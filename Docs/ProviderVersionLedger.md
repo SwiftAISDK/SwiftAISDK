@@ -41,6 +41,7 @@ source and behavior review.
 | `@ai-sdk/google` | `4.0.93` | `AIProviders.google`, `GoogleGenerativeAIProvider`, `GoogleGenerativeAI.swift`, `GoogleGenerativeMediaModels.swift`, `GoogleGenerativeAITests.swift`, `GoogleGenerativeAIMediaAndToolsTests.swift`, `GoogleBatchLanguageModel`, `GoogleBatchUpstreamTests.swift`, `GoogleGenerativeAIVideoAndInteractionsTests.swift` |
 | `@ai-sdk/google-vertex` | `5.0.109` | `AIProviders.googleVertex`, `GoogleVertexProvider`, `GoogleVertexProvider.swift`, `GoogleVertexModels.swift`, `GoogleVertexTests.swift`, `GoogleVertexMediaAndMaaSTests.swift` |
 | `@ai-sdk/groq` | `4.0.59` | `AIProviders.groq`, `GroqLanguageModel`, `GroqTranscriptionModel`, `GroqProviderTests.swift` |
+| `@ai-sdk/heygen` | `3.0.0` | `AIProviders.heyGen`, `HeyGenVideoModel`, `HeyGenVideoModelOptions`, `HeyGenVideoAsset`, `HeyGen*Tests.swift` |
 | `@ai-sdk/huggingface` | `2.0.67` | `AIProviders.huggingFace`, `HuggingFaceProvider`, `HuggingFaceResponsesLanguageModel`, `HuggingFaceProviderTests.swift` |
 | `@ai-sdk/hume` | `3.0.58` | `AIProviders.hume`, `HumeSpeechModel`, `HumeProviderTests.swift` |
 | `@ai-sdk/klingai` | `4.0.60` | `AIProviders.klingAI`, `KlingAIVideoModel`, `KlingAIProviderTests.swift`, `MediaStatusRedirectUpstreamTests.swift` |

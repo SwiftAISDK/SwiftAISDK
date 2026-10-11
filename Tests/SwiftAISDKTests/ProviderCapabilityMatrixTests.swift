@@ -37,6 +37,7 @@ import Testing
         "@ai-sdk/google",
         "@ai-sdk/google-vertex",
         "@ai-sdk/groq",
+        "@ai-sdk/heygen",
         "@ai-sdk/huggingface",
         "@ai-sdk/hume",
         "@ai-sdk/klingai",
@@ -98,6 +99,10 @@ import Testing
     let topazRow = try #require(AIProviderCapabilities.row(providerID: "topaz"))
     #expect(topazRow.supportedCapabilities == topaz.supportedCapabilities)
     #expect(topazRow.supportedCapabilities == [.image, .video])
+    let heyGen = try AIProviders.heyGen(settings: ProviderSettings(apiKey: "heygen-key"))
+    let heyGenRow = try #require(AIProviderCapabilities.row(providerID: "heygen"))
+    #expect(heyGenRow.supportedCapabilities == heyGen.supportedCapabilities)
+    #expect(heyGenRow.supportedCapabilities == [.video])
 
     let voyage = try AIProviders.voyage(settings: ProviderSettings(apiKey: "voyage-key"))
     let voyageRow = try #require(AIProviderCapabilities.row(providerID: "voyage"))

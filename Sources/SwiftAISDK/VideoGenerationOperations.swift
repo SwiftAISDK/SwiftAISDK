@@ -182,7 +182,7 @@ extension AI {
             )
         }
 
-        let normalized = normalizeVideoGenerationRequest(request)
+        let normalized = normalizeVideoGenerationRequest(request, model: model)
         let requestedCount = normalized.request.count ?? 1
         guard requestedCount > 0 else {
             throw AIError.invalidArgument(

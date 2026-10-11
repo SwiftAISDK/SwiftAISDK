@@ -153,8 +153,8 @@ Each row records one added/changed/deleted/renamed destination path. Source/fixt
 | `M` | `packages/harness/src/agent/internal/validate-tool-call.test.ts` | `out-of-scope` | Framework/harness/workflow/Node tooling outside the native provider-model contract. |
 | `M` | `packages/harness/src/agent/telemetry-integration.test.ts` | `out-of-scope` | Framework/harness/workflow/Node tooling outside the native provider-model contract. |
 | `M` | `packages/harness/src/v1/harness-v1-stream-part.test-d.ts` | `declaration-review` | TypeScript type/export assertions; native public overloads and generated symbol docs reviewed separately. |
-| `A` | `packages/heygen/src/heygen-provider.test.ts` | `announced` | New provider deliberately unimplemented; dedicated native async-video vertical proposed in package audit. |
-| `A` | `packages/heygen/src/heygen-video-model.test.ts` | `announced` | New provider deliberately unimplemented; dedicated native async-video vertical proposed in package audit. |
+| `A` | `packages/heygen/src/heygen-provider.test.ts` | `ported; native credential timing` | HeyGenProviderTests and capability tests; Swift factory resolves credentials eagerly, documented relative to JS lazy resolution. |
+| `A` | `packages/heygen/src/heygen-video-model.test.ts` | `ported; JS workflow excluded` | HeyGen request/validation/operation suites; all native start/status modes, assets/options, metadata/errors and durable operation JSON. JS model/workflow serialization is out of scope. |
 | `M` | `packages/mcp/src/index.test-d.ts` | `declaration-review` | TypeScript type/export assertions; native public overloads and generated symbol docs reviewed separately. |
 | `M` | `packages/mcp/src/tool/mcp-client.test.ts` | `ported` | WeeklyMCPEvents20261011 / WeeklyMCPCore20261011 / MCPOAuthFlowTests; deprecated EventSource adapter absent. |
 | `A` | `packages/mcp/src/tool/mcp-event-webhook.test.ts` | `ported` | WeeklyMCPEvents20261011 / WeeklyMCPCore20261011 / MCPOAuthFlowTests; deprecated EventSource adapter absent. |
@@ -226,4 +226,4 @@ Each row records one added/changed/deleted/renamed destination path. Source/fixt
 
 ## Published versus monorepo boundaries
 
-Anthropic citations/tool-choice-none, later Google capability updates, OpenAI annotations, openai-compatible tool_content/files, Decision exact-choice labels and relaxed rounded maxima, and the native-unimplemented browser reconnect helper are not silently taken from newer checkout tests. Package-specific fixtures for existing native paths remain covered by the full suite. HeyGen fixtures stay announced. TypeScript declaration counts and parameterized Swift invocations are reported separately from test-function totals.
+Anthropic citations/tool-choice-none, later Google capability updates, OpenAI annotations, openai-compatible tool_content/files, Decision exact-choice labels and relaxed rounded maxima, and the native-unimplemented browser reconnect helper are not silently taken from newer checkout tests. Package-specific fixtures for existing native paths remain covered by the full suite. HeyGen fixtures were ported in the separately authorized follow-up; JavaScript workflow serialization and native credential timing differences are recorded above. TypeScript declaration counts and parameterized Swift invocations are reported separately from test-function totals.

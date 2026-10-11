@@ -42,7 +42,7 @@ print(result.text)
 
 Provider factories read their upstream-style environment variables by default,
 for example `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY`,
-`GEMINI_API_KEY`, `TYPESAFE_AI_API_KEY`, and `ZAI_API_KEY`. Provider-specific defaults live in the corresponding
+`GEMINI_API_KEY`, `TYPESAFE_AI_API_KEY`, `ZAI_API_KEY`, and `HEYGEN_API_KEY`. Provider-specific defaults live in the corresponding
 factory in `Sources/SwiftAISDK/Providers/ProviderRegistry.swift`. You can also
 pass credentials explicitly:
 
@@ -327,7 +327,7 @@ listing, and result setup use the normal retry policy. The older model-owned
 Async Video V4 keeps unary `generateVideo` source compatible while adding
 serializable start/status operations, core-owned polling/webhook waiting, and a
 stable logical-start idempotency key. Black Forest Labs FLUX 3, Fal, ByteDance,
-and Gateway expose operation adapters; select the managed flow with
+Gateway, Topaz, and HeyGen expose operation adapters; select the managed flow with
 `poll: VideoGenerationPollOptions(...)` or a webhook registration. Fal and
 Gateway forward native webhook URLs, while providers without native webhooks
 fall back to polling with a warning. Requests above a model's
@@ -354,7 +354,17 @@ let status = try await AI.getVideoStatus(
 Provider factories live under `AIProviders`, including OpenAI, Azure,
 Anthropic, Google, Google Vertex, Gateway, xAI, Mistral, Groq, Cohere, Voyage,
 MiniMax, Bedrock, Replicate, fal, Fish Audio, GMI Cloud, Deepgram, ElevenLabs,
-Cartesia, Topaz, and other official `@ai-sdk/*` provider packages.
+Cartesia, Topaz, HeyGen, and other official `@ai-sdk/*` provider packages.
+
+`AIProviders.heyGen()` reads `HEYGEN_API_KEY` and provides `video("heygen-video-1")`
+for text-to-video, first-frame image-to-video, and mixed image/video/audio
+reference conditioning. `AI.generateVideo` polls automatically; `AI.startVideo`
+and `AI.getVideoStatus` let applications persist and resume an operation.
+`HeyGenVideoModelOptions` and `HeyGenVideoAsset` expose typed resolution,
+prompt enhancement, URLs, workspace assets, and inline references. Completion
+returns a signed MP4 URL without downloading. See the
+[HeyGen guide](https://ozio.github.io/SwiftAISDK/providers/heygen/) for examples,
+validation limits, metadata, and URL refresh.
 
 `AIProviders.topaz()` reads `TOPAZ_API_KEY` and enhances existing media:
 `image("wonder-3.5")` accepts an image file or URL; `video("proteus")` and

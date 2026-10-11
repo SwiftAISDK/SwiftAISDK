@@ -377,6 +377,21 @@ public enum AIProviders {
         try OpenAICompatibleProvider(providerID: "hume", defaultBaseURL: "https://api.hume.ai", authorization: .apiKeyHeader(name: "X-Hume-Api-Key", environmentVariables: ["HUME_API_KEY"]), supportedCapabilities: [.speech], settings: settings)
     }
 
+    /// Creates HeyGen text, first-frame image, and reference video models.
+    public static func heyGen(settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider {
+        var settings = settings
+        settings.apiKey = settings.apiKey ?? (settings.environment ?? ProcessInfo.processInfo.environment)["HEYGEN_API_KEY"]
+        guard settings.apiKey != nil else {
+            throw AIError.missingAPIKey(provider: "heygen", environmentVariables: ["HEYGEN_API_KEY"])
+        }
+        settings.headers = normalizeHeaders(settings.headers)
+        return try OpenAICompatibleProvider(
+            providerID: "heygen", defaultBaseURL: "https://api.heygen.com",
+            authorization: .apiKeyHeader(name: "x-api-key", environmentVariables: ["HEYGEN_API_KEY"]),
+            supportedCapabilities: [.video], settings: settings, userAgentSuffix: "ai-sdk-heygen/3.0.0"
+        )
+    }
+
     public static func lmnt(settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider {
         try OpenAICompatibleProvider(providerID: "lmnt", defaultBaseURL: "https://api.lmnt.com", authorization: .apiKeyHeader(name: "x-api-key", environmentVariables: ["LMNT_API_KEY"]), supportedCapabilities: [.speech], settings: settings)
     }

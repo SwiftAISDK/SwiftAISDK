@@ -22,6 +22,61 @@ Status meanings:
 - `current`: the tracked package has no published version drift.
 
 
+## 2026-10-11 HeyGen Follow-up
+
+The user separately authorized HeyGen after the weekly `2.3.0` release. The
+follow-up starts on clean, synchronized `main` at
+`ce9589ea6cfbb03c91991e3f280dd3298a9a0747`, with no inherited ahead commits.
+
+| Package | Previous reference | Published latest | Decision and behavior | Focused evidence |
+| --- | --- | --- | --- | --- |
+| `@ai-sdk/heygen` | Announced, unimplemented | `3.0.0` | Ported native async video start/status, text/first-frame/reference modes, URL/workspace/base64 inputs, strict validation, typed options, auth/errors/metadata and durable resume | `HeyGenProviderTests`, `HeyGenVideoRequestTests`, `HeyGenVideoValidationTests`, `HeyGenVideoOperationTests`, `ProviderCapabilityMatrixTests` |
+
+Fresh npm metadata and the exact `heygen-3.0.0.tgz` match registry integrity
+`sha512-SbKrKzzBDLqR+sW1utuSLdyPJE2D8KYyWXyQqjMADX29j7mAuCrPDVraAg/hAhyB7uQN2RkJk2hkubw7IeMQ2Q==`.
+Published source, declarations, entry points, provider/options/error/settings
+modules, video request/status builders and bundled provider documentation were
+reviewed. Both upstream fixture files at
+`vercel/ai@ba05943b69ad070558bb5bc912da99ec66d7d263` were read before porting.
+This adds one tracked package, for **54** total; the inventory remains
+**1,024 executable paths in 84 groups**.
+
+Runtime parity includes `HEYGEN_API_KEY` / `x-api-key`, custom endpoint/headers/
+transport, `ai-sdk-heygen/3.0.0`, `video`/`videoModel` aliases and open model IDs;
+`/v3/models/videos` POST and safely encoded GET IDs; inferred or explicit modes;
+all 16 documented frame sizes, size-class override and high-resolution ratio
+constraints; UTF-16 prompt length, integer duration/seed and reference limits;
+ordered kind grouping and provider-reference append; structured error code/param,
+HTTP context and retryability; status schema checks, fractional reported duration,
+zero-valued inference timing, failure codes and nullable-field omission.
+Completed results return a refreshed signed MP4 URL without downloading, and
+do not invent credit/token usage. Shared start retries reuse one idempotency key;
+persisted operation JSON resumes on a new model instance. Status redirect checks
+remove credentials across origins. The existing shared DNS pinning gap remains.
+
+HeyGen needs the original frame/image/reference inputs for its validation.
+An internal model marker bypasses only this provider's generic normalization,
+which otherwise duplicates the first frame and drops mixed references.
+Tests exercise both direct provider and public facade inputs; other providers
+retain the existing normalization. Public signatures remain unchanged.
+
+| Upstream fixture path | Disposition | Native evidence / boundary |
+| --- | --- | --- |
+| `packages/heygen/src/heygen-provider.test.ts` | Ported; native credential timing | Factory/aliases/capabilities/auth/headers/transport tests. Swift resolves credentials eagerly at factory creation; lazy JavaScript factory resolution is explicitly documented. |
+| `packages/heygen/src/heygen-video-model.test.ts` | Ported; JS model/workflow serialization excluded | Request/options/assets/limits, all frame sizes, operation JSON persistence, pending/terminal errors, signed URL refresh, metadata, aborts and shared facade polling/retries. Swift uses nonoptional `String` prompts, `Int` seeds and `Data` bytes, so JS null/type branches are represented by native type constraints. |
+
+Avatar, voice and translation APIs, public remote cancellation, native video
+webhooks and unary generation are absent from the published video adapter.
+JavaScript workflow serialization is outside this native port; durable operation
+JSON is supported. Provider status calls return URLs rather than downloading
+video output, matching the published implementation.
+
+HeyGen follow-up verification passed **42 focused tests in 4 suites** (90 parameterized case invocations), full `swift test` **3,261 tests in 40 suites**, all `Examples` targets including `GenerateWithHeyGen`, and its no-argument usage without API calls. `npm ci --prefix docs-site` installed 446 packages (447 audited); `npm --prefix docs-site run check` reported 0 errors/warnings/hints across 4 Astro files; `npm --prefix docs-site run build` built **97 pages**. Fresh strict registry checks confirm **54 current packages, zero drift/errors**, and search plus the exact **90-name** registry prefix finds no new unported provider. The additive HeyGen provider/options/assets justify **minor 2.4.0** from **2.3.0**. Existing callers need no migration; live credentialed provider tests were not enabled. `git diff --check` passed.
+
+The release uses a **minor** bump from `2.3.0` because a new provider and typed
+public options/assets are additive public API. Existing provider signatures and
+behavior remain compatible; no migration action is required for existing users.
+
 ## 2026-10-11 Weekly Audit
 
 The pass starts on clean `main` at published `2.2.0` (`efaf15fdca5a475496e99e71d182b432484ce874`), synchronized with origin and with no inherited ahead commits. Fresh registry reads cover all **53 tracked packages: 51 version drifts and two current rows**. Each drift is compared separately against its prior reference, including declarations, exports/configuration, request builders, response/errors/streams, options, headers/user-agent, telemetry metadata and upstream fixture patterns.
@@ -99,7 +154,11 @@ Unpublished changes excluded from this baseline include later Anthropic citation
 
 Fresh `npm search --json` is cross-checked with `https://replicate.npmjs.com/_all_docs` exact `@ai-sdk/` prefix bounds and per-name registry metadata (latest/time/repository/exports/dist). The prefix contains **90 scoped names**, SHA-256 of sorted newline-joined names `492ce836577dac24d2e4ab1c783f3f5c82d8210896e164ce9cd5d44aa5338d87`; there are 52 tracked scoped names plus `ai`, and 38 untracked scoped names. The prior snapshot had 88 names. Search results with missing descriptions are explicitly classified, preventing empty-description providers from disappearing.
 
-**New provider: `@ai-sdk/heygen@3.0.0`, announced and deliberately unimplemented.** Its published `heygen-video-1` async adapter uses `HEYGEN_API_KEY` / `x-api-key`, `/v3/models/videos` start/status, text/image/reference video modes, URL/asset/base64 inputs, resolution/ratio/duration/seed controls, validated reference limits, persisted operations, output downloads, usage and errors. Next recommended vertical: a native `AsyncVideoModel` start/status/polling adapter, safe upload/download/auth handling, request and terminal-state fixtures, factory/capability row, public guide and release. No automatic HeyGen implementation is included.
+**New provider at the weekly discovery: `@ai-sdk/heygen@3.0.0`.** It was
+announced and left unimplemented by that pass, then ported in the separately
+authorized HeyGen follow-up recorded above. Its published adapter supports
+text/image/reference start/status operations and returns signed output URLs
+without downloading them. HeyGen is implemented now.
 
 `@ai-sdk/tools@0.0.0` is a new seed package with no provider surface. `@ai-sdk/spacexai@0.0.0` remains an empty reservation. Full untracked classification follows; every latest package was downloaded and its exports/source reviewed.
 
@@ -122,7 +181,7 @@ Fresh `npm search --json` is cross-checked with `https://replicate.npmjs.com/_al
 | `@ai-sdk/harness-grok-build` | `1.0.86` | JavaScript harness/sandbox runtime adapter; outside provider-model port |
 | `@ai-sdk/harness-opencode` | `1.0.150` | JavaScript harness/sandbox runtime adapter; outside provider-model port |
 | `@ai-sdk/harness-pi` | `1.0.150` | JavaScript harness/sandbox runtime adapter; outside provider-model port |
-| `@ai-sdk/heygen` | `3.0.0` | Announced provider; native async video port proposed above, not implemented |
+| `@ai-sdk/heygen` | `3.0.0` | Announced by weekly discovery; ported in the separately authorized follow-up above |
 | `@ai-sdk/langchain` | `3.0.137` | adapter package; framework/schema/product runtime outside native provider coverage |
 | `@ai-sdk/llamaindex` | `3.0.137` | adapter package; framework/schema/product runtime outside native provider coverage |
 | `@ai-sdk/otel` | `1.0.137` | JavaScript OpenTelemetry integration; existing native Telemetry is retained |

@@ -11,7 +11,7 @@ Source URL: /components/core-runtime/
 | Enumeration | 56 |
 | Function | 65 |
 | Global Variable | 1 |
-| Initializer | 184 |
+| Initializer | 187 |
 | Instance Method | 161 |
 | Instance Property | 526 |
 | Instance Subscript | 2 |
@@ -477,6 +477,9 @@ Source URL: /components/core-runtime/
 | Initializer | `init(questionID:questionType:providerID:modelID:message:)` | `init(questionID: String, questionType: AIEvaluationQuestionType, providerID: String, modelID: String, message: String? = nil)` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Initializer | `init(questionIDs:providerID:modelID:message:)` | `init(questionIDs: [String], providerID: String, modelID: String, message: String? = nil)` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Initializer | `init(rawTools:toolContexts:executableTools:maxSteps:stopWhen:prepareStep:approval:choice:)` | `init(rawTools: [String : JSONValue] = [:], toolContexts: [String : JSONValue] = [:], executableTools: [AITool] = [], maxSteps: Int = 5, stopWhen: [AIStopCondition] = [], prepareStep: AIPrepareStep? = nil, approval: AIToolApproval? = nil, choice: JSONValue? = nil)` | [Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift) |
+| Initializer | `init(rawValue:)` | `init?(rawValue: String)` |  |
+| Initializer | `init(rawValue:)` | `init?(rawValue: String)` |  |
+| Initializer | `init(rawValue:)` | `init?(rawValue: String)` |  |
 | Initializer | `init(rawValue:)` | `init?(rawValue: String)` |  |
 | Initializer | `init(rawValue:)` | `init?(rawValue: String)` |  |
 | Initializer | `init(rawValue:)` | `init?(rawValue: String)` |  |

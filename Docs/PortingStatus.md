@@ -59,15 +59,36 @@ for exact evidence.
 
 Provider and core package versions were checked against fresh npm metadata on 2026-10-11. All **53 tracked packages** were reviewed (51 version drifts, two current); 140 old/latest/untracked published archives passed SHA-512 integrity checks. Package-by-package versions, decisions, focused tests and new-provider scope are in `Docs/UpstreamPackageDiffAudit.md`.
 
+The separately authorized HeyGen follow-up adds `@ai-sdk/heygen@3.0.0` to the
+ledger, bringing the tracked package total to **54**. Its exact published
+tarball passed SHA-512 verification; both upstream HeyGen test files were read
+and classified at the same fixture snapshot.
+
 The inventory has **1,024 executable test/spec files in 84 groups**. `Docs/FreshUpstreamTestDiffAudit.md` accounts for 190 changed executable paths and 18 declaration-test paths against the prior snapshot; published tarballs control behavior where the monorepo is ahead.
 
 ## Provider State
 
 The 2026-10-11 pass adds native Decision V4 and MCP Events, Azure MAI Image, Mistral Conversations and xAI streaming transcription. JSON-with-tools, Haiku 5.5/GPT-6 family reasoning, shared embedding dimensions, bounded batch downloads, cached/transcription metadata and native UI lifecycle/history are synchronized with the reviewed package releases. New overloads retain existing callable signatures. Experimental Evaluation endpoint/schema emulators need the documented Decision envelopes; normal source-level callers remain compatible.
 
-Fresh search plus exact registry-prefix enumeration finds **90 scoped names**. **HeyGen 3.0.0** is a new published async video provider and remains deliberately unimplemented: port its text/image/reference start/status lifecycle, options/inputs, downloads/auth, errors/usage, focused fixtures, factory and docs as the next dedicated provider vertical. `@ai-sdk/tools@0.0.0` is a seed package; SpaceXAI remains an empty reservation. Framework, harness, sandbox and JavaScript workflow packages remain outside native provider-model coverage.
+Fresh search plus exact registry-prefix enumeration finds **90 scoped names**.
+The separately authorized **HeyGen 3.0.0** follow-up is implemented:
+`AIProviders.heyGen`, `HeyGenVideoModel`, typed `HeyGenVideoModelOptions` and
+`HeyGenVideoAsset` support text/first-frame/reference video, strict preflight
+validation, persisted operations, shared polling and retries, reported metadata,
+structured errors, and signed MP4 URL refresh without downloading. The facade
+preserves original HeyGen inputs so conflicting frame/image/reference requests
+fail rather than being normalized away. Existing providers retain their current
+normalization. The public guide and `GenerateWithHeyGen` example cover setup,
+generation and durable resume. Credentials resolve at factory creation in Swift.
+Avatar/voice/translation, remote cancellation, native webhooks and JavaScript
+workflow serialization are absent from the published provider surface.
+`@ai-sdk/tools@0.0.0` is a seed package; SpaceXAI remains an empty reservation.
+Framework, harness, sandbox and JavaScript workflow packages remain outside
+native provider-model coverage. HeyGen is no longer an unported discovery.
 
-Final local verification passed **3,223 tests in 36 suites**, all existing `Examples` targets, five public Swift snippets with zero diagnostics, docs dependency installation, zero Astro errors/warnings/hints across four files, and a **96-page** site build. Fresh registry readback confirms 53 current baselines and zero drift/errors. The release is an additive **minor 2.3.0** from **2.2.0**; exhaustive `ModelCapability` switches should handle `.decision`. Paid provider smoke calls remain opt-in and were not enabled.
+HeyGen follow-up verification passed **42 focused tests in 4 suites** (90 parameterized case invocations), full `swift test` **3,261 tests in 40 suites**, all `Examples` targets including `GenerateWithHeyGen`, and its no-argument usage without API calls. `npm ci --prefix docs-site` installed 446 packages (447 audited); `npm --prefix docs-site run check` reported 0 errors/warnings/hints across 4 Astro files; `npm --prefix docs-site run build` built **97 pages**. Fresh strict registry checks confirm **54 current packages, zero drift/errors**, and search plus the exact **90-name** registry prefix finds no new unported provider. The additive HeyGen provider/options/assets justify **minor 2.4.0** from **2.3.0**. Existing callers need no migration; live credentialed provider tests were not enabled. `git diff --check` passed.
+
+The preceding weekly release passed **3,223 tests in 36 suites**, all existing `Examples` targets, five public Swift snippets with zero diagnostics, docs dependency installation, zero Astro errors/warnings/hints across four files, and a **96-page** site build. Its fresh registry readback confirmed 53 current baselines and zero drift/errors. That release is an additive **minor 2.3.0** from **2.2.0**; exhaustive `ModelCapability` switches should handle `.decision`. Paid provider smoke calls remain opt-in and were not enabled.
 
 The previous published `2.2.0` added Topaz image/video enhancement and passed 3,042 tests in 23 suites, zero docs diagnostics and a 94-page docs build. Topaz remains implemented. The prior `2.1.1` polling-fixture repair is preserved; this pass does not alter the old release tags or include inherited commits or unrelated work.
 
@@ -357,13 +378,12 @@ one of these is true:
 
 | Priority | Gap | Next action |
 | --- | --- | --- |
-| P1 | HeyGen 3.0.0 async video is announced but unported. | Implement one dedicated native provider vertical with persisted operation state, inputs/options, safe downloads, fixtures and docs. |
 | P1 | Google/Vertex Gemini transcription and Open Responses extension codecs remain absent native adapters. | Design and port each complete request/stream/replay surface before advertising parity. |
 | P0 | Completion evidence can drift as npm packages and upstream tests change. | Before release, rerun package discovery, regenerate upstream inventory, compare ledgers, run full `swift test`, and record the audit. |
 | P0 | Live verification is representative, not exhaustive. | Add opt-in live smoke only for distinct transport families or concrete production risks. Keep it disabled by default. |
 | P1 | `URLSessionTransport` currently adapts `URLSession.AsyncBytes` into one `Data` value per byte. This preserves minimum latency and correct cancellation, but adds allocation overhead and offers no demand-aware backpressure. | Introduce a cancelable, demand-driven `AIHTTPBody` sequence backed by a delegate-owned `URLSession`, with bounded lossless buffering and explicit high/low watermarks. Keep the injected-session compatibility path until delegate, authentication, cache, metrics, and lifecycle semantics can be preserved. |
 | P1 | xAI realtime and OpenAI Live server WebSocket are represented, but browser WebRTC/client permissions, provider-backed Responses delegation, non-Live OpenAI Realtime, Google Realtime 3.8, ElevenLabs realtime STT, and streaming translation remain deferred. | Extend `AIRealtimeModelV4` one complete transport/provider vertical at a time; do not advertise browser or delegation modes until their native lifecycle is implemented and tested. |
-| P1 | Batch V4 has Anthropic, OpenAI Responses, Gateway, Google, and xAI adapters. Async Video V4 has Black Forest Labs, Fal, ByteDance, Gateway and Topaz adapters, but other capable providers still use unary or internal-polling paths. | Migrate additional batch/video providers incrementally when persisted operation state, native webhook behavior, and provider-specific cancellation semantics can be translated with focused tests. |
+| P1 | Batch V4 has Anthropic, OpenAI Responses, Gateway, Google, and xAI adapters. Async Video V4 has Black Forest Labs, Fal, ByteDance, Gateway, Topaz and HeyGen adapters, but other capable providers still use unary or internal-polling paths. | Migrate additional batch/video providers incrementally when persisted operation state, native webhook behavior, and provider-specific cancellation semantics can be translated with focused tests. |
 | P1 | `@ai-sdk/provider-utils@5.0.58` retains resolver-backed DNS address pinning for validated downloads; Swift validates literal/private hosts and every redirect and removes provider credentials across origins, but does not pin the resolved address. | Add resolver-aware connection pinning at the transport layer before claiming DNS-rebinding parity. |
 | P1 | Browser HTTP/WebSocket chat framing, Node stream-response helpers, tracing-channel/workflow codecs and legacy EventSource SSE are not native adapters. | Add a complete native public adapter only after lifecycle, replay, auth and serialization behavior are designed and tested. |
 | P1 | Upstream preserves repeated tool-call IDs across explicit UI stream steps; Swift stream parts do not expose step boundaries. | Add a public step-boundary representation, then scope reducer tool-part identity to the active step with backwards lookup for late results. |

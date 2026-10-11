@@ -73,6 +73,7 @@ SwiftAISDK is a SwiftPM port of the provider-facing Vercel AI SDK.
 - ["googleVertex.maas"](/llms/providers/googlevertex-maas.txt): "googleVertex.maas provider capabilities and factories."
 - ["googleVertex.xai"](/llms/providers/googlevertex-xai.txt): "googleVertex.xai provider capabilities and factories."
 - ["groq"](/llms/providers/groq.txt): "groq provider capabilities and factories."
+- ["heygen"](/llms/providers/heygen.txt): "heygen provider capabilities and factories."
 - ["huggingface"](/llms/providers/huggingface.txt): "huggingface provider capabilities and factories."
 - ["hume"](/llms/providers/hume.txt): "hume provider capabilities and factories."
 - ["klingai"](/llms/providers/klingai.txt): "klingai provider capabilities and factories."

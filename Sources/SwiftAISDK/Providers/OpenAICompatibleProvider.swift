@@ -613,6 +613,9 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
         if providerID == "topaz" {
             return TopazVideoModel(modelID: modelID, config: config)
         }
+        if providerID == "heygen" {
+            return HeyGenVideoModel(modelID: modelID, config: config)
+        }
         if providerID == "replicate" {
             return ReplicateVideoModel(modelID: modelID, config: config)
         }

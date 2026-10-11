@@ -353,7 +353,7 @@ extension AI {
         poll: VideoGenerationPollOptions? = nil,
         webhook: VideoGenerationWebhookFactory? = nil
     ) async throws -> VideoGenerationResult {
-        let normalized = normalizeVideoGenerationRequest(request)
+        let normalized = normalizeVideoGenerationRequest(request, model: model)
         let operationOptionsRequested = poll != nil || webhook != nil
         let availableOperationModel = model as? any AsyncVideoModel
         let operationModel = availableOperationModel.flatMap { candidate in
@@ -811,7 +811,13 @@ private func embeddingValueChunks(
     return chunks
 }
 
-func normalizeVideoGenerationRequest(_ request: VideoGenerationRequest) -> (request: VideoGenerationRequest, warnings: [AIWarning]) {
+// Strict providers validate the distinct original image/frame/reference inputs.
+// Legacy normalization copies first_frame into image and discards references;
+// those transformations would hide invalid combinations from these providers.
+protocol RawVideoGenerationInputModel: VideoModel {}
+
+func normalizeVideoGenerationRequest(_ request: VideoGenerationRequest, model: (any VideoModel)? = nil) -> (request: VideoGenerationRequest, warnings: [AIWarning]) {
+    if model is any RawVideoGenerationInputModel { return (request, []) }
     var normalized = request
     var warnings: [AIWarning] = []
 

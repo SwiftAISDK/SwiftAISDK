@@ -13,7 +13,7 @@ Speech: 14
 Audio generation: 1
 Audio transformation: 1
 Dubbing: 1
-Video: 13
+Video: 14
 Reranking: 5
 Evaluation: 5
 Decision: 5
@@ -52,6 +52,7 @@ Skills: 3
 | [`googleVertex.xai`](googlevertex-xai/) | `@ai-sdk/google-vertex` | `AIProviders.googleVertexXAI` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | [`googleVertex.anthropic`](googlevertex-anthropic/) | `@ai-sdk/google-vertex` | `AIProviders.googleVertexAnthropic` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | [`groq`](groq/) | `@ai-sdk/groq` | `AIProviders.groq` | ✅ |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |
+| [`heygen`](heygen/) | `@ai-sdk/heygen` | `AIProviders.heyGen` |  |  |  |  |  |  |  |  |  | ✅ |  |  |  |  |  |
 | [`huggingface`](huggingface/) | `@ai-sdk/huggingface` | `AIProviders.huggingFace` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | [`hume`](hume/) | `@ai-sdk/hume` | `AIProviders.hume` |  |  |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |
 | [`klingai`](klingai/) | `@ai-sdk/klingai` | `AIProviders.klingAI` |  |  |  |  |  |  |  |  |  | ✅ |  |  |  |  |  |

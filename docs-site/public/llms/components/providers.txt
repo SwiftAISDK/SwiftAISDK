@@ -16,7 +16,7 @@ Source URL: /components/providers/
 | Instance Property | 176 |
 | Structure | 22 |
 | Type Alias | 4 |
-| Type Method | 82 |
+| Type Method | 83 |
 | Type Property | 3 |
 
 ## Public symbols
@@ -620,6 +620,7 @@ Source URL: /components/providers/
 | Type Method | `googleVertexMaaS(project:location:settings:)` | `static func googleVertexMaaS(project: String? = nil, location: String? = nil, settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider` | [Sources/SwiftAISDK/Providers/ProviderRegistry.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/ProviderRegistry.swift) |
 | Type Method | `googleVertexXAI(project:location:settings:)` | `static func googleVertexXAI(project: String? = nil, location: String? = nil, settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider` | [Sources/SwiftAISDK/Providers/ProviderRegistry.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/ProviderRegistry.swift) |
 | Type Method | `groq(settings:)` | `static func groq(settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider` | [Sources/SwiftAISDK/Providers/ProviderRegistry.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/ProviderRegistry.swift) |
+| Type Method | `heyGen(settings:)` | `static func heyGen(settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider` | [Sources/SwiftAISDK/Providers/ProviderRegistry.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/ProviderRegistry.swift) |
 | Type Method | `huggingFace(settings:)` | `static func huggingFace(settings: ProviderSettings = ProviderSettings()) throws -> HuggingFaceProvider` | [Sources/SwiftAISDK/Providers/ProviderRegistry.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/ProviderRegistry.swift) |
 | Type Method | `hume(settings:)` | `static func hume(settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider` | [Sources/SwiftAISDK/Providers/ProviderRegistry.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/ProviderRegistry.swift) |
 | Type Method | `klingAI(settings:)` | `static func klingAI(settings: KlingAIProviderSettings = KlingAIProviderSettings()) throws -> OpenAICompatibleProvider` | [Sources/SwiftAISDK/Providers/ProviderRegistry.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/ProviderRegistry.swift) |

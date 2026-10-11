@@ -75,7 +75,7 @@ let result = try await AI.generateVideo(
 ```
 
 A caller-supplied `Idempotency-Key` header wins. Black Forest Labs FLUX 3, Fal,
-ByteDance, and Gateway are operation adapters. Callers can invoke
+ByteDance, Gateway, Topaz, and [HeyGen](/SwiftAISDK/providers/heygen/) are operation adapters. Callers can invoke
 `AI.startVideo` and `AI.getVideoStatus` (or the model-level
 `startVideoGeneration` and `videoGenerationStatus`) and persist the returned
 JSON operation across processes.
@@ -99,7 +99,7 @@ let result = try await AI.generateVideo(
 Fal forwards the registration URL through its native `fal_webhook` start
 parameter, while Gateway forwards it as `callbackUrl`. The webhook factory is
 not invoked for providers without native webhook support; Black Forest Labs
-and ByteDance emit an unsupported warning and fall back to polling.
+ByteDance, Topaz, and HeyGen emit an unsupported warning and fall back to polling.
 `timeoutMilliseconds` also bounds the webhook wait, and caller cancellation
 closes either path.
 
@@ -133,3 +133,10 @@ one-video limit, so multi-video requests use this split automatically.
 - `providerMetadata`
 - `requestMetadata`
 - `responseMetadata`
+
+HeyGen supports text, first-frame image, and mixed image/video/audio reference
+generation through `AIProviders.heyGen().video("heygen-video-1")`. Its completed
+result contains a signed MP4 URL; the adapter does not download it. Persist the
+operation and check status again to refresh the URL. See the
+[HeyGen guide](/SwiftAISDK/providers/heygen/) for typed options, input validation,
+reported metadata, and a compile-checked example.

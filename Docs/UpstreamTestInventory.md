@@ -5,14 +5,14 @@ Use it as a review checklist before porting behavior into SwiftAISDK; do not cop
 
 ## Snapshot
 
-- Generated at: 2026-10-11T01:57:38.667Z
+- Generated at: 2026-10-11T04:38:15.494Z
 - Upstream ref: `main`
 - Upstream commit: [`ba05943b69ad`](https://github.com/vercel/ai/tree/ba05943b69ad070558bb5bc912da99ec66d7d263)
 - Commit line: `ba05943b69ad070558bb5bc912da99ec66d7d263 2026-10-10T11:42:13-07:00 fix: record resolved model and response ID on decision model spans (#22542)`
 - Total upstream test/spec files: 1024
 - Package/example groups with tests: 84
-- Groups tracked by SwiftAISDK ledger/core snapshot: 51
-- Groups not tracked locally: 33
+- Groups tracked by SwiftAISDK ledger/core snapshot: 52
+- Groups not tracked locally: 32
 
 ## Maintenance Plan
 
@@ -52,6 +52,7 @@ Use it as a review checklist before porting behavior into SwiftAISDK; do not cop
 | `google` | `@ai-sdk/google` | `4.0.93` | provider | 34 | AIProviders.google, GoogleGenerativeAIProvider, GoogleGenerativeAI.swift, GoogleGenerativeMediaModels.swift, GoogleGenerativeAITests.swift, GoogleGenerativeAIMediaAndToolsTests.swift, GoogleBatchLanguageModel, GoogleBatchUpstreamTests.swift, GoogleGenerativeAIVideoAndInteractionsTests.swift |
 | `google-vertex` | `@ai-sdk/google-vertex` | `5.0.109` | provider | 22 | AIProviders.googleVertex, GoogleVertexProvider, GoogleVertexProvider.swift, GoogleVertexModels.swift, GoogleVertexTests.swift, GoogleVertexMediaAndMaaSTests.swift |
 | `groq` | `@ai-sdk/groq` | `4.0.59` | provider | 7 | AIProviders.groq, GroqLanguageModel, GroqTranscriptionModel, GroqProviderTests.swift |
+| `heygen` | `@ai-sdk/heygen` | `3.0.0` | provider | 2 | AIProviders.heyGen, HeyGenVideoModel, HeyGenVideoModelOptions, HeyGenVideoAsset, HeyGen*Tests.swift |
 | `huggingface` | `@ai-sdk/huggingface` | `2.0.67` | provider | 2 | AIProviders.huggingFace, HuggingFaceProvider, HuggingFaceResponsesLanguageModel, HuggingFaceProviderTests.swift |
 | `hume` | `@ai-sdk/hume` | `3.0.58` | provider | 2 | AIProviders.hume, HumeSpeechModel, HumeProviderTests.swift |
 | `klingai` | `@ai-sdk/klingai` | `4.0.60` | provider | 3 | AIProviders.klingAI, KlingAIVideoModel, KlingAIProviderTests.swift, MediaStatusRedirectUpstreamTests.swift |
@@ -104,7 +105,6 @@ These are visible in the upstream monorepo but are not currently tracked in the 
 | `harness-grok-build` | 3 |
 | `harness-opencode` | 17 |
 | `harness-pi` | 13 |
-| `heygen` | 2 |
 | `langchain` | 4 |
 | `llamaindex` | 1 |
 | `otel` | 9 |
@@ -938,7 +938,7 @@ These are visible in the upstream monorepo but are not currently tracked in the 
 - [`packages/harness-pi/src/pi-workspace-mirror.test.ts`](https://github.com/vercel/ai/blob/ba05943b69ad070558bb5bc912da99ec66d7d263/packages/harness-pi/src/pi-workspace-mirror.test.ts)
 - [`packages/harness-pi/src/pi-workspace-vfs.test.ts`](https://github.com/vercel/ai/blob/ba05943b69ad070558bb5bc912da99ec66d7d263/packages/harness-pi/src/pi-workspace-vfs.test.ts)
 
-### `heygen`
+### `heygen (@ai-sdk/heygen@3.0.0)`
 
 - [`packages/heygen/src/heygen-provider.test.ts`](https://github.com/vercel/ai/blob/ba05943b69ad070558bb5bc912da99ec66d7d263/packages/heygen/src/heygen-provider.test.ts)
 - [`packages/heygen/src/heygen-video-model.test.ts`](https://github.com/vercel/ai/blob/ba05943b69ad070558bb5bc912da99ec66d7d263/packages/heygen/src/heygen-video-model.test.ts)
