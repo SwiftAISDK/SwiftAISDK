@@ -802,3 +802,6 @@ npm ci --prefix docs-site
 npm --prefix docs-site run check
 npm --prefix docs-site run build
 ```
+
+The Docs workflow uploads the built site only for deployments from `main`,
+with one-day artifact retention. Pull request checks do not upload artifacts.

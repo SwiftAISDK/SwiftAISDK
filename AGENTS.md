@@ -53,3 +53,5 @@ Every porting pass must update:
   ```
 
 - Optional live checks stay behind `LIVE_AI_TESTS=1`.
+- Keep Actions artifact uploads limited to the documentation deployment handoff
+  on `main`, with one-day retention. Pull request checks must not upload artifacts.
