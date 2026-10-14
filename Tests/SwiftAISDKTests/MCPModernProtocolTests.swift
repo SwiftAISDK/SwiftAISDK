@@ -256,7 +256,7 @@ private final class MCP2026ErrorRecorder: @unchecked Sendable {
         _ = try await inputClient.listTools()
         Issue.record("Expected input_required to throw.")
     } catch let error as MCPClientError {
-        #expect(error.message.contains("multi round-trip requests are not supported"))
+        #expect(error.message.contains("InputRequiredResult is not allowed"))
     }
     try await inputClient.close()
 }

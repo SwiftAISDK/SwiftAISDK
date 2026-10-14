@@ -726,6 +726,16 @@ let simulatedStream = wrapLanguageModel(model, middleware: simulateStreamingMidd
 
 ## MCP
 
+Modern MCP `2026-07-28` supports bounded multi round-trip `input_required`
+continuations on tool calls, resource reads and prompt retrieval. Register
+`onElicitationRequest` and advertise form elicitation in `clientCapabilities`.
+Each continuation receives a fresh RPC ID and echoes only that request's opaque
+state. Up to eight input rounds and sixteen inputs per round are allowed; one
+request deadline/abort covers network traffic and user input. Sampling, roots
+and URL elicitation remain unsupported and fail without replay. These Swift
+extensions go beyond the currently published upstream MCP client. See the
+[MCP MRTR specification](https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/mrtr).
+
 `MCPClient` mirrors the core of official `@ai-sdk/mcp@2.0.73`: initialize handshake,
 tool discovery, dynamic `AITool` conversion, resources, prompts, elicitation,
 HTTP/SSE transport, stdio transport, and OAuth helpers.

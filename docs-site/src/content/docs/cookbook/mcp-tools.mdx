@@ -3,6 +3,15 @@ title: MCP tools
 description: Discover MCP tools and pass them to a language model.
 ---
 
+Modern MCP `2026-07-28` tool calls can return `input_required`. Advertise
+`clientCapabilities: ["elicitation": ["form": [:]]]` and register
+`onElicitationRequest` to answer form requests. SwiftAISDK continues the original
+operation using a new RPC ID, exact opaque `requestState` and scoped
+`inputResponses`. This is protocol continuation, not a transport failure retry.
+The client permits eight rounds with sixteen inputs each; the original timeout
+and abort signal cover the entire exchange, including the form callback.
+Unsupported sampling, roots or URL input requests fail without continuation.
+
 ## OAuth refresh storage
 
 Shared OAuth stores can implement

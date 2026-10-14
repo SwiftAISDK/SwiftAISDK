@@ -465,25 +465,66 @@ public actor MCPClient {
         if !skipCapabilityCheck {
             try assertCapability(capabilityName(for: method), method: method)
         }
-        let id = requestID
-        requestID += 1
-        let preparedParams = modernRequestParams(from: params)
-        let message = JSONValue.object([
-            "jsonrpc": .string("2.0"),
-            "id": .number(Double(id)),
-            "method": .string(method),
-            "params": preparedParams
-        ])
-        var requestOptions = options ?? MCPRequestOptions()
-        requestOptions.transportHeaders = try toolRequestHeaders(method: method, params: preparedParams)
-        let response = try await mcpRunWithRequestOptions(
-            requestOptions,
+        return try await mcpRunWithRequestOptions(
+            options,
             timeoutMessage: { timeout in "Request timed out after \(timeout)ms" },
             abortMessage: "Request was aborted"
-        ) { [transport] effectiveOptions in
-            try await transport.request(message, options: effectiveOptions)
+        ) { effectiveOptions in
+            try await self.requestRounds(method: method, params: params, options: effectiveOptions)
         }
-        return try result(from: response, expectedID: id)
+    }
+
+    /// MCP 2026 MRTR continuations are protocol requests, not failure retries.
+    /// State and input responses belong only to this invocation, including
+    /// when the actor services another call while waiting for user input.
+    private func requestRounds(method: String, params: JSONValue?, options: MCPRequestOptions) async throws -> JSONValue {
+        var nextParams = params?.objectValue ?? [:]
+        for round in 0...8 {
+            try Task.checkCancellation(); try options.abortSignal?.throwIfAborted()
+            guard !isClosed else { throw MCPClientError(message: "MCP client closed during request.") }
+            let id = requestID; requestID += 1
+            let prepared = modernRequestParams(from: params == nil && nextParams.isEmpty ? nil : .object(nextParams))
+            let message = JSONValue.object(["jsonrpc": "2.0", "id": .number(Double(id)), "method": .string(method), "params": prepared])
+            var requestOptions = options
+            requestOptions.transportHeaders = try toolRequestHeaders(method: method, params: prepared)
+            let response = try await transport.request(message, options: requestOptions)
+            let value = try result(from: response, expectedID: id)
+            guard protocolEra == .modern, value["resultType"]?.stringValue == "input_required" else { return value }
+            guard ["tools/call", "resources/read", "prompts/get"].contains(method) else {
+                throw MCPClientError(message: "InputRequiredResult is not allowed for \(method).")
+            }
+            guard round < 8 else { throw MCPClientError(message: "MCP request exceeded its input round limit.") }
+            let state = value["requestState"]
+            guard state == nil || state?.stringValue != nil,
+                  (state?.stringValue?.utf8.count ?? 0) <= 256 * 1024 else { throw MCPClientError(message: "Invalid MCP requestState.") }
+            let input = value["inputRequests"]
+            guard input == nil || input?.objectValue != nil,
+                  input != nil || state != nil else { throw MCPClientError(message: "Invalid MCP InputRequiredResult.") }
+            let requests = input?.objectValue ?? [:]
+            guard requests.count <= 16 else { throw MCPClientError(message: "MCP request exceeded its input request limit.") }
+            // Validate the entire batch before invoking any user callback.
+            for (_, request) in requests {
+                guard request["method"]?.stringValue == "elicitation/create",
+                      request["params"]?.objectValue != nil,
+                      clientCapabilities["elicitation"] != nil,
+                      elicitationRequestHandler != nil else {
+                    throw MCPClientError(message: "Unsupported or unadvertised MCP input request.")
+                }
+                let mode = request["params"]?["mode"]?.stringValue ?? "form"
+                guard mode == "form" else { throw MCPClientError(message: "Unsupported MCP elicitation mode: \(mode).") }
+            }
+            var answers: [String: JSONValue] = [:]
+            for (key, request) in requests.sorted(by: { $0.key < $1.key }) {
+                try Task.checkCancellation(); try options.abortSignal?.throwIfAborted()
+                guard let handler = elicitationRequestHandler else { throw MCPClientError(message: "MCP elicitation handler was removed.") }
+                let result = try await handler(MCPElicitationRequest(params: request["params"]!))
+                try Task.checkCancellation(); try options.abortSignal?.throwIfAborted()
+                answers[key] = result.rawValue
+            }
+            nextParams["inputResponses"] = input == nil ? nil : .object(answers)
+            nextParams["requestState"] = state
+        }
+        throw MCPClientError(message: "MCP request exceeded its input round limit.")
     }
 
     private func notify(
@@ -524,11 +565,7 @@ public actor MCPClient {
             guard let resultType = result["resultType"]?.stringValue else {
                 throw MCPClientError(message: "Modern MCP result is missing resultType")
             }
-            if resultType == "input_required" {
-                throw MCPClientError(
-                    message: "Server requested additional input, but multi round-trip requests are not supported yet"
-                )
-            }
+            guard ["complete", "input_required"].contains(resultType) else { throw MCPClientError(message: "Unknown modern MCP resultType.") }
         }
         return result
     }

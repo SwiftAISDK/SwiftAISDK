@@ -1,6 +1,21 @@
 # Porting Status
 
-Snapshot date: 2026-10-11
+Snapshot date: 2026-10-15
+
+The R30 client-integration follow-up adds native MCP 2026 multi round-trip form
+elicitation beyond `@ai-sdk/mcp@2.0.73` (whose published client still rejects
+`input_required`). Fresh IDs, per-call opaque state, capability checks, bounded
+rounds/batches and an operation-wide deadline/abort are covered in
+`MCPMultiRoundTripTests.swift`. Invalid input on non-input-enabled methods and
+unsupported sampling, roots or URL elicitation fail explicitly. Provider npm
+baselines are unchanged; no paid live suites were enabled.
+
+Verification for patch release **2.4.1**: the initial focused MCP pass ran 163
+tests in four suites; the final full suite, including resource/prompt MRTR
+continuations, passed **3,269 tests in 40 suites**. Docs dependencies were
+installed with `npm ci`; sequential docs check reported zero diagnostics and
+the static build produced **97 pages**. No provider codecs or model defaults
+were changed by this patch.
 
 SwiftAISDK currently ports the provider-facing parts of Vercel AI SDK into a
 SwiftPM library. The package has a broad Swift-native facade, provider registry,
