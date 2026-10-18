@@ -346,7 +346,8 @@ import Testing
         streamed.append(part)
     }
 
-    #expect(await approvalCapture.values() == [
+    let approvalInputs = await approvalCapture.values()
+    #expect(approvalInputs.sorted { ($0["value"]?.stringValue ?? "") < ($1["value"]?.stringValue ?? "") } == [
         ["value": "value-needs-approval"],
         ["value": "value-no-approval"]
     ])

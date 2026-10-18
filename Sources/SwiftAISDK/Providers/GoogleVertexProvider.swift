@@ -121,7 +121,7 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
             baseURL = "https://\(host)/v1beta1/projects/\(project)/locations/\(location)/publishers/google"
         }
 
-        let headers = withUserAgentSuffix(settings.headers, "ai-sdk-google-vertex/5.0.109")
+        let headers = withUserAgentSuffix(settings.headers, "ai-sdk-google-vertex/5.0.115")
         config = GoogleVertexConfig(
             providerID: providerID,
             baseURL: baseURL,
@@ -420,4 +420,20 @@ enum GoogleServiceAccountTokenGenerator {
         allowed.remove(charactersIn: "&+=")
         return value.addingPercentEncoding(withAllowedCharacters: allowed) ?? value
     }
+}
+
+/// Vertex Anthropic labels are sent in a UTF-8 JSON, base64-encoded header.
+func googleVertexAnthropicRequestHeaders(_ headers: [String: String], _ providerOptions: [String: JSONValue]) async throws -> [String: String] {
+    guard let vertex = providerOptions["vertex"], vertex != .null else { return headers }
+    guard let options = vertex.objectValue else {
+        throw AIError.invalidArgument(argument: "providerOptions.vertex", message: "Vertex provider options must be an object.")
+    }
+    guard let labels = options["labels"] else { return headers }
+    guard let values = labels.objectValue, values.values.allSatisfy({ $0.stringValue != nil }) else {
+        throw AIError.invalidArgument(argument: "providerOptions.vertex.labels", message: "Vertex labels must be an object with string values.")
+    }
+    guard !headers.keys.contains(where: { $0.caseInsensitiveCompare("x-vertex-ai-labels") == .orderedSame }) else { return headers }
+    var transformed = headers
+    transformed["x-vertex-ai-labels"] = try encodeJSONBody(labels).base64EncodedString()
+    return transformed
 }

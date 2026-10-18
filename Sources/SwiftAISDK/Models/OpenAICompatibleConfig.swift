@@ -208,6 +208,7 @@ public enum OpenAITools {
         ]
     }
 
+    @available(*, deprecated, message: "Use webSearch instead.")
     public static func webSearchPreview(searchContextSize: String? = nil, userLocation: JSONValue? = nil) -> JSONValue {
         providerTool(id: "openai.web_search_preview", name: "web_search_preview", args: JSONValue.object([
             "searchContextSize": searchContextSize.map(JSONValue.string),
@@ -342,6 +343,7 @@ public enum AzureOpenAITools {
         OpenAITools.webSearch(filters: filters, externalWebAccess: externalWebAccess, searchContextSize: searchContextSize, userLocation: userLocation)
     }
 
+    @available(*, deprecated, message: "Use webSearch instead.")
     public static func webSearchPreview(searchContextSize: String? = nil, userLocation: JSONValue? = nil) -> JSONValue {
         OpenAITools.webSearchPreview(searchContextSize: searchContextSize, userLocation: userLocation)
     }

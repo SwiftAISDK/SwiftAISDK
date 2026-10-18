@@ -20,30 +20,10 @@ public final class GoogleVertexLanguageModel: LanguageModel, @unchecked Sendable
         )
         let jsonResponse = googlePrepareJSONResponseToolRequest(resolvedRequest, modelID: modelID)
         let prepared = try googleGenerateContentBody(jsonResponse.request, modelID: modelID, providerID: providerID)
-        let response = try await config.sendJSONResponse(path: "/models/\(modelID):generateContent", body: prepared.body, headers: request.headers.mergingHeaders(prepared.headers), abortSignal: request.abortSignal)
-        let raw = response.json
-        let parsed = googleConvertJSONResponseTool(raw, name: jsonResponse.name)
-        let text = googleGenerateContentText(from: parsed, includeThoughts: jsonResponse.name == nil)
-        let toolCalls = googleGenerateContentToolCalls(from: parsed, toolNameMapping: prepared.toolNameMapping)
-        let toolResults = googleGenerateContentToolResults(from: raw, toolNameMapping: prepared.toolNameMapping)
-        let finishReason = googleGenerateContentFinishReason(from: raw, hasToolCalls: !toolCalls.isEmpty)
-        guard text != nil || !toolCalls.isEmpty || !toolResults.isEmpty || finishReason == "content-filter" else {
-            throw AIError.invalidResponse(provider: providerID, message: "No candidate text found in Vertex response.")
+        let response = try await googleGenerateContentWithContinuation(body: prepared.body, abortSignal: request.abortSignal) { body in
+            try await config.sendJSONResponse(path: "/models/\(modelID):generateContent", body: body, headers: request.headers.mergingHeaders(prepared.headers), abortSignal: request.abortSignal)
         }
-        return TextGenerationResult(
-            text: text ?? "",
-            content: jsonResponse.name == nil ? [] : googleJSONResponseToolContent(from: parsed, toolNameMapping: prepared.toolNameMapping),
-            reasoning: jsonResponse.name == nil ? "" : googleGenerateContentReasoning(from: parsed),
-            finishReason: finishReason,
-            usage: googleGenerateContentUsage(from: raw),
-            toolCalls: toolCalls,
-            toolResults: toolResults,
-            sources: googleGenerateContentSources(from: raw),
-            providerMetadata: googleGenerateContentProviderMetadata(from: raw),
-            rawValue: raw,
-            warnings: prepared.warnings,
-            responseMetadata: googleGenerateContentResponseMetadata(from: raw, response: response.response, modelID: modelID)
-        )
+        return try response.result(providerID: providerID, modelID: modelID, prepared: prepared, jsonResponseToolName: jsonResponse.name)
     }
 
     public func stream(_ request: LanguageModelRequest) -> AsyncThrowingStream<LanguageStreamPart, Error> {
@@ -58,33 +38,22 @@ public final class GoogleVertexLanguageModel: LanguageModel, @unchecked Sendable
                     )
                     let jsonResponse = googlePrepareJSONResponseToolRequest(resolvedRequest, modelID: modelID)
                     let prepared = try googleGenerateContentBody(jsonResponse.request, modelID: modelID, providerID: providerID, isStreaming: true)
-                    let httpRequest = try await config.request(
-                        path: "/models/\(modelID):streamGenerateContent?alt=sse",
+                    try await googleStreamWithContinuation(
                         body: prepared.body,
-                        headers: request.headers.mergingHeaders(prepared.headers),
-                        abortSignal: request.abortSignal
-                    )
-                    let response = try await config.streamRequest(httpRequest)
-                    guard (200..<300).contains(response.statusCode) else {
-                        throw apiCallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
-                    }
-                    var state = GoogleGenerateContentStreamState(
-                        response: httpResponseHead(from: response, request: httpRequest),
-                        includeRawChunks: request.includeRawChunks,
+                        request: request,
                         modelID: modelID,
-                        warnings: prepared.warnings,
-                        toolNameMapping: prepared.toolNameMapping,
-                        jsonResponseToolName: jsonResponse.name
-                    )
-                    for try await event in serverSentEvents(from: response.body) {
-                        if event.data == "[DONE]" { break }
-                        let raw = try decodeJSONBody(Data(event.data.utf8))
-                        for part in state.apply(raw) {
-                            continuation.yield(part)
-                        }
-                    }
-                    for part in state.finish() {
-                        continuation.yield(part)
+                        providerID: providerID,
+                        prepared: prepared,
+                        jsonResponseToolName: jsonResponse.name,
+                        continuation: continuation
+                    ) { body in
+                        let httpRequest = try await config.request(
+                            path: "/models/\(modelID):streamGenerateContent?alt=sse",
+                            body: body,
+                            headers: request.headers.mergingHeaders(prepared.headers),
+                            abortSignal: request.abortSignal
+                        )
+                        return (httpRequest, try await config.streamRequest(httpRequest))
                     }
                     continuation.finish()
                 } catch {
@@ -443,7 +412,7 @@ public final class GoogleVertexInteractionsLanguageModel: LanguageModel, @unchec
     public func generate(_ request: LanguageModelRequest) async throws -> TextGenerationResult {
         let prepared = try googleInteractionsPreparedCall(for: request, modelID: modelID, agent: agent, stream: false)
         let raw = try await sendInteractions(body: .object(prepared.body), headers: request.headers, abortSignal: request.abortSignal)
-        let final = try await resolvedInteraction(raw, requestHeaders: request.headers, abortSignal: request.abortSignal)
+        let final = try await resolvedInteraction(raw, isBackground: prepared.body["background"]?.boolValue == true, requestHeaders: request.headers, abortSignal: request.abortSignal)
         let output = googleInteractionsParsedOutput(from: final)
         guard !output.content.isEmpty else {
             throw AIError.invalidResponse(provider: providerID, message: "No supported output found in Google Vertex Interactions response.")
@@ -603,8 +572,8 @@ public final class GoogleVertexInteractionsLanguageModel: LanguageModel, @unchec
         return try response.jsonValue()
     }
 
-    private func resolvedInteraction(_ raw: JSONValue, requestHeaders: [String: String], abortSignal: AIAbortSignal?) async throws -> JSONValue {
-        guard agent != nil,
+    private func resolvedInteraction(_ raw: JSONValue, isBackground: Bool, requestHeaders: [String: String], abortSignal: AIAbortSignal?) async throws -> JSONValue {
+        guard agent != nil || isBackground,
               !googleInteractionsIsTerminal(raw["status"]?.stringValue),
               let id = raw["id"]?.stringValue else {
             return raw
@@ -829,15 +798,10 @@ private func googleVertexUsesEmbedContentEndpoint(_ modelID: String) -> Bool {
     modelID == "gemini-embedding-2" || modelID == "gemini-embedding-2-preview"
 }
 
-private struct GoogleVertexGenerateContentPreparedCall {
-    var body: JSONValue
-    var warnings: [AIWarning]
-    var headers: [String: String]
-    var toolNameMapping: AIToolNameMapping
-}
+private typealias GoogleVertexGenerateContentPreparedCall = GoogleGenerateContentPreparedCall
 
 private func googleGenerateContentBody(_ request: LanguageModelRequest, modelID: String, providerID: String, isStreaming: Bool = false) throws -> GoogleVertexGenerateContentPreparedCall {
-    let preparedOptions = googlePrepareGenerateContentOptions(
+    let preparedOptions = try googlePrepareGenerateContentOptions(
         from: request,
         modelID: modelID,
         providerID: providerID,

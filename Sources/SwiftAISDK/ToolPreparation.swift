@@ -217,12 +217,16 @@ func collectToolApprovals(messages: [AIMessage]) throws -> AICollectedToolApprov
     }
 
     var toolCallsByID: [String: AIToolCall] = [:]
+    var toolCallOrder: [String: Int] = [:]
+    var nextToolCallIndex = 0
     var approvalRequestsByID: [String: AIToolApprovalRequest] = [:]
     for message in messages where message.role == .assistant {
         for part in message.content {
             switch part {
             case let .toolCall(toolCall):
                 toolCallsByID[toolCall.id] = toolCall
+                toolCallOrder[toolCall.id] = nextToolCallIndex
+                nextToolCallIndex += 1
             case let .toolApprovalRequest(request):
                 approvalRequestsByID[request.id] = request
             case .text, .reasoning, .reasoningFile, .custom, .imageURL, .data, .file, .providerReference, .toolResult, .toolApprovalResponse:
@@ -268,6 +272,7 @@ func collectToolApprovals(messages: [AIMessage]) throws -> AICollectedToolApprov
         }
     }
 
+    approvedToolApprovals.sort { (toolCallOrder[$0.toolCall.id] ?? 0) < (toolCallOrder[$1.toolCall.id] ?? 0) }
     return AICollectedToolApprovals(
         approvedToolApprovals: approvedToolApprovals,
         deniedToolApprovals: deniedToolApprovals,

@@ -65,7 +65,9 @@ struct OpenAIResponsesStreamingToolCalls {
                 return []
             }
             return [
-                .toolInputStart(id: toolCall.id, name: toolCall.name, providerExecuted: toolCall.providerExecuted, dynamic: toolCall.dynamic),
+                .toolInputStart(id: toolCall.id, name: toolCall.name,
+                                inputEncoding: item["type"]?.stringValue == "custom_tool_call" ? .text : .json,
+                                providerExecuted: toolCall.providerExecuted, dynamic: toolCall.dynamic),
                 .toolCallDelta(id: toolCall.id, name: toolCall.name, argumentsDelta: "", index: index)
             ]
         case "response.function_call_arguments.delta", "response.custom_tool_call_input.delta":

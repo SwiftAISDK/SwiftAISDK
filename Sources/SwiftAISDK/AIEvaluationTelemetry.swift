@@ -268,6 +268,8 @@ private func evaluationQuestionTelemetryJSON(_ question: AIEvaluationQuestion) -
             "instructions": instructions,
             "criteria": .array(criteria)
         ])
+    case let .box(instructions):
+        return .object(["type": "box", "instructions": instructions])
     case let .boolean(instructions, criteria):
         return .object([
             "type": .string("boolean"),
@@ -295,6 +297,8 @@ private func evaluationAnswerTelemetryJSON(_ answer: AIEvaluationAnswer) -> JSON
             "score": .number(score),
             "probabilities": probabilities.map { .object($0.mapValues(JSONValue.number)) }
         ])
+    case let .box(box):
+        return .object(["type": "box", "box": box.jsonValue])
     case let .boolean(probability):
         return .object([
             "type": .string("boolean"),

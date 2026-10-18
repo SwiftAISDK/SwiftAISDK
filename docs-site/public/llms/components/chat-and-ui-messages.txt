@@ -12,7 +12,7 @@ Source URL: /components/chat-and-ui-messages/
 | Function | 13 |
 | Initializer | 12 |
 | Instance Method | 23 |
-| Instance Property | 77 |
+| Instance Property | 78 |
 | Protocol | 1 |
 | Structure | 10 |
 | Type Alias | 1 |
@@ -153,6 +153,7 @@ Source URL: /components/chat-and-ui-messages/
 | Instance Property | `temperature` | `var temperature: Double?` | [Sources/SwiftAISDK/AIChatTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIChatTransport.swift) |
 | Instance Property | `timeoutNanoseconds` | `var timeoutNanoseconds: UInt64?` | [Sources/SwiftAISDK/AIChatTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIChatTransport.swift) |
 | Instance Property | `toolApproval` | `var toolApproval: AIToolApproval?` | [Sources/SwiftAISDK/AIChatTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIChatTransport.swift) |
+| Instance Property | `toolCallConcurrency` | `var toolCallConcurrency: Int?` | [Sources/SwiftAISDK/AIChatTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIChatTransport.swift) |
 | Instance Property | `toolCallers` | `var toolCallers: AIToolCallerRouting` | [Sources/SwiftAISDK/AIChatTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIChatTransport.swift) |
 | Instance Property | `toolChoice` | `var toolChoice: JSONValue?` | [Sources/SwiftAISDK/AIChatTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIChatTransport.swift) |
 | Instance Property | `toolContexts` | `var toolContexts: [String : JSONValue]` | [Sources/SwiftAISDK/AIChatTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIChatTransport.swift) |

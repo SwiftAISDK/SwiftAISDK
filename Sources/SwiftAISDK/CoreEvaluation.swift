@@ -5,6 +5,7 @@ public enum AIEvaluationQuestionType: String, CaseIterable, Codable, Equatable, 
     case choice
     case score
     case boolean
+    case box
 }
 
 /// One experimental Evaluation Model V4 judgment over shared JSON state.
@@ -15,12 +16,15 @@ public enum AIEvaluationQuestion: Equatable, Sendable {
     case score(instructions: JSONValue, criteria: [JSONValue])
     /// Return P(true), optionally using descriptions keyed by `true` and `false`.
     case boolean(instructions: JSONValue, criteria: [String: JSONValue]? = nil)
+    /// Locate a rectangle in image evidence using normalized edges.
+    case box(instructions: JSONValue)
 
     public var type: AIEvaluationQuestionType {
         switch self {
         case .choice: .choice
         case .score: .score
         case .boolean: .boolean
+        case .box: .box
         }
     }
 
@@ -28,7 +32,8 @@ public enum AIEvaluationQuestion: Equatable, Sendable {
         switch self {
         case let .choice(instructions, _),
              let .score(instructions, _),
-             let .boolean(instructions, _):
+             let .boolean(instructions, _),
+             let .box(instructions):
             instructions
         }
     }
@@ -39,12 +44,14 @@ public enum AIEvaluationAnswer: Equatable, Sendable {
     case choice(choice: String, probabilities: [String: Double]? = nil)
     case score(score: Double, probabilities: [String: Double]? = nil)
     case boolean(probability: Double)
+    case box(box: AIDecisionBox)
 
     public var type: AIEvaluationQuestionType {
         switch self {
         case .choice: .choice
         case .score: .score
         case .boolean: .boolean
+        case .box: .box
         }
     }
 }
@@ -336,6 +343,8 @@ func validateEvaluationInput(
 
         let criteria: [JSONValue]
         switch question {
+        case .box:
+            criteria = []
         case let .choice(_, options):
             guard !options.isEmpty else {
                 throw AIError.invalidArgument(
@@ -420,7 +429,7 @@ func validateEvaluationAnswers(
                     providerID: providerID
                 )
                 guard let selected = probabilities[choice],
-                      !probabilities.values.contains(where: { $0 > selected + evaluationTolerance }) else {
+                      !probabilities.values.contains(where: { $0 > selected + evaluationTolerance + 2 * probabilityError }) else {
                     throw invalidEvaluationResponse(
                         providerID: providerID,
                         "Question \"\(id)\" did not select a highest-probability option."
@@ -455,6 +464,10 @@ func validateEvaluationAnswers(
                         "Question \"\(id)\" score must equal the probability-weighted mean within the declared rounding precision."
                     )
                 }
+            }
+        case let (.box, .box(box)):
+            guard box.isValid else {
+                throw invalidEvaluationResponse(providerID: providerID, "Question \"\(id)\" must return box edges in [0, 1] with left < right and top < bottom.")
             }
         case let (.boolean, .boolean(probability)):
             guard isEvaluationProbability(probability) else {

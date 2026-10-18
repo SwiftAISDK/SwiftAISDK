@@ -305,6 +305,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
     public let modelID: String
     public let supportedURLs: [String: [AISupportedURLPattern]]
     private let config: ModelHTTPConfig
+    private let transformRequestHeaders: (@Sendable ([String: String], [String: JSONValue]) async throws -> [String: String])?
     private static let providerToolNames: [String: String] = [
         "anthropic.code_execution_20250522": "code_execution",
         "anthropic.code_execution_20250825": "code_execution",
@@ -337,12 +338,14 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         supportedURLs: [String: [AISupportedURLPattern]] = [
             "image/*": [AISupportedURLPattern(anthropicSupportedHTTPURL)],
             "application/pdf": [AISupportedURLPattern(anthropicSupportedHTTPURL)]
-        ]
+        ],
+        transformRequestHeaders: (@Sendable ([String: String], [String: JSONValue]) async throws -> [String: String])? = nil
     ) {
         self.providerID = config.providerID
         self.modelID = modelID
         self.config = config
         self.supportedURLs = supportedURLs
+        self.transformRequestHeaders = transformRequestHeaders
     }
 
     public func generate(_ request: LanguageModelRequest) async throws -> TextGenerationResult {
@@ -358,13 +361,17 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
             path = "/messages"
         }
         body = config.transformRequestBody?(body) ?? body
-        let response = try await config.transport.send(config.request(
+        var httpRequest = try config.request(
             path: path,
             modelID: modelID,
             body: .object(body),
             headers: anthropicHeaders(request.headers, configHeaders: config.headers, betas: preparedRequest.betas),
             abortSignal: request.abortSignal
-        ))
+        )
+        if let transformRequestHeaders {
+            httpRequest.headers = try await transformRequestHeaders(httpRequest.headers, request.providerOptions)
+        }
+        let response = try await config.transport.send(httpRequest)
         guard (200..<300).contains(response.statusCode) else {
             throw anthropicHTTPStatusError(provider: providerID, response: response)
         }
@@ -412,13 +419,16 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                         path = "/messages"
                     }
                     body = config.transformRequestBody?(body) ?? body
-                    let httpRequest = try config.request(
+                    var httpRequest = try config.request(
                         path: path,
                         modelID: modelID,
                         body: .object(body),
                         headers: anthropicHeaders(request.headers, configHeaders: config.headers, betas: preparedRequest.betas),
                         abortSignal: request.abortSignal
                     )
+                    if let transformRequestHeaders {
+                        httpRequest.headers = try await transformRequestHeaders(httpRequest.headers, request.providerOptions)
+                    }
                     let response = try await config.streamRequest(httpRequest)
                     guard (200..<300).contains(response.statusCode) else {
                         throw anthropicHTTPStatusError(
@@ -444,8 +454,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                         markCodeExecutionDynamic: preparedRequest.markCodeExecutionDynamic
                     )
                     var realToolCallCount = 0
-                    let citationDocuments = anthropicCitationDocuments(from: request.messages)
-                    var sourceCounter = 0
+                    var streamingSources = AnthropicStreamingSources(citationDocuments: anthropicCitationDocuments(from: request.messages))
                     var finishReason: String?
                     var finishUsage: TokenUsage?
                     var rawUsage: JSONValue?
@@ -468,7 +477,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                         if let providerError = anthropicStreamProviderError(from: raw) {
                             if didReceiveMessageStart {
                                 continuation.yield(.providerError(providerError))
-                                for part in contentBlocks.finishParts() {
+                                for part in contentBlocks.finishParts(citationDocuments: streamingSources.citationDocuments) {
                                     continuation.yield(part)
                                 }
                                 for part in jsonToolText.finishParts() {
@@ -565,7 +574,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                             }
                             continuation.yield(part)
                         }
-                        for part in contentBlocks.apply(event: raw) {
+                        for part in contentBlocks.apply(event: raw, citationDocuments: streamingSources.citationDocuments) {
                             continuation.yield(part)
                         }
                         for part in jsonToolText.apply(event: raw) {
@@ -574,7 +583,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                         for part in providerToolResults.apply(event: raw) {
                             continuation.yield(part)
                         }
-                        for source in anthropicSources(from: raw, citationDocuments: citationDocuments, sourceCounter: &sourceCounter) {
+                        for source in streamingSources.apply(event: raw) {
                             continuation.yield(.source(source))
                         }
                         for part in toolCalls.apply(event: raw) {
@@ -584,7 +593,10 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                             continuation.yield(part)
                         }
                         if raw["type"]?.stringValue == "message_stop" {
-                            for part in contentBlocks.finishParts() {
+                            for source in streamingSources.finishSources() {
+                                continuation.yield(.source(source))
+                            }
+                            for part in contentBlocks.finishParts(citationDocuments: streamingSources.citationDocuments) {
                                 continuation.yield(part)
                             }
                             for part in jsonToolText.finishParts() {
@@ -671,21 +683,6 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         let supportsStrictToolDefinitions = capabilities.supportsStructuredOutput
             && (supportsStrictTools ?? true)
         let eagerInputStreaming = stream && (providerOptions.toolStreaming ?? true)
-        let preparedTools = try anthropicPrepareTools(
-            from: request.tools,
-            toolChoice: request.toolChoice ?? providerOptions.toolChoice,
-            disableParallelToolUse: providerOptions.disableParallelToolUse,
-            supportsStructuredOutput: supportsStructuredOutput,
-            supportsStrictTools: supportsStrictToolDefinitions,
-            defaultEagerInputStreaming: eagerInputStreaming,
-            rejectsForcedToolUse: capabilities.rejectsForcedToolUse
-        )
-        if !preparedTools.tools.isEmpty {
-            body["tools"] = .array(preparedTools.tools)
-        }
-        if let toolChoice = preparedTools.toolChoice {
-            body["tool_choice"] = toolChoice
-        }
         body.merge(providerOptions.body) { _, new in new }
         if body["context_management"] != nil, body["compaction"] != nil {
             throw AIError.invalidArgument(
@@ -712,6 +709,29 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
             capabilities: capabilities,
             warnings: &warnings
         )
+        let usesJSONResponseTool: Bool
+        if case let .json(schema, _, _) = request.responseFormat, schema != nil {
+            usesJSONResponseTool = providerOptions.structuredOutputMode != "outputFormat"
+                && (providerOptions.structuredOutputMode == "jsonTool" || !supportsStructuredOutput)
+                && !(capabilities.rejectsForcedToolUse && supportsStructuredOutput)
+        } else {
+            usesJSONResponseTool = false
+        }
+        let preparedTools = try anthropicPrepareTools(
+            from: request.tools,
+            toolChoice: usesJSONResponseTool ? nil : (request.toolChoice ?? providerOptions.toolChoice),
+            disableParallelToolUse: providerOptions.disableParallelToolUse,
+            supportsStructuredOutput: usesJSONResponseTool ? false : supportsStructuredOutput,
+            supportsStrictTools: supportsStrictToolDefinitions,
+            defaultEagerInputStreaming: eagerInputStreaming,
+            rejectsForcedToolUse: capabilities.rejectsForcedToolUse || body["thinking"]?["type"]?.stringValue == "enabled"
+        )
+        if !preparedTools.tools.isEmpty {
+            body["tools"] = .array(preparedTools.tools)
+        }
+        if let toolChoice = preparedTools.toolChoice {
+            body["tool_choice"] = toolChoice
+        }
         warnings.append(contentsOf: preparedTools.warnings)
         let usesJSONToolResponseFormat = anthropicApplyResponseFormat(
             request.responseFormat,
@@ -1248,9 +1268,17 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                        ) {
                         block["caller"] = caller
                     }
+                    if providerToolName == "tool_search" || providerToolName.hasPrefix("tool_search_tool_") {
+                        anthropicApplyCacheControl(
+                            anthropicToolResultCacheControl(result),
+                            to: &block,
+                            cacheBreakpointCount: &cacheBreakpointCount,
+                            warnings: &warnings
+                        )
+                    }
                     return .object(block)
                 }
-                let converted = try anthropicToolResultContent(result, betas: &betas, warnings: &warnings)
+                let converted = try anthropicToolResultContent(result, providerID: providerID, betas: &betas, warnings: &warnings)
                 var block: [String: JSONValue] = [
                     "type": .string("tool_result"),
                     "tool_use_id": .string(result.toolCallID),
@@ -1508,6 +1536,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
 
     private static func anthropicToolResultContent(
         _ result: AIToolResult,
+        providerID: String,
         betas: inout [String],
         warnings: inout [AIWarning]
     ) throws -> (content: JSONValue, isError: Bool) {
@@ -1521,7 +1550,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         switch type {
         case "content":
             let content = try (object["value"]?.arrayValue ?? []).compactMap { item in
-                try anthropicToolResultContentPart(item, betas: &betas, warnings: &warnings)
+                try anthropicToolResultContentPart(item, providerReferenceKey: anthropicProviderReferenceKey(from: providerID), betas: &betas, warnings: &warnings)
             }
             return (.array(content), result.isError)
         case "text", "error-text":
@@ -1685,6 +1714,15 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
 
     private static func anthropicToolSearchToolResultBlock(_ result: AIToolResult) -> JSONValue? {
         let output = result.modelOutput ?? result.result
+        let outputType = output["type"]?.stringValue
+        let value = outputType == "json" || outputType == "error-json" ? output["value"] ?? .null : output
+        if outputType == "error-json" || value["type"]?.stringValue == "tool_search_tool_result_error" {
+            return .object([
+                "type": .string("tool_search_tool_result"),
+                "tool_use_id": .string(result.toolCallID),
+                "content": anthropicProviderExecutedErrorBlock(value, defaultType: "tool_search_tool_result_error")
+            ])
+        }
         if let object = output.objectValue,
            object["type"]?.stringValue == "json",
            let references = object["value"]?.arrayValue {
@@ -1692,13 +1730,6 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         }
         if let references = output.arrayValue {
             return anthropicToolSearchToolResultBlock(toolCallID: result.toolCallID, references: references)
-        }
-        if output["type"]?.stringValue == "tool_search_tool_result_error" {
-            return .object([
-                "type": .string("tool_search_tool_result"),
-                "tool_use_id": .string(result.toolCallID),
-                "content": anthropicProviderExecutedErrorBlock(output, defaultType: "tool_search_tool_result_error")
-            ])
         }
         return nil
     }
@@ -1811,6 +1842,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
 
     private static func anthropicToolResultContentPart(
         _ item: JSONValue,
+        providerReferenceKey: String,
         betas: inout [String],
         warnings: inout [AIWarning]
     ) throws -> JSONValue? {
@@ -1824,6 +1856,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
             return try anthropicToolResultFileContent(
                 mediaType: item["mediaType"]?.stringValue ?? "application/octet-stream",
                 data: item["data"],
+                providerReferenceKey: providerReferenceKey,
                 betas: &betas,
                 warnings: &warnings
             )
@@ -1869,10 +1902,25 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
     private static func anthropicToolResultFileContent(
         mediaType: String,
         data: JSONValue?,
+        providerReferenceKey: String,
         betas: inout [String],
         warnings: inout [AIWarning]
     ) throws -> JSONValue? {
         switch data?["type"]?.stringValue {
+        case "reference":
+            let reference = (data?["reference"]?.objectValue ?? [:]).compactMapValues(\.stringValue)
+            let key = reference[providerReferenceKey] != nil ? providerReferenceKey : "anthropic"
+            let fileID = try resolveProviderReference(reference, provider: key)
+            if !betas.contains("files-api-2025-04-14") {
+                betas.append("files-api-2025-04-14")
+            }
+            return .object([
+                "type": .string(topLevelMediaType(mediaType) == "image" ? "image" : "document"),
+                "source": .object([
+                    "type": .string("file"),
+                    "file_id": .string(fileID)
+                ])
+            ])
         case "url":
             if topLevelMediaType(mediaType) == "image" {
                 return .object([
@@ -2125,8 +2173,7 @@ public final class AmazonBedrockAnthropicLanguageModel: LanguageModel, @unchecke
                         markCodeExecutionDynamic: prepared.markCodeExecutionDynamic
                     )
                     var realToolCallCount = 0
-                    let citationDocuments = anthropicCitationDocuments(from: request.messages)
-                    var sourceCounter = 0
+                    var streamingSources = AnthropicStreamingSources(citationDocuments: anthropicCitationDocuments(from: request.messages))
                     var parser = BedrockRawStreamParser(
                         providerID: providerID,
                         contentType: response.headerValue("content-type")
@@ -2144,7 +2191,10 @@ public final class AmazonBedrockAnthropicLanguageModel: LanguageModel, @unchecke
 
                     func emitTerminal() {
                         guard !didEmitTerminal else { return }
-                        for part in contentBlocks.finishParts() {
+                        for source in streamingSources.finishSources() {
+                            continuation.yield(.source(source))
+                        }
+                        for part in contentBlocks.finishParts(citationDocuments: streamingSources.citationDocuments) {
                             continuation.yield(part)
                         }
                         for part in jsonToolText.finishParts() {
@@ -2248,7 +2298,7 @@ public final class AmazonBedrockAnthropicLanguageModel: LanguageModel, @unchecke
                                 }
                                 continuation.yield(part)
                             }
-                            for part in contentBlocks.apply(event: raw) {
+                            for part in contentBlocks.apply(event: raw, citationDocuments: streamingSources.citationDocuments) {
                                 continuation.yield(part)
                             }
                             for part in jsonToolText.apply(event: raw) {
@@ -2257,7 +2307,7 @@ public final class AmazonBedrockAnthropicLanguageModel: LanguageModel, @unchecke
                             for part in providerToolResults.apply(event: raw) {
                                 continuation.yield(part)
                             }
-                            for source in anthropicSources(from: raw, citationDocuments: citationDocuments, sourceCounter: &sourceCounter) {
+                            for source in streamingSources.apply(event: raw) {
                                 continuation.yield(.source(source))
                             }
                             for part in toolCalls.apply(event: raw) {

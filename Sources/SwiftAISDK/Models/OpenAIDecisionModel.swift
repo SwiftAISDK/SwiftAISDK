@@ -215,6 +215,8 @@ private func openAIDecisionContent(_ part: AIDecisionStatePart) throws -> JSONVa
 private func openAIDecisionQuestion(name: String, question: AIDecisionQuestion) throws -> JSONValue {
     let instructions = try decisionInputText(question.instructions)
     switch question {
+    case .box:
+        throw AIDecisionUnsupportedFunctionalityError(functionality: "OpenAI box decisions")
     case let .boolean(_, criteria):
         var text = [instructions]
         for key in ["true", "false"] {

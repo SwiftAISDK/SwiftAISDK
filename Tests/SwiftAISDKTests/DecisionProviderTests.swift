@@ -58,17 +58,15 @@ struct DecisionProviderTests {
         }
     }
 
-    @Test func languageAdapterRejectsUnsupportedMediaBeforeGenerationAndStrictlyUsesCodes() async {
+    @Test func languageAdapterRejectsUnsupportedMediaAndAcceptsExactChoiceLabels() async throws {
         let language = DecisionTestLanguageModel(result: TextGenerationResult(text: #"{"q0":"a"}"#, finishReason: "stop", rawValue: .null))
         let model = DecisionLanguageModel(model: language)
         await #expect(throws: AIDecisionUnsupportedFunctionalityError.self) {
             try await model.doDecide(.init(state: [.file(mediaType: "audio/wav", data: .base64("AAAA"))], questions: decisionTestQuestions))
         }
         #expect(language.callCount == 0)
-        // Published provider-utils@5.0.58 rejects exact labels; a newer monorepo fixture differs.
-        await #expect(throws: AIError.self) {
-            try await model.doDecide(.init(state: [], questions: ["choice": .choice(instructions: "Pick", criteria: ["a": .null])]))
-        }
+        let result = try await model.doDecide(.init(state: [], questions: ["choice": .choice(instructions: "Pick", criteria: ["a": .null])]))
+        #expect(result.answers["choice"] == .choice(choice: "a"))
     }
 
     @Test func gatewayDecisionUsesNewRouteHeadersPartsAndRefusals() async throws {
@@ -131,11 +129,11 @@ struct DecisionProviderTests {
         #expect(try decodeJSONBody(try #require(await transport.requests().last?.body))["state"] == [1, .null])
     }
 
-    @Test func typesafeRejectsImagesBeforeHTTP() async throws {
+    @Test func typesafeRejectsUnsupportedImageTypesBeforeHTTP() async throws {
         let transport = RecordingTransport(response: jsonResponse(#"{"answers":{}}"#))
         let provider = TypeSafeAIProvider(settings: .init(apiKey: "key", transport: transport))
         await #expect(throws: AIDecisionUnsupportedFunctionalityError.self) {
-            try await provider.decisionModel("model").doDecide(.init(state: [.file(mediaType: "image/png", data: .base64("AAAA"))], questions: decisionTestQuestions))
+            try await provider.decisionModel("model").doDecide(.init(state: [.file(mediaType: "image/webp", data: .base64("AAAA"))], questions: decisionTestQuestions))
         }
         #expect(await transport.requests().isEmpty)
     }

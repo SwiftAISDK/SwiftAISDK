@@ -12,7 +12,8 @@ public final class BlackForestLabsImageModel: ImageModel, @unchecked Sendable {
 
     public func generateImage(_ request: ImageGenerationRequest) async throws -> ImageGenerationResult {
         let options = try blackForestLabsProviderOptions(from: request, modelID: modelID)
-        var warnings = blackForestLabsWarnings(for: request)
+        let modelAPI = blackForestLabsImageAPI(for: modelID)
+        var warnings = modelAPI == .latest ? [] : blackForestLabsWarnings(for: request)
         var body: [String: JSONValue] = ["prompt": .string(request.prompt)]
         if let aspectRatio = request.aspectRatio {
             body["aspect_ratio"] = .string(aspectRatio)
@@ -30,28 +31,42 @@ public final class BlackForestLabsImageModel: ImageModel, @unchecked Sendable {
             body["seed"] = .number(Double(seed))
         }
         body.merge(try blackForestLabsImageInputs(files: request.files, mask: request.mask, modelID: modelID)) { _, new in new }
-        if modelID == "flux-3-image" {
+        if modelAPI != .legacy {
             if request.mask != nil { throw AIError.invalidArgument(argument: "mask", message: "FLUX 3 image masks are unsupported.") }
-            if request.size != nil {
+            if request.size != nil && modelAPI != .latest {
                 warnings = [AIWarning(type: "unsupported", feature: "size", message: request.aspectRatio == nil
                     ? "Deriving aspect_ratio from size. FLUX 3 uses the resolution provider option to select output resolution."
                     : "FLUX 3 ignores size when aspectRatio is provided. Use the resolution provider option to select output resolution.")]
             }
-            let original = body["aspect_ratio"]?.stringValue
+            let hasDimensions = modelAPI == .latest && options["width"] != nil
+            let original = hasDimensions ? nil : body["aspect_ratio"]?.stringValue
             var aspectRatio = original == "7:3" ? "21:9" : original == "3:7" ? "9:21" : original
             if let ratio = aspectRatio, !["21:9", "2:1", "16:9", "3:2", "7:5", "4:3", "5:4", "1:1", "4:5", "3:4", "5:7", "2:3", "9:16", "1:2", "9:21"].contains(ratio) {
                 warnings.append(AIWarning(type: "unsupported", feature: "aspectRatio", message: "FLUX 3 does not support aspect ratio \(original ?? ratio). Using the endpoint's default auto aspect ratio."))
                 aspectRatio = nil
             }
-            if request.seed != nil { warnings.append(AIWarning(type: "unsupported", feature: "seed", message: "FLUX 3 does not support seed.")) }
-            for key in options.keys.sorted() where !["grounding", "pollIntervalMillis", "pollTimeoutMillis", "resolution", "safetyTolerance", "version"].contains(key) && options[key] != .null {
+            if request.seed != nil && modelAPI != .latest { warnings.append(AIWarning(type: "unsupported", feature: "seed", message: "FLUX 3 does not support seed.")) }
+            let supportedOptions: Set<String> = modelAPI == .latest
+                ? ["height", "width", "outputFormat", "steps", "pollIntervalMillis", "pollTimeoutMillis", "resolution", "safetyTolerance"]
+                : ["grounding", "pollIntervalMillis", "pollTimeoutMillis", "resolution", "safetyTolerance", "version"]
+            for key in options.keys.sorted() where !supportedOptions.contains(key) && options[key] != .null {
                 warnings.append(AIWarning(type: "unsupported", feature: "blackForestLabs.\(key)", message: "FLUX 3 does not support \(key)."))
             }
             body = ["prompt": .string(request.prompt)]
             body["aspect_ratio"] = aspectRatio.map(JSONValue.string)
             if !request.files.isEmpty { body["images"] = .array(request.files.map { .string(blackForestLabsImageString($0)) }) }
-            for key in ["resolution", "grounding", "version"] { body[key] = options[key] }
+            body["resolution"] = hasDimensions ? nil : options["resolution"]
             body["safety_tolerance"] = options["safetyTolerance"]
+            if modelAPI == .latest {
+                body["width"] = options["width"]
+                body["height"] = options["height"]
+                body["seed"] = request.seed.map { .number(Double($0)) }
+                body["steps"] = options["steps"]
+                body["output_format"] = options["outputFormat"]
+            } else {
+                body["grounding"] = options["grounding"]
+                body["version"] = options["version"]
+            }
         }
         let submitResponse = try await config.transport.send(config.request(path: "/\(modelID)", modelID: modelID, body: .object(body), headers: request.headers, abortSignal: request.abortSignal))
         guard (200..<300).contains(submitResponse.statusCode) else {
@@ -203,16 +218,35 @@ private func defaultPort(for scheme: String) -> Int? {
     }
 }
 
+enum BlackForestLabsImageAPI {
+    case legacy, flux3Image, latest
+}
+
+func blackForestLabsImageAPI(for modelID: String) -> BlackForestLabsImageAPI {
+    if modelID == "flux-pro" || modelID == "flux-dev" || modelID.hasPrefix("flux-pro-") || modelID.hasPrefix("flux-kontext-") || modelID.range(of: #"^flux-[12](?:[.-]|$)"#, options: .regularExpression) != nil {
+        return .legacy
+    }
+    return modelID == "flux-3-image" ? .flux3Image : .latest
+}
+
 private func blackForestLabsProviderOptions(from request: ImageGenerationRequest, modelID: String) throws -> [String: JSONValue] {
+    let latest = blackForestLabsImageAPI(for: modelID) == .latest
     var output = blackForestLabsProviderOptions(from: request.extraBody)
-    if let providerValue = request.providerOptions["blackForestLabs"] {
-        guard providerValue != .null else { return output }
+    if latest, let size = request.size {
+        let dimensions = size.split(separator: "x", omittingEmptySubsequences: false)
+        let width = dimensions.first.flatMap { Double($0) } ?? .nan
+        let height = dimensions.count > 1 ? Double(dimensions[1]) ?? .nan : .nan
+        output["width"] = output["width"] ?? .number(width)
+        output["height"] = output["height"] ?? .number(height)
+    }
+    if let providerValue = request.providerOptions["blackForestLabs"], providerValue != .null {
         guard let providerOptions = providerValue.objectValue else {
             throw AIError.invalidArgument(argument: "providerOptions.blackForestLabs", message: "Black Forest Labs provider options must be an object.")
         }
-        output.merge(try blackForestLabsValidatedProviderOptions(from: providerOptions, modelID: modelID)) { _, providerValue in providerValue }
+        if latest { output.merge(providerOptions) { _, value in value } }
+        else { output.merge(try blackForestLabsValidatedProviderOptions(from: providerOptions, modelID: modelID)) { _, providerValue in providerValue } }
     }
-    return output
+    return latest ? try blackForestLabsValidatedProviderOptions(from: output, modelID: modelID) : output
 }
 
 func blackForestLabsHTTPStatusError(provider: String, response: AIHTTPResponse) -> AIError {
@@ -274,6 +308,7 @@ private func blackForestLabsOptions(from extraBody: [String: JSONValue]) -> [Str
 }
 
 private func blackForestLabsValidatedProviderOptions(from options: [String: JSONValue], modelID: String) throws -> [String: JSONValue] {
+    let modelAPI = blackForestLabsImageAPI(for: modelID)
     var output: [String: JSONValue] = [:]
     for (key, value) in options where blackForestLabsSupportedProviderOptionKeys.contains(key) {
         switch key {
@@ -290,7 +325,7 @@ private func blackForestLabsValidatedProviderOptions(from options: [String: JSON
                 throw AIError.invalidArgument(argument: "providerOptions.blackForestLabs.imagePromptStrength", message: "Black Forest Labs imagePromptStrength must be between 0 and 1.")
             }
         case "steps", "pollIntervalMillis", "pollTimeoutMillis":
-            guard let number = value.doubleValue, blackForestLabsIsInteger(number), number > 0 else {
+            guard let number = value.doubleValue, blackForestLabsIsInteger(number), number > 0, key != "steps" || modelAPI != .latest || number <= 16 else {
                 throw AIError.invalidArgument(argument: "providerOptions.blackForestLabs.\(key)", message: "Black Forest Labs \(key) must be a positive integer.")
             }
         case "guidance":
@@ -298,8 +333,10 @@ private func blackForestLabsValidatedProviderOptions(from options: [String: JSON
                 throw AIError.invalidArgument(argument: "providerOptions.blackForestLabs.guidance", message: "Black Forest Labs guidance must be greater than or equal to 0.")
             }
         case "width", "height":
-            guard let number = value.doubleValue, blackForestLabsIsInteger(number), number >= 256, number <= 1920 else {
-                throw AIError.invalidArgument(argument: "providerOptions.blackForestLabs.\(key)", message: "Black Forest Labs \(key) must be an integer between 256 and 1920.")
+            let minimum = modelAPI == .latest ? 64 : 256
+            let maximum = modelAPI == .latest ? 6256 : 1920
+            guard let number = value.doubleValue, blackForestLabsIsInteger(number), number >= Double(minimum), number <= Double(maximum) else {
+                throw AIError.invalidArgument(argument: "providerOptions.blackForestLabs.\(key)", message: "Black Forest Labs \(key) must be an integer between \(minimum) and \(maximum).")
             }
         case "outputFormat":
             guard let format = value.stringValue, ["jpeg", "png"].contains(format) else {
@@ -310,7 +347,7 @@ private func blackForestLabsValidatedProviderOptions(from options: [String: JSON
                 throw AIError.invalidArgument(argument: "providerOptions.blackForestLabs.\(key)", message: "Black Forest Labs \(key) must be a boolean.")
             }
         case "safetyTolerance":
-            let maximum = modelID == "flux-3-image" ? 4 : 6
+            let maximum = modelAPI == .legacy ? 6 : 7
             guard let number = value.doubleValue, blackForestLabsIsInteger(number), number >= 0, number <= Double(maximum) else {
                 throw AIError.invalidArgument(argument: "providerOptions.blackForestLabs.safetyTolerance", message: "Black Forest Labs safetyTolerance must be an integer between 0 and \(maximum).")
             }
@@ -322,6 +359,14 @@ private func blackForestLabsValidatedProviderOptions(from options: [String: JSON
             break
         }
         output[key] = value
+    }
+    if modelAPI == .latest {
+        guard (output["width"] == nil) == (output["height"] == nil) else {
+            throw AIError.invalidArgument(argument: "providerOptions.blackForestLabs", message: "width and height must be provided together")
+        }
+        if let width = output["width"]?.doubleValue, let height = output["height"]?.doubleValue, width * height > 16_822_272 {
+            throw AIError.invalidArgument(argument: "providerOptions.blackForestLabs", message: "width × height must not exceed 16822272 pixels")
+        }
     }
     return output
 }

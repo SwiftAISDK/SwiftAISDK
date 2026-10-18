@@ -387,7 +387,7 @@ func internalLanguageStream(
 
 private func isStreamRetryBufferedPart(_ part: LanguageStreamPart) -> Bool {
     switch part {
-    case .toolInputStart, .toolInputDelta, .toolInputEnd, .toolCallDelta,
+    case .toolInputStart, .toolInputStartText, .toolInputDelta, .toolInputEnd, .toolCallDelta,
          .toolCall, .toolResult, .toolApprovalRequest, .toolApprovalResponse:
         return true
     default:
@@ -429,7 +429,7 @@ private func updateStreamRetryOpenParts(
     switch part {
     case let .textStart(id, _):
         textIDs.insert(id)
-    case let .textEnd(id, _):
+    case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
         textIDs.remove(id)
     case let .reasoningStart(id, _):
         reasoningIDs.insert(id)

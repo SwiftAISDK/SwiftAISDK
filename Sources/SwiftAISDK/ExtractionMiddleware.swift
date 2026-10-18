@@ -92,16 +92,19 @@ public func simulateStreamingMiddleware() -> AILanguageModelMiddleware {
                         id += 1
                     }
 
-                    let textProviderMetadata = result.content.reduce(into: [String: JSONValue]()) { metadata, part in
-                        guard case let .text(_, partMetadata) = part else { return }
-                        metadata.merge(partMetadata) { _, new in new }
-                    }
-
-                    if !result.text.isEmpty {
+                    for part in result.content {
+                        let text: String
+                        let metadata: [String: JSONValue]
+                        switch part {
+                        case let .text(value, providerMetadata), let .citedText(value, _, providerMetadata):
+                            text = value; metadata = providerMetadata
+                        default: continue
+                        }
+                        guard !text.isEmpty || !part.citations.isEmpty else { continue }
                         let partID = String(id)
-                        continuation.yield(.textStart(id: partID, providerMetadata: textProviderMetadata))
-                        continuation.yield(.textDeltaPart(id: partID, delta: result.text))
-                        continuation.yield(.textEnd(id: partID))
+                        continuation.yield(.textStart(id: partID, providerMetadata: metadata))
+                        continuation.yield(.textDeltaPart(id: partID, delta: text))
+                        continuation.yield(.textEnd(id: partID, citations: part.citations))
                         id += 1
                     }
 
@@ -192,7 +195,7 @@ func transformTextStream(
                     case let .textDeltaPart(id, delta, providerMetadata):
                         blockBuffers[id, default: ""] += delta
                         blockDeltaMetadata[id, default: [:]].merge(providerMetadata) { _, new in new }
-                    case let .textEnd(id, providerMetadata):
+                    case let .textEnd(id, providerMetadata), let .textEndWithCitations(id, _, providerMetadata):
                         let transformed = transform(blockBuffers[id] ?? "")
                         let deltaMetadata = blockDeltaMetadata[id] ?? [:]
                         continuation.yield(blockStarts[id] ?? .textStart(id: id))
@@ -203,7 +206,7 @@ func transformTextStream(
                                 providerMetadata: deltaMetadata
                             ))
                         }
-                        continuation.yield(.textEnd(id: id, providerMetadata: providerMetadata))
+                        continuation.yield(.textEnd(id: id, citations: part.citations, providerMetadata: providerMetadata))
                         blockBuffers[id] = nil
                         blockStarts[id] = nil
                         blockDeltaMetadata[id] = nil
@@ -327,6 +330,7 @@ func extractReasoningStream(
                 var textStartMetadata: [String: [String: JSONValue]] = [:]
                 var textDeltaMetadata: [String: [String: JSONValue]] = [:]
                 var textEndMetadata: [String: [String: JSONValue]] = [:]
+                var textCitations: [String: [AICitation]] = [:]
                 var activeTextIDs = Set<String>()
                 var textIDOrder: [String] = []
                 var reasoningIDCounter = 0
@@ -342,6 +346,7 @@ func extractReasoningStream(
                     let textBuffer = textBuffers[textID] ?? ""
                     let startMetadata = textStartMetadata[textID] ?? [:]
                     let endMetadata = textEndMetadata[textID] ?? [:]
+                    let citations = textCitations[textID] ?? []
                     let input = startWithReasoning ? opening + textBuffer : textBuffer
                     var pendingDeltaMetadata = textDeltaMetadata[textID] ?? [:]
                     func takeDeltaMetadata() -> [String: JSONValue] {
@@ -398,7 +403,7 @@ func extractReasoningStream(
                                 providerMetadata: takeDeltaMetadata()
                             ))
                         }
-                        continuation.yield(.textEnd(id: textID, providerMetadata: endMetadata))
+                        continuation.yield(.textEnd(id: textID, citations: citations, providerMetadata: endMetadata))
                     } else if !textBuffer.isEmpty {
                         continuation.yield(.textStart(id: textID, providerMetadata: startMetadata))
                         continuation.yield(.textDeltaPart(
@@ -406,7 +411,7 @@ func extractReasoningStream(
                             delta: textBuffer,
                             providerMetadata: takeDeltaMetadata()
                         ))
-                        continuation.yield(.textEnd(id: textID, providerMetadata: endMetadata))
+                        continuation.yield(.textEnd(id: textID, citations: citations, providerMetadata: endMetadata))
                     } else {
                         continuation.yield(.textStart(id: textID, providerMetadata: startMetadata))
                         if !pendingDeltaMetadata.isEmpty {
@@ -416,12 +421,13 @@ func extractReasoningStream(
                                 providerMetadata: takeDeltaMetadata()
                             ))
                         }
-                        continuation.yield(.textEnd(id: textID, providerMetadata: endMetadata))
+                        continuation.yield(.textEnd(id: textID, citations: citations, providerMetadata: endMetadata))
                     }
                     textBuffers[textID] = nil
                     textStartMetadata[textID] = nil
                     textDeltaMetadata[textID] = nil
                     textEndMetadata[textID] = nil
+                    textCitations[textID] = nil
                     activeTextIDs.remove(textID)
                 }
 
@@ -441,9 +447,10 @@ func extractReasoningStream(
                         markTextID(id)
                         textBuffers[id, default: ""] += delta
                         textDeltaMetadata[id, default: [:]].merge(providerMetadata) { _, new in new }
-                    case let .textEnd(id, providerMetadata):
+                    case let .textEnd(id, providerMetadata), let .textEndWithCitations(id, _, providerMetadata):
                         markTextID(id)
                         textEndMetadata[id] = providerMetadata
+                        textCitations[id] = part.citations
                         flushExtractedText(id: id)
                     case .finishMetadata:
                         flushAllExtractedText()

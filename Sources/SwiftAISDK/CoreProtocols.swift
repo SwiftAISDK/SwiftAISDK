@@ -18,7 +18,6 @@ public func isURLSupported(
     supportedURLs: [String: [AISupportedURLPattern]]
 ) -> Bool {
     let lowercasedMediaType = mediaType.lowercased()
-    let lowercasedURL = url.lowercased()
     let isTopLevelOnly = !lowercasedMediaType.contains("/")
 
     return supportedURLs.contains { key, patterns in
@@ -36,7 +35,7 @@ public func isURLSupported(
             mediaTypeMatches = lowercasedMediaType.hasPrefix(mediaTypePrefix)
         }
 
-        return mediaTypeMatches && patterns.contains { $0.test(lowercasedURL) }
+        return mediaTypeMatches && patterns.contains { $0.test(url) }
     }
 }
 
@@ -66,6 +65,12 @@ public extension LanguageModel {
                     for contentPart in result.content {
                         try Task.checkCancellation()
                         switch contentPart {
+                        case let .citedText(text, citations, providerMetadata):
+                            let id = String(nextPartID)
+                            nextPartID += 1
+                            continuation.yield(.textStart(id: id, providerMetadata: providerMetadata))
+                            continuation.yield(.textDeltaPart(id: id, delta: text, providerMetadata: providerMetadata))
+                            continuation.yield(.textEnd(id: id, citations: citations, providerMetadata: providerMetadata))
                         case let .text(text, providerMetadata):
                             guard !text.isEmpty else { continue }
                             let id = String(nextPartID)

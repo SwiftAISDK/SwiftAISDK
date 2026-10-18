@@ -14,36 +14,16 @@ public final class GoogleGenerativeLanguageModel: LanguageModel, @unchecked Send
     public func generate(_ request: LanguageModelRequest) async throws -> TextGenerationResult {
         let jsonResponse = googlePrepareJSONResponseToolRequest(request, modelID: modelID)
         let prepared = try Self.generateContentBody(for: jsonResponse.request, modelID: modelID)
-        let response = try await config.sendJSONResponse(
-            path: "/models/\(modelID):generateContent",
-            modelID: modelID,
-            body: prepared.body,
-            headers: request.headers.mergingHeaders(prepared.headers),
-            abortSignal: request.abortSignal
-        )
-        let raw = response.json
-        let parsed = googleConvertJSONResponseTool(raw, name: jsonResponse.name)
-        let text = googleGenerateContentText(from: parsed, includeThoughts: jsonResponse.name == nil)
-        let toolCalls = googleGenerateContentToolCalls(from: parsed, toolNameMapping: prepared.toolNameMapping)
-        let toolResults = googleGenerateContentToolResults(from: raw, toolNameMapping: prepared.toolNameMapping)
-        let finishReason = googleGenerateContentFinishReason(from: raw, hasToolCalls: !toolCalls.isEmpty)
-        guard text != nil || !toolCalls.isEmpty || !toolResults.isEmpty || finishReason == "content-filter" else {
-            throw AIError.invalidResponse(provider: providerID, message: "No candidate text found in Google response.")
+        let response = try await googleGenerateContentWithContinuation(body: prepared.body, abortSignal: request.abortSignal) { body in
+            try await config.sendJSONResponse(
+                path: "/models/\(modelID):generateContent",
+                modelID: modelID,
+                body: body,
+                headers: request.headers.mergingHeaders(prepared.headers),
+                abortSignal: request.abortSignal
+            )
         }
-        return TextGenerationResult(
-            text: text ?? "",
-            content: jsonResponse.name == nil ? [] : googleJSONResponseToolContent(from: parsed, toolNameMapping: prepared.toolNameMapping),
-            reasoning: jsonResponse.name == nil ? "" : googleGenerateContentReasoning(from: parsed),
-            finishReason: finishReason,
-            usage: googleGenerateContentUsage(from: raw),
-            toolCalls: toolCalls,
-            toolResults: toolResults,
-            sources: googleGenerateContentSources(from: raw),
-            providerMetadata: googleGenerateContentProviderMetadata(from: raw),
-            rawValue: raw,
-            warnings: prepared.warnings,
-            responseMetadata: googleGenerateContentResponseMetadata(from: raw, response: response.response, modelID: modelID)
-        )
+        return try response.result(providerID: providerID, modelID: modelID, prepared: prepared, jsonResponseToolName: jsonResponse.name)
     }
 
     public func stream(_ request: LanguageModelRequest) -> AsyncThrowingStream<LanguageStreamPart, Error> {
@@ -52,34 +32,23 @@ public final class GoogleGenerativeLanguageModel: LanguageModel, @unchecked Send
                 do {
                     let jsonResponse = googlePrepareJSONResponseToolRequest(request, modelID: modelID)
                     let prepared = try Self.generateContentBody(for: jsonResponse.request, modelID: modelID, isStreaming: true)
-                    let httpRequest = try config.request(
-                        path: "/models/\(modelID):streamGenerateContent?alt=sse",
-                        modelID: modelID,
+                    try await googleStreamWithContinuation(
                         body: prepared.body,
-                        headers: request.headers.mergingHeaders(prepared.headers),
-                        abortSignal: request.abortSignal
-                    )
-                    let response = try await config.streamRequest(httpRequest)
-                    guard (200..<300).contains(response.statusCode) else {
-                        throw apiCallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
-                    }
-                    var state = GoogleGenerateContentStreamState(
-                        response: httpResponseHead(from: response, request: httpRequest),
-                        includeRawChunks: request.includeRawChunks,
+                        request: request,
                         modelID: modelID,
-                        warnings: prepared.warnings,
-                        toolNameMapping: prepared.toolNameMapping,
-                        jsonResponseToolName: jsonResponse.name
-                    )
-                    for try await event in serverSentEvents(from: response.body) {
-                        if event.data == "[DONE]" { break }
-                        let raw = try decodeJSONBody(Data(event.data.utf8))
-                        for part in state.apply(raw) {
-                            continuation.yield(part)
-                        }
-                    }
-                    for part in state.finish() {
-                        continuation.yield(part)
+                        providerID: providerID,
+                        prepared: prepared,
+                        jsonResponseToolName: jsonResponse.name,
+                        continuation: continuation
+                    ) { body in
+                        let httpRequest = try config.request(
+                            path: "/models/\(modelID):streamGenerateContent?alt=sse",
+                            modelID: modelID,
+                            body: body,
+                            headers: request.headers.mergingHeaders(prepared.headers),
+                            abortSignal: request.abortSignal
+                        )
+                        return (httpRequest, try await config.streamRequest(httpRequest))
                     }
                     continuation.finish()
                 } catch {
@@ -91,7 +60,7 @@ public final class GoogleGenerativeLanguageModel: LanguageModel, @unchecked Send
     }
 
     static func generateContentBody(for request: LanguageModelRequest, modelID: String, isStreaming: Bool = false) throws -> GoogleGenerateContentPreparedCall {
-        let preparedOptions = googlePrepareGenerateContentOptions(
+        let preparedOptions = try googlePrepareGenerateContentOptions(
             from: request,
             modelID: modelID,
             providerID: "google.generative-ai",
@@ -162,7 +131,7 @@ func googlePrepareJSONResponseToolRequest(
           request.tools.contains(where: { name, schema in
               schema["type"]?.stringValue != "provider" && !(schema["id"]?.stringValue ?? name).hasPrefix("google.")
           }),
-          modelID.range(of: #"(^|/)gemini-"#, options: [.regularExpression, .caseInsensitive]) != nil,
+          modelID.range(of: #"(^|[/.])gemini-"#, options: [.regularExpression, .caseInsensitive]) != nil,
           !googleModelCapabilities(for: modelID).usesGemini3Features || choiceType == "required" || choiceType == "tool" else {
         return (request, nil)
     }

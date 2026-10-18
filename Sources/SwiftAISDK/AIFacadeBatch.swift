@@ -632,7 +632,7 @@ private func convertTextBatchItemResult(
         }
         return .succeeded(id: id, result: TextBatchGenerationResult(
             text: result.content.compactMap { part in
-                guard case let .text(text, _) = part else { return nil }
+                guard let text = part.textValue else { return nil }
                 return text
             }.joined(),
             content: result.content,

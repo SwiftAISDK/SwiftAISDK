@@ -235,6 +235,7 @@ public struct AIToolLoopAgent: AIAgent {
         merged.reasoning = options.reasoning ?? merged.reasoning
         if !options.tools.isEmpty { merged.tools.merge(options.tools) { _, new in new } }
         if !options.toolContexts.isEmpty { merged.toolContexts.merge(options.toolContexts) { _, new in new } }
+        merged.toolCallConcurrency = options.toolCallConcurrency ?? merged.toolCallConcurrency
         merged.toolChoice = options.toolChoice ?? merged.toolChoice
         merged.includeRawChunks = options.includeRawChunks || merged.includeRawChunks
         if !options.providerOptions.isEmpty { merged.providerOptions.merge(options.providerOptions) { _, new in new } }

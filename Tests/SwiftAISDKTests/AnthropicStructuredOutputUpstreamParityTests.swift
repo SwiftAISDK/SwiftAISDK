@@ -68,7 +68,7 @@ import Testing
         case let .textDeltaPart(id, delta, _):
             textIDs.append("delta:\(id)")
             textDeltas.append(delta)
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             textIDs.append("end:\(id)")
         case let .toolCall(call):
             toolCalls.append(call)
@@ -138,7 +138,7 @@ import Testing
         case let .textDeltaPart(id, delta, _):
             textIDs.append("delta:\(id)")
             textDeltas.append(delta)
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             textIDs.append("end:\(id)")
         case let .finishMetadata(reason, _, _):
             finishReason = reason

@@ -68,7 +68,7 @@ import Testing
     #expect(request.headers["cartesia-version"] == "2026-03-01")
     #expect(request.headers["custom-provider-header"] == "provider-value")
     #expect(request.headers["Custom-Request-Header"] == "request-value")
-    #expect(request.headers["user-agent"] == "ai-sdk-cartesia/3.0.53")
+    #expect(request.headers["user-agent"] == "ai-sdk-cartesia/3.0.57")
     #expect(request.headers["content-type"]?.hasPrefix("multipart/form-data; boundary=SwiftAISDK-") == true)
     #expect(request.abortSignal === controller.signal)
 
@@ -132,7 +132,7 @@ import Testing
         let model = try provider.transcriptionModel(modelID)
         await #expect(throws: AIError.invalidArgument(
             argument: "modelID",
-            message: "Cartesia \(modelID) supports streaming transcription, which SwiftAISDK does not currently expose."
+            message: "Cartesia \(modelID) supports streaming transcription; use streamingTranscriptionModel instead."
         )) {
             _ = try await model.transcribe(AudioTranscriptionRequest(
                 audio: Data("audio".utf8)

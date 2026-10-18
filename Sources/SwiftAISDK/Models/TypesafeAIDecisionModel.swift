@@ -31,7 +31,7 @@ struct TypeSafeAIDecisionModelConfiguration: @unchecked Sendable {
 /// TypeSafe System One's native Decision Model V4 implementation.
 public final class TypeSafeAIDecisionModel: AIDecisionModelV4, @unchecked Sendable {
     public let specificationVersion = "v4"
-    public let supportedQuestionTypes: [AIDecisionQuestionType] = [.choice, .score, .boolean]
+    public let supportedQuestionTypes: [AIDecisionQuestionType] = [.choice, .score, .boolean, .box]
     public let providerID: String
     public let modelID: String
 
@@ -48,34 +48,44 @@ public final class TypeSafeAIDecisionModel: AIDecisionModelV4, @unchecked Sendab
     ) async throws -> AIDecisionModelV4Result {
         try validateTypesafeLimits(options.questions)
 
-        let providerOptions = options.providerOptions["typesafe"]?.objectValue ?? [:]
-        let warnings = providerOptions.keys.sorted().map {
+        try options.abortSignal?.throwIfAborted()
+        let providerOptions = try typesafeOptions(options.providerOptions)
+        if let value = providerOptions["longContext"], value.boolValue == nil {
+            throw AIError.invalidArgument(argument: "providerOptions.typesafe.longContext", message: "longContext must be a boolean.")
+        }
+        let warnings = providerOptions.keys.sorted().filter { $0 != "longContext" }.map {
             AIWarning(type: "unsupported", feature: "providerOptions.typesafe.\($0)")
         }
-
+        let state = try prepareTypesafeState(options.state)
         let body: JSONValue = .object([
-            "model": .string(modelID),
-            "state": try typesafeDecisionState(options.state),
+            "model": .string(modelID), "state": state.state,
+            "assets": state.assets.isEmpty ? nil : .object(state.assets),
             "questions": .object(options.questions.mapValues(typesafeQuestion))
         ])
-
         let apiKey = try configuration.resolvedAPIKey()
         var modelHeaders = normalizeHeaders(configuration.headers)
         modelHeaders["authorization"] = modelHeaders["authorization"] ?? "Bearer \(apiKey)"
-        modelHeaders = withUserAgentSuffix(
-            modelHeaders,
-            "ai-sdk-typesafe-ai/\(typeSafeAIProviderVersion)"
-        )
-        let headers = combineHeaders(modelHeaders, normalizeHeaders(options.headers))
-        let request = AIHTTPRequest(
-            method: "POST",
-            url: try requireURL("\(configuration.baseURL)/systemone"),
-            headers: headers.mergingHeaders([
-                "content-type": headers["content-type"] ?? "application/json"
-            ]),
-            body: try encodeJSONBody(body),
-            abortSignal: options.abortSignal
-        )
+        modelHeaders = withUserAgentSuffix(modelHeaders, "ai-sdk-typesafe-ai/\(typeSafeAIProviderVersion)")
+        if !state.assets.isEmpty || options.questions.values.contains(where: { $0.type == .box }) {
+            modelHeaders["typesafe-danger-zone-images"] = "true"
+        }
+        if providerOptions["longContext"]?.boolValue == true {
+            modelHeaders["typesafe-danger-zone-long-context"] = "true"
+        }
+        var headers = combineHeaders(modelHeaders, normalizeHeaders(options.headers))
+        let requestBody: Data
+        if state.images.isEmpty {
+            headers["content-type"] = headers["content-type"] ?? "application/json"
+            requestBody = try encodeJSONBody(body)
+        } else {
+            var form = MultipartFormData()
+            form.appendFile(name: "request", fileName: "request.json", mimeType: "application/json", data: try encodeJSONBody(body))
+            for image in state.images { form.appendFile(name: image.name, fileName: image.filename, mimeType: image.mediaType, data: image.bytes) }
+            headers["content-type"] = "multipart/form-data; boundary=\(form.boundary)"
+            requestBody = form.finalize()
+        }
+        let request = AIHTTPRequest(method: "POST", url: try requireURL("\(configuration.baseURL)/systemone"),
+                                    headers: headers, body: requestBody, abortSignal: options.abortSignal)
 
         let response = try await configuration.transport.send(request)
         guard (200..<300).contains(response.statusCode) else {
@@ -173,6 +183,8 @@ private func typesafeQuestion(_ question: AIDecisionQuestion) -> JSONValue {
             "instructions": instructions,
             "criteria": .array(criteria)
         ])
+    case let .box(instructions):
+        return .object(["type": "box", "instructions": instructions])
     case let .boolean(instructions, criteria):
         return .object([
             "type": .string("noul"),
@@ -235,6 +247,14 @@ private func parseTypesafeResponse(
             if let value = try typesafeOptionalNumber(answer["confidence"], field: "answers.\(id).confidence") {
                 confidence[id] = value
             }
+        case "box":
+            guard let box = answer["box"]?.objectValue,
+                  let top = typesafeFiniteNumber(box["top"]), let bottom = typesafeFiniteNumber(box["bottom"]),
+                  let left = typesafeFiniteNumber(box["left"]), let right = typesafeFiniteNumber(box["right"]) else {
+                throw TypeSafeResponseValidationError(message: "TypeSafe AI box answer \"\(id)\" is missing numeric edges.")
+            }
+            answers[id] = .box(box: AIDecisionBox(top: top, bottom: bottom, left: left, right: right))
+            if let value = try typesafeOptionalNumber(answer["confidence"], field: "answers.\(id).confidence") { confidence[id] = value }
         case "noul":
             guard let probability = typesafeFiniteNumber(answer["noul"]) else {
                 throw TypeSafeResponseValidationError(message: "TypeSafe AI noul answer \"\(id)\" is missing noul.")

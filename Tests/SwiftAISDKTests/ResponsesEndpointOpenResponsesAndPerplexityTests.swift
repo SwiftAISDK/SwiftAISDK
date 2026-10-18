@@ -285,7 +285,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.perplexity.ai/chat/completions")
     #expect(request.headers["authorization"] == "Bearer pplx-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-perplexity/5.0.10")
+    #expect(request.headers["user-agent"] == "ai-sdk-perplexity/5.0.14")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["model"]?.stringValue == "sonar")
     #expect(body["temperature"]?.doubleValue == 0.2)
@@ -510,7 +510,7 @@ import Testing
             textLifecycle.append("start:\(id)")
         case let .textDeltaPart(id, delta, _):
             textLifecycle.append("delta:\(id):\(delta)")
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             textLifecycle.append("end:\(id)")
         case let .source(source):
             sources.append(source)

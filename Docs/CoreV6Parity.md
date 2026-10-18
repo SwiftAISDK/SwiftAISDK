@@ -1,20 +1,61 @@
 # Core V7 Parity
 
-Snapshot date: 2026-10-11
+Snapshot date: 2026-10-18
 
 This document tracks SwiftAISDK against the current AI SDK Core and Errors
 reference. It is intentionally high-level: product status belongs in
 `PortingStatus.md`, provider package drift belongs in `ProviderVersionLedger.md`,
 and provider behavior belongs in focused tests.
 Implementation-sensitive UI/chat items are also checked against npm source
-snapshots, currently `ai@7.0.137`, `@ai-sdk/provider@4.0.26`,
-`@ai-sdk/provider-utils@5.0.58`, and `@ai-sdk/react@4.0.140`.
+snapshots, currently `ai@7.0.143`, `@ai-sdk/provider@4.0.29`,
+`@ai-sdk/provider-utils@5.0.62`, and `@ai-sdk/react@4.0.147`.
 
 References:
 
 - <https://ai-sdk.dev/docs/reference/ai-sdk-core>
 - <https://ai-sdk.dev/docs/reference/ai-sdk-errors>
 - <https://ai-sdk.dev/docs/reference/ai-sdk-ui>
+
+## 2026-10-18 Native Parity
+
+Citations are attached to individual generated text blocks and streaming text
+endings, independently of retrieved sources. `AICitation` preserves source,
+optional UTF-16 output offsets and quoted text. Existing uncited enum cases and
+constructors remain valid; cited blocks use `.citedText`, cited endings use
+`.textEndWithCitations`, and raw custom-tool input starts use `.toolInputStartText`.
+Exhaustive switches over these public enums must handle the new cases. Facade
+aggregation, simulated streaming, typed text output, middleware and native UI
+retain the citation blocks and provider metadata.
+
+`LanguageModelRequest.toolCallConcurrency` bounds local tool execution; nil is
+unlimited and 1 is sequential. It applies to generate, stream, restored approvals
+and agent/chat requests. Sequential executions and all returned results retain model-call order;
+failure/abort prevents queued work from starting. Missing local tool
+results are validated even when an approval response is present. Raw text tool
+input deltas retain their encoding and become a JSON string at final execution.
+
+Decision V4 adds normalized finite ordered `AIDecisionBox` edges and `.box`
+questions/answers. TypeSafe AI accepts PNG/JPEG evidence, explicit/automatic
+image references, multipart requests and typed experimental `longContext`
+options. Other decision adapters reject Box before I/O. Choice maximum checks
+allow the declared rounding error on both compared probabilities; language
+adapters accept either internal choice codes or an exact choice label. Supported
+URL matching preserves case-sensitive paths and query strings.
+
+Managed MCP subscriptions support nullable `ttlMs`: nil keeps an application
+subscription until explicitly stopped. The old `expiresAt` constructor is retained
+with a deprecation for source compatibility. MCP tools already permit execution
+without explicit native execution options. The existing native multi round-trip
+form implementation remains covered separately from the published npm client.
+
+The JavaScript `experimental_lowMemory` result/replay/getter-retention facade is
+not exposed by this provider-facing port. Native AsyncSequence consumption has
+a different result API; this release makes no equivalent memory-bound claim.
+Browser visibility/resume, React hook stale-closure and HTTP reconnect races,
+Node process-global configuration, TypeScript inference and workflow serializers
+remain runtime-specific. Existing UI wire/step and other shared gaps below remain
+open. Published behavior controls parity; monorepo-only Perplexity decisions and
+MCP stdio shell changes are not adopted.
 
 ## 2026-10-11 Native Parity
 
@@ -45,6 +86,12 @@ Typed authorization-server mismatch errors; invalidation context captures the fa
 ## Latest Core Package Diff Notes
 
 Checked npm package diffs:
+
+- `ai@7.0.137 -> 7.0.143`
+- `@ai-sdk/provider@4.0.26 -> 4.0.29`
+- `@ai-sdk/provider-utils@5.0.58 -> 5.0.62`
+- `@ai-sdk/react@4.0.140 -> 4.0.147`
+
 
 - `ai@7.0.127 -> 7.0.137`
 - `@ai-sdk/provider@4.0.21 -> 4.0.26`

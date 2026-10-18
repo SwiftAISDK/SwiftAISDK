@@ -20,6 +20,7 @@ enum AnthropicStreamingContentBlock {
 
 struct AnthropicStreamingContentBlocks {
     private var blocks: [Int: AnthropicStreamingContentBlock] = [:]
+    private var citations: [Int: [JSONValue]] = [:]
     private let providerID: String
     private let ignoresTextBlocks: Bool
 
@@ -28,7 +29,7 @@ struct AnthropicStreamingContentBlocks {
         self.ignoresTextBlocks = ignoresTextBlocks
     }
 
-    mutating func apply(event raw: JSONValue) -> [LanguageStreamPart] {
+    mutating func apply(event raw: JSONValue, citationDocuments: [AnthropicCitationDocument] = []) -> [LanguageStreamPart] {
         switch raw["type"]?.stringValue {
         case "content_block_start":
             guard let index = raw["index"]?.intValue,
@@ -77,6 +78,10 @@ struct AnthropicStreamingContentBlocks {
             let id = String(index)
             let delta = raw["delta"]
             switch delta?["type"]?.stringValue {
+            case "citations_delta":
+                guard case .text = blocks[index], let citation = delta?["citation"] else { return [] }
+                citations[index, default: []].append(citation)
+                return []
             case "text_delta":
                 guard !ignoresTextBlocks else { return [] }
                 let needsStart = blocks[index] == nil
@@ -136,7 +141,8 @@ struct AnthropicStreamingContentBlocks {
             let id = String(index)
             switch block {
             case let .text(metadata):
-                return [.textEnd(id: id, providerMetadata: metadata)]
+                let blockCitations = citations.removeValue(forKey: index) ?? []
+                return [textEnd(id: id, citations: blockCitations, documents: citationDocuments, metadata: metadata)]
             case let .reasoning(metadata):
                 return [.reasoningEnd(id: id, providerMetadata: metadata)]
             }
@@ -145,21 +151,81 @@ struct AnthropicStreamingContentBlocks {
         }
     }
 
-    mutating func finishParts() -> [LanguageStreamPart] {
+    mutating func finishParts(citationDocuments: [AnthropicCitationDocument] = []) -> [LanguageStreamPart] {
         let parts = blocks.keys.sorted().compactMap { index -> LanguageStreamPart? in
             guard let block = blocks[index] else { return nil }
             let id = String(index)
             switch block {
             case let .text(metadata):
-                return .textEnd(id: id, providerMetadata: metadata)
+                return textEnd(id: id, citations: citations[index] ?? [], documents: citationDocuments, metadata: metadata)
             case let .reasoning(metadata):
                 return .reasoningEnd(id: id, providerMetadata: metadata)
             }
         }
         blocks.removeAll()
+        citations.removeAll()
         return parts
     }
 
+    private func textEnd(id: String, citations: [JSONValue], documents: [AnthropicCitationDocument], metadata: [String: JSONValue]) -> LanguageStreamPart {
+        var metadata = metadata
+        if !citations.isEmpty {
+            let key = anthropicProviderMetadataKey(from: providerID)
+            var providerMetadata = metadata[key]?.objectValue ?? [:]
+            providerMetadata["citations"] = .array(citations)
+            metadata[key] = .object(providerMetadata)
+        }
+        return .textEnd(
+            id: id,
+            citations: citations.compactMap { anthropicMapCitation($0, documents: documents) },
+            providerMetadata: metadata
+        )
+    }
+}
+
+struct AnthropicStreamingSources {
+    private(set) var citationDocuments: [AnthropicCitationDocument]
+    private var sourceCounter = 0
+    private var hasWebSearchResults = false
+    private var fallbackWebCitations: [JSONValue] = []
+
+    init(citationDocuments: [AnthropicCitationDocument]) {
+        self.citationDocuments = citationDocuments
+    }
+
+    mutating func apply(event raw: JSONValue) -> [AISource] {
+        if raw["type"]?.stringValue == "content_block_delta",
+           raw["delta"]?["type"]?.stringValue == "citations_delta",
+           let citation = raw["delta"]?["citation"],
+           citation["type"]?.stringValue == "web_search_result_location" {
+            fallbackWebCitations.append(citation)
+            return []
+        }
+        let block = raw["type"]?.stringValue == "content_block_start" ? raw["content_block"] : raw
+        if block?["type"]?.stringValue == "web_search_tool_result", block?["content"]?.arrayValue?.isEmpty == false {
+            hasWebSearchResults = true
+        }
+        if block?["type"]?.stringValue == "web_fetch_tool_result",
+           block?["content"]?["type"]?.stringValue == "web_fetch_result",
+           let mediaType = block?["content"]?["content"]?["source"]?["media_type"]?.stringValue {
+            citationDocuments.append(AnthropicCitationDocument(
+                title: block?["content"]?["content"]?["title"]?.stringValue ?? block?["content"]?["url"]?.stringValue ?? "Document",
+                filename: nil,
+                mediaType: mediaType
+            ))
+        }
+        return anthropicSources(from: raw, citationDocuments: citationDocuments, sourceCounter: &sourceCounter)
+    }
+
+    mutating func finishSources() -> [AISource] {
+        defer { fallbackWebCitations.removeAll() }
+        guard !hasWebSearchResults else { return [] }
+        return fallbackWebCitations.compactMap { citation in
+            guard let source = anthropicCitationSource(from: citation, citationDocuments: citationDocuments, id: "anthropic-source-\(sourceCounter)") else { return nil }
+            sourceCounter += 1
+            return source
+        }
+    }
 }
 
 struct AnthropicStreamingJSONToolText {

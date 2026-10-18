@@ -470,37 +470,22 @@ func bedrockStrictToolSchemaCompatible(_ schema: JSONValue) -> Bool {
 }
 
 func bedrockSupportsStrictToolSpec(modelID: String) -> Bool {
-    !bedrockAnthropicMatches(
-        modelID: modelID,
-        models: bedrockAnthropicModelsWithoutStrictToolSupport
-    )
+    !modelID.contains("claude-")
+        || modelID.range(of: #"claude-(?:instant|v?2|3)(?=[-.:]|$)"#, options: .regularExpression) != nil
+        || bedrockAnthropicStrictToolPatterns.contains { modelID.range(of: $0, options: .regularExpression) != nil }
 }
 
 func bedrockSupportsNativeStructuredOutput(modelID: String) -> Bool {
-    !bedrockAnthropicMatches(
-        modelID: modelID,
-        models: bedrockAnthropicModelsWithoutReliableNativeStructuredOutput
-    )
+    bedrockSupportsStrictToolSpec(modelID: modelID)
+        && modelID.range(of: #"claude-(?:sonnet-4-6|haiku-4-5)(?=[-.:]|$)"#, options: .regularExpression) == nil
 }
 
-private let bedrockAnthropicModelsWithoutStrictToolSupport = [
-    "claude-opus-4-7",
-    "claude-opus-4-8",
-    "claude-opus-5",
-    "claude-fable-5",
-    "claude-sonnet-5",
-    "claude-haiku-5-5"
+private let bedrockAnthropicStrictToolPatterns = [
+    #"claude-(?:opus|sonnet)-4(?:-\d{8})?(?:-v\d+)?(?=[:.]|$)"#,
+    #"claude-opus-4-(?:1|5|6)(?=[-.:]|$)"#,
+    #"claude-sonnet-4-(?:5|6)(?=[-.:]|$)"#,
+    #"claude-haiku-4-5(?=[-.:]|$)"#
 ]
-
-private let bedrockAnthropicModelsWithoutReliableNativeStructuredOutput =
-    bedrockAnthropicModelsWithoutStrictToolSupport + [
-        "claude-sonnet-4-6",
-        "claude-haiku-4-5"
-    ]
-
-private func bedrockAnthropicMatches(modelID: String, models: [String]) -> Bool {
-    models.contains { modelID.contains($0) }
-}
 
 func bedrockSanitizeToolName(_ name: String) -> String {
     let sanitized = name.replacingOccurrences(

@@ -36,6 +36,7 @@ public enum AIDecisionAnswerType: String, CaseIterable, Codable, Equatable, Hash
     case choice
     case score
     case boolean
+    case box
     case refusal
 }
 
@@ -44,6 +45,7 @@ public enum AIDecisionAnswer: Equatable, Sendable {
     case choice(choice: String, probabilities: [String: Double]? = nil)
     case score(score: Double, probabilities: [String: Double]? = nil)
     case boolean(probability: Double)
+    case box(box: AIDecisionBox)
     case refusal
 
     public var type: AIDecisionAnswerType {
@@ -51,6 +53,7 @@ public enum AIDecisionAnswer: Equatable, Sendable {
         case .choice: .choice
         case .score: .score
         case .boolean: .boolean
+        case .box: .box
         case .refusal: .refusal
         }
     }
@@ -60,6 +63,7 @@ public enum AIDecisionAnswer: Equatable, Sendable {
         case .choice: .choice
         case .score: .score
         case .boolean: .boolean
+        case .box: .box
         case .refusal: nil
         }
     }
@@ -251,6 +255,7 @@ func evaluationAnswers(from answers: [String: AIDecisionAnswer], providerID: Str
         case let .choice(choice, probabilities): .choice(choice: choice, probabilities: probabilities)
         case let .score(score, probabilities): .score(score: score, probabilities: probabilities)
         case let .boolean(probability): .boolean(probability: probability)
+        case let .box(box): .box(box: box)
         case .refusal: nil
         }
     }

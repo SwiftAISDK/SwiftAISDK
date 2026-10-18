@@ -14,3 +14,9 @@ settings.transformRequestBodyWithWarnings = { body, warnings in
 The existing `transformRequestBody` callback remains available and runs first. The new callback can report changes alongside the transformed request. Normal request/response metadata and warning results include the resulting transformation.
 
 The standard `AIProviders.openAICompatible(..., transformRequestBodyWithWarnings:)` overload also accepts this two-argument callback. It preserves the existing factory overloads and the optional earlier one-argument transform.
+
+## Referenced files and returned image URLs
+
+Chat user content and multipart tool-result content accept provider file references for every media type. References resolve against the configured provider identity and preserve compatible content metadata; a missing provider ID raises `AINoSuchProviderReferenceError`.
+
+Image generation and edits accept base64, URL, and mixed image responses. Returned URLs are downloaded through the configured transport with the request abort signal and URL/redirect checks. Credentials and custom headers remain on the API origin. `base64Images` preserves image order, including downloaded bytes, while `urls` retains response URLs for existing callers.

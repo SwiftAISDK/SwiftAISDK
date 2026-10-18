@@ -40,7 +40,8 @@ import Testing
     ))
 
     let legacyBody = try decodeJSONBody(try #require((await legacyTransport.requests()).first?.body))
-    #expect(legacyBody["response_format"] == ["type": "json_object"])
+    #expect(legacyBody["response_format"]?["type"] == "json_schema")
+    #expect(legacyBody["response_format"]?["json_schema"]?["schema"] == sentSchema)
 }
 
 @Test func moonshotStructuredOutputSupportMatchesUpstreamModelHelper() {
@@ -48,8 +49,8 @@ import Testing
     #expect(moonshotSupportsStructuredOutputs(modelID: "kimi-k2.6"))
     #expect(moonshotSupportsStructuredOutputs(modelID: "kimi-k2.7-code"))
     #expect(moonshotSupportsStructuredOutputs(modelID: "kimi-k2.7-code-highspeed"))
-    #expect(!moonshotSupportsStructuredOutputs(modelID: "moonshot-v1-8k"))
-    #expect(!moonshotSupportsStructuredOutputs(modelID: "moonshot-v1-32k"))
-    #expect(!moonshotSupportsStructuredOutputs(modelID: "moonshot-v1-128k"))
-    #expect(!moonshotSupportsStructuredOutputs(modelID: "custom-model-id"))
+    #expect(moonshotSupportsStructuredOutputs(modelID: "moonshot-v1-8k"))
+    #expect(moonshotSupportsStructuredOutputs(modelID: "moonshot-v1-32k"))
+    #expect(moonshotSupportsStructuredOutputs(modelID: "moonshot-v1-128k"))
+    #expect(moonshotSupportsStructuredOutputs(modelID: "custom-model-id"))
 }

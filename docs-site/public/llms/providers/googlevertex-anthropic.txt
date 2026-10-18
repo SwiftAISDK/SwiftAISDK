@@ -14,9 +14,13 @@ Source URL: /providers/googlevertex-anthropic/
 
 - Language
 
+## Request labels
+
+Set `providerOptions["vertex"]["labels"]` to an object of string values to attach billing and usage labels to a Claude request. Generate and stream calls encode its UTF-8 JSON as a base64 `x-vertex-ai-labels` header. An explicit request or provider header takes precedence regardless of casing. Labels stay isolated to each call; they are omitted from the Anthropic request body. Invalid labels fail before network I/O.
+
 ## Notes
 
-Vertex Anthropic mirrors upstream Google Vertex 5.0.109 and inherits the shared Anthropic 4.0.49 model recognition, system options, thinking behavior, and beta headers.
+Vertex Anthropic mirrors upstream Google Vertex 5.0.115 and inherits the shared Anthropic 4.0.82 model recognition, system options, thinking behavior, citations, and beta headers. The 2026-10-18 pass: Validated labels are UTF-8 JSON/base64 encoded into x-vertex-ai-labels after final request-header merging, with explicit caller header precedence.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

@@ -71,6 +71,28 @@ call, generation throws `AIToolChoiceViolationError`. The error retains the
 requested choice, provider/model identity, finish reason, and returned content
 for diagnostics.
 
+## Tool execution concurrency
+
+Set `LanguageModelRequest.toolCallConcurrency` to a positive integer to cap local
+tool executions within a step. `1` executes calls in the model's order; nil runs
+them concurrently. Results retain model order even when executions finish in a
+different order. Queued calls do not start after cancellation or an execution
+failure. The same limit applies to restored approvals and streaming tool loops.
+`AIChatRequestOptions.toolCallConcurrency` carries this setting through native
+agents and chat transports.
+
+```swift
+var request = LanguageModelRequest(messages: [.user("Check these records.")])
+request.toolCallConcurrency = 1
+let result = try await AI.generateText(
+    model: model, request: request, executableTools: tools
+)
+```
+
+Approved history is scheduled in original model order even when approvals arrive
+out of order. An approval alone does not replace a local tool result in a direct
+model prompt; use the executable-tool facade to run approved calls first.
+
 ## Approvals
 
 Use `needsApproval` on a tool when a specific tool call should pause for approval, or use a call-level approval policy when one central policy should evaluate every tool call.
@@ -209,3 +231,9 @@ The generic Open Responses 2.0.54 provider does not inherit OpenAI's
 surface through `OpenResponsesTools.customTool(...)` and
 `OpenResponsesTools.textFormat()`, including generated and streamed custom tool
 calls and results.
+
+Text-encoded tool input uses `.toolInputStart(id:name:inputEncoding: .text)` and
+emits the `.toolInputStartText` companion case. The default remains JSON. Native
+UI reducers concatenate raw text while keeping final `AIToolCall.arguments`
+JSON-encoded, including string inputs. `AIToolCall.inputEncoding` and
+`rawInputText` preserve unfinished text input across UI snapshot restoration.

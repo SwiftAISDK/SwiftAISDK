@@ -13,7 +13,7 @@ func googlePrepareGenerateContentOptions(
     modelID: String,
     providerID: String,
     isVertexProvider: Bool
-) -> GooglePreparedGenerateContentOptions {
+) throws -> GooglePreparedGenerateContentOptions {
     var options = googleGenerateContentOptions(from: request.extraBody)
     if let toolChoice = request.toolChoice { options["toolChoice"] = toolChoice }
     let providerOptionsNames = isVertexProvider ? ["googleVertex", "vertex", "google"] : ["google"]
@@ -21,6 +21,10 @@ func googlePrepareGenerateContentOptions(
         guard let providerOptions = request.providerOptions[name]?.objectValue else { continue }
         options.merge(providerOptions.filter { googleKnownLanguageProviderOptionKeys.contains($0.key) }) { _, providerValue in providerValue }
         break
+    }
+
+    if let token = options["continuationToken"], token.stringValue == nil {
+        throw AIError.invalidArgument(argument: "continuationToken", message: "Google continuationToken must be a string.")
     }
 
     var warnings: [AIWarning] = []
@@ -54,7 +58,9 @@ func googlePrepareGenerateContentOptions(
         }
     }
 
-    let thinkingConfig = googleThinkingConfig(for: request.reasoning, modelID: modelID, warnings: &warnings)
+    let explicitThinking = options["thinkingConfig"]
+    let hasExplicitThinking = explicitThinking?["thinkingBudget"]?.doubleValue != nil || explicitThinking?["thinkingLevel"]?.stringValue != nil
+    let thinkingConfig = hasExplicitThinking ? nil : googleThinkingConfig(for: request.reasoning, modelID: modelID, warnings: &warnings)
     if var thinkingConfig {
         if let providerThinkingConfig = options["thinkingConfig"]?.objectValue {
             thinkingConfig.merge(providerThinkingConfig) { _, providerValue in providerValue }
@@ -110,7 +116,7 @@ func googleApplyProviderGenerationOptions(_ options: [String: JSONValue], to gen
 
 func googleTopLevelGenerateContentOptions(_ options: [String: JSONValue]) -> [String: JSONValue] {
     var output: [String: JSONValue] = [:]
-    for key in ["cachedContent", "labels", "serviceTier"] {
+    for key in ["cachedContent", "labels", "serviceTier", "continuationToken"] {
         if let value = options[key] {
             output[key] = value
         }
@@ -217,15 +223,16 @@ func googleThinkingConfig(for reasoning: String?, modelID: String, warnings: ino
 }
 
 private func googleMinimumThinkingLevelForGemini3Model(_ modelID: String) -> String {
-    guard let modelName = modelID
-        .lowercased()
-        .split(separator: "/", omittingEmptySubsequences: false)
-        .last
-        .map(String.init) else {
-        return "minimal"
-    }
+    let normalized = modelID.lowercased()
+    guard let range = normalized.range(of: #"(^|[/.])gemini-[^/]*$"#, options: .regularExpression) else { return "minimal" }
+    let modelName = String(normalized[range]).trimmingCharacters(in: CharacterSet(charactersIn: "/."))
     if modelName == "gemini-flash-latest" {
         return "low"
+    }
+
+    if let match = modelName.range(of: #"^gemini-\d+(?:\.\d+)?-pro(?:$|-)"#, options: .regularExpression) {
+        let version = modelName[match].dropFirst("gemini-".count).prefix(while: { $0.isNumber })
+        if let major = Double(version), major >= 3 { return "low" }
     }
 
     let prefix = "gemini-"
@@ -274,6 +281,7 @@ let googleKnownLanguageProviderOptionKeys: Set<String> = [
     "retrievalConfig",
     "streamFunctionCallArguments",
     "serviceTier",
+    "continuationToken",
     "sharedRequestType",
     "requestType"
 ]

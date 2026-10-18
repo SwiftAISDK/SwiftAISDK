@@ -426,9 +426,9 @@ import Testing
     let result = try await model.generate(LanguageModelRequest(messages: [.user("Use hosted tools.")]))
 
     #expect(result.text == "Done")
-    #expect(result.sources.count == 1)
-    #expect(result.sources[0].url == "https://example.com/docs")
-    #expect(result.sources[0].rawValue?["start_index"]?.intValue == 0)
+    #expect(result.sources.count == 2)
+    #expect(result.sources[1].url == "https://example.com/docs")
+    #expect(result.citations.first?.startIndex == 0)
     #expect(result.providerMetadata["openai"]?["logprobs"]?[0]?[0]?["token"]?.stringValue == "Done")
 
     let webSearchResult = try #require(result.toolResults.first { $0.toolName == "web_search" })

@@ -17,7 +17,7 @@ public final class CartesiaTranscriptionModel: TranscriptionModel, @unchecked Se
         guard !isCartesiaStreamingTranscriptionModel(modelID) else {
             throw AIError.invalidArgument(
                 argument: "modelID",
-                message: "Cartesia \(modelID) supports streaming transcription, which SwiftAISDK does not currently expose."
+                message: "Cartesia \(modelID) supports streaming transcription; use streamingTranscriptionModel instead."
             )
         }
 
@@ -320,5 +320,5 @@ private func parseCartesiaTranscriptionResponse(
 private func isCartesiaStreamingTranscriptionModel(
     _ modelID: String
 ) -> Bool {
-    modelID == "ink-2" || modelID.hasPrefix("ink-2-")
+    modelID != "ink-whisper" && !modelID.hasPrefix("ink-whisper-")
 }

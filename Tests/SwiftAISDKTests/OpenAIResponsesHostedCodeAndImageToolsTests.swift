@@ -89,7 +89,7 @@ import Testing
           case let .toolCall(thirdToolCall) = result.content[7],
           case let .toolResult(thirdToolResult) = result.content[8],
           case let .reasoning(fourthReasoning, fourthReasoningMetadata) = result.content[9],
-          case let .text(text, textMetadata) = result.content[10],
+          case let .citedText(text, _, textMetadata) = result.content[10],
           case let .source(source) = result.content[11] else {
         Issue.record("Expected upstream code interpreter content order")
         return

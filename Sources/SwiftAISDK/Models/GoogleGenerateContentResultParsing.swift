@@ -174,6 +174,9 @@ func googleGenerateContentProviderMetadata(from raw: JSONValue, includeNullDefau
     if let urlContextMetadata = candidate?["urlContextMetadata"] {
         google["urlContextMetadata"] = urlContextMetadata
     }
+    if let token = candidate?["continuationToken"], token != .null {
+        google["continuationToken"] = token
+    }
     if let finishMessage = candidate?["finishMessage"] {
         google["finishMessage"] = finishMessage
     } else if includeNullDefaults {
@@ -244,7 +247,7 @@ func googleGenerateContentFinishReason(_ reason: String?, hasToolCalls: Bool) ->
     switch reason {
     case "STOP":
         return hasToolCalls ? "tool-calls" : "stop"
-    case "MAX_TOKENS":
+    case "MAX_TOKENS", "CONTINUATION":
         return "length"
     case "IMAGE_SAFETY", "RECITATION", "SAFETY", "BLOCKLIST", "PROHIBITED_CONTENT", "SPII":
         return "content-filter"
@@ -274,4 +277,137 @@ func googleGenerateContentFinishReason(from raw: JSONValue, hasToolCalls: Bool) 
         return "content-filter"
     }
     return googleGenerateContentFinishReason(candidateFinishReason ?? promptBlockReason, hasToolCalls: hasToolCalls)
+}
+
+/// Preserves per-request billing usage across automatically continued responses.
+func googleAddUsageMetadata(_ first: JSONValue?, _ second: JSONValue?) -> JSONValue? {
+    guard let first, first != .null else { return second }
+    guard let second, second != .null else { return first }
+    var combined = first.objectValue ?? [:]
+    combined.merge(second.objectValue ?? [:]) { _, later in later }
+    for key in ["promptTokenCount", "candidatesTokenCount", "toolUsePromptTokenCount", "totalTokenCount", "cachedContentTokenCount", "thoughtsTokenCount"] {
+        let a = first[key]?.doubleValue
+        let b = second[key]?.doubleValue
+        if a != nil || b != nil { combined[key] = .number((a ?? 0) + (b ?? 0)) }
+    }
+    for key in ["promptTokensDetails", "cacheTokensDetails", "candidatesTokensDetails", "toolUsePromptTokensDetails"] {
+        guard let a = first[key]?.arrayValue, let b = second[key]?.arrayValue else {
+            combined[key] = (second[key] != nil && second[key] != .null) ? second[key] : first[key]
+            continue
+        }
+        var order: [String] = []
+        var counts: [String: Double] = [:]
+        for detail in a + b {
+            guard let modality = detail["modality"]?.stringValue, let count = detail["tokenCount"]?.doubleValue else { continue }
+            if counts[modality] == nil { order.append(modality) }
+            counts[modality, default: 0] += count
+        }
+        combined[key] = .array(order.map { .object(["modality": .string($0), "tokenCount": .number(counts[$0] ?? 0)]) })
+    }
+    return .object(combined)
+}
+
+struct GoogleContinuedGenerateContentResponse {
+    var responses: [JSONValue]
+    var response: AIHTTPResponse
+    var usageMetadata: JSONValue?
+
+    func result(providerID: String, modelID: String, prepared: GoogleGenerateContentPreparedCall, jsonResponseToolName: String?) throws -> TextGenerationResult {
+        let raw = responses.last ?? .object([:])
+        var converted = raw.objectValue ?? [:]
+        converted["usageMetadata"] = usageMetadata
+        let parsed = responses.map { googleConvertJSONResponseTool($0, name: jsonResponseToolName) }
+        let finishReason = googleGenerateContentFinishReason(from: raw, hasToolCalls: !(parsed.last.map { googleGenerateContentToolCalls(from: $0) } ?? []).isEmpty)
+        let textParts = parsed.compactMap { googleGenerateContentText(from: $0, includeThoughts: responses.count == 1 && jsonResponseToolName == nil) }
+        let content = parsed.enumerated().flatMap { hop, response in
+            googleContinuationContent(googleJSONResponseToolContent(from: response, toolNameMapping: prepared.toolNameMapping), hop: hop)
+        }
+        let toolCalls = resultToolCalls(from: content)
+        let toolResults = resultToolResults(from: content)
+        guard !textParts.isEmpty || !content.isEmpty || finishReason == "content-filter" else {
+            throw AIError.invalidResponse(provider: providerID, message: providerID.contains("vertex") ? "No candidate text found in Vertex response." : "No candidate text found in Google response.")
+        }
+        var metadata = googleGenerateContentProviderMetadata(from: .object(converted))
+        if responses.count > 1, let count = responses.first?["usageMetadata"]?["promptTokenCount"], count != .null {
+            var google = metadata["google"]?.objectValue ?? [:]
+            google["initialPromptTokenCount"] = count
+            metadata["google"] = .object(google)
+        }
+        let hasMedia = content.contains { if case .file = $0 { return true }; if case .reasoningFile = $0 { return true }; return false }
+        return TextGenerationResult(
+            text: textParts.joined(),
+            content: responses.count == 1 && jsonResponseToolName == nil && !hasMedia ? [] : content,
+            reasoning: responses.count == 1 && jsonResponseToolName == nil ? "" : parsed.map(googleGenerateContentReasoning).joined(),
+            finishReason: finishReason,
+            usage: usageMetadata.map(googleGenerateContentUsage(fromUsageMetadata:)),
+            toolCalls: toolCalls,
+            toolResults: toolResults,
+            sources: resultSources(from: content),
+            providerMetadata: metadata,
+            rawValue: raw,
+            warnings: prepared.warnings,
+            responseMetadata: googleGenerateContentResponseMetadata(from: raw, response: response, modelID: modelID)
+        )
+    }
+}
+
+private func googleContinuationContent(_ content: [AIResultContentPart], hop: Int) -> [AIResultContentPart] {
+    guard hop > 0 else { return content }
+    var ids: [String: String] = [:]
+    for case let .toolCall(call) in content {
+        let explicitID = call.rawValue?["functionCall"]?["id"]?.stringValue ?? call.rawValue?["toolCall"]?["id"]?.stringValue
+        if explicitID == nil || explicitID?.isEmpty == true { ids[call.id] = "\(call.id)-hop-\(hop)" }
+    }
+    return content.map { part in
+        switch part {
+        case var .source(source):
+            source.id += "-hop-\(hop)"
+            return .source(source)
+        case var .toolCall(call):
+            if let id = ids[call.id] {
+                call.id = id
+                if var google = call.providerMetadata["google"]?.objectValue, google["serverToolCallId"] != nil {
+                    google["serverToolCallId"] = .string(id)
+                    call.providerMetadata["google"] = .object(google)
+                }
+            }
+            return .toolCall(call)
+        case var .toolResult(result):
+            if let id = ids[result.toolCallID] {
+                result.toolCallID = id
+                if var google = result.providerMetadata["google"]?.objectValue, google["serverToolCallId"] != nil {
+                    google["serverToolCallId"] = .string(id)
+                    result.providerMetadata["google"] = .object(google)
+                }
+            }
+            return .toolResult(result)
+        default:
+            return part
+        }
+    }
+}
+
+func googleGenerateContentWithContinuation(
+    body: JSONValue,
+    abortSignal: AIAbortSignal?,
+    send: (JSONValue) async throws -> (json: JSONValue, response: AIHTTPResponse)
+) async throws -> GoogleContinuedGenerateContentResponse {
+    var nextBody = body
+    var responses: [JSONValue] = []
+    var usage: JSONValue?
+    while true {
+        try Task.checkCancellation()
+        try abortSignal?.throwIfAborted()
+        let response = try await send(nextBody)
+        responses.append(response.json)
+        usage = googleAddUsageMetadata(usage, response.json["usageMetadata"])
+        guard let candidate = response.json["candidates"]?[0],
+              candidate["finishReason"] == "CONTINUATION",
+              let token = candidate["continuationToken"]?.stringValue else {
+            return GoogleContinuedGenerateContentResponse(responses: responses, response: response.response, usageMetadata: usage)
+        }
+        var resumed = body.objectValue ?? [:]
+        resumed["continuationToken"] = .string(token)
+        nextBody = .object(resumed)
+    }
 }

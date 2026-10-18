@@ -243,7 +243,7 @@ import Testing
             textStarts.append((id, metadata))
         case let .textDeltaPart(id, delta, _):
             textDeltas.append((id, delta))
-        case let .textEnd(id, metadata):
+        case let .textEnd(id, metadata), let .textEndWithCitations(id, _, metadata):
             textEnds.append((id, metadata))
         case let .finishMetadata(reason, usage, providerMetadata):
             finishReason = reason
@@ -337,7 +337,7 @@ import Testing
             textStarts.append((id, metadata))
         case let .textDeltaPart(id, delta, _):
             textDeltas.append((id, delta))
-        case let .textEnd(id, metadata):
+        case let .textEnd(id, metadata), let .textEndWithCitations(id, _, metadata):
             textEnds.append((id, metadata))
         case let .finishMetadata(reason, usage, providerMetadata):
             finishReason = reason
@@ -434,7 +434,8 @@ import Testing
             streamStarted = true
         case let .responseMetadata(metadata):
             responseMetadata = metadata
-        case let .toolInputStart(id, name, _, _, _, providerMetadata):
+        case let .toolInputStart(id, name, _, _, _, providerMetadata),
+             let .toolInputStartText(id, name, _, _, _, providerMetadata):
             inputStarts.append((id, name, providerMetadata))
         case let .toolInputDelta(id, delta, _):
             inputDeltas.append((id, delta))
@@ -463,7 +464,7 @@ import Testing
     #expect(responseMetadata?.timestamp == Date(timeIntervalSince1970: 1_741_257_730))
     #expect(inputStarts.map { $0.0 } == [callID])
     #expect(inputStarts.map { $0.1 } == ["write_sql"])
-    #expect(inputStarts[0].2.isEmpty)
+    #expect(try #require(inputStarts.first).2.isEmpty)
     #expect(inputDeltas.map { $0.0 } == [callID, callID, callID])
     #expect(inputDeltas.map { $0.1 } == ["SELECT * ", "FROM users ", "WHERE age > 25"])
     #expect(inputEnds.map { $0.0 } == [callID])

@@ -89,6 +89,7 @@ public struct AIChatRequestOptions: Sendable {
     public var reasoning: String?
     public var tools: [String: JSONValue]
     public var toolContexts: [String: JSONValue]
+    public var toolCallConcurrency: Int? = nil
     public var toolChoice: JSONValue?
     public var includeRawChunks: Bool
     public var providerOptions: [String: JSONValue]
@@ -138,7 +139,7 @@ public struct AIChatRequestOptions: Sendable {
         abortSignal: AIAbortSignal? = nil,
         headers additionalHeaders: [String: String] = [:]
     ) -> LanguageModelRequest {
-        LanguageModelRequest(
+        var request = LanguageModelRequest(
             messages: messages,
             temperature: temperature,
             topP: topP,
@@ -159,6 +160,8 @@ public struct AIChatRequestOptions: Sendable {
             headers: headers.merging(additionalHeaders) { _, new in new },
             abortSignal: abortSignal
         )
+        request.toolCallConcurrency = toolCallConcurrency
+        return request
     }
 }
 

@@ -15,9 +15,23 @@ Source URL: /providers/typesafe/
 - Evaluation
 - Decision
 
+## Images and Box decisions
+
+Use [`AI.experimentalDecide`](../../core/decide/) with `decisionModel("jev-preview")`
+and `.box(instructions:)` to locate an object in PNG/JPEG evidence. Answers use
+`AIDecisionBox(top:bottom:left:right:)` with ordered finite edges in [0, 1].
+
+`TypeSafeAIFilePartProviderOptions` supplies nonempty unique references and optional
+`insertReference`. Images are uploaded as multipart files alongside `request.json`;
+text-only decisions remain JSON. The SDK adds the experimental images header for
+images or Box questions and enables the 262k-token long-context header only when
+`TypeSafeAIDecisionModelOptions(longContext: true)` is supplied. Unknown model
+options still warn; known options are validated before I/O. See the Decision guide
+for a complete typed example and reference insertion rules.
+
 ## Notes
 
-TypeSafe AI mirrors upstream 3.0.17 with native Decision V4 text/JSON state, /systemone Choice/Score/Boolean evaluation, published question limits, two-decimal rounding, confidence/usage metadata, lazy bearer auth, versioned user-agent and strict errors. Existing Evaluation V4 factories remain source compatible. File evidence and other model families are unsupported; JavaScript workflow serialization stays out of scope.
+TypeSafe AI mirrors upstream 3.0.21 with native Decision V4 text/JSON/PNG/JPEG evidence and /systemone Choice/Score/Boolean/Box decisions. Validated multipart image references preserve state ordering and explicit insertion controls. Box answers expose normalized finite ordered edges; experimental longContext enables the separate 262k-token header. Typed model/file options, question limits, two-decimal rounding, confidence/usage, lazy bearer auth and strict errors are represented. Existing Evaluation adapters remain callable; JavaScript workflow serialization and unrelated model families stay out of scope.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

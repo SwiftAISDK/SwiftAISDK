@@ -78,7 +78,7 @@ import Testing
             semanticSequence.append("start:\(id)")
         case let .textDeltaPart(id, delta, _):
             semanticSequence.append("delta:\(id):\(delta)")
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             semanticSequence.append("end:\(id)")
         case let .finishMetadata(reason, usage, metadata):
             semanticSequence.append("finish:\(reason ?? "nil"):\(usage?.totalTokens ?? -1):\(metadata["openai"]?["responseId"]?.stringValue ?? "nil")")
@@ -150,7 +150,7 @@ import Testing
             legacyTextDeltas.append(delta)
         case let .textDeltaPart(id, delta, _):
             textDeltas.append((id, delta))
-        case let .textEnd(id, metadata):
+        case let .textEnd(id, metadata), let .textEndWithCitations(id, _, metadata):
             textEnds.append((id, metadata))
         case let .finishMetadata(reason, usage, metadata):
             finishReason = reason
@@ -340,7 +340,7 @@ import Testing
             legacyText.append(delta)
         case let .textDeltaPart(id, delta, metadata):
             textDeltas.append((id, delta, metadata))
-        case let .textEnd(id, metadata):
+        case let .textEnd(id, metadata), let .textEndWithCitations(id, _, metadata):
             textEnds.append((id, metadata))
         default:
             break
@@ -377,7 +377,7 @@ import Testing
         switch part {
         case let .textStart(id, providerMetadata):
             textStartParts.append((id, providerMetadata))
-        case let .textEnd(id, providerMetadata):
+        case let .textEnd(id, providerMetadata), let .textEndWithCitations(id, _, providerMetadata):
             textEndParts.append((id, providerMetadata))
         default:
             break

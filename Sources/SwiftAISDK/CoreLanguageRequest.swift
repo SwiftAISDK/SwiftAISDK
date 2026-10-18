@@ -14,6 +14,8 @@ public struct LanguageModelRequest: Sendable {
     public var reasoning: String?
     public var tools: [String: JSONValue]
     public var toolContexts: [String: JSONValue]
+    /// Maximum concurrent local tool executions within a step. Nil means unlimited.
+    public var toolCallConcurrency: Int? = nil
     public var toolChoice: JSONValue?
     public var includeRawChunks: Bool
     public var providerOptions: [String: JSONValue]

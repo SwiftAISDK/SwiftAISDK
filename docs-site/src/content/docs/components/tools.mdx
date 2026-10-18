@@ -7,13 +7,13 @@ description: Public SwiftAISDK APIs for tools.
 
 | Symbol kind | Count |
 | --- | --- |
-| Case | 36 |
+| Case | 38 |
 | Enumeration | 4 |
 | Function | 4 |
 | Global Variable | 1 |
 | Initializer | 31 |
 | Instance Method | 4 |
-| Instance Property | 154 |
+| Instance Property | 156 |
 | Structure | 26 |
 | Type Alias | 9 |
 | Type Method | 5 |
@@ -49,6 +49,7 @@ description: Public SwiftAISDK APIs for tools.
 | Case | `LanguageStreamPart.textDelta(_:)` | `case textDelta(String)` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Case | `LanguageStreamPart.textDeltaPart(id:delta:providerMetadata:)` | `case textDeltaPart(id: String, delta: String, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Case | `LanguageStreamPart.textEnd(id:providerMetadata:)` | `case textEnd(id: String, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
+| Case | `LanguageStreamPart.textEndWithCitations(id:citations:providerMetadata:)` | `case textEndWithCitations(id: String, citations: [AICitation], providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Case | `LanguageStreamPart.textStart(id:providerMetadata:)` | `case textStart(id: String, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Case | `LanguageStreamPart.toolApprovalRequest(_:)` | `case toolApprovalRequest(AIToolApprovalRequest)` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Case | `LanguageStreamPart.toolApprovalResponse(_:)` | `case toolApprovalResponse(AIToolApprovalResponse)` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
@@ -57,6 +58,7 @@ description: Public SwiftAISDK APIs for tools.
 | Case | `LanguageStreamPart.toolInputDelta(id:delta:providerMetadata:)` | `case toolInputDelta(id: String, delta: String, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Case | `LanguageStreamPart.toolInputEnd(id:providerMetadata:)` | `case toolInputEnd(id: String, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Case | `LanguageStreamPart.toolInputStart(id:name:providerExecuted:dynamic:title:providerMetadata:)` | `case toolInputStart(id: String, name: String, providerExecuted: Bool = false, dynamic: Bool = false, title: String? = nil, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
+| Case | `LanguageStreamPart.toolInputStartText(id:name:providerExecuted:dynamic:title:providerMetadata:)` | `case toolInputStartText(id: String, name: String, providerExecuted: Bool = false, dynamic: Bool = false, title: String? = nil, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Case | `LanguageStreamPart.toolResult(_:)` | `case toolResult(AIToolResult)` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Enumeration | `AIStreamingToolCallTypeValidation` | `enum AIStreamingToolCallTypeValidation` | [Sources/SwiftAISDK/StreamingToolCallTracker.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/StreamingToolCallTracker.swift) |
 | Enumeration | `AIToolApprovalStatus` | `enum AIToolApprovalStatus` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
@@ -154,6 +156,7 @@ description: Public SwiftAISDK APIs for tools.
 | Instance Property | `initialRequest` | `var initialRequest: LanguageModelRequest` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Instance Property | `input` | `var input: JSONValue` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Instance Property | `input` | `var input: JSONValue` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
+| Instance Property | `inputEncoding` | `var inputEncoding: AIToolInputEncoding` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Instance Property | `inputExamples` | `var inputExamples: [JSONValue]` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Instance Property | `inputSchemaInput` | `var inputSchemaInput: JSONValue?` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Instance Property | `inputTextDelta` | `var inputTextDelta: String` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
@@ -198,6 +201,7 @@ description: Public SwiftAISDK APIs for tools.
 | Instance Property | `providerMetadata` | `var providerMetadata: [String : JSONValue]` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Instance Property | `providerOptions` | `var providerOptions: [String : JSONValue]` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Instance Property | `providerReference` | `var providerReference: AIProviderReference?` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
+| Instance Property | `rawInputText` | `var rawInputText: String?` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Instance Property | `rawValue` | `var rawValue: JSONValue?` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Instance Property | `rawValue` | `var rawValue: JSONValue?` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |
 | Instance Property | `rawValue` | `var rawValue: JSONValue?` | [Sources/SwiftAISDK/CoreTools.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTools.swift) |

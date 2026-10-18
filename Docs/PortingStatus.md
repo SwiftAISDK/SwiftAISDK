@@ -1,21 +1,6 @@
 # Porting Status
 
-Snapshot date: 2026-10-15
-
-The R30 client-integration follow-up adds native MCP 2026 multi round-trip form
-elicitation beyond `@ai-sdk/mcp@2.0.73` (whose published client still rejects
-`input_required`). Fresh IDs, per-call opaque state, capability checks, bounded
-rounds/batches and an operation-wide deadline/abort are covered in
-`MCPMultiRoundTripTests.swift`. Invalid input on non-input-enabled methods and
-unsupported sampling, roots or URL elicitation fail explicitly. Provider npm
-baselines are unchanged; no paid live suites were enabled.
-
-Verification for patch release **2.4.1**: the initial focused MCP pass ran 163
-tests in four suites; the final full suite, including resource/prompt MRTR
-continuations, passed **3,269 tests in 40 suites**. Docs dependencies were
-installed with `npm ci`; sequential docs check reported zero diagnostics and
-the static build produced **97 pages**. No provider codecs or model defaults
-were changed by this patch.
+Snapshot date: 2026-10-18
 
 SwiftAISDK currently ports the provider-facing parts of Vercel AI SDK into a
 SwiftPM library. The package has a broad Swift-native facade, provider registry,
@@ -40,9 +25,11 @@ for exact evidence.
 - Experimental Decision V4 is available through `AI.experimentalDecide` with
   ordered text/JSON/file evidence, typed questions/answers/refusals, provider and
   registry routing, and native telemetry. Existing Evaluation V4 is available through `AI.experimentalEvaluate`
-  with Choice, Score, and Boolean questions, provider/default-registry model
+  with Choice, Score, Boolean, and TypeSafe Box questions, provider/default-registry model
   resolution, a native TypeSafe AI provider, and OpenAI, Anthropic, Google, and
   Gateway adapters.
+- Attached citations survive generated/streamed content, typed text output and
+  native UI independently of retrieved sources; tool concurrency is configurable.
 - HTTP language-model streaming consumes SSE and Amazon EventStream bodies
   incrementally through `AIStreamingTransport`; first parts can arrive before
   response EOF, and abort or early consumer termination cancels the body read.
@@ -72,40 +59,62 @@ for exact evidence.
 | Upstream test inventory | `Docs/UpstreamTestInventory.md` |
 | Latest upstream test diff audit | `Docs/FreshUpstreamTestDiffAudit.md` |
 
-Provider and core package versions were checked against fresh npm metadata on 2026-10-11. All **53 tracked packages** were reviewed (51 version drifts, two current); 140 old/latest/untracked published archives passed SHA-512 integrity checks. Package-by-package versions, decisions, focused tests and new-provider scope are in `Docs/UpstreamPackageDiffAudit.md`.
-
-The separately authorized HeyGen follow-up adds `@ai-sdk/heygen@3.0.0` to the
-ledger, bringing the tracked package total to **54**. Its exact published
-tarball passed SHA-512 verification; both upstream HeyGen test files were read
-and classified at the same fixture snapshot.
-
-The inventory has **1,024 executable test/spec files in 84 groups**. `Docs/FreshUpstreamTestDiffAudit.md` accounts for 190 changed executable paths and 18 declaration-test paths against the prior snapshot; published tarballs control behavior where the monorepo is ahead.
+Provider and core versions were freshly checked on 2026-10-18. All **54 tracked
+packages** were reviewed: **52 version drifts and two current rows** (LMNT and
+Vercel). **142 published archives** passed SHA-512 integrity checks. Separate
+source, declaration, manifest and fixture decisions are recorded in
+`Docs/UpstreamPackageDiffAudit.md`; versions advance only after that review.
+The fixture inventory now has **1,019 executable test/spec paths in 81 groups**.
+The latest fixture diff accounts for **106 executable and nine declaration paths**
+against the previous snapshot, including runtime-specific and unpublished cases.
 
 ## Provider State
 
-The 2026-10-11 pass adds native Decision V4 and MCP Events, Azure MAI Image, Mistral Conversations and xAI streaming transcription. JSON-with-tools, Haiku 5.5/GPT-6 family reasoning, shared embedding dimensions, bounded batch downloads, cached/transcription metadata and native UI lifecycle/history are synchronized with the reviewed package releases. New overloads retain existing callable signatures. Experimental Evaluation endpoint/schema emulators need the documented Decision envelopes; normal source-level callers remain compatible.
+The latest pass ports OpenAI/Anthropic citations separately from retrieved
+sources, Responses history/additional-tools/custom-input behavior, safe
+OpenAI-compatible image URL downloads and provider file references, Gemini long
+decode/manual resume with aggregate usage, Vertex Anthropic labels, current BFL
+image controls, numeric/future Wan video routing, future Groq/Mistral/Moonshot/
+DeepSeek/Cartesia model behavior, and conservative Bedrock Claude output gates.
+TypeSafe Decision adds PNG/JPEG evidence, Box questions/answers and explicit
+reference/long-context options. Shared runtime adds bounded tool concurrency,
+restored-approval ordering, case-sensitive URL matching and rounding-aware
+choice validation. Managed MCP subscriptions expose nullable application TTL.
+Provider request identities and generated docs match the reviewed baselines.
 
-Fresh search plus exact registry-prefix enumeration finds **90 scoped names**.
-The separately authorized **HeyGen 3.0.0** follow-up is implemented:
-`AIProviders.heyGen`, `HeyGenVideoModel`, typed `HeyGenVideoModelOptions` and
-`HeyGenVideoAsset` support text/first-frame/reference video, strict preflight
-validation, persisted operations, shared polling and retries, reported metadata,
-structured errors, and signed MP4 URL refresh without downloading. The facade
-preserves original HeyGen inputs so conflicting frame/image/reference requests
-fail rather than being normalized away. Existing providers retain their current
-normalization. The public guide and `GenerateWithHeyGen` example cover setup,
-generation and durable resume. Credentials resolve at factory creation in Swift.
-Avatar/voice/translation, remote cancellation, native webhooks and JavaScript
-workflow serialization are absent from the published provider surface.
-`@ai-sdk/tools@0.0.0` is a seed package; SpaceXAI remains an empty reservation.
-Framework, harness, sandbox and JavaScript workflow packages remain outside
-native provider-model coverage. HeyGen is no longer an unported discovery.
+Search returned **73 scoped names**, while exact registry-prefix enumeration
+returned **91**. All **38 untracked scoped packages** have current metadata and
+published-artifact classification. No new unimplemented model provider was
+found. The only new name, `@ai-sdk/tool-bash@0.0.0`, is an empty seed package;
+`@ai-sdk/tools`, SpaceXAI and specification remain empty seeds/reservations.
+HeyGen and Topaz remain implemented. Framework UI, agent harnesses, sandbox,
+workflow and JavaScript schema adapters remain outside provider-model coverage.
+There is no new model-provider implementation to queue from this snapshot.
 
-HeyGen follow-up verification passed **42 focused tests in 4 suites** (90 parameterized case invocations), full `swift test` **3,261 tests in 40 suites**, all `Examples` targets including `GenerateWithHeyGen`, and its no-argument usage without API calls. `npm ci --prefix docs-site` installed 446 packages (447 audited); `npm --prefix docs-site run check` reported 0 errors/warnings/hints across 4 Astro files; `npm --prefix docs-site run build` built **97 pages**. Fresh strict registry checks confirm **54 current packages, zero drift/errors**, and search plus the exact **90-name** registry prefix finds no new unported provider. The additive HeyGen provider/options/assets justify **minor 2.4.0** from **2.3.0**. Existing callers need no migration; live credentialed provider tests were not enabled. `git diff --check` passed.
+Public constructors retain existing callable signatures. Exhaustive switches
+must handle the new cited text/end, text-input-start and Box enum cases.
+`webSearchPreview` and the managed MCP `expiresAt` path are deprecated; use
+`webSearch` and nullable `ttlMs`. Existing citations are now attached to text;
+retrieved `sources` no longer duplicate those citations. Live paid provider
+checks remain opt-in and were not enabled. The JS minimal-retention result
+facade, native UI wire/step surfaces and provider-specific pre-existing gaps
+remain explicitly deferred below and in the package audit.
 
-The preceding weekly release passed **3,223 tests in 36 suites**, all existing `Examples` targets, five public Swift snippets with zero diagnostics, docs dependency installation, zero Astro errors/warnings/hints across four files, and a **96-page** site build. Its fresh registry readback confirmed 53 current baselines and zero drift/errors. That release is an additive **minor 2.3.0** from **2.2.0**; exhaustive `ModelCapability` switches should handle `.decision`. Paid provider smoke calls remain opt-in and were not enabled.
+The preceding **2.4.1** patch adds native MCP 2026 multi round-trip form
+elicitation beyond the published npm client: fresh IDs, opaque per-call state,
+capability validation and operation-wide deadline/abort bounds. Unsupported
+sampling, roots and URL elicitation fail explicitly. Its 3,269-test/40-suite and
+97-page verification is historical; this weekly run records its own final
+results in the package audit. No inherited ahead commits or unrelated working
+changes were present at the start of this pass.
 
-The previous published `2.2.0` added Topaz image/video enhancement and passed 3,042 tests in 23 suites, zero docs diagnostics and a 94-page docs build. Topaz remains implemented. The prior `2.1.1` polling-fixture repair is preserved; this pass does not alter the old release tags or include inherited commits or unrelated work.
+Final weekly verification: **3,357 tests in 44 suites**, all 17 Examples targets,
+four public snippets with zero diagnostics, docs dependency installation,
+zero Astro diagnostics across four files and a **97-page** build. Strict npm
+readback reports 54 current baselines, zero drift/errors and no new unported model
+provider. The additive public citation/Box/options/concurrency surface justifies
+**minor 2.5.0** from **2.4.1**. Detailed commands, overlapping focused counts and
+the unchanged private docs dependency audit findings are in the package audit.
 
 ### Earlier weekly passes
 

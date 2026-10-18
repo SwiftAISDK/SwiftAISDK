@@ -73,7 +73,7 @@ struct LanguageStreamNormalizer: Sendable {
             textRepresentation = try selected(.canonical, current: textRepresentation, channel: "text")
             output.append(part)
 
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             textRepresentation = try selected(.canonical, current: textRepresentation, channel: "text")
             close(.text, id: id)
             output.append(part)
@@ -106,7 +106,8 @@ struct LanguageStreamNormalizer: Sendable {
             close(.reasoning, id: id)
             output.append(part)
 
-        case let .toolInputStart(id, _, _, _, _, providerMetadata):
+        case let .toolInputStart(id, _, _, _, _, providerMetadata),
+             let .toolInputStartText(id, _, _, _, _, providerMetadata):
             open(.toolInput, id: id, providerMetadata: providerMetadata)
             output.append(part)
 
@@ -208,7 +209,7 @@ struct LanguageStreamNormalizer: Sendable {
     private func beginsLogicalLifecycle(_ part: LanguageStreamPart) -> Bool {
         switch part {
         case .streamStart, .responseMetadata, .textStart, .textDelta,
-             .reasoningStart, .reasoningDelta, .toolInputStart:
+             .reasoningStart, .reasoningDelta, .toolInputStart, .toolInputStartText:
             return true
         default:
             return false

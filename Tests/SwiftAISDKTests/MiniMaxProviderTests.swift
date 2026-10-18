@@ -32,7 +32,7 @@ import Testing
     #expect(requests.allSatisfy { $0.url.absoluteString == "https://api.minimax.io/anthropic/v1/messages" })
     #expect(requests.allSatisfy { $0.headers["x-api-key"] == "env-key" })
     #expect(requests.allSatisfy { $0.headers["anthropic-version"] == "2023-06-01" })
-    #expect(requests.allSatisfy { $0.headers["user-agent"] == "ai-sdk-minimax/3.0.55" })
+    #expect(requests.allSatisfy { $0.headers["user-agent"] == "ai-sdk-minimax/3.0.59" })
 }
 
 @Test func miniMaxCustomConfigurationMatchesUpstreamHeaderPrecedence() async throws {
@@ -61,7 +61,7 @@ import Testing
     #expect(request.headers["x-api-key"] == "header-key")
     #expect(request.headers["anthropic-version"] == "custom-version")
     #expect(request.headers["x-custom"] == "custom-value")
-    #expect(request.headers["user-agent"] == "CustomApp/1.0 ai-sdk-minimax/3.0.55")
+    #expect(request.headers["user-agent"] == "CustomApp/1.0 ai-sdk-minimax/3.0.59")
 }
 
 @Test func miniMaxRequiresAPIKeyLikeUpstream() throws {
@@ -276,11 +276,8 @@ import Testing
     #expect(result.finishReason == "tool-calls")
     #expect(result.toolCalls.map(\.id) == ["search_1"])
     #expect(result.toolResults.map(\.toolCallID) == ["search_1"])
-    #expect(result.sources.map(\.url) == [
-        "https://example.com/result",
-        "https://example.com/citation"
-    ])
-    #expect(result.content.count == 8)
+    #expect(result.sources.map(\.url) == ["https://example.com/result"])
+    #expect(result.content.count == 7)
 
     guard case let .toolCall(toolCall) = result.content[0] else {
         Issue.record("Expected provider tool call first")
@@ -309,18 +306,14 @@ import Testing
         return
     }
     #expect(searchSource.url == "https://example.com/result")
-    guard case let .text(answer, answerMetadata) = result.content[5] else {
+    guard case let .citedText(answer, citations, answerMetadata) = result.content[5] else {
         Issue.record("Expected cited text after the search result")
         return
     }
     #expect(answer == "Answer")
     #expect(answerMetadata["anthropic"]?["citations"]?[0]?["url"]?.stringValue == "https://example.com/citation")
-    guard case let .source(citationSource) = result.content[6] else {
-        Issue.record("Expected citation source immediately after its text")
-        return
-    }
-    #expect(citationSource.url == "https://example.com/citation")
-    guard case let .text(compaction, compactionMetadata) = result.content[7] else {
+    #expect(citations.map(\.source.url) == ["https://example.com/citation"])
+    guard case let .text(compaction, compactionMetadata) = result.content[6] else {
         Issue.record("Expected compaction content last")
         return
     }
@@ -379,7 +372,7 @@ import Testing
     #expect(requests[0].headers["authorization"] == "Bearer video-key")
     #expect(requests[0].headers["x-api-key"] == nil)
     #expect(requests[0].headers["anthropic-version"] == nil)
-    #expect(requests[0].headers["user-agent"] == "ai-sdk-minimax/3.0.55")
+    #expect(requests[0].headers["user-agent"] == "ai-sdk-minimax/3.0.59")
     #expect(requests[0].headers["x-request"] == "video")
     let body = try decodeJSONBody(try #require(requests[0].body))
     #expect(body["model"]?.stringValue == "MiniMax-H3")

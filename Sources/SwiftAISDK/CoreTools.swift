@@ -208,6 +208,10 @@ public struct AIToolCall: Equatable, Hashable, Sendable {
     public var id: String
     public var name: String
     public var arguments: String
+    /// UI delta encoding; final arguments remain JSON-encoded.
+    public var inputEncoding: AIToolInputEncoding = .json
+    /// Unfinished text-encoded deltas, retained for native UI resume.
+    public var rawInputText: String? = nil
     public var providerExecuted: Bool
     public var dynamic: Bool
     public var title: String?
@@ -977,6 +981,7 @@ public enum LanguageStreamPart: Equatable, Sendable {
     case textDelta(String)
     case textDeltaPart(id: String, delta: String, providerMetadata: [String: JSONValue] = [:])
     case textEnd(id: String, providerMetadata: [String: JSONValue] = [:])
+    case textEndWithCitations(id: String, citations: [AICitation], providerMetadata: [String: JSONValue] = [:])
     case reasoningStart(id: String, providerMetadata: [String: JSONValue] = [:])
     /// Legacy reasoning delta without an explicit lifecycle or part identifier.
     /// SDK facades normalize a legacy-only reasoning channel to its canonical
@@ -985,6 +990,7 @@ public enum LanguageStreamPart: Equatable, Sendable {
     case reasoningDeltaPart(id: String, delta: String, providerMetadata: [String: JSONValue] = [:])
     case reasoningEnd(id: String, providerMetadata: [String: JSONValue] = [:])
     case toolInputStart(id: String, name: String, providerExecuted: Bool = false, dynamic: Bool = false, title: String? = nil, providerMetadata: [String: JSONValue] = [:])
+    case toolInputStartText(id: String, name: String, providerExecuted: Bool = false, dynamic: Bool = false, title: String? = nil, providerMetadata: [String: JSONValue] = [:])
     case toolInputDelta(id: String, delta: String, providerMetadata: [String: JSONValue] = [:])
     case toolInputEnd(id: String, providerMetadata: [String: JSONValue] = [:])
     case toolCallDelta(id: String?, name: String?, argumentsDelta: String, index: Int?)

@@ -701,9 +701,16 @@ func anthropicApplyResponseFormat(
             ].filter { key, _ in key != "eager_input_streaming" || eagerInputStreaming }))
             body["tools"] = .array(tools)
             body["tool_choice"] = .object([
-                "type": .string("any"),
+                "type": .string(body["thinking"]?["type"]?.stringValue == "enabled" ? "auto" : "any"),
                 "disable_parallel_tool_use": true
             ])
+            if body["thinking"]?["type"]?.stringValue == "enabled" {
+                warnings.append(AIWarning(
+                    type: "unsupported",
+                    feature: "toolChoice",
+                    message: "toolChoice 'required' is not supported with this model or thinking configuration. Using 'auto' instead. Instruct the model to use a tool in the prompt and verify that a tool call was made."
+                ))
+            }
             return true
         }
         var outputConfig = body["output_config"]?.objectValue ?? [:]

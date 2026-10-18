@@ -32,7 +32,7 @@ func WeeklyBFLXAI20261011FLUX3MapsRatiosReferencesAndRestrictedOptions(_ ratio: 
     let transport = weeklyBFLTransport(host: "proxy.example")
     let model = try AIProviders.blackForestLabs(settings: .init(apiKey: "key", baseURL: "https://proxy.example/v1", headers: ["Authorization": "Bearer custom", "x-extra": "value"], transport: transport)).image("flux-3-image")
     await #expect(throws: AIError.self) { try await model.generateImage(.init(prompt: "a", mask: .init(data: Data([1]), mediaType: "image/png"))) }
-    await #expect(throws: AIError.self) { try await model.generateImage(.init(prompt: "a", providerOptions: ["blackForestLabs": ["safetyTolerance": 5]])) }
+    await #expect(throws: AIError.self) { try await model.generateImage(.init(prompt: "a", providerOptions: ["blackForestLabs": ["safetyTolerance": 8]])) }
     #expect(await transport.requests().isEmpty)
     _ = try await model.generateImage(.init(prompt: "a", size: "2100x900"))
     let requests = await transport.requests()

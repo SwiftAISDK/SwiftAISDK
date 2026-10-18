@@ -9,7 +9,7 @@ struct TypesafeAIProviderTests {
         let upstreamCasedProvider = createTypeSafeAi(settings: ProviderSettings(environment: [:]))
         let model = try provider.evaluationModel("jev-latest")
 
-        #expect(typeSafeAIProviderVersion == "3.0.17")
+        #expect(typeSafeAIProviderVersion == "3.0.21")
         #expect(typeSafeAI.providerID == "typesafe")
         #expect(typeSafeAi.providerID == "typesafe")
         #expect(upstreamCasedProvider.providerID == "typesafe")
@@ -18,7 +18,7 @@ struct TypesafeAIProviderTests {
         #expect(model.specificationVersion == "v4")
         #expect(model.providerID == "typesafe.evaluation")
         #expect(model.modelID == "jev-latest")
-        #expect(model.supportedQuestionTypes == [.choice, .score, .boolean])
+        #expect(model.supportedQuestionTypes == [.choice, .score, .boolean, .box])
 
         #expect(throws: AIError.unsupportedModel(provider: "typesafe", capability: .language, modelID: "unknown")) {
             _ = try provider.languageModel("unknown")
@@ -77,7 +77,7 @@ struct TypesafeAIProviderTests {
         #expect(request.abortSignal === abortController.signal)
         #expect(request.headers["authorization"] == "Bearer test-api-key")
         #expect(request.headers["content-type"] == "application/json")
-        #expect(request.headers["user-agent"] == "ai-sdk-typesafe-ai/3.0.17")
+        #expect(request.headers["user-agent"] == "ai-sdk-typesafe-ai/3.0.21")
         let requestBody = try decodeJSONBody(try #require(request.body))
         #expect(requestBody["model"] == "jev-latest")
         #expect(requestBody["state"] == typesafeState())
@@ -119,7 +119,7 @@ struct TypesafeAIProviderTests {
         #expect(request.headers["authorization"] == "Bearer header-key")
         #expect(request.headers["custom"] == "provider")
         #expect(request.headers["shared"] == "call")
-        #expect(request.headers["user-agent"] == "Example/1.0 ai-sdk-typesafe-ai/3.0.17")
+        #expect(request.headers["user-agent"] == "Example/1.0 ai-sdk-typesafe-ai/3.0.21")
         #expect(try decodeJSONBody(try #require(request.body))["model"] == "jev-future")
         #expect(result.response?.headers["x-request-id"] == "custom-request")
     }

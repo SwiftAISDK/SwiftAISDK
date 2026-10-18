@@ -650,7 +650,8 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                 if mimeType.hasPrefix("video/"),
                    let url = reference["openaiCompatible"]
                     ?? reference[providerOptionsKey ?? ""]
-                    ?? reference[openAICompatibleProviderRoot(providerID)] {
+                    ?? reference[openAICompatibleProviderRoot(providerID)],
+                   url.hasPrefix("https://") || url.hasPrefix("http://") {
                     var output: [String: JSONValue] = [
                         "type": .string("video_url"),
                         "video_url": .object(["url": .string(url)])
@@ -662,12 +663,18 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                     }
                     return .object(output)
                 }
-                return .object([
+                var output: [String: JSONValue] = [
                     "type": .string("file"),
                     "file": .object([
                         "file_id": .string(try resolveProviderReference(reference, provider: openAICompatibleProviderRoot(providerID)))
                     ])
-                ])
+                ]
+                let namespace = providerOptionsKey ?? openAICompatibleProviderMetadataNamespace(providerID)
+                if let metadata = providerMetadata[namespace]?.objectValue
+                    ?? providerMetadata["openaiCompatible"]?.objectValue {
+                    output.merge(metadata) { _, value in value }
+                }
+                return .object(output)
             case .reasoningFile, .custom, .toolCall, .toolResult, .toolApprovalRequest, .toolApprovalResponse:
                 return .object(["type": .string("text"), "text": .string("")])
             }
@@ -693,6 +700,13 @@ private func openAICompatibleToolContentPart(_ part: JSONValue, index: Int, prov
         throw AIError.invalidArgument(argument: "toolResult.content", message: "Unsupported custom tool content part.")
     }
     let data = part["data"]
+    if data?["type"]?.stringValue == "reference" {
+        let reference = data?["reference"]?.objectValue?.compactMapValues(\.stringValue) ?? [:]
+        return withMetadata([
+            "type": .string("file"),
+            "file": .object(["file_id": .string(try resolveProviderReference(reference, provider: openAICompatibleProviderRoot(providerID)))])
+        ])
+    }
     if data?["type"]?.stringValue == "url", let url = data?["url"]?.stringValue {
         if mediaType.hasPrefix("image/") || mediaType.hasPrefix("video/") {
             let type = mediaType.hasPrefix("image/") ? "image_url" : "video_url"
@@ -703,7 +717,7 @@ private func openAICompatibleToolContentPart(_ part: JSONValue, index: Int, prov
     }
     guard data?["type"]?.stringValue == "data", let encoded = data?["data"]?.stringValue,
           let bytes = Data(base64Encoded: encoded) else {
-        throw AIError.invalidArgument(argument: "toolResult.content", message: "Tool files require base64 data or a supported URL; text and provider-reference files are unsupported.")
+        throw AIError.invalidArgument(argument: "toolResult.content", message: "Tool files require base64 data, a provider reference or a supported URL; inline text files are unsupported.")
     }
     var converted = try chatFilePart(mimeType: mediaType, data: bytes, filename: part["filename"]?.stringValue,
                                      providerMetadata: [:], index: index, providerID: providerID, providerOptionsKey: providerOptionsKey).objectValue ?? [:]

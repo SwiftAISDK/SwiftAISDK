@@ -10,17 +10,20 @@ public struct AIUITextPart: Equatable, Hashable, Sendable {
     public var text: String
     public var state: AIUIStreamingPartState?
     public var providerMetadata: [String: JSONValue]
+    public var citations: [AICitation]
 
     public init(
         id: String? = nil,
         text: String,
         state: AIUIStreamingPartState? = nil,
-        providerMetadata: [String: JSONValue] = [:]
+        providerMetadata: [String: JSONValue] = [:],
+        citations: [AICitation] = []
     ) {
         self.id = id
         self.text = text
         self.state = state
         self.providerMetadata = providerMetadata
+        self.citations = citations
     }
 }
 

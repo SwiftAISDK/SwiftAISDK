@@ -336,6 +336,7 @@ private func collectPartReferences(
     switch part {
     case let .text(text):
         validateOptionalID(text.id, path: "\(path).text.id", issues: &issues)
+        validateCitations(text.citations, path: "\(path).text.citations", issues: &issues)
     case let .reasoning(reasoning):
         validateOptionalID(reasoning.id, path: "\(path).reasoning.id", issues: &issues)
     case let .source(source):
@@ -425,5 +426,17 @@ private func validateJSONString(_ value: String, path: String, issues: inout [AI
         _ = try secureJSONParse(value)
     } catch {
         issues.append(AIUIMessageValidationIssue(path: path, message: "must be valid JSON."))
+    }
+}
+
+private func validateCitations(_ citations: [AICitation], path: String, issues: inout [AIUIMessageValidationIssue]) {
+    for (index, citation) in citations.enumerated() {
+        let base = "\(path)[\(index)]"
+        let source = citation.source
+        let validSource = source.sourceType == "url" ? source.url != nil
+            : source.sourceType == "document" && source.mediaType != nil && source.title != nil
+        if !validSource { issues.append(.init(path: "\(base).source", message: "Citation requires a URL source or a document with mediaType and title.")) }
+        if let value = citation.startIndex, value < 0 { issues.append(.init(path: "\(base).startIndex", message: "Citation offsets must be nonnegative.")) }
+        if let value = citation.endIndex, value < 0 { issues.append(.init(path: "\(base).endIndex", message: "Citation offsets must be nonnegative.")) }
     }
 }

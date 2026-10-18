@@ -105,3 +105,8 @@ propagates without invalidating credentials or repeating the code exchange.
 Discovery URLs with repeated slashes retain the original authorization-server
 origin. The deprecated legacy SSE transport remains an unported JS adapter;
 native Streamable HTTP and stdio are the supported transports.
+
+Managed adapters can construct `MCPManagedSubscribeInput(..., ttlMs: value)`;
+`nil` means until explicitly stopped and becomes `.indefinite`. Positive TTLs
+become `.milliseconds`. The original absolute `.expiresAt` native convenience is
+deprecated and remains callable for existing application adapters.

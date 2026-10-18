@@ -39,28 +39,16 @@ func mistralWarnings(for request: LanguageModelRequest, modelID: String) -> [AIW
 
 func mistralSupportsReasoningEffort(_ modelID: String) -> Bool {
     switch modelID {
-    case "glm-5-2",
-         "labs-leanstral-1-5",
-         "labs-leanstral-1-5-1",
-         "magistral-medium-latest",
-         "magistral-small-latest",
-         "mistral-large-4",
-         "mistral-large-4-0",
-         "mistral-medium",
-         "mistral-medium-2604",
-         "mistral-medium-3",
-         "mistral-medium-3-5",
-         "mistral-medium-3.5",
-         "mistral-medium-latest",
-         "mistral-small-2603",
-         "mistral-small-latest",
-         "mistral-vibe-cli-fast",
-         "mistral-vibe-cli-latest",
-         "mistral-vibe-cli-with-tools",
-         "zai-glm-5-2":
-        return true
-    default:
+    case "codestral-2508", "codestral-latest",
+         "ministral-14b-2512", "ministral-14b-latest",
+         "ministral-3b-2512", "ministral-3b-latest",
+         "ministral-8b-2512", "ministral-8b-latest",
+         "mistral-code-fim-latest", "mistral-code-latest",
+         "mistral-large-latest", "mistral-large-2512",
+         "voxtral-small-2507", "voxtral-small-latest":
         return false
+    default:
+        return true
     }
 }
 

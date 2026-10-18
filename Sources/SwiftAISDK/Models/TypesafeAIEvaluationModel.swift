@@ -6,7 +6,7 @@ typealias TypeSafeAIEvaluationModelConfiguration = TypeSafeAIDecisionModelConfig
 /// Compatibility Evaluation adapter backed by TypeSafe's native decision implementation.
 public final class TypeSafeAIEvaluationModel: AIEvaluationModelV4, @unchecked Sendable {
     public let specificationVersion = "v4"
-    public let supportedQuestionTypes: [AIEvaluationQuestionType] = [.choice, .score, .boolean]
+    public let supportedQuestionTypes: [AIEvaluationQuestionType] = [.choice, .score, .boolean, .box]
     private let decision: TypeSafeAIDecisionModel
     public var providerID: String { decision.providerID }
     public var modelID: String { decision.modelID }

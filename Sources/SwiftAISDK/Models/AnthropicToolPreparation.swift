@@ -18,6 +18,7 @@ func anthropicPrepareTools(
     rejectsForcedToolUse: Bool = false
 ) throws -> AnthropicPreparedTools {
     var prepared = AnthropicPreparedTools()
+    guard !tools.isEmpty else { return prepared }
 
     func addBeta(_ beta: String) {
         if !prepared.betas.contains(beta) {
@@ -195,7 +196,7 @@ func anthropicPrepareTools(
         prepared.warnings.append(AIWarning(
             type: "unsupported",
             feature: "toolChoice",
-            message: "toolChoice 'required' is not supported by this model because it rejects forced tool use. Using 'auto' instead. Instruct the model to use a tool in the prompt and verify that a tool call was made."
+            message: "toolChoice 'required' is not supported with this model or thinking configuration. Using 'auto' instead. Instruct the model to use a tool in the prompt and verify that a tool call was made."
         ))
         prepared.toolChoice = anthropicToolChoice(from: .object(["type": .string("auto")]), disableParallelToolUse: disableParallelToolUse).value
     } else if rejectsForcedToolUse, requestedChoiceType == "tool" {
@@ -203,7 +204,7 @@ func anthropicPrepareTools(
         prepared.warnings.append(AIWarning(
             type: "unsupported",
             feature: "toolChoice",
-            message: "toolChoice 'tool' is not supported by this model because it rejects forced tool use. Only the '\(selectedName)' tool is sent with 'auto' tool choice. Instruct the model to use the tool in the prompt and verify that a tool call was made."
+            message: "toolChoice 'tool' is not supported with this model or thinking configuration. Only the '\(selectedName)' tool is sent with 'auto' tool choice. Instruct the model to use the tool in the prompt and verify that a tool call was made."
         ))
         prepared.tools = prepared.tools.filter { $0["name"]?.stringValue == selectedName }
         prepared.toolChoice = anthropicToolChoice(from: .object(["type": .string("auto")]), disableParallelToolUse: disableParallelToolUse).value
@@ -298,7 +299,7 @@ func anthropicToolChoice(from value: JSONValue?, disableParallelToolUse: Bool?) 
     case "required", "any":
         object = ["type": .string("any")]
     case "none":
-        return (nil, true)
+        return (.object(["type": .string("none")]), false)
     case "tool":
         object = ["type": .string("tool")]
         if let name = value["toolName"]?.stringValue ?? value["name"]?.stringValue {

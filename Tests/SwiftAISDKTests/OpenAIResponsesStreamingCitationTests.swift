@@ -269,7 +269,7 @@ private func openAIResponsesCollectCitationStream(
             capture.textStarts.append((id, metadata))
         case let .textDeltaPart(id, delta, _):
             capture.textDeltas.append((id, delta))
-        case let .textEnd(id, metadata):
+        case let .textEnd(id, metadata), let .textEndWithCitations(id, _, metadata):
             capture.textEnds.append((id, metadata))
         case let .source(source):
             capture.sources.append(source)

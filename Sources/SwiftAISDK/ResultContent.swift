@@ -116,7 +116,7 @@ func resolvingGeneratedFileStream(
 extension AIResultContentPart {
     var responseMessagePart: AIContentPart? {
         switch self {
-        case let .text(text, providerMetadata):
+        case let .text(text, providerMetadata), let .citedText(text, _, providerMetadata):
             return .text(text, providerMetadata: providerMetadata)
         case let .reasoning(text, providerMetadata):
             return .reasoning(text, providerMetadata: providerMetadata)

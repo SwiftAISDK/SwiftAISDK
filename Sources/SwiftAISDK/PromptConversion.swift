@@ -56,7 +56,6 @@ func downloadUnsupportedPromptAssets(
 }
 
 func convertToLanguageModelPrompt(_ prompt: StandardizedPrompt) throws -> [AIMessage] {
-    let approvedToolCallIDs = approvedToolCallIDs(from: prompt.messages)
     let messages = (prompt.instructions ?? []) + prompt.messages.map(convertToLanguageModelMessage)
     var combinedMessages: [AIMessage] = []
 
@@ -83,35 +82,8 @@ func convertToLanguageModelPrompt(_ prompt: StandardizedPrompt) throws -> [AIMes
     let filteredMessages = combinedMessages.filter { message in
         message.role != .tool || !message.content.isEmpty
     }
-    try validateToolResultAvailability(in: filteredMessages, preapprovedToolCallIDs: approvedToolCallIDs)
+    try validateToolResultAvailability(in: filteredMessages)
     return filteredMessages
-}
-
-private func approvedToolCallIDs(from messages: [AIMessage]) -> Set<String> {
-    var approvalIDToToolCallID: [String: String] = [:]
-    for message in messages where message.role == .assistant {
-        for part in message.content {
-            guard case let .toolApprovalRequest(request) = part,
-                  let toolCallID = request.toolCallID,
-                  !request.id.isEmpty,
-                  !toolCallID.isEmpty else {
-                continue
-            }
-            approvalIDToToolCallID[request.id] = toolCallID
-        }
-    }
-
-    var approvedToolCallIDs: Set<String> = []
-    for message in messages where message.role == .tool {
-        for part in message.content {
-            guard case let .toolApprovalResponse(response) = part,
-                  let toolCallID = approvalIDToToolCallID[response.id] else {
-                continue
-            }
-            approvedToolCallIDs.insert(toolCallID)
-        }
-    }
-    return approvedToolCallIDs
 }
 
 func convertToLanguageModelMessage(_ message: AIMessage) -> AIMessage {

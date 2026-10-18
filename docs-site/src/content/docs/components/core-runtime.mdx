@@ -7,20 +7,20 @@ description: Public SwiftAISDK APIs for core runtime.
 
 | Symbol kind | Count |
 | --- | --- |
-| Case | 225 |
+| Case | 232 |
 | Class | 8 |
-| Enumeration | 56 |
+| Enumeration | 57 |
 | Function | 65 |
 | Global Variable | 1 |
-| Initializer | 187 |
+| Initializer | 191 |
 | Instance Method | 161 |
-| Instance Property | 526 |
+| Instance Property | 540 |
 | Instance Subscript | 2 |
 | Operator | 1 |
 | Protocol | 28 |
-| Structure | 90 |
+| Structure | 92 |
 | Type Alias | 48 |
-| Type Method | 123 |
+| Type Method | 126 |
 | Type Property | 7 |
 
 ## Public symbols
@@ -54,10 +54,12 @@ description: Public SwiftAISDK APIs for core runtime.
 | Case | `AIContentPart.toolCall(_:)` | `case toolCall(AIToolCall)` | [Sources/SwiftAISDK/CoreMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreMessages.swift) |
 | Case | `AIContentPart.toolResult(_:)` | `case toolResult(AIToolResult)` | [Sources/SwiftAISDK/CoreMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreMessages.swift) |
 | Case | `AIDecisionAnswer.boolean(probability:)` | `case boolean(probability: Double)` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
+| Case | `AIDecisionAnswer.box(box:)` | `case box(box: AIDecisionBox)` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Case | `AIDecisionAnswer.choice(choice:probabilities:)` | `case choice(choice: String, probabilities: [String : Double]? = nil)` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Case | `AIDecisionAnswer.refusal` | `case refusal` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Case | `AIDecisionAnswer.score(score:probabilities:)` | `case score(score: Double, probabilities: [String : Double]? = nil)` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Case | `AIDecisionAnswerType.boolean` | `case boolean` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
+| Case | `AIDecisionAnswerType.box` | `case box` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Case | `AIDecisionAnswerType.choice` | `case choice` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Case | `AIDecisionAnswerType.refusal` | `case refusal` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Case | `AIDecisionAnswerType.score` | `case score` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
@@ -90,6 +92,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Case | `AIError.timeout(durationNanoseconds:)` | `case timeout(durationNanoseconds: UInt64)` | [Sources/SwiftAISDK/Core.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Core.swift) |
 | Case | `AIError.unsupportedModel(provider:capability:modelID:)` | `case unsupportedModel(provider: String, capability: ModelCapability, modelID: String)` | [Sources/SwiftAISDK/Core.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Core.swift) |
 | Case | `AIEvaluationAnswer.boolean(probability:)` | `case boolean(probability: Double)` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
+| Case | `AIEvaluationAnswer.box(box:)` | `case box(box: AIDecisionBox)` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Case | `AIEvaluationAnswer.choice(choice:probabilities:)` | `case choice(choice: String, probabilities: [String : Double]? = nil)` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Case | `AIEvaluationAnswer.score(score:probabilities:)` | `case score(score: Double, probabilities: [String : Double]? = nil)` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Case | `AIEvaluationModelReference.model(_:)` | `case model(any AIEvaluationModelV4)` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
@@ -98,9 +101,11 @@ description: Public SwiftAISDK APIs for core runtime.
 | Case | `AIEvaluationModelResolutionError.noSuchModel(modelID:)` | `case noSuchModel(modelID: String)` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Case | `AIEvaluationModelResolutionError.unsupportedSpecificationVersion(version:providerID:modelID:)` | `case unsupportedSpecificationVersion(version: String, providerID: String, modelID: String)` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Case | `AIEvaluationQuestion.boolean(instructions:criteria:)` | `case boolean(instructions: JSONValue, criteria: [String : JSONValue]? = nil)` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
+| Case | `AIEvaluationQuestion.box(instructions:)` | `case box(instructions: JSONValue)` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Case | `AIEvaluationQuestion.choice(instructions:criteria:)` | `case choice(instructions: JSONValue, criteria: [String : JSONValue])` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Case | `AIEvaluationQuestion.score(instructions:criteria:)` | `case score(instructions: JSONValue, criteria: [JSONValue])` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Case | `AIEvaluationQuestionType.boolean` | `case boolean` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
+| Case | `AIEvaluationQuestionType.box` | `case box` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Case | `AIEvaluationQuestionType.choice` | `case choice` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Case | `AIEvaluationQuestionType.score` | `case score` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Case | `AIFileOperation.delete` | `case delete` | [Sources/SwiftAISDK/CoreProtocols.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreProtocols.swift) |
@@ -201,6 +206,8 @@ description: Public SwiftAISDK APIs for core runtime.
 | Case | `AISmoothStreamChunking.word` | `case word` | [Sources/SwiftAISDK/CoreUtilities.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUtilities.swift) |
 | Case | `AIStreamTimeoutPhase.chunk` | `case chunk` | [Sources/SwiftAISDK/AIStreamTimeouts.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIStreamTimeouts.swift) |
 | Case | `AIStreamTimeoutPhase.firstChunk` | `case firstChunk` | [Sources/SwiftAISDK/AIStreamTimeouts.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIStreamTimeouts.swift) |
+| Case | `AIToolInputEncoding.json` | `case json` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
+| Case | `AIToolInputEncoding.text` | `case text` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
 | Case | `AIUIMessagePart.custom(_:providerMetadata:)` | `case custom(JSONValue, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
 | Case | `AIUIMessagePart.data(_:)` | `case data(AIUIDataPart)` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
 | Case | `AIUIMessagePart.error(message:rawValue:)` | `case error(message: String, rawValue: JSONValue?)` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
@@ -306,6 +313,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Enumeration | `AIRetryErrorReason` | `enum AIRetryErrorReason` | [Sources/SwiftAISDK/Core.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Core.swift) |
 | Enumeration | `AISmoothStreamChunking` | `enum AISmoothStreamChunking` | [Sources/SwiftAISDK/CoreUtilities.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUtilities.swift) |
 | Enumeration | `AIStreamTimeoutPhase` | `enum AIStreamTimeoutPhase` | [Sources/SwiftAISDK/AIStreamTimeouts.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIStreamTimeouts.swift) |
+| Enumeration | `AIToolInputEncoding` | `enum AIToolInputEncoding` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
 | Enumeration | `AIUIMessagePart` | `enum AIUIMessagePart` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
 | Enumeration | `AIUIStreamingPartState` | `enum AIUIStreamingPartState` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
 | Enumeration | `AIWarningLogging` | `enum AIWarningLogging` | [Sources/SwiftAISDK/WarningLogging.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/WarningLogging.swift) |
@@ -431,6 +439,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Initializer | `init(from:)` | `init(from decoder: any Decoder) throws` |  |
 | Initializer | `init(from:)` | `init(from decoder: any Decoder) throws` |  |
 | Initializer | `init(from:)` | `init(from decoder: any Decoder) throws` |  |
+| Initializer | `init(from:)` | `init(from decoder: any Decoder) throws` |  |
 | Initializer | `init(from:)` | `init(from decoder: Decoder) throws` | [Sources/SwiftAISDK/JSONValue.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/JSONValue.swift) |
 | Initializer | `init(from:)` | `init(from decoder: any Decoder) throws` |  |
 | Initializer | `init(from:)` | `init(from decoder: any Decoder) throws` |  |
@@ -448,7 +457,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Initializer | `init(id:role:parts:metadata:)` | `init(id: String = UUID().uuidString, role: MessageRole, parts: [AIUIMessagePart] = [], metadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
 | Initializer | `init(id:role:parts:metadata:unavailableStaticToolCallIDs:)` | `init(id: String = UUID().uuidString, role: MessageRole, parts: [AIUIMessagePart] = [], metadata: [String : JSONValue] = [:], unavailableStaticToolCallIDs: Set<String>)` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
 | Initializer | `init(id:text:state:providerMetadata:)` | `init(id: String? = nil, text: String, state: AIUIStreamingPartState? = nil, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
-| Initializer | `init(id:text:state:providerMetadata:)` | `init(id: String? = nil, text: String, state: AIUIStreamingPartState? = nil, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
+| Initializer | `init(id:text:state:providerMetadata:citations:)` | `init(id: String? = nil, text: String, state: AIUIStreamingPartState? = nil, providerMetadata: [String : JSONValue] = [:], citations: [AICitation] = [])` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
 | Initializer | `init(id:timestamp:modelID:headers:body:)` | `init(id: String? = nil, timestamp: Date, modelID: String, headers: [String : String] = [:], body: JSONValue? = nil)` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Initializer | `init(id:value:providerMetadata:)` | `init(id: String? = nil, value: JSONValue, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
 | Initializer | `init(inputSchema:outputSchema:)` | `init(inputSchema: JSONValue, outputSchema: JSONValue? = nil)` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
@@ -524,6 +533,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Initializer | `init(rawValue:)` | `init?(rawValue: String)` |  |
 | Initializer | `init(rawValue:)` | `init?(rawValue: String)` |  |
 | Initializer | `init(rawValue:)` | `init?(rawValue: String)` |  |
+| Initializer | `init(rawValue:)` | `init?(rawValue: String)` |  |
 | Initializer | `init(rawValue:)` | `init(rawValue: String)` | [Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift) |
 | Initializer | `init(rawValue:)` | `init?(rawValue: String)` |  |
 | Initializer | `init(reason:attempts:errors:)` | `init(reason: AIRetryErrorReason, attempts: Int, errors: [String])` | [Sources/SwiftAISDK/Core.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Core.swift) |
@@ -538,6 +548,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Initializer | `init(scope:tools:)` | `init(scope: Scope, tools: Set<String>? = nil)` | [Sources/SwiftAISDK/PruneMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/PruneMessages.swift) |
 | Initializer | `init(seconds:)` | `init(seconds: Double)` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
 | Initializer | `init(session:)` | `init(session: URLSession = .shared)` | [Sources/SwiftAISDK/HTTP.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/HTTP.swift) |
+| Initializer | `init(source:startIndex:endIndex:citedText:)` | `init(source: AISource, startIndex: Int? = nil, endIndex: Int? = nil, citedText: String? = nil)` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
 | Initializer | `init(state:questions:abortSignal:headers:providerOptions:)` | `init(state: [AIDecisionStatePart], questions: [String : AIDecisionQuestion], abortSignal: AIAbortSignal? = nil, headers: [String : String] = [:], providerOptions: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Initializer | `init(state:questions:abortSignal:headers:providerOptions:)` | `init(state: JSONValue, questions: [String : AIEvaluationQuestion], abortSignal: AIAbortSignal? = nil, headers: [String : String] = [:], providerOptions: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Initializer | `init(stateParts:questions:abortSignal:headers:providerOptions:)` | `init(stateParts: [AIDecisionStatePart], questions: [String : AIEvaluationQuestion], abortSignal: AIAbortSignal? = nil, headers: [String : String] = [:], providerOptions: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
@@ -556,6 +567,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Initializer | `init(text:finishReason:rawFinishReason:usage:response:providerMetadata:)` | `init(text: String, finishReason: String? = nil, rawFinishReason: String? = nil, usage: TokenUsage = TokenUsage(), response: AIResponseMetadata? = nil, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreBatch.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreBatch.swift) |
 | Initializer | `init(text:message:)` | `init(text: String, message: String)` | [Sources/SwiftAISDK/JSONParsing.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/JSONParsing.swift) |
 | Initializer | `init(token:url:expiresAt:)` | `init(token: String, url: String, expiresAt: Int? = nil)` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
+| Initializer | `init(top:bottom:left:right:)` | `init(top: Double, bottom: Double, left: Double, right: Double)` | [Sources/SwiftAISDK/DecisionBox.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/DecisionBox.swift) |
 | Initializer | `init(total:pending:completed:failed:)` | `init(total: Int, pending: Int, completed: Int, failed: Int)` | [Sources/SwiftAISDK/CoreBatch.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreBatch.swift) |
 | Initializer | `init(totalNanoseconds:stepNanoseconds:firstChunkNanoseconds:chunkNanoseconds:)` | `init(totalNanoseconds: UInt64? = nil, stepNanoseconds: UInt64? = nil, firstChunkNanoseconds: UInt64? = nil, chunkNanoseconds: UInt64? = nil)` | [Sources/SwiftAISDK/AIStreamTimeouts.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIStreamTimeouts.swift) |
 | Initializer | `init(type:feature:setting:message:)` | `init(type: String, feature: String? = nil, setting: String? = nil, message: String? = nil)` | [Sources/SwiftAISDK/CoreFileSkillResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreFileSkillResults.swift) |
@@ -769,6 +781,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Instance Property | `bodyStream` | `var bodyStream: AsyncThrowingStream<Data, Error>?` | [Sources/SwiftAISDK/HTTP.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/HTTP.swift) |
 | Instance Property | `bodyText` | `var bodyText: String { get }` | [Sources/SwiftAISDK/HTTP.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/HTTP.swift) |
 | Instance Property | `boolValue` | `var boolValue: Bool? { get }` | [Sources/SwiftAISDK/JSONValue.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/JSONValue.swift) |
+| Instance Property | `bottom` | `var bottom: Double` | [Sources/SwiftAISDK/DecisionBox.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/DecisionBox.swift) |
 | Instance Property | `bufferedData` | `var bufferedData: Data? { get }` | [Sources/SwiftAISDK/CoreFileSkillResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreFileSkillResults.swift) |
 | Instance Property | `byteCount` | `var byteCount: Int? { get }` | [Sources/SwiftAISDK/CoreFileSkillResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreFileSkillResults.swift) |
 | Instance Property | `byteSize` | `var byteSize: Int?` | [Sources/SwiftAISDK/CoreFileSkillResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreFileSkillResults.swift) |
@@ -777,6 +790,10 @@ description: Public SwiftAISDK APIs for core runtime.
 | Instance Property | `capabilities` | `var capabilities: AIRealtimeModelCapabilities? { get }` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
 | Instance Property | `choice` | `var choice: JSONValue?` | [Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift) |
 | Instance Property | `chunkNanoseconds` | `var chunkNanoseconds: UInt64?` | [Sources/SwiftAISDK/AIStreamTimeouts.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIStreamTimeouts.swift) |
+| Instance Property | `citations` | `var citations: [AICitation] { get }` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
+| Instance Property | `citations` | `var citations: [AICitation] { get }` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
+| Instance Property | `citations` | `var citations: [AICitation]` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
+| Instance Property | `citedText` | `var citedText: String?` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
 | Instance Property | `clientSecretExpiresAt` | `let clientSecretExpiresAt: Int?` | [Sources/SwiftAISDK/AIRealtimeSession.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIRealtimeSession.swift) |
 | Instance Property | `code` | `var code: String?` | [Sources/SwiftAISDK/CoreBatch.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreBatch.swift) |
 | Instance Property | `code` | `var code: Int` | [Sources/SwiftAISDK/DuplexWebSocketTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/DuplexWebSocketTransport.swift) |
@@ -815,6 +832,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Instance Property | `displayTitle` | `var displayTitle: String?` | [Sources/SwiftAISDK/CoreFileSkillResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreFileSkillResults.swift) |
 | Instance Property | `doubleValue` | `var doubleValue: Double? { get }` | [Sources/SwiftAISDK/JSONValue.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/JSONValue.swift) |
 | Instance Property | `durationNanoseconds` | `var durationNanoseconds: UInt64` | [Sources/SwiftAISDK/AIStreamTimeouts.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIStreamTimeouts.swift) |
+| Instance Property | `endIndex` | `var endIndex: Int?` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
 | Instance Property | `error` | `var error: AIBatchError?` | [Sources/SwiftAISDK/CoreBatch.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreBatch.swift) |
 | Instance Property | `errorDescription` | `var errorDescription: String?` | [Sources/SwiftAISDK/JSONParsing.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/JSONParsing.swift) |
 | Instance Property | `errors` | `var errors: [String]` | [Sources/SwiftAISDK/Core.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Core.swift) |
@@ -890,6 +908,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Instance Property | `initialDelayNanoseconds` | `var initialDelayNanoseconds: UInt64` | [Sources/SwiftAISDK/Core.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Core.swift) |
 | Instance Property | `inputAudioFormat` | `var inputAudioFormat: AIRealtimeAudioFormat?` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
 | Instance Property | `inputAudioTranscription` | `var inputAudioTranscription: AIRealtimeAudioTranscriptionConfiguration?` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
+| Instance Property | `inputEncoding` | `var inputEncoding: AIToolInputEncoding? { get }` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
 | Instance Property | `inputSchema` | `var inputSchema: JSONValue` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
 | Instance Property | `inputTokens` | `var inputTokens: Int?` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Instance Property | `inputTokens` | `var inputTokens: Int?` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
@@ -909,6 +928,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Instance Property | `isStream` | `var isStream: Bool { get }` | [Sources/SwiftAISDK/CoreFileSkillResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreFileSkillResults.swift) |
 | Instance Property | `language` | `var language: String?` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
 | Instance Property | `latestVersion` | `var latestVersion: String?` | [Sources/SwiftAISDK/CoreFileSkillResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreFileSkillResults.swift) |
+| Instance Property | `left` | `var left: Double` | [Sources/SwiftAISDK/DecisionBox.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/DecisionBox.swift) |
 | Instance Property | `limit` | `var limit: Int?` | [Sources/SwiftAISDK/CoreBatch.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreBatch.swift) |
 | Instance Property | `maxDelayNanoseconds` | `var maxDelayNanoseconds: UInt64` | [Sources/SwiftAISDK/Core.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Core.swift) |
 | Instance Property | `maxEmbeddingsPerCall` | `var maxEmbeddingsPerCall: Int? { get }` | [Sources/SwiftAISDK/CoreProtocols.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreProtocols.swift) |
@@ -1114,6 +1134,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Instance Property | `retryPolicy` | `var retryPolicy: AIRetryPolicy?` | [Sources/SwiftAISDK/AIAgent.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIAgent.swift) |
 | Instance Property | `retryPolicy` | `var retryPolicy: AIRetryPolicy` | [Sources/SwiftAISDK/AIAgent.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIAgent.swift) |
 | Instance Property | `retryPolicy` | `var retryPolicy: AIRetryPolicy` | [Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift) |
+| Instance Property | `right` | `var right: Double` | [Sources/SwiftAISDK/DecisionBox.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/DecisionBox.swift) |
 | Instance Property | `role` | `var role: MessageRole` | [Sources/SwiftAISDK/CoreMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreMessages.swift) |
 | Instance Property | `role` | `var role: MessageRole` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
 | Instance Property | `rounding` | `var rounding: AIDecisionRounding?` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
@@ -1129,12 +1150,14 @@ description: Public SwiftAISDK APIs for core runtime.
 | Instance Property | `setting` | `var setting: String?` | [Sources/SwiftAISDK/CoreFileSkillResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreFileSkillResults.swift) |
 | Instance Property | `signal` | `let signal: AIAbortSignal` | [Sources/SwiftAISDK/CoreAbort.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreAbort.swift) |
 | Instance Property | `silenceDurationMilliseconds` | `var silenceDurationMilliseconds: Int?` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
+| Instance Property | `source` | `var source: AISource` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
 | Instance Property | `specificationVersion` | `var specificationVersion: String { get }` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Instance Property | `specificationVersion` | `var specificationVersion: String { get }` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Instance Property | `specificationVersion` | `var specificationVersion: String { get }` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Instance Property | `specificationVersion` | `var specificationVersion: String { get }` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Instance Property | `specificationVersion` | `var specificationVersion: String { get }` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
 | Instance Property | `specificationVersion` | `var specificationVersion: String { get }` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
+| Instance Property | `startIndex` | `var startIndex: Int?` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
 | Instance Property | `startup` | `var startup: AIRealtimeStartupMode?` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
 | Instance Property | `state` | `var state: [AIDecisionStatePart]` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Instance Property | `state` | `var state: JSONValue` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
@@ -1185,6 +1208,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Instance Property | `text` | `var text: String` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
 | Instance Property | `text` | `var text: String { get }` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
 | Instance Property | `text` | `var text: String` | [Sources/SwiftAISDK/JSONParsing.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/JSONParsing.swift) |
+| Instance Property | `textValue` | `var textValue: String? { get }` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
 | Instance Property | `threshold` | `var threshold: Double?` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
 | Instance Property | `timeoutNanoseconds` | `var timeoutNanoseconds: UInt64?` | [Sources/SwiftAISDK/AIAgent.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIAgent.swift) |
 | Instance Property | `timeoutNanoseconds` | `var timeoutNanoseconds: UInt64?` | [Sources/SwiftAISDK/AIAgent.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIAgent.swift) |
@@ -1192,6 +1216,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Instance Property | `timestamp` | `var timestamp: Date` | [Sources/SwiftAISDK/CoreEvaluation.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreEvaluation.swift) |
 | Instance Property | `token` | `var token: String` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
 | Instance Property | `toolApproval` | `var toolApproval: AIToolApproval?` | [Sources/SwiftAISDK/AIAgent.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIAgent.swift) |
+| Instance Property | `toolCallConcurrency` | `var toolCallConcurrency: Int?` | [Sources/SwiftAISDK/CoreLanguageRequest.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreLanguageRequest.swift) |
 | Instance Property | `toolCallers` | `var toolCallers: AIToolCallerRouting` | [Sources/SwiftAISDK/AIAgent.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIAgent.swift) |
 | Instance Property | `toolChoice` | `var toolChoice: JSONValue?` | [Sources/SwiftAISDK/CoreLanguageRequest.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreLanguageRequest.swift) |
 | Instance Property | `toolContexts` | `var toolContexts: [String : JSONValue]` | [Sources/SwiftAISDK/CoreLanguageRequest.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreLanguageRequest.swift) |
@@ -1199,6 +1224,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Instance Property | `tools` | `var tools: [String : JSONValue]` | [Sources/SwiftAISDK/CoreLanguageRequest.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreLanguageRequest.swift) |
 | Instance Property | `tools` | `var tools: [AIRealtimeToolDefinition]?` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
 | Instance Property | `tools` | `var tools: Set<String>?` | [Sources/SwiftAISDK/PruneMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/PruneMessages.swift) |
+| Instance Property | `top` | `var top: Double` | [Sources/SwiftAISDK/DecisionBox.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/DecisionBox.swift) |
 | Instance Property | `topK` | `var topK: Int?` | [Sources/SwiftAISDK/CoreLanguageRequest.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreLanguageRequest.swift) |
 | Instance Property | `topK` | `var topK: Int?` | [Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift) |
 | Instance Property | `topP` | `var topP: Double?` | [Sources/SwiftAISDK/CoreLanguageRequest.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreLanguageRequest.swift) |
@@ -1302,7 +1328,9 @@ description: Public SwiftAISDK APIs for core runtime.
 | Structure | `AIBatchStartResult` | `struct AIBatchStartResult` | [Sources/SwiftAISDK/CoreBatch.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreBatch.swift) |
 | Structure | `AIBatchStatus` | `struct AIBatchStatus` | [Sources/SwiftAISDK/CoreBatch.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreBatch.swift) |
 | Structure | `AIBatchWarning` | `struct AIBatchWarning` | [Sources/SwiftAISDK/CoreBatch.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreBatch.swift) |
+| Structure | `AICitation` | `struct AICitation` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
 | Structure | `AIConsoleWarningLogger` | `struct AIConsoleWarningLogger` | [Sources/SwiftAISDK/WarningLogging.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/WarningLogging.swift) |
+| Structure | `AIDecisionBox` | `struct AIDecisionBox` | [Sources/SwiftAISDK/DecisionBox.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/DecisionBox.swift) |
 | Structure | `AIDecisionModelV4CallOptions` | `struct AIDecisionModelV4CallOptions` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Structure | `AIDecisionModelV4Result` | `struct AIDecisionModelV4Result` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
 | Structure | `AIDecisionRefusalError` | `struct AIDecisionRefusalError` | [Sources/SwiftAISDK/CoreDecision.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreDecision.swift) |
@@ -1536,6 +1564,9 @@ description: Public SwiftAISDK APIs for core runtime.
 | Type Method | `success(value:rawValue:)` | `static func success(value: JSONValue, rawValue: JSONValue) -> AIJSONParseResult` | [Sources/SwiftAISDK/JSONParsing.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/JSONParsing.swift) |
 | Type Method | `system(_:)` | `static func system(_ text: String) -> AIMessage` | [Sources/SwiftAISDK/CoreMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreMessages.swift) |
 | Type Method | `system(_:id:metadata:)` | `static func system(_ text: String, id: String = UUID().uuidString, metadata: [String : JSONValue] = [:]) -> AIUIMessage` | [Sources/SwiftAISDK/CoreUIMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUIMessages.swift) |
+| Type Method | `text(_:citations:providerMetadata:)` | `static func text(_ text: String, citations: [AICitation], providerMetadata: [String : JSONValue] = [:]) -> AIResultContentPart` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
+| Type Method | `textEnd(id:citations:providerMetadata:)` | `static func textEnd(id: String, citations: [AICitation], providerMetadata: [String : JSONValue] = [:]) -> LanguageStreamPart` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
+| Type Method | `toolInputStart(id:name:inputEncoding:providerExecuted:dynamic:title:providerMetadata:)` | `static func toolInputStart(id: String, name: String, inputEncoding: AIToolInputEncoding, providerExecuted: Bool = false, dynamic: Bool = false, title: String? = nil, providerMetadata: [String : JSONValue] = [:]) -> LanguageStreamPart` | [Sources/SwiftAISDK/CoreCitations.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreCitations.swift) |
 | Type Method | `toolResponses(approvalResponses:toolResults:)` | `static func toolResponses(approvalResponses: [AIToolApprovalResponse] = [], toolResults: [AIToolResult] = []) -> AIMessage` | [Sources/SwiftAISDK/CoreMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreMessages.swift) |
 | Type Method | `toolResult(_:)` | `static func toolResult(_ result: AIToolResult) -> AIMessage` | [Sources/SwiftAISDK/CoreMessages.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreMessages.swift) |
 | Type Method | `transcribe(audio:using:fileName:mimeType:language:prompt:providerOptions:extraBody:headers:abortSignal:retryPolicy:telemetry:)` | `static func transcribe(audio: Data, using model: any TranscriptionModel, fileName: String = "audio.wav", mimeType: String = "audio/wav", language: String? = nil, prompt: String? = nil, providerOptions: [String : JSONValue] = [:], extraBody: [String : JSONValue] = [:], headers: [String : String] = [:], abortSignal: AIAbortSignal? = nil, retryPolicy: AIRetryPolicy = .default, telemetry: Telemetry.Options? = nil) async throws -> TranscriptionResult` | [Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift) |

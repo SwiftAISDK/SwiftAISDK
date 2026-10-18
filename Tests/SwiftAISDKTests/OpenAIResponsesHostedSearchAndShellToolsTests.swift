@@ -150,7 +150,7 @@ import Testing
         ]
     ))
 
-    #expect(result.content.count == 14)
+    #expect(result.content.count == 27)
     guard case let .reasoning(firstReasoning, firstReasoningMetadata) = result.content[0],
           case let .toolCall(searchCall) = result.content[1],
           case let .toolResult(searchResult) = result.content[2],
@@ -161,14 +161,17 @@ import Testing
           case let .toolCall(findInPageCall) = result.content[7],
           case let .toolResult(findInPageResult) = result.content[8],
           case let .reasoning(fourthReasoning, fourthReasoningMetadata) = result.content[9],
-          case let .text(text, textMetadata) = result.content[10],
-          case let .source(firstSource) = result.content[11],
-          case let .source(secondSource) = result.content[12],
-          case let .source(thirdSource) = result.content[13] else {
+          case let .citedText(text, citations, textMetadata) = result.content[10] else {
         Issue.record("Expected upstream web search content order")
         return
     }
 
+    #expect(citations.count == 3)
+    let firstSource = try #require(citations.first?.source)
+    let secondSource = try #require(citations.dropFirst().first?.source)
+    let thirdSource = try #require(citations.last?.source)
+    #expect(result.sources.count == 16)
+    #expect(result.sources.map(\.url) == result.toolResults.first?.result["sources"]?.arrayValue?.map { $0["url"]?.stringValue })
     #expect(firstReasoning == "")
     #expect(secondReasoning == "")
     #expect(thirdReasoning == "")
@@ -207,14 +210,14 @@ import Testing
     #expect(text.contains("keyword pattern \"vercel\""))
     #expect(textMetadata["openai"]?["itemId"]?.stringValue == "msg_0953eda47ee17412006933308e32f08195bdfb73a410a2abfc")
     #expect(textMetadata["openai"]?["annotations"]?[0]?["title"]?.stringValue == "Why OpenAI declared a code red for ChatGPT | The Verge")
-    #expect(firstSource.id == "id-0")
+    #expect(firstSource.id == firstSource.url)
     #expect(firstSource.sourceType == "url")
     #expect(firstSource.title == "Why OpenAI declared a code red for ChatGPT | The Verge")
     #expect(firstSource.url == "https://www.theverge.com/podcast/838932/openai-chatgpt-code-red-vergecast")
-    #expect(secondSource.id == "id-1")
+    #expect(secondSource.id == secondSource.url)
     #expect(secondSource.sourceType == "url")
     #expect(secondSource.url == "https://techstartups.com/2025/12/05/technology-news-today-the-latest-in-tech-ai-startup-news-december-5-2025/")
-    #expect(thirdSource.id == "id-2")
+    #expect(thirdSource.id == thirdSource.url)
     #expect(thirdSource.sourceType == "url")
     #expect(thirdSource.url == "https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-december-5-2025-11862701?utm_source=openai")
 }
@@ -479,8 +482,8 @@ import Testing
     #expect(input[2]["output"]?[0]?["outcome"]?["exit_code"]?.intValue == 0)
     #expect(input[2]["output"]?[0]?["stderr"]?.stringValue == "")
     #expect(input[2]["output"]?[0]?["stdout"]?.stringValue == "Linux container-host 6.1.0 #1 SMP x86_64 GNU/Linux\n")
-    #expect(input[3]["type"]?.stringValue == "item_reference")
-    #expect(input[3]["id"]?.stringValue == "msg_0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e52")
+    #expect(input[3]["role"] == "assistant")
+    #expect(input[3]["content"]?.stringValue?.isEmpty == false)
     #expect(input[4]["role"]?.stringValue == "user")
     #expect(input[4]["content"]?[0]?["text"]?.stringValue == "What architecture do you run in?")
     #expect(body["model"]?.stringValue == "gpt-5.2")
@@ -549,8 +552,8 @@ import Testing
     #expect(input[2]["output"]?[0]?["outcome"]?["exit_code"]?.intValue == 0)
     #expect(input[2]["output"]?[0]?["stderr"]?.stringValue == "")
     #expect(input[2]["output"]?[0]?["stdout"]?.stringValue == "Darwin mac-host 24.6.0 Darwin Kernel Version 24.6.0 root:xnu-11417.60.45.601.5~1/RELEASE_ARM64_T6041 arm64\n")
-    #expect(input[3]["type"]?.stringValue == "item_reference")
-    #expect(input[3]["id"]?.stringValue == "msg_0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e52")
+    #expect(input[3]["role"] == "assistant")
+    #expect(input[3]["content"]?.stringValue?.isEmpty == false)
     #expect(input[4]["role"]?.stringValue == "user")
     #expect(input[4]["content"]?[0]?["text"]?.stringValue == "What architecture do you run in?")
     #expect(body["model"]?.stringValue == "gpt-5.2")

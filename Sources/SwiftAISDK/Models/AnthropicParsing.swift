@@ -37,7 +37,8 @@ func anthropicGeneratedContent(
     citationDocuments: [AnthropicCitationDocument],
     usesJSONToolResponseFormat: Bool = false,
     toolNameMapping: AIToolNameMapping = AIToolNameMapping(),
-    markCodeExecutionDynamic: Bool = false
+    markCodeExecutionDynamic: Bool = false,
+    isBatchResult: Bool = false
 ) -> AnthropicGeneratedContent {
     guard let parts = value?.arrayValue else {
         return AnthropicGeneratedContent(
@@ -61,6 +62,9 @@ func anthropicGeneratedContent(
     var serverToolNames: [String: String] = [:]
     var mcpToolNames: [String: String] = [:]
     var mcpToolMetadata: [String: [String: JSONValue]] = [:]
+    let hasWebSearchResults = parts.contains {
+        $0["type"]?.stringValue == "web_search_tool_result" && $0["content"]?.arrayValue?.isEmpty == false
+    }
 
     for part in parts {
         guard let type = part["type"]?.stringValue else { continue }
@@ -113,17 +117,24 @@ func anthropicGeneratedContent(
             guard !usesJSONToolResponseFormat else { continue }
             let partText = part["text"]?.stringValue ?? ""
             text += partText
-            let webSearchCitations = part["citations"]?.arrayValue?.filter {
-                $0["type"]?.stringValue == "web_search_result_location"
-            } ?? []
-            let metadata = webSearchCitations.isEmpty
+            let citations = part["citations"]?.arrayValue ?? []
+            let metadata = citations.isEmpty
                 ? [String: JSONValue]()
                 : anthropicContentBlockProviderMetadata([
-                    "citations": .array(webSearchCitations)
+                    "citations": .array(citations)
                 ], providerID: providerID)
-            content.append(.text(partText, providerMetadata: metadata))
+            content.append(.text(
+                partText,
+                citations: citations.compactMap { anthropicMapCitation($0, documents: isBatchResult ? [] : resolvedCitationDocuments) },
+                providerMetadata: metadata
+            ))
+            var sourcePart = part.objectValue ?? [:]
+            sourcePart["citations"] = .array(citations.filter {
+                let isWebCitation = $0["type"]?.stringValue == "web_search_result_location"
+                return isWebCitation ? !hasWebSearchResults : !isBatchResult
+            })
             let partSources = anthropicSources(
-                from: part,
+                from: .object(sourcePart),
                 citationDocuments: resolvedCitationDocuments,
                 sourceCounter: &sourceCounter
             )
@@ -721,21 +732,64 @@ struct AnthropicCitationDocument {
 }
 
 func anthropicCitationDocuments(from messages: [AIMessage]) -> [AnthropicCitationDocument] {
-    messages.flatMap(\.content).compactMap { part in
+    messages.filter { $0.role == .user }.flatMap(\.content).compactMap { part in
         switch part {
-        case let .data(mimeType, _, _), let .file(mimeType, _, _, _):
-            guard mimeType.lowercased().hasPrefix("text/") || mimeType.lowercased() == "application/pdf" else {
+        case let .data(mimeType, _, metadata):
+            guard ["text/plain", "application/pdf"].contains(mimeType.lowercased()),
+                  metadata["anthropic"]?["citations"]?["enabled"]?.boolValue == true else {
                 return nil
             }
-            return AnthropicCitationDocument(title: "Document", filename: nil, mediaType: mimeType)
-        case let .imageURL(url, _):
-            guard url.lowercased().contains(".pdf") else { return nil }
+            return AnthropicCitationDocument(title: "Untitled Document", filename: nil, mediaType: mimeType)
+        case let .file(mimeType, _, filename, metadata), let .providerReference(mimeType, _, filename, metadata):
+            guard ["text/plain", "application/pdf"].contains(mimeType.lowercased()),
+                  metadata["anthropic"]?["citations"]?["enabled"]?.boolValue == true else {
+                return nil
+            }
+            return AnthropicCitationDocument(title: filename ?? "Untitled Document", filename: filename, mediaType: mimeType)
+        case let .imageURL(url, metadata):
+            guard url.lowercased().contains(".pdf"),
+                  metadata["anthropic"]?["citations"]?["enabled"]?.boolValue == true else { return nil }
             let filename = url.split(separator: "/").last.map(String.init)
             return AnthropicCitationDocument(title: filename ?? "Document", filename: filename, mediaType: "application/pdf")
-        case .text, .reasoning, .reasoningFile, .custom, .providerReference, .toolCall, .toolResult, .toolApprovalRequest, .toolApprovalResponse:
+        case .text, .reasoning, .reasoningFile, .custom, .toolCall, .toolResult, .toolApprovalRequest, .toolApprovalResponse:
             return nil
         }
     }
+}
+
+/// Citation source offsets belong to the cited document, so generated-text offsets stay absent.
+func anthropicMapCitation(_ citation: JSONValue, documents: [AnthropicCitationDocument]) -> AICitation? {
+    let metadata = ["anthropic": citation]
+    let source: AISource
+    switch citation["type"]?.stringValue {
+    case "web_search_result_location", "search_result_location":
+        guard let url = (citation["type"]?.stringValue == "web_search_result_location" ? citation["url"] : citation["source"])?.stringValue else {
+            return nil
+        }
+        source = AISource(
+            id: url,
+            sourceType: "url",
+            url: url,
+            title: citation["title"]?.stringValue,
+            providerMetadata: metadata,
+            rawValue: citation
+        )
+    case "page_location", "char_location", "content_block_location":
+        guard let index = citation["document_index"]?.intValue else { return nil }
+        let document = documents.indices.contains(index) ? documents[index] : nil
+        source = AISource(
+            id: citation["file_id"]?.stringValue ?? String(index),
+            sourceType: "document",
+            title: citation["document_title"]?.stringValue ?? document?.title ?? "Document \(index)",
+            mediaType: document?.mediaType ?? "text/plain",
+            filename: document?.filename,
+            providerMetadata: metadata,
+            rawValue: citation
+        )
+    default:
+        return nil
+    }
+    return AICitation(source: source, citedText: citation["cited_text"]?.stringValue)
 }
 
 func anthropicToolArguments(_ arguments: String) -> JSONValue {

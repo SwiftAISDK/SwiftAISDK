@@ -428,9 +428,12 @@ private func deepSeekToolResultContentValue(
 }
 
 func deepSeekIsV4Model(_ modelID: String) -> Bool {
-    modelID.contains("deepseek-v4")
-        || modelID.hasPrefix("deepseek-flash")
-        || modelID.hasPrefix("deepseek-pro")
+    // Only known legacy aliases and V1-V3 protocols opt out. Future IDs use
+    // the current protocol, including required assistant reasoning_content.
+    modelID.range(
+        of: #"(^|[/.])deepseek-(?:chat|reasoner|v[1-3](?:\.\d+)?)(?=[-/:.]|$)"#,
+        options: .regularExpression
+    ) == nil
 }
 
 private func deepSeekMessageOptions(

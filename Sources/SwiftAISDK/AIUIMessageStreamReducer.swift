@@ -80,7 +80,7 @@ public struct AIUIMessageStreamReducer: Sendable {
                 reasoningPartIndexes[reasoning.id ?? "$default"] = index
             case let .toolCall(call):
                 toolCallPartIndexes[call.id] = index
-                if (try? decodeJSONBody(Data(call.arguments.utf8))) == nil { activeToolInputIDs.insert(call.id) }
+                if call.rawInputText != nil || (try? decodeJSONBody(Data(call.arguments.utf8))) == nil { activeToolInputIDs.insert(call.id) }
             default: break
             }
         }
@@ -108,6 +108,8 @@ public struct AIUIMessageStreamReducer: Sendable {
             try appendTextDeltaPart(delta, id: id, providerMetadata: providerMetadata)
         case let .textEnd(id, providerMetadata):
             try endTextPart(id: id, providerMetadata: providerMetadata)
+        case let .textEndWithCitations(id, citations, providerMetadata):
+            try endTextPart(id: id, providerMetadata: providerMetadata, citations: citations)
         case let .reasoningStart(id, providerMetadata):
             ensureReasoningPart(id: id, providerMetadata: providerMetadata)
         case let .reasoningDelta(delta):
@@ -116,7 +118,8 @@ public struct AIUIMessageStreamReducer: Sendable {
             try appendReasoningDeltaPart(delta, id: id, providerMetadata: providerMetadata)
         case let .reasoningEnd(id, providerMetadata):
             try endReasoningPart(id: id, providerMetadata: providerMetadata)
-        case let .toolInputStart(id, name, providerExecuted, dynamic, title, providerMetadata):
+        case let .toolInputStart(id, name, providerExecuted, dynamic, title, providerMetadata),
+             let .toolInputStartText(id, name, providerExecuted, dynamic, title, providerMetadata):
             ensureToolCallPart(
                 id: id,
                 name: name,
@@ -125,6 +128,12 @@ public struct AIUIMessageStreamReducer: Sendable {
                 title: title,
                 providerMetadata: providerMetadata
             )
+            if part.inputEncoding == .text, let index = toolCallPartIndexes[id], case var .toolCall(call) = message.parts[index] {
+                call.inputEncoding = .text
+                call.rawInputText = ""
+                call.arguments = canonicalJSONText(.string("")) ?? "\"\""
+                message.parts[index] = .toolCall(call)
+            }
             activeToolInputIDs.insert(id)
         case let .toolInputDelta(id, delta, providerMetadata):
             try appendToolInputDelta(delta, id: id, providerMetadata: providerMetadata)
@@ -291,7 +300,8 @@ public struct AIUIMessageStreamReducer: Sendable {
                 id: part.id,
                 text: part.text,
                 state: part.state ?? state,
-                providerMetadata: part.providerMetadata.merging(providerMetadata) { _, new in new }
+                providerMetadata: part.providerMetadata.merging(providerMetadata) { _, new in new },
+                citations: part.citations
             ))
             return
         }
@@ -307,7 +317,8 @@ public struct AIUIMessageStreamReducer: Sendable {
             id: part.id,
             text: part.text + delta,
             state: part.state,
-            providerMetadata: part.providerMetadata.merging(providerMetadata) { _, new in new }
+            providerMetadata: part.providerMetadata.merging(providerMetadata) { _, new in new },
+            citations: part.citations
         ))
     }
 
@@ -322,7 +333,7 @@ public struct AIUIMessageStreamReducer: Sendable {
         appendText(delta, id: id, providerMetadata: providerMetadata)
     }
 
-    private mutating func endTextPart(id: String, providerMetadata: [String: JSONValue]) throws {
+    private mutating func endTextPart(id: String, providerMetadata: [String: JSONValue], citations: [AICitation]? = nil) throws {
         guard let index = textPartIndexes[id], case let .text(part) = message.parts[index] else {
             throw missingStartError(chunkType: "text-end", chunkID: id, startChunkType: "text-start")
         }
@@ -330,7 +341,8 @@ public struct AIUIMessageStreamReducer: Sendable {
             id: part.id,
             text: part.text,
             state: .done,
-            providerMetadata: part.providerMetadata.merging(providerMetadata) { _, new in new }
+            providerMetadata: part.providerMetadata.merging(providerMetadata) { _, new in new },
+            citations: citations ?? part.citations
         ))
         textPartIndexes.removeValue(forKey: id)
     }
@@ -399,16 +411,13 @@ public struct AIUIMessageStreamReducer: Sendable {
         providerMetadata: [String: JSONValue] = [:]
     ) {
         if let index = toolCallPartIndexes[id], case let .toolCall(call) = message.parts[index] {
-            message.parts[index] = .toolCall(AIToolCall(
-                id: call.id,
-                name: call.name.isEmpty ? name : call.name,
-                arguments: call.arguments,
-                providerExecuted: call.providerExecuted || providerExecuted,
-                dynamic: call.dynamic || dynamic,
-                title: call.title ?? title,
-                providerMetadata: call.providerMetadata.merging(providerMetadata) { _, new in new },
-                rawValue: call.rawValue
-            ))
+            var updated = call
+            updated.name = call.name.isEmpty ? name : call.name
+            updated.providerExecuted = call.providerExecuted || providerExecuted
+            updated.dynamic = call.dynamic || dynamic
+            updated.title = call.title ?? title
+            updated.providerMetadata.merge(providerMetadata) { _, new in new }
+            message.parts[index] = .toolCall(updated)
             return
         }
         toolCallPartIndexes[id] = message.parts.count
@@ -426,16 +435,14 @@ public struct AIUIMessageStreamReducer: Sendable {
     private mutating func appendToolArguments(_ delta: String, id: String, providerMetadata: [String: JSONValue] = [:]) {
         ensureToolCallPart(id: id, name: "", providerMetadata: providerMetadata)
         guard let index = toolCallPartIndexes[id], case let .toolCall(call) = message.parts[index] else { return }
-        message.parts[index] = .toolCall(AIToolCall(
-            id: call.id,
-            name: call.name,
-            arguments: call.arguments + delta,
-            providerExecuted: call.providerExecuted,
-            dynamic: call.dynamic,
-            title: call.title,
-            providerMetadata: call.providerMetadata.merging(providerMetadata) { _, new in new },
-            rawValue: call.rawValue
-        ))
+        var updated = call
+        if call.inputEncoding == .text {
+            let raw = (call.rawInputText ?? (try? decodeJSONBody(Data(call.arguments.utf8)))?.stringValue ?? "") + delta
+            updated.rawInputText = raw
+            updated.arguments = canonicalJSONText(.string(raw)) ?? "\"\""
+        } else { updated.arguments += delta }
+        updated.providerMetadata.merge(providerMetadata) { _, new in new }
+        message.parts[index] = .toolCall(updated)
     }
 
     private mutating func mergeToolMetadata(id: String, providerMetadata: [String: JSONValue]) {
@@ -469,7 +476,11 @@ public struct AIUIMessageStreamReducer: Sendable {
 
     private mutating func upsertToolCall(_ call: AIToolCall) {
         if let index = toolCallPartIndexes[call.id] {
-            message.parts[index] = .toolCall(call)
+            var updated = call
+            if case let .toolCall(previous) = message.parts[index] { updated.inputEncoding = previous.inputEncoding }
+            updated.rawInputText = nil
+            activeToolInputIDs.remove(call.id)
+            message.parts[index] = .toolCall(updated)
         } else {
             toolCallPartIndexes[call.id] = message.parts.count
             message.parts.append(.toolCall(call))

@@ -150,6 +150,21 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                     var fallbackFinishReason: String? = "other"
                     let shouldThrowPreOutputStreamErrors = isOpenAIBackedProvider(providerID, config: config)
                     var sourceCounter = 0
+                    var hasWebSearchActionSources = false
+                    var hasFileSearchResults = false
+                    var retrievedFileIDs: Set<String> = []
+                    var fallbackAnnotations: [JSONValue] = []
+                    var activeTextItemID: String?
+                    func flushFallbackSources() {
+                        let annotations = fallbackAnnotations.filter {
+                            !($0["type"]?.stringValue == "url_citation" && hasWebSearchActionSources)
+                                && !($0["type"]?.stringValue == "file_citation" && hasFileSearchResults)
+                        }
+                        for source in openAIResponsesSources(fromAnnotations: annotations, providerID: providerID, sourceCounter: &sourceCounter) {
+                            continuation.yield(.source(source))
+                        }
+                        fallbackAnnotations = []
+                    }
                     var pendingCompletedResponse: JSONValue?
                     var pendingCompletedResponseType: String?
                     let openResponsesProviderOptionsName: String?
@@ -197,8 +212,9 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                         }
                         let responsePayload = raw["response"] ?? raw
                         if raw["type"]?.stringValue == "response.created" {
+                            flushFallbackSources()
                             for textID in activeTextPartIDs.sorted() {
-                                continuation.yield(.textEnd(id: textID))
+                                continuation.yield(.textEnd(id: textID, citations: openAIResponsesCitations(from: textItemAnnotations[textID] ?? [], providerID: providerID)))
                             }
                             for reasoningID in activeReasoningPartIDs.sorted() {
                                 continuation.yield(.reasoningEnd(id: reasoningID))
@@ -244,6 +260,10 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             activeReasoning = [:]
                             activeOutputItemIDs = [:]
                             activeTextPartIDs = []
+                            activeTextItemID = nil
+                            hasWebSearchActionSources = false
+                            hasFileSearchResults = false
+                            retrievedFileIDs = []
                             activeReasoningPartIDs = []
                             toolCallBuffers = OpenAIResponsesStreamingToolCalls(
                                 providerID: providerID,
@@ -276,6 +296,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                                 textItemPhases[itemID] = phase
                             }
                             textItemAnnotations[itemID] = []
+                            activeTextItemID = itemID
                             activeTextPartIDs.insert(itemID)
                             continuation.yield(.textStart(
                                 id: itemID,
@@ -375,14 +396,18 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                         }
                         if raw["type"]?.stringValue == "response.output_text.annotation.added",
                            let annotation = raw["annotation"],
-                           let eventItemID = raw["item_id"]?.stringValue {
+                           let eventItemID = raw["item_id"]?.stringValue ?? activeTextItemID {
                             let itemID = resolvedOutputItemID(
                                 eventItemID,
                                 outputIndex: raw["output_index"]?.intValue
                             )
                             textItemAnnotations[itemID, default: []].append(annotation)
-                            for source in openAIResponsesSources(fromAnnotations: [annotation], providerID: providerID, sourceCounter: &sourceCounter) {
-                                continuation.yield(.source(source))
+                            if ["url_citation", "file_citation"].contains(annotation["type"]?.stringValue ?? "") {
+                                fallbackAnnotations.append(annotation)
+                            } else {
+                                for source in openAIResponsesSources(fromAnnotations: [annotation], providerID: providerID, sourceCounter: &sourceCounter) {
+                                    continuation.yield(.source(source))
+                                }
                             }
                         }
                         if raw["type"]?.stringValue == "response.reasoning_summary_part.added",
@@ -428,6 +453,18 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             }
                             continuation.yield(eventPart)
                         }
+                        if raw["type"]?.stringValue == "response.output_item.done", let item = raw["item"] {
+                            if item["type"]?.stringValue == "web_search_call", item["action"]?["type"]?.stringValue == "search",
+                               item["action"]?["sources"]?.arrayValue?.contains(where: { $0["type"]?.stringValue == "url" }) == true {
+                                hasWebSearchActionSources = true
+                            }
+                            if item["type"]?.stringValue == "file_search_call", !(item["results"]?.arrayValue ?? []).isEmpty {
+                                hasFileSearchResults = true
+                            }
+                            for source in openAIResponsesRetrievedSources(from: item, providerID: providerID, sourceCounter: &sourceCounter, retrievedFileIDs: &retrievedFileIDs) {
+                                continuation.yield(.source(source))
+                            }
+                        }
                         if raw["type"]?.stringValue == "response.output_item.done",
                            let item = raw["item"],
                            item["type"]?.stringValue == "message",
@@ -445,10 +482,12 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             }
                             continuation.yield(.textEnd(
                                 id: itemID,
+                                citations: openAIResponsesCitations(from: annotations, providerID: providerID),
                                 providerMetadata: openAIResponsesTextProviderMetadata(itemID: itemID, phase: phase, annotations: annotations, providerID: providerID)
                             ))
                             activeTextPartIDs.remove(itemID)
                             textItemAnnotations[itemID] = nil
+                            if activeTextItemID == itemID { activeTextItemID = nil }
                             if let outputIndex {
                                 activeOutputItemIDs[outputIndex] = nil
                             }
@@ -547,8 +586,9 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             pendingCompletedResponseType = "response.failed"
                         }
                     }
+                    flushFallbackSources()
                     for textID in activeTextPartIDs.sorted() {
-                        continuation.yield(.textEnd(id: textID))
+                        continuation.yield(.textEnd(id: textID, citations: openAIResponsesCitations(from: textItemAnnotations[textID] ?? [], providerID: providerID)))
                     }
                     for reasoningID in activeReasoningPartIDs.sorted() {
                         continuation.yield(.reasoningEnd(id: reasoningID))
@@ -753,6 +793,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             try openAIResponsesInputMessageJSON(
                 $0,
                 store: store,
+                isReasoningModel: isEffectiveReasoningModel,
                 hasConversation: hasConversation,
                 hasPreviousResponseID: hasPreviousResponseID,
                 processedApprovalIDs: &processedApprovalIDs,
@@ -764,6 +805,10 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                 shellToolNames: shellToolNames,
                 computerToolNames: computerToolNames,
                 toolSearchToolName: toolSearchToolName,
+                webSearchToolNames: Set(["web_search", "web_search_preview"] + request.tools.compactMap { name, tool in
+                    ["openai.web_search", "openai.web_search_preview"].contains(tool["id"]?.stringValue ?? "")
+                        ? tool["name"]?.stringValue ?? name : nil
+                }),
                 providerID: providerID,
                 wrapToolErrors: isOpenAIBacked,
                 useDeveloperRoleForSystem: useDeveloperRoleForSystem,
@@ -867,7 +912,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             text["format"] = textFormat
             body["text"] = .object(text)
         }
-        if !preparedTools.tools.isEmpty {
+        if !request.tools.isEmpty {
             body["tools"] = .array(preparedTools.tools)
             if let allowedTools = options["allowedTools"] ?? options["allowed_tools"] {
                 body["tool_choice"] = try openAIResponsesAllowedToolsChoice(
@@ -880,6 +925,17 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                 customToolNames: preparedTools.customToolNames,
                 programmaticToolNames: preparedTools.programmaticToolNames
             ) {
+                if toolChoice["type"]?.stringValue == "function",
+                   let name = toolChoice["name"]?.stringValue,
+                   let tool = request.tools[name] {
+                    let openAIOptions = tool["providerOptions"]?["openai"] ?? tool["openai"]
+                    if (openAIOptions?["omitFromRequestTools"] ?? openAIOptions?["omit_from_request_tools"])?.boolValue == true {
+                        throw AIError.invalidArgument(
+                            argument: "toolChoice",
+                            message: "forcing tool \"\(name)\" omitted from the request tools array; use automatic tool choice for history-loaded tools"
+                        )
+                    }
+                }
                 body["tool_choice"] = toolChoice
             }
         }

@@ -136,9 +136,11 @@ import Testing
         return "result1"
     }
 
+    var request = LanguageModelRequest(messages: initialMessages)
+    request.toolCallConcurrency = 1
     let result = try await AI.generateText(
         model: model,
-        request: LanguageModelRequest(messages: initialMessages),
+        request: request,
         executableTools: [tool],
         maxSteps: 3,
         toolApproval: { _ in .userApproval }

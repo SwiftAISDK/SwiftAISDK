@@ -77,7 +77,7 @@ import Testing
     ))
 
     #expect(result.warnings == [
-        AIWarning(type: "unsupported", feature: "provider-defined tool groq.browser_search")
+        AIWarning(type: "unsupported", feature: "provider-defined tool groq.browser_search", message: "Browser search is not supported on model gemma2-9b-it.")
     ])
     let request = try #require(await transport.requests().first)
     let body = try decodeJSONBody(try #require(request.body))

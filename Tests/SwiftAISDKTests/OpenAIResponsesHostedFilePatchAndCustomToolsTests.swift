@@ -44,7 +44,7 @@ import Testing
           case let .toolCall(toolCall) = result.content[1],
           case let .toolResult(toolResult) = result.content[2],
           case let .reasoning(secondReasoning, secondReasoningMetadata) = result.content[3],
-          case let .text(text, textMetadata) = result.content[4],
+          case let .citedText(text, _, textMetadata) = result.content[4],
           case let .source(source) = result.content[5] else {
         Issue.record("Expected upstream file search content without included results")
         return
@@ -116,7 +116,7 @@ import Testing
           case let .toolCall(toolCall) = result.content[1],
           case let .toolResult(toolResult) = result.content[2],
           case let .reasoning(secondReasoning, secondReasoningMetadata) = result.content[3],
-          case let .text(text, textMetadata) = result.content[4],
+          case let .citedText(text, _, textMetadata) = result.content[4],
           case let .source(source) = result.content[5] else {
         Issue.record("Expected upstream file search content with included results")
         return
@@ -148,7 +148,8 @@ import Testing
     #expect(source.mediaType == "text/plain")
     #expect(source.filename == "ai.pdf")
     #expect(source.providerMetadata["openai"]?["fileId"]?.stringValue == "file-Ebzhf8H4DPGPr9pUhr7n7v")
-    #expect(source.providerMetadata["openai"]?["index"]?.intValue == 350)
+    #expect(source.providerMetadata["openai"]?["type"] == "file_search")
+    #expect(source.rawValue?["file_id"] == source.providerMetadata["openai"]?["fileId"])
 }
 
 @Test func openAIResponsesSendsApplyPatchRequestBodyLikeUpstream() async throws {

@@ -20,7 +20,7 @@ import Testing
     ])
 }
 
-@Test func aiConvertPromptValidationPassesToolApprovalResponseLikeUpstream() throws {
+@Test func aiConvertPromptValidationRequiresToolResultAfterLocalApprovalLikeUpstream() throws {
     let toolCall = AIToolCall(
         id: "call_to_approve",
         name: "dangerous_action",
@@ -41,11 +41,7 @@ import Testing
         .toolResponses(approvalResponses: [approvalResponse])
     ])
 
-    let prepared = try prepareLanguageModelCallOptions(request)
-
-    #expect(prepared.messages == [
-        AIMessage(role: .assistant, content: [.toolCall(toolCall)])
-    ])
+    #expect(throws: AIMissingToolResultsError.self) { try prepareLanguageModelCallOptions(request) }
 }
 
 @Test func aiConvertPromptValidationPreservesProviderExecutedToolApprovalResponseLikeUpstream() throws {

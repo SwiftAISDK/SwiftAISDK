@@ -159,6 +159,7 @@ extension AI {
             }
             let executionToolsByName = try toolsByName(from: directExecutionTools)
             var stepRequest = prepared?.request ?? currentRequest
+            stepRequest.toolCallConcurrency = stepRequest.toolCallConcurrency ?? initialRequest.toolCallConcurrency
             stepRequest.messages = appendToolCallerMessages(
                 stepRequest.messages,
                 additions: preparedTools.callerMessages

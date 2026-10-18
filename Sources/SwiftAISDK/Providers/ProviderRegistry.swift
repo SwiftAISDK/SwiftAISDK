@@ -11,7 +11,7 @@ public enum AIProviders {
         if let project = settings.project {
             settings.headers["OpenAI-Project"] = settings.headers["OpenAI-Project"] ?? project
         }
-        return try OpenAICompatibleProvider(providerID: providerID, defaultBaseURL: "https://api.openai.com/v1", authorization: .bearer(environmentVariables: ["OPENAI_API_KEY"]), supportedCapabilities: [.language, .completion, .embedding, .image, .transcription, .speech], settings: settings, routesLikeOpenAI: true, userAgentSuffix: "ai-sdk-openai/4.0.91", supportsProviderOwnedBatch: true)
+        return try OpenAICompatibleProvider(providerID: providerID, defaultBaseURL: "https://api.openai.com/v1", authorization: .bearer(environmentVariables: ["OPENAI_API_KEY"]), supportedCapabilities: [.language, .completion, .embedding, .image, .transcription, .speech], settings: settings, routesLikeOpenAI: true, userAgentSuffix: "ai-sdk-openai/4.0.96", supportsProviderOwnedBatch: true)
     }
 
     public static func anthropic(settings: ProviderSettings = ProviderSettings()) throws -> AnthropicProvider {
@@ -140,7 +140,7 @@ public enum AIProviders {
             authorization: apiKey == nil ? .none : .bearer(environmentVariables: []),
             supportedCapabilities: [.language, .completion, .embedding, .image],
             settings: settings,
-            userAgentSuffix: "ai-sdk-openai-compatible/3.0.67",
+            userAgentSuffix: "ai-sdk-openai-compatible/3.0.71",
             usesOpenAICompatibleSurfaceIDs: true
         )
     }
@@ -170,7 +170,7 @@ public enum AIProviders {
             authorization: apiKey == nil ? .none : .bearer(environmentVariables: []),
             supportedCapabilities: [.language, .completion, .embedding, .image],
             settings: settings,
-            userAgentSuffix: "ai-sdk-openai-compatible/3.0.67",
+            userAgentSuffix: "ai-sdk-openai-compatible/3.0.71",
             usesOpenAICompatibleSurfaceIDs: true
         )
     }
@@ -329,7 +329,7 @@ public enum AIProviders {
             headers: headers,
             transport: settings.transport,
             dynamicHeaders: dynamicHeaders,
-            userAgentSuffix: userAgentSuffix ?? "ai-sdk-open-responses/2.0.63",
+            userAgentSuffix: userAgentSuffix ?? "ai-sdk-open-responses/2.0.67",
             includeUsage: settings.includeUsage,
             queryParams: settings.queryParams,
             supportsStructuredOutputs: structuredOutputs,
@@ -388,7 +388,7 @@ public enum AIProviders {
         return try OpenAICompatibleProvider(
             providerID: "heygen", defaultBaseURL: "https://api.heygen.com",
             authorization: .apiKeyHeader(name: "x-api-key", environmentVariables: ["HEYGEN_API_KEY"]),
-            supportedCapabilities: [.video], settings: settings, userAgentSuffix: "ai-sdk-heygen/3.0.0"
+            supportedCapabilities: [.video], settings: settings, userAgentSuffix: "ai-sdk-heygen/3.0.4"
         )
     }
 
@@ -419,7 +419,7 @@ public enum AIProviders {
         return try OpenAICompatibleProvider(
             providerID: "topaz", defaultBaseURL: "https://api.topazlabs.com",
             authorization: .apiKeyHeader(name: "x-api-key", environmentVariables: ["TOPAZ_API_KEY"]),
-            supportedCapabilities: [.image, .video], settings: settings, userAgentSuffix: "ai-sdk-topaz/3.0.5"
+            supportedCapabilities: [.image, .video], settings: settings, userAgentSuffix: "ai-sdk-topaz/3.0.9"
         )
     }
 
@@ -530,5 +530,5 @@ private func perplexityHeaders(settings: ProviderSettings) throws -> [String: St
         throw AIError.missingAPIKey(provider: "perplexity", environmentVariables: ["PERPLEXITY_API_KEY"])
     }
     headers["Authorization"] = headers["Authorization"] ?? "Bearer \(key)"
-    return withUserAgentSuffix(headers, "ai-sdk-perplexity/5.0.10")
+    return withUserAgentSuffix(headers, "ai-sdk-perplexity/5.0.14")
 }

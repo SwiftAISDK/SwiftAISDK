@@ -256,6 +256,10 @@ public final class AmazonBedrockLanguageModel: LanguageModel, @unchecked Sendabl
             && !useNativeStructuredOutput
             && isAnthropicModel
             && (capabilities.rejectsForcedToolUse
+                || (modelID.contains("claude-")
+                    && (!capabilities.isKnownModel || !modelSupportsStructuredOutput)
+                    && !bedrockSupportsNativeStructuredOutput(modelID: modelID)
+                    && structuredOutputMode != "jsonTool")
                 || (structuredOutputMode != "jsonTool"
                     && !bedrockSupportsStrictToolSpec(modelID: modelID)
                     && !request.tools.isEmpty))

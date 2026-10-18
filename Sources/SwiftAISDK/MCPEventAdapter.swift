@@ -19,7 +19,13 @@ public struct MCPManagedSubscription: Codable, Equatable, Sendable {
 }
 
 public struct MCPManagedSubscribeInput: Sendable {
-    public enum Lifetime: Sendable { case milliseconds(Int), expiresAt(String?) }
+    public enum Lifetime: Sendable {
+        case milliseconds(Int)
+        case indefinite
+        /// Retained for native callers that used the original absolute-lifetime adapter.
+        @available(*, deprecated, message: "Use milliseconds or indefinite for managed subscriptions.")
+        case expiresAt(String?)
+    }
     public var name: String
     public var arguments: [String: JSONValue]
     public var context: [String: JSONValue]?
@@ -30,6 +36,11 @@ public struct MCPManagedSubscribeInput: Sendable {
     public init(name: String, arguments: [String: JSONValue] = [:], context: [String: JSONValue]? = nil, idempotencyKey: String, lifetime: Lifetime, options: MCPRequestOptions? = nil) {
         self.name = name; self.arguments = arguments; self.context = context
         self.idempotencyKey = idempotencyKey; self.lifetime = lifetime; self.options = options
+    }
+
+    public init(name: String, arguments: [String: JSONValue] = [:], context: [String: JSONValue]? = nil, idempotencyKey: String, ttlMs: Int?, options: MCPRequestOptions? = nil) {
+        self.init(name: name, arguments: arguments, context: context, idempotencyKey: idempotencyKey,
+                  lifetime: ttlMs.map(Lifetime.milliseconds) ?? .indefinite, options: options)
     }
 }
 

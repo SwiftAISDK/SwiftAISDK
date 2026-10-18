@@ -553,10 +553,16 @@ duplex transport preserves Gateway auth/team subprotocols, splits large audio
 frames safely, and maps provider stream metadata and errors into the shared
 Swift lifecycle.
 
+Generated and streamed text retain attached `AICitation` values separately from
+retrieved sources, including through typed text output and native UI. See the
+[citation guide](https://ozio.github.io/SwiftAISDK/core/stream-text/).
+`LanguageModelRequest.toolCallConcurrency` bounds local tool execution; 1 is
+sequential and nil is unlimited, while returned results retain model order.
+
 ## Decision V4
 
-`AI.experimentalDecide` answers typed Choice, Score and Boolean questions over
-ordered text, JSON and file evidence. OpenAI, Anthropic, Google, Gateway and
+`AI.experimentalDecide` answers typed Choice, Score, Boolean and TypeSafe Box
+questions over ordered text, JSON and file evidence. OpenAI, Anthropic, Google, Gateway and
 TypeSafe AI expose `decisionModel(_:)`; registry and custom-provider routing
 support the same model reference.
 
@@ -574,7 +580,8 @@ let result = try await AI.experimentalDecide(
 
 URL evidence is downloaded and normalized before adapter execution. File
 support depends on the adapter: OpenAI supports image files, generic language
-adapters support images, and TypeSafe supports text/JSON. Refusals throw
+adapters support images, and TypeSafe supports text/JSON plus PNG/JPEG evidence
+with normalized Box answers and typed reference/long-context options. Refusals throw
 `AIDecisionRefusalError`. See the [Decision guide](https://ozio.github.io/SwiftAISDK/core/decide/).
 
 ## Evaluation V4

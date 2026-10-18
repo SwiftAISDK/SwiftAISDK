@@ -42,7 +42,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.moonshot.ai/v1/chat/completions")
     #expect(request.headers["authorization"] == "Bearer moonshot-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-moonshotai/3.0.67")
+    #expect(request.headers["user-agent"] == "ai-sdk-moonshotai/3.0.71")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["moonshotai"] == nil)
     #expect(body["extraRaw"]?.stringValue == "keep-me")
@@ -70,7 +70,7 @@ import Testing
     _ = try await model.generate(LanguageModelRequest(messages: [.user("Hi")]))
 
     let request = try #require(await transport.requests().first)
-    #expect(request.headers["user-agent"] == "TestApp/1.0 ai-sdk-moonshotai/3.0.67")
+    #expect(request.headers["user-agent"] == "TestApp/1.0 ai-sdk-moonshotai/3.0.71")
     #expect(request.headers["authorization"] == "Bearer moonshot-key")
 }
 
@@ -441,7 +441,7 @@ import Testing
         case let .textDeltaPart(id, delta, _):
             text.append(delta)
             lifecycle.append("delta:\(id):\(delta)")
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             lifecycle.append("end:\(id)")
         case let .finishMetadata(reason, finalUsage, _):
             finishReason = reason

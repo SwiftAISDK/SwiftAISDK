@@ -28,22 +28,24 @@ import Testing
         switch part {
         case let .source(source):
             sources.append(source)
-        case let .textEnd(id, metadata) where id == "msg_annotations":
+        case let .textEnd(id, metadata) where id == "msg_annotations",
+             let .textEndWithCitations(id, _, metadata) where id == "msg_annotations":
             textEndMetadata = metadata
         default:
             break
         }
     }
 
-    #expect(sources.map(\.sourceType) == ["url", "document", "document", "document"])
-    #expect(sources[0].url == "https://example.com")
-    #expect(sources[1].filename == "resource1.json")
-    #expect(sources[1].providerMetadata["openai"]?["type"]?.stringValue == "file_citation")
-    #expect(sources[1].providerMetadata["openai"]?["fileId"]?.stringValue == "file-abc123")
-    #expect(sources[1].providerMetadata["openai"]?["index"]?.intValue == 123)
-    #expect(sources[2].providerMetadata["openai"]?["containerId"]?.stringValue == "cntr-1")
-    #expect(sources[3].mediaType == "application/octet-stream")
-    #expect(sources[3].filename == "cfile-path")
+    #expect(sources.map(\.sourceType) == ["document", "document", "url", "document"])
+    #expect(sources[2].url == "https://example.com")
+    #expect(sources[3].filename == "resource1.json")
+    #expect(sources[3].providerMetadata["openai"]?["type"]?.stringValue == "file_citation")
+    #expect(sources[3].providerMetadata["openai"]?["fileId"]?.stringValue == "file-abc123")
+    #expect(sources[3].providerMetadata["openai"]?["index"]?.intValue == 123)
+    #expect(sources[0].providerMetadata["openai"]?["containerId"]?.stringValue == "cntr-1")
+    #expect(sources[1].mediaType == "application/octet-stream")
+    #expect(sources[1].filename == "cfile-path")
+
     let annotations = try #require(textEndMetadata["openai"]?["annotations"]?.arrayValue)
     #expect(textEndMetadata["openai"]?["itemId"]?.stringValue == "msg_annotations")
     #expect(annotations.count == 4)
@@ -117,7 +119,7 @@ import Testing
             textStarts.append((id, metadata))
         case let .textDeltaPart(id, delta, _):
             textDeltas.append((id, delta))
-        case let .textEnd(id, metadata):
+        case let .textEnd(id, metadata), let .textEndWithCitations(id, _, metadata):
             textEnds.append((id, metadata))
         case let .finishMetadata(reason, usage, providerMetadata):
             finishReason = reason

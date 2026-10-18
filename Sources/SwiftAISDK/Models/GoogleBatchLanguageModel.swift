@@ -1214,6 +1214,8 @@ private func googleBatchMergingProviderMetadata(
     switch part {
     case let .text(text, existing):
         return .text(text, providerMetadata: googleBatchMergedProviderMetadata(existing, metadata))
+    case let .citedText(text, citations, existing):
+        return .text(text, citations: citations, providerMetadata: googleBatchMergedProviderMetadata(existing, metadata))
     case let .reasoning(text, existing):
         return .reasoning(text, providerMetadata: googleBatchMergedProviderMetadata(existing, metadata))
     case let .source(source):

@@ -7,13 +7,13 @@ Source URL: /components/structured-output/
 | Symbol kind | Count |
 | --- | --- |
 | Associated Type | 1 |
-| Case | 50 |
+| Case | 51 |
 | Class | 1 |
 | Enumeration | 9 |
 | Function | 2 |
 | Initializer | 19 |
 | Instance Method | 7 |
-| Instance Property | 160 |
+| Instance Property | 161 |
 | Protocol | 1 |
 | Structure | 17 |
 | Type Method | 29 |
@@ -54,6 +54,7 @@ Source URL: /components/structured-output/
 | Case | `AIParsePartialJSONState.repairedParse` | `case repairedParse` | [Sources/SwiftAISDK/AIObjectPartialJSON.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIObjectPartialJSON.swift) |
 | Case | `AIParsePartialJSONState.successfulParse` | `case successfulParse` | [Sources/SwiftAISDK/AIObjectPartialJSON.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIObjectPartialJSON.swift) |
 | Case | `AIParsePartialJSONState.undefinedInput` | `case undefinedInput` | [Sources/SwiftAISDK/AIObjectPartialJSON.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIObjectPartialJSON.swift) |
+| Case | `AIResultContentPart.citedText(_:citations:providerMetadata:)` | `case citedText(String, citations: [AICitation], providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreTextObjectResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTextObjectResults.swift) |
 | Case | `AIResultContentPart.custom(_:providerMetadata:)` | `case custom(JSONValue, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreTextObjectResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTextObjectResults.swift) |
 | Case | `AIResultContentPart.file(_:)` | `case file(AIStreamFile)` | [Sources/SwiftAISDK/CoreTextObjectResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTextObjectResults.swift) |
 | Case | `AIResultContentPart.reasoning(_:providerMetadata:)` | `case reasoning(String, providerMetadata: [String : JSONValue] = [:])` | [Sources/SwiftAISDK/CoreTextObjectResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTextObjectResults.swift) |
@@ -117,6 +118,7 @@ Source URL: /components/structured-output/
 | Instance Property | `callID` | `var callID: String` | [Sources/SwiftAISDK/CoreTextObjectResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTextObjectResults.swift) |
 | Instance Property | `callID` | `var callID: String` | [Sources/SwiftAISDK/CoreTextObjectResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTextObjectResults.swift) |
 | Instance Property | `callID` | `var callID: String` | [Sources/SwiftAISDK/CoreTextObjectResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTextObjectResults.swift) |
+| Instance Property | `citations` | `var citations: [AICitation] { get }` | [Sources/SwiftAISDK/CoreTextObjectResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTextObjectResults.swift) |
 | Instance Property | `content` | `var content: [AIResultContentPart]` | [Sources/SwiftAISDK/CoreTextObjectResults.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreTextObjectResults.swift) |
 | Instance Property | `description` | `var description: String? { get }` | [Sources/SwiftAISDK/CoreObjectSchema.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreObjectSchema.swift) |
 | Instance Property | `description` | `var description: String? { get }` | [Sources/SwiftAISDK/CoreObjectSchema.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreObjectSchema.swift) |

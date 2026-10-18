@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import SwiftAISDK
 
-@Test func openAIResponsesSkipsProviderExecutedToolCallsAndResultsLikeUpstream() async throws {
+@Test func openAIResponsesReplaysProviderExecutedSearchWithStorageDisabledLikeUpstream() async throws {
     let transport = RecordingTransport(response: jsonResponse(#"{"id":"resp-1","status":"completed","output_text":"done"}"#))
     let provider = try AIProviders.openAI(settings: ProviderSettings(apiKey: "test-key", transport: transport))
     let model = try provider.languageModel("gpt-5.1")
@@ -44,14 +44,15 @@ import Testing
 
     let body = try decodeJSONBody(try #require((await transport.requests()).first?.body))
     let input = try #require(body["input"]?.arrayValue)
-    #expect(input.count == 2)
+    #expect(input.count == 3)
     #expect(input[0]["role"]?.stringValue == "assistant")
     #expect(input[0]["content"]?.stringValue == "Let me search for recent news from San Francisco.")
-    #expect(input[1]["role"]?.stringValue == "assistant")
-    #expect(input[1]["content"]?.stringValue == "Based on the search results, several significant events took place in San Francisco yesterday (June 22, 2025).")
-    #expect(result.warnings.count == 1)
-    #expect(result.warnings.first?.type == "other")
-    #expect(result.warnings.first?.message == "Results for OpenAI tool web_search are not sent to the API when store is false")
+    #expect(input[1]["type"] == "web_search_call")
+    #expect(input[1]["id"] == "ws_67cf2b3051e88190b006770db6fdb13d")
+    #expect(input[1]["action"]?["query"] == "San Francisco major news events June 22 2025")
+    #expect(input[2]["role"]?.stringValue == "assistant")
+    #expect(input[2]["content"]?.stringValue == "Based on the search results, several significant events took place in San Francisco yesterday (June 22, 2025).")
+    #expect(result.warnings.isEmpty)
 }
 
 @Test func openAIResponsesSkipsExecutionDeniedAssistantToolResultsLikeUpstream() async throws {

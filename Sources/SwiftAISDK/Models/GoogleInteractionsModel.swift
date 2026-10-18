@@ -16,7 +16,7 @@ public final class GoogleInteractionsLanguageModel: LanguageModel, @unchecked Se
     public func generate(_ request: LanguageModelRequest) async throws -> TextGenerationResult {
         let prepared = try googleInteractionsPreparedCall(for: request, modelID: modelID, agent: agent, stream: false)
         let raw = try await sendInteractions(body: .object(prepared.body), headers: request.headers, abortSignal: request.abortSignal)
-        let final = try await resolvedInteraction(raw, requestHeaders: request.headers, abortSignal: request.abortSignal)
+        let final = try await resolvedInteraction(raw, isBackground: prepared.body["background"]?.boolValue == true, requestHeaders: request.headers, abortSignal: request.abortSignal)
         let output = googleInteractionsParsedOutput(from: final)
         guard !output.content.isEmpty else {
             throw AIError.invalidResponse(provider: providerID, message: "No supported output found in Google Interactions response.")
@@ -179,8 +179,8 @@ public final class GoogleInteractionsLanguageModel: LanguageModel, @unchecked Se
         return try response.jsonValue()
     }
 
-    private func resolvedInteraction(_ raw: JSONValue, requestHeaders: [String: String], abortSignal: AIAbortSignal?) async throws -> JSONValue {
-        guard agent != nil,
+    private func resolvedInteraction(_ raw: JSONValue, isBackground: Bool, requestHeaders: [String: String], abortSignal: AIAbortSignal?) async throws -> JSONValue {
+        guard agent != nil || isBackground,
               !googleInteractionsIsTerminal(raw["status"]?.stringValue),
               let id = raw["id"]?.stringValue else {
             return raw

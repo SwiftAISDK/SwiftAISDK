@@ -257,7 +257,7 @@ private func cartesiaEncoding(for mediaType: String) throws -> String {
 }
 
 private func isCartesiaInk2Model(_ modelID: String) -> Bool {
-    modelID == "ink-2" || modelID.hasPrefix("ink-2-")
+    modelID != "ink-whisper" && !modelID.hasPrefix("ink-whisper-")
 }
 
 private func cartesiaStreamingURLs(

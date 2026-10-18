@@ -129,7 +129,7 @@ private func wrapCanonicalTextStream(
                     case let .textStart(id, _):
                         continuation.yield(part)
                         continuation.yield(.textDeltaPart(id: id, delta: prefix))
-                    case let .textEnd(id, _):
+                    case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
                         continuation.yield(.textDeltaPart(id: id, delta: suffix))
                         continuation.yield(part)
                     default:

@@ -163,6 +163,7 @@ func openAIResponsesOutputContentItem(
                 }
                 return .text(
                     text,
+                    citations: openAIResponsesCitations(from: annotations, providerID: providerID),
                     providerMetadata: openAIResponsesTextProviderMetadata(
                         itemID: itemID,
                         phase: item["phase"],

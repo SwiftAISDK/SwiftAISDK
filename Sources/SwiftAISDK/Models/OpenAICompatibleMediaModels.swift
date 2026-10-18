@@ -116,20 +116,22 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
             body["response_format"] = .string("b64_json")
         }
 
-        let response = try await config.sendJSONResponse(path: "/images/generations", modelID: modelID, body: .object(body), headers: request.headers, abortSignal: request.abortSignal)
-        let raw = response.json
+        let httpRequest = try config.request(path: "/images/generations", modelID: modelID, body: .object(body), headers: request.headers, abortSignal: request.abortSignal)
+        let response = try await config.transport.send(httpRequest)
+        guard (200..<300).contains(response.statusCode) else { throw config.httpStatusError(response) }
+        let raw = try response.jsonValue()
         guard case let .array(data) = raw["data"] else {
             throw AIError.invalidResponse(provider: providerID, message: "No image data found.")
         }
         return ImageGenerationResult(
             urls: data.compactMap { $0["url"]?.stringValue },
-            base64Images: data.compactMap { $0["b64_json"]?.stringValue },
+            base64Images: try await resolvedImages(data, request: httpRequest),
             rawValue: raw,
             warnings: warnings,
             usage: tokenUsage(from: raw),
             providerMetadata: openAIImageProviderMetadata(from: raw, providerID: providerID, openAIBackedProviderRoot: config.openAIBackedProviderRoot),
             requestMetadata: imageGenerationRequestMetadata(request, body: .object(body)),
-            responseMetadata: openAICompatibleResponseMetadata(from: raw, response: response.response, modelID: modelID)
+            responseMetadata: openAICompatibleResponseMetadata(from: raw, response: response, modelID: modelID)
         )
     }
 
@@ -182,8 +184,7 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
             }
         }
 
-        let response = try await config.transport.send(
-            config.rawRequest(
+        let httpRequest = try config.rawRequest(
                 path: "/images/edits",
                 modelID: modelID,
                 body: form.finalize(),
@@ -191,7 +192,7 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
                 headers: request.headers,
                 abortSignal: request.abortSignal
             )
-        )
+        let response = try await config.transport.send(httpRequest)
         guard (200..<300).contains(response.statusCode) else {
             throw apiCallError(provider: providerID, response: response)
         }
@@ -201,7 +202,7 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
         }
         return ImageGenerationResult(
             urls: data.compactMap { $0["url"]?.stringValue },
-            base64Images: data.compactMap { $0["b64_json"]?.stringValue },
+            base64Images: try await resolvedImages(data, request: httpRequest),
             rawValue: raw,
             warnings: warnings,
             usage: tokenUsage(from: raw),
@@ -209,6 +210,49 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
             requestMetadata: imageGenerationRequestMetadata(request),
             responseMetadata: openAICompatibleResponseMetadata(from: raw, response: response, modelID: modelID)
         )
+    }
+
+    private func resolvedImages(_ data: [JSONValue], request: AIHTTPRequest) async throws -> [String] {
+        guard !isOpenAIBackedProvider(providerID, config: config) else {
+            return data.compactMap { $0["b64_json"]?.stringValue }
+        }
+        for image in data {
+            for key in ["b64_json", "url"] {
+                if let value = image[key], value != .null, value.stringValue == nil {
+                    throw AIError.invalidResponse(provider: providerID, message: "Image response \(key) must be a string or null.")
+                }
+            }
+            guard image["b64_json"]?.stringValue != nil || image["url"]?.stringValue != nil else {
+                throw AIError.invalidResponse(provider: providerID, message: "Expected b64_json or url in the image response.")
+            }
+        }
+        // Preserve upstream's base64-only responses verbatim. Mixed responses
+        // normalize to the local base64 array in the original image order.
+        if data.allSatisfy({ $0["b64_json"]?.stringValue != nil }) {
+            return data.compactMap { $0["b64_json"]?.stringValue }
+        }
+        var images: [String] = []
+        for image in data {
+            if let encoded = image["b64_json"]?.stringValue {
+                guard Data(base64Encoded: encoded) != nil else {
+                    throw AIError.invalidResponse(provider: providerID, message: "Invalid base64 image data.")
+                }
+                images.append(encoded)
+                continue
+            }
+            guard let url = image["url"]?.stringValue else {
+                throw AIError.invalidResponse(provider: providerID, message: "Expected b64_json or url in the image response.")
+            }
+            let response = try await downloadURL(
+                url, transport: config.transport, headers: request.headers,
+                abortSignal: request.abortSignal,
+                trustedOrigin: request.url.absoluteString,
+                credentialedOrigin: request.url.absoluteString
+            )
+            guard (200..<300).contains(response.statusCode) else { throw apiCallError(provider: providerID, response: response) }
+            images.append(response.body.base64EncodedString())
+        }
+        return images
     }
 }
 

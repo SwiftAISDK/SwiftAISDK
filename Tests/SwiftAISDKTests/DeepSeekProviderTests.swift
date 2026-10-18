@@ -40,7 +40,7 @@ import Testing
             textLifecycle.append("start:\(id)")
         case let .textDeltaPart(id, delta, _):
             textLifecycle.append("delta:\(id):\(delta)")
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             textLifecycle.append("end:\(id)")
         case let .finishMetadata(reason, usage, metadata):
             finishReason = reason
@@ -170,7 +170,7 @@ import Testing
 
     let request = try #require(await transport.requests().first)
     #expect(request.headers["authorization"] == "Bearer deepseek-key")
-    #expect(request.headers["user-agent"] == "custom-client/1.0 ai-sdk-deepseek/3.0.63")
+    #expect(request.headers["user-agent"] == "custom-client/1.0 ai-sdk-deepseek/3.0.67")
 }
 
 @Test func deepSeekLanguageGeneratesMissingToolCallIDLikeUpstreamV4() async throws {
@@ -576,7 +576,7 @@ import Testing
     ))
 
     let request = try #require(await transport.requests().first)
-    #expect(request.headers["user-agent"] == "ai-sdk-azure/4.0.99")
+    #expect(request.headers["user-agent"] == "ai-sdk-azure/4.0.104")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["messages"]?[0]?["role"]?.stringValue == "user")
     #expect(body["response_format"]?["type"]?.stringValue == "json_schema")

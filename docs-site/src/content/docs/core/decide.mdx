@@ -1,6 +1,6 @@
 ---
 title: Decision
-description: Ask typed Choice, Score, and Boolean questions about ordered text, JSON, and file evidence.
+description: Ask typed Choice, Score, Boolean, and image Box questions about ordered text, JSON, and file evidence.
 ---
 
 `AI.experimentalDecide` returns validated answers to a named question map.
@@ -40,7 +40,7 @@ weighted means of the indexed criteria. Boolean answers represent P(true).
 Values must be finite and within their rubric bounds; missing/extra answers,
 malformed distributions, and unsupported question types fail validation.
 Provider-declared rounding relaxes sum/weighted-score precision checks; the
-chosen option must still have maximal probability under the published contract.
+chosen option must be maximal within the declared rounding uncertainty of both probabilities.
 
 If any question is refused, raw provider results can contain `.refusal`, while
 the facade throws `AIDecisionRefusalError` for the entire decision. No partial
@@ -51,7 +51,7 @@ answer map is reported as successful, and a refusal does not retry provider I/O.
 - OpenAI accepts inline PNG, JPEG, WebP, and GIF images, with optional image detail.
 - `DecisionLanguageModel` accepts image evidence alongside text/JSON.
 - Gateway forwards inline bytes/base64 after URL normalization by the facade.
-- TypeSafe AI accepts text/JSON only and rejects files before HTTP.
+- TypeSafe AI accepts text/JSON and inline PNG/JPEG images. Box questions return finite normalized edges with `left < right` and `top < bottom`; other adapters reject Box before model I/O.
 - Native provider-file references are unsupported by these decision adapters.
 
 ## Callbacks, telemetry, and compatibility
@@ -68,3 +68,31 @@ use the new `stateParts:` overload for ordered Evaluation evidence. New code
 should use Decision names. Custom mocks for experimental OpenAI/Gateway
 Evaluation should now serve `/decisions` and `/decision-model` envelopes;
 language-backed mocks should use the schema name `decision`.
+
+## TypeSafe image decisions
+
+TypeSafe image evidence is sent as multipart `request.json` plus image files.
+`TypeSafeAIFilePartProviderOptions` controls a unique nonempty reference and
+whether it is inserted into state. By default the SDK inserts a generated
+reference, or reuses an explicit reference already present in a state string
+(including nested JSON values). Object keys do not count as references.
+`insertReference: false` requires an explicit reference for use in instructions
+or criteria. Repeated references send repeated image context upstream.
+
+```swift
+let provider = AIProviders.typeSafeAI()
+let result = try await AI.experimentalDecide(
+    model: try provider.decisionModel("jev-preview"),
+    state: .parts([.file(
+        mediaType: "image/png", data: .data(imageBytes),
+        providerOptions: TypeSafeAIFilePartProviderOptions(reference: "[photo]").providerOptions
+    )]),
+    questions: ["object": .box(instructions: "The mug in [photo]")],
+    providerOptions: TypeSafeAIDecisionModelOptions(longContext: true).providerOptions
+)
+```
+
+Images or Box questions enable TypeSafe's experimental image header. The
+optional long-context setting enables its separate 262k-token context header;
+upstream documents this mode as slower and less accurate. Confidence metadata
+and two-decimal rounding remain available.

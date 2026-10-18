@@ -160,6 +160,7 @@ func openAIResponsesOutputText(from raw: JSONValue) -> String? {
 func openAIResponsesInputMessageJSON(
     _ message: AIMessage,
     store: Bool,
+    isReasoningModel: Bool = false,
     hasConversation: Bool = false,
     hasPreviousResponseID: Bool = false,
     processedApprovalIDs: inout Set<String>,
@@ -171,6 +172,7 @@ func openAIResponsesInputMessageJSON(
     shellToolNames: Set<String> = [],
     computerToolNames: Set<String> = [],
     toolSearchToolName: String? = "tool_search",
+    webSearchToolNames: Set<String> = ["web_search", "web_search_preview"],
     providerID: String = "openai",
     wrapToolErrors: Bool = false,
     useDeveloperRoleForSystem: Bool = false,
@@ -258,7 +260,16 @@ func openAIResponsesInputMessageJSON(
                 if let caller = openAIResponsesCaller(from: result.providerMetadata) {
                     item["caller"] = caller
                 }
-                return [.object(item)]
+                var items: [JSONValue] = [.object(item)]
+                if let additionalTools = try openAIResponsesAdditionalTools(result, providerID: providerID),
+                   !additionalTools.isEmpty {
+                    items.append(.object([
+                        "type": .string("additional_tools"),
+                        "role": .string("developer"),
+                        "tools": .array(additionalTools)
+                    ]))
+                }
+                return items
             default:
                 return []
             }
@@ -280,23 +291,26 @@ func openAIResponsesInputMessageJSON(
         var output: [JSONValue] = []
         var reasoningIndexes: [String: Int] = [:]
         var emittedTextItemIDs: Set<String> = []
+        var hasPrecedingReasoning = false
         for part in message.content {
             switch part {
             case let .text(text, providerMetadata):
                 if hasConversation, openAIResponsesItemID(from: providerMetadata) != nil {
                     break
                 }
-                if store, let itemID = openAIResponsesItemID(from: providerMetadata),
+                let referenceStoredMessage = store && (!isReasoningModel || hasPrecedingReasoning)
+                if referenceStoredMessage, let itemID = openAIResponsesItemID(from: providerMetadata),
                    !emittedTextItemIDs.insert(itemID).inserted {
                     break
                 }
                 output.append(openAIResponsesAssistantTextItem(
                     text: text,
                     providerMetadata: providerMetadata,
-                    store: store,
+                    store: referenceStoredMessage,
                     explicitMessageItemType: explicitMessageItemType
                 ))
             case let .reasoning(text, providerMetadata):
+                hasPrecedingReasoning = true
                 if (hasConversation || hasPreviousResponseID), openAIResponsesItemID(from: providerMetadata) != nil {
                     break
                 }
@@ -370,6 +384,18 @@ func openAIResponsesInputMessageJSON(
             case let .toolResult(result):
                 if openAIResponsesShouldSkipAssistantToolResult(result) {
                     break
+                }
+                if webSearchToolNames.contains(result.toolName) {
+                    let namespace = openAICompatibleProviderMetadataNamespace(providerID)
+                    let itemID = result.providerMetadata[namespace]?["itemId"]?.stringValue ?? result.toolCallID
+                    if store {
+                        output.append(.object(["type": .string("item_reference"), "id": .string(itemID)]))
+                        break
+                    }
+                    if let item = openAIResponsesWebSearchReplayItem(result, itemID: itemID) {
+                        output.append(item)
+                        break
+                    }
                 }
                 if result.toolName == toolSearchToolName {
                     output.append(.object(openAIResponsesToolSearchOutput(result, store: store, providerID: providerID)))
@@ -498,6 +524,85 @@ func openAIResponsesScalarToolResultPromptCacheBreakpoint(_ result: AIToolResult
         ?? result.providerMetadata
     return resultOptions["promptCacheBreakpoint"]
         ?? resultOptions["prompt_cache_breakpoint"]
+}
+
+/// History-loaded functions follow an ordinary tool result in an additional_tools item.
+func openAIResponsesAdditionalTools(_ result: AIToolResult, providerID: String) throws -> [JSONValue]? {
+    let namespace = openAICompatibleProviderMetadataNamespace(providerID)
+    guard let options = result.providerMetadata[namespace], options != .null else { return nil }
+    guard let object = options.objectValue else {
+        throw AIError.invalidArgument(argument: "toolResult.providerOptions.\(namespace)", message: "Tool result options must be an object.")
+    }
+    guard let value = object["additionalTools"] else { return nil }
+    guard let definitions = value.arrayValue else {
+        throw AIError.invalidArgument(argument: "additionalTools", message: "additionalTools must be an array of function definitions.")
+    }
+    let allowed: Set<String> = ["type", "name", "description", "parameters", "strict"]
+    for definition in definitions {
+        guard let definition = definition.objectValue,
+              Set(definition.keys).isSubset(of: allowed),
+              definition["type"]?.stringValue == "function",
+              let name = definition["name"]?.stringValue, !name.isEmpty,
+              definition["parameters"]?.objectValue != nil,
+              definition["description"] == nil || definition["description"]?.stringValue != nil,
+              definition["strict"] == nil || definition["strict"]?.boolValue != nil else {
+            throw AIError.invalidArgument(argument: "additionalTools", message: "Invalid additionalTools function definition.")
+        }
+    }
+    return definitions
+}
+
+func openAIResponsesWebSearchReplayItem(_ result: AIToolResult, itemID: String) -> JSONValue? {
+    let output = result.modelOutput ?? result.result
+    let value: JSONValue
+    if output["type"]?.stringValue == "json" {
+        value = output["value"] ?? .null
+    } else if output["type"] == nil, output.objectValue != nil {
+        value = output
+    } else {
+        return nil
+    }
+    guard let action = value["action"]?.objectValue,
+          let type = action["type"]?.stringValue else { return nil }
+    var mapped: [String: JSONValue] = [:]
+    switch type {
+    case "search":
+        mapped["type"] = .string("search")
+        if let query = action["query"] {
+            guard query.stringValue != nil else { return nil }
+            mapped["query"] = query
+        }
+        if let queries = action["queries"] {
+            guard let strings = queries.arrayValue, strings.allSatisfy({ $0.stringValue != nil }) else { return nil }
+            mapped["queries"] = queries
+        }
+    case "openPage", "findInPage":
+        mapped["type"] = .string(type == "openPage" ? "open_page" : "find_in_page")
+        for key in type == "openPage" ? ["url"] : ["url", "pattern"] {
+            if let item = action[key] {
+                guard item == .null || item.stringValue != nil else { return nil }
+                mapped[key] = item
+            }
+        }
+    default:
+        return nil
+    }
+    if let sourcesValue = value["sources"] {
+        guard let sources = sourcesValue.arrayValue else { return nil }
+        var mappedSources: [JSONValue] = []
+        for source in sources {
+            guard let sourceType = source["type"]?.stringValue,
+                  ["url", "api"].contains(sourceType) else { return nil }
+            let key = sourceType == "url" ? "url" : "name"
+            guard let text = source[key]?.stringValue else { return nil }
+            mappedSources.append(.object(["type": .string(sourceType), key: .string(text)]))
+        }
+        if type == "search" { mapped["sources"] = .array(mappedSources) }
+    }
+    return .object([
+        "type": .string("web_search_call"), "id": .string(itemID),
+        "status": .string("completed"), "action": .object(mapped)
+    ])
 }
 
 func openAIResponsesSerializedToolCallArguments(_ arguments: String) -> String {
@@ -1387,8 +1492,11 @@ func openAIResponsesAllowedToolsChoice(
             let isNamespaced = openAIOptions?["namespace"] != nil
             let isDeferred = (openAIOptions?["deferLoading"] ?? openAIOptions?["defer_loading"]
                 ?? tool["deferLoading"] ?? tool["defer_loading"])?.boolValue == true
+            let isOmitted = (openAIOptions?["omitFromRequestTools"] ?? openAIOptions?["omit_from_request_tools"])?.boolValue == true
             let resolution: OpenAIResponsesAllowedToolResolution
-            if isNamespaced {
+            if isOmitted {
+                resolution = .unsupported("tools omitted from the request tools array cannot be allow-listed")
+            } else if isNamespaced {
                 resolution = .unsupported("tools inside an OpenAI tool namespace are not visible to tool_choice.allowed_tools")
             } else if isDeferred {
                 resolution = .unsupported("deferred tools are not visible to tool_choice.allowed_tools")

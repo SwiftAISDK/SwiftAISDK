@@ -81,6 +81,8 @@ struct LanguageStreamToolStep {
             appendTextContent(id: id, delta: delta, providerMetadata: metadata)
         case let .textEnd(id, metadata):
             mergeTextContentMetadata(id: id, providerMetadata: metadata)
+        case let .textEndWithCitations(id, citations, metadata):
+            mergeTextContentMetadata(id: id, providerMetadata: metadata, citations: citations)
         case let .reasoningDelta(delta):
             reasoning += delta
             appendReasoningContent(id: "__default", delta: delta)
@@ -155,7 +157,7 @@ struct LanguageStreamToolStep {
         )
     }
 
-    mutating func mergeTextContentMetadata(id: String, providerMetadata: [String: JSONValue]) {
+    mutating func mergeTextContentMetadata(id: String, providerMetadata: [String: JSONValue], citations: [AICitation] = []) {
         let key = "text:\(id)"
         guard let index = contentIndicesByStreamKey[key],
               case let .text(existing, existingMetadata) = orderedContent[index] else {
@@ -163,6 +165,7 @@ struct LanguageStreamToolStep {
         }
         orderedContent[index] = .text(
             existing,
+            citations: citations,
             providerMetadata: mergeProviderMetadata(existingMetadata, providerMetadata)
         )
     }
@@ -477,7 +480,7 @@ func forwardLanguageStream(
         step.record(forwardedPart)
         continuation.yield(forwardedPart)
         switch forwardedPart {
-        case let .toolInputStart(id, name, _, _, _, _):
+        case let .toolInputStart(id, name, _, _, _, _), let .toolInputStartText(id, name, _, _, _, _):
             inputToolNamesByID[id] = name
             guard let tool = callbackToolsByName[name], let callback = tool.onInputStart else { break }
             let toolContext = try validatedStreamingToolContext(
@@ -594,6 +597,9 @@ private func remapLanguageStreamPartID(
     case let .textEnd(id, providerMetadata):
         let reservedID = textPartIDs.removeValue(forKey: id) ?? id
         return .textEnd(id: reservedID, providerMetadata: providerMetadata)
+    case let .textEndWithCitations(id, citations, providerMetadata):
+        let reservedID = textPartIDs.removeValue(forKey: id) ?? id
+        return .textEnd(id: reservedID, citations: citations, providerMetadata: providerMetadata)
     case let .reasoningStart(id, providerMetadata):
         let reservedID = reserver.reserveReasoningID(id)
         reasoningPartIDs[id] = reservedID

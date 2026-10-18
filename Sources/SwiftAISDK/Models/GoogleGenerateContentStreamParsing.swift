@@ -63,6 +63,12 @@ struct GoogleGenerateContentStreamState {
     private var latestFinishReason: String?
     private var confirmedPromptBlockReason: String?
     private var latestUsage: TokenUsage?
+    private var currentUsageMetadata: JSONValue?
+    private var continuedUsageMetadata: JSONValue?
+    private var initialPromptTokenCount: JSONValue?
+    private var didContinue = false
+    private var requestHop = 0
+    private var receivedProviderError = false
     private var latestProviderMetadata: [String: JSONValue] = [:]
     private var emittedSourceKeys: Set<String> = []
     private var sawToolCalls = false
@@ -102,11 +108,24 @@ struct GoogleGenerateContentStreamState {
         if includeRawChunks {
             parts.append(.raw(raw))
         }
+        if let error = raw["error"], error != .null {
+            receivedProviderError = true
+            latestFinishReason = nil
+            parts.append(.providerError(AIStreamProviderError(
+                message: error["message"]?.stringValue ?? "Google stream error",
+                type: error["status"]?.stringValue,
+                code: error["code"] == .null ? nil : error["code"],
+                statusCode: error["code"]?.intValue,
+                data: error
+            )))
+            return parts
+        }
         latestProviderMetadata = googleMergeProviderMetadata(
             latestProviderMetadata,
             googleGenerateContentProviderMetadata(from: raw, includeNullDefaults: false)
         )
-        if let usageMetadata = latestProviderMetadata["google"]?["usageMetadata"] {
+        if let usageMetadata = raw["usageMetadata"], usageMetadata != .null {
+            currentUsageMetadata = usageMetadata
             latestUsage = googleGenerateContentUsage(fromUsageMetadata: usageMetadata)
         }
         if confirmedPromptBlockReason == nil {
@@ -121,9 +140,10 @@ struct GoogleGenerateContentStreamState {
             return parts
         }
 
-        for source in googleGenerateContentSources(from: raw) {
+        for var source in googleGenerateContentSources(from: raw) {
             let key = googleSourceDeduplicationKey(source)
             guard !emittedSourceKeys.contains(key) else { continue }
+            source.id = "grounding-\(emittedSourceKeys.count)"
             emittedSourceKeys.insert(key)
             parts.append(.source(source))
         }
@@ -132,7 +152,7 @@ struct GoogleGenerateContentStreamState {
         for (index, contentPart) in contentParts.enumerated() {
             if let executableCode = contentPart["executableCode"],
                executableCode["code"]?.stringValue != nil {
-                let id = "google-code-execution-\(index)"
+                let id = "google-code-execution-\(index)" + (requestHop == 0 ? "" : "-hop-\(requestHop)")
                 lastCodeExecutionToolCallID = id
                 sawToolCalls = true
                 let toolName = toolNameMapping.toCustomToolName("code_execution")
@@ -221,7 +241,7 @@ struct GoogleGenerateContentStreamState {
             }
             if let serverToolCall = contentPart["toolCall"],
                let toolType = serverToolCall["toolType"]?.stringValue {
-                let id = serverToolCall["id"]?.stringValue ?? "google-server-tool-\(index)"
+                let id = serverToolCall["id"]?.stringValue ?? ("google-server-tool-\(index)" + (requestHop == 0 ? "" : "-hop-\(requestHop)"))
                 lastServerToolCallID = id
                 sawToolCalls = true
                 let name = "server:\(toolType)"
@@ -261,6 +281,15 @@ struct GoogleGenerateContentStreamState {
         return convertJSONResponseParts(parts)
     }
 
+    mutating func completeRequest(willContinue: Bool) {
+        guard willContinue else { return }
+        if !didContinue { initialPromptTokenCount = currentUsageMetadata?["promptTokenCount"] }
+        didContinue = true
+        requestHop += 1
+        continuedUsageMetadata = googleAddUsageMetadata(continuedUsageMetadata, currentUsageMetadata)
+        currentUsageMetadata = nil
+    }
+
     mutating func finish() -> [LanguageStreamPart] {
         var parts: [LanguageStreamPart] = []
         if !emittedInitialParts {
@@ -278,7 +307,15 @@ struct GoogleGenerateContentStreamState {
             parts.append(.textEnd(id: id))
         }
         currentTextID = nil
-        let finishReason = confirmedPromptBlockReason != nil
+        let usageMetadata = googleAddUsageMetadata(continuedUsageMetadata, currentUsageMetadata)
+        latestUsage = usageMetadata.map(googleGenerateContentUsage(fromUsageMetadata:))
+        var google = latestProviderMetadata["google"]?.objectValue ?? [:]
+        google["usageMetadata"] = usageMetadata ?? .null
+        google["serviceTier"] = usageMetadata?["serviceTier"] ?? .null
+        if latestFinishReason != "MAX_TOKENS" && latestFinishReason != "CONTINUATION" { google.removeValue(forKey: "continuationToken") }
+        if didContinue, let initialPromptTokenCount, initialPromptTokenCount != .null { google["initialPromptTokenCount"] = initialPromptTokenCount }
+        latestProviderMetadata["google"] = .object(google)
+        let finishReason = receivedProviderError ? "error" : confirmedPromptBlockReason != nil
             ? "content-filter"
             : googleGenerateContentFinishReason(
                 latestFinishReason,
@@ -339,4 +376,85 @@ private struct GoogleJSONResponseToolStreamConverter {
         }
         return [part]
     }
+}
+
+/// Joins the provider's long-decode hops while maintaining one stream lifecycle.
+func googleStreamWithContinuation(
+    body: JSONValue,
+    request: LanguageModelRequest,
+    modelID: String,
+    providerID: String,
+    prepared: GoogleGenerateContentPreparedCall,
+    jsonResponseToolName: String?,
+    continuation: AsyncThrowingStream<LanguageStreamPart, Error>.Continuation,
+    open: (JSONValue) async throws -> (request: AIHTTPRequest, response: AIHTTPStreamResponse)
+) async throws {
+    var nextBody = body
+    var state: GoogleGenerateContentStreamState?
+    while true {
+        try Task.checkCancellation()
+        try request.abortSignal?.throwIfAborted()
+        let opened: (request: AIHTTPRequest, response: AIHTTPStreamResponse)
+        do {
+            opened = try await open(nextBody)
+            guard (200..<300).contains(opened.response.statusCode) else {
+                throw apiCallError(provider: providerID, response: try await bufferedHTTPResponse(from: opened.response, request: opened.request))
+            }
+        } catch {
+            try Task.checkCancellation()
+            try request.abortSignal?.throwIfAborted()
+            guard state != nil, !(error is CancellationError), !(error is AIAbortError) else { throw error }
+            // Preserve the last continuation token so a failed hop is resumable.
+            continuation.yield(googleContinuationStreamError(error))
+            break
+        }
+        if state == nil {
+            state = GoogleGenerateContentStreamState(
+                response: httpResponseHead(from: opened.response, request: opened.request),
+                includeRawChunks: request.includeRawChunks,
+                modelID: modelID,
+                warnings: prepared.warnings,
+                toolNameMapping: prepared.toolNameMapping,
+                jsonResponseToolName: jsonResponseToolName
+            )
+        }
+        var pendingToken: String?
+        var receivedProviderError = false
+        for try await event in serverSentEvents(from: opened.response.body) {
+            try Task.checkCancellation()
+            try request.abortSignal?.throwIfAborted()
+            if event.data == "[DONE]" { break }
+            let raw = try decodeJSONBody(Data(event.data.utf8))
+            if raw["error"] != nil && raw["error"] != .null { receivedProviderError = true }
+            if let candidate = raw["candidates"]?[0], candidate["finishReason"] == "CONTINUATION", let token = candidate["continuationToken"]?.stringValue {
+                pendingToken = token
+            }
+            for part in state!.apply(raw) { continuation.yield(part) }
+        }
+        guard !receivedProviderError, let token = pendingToken else { break }
+        state!.completeRequest(willContinue: true)
+        var resumed = body.objectValue ?? [:]
+        resumed["continuationToken"] = .string(token)
+        nextBody = .object(resumed)
+    }
+    for part in state?.finish() ?? [] { continuation.yield(part) }
+}
+
+private func googleContinuationStreamError(_ error: Error) -> LanguageStreamPart {
+    guard let error = error as? AIError, case let .apiCall(call) = error else {
+        return .error(message: String(describing: error), rawValue: nil)
+    }
+    let body = try? decodeJSONBody(Data(call.responseBody.utf8))
+    return .providerError(AIStreamProviderError(
+        message: call.message ?? body?["error"]?["message"]?.stringValue ?? call.description,
+        type: body?["error"]?["status"]?.stringValue,
+        code: body?["error"]?["code"],
+        statusCode: call.statusCode,
+        isRetryable: call.isRetryable,
+        data: .object([
+            "responseBody": .string(call.responseBody),
+            "responseHeaders": .object(call.responseHeaders.mapValues(JSONValue.string)),
+            "error": body?["error"] ?? .null
+        ])
+    ))
 }

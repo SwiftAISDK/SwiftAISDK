@@ -428,6 +428,7 @@ private struct EvaluationDecisionBridge: AIDecisionModelV4 {
                 case let .choice(choice, probabilities): .choice(choice: choice, probabilities: probabilities)
                 case let .score(score, probabilities): .score(score: score, probabilities: probabilities)
                 case let .boolean(probability): .boolean(probability: probability)
+                case let .box(box): .box(box: box)
                 }
             },
             rounding: result.rounding,

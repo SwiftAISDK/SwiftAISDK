@@ -154,8 +154,8 @@ import Testing
     #expect(firstBody["tool_choice"]?["disable_parallel_tool_use"]?.boolValue == true)
 
     let secondBody = try decodeJSONBody(try #require(requests[1].body))
-    #expect(secondBody["tools"] == nil)
-    #expect(secondBody["tool_choice"] == nil)
+    #expect(secondBody["tools"]?[0]?["name"] == "lookup")
+    #expect(secondBody["tool_choice"]?["type"] == "none")
 }
 @Test func anthropicRequestWrapsInvalidAssistantToolInputLikeUpstream() async throws {
     let transport = RecordingTransport(response: jsonResponse("""
@@ -390,13 +390,13 @@ import Testing
 
     let result = try await model.generate(LanguageModelRequest(messages: [
         AIMessage(role: .user, content: [
-            .data(mimeType: "application/pdf", data: Data("%PDF".utf8)),
+            .data(mimeType: "application/pdf", data: Data("%PDF".utf8), providerMetadata: ["anthropic": ["citations": ["enabled": true]]]),
             .text("Summarize with sources.")
         ])
     ]))
 
     #expect(result.text == "The report shows growth.")
-    #expect(result.sources.count == 3)
+    #expect(result.sources.count == 2)
     #expect(result.sources[0].id == "anthropic-source-0")
     #expect(result.sources[0].sourceType == "url")
     #expect(result.sources[0].url == "https://example.com/ai-news")
@@ -408,10 +408,9 @@ import Testing
     #expect(result.sources[1].providerMetadata["anthropic"]?["citedText"]?.stringValue == "Revenue increased by 25% year over year")
     #expect(result.sources[1].providerMetadata["anthropic"]?["startPageNumber"]?.intValue == 5)
     #expect(result.sources[1].providerMetadata["anthropic"]?["endPageNumber"]?.intValue == 6)
-    #expect(result.sources[2].sourceType == "url")
-    #expect(result.sources[2].url == "https://example.com/ai-news")
-    #expect(result.sources[2].providerMetadata["anthropic"]?["citedText"]?.stringValue == "AI continues to advance")
-    #expect(result.sources[2].providerMetadata["anthropic"]?["encryptedIndex"]?.stringValue == "enc_1")
+    #expect(result.citations.count == 2)
+    #expect(result.citations[1].source.url == "https://example.com/ai-news")
+    #expect(result.citations[1].citedText == "AI continues to advance")
     #expect(result.toolResults.count == 1)
     #expect(result.toolResults[0].toolCallID == "srvtoolu_1")
     #expect(result.toolResults[0].toolName == "web_search")

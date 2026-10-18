@@ -222,7 +222,7 @@ import Testing
             textStarts.append((id, metadata))
         case let .textDeltaPart(id, delta, _):
             textDeltas.append((id, delta))
-        case let .textEnd(id, metadata):
+        case let .textEnd(id, metadata), let .textEndWithCitations(id, _, metadata):
             textEnds.append((id, metadata))
         case let .finish(reason, usage):
             finishReason = reason
@@ -662,7 +662,7 @@ import Testing
             textStarts.append((id, metadata))
         case let .textDeltaPart(id, delta, _):
             textDeltas.append((id, delta))
-        case let .textEnd(id, metadata):
+        case let .textEnd(id, metadata), let .textEndWithCitations(id, _, metadata):
             textEnds.append((id, metadata))
         case let .finish(reason, usage):
             finishReason = reason

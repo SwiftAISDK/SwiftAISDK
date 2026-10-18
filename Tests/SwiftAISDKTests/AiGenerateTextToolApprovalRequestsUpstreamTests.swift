@@ -88,7 +88,8 @@ import Testing
         maxSteps: 3
     )
 
-    #expect(await approvalCapture.calls() == [
+    let approvalCalls = await approvalCapture.calls()
+    #expect(approvalCalls.sorted { $0.toolCallID < $1.toolCallID } == [
         ToolDefinedApprovalCapture.Call(
             input: ["value": "value"],
             toolCallID: "call-1",

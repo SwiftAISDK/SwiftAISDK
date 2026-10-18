@@ -122,7 +122,7 @@ import Testing
             lifecycle.append("text-start:\(id)")
         case let .textDeltaPart(id, delta, _):
             lifecycle.append("text-delta:\(id):\(delta)")
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             lifecycle.append("text-end:\(id)")
         case .textDelta, .reasoningDelta:
             legacyDeltaCount += 1

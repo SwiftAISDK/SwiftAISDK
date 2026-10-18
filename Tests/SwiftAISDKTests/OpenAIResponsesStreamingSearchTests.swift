@@ -60,7 +60,7 @@ import Testing
             textStarts.append((id, metadata))
         case let .textDeltaPart(id, delta, _):
             textDeltas.append((id, delta))
-        case let .textEnd(id, metadata):
+        case let .textEnd(id, metadata), let .textEndWithCitations(id, _, metadata):
             textEnds.append((id, metadata))
         case let .source(source):
             sources.append(source)
@@ -124,13 +124,10 @@ import Testing
     #expect(textEnds.map { $0.0 } == ["msg_0cc96ac817fdc57e006933374a84348198a4e1ac9bc0c4607b"])
     #expect(textEnds[0].1["openai"]?["annotations"]?.arrayValue?.count == 12)
 
-    #expect(sources.count == 12)
-    #expect(sources[0].id == "id-0")
-    #expect(sources[0].sourceType == "url")
-    #expect(sources[0].title == "Petco confirms security lapse exposed customers’ personal data | TechCrunch")
-    #expect(sources[0].url == "https://techcrunch.com/2025/12/05/petco-confirms-security-lapse-exposed-customers-personal-data/?utm_source=openai")
-    #expect(sources[11].id == "id-11")
-    #expect(sources[11].title == "AI coding startup Vercel raises $300 million, valued at $9.3 billion")
+    #expect(sources.count == 21)
+    #expect(sources.map(\.url) == toolResults.flatMap { $0.result["sources"]?.arrayValue ?? [] }.map { $0["url"]?.stringValue })
+    #expect(sources.map(\.id) == (0..<21).map { "id-\($0)" })
+    #expect(sources.allSatisfy { $0.sourceType == "url" && $0.title == nil })
 
     #expect(finishReason == "stop")
     #expect(finishUsage?.inputTokens == 31_073)
@@ -218,7 +215,7 @@ import Testing
             textStarts.append((id, metadata))
         case let .textDeltaPart(id, delta, _):
             textDeltas.append((id, delta))
-        case let .textEnd(id, metadata):
+        case let .textEnd(id, metadata), let .textEndWithCitations(id, _, metadata):
             textEnds.append((id, metadata))
         case let .finish(reason, usage):
             finishReason = reason

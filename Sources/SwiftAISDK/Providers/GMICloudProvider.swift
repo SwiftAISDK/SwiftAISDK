@@ -1,6 +1,6 @@
 import Foundation
 
-public let gmiCloudProviderVersion = "3.0.38"
+public let gmiCloudProviderVersion = "3.0.42"
 
 public func createGMICloud(settings: ProviderSettings = ProviderSettings()) throws -> GMICloudProvider {
     try GMICloudProvider(settings: settings)

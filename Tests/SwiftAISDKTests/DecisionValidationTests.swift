@@ -94,11 +94,12 @@ struct DecisionValidationTests {
         }
     }
 
-    @Test func publishedChoiceMaximumRemainsStrictEvenWithDeclaredRounding() {
-        // The monorepo fixture is ahead of ai@7.0.137; published code allows only 1e-6 here.
+    @Test func publishedChoiceMaximumAllowsOnlyDeclaredRoundingUncertainty() throws {
+        // ai@7.0.143 permits uncertainty in both rounded probabilities.
         let questions: [String: AIDecisionQuestion] = ["choice": .choice(instructions: "Pick", criteria: ["a": .null, "b": .null, "c": .null])]
+        try validateDecisionAnswers(questions: questions, answers: ["choice": .choice(choice: "b", probabilities: ["a": 0.44, "b": 0.43, "c": 0.13])], rounding: .init(probabilityDecimals: 2), providerID: "test")
         #expect(throws: AIError.self) {
-            try validateDecisionAnswers(questions: questions, answers: ["choice": .choice(choice: "b", probabilities: ["a": 0.44, "b": 0.43, "c": 0.13])], rounding: .init(probabilityDecimals: 2), providerID: "test")
+            try validateDecisionAnswers(questions: questions, answers: ["choice": .choice(choice: "b", probabilities: ["a": 0.45, "b": 0.42, "c": 0.13])], rounding: .init(probabilityDecimals: 2), providerID: "test")
         }
     }
 

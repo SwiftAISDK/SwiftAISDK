@@ -476,15 +476,19 @@ import Testing
     let toolEvents = await recorder.events().filter { $0.operationID == "ai.streamText.tool" }
     #expect(streamed.contains(.toolResult(AIToolResult(toolCallID: "call-1", toolName: "tool1", result: .string("a-result")))))
     #expect(streamed.contains(.toolResult(AIToolResult(toolCallID: "call-2", toolName: "tool1", result: .string("b-result")))))
-    #expect(toolEvents.map(\.kind) == [.toolStart, .toolEnd, .toolStart, .toolEnd])
-    #expect(toolEvents[0].input?["toolCall"]?["id"]?.stringValue == "call-1")
-    #expect(toolEvents[0].input?["toolCall"]?["arguments"]?.stringValue == #"{"value":"a"}"#)
-    #expect(toolEvents[1].output?["status"]?.stringValue == "executed")
-    #expect(toolEvents[1].output?["arguments"]?["value"]?.stringValue == "a")
-    #expect(toolEvents[1].output?["result"]?["result"]?.stringValue == "a-result")
-    #expect(toolEvents[2].input?["toolCall"]?["id"]?.stringValue == "call-2")
-    #expect(toolEvents[3].output?["arguments"]?["value"]?.stringValue == "b")
-    #expect(toolEvents[3].output?["result"]?["result"]?.stringValue == "b-result")
+    #expect(toolEvents.count == 4)
+    for (id, value) in [("call-1", "a"), ("call-2", "b")] {
+        let callEvents = toolEvents.filter {
+            ($0.input?["toolCall"]?["id"] ?? $0.output?["toolCall"]?["id"])?.stringValue == id
+        }
+        #expect(callEvents.map(\.kind) == [.toolStart, .toolEnd])
+        let start = try #require(callEvents.first)
+        let end = try #require(callEvents.last)
+        #expect(start.input?["toolCall"]?["arguments"]?.stringValue == "{\"value\":\"\(value)\"}")
+        #expect(end.output?["status"] == "executed")
+        #expect(end.output?["arguments"]?["value"]?.stringValue == value)
+        #expect(end.output?["result"]?["result"]?.stringValue == "\(value)-result")
+    }
 }
 
 @Test func aiStreamTextReturnsToolExecutionErrorsAsToolResultsLikeUpstream() async throws {

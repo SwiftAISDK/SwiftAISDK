@@ -2,6 +2,8 @@ import Foundation
 
 public enum AIResultContentPart: Equatable, Hashable, Sendable {
     case text(String, providerMetadata: [String: JSONValue] = [:])
+    /// Text with supporting references. The original `text` case remains available.
+    case citedText(String, citations: [AICitation], providerMetadata: [String: JSONValue] = [:])
     case reasoning(String, providerMetadata: [String: JSONValue] = [:])
     case source(AISource)
     case file(AIStreamFile)
@@ -34,6 +36,7 @@ public struct TextGenerationResult: Sendable {
     public var responseMetadata: AIResponseMetadata
 
     public var reasoningText: String { reasoning }
+    public var citations: [AICitation] { content.flatMap(\.citations) }
     public var finalStep: AIToolStep? { steps.last }
 
     public init(

@@ -91,7 +91,7 @@ func moonshotChatBody(
 }
 
 func moonshotSupportsStructuredOutputs(modelID: String) -> Bool {
-    modelID.hasPrefix("kimi-k")
+    true
 }
 
 func moonshotSupportsThinkingKeep(modelID: String) -> Bool {

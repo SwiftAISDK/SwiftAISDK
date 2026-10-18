@@ -47,7 +47,7 @@ import Testing
     let result = try await model.generate(LanguageModelRequest(messages: [.user("Hello")]))
 
     #expect(result.content.count == 3)
-    guard case let .text(text, textMetadata) = result.content[0],
+    guard case let .citedText(text, _, textMetadata) = result.content[0],
           case let .source(urlSource) = result.content[1],
           case let .source(fileSource) = result.content[2] else {
         Issue.record("Expected upstream text, URL source, and document source content")
@@ -89,7 +89,7 @@ import Testing
     let result = try await model.generate(LanguageModelRequest(messages: [.user("Hello")]))
 
     #expect(result.content.count == 2)
-    guard case let .text(text, textMetadata) = result.content[0],
+    guard case let .citedText(text, _, textMetadata) = result.content[0],
           case let .source(source) = result.content[1] else {
         Issue.record("Expected upstream text and document source content")
         return
@@ -119,13 +119,14 @@ import Testing
     let result = try await model.generate(LanguageModelRequest(messages: [.user("Hello")]))
 
     #expect(result.content.count == 3)
-    guard case let .text(text, textMetadata) = result.content[0],
+    guard case let .citedText(text, _, textMetadata) = result.content[0],
           case let .source(firstSource) = result.content[1],
           case let .source(secondSource) = result.content[2] else {
         Issue.record("Expected upstream text and two document source content parts")
         return
     }
 
+    #expect(result.citations.count == 2)
     #expect(text == "Answer for the specified years....")
     #expect(textMetadata["openai"]?["itemId"]?.stringValue == "msg_789")
     #expect(textMetadata["openai"]?["annotations"]?[0]?["file_id"]?.stringValue == "file-YRcoCqn3Fo2K4JgraG")
@@ -162,7 +163,7 @@ import Testing
     let result = try await model.generate(LanguageModelRequest(messages: [.user("Hello")]))
 
     #expect(result.content.count == 2)
-    guard case let .text(text, textMetadata) = result.content[0],
+    guard case let .citedText(text, _, textMetadata) = result.content[0],
           case let .source(source) = result.content[1] else {
         Issue.record("Expected upstream text and container file source content")
         return

@@ -138,7 +138,7 @@ func validateDecisionAnswers(
                     providerID: providerID
                 )
                 guard let selected = probabilities[choice],
-                      !probabilities.values.contains(where: { $0 > selected + decisionTolerance }) else {
+                      !probabilities.values.contains(where: { $0 > selected + decisionTolerance + 2 * probabilityError }) else {
                     throw invalidDecisionResponse(
                         providerID: providerID,
                         "Question \"\(id)\" did not select a highest-probability option."
@@ -173,6 +173,10 @@ func validateDecisionAnswers(
                         "Question \"\(id)\" score must equal the probability-weighted mean within the declared rounding precision."
                     )
                 }
+            }
+        case let (.box, .box(box)):
+            guard box.isValid else {
+                throw invalidDecisionResponse(providerID: providerID, "Question \"\(id)\" must return box edges in [0, 1] with left < right and top < bottom.")
             }
         case let (.boolean, .boolean(probability)):
             guard isDecisionProbability(probability) else {

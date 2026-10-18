@@ -60,6 +60,16 @@ func openAIResponsesTools(
 
         var parameters = schema
         let openAIOptions = object?["providerOptions"]?["openai"]?.objectValue ?? object?["openai"]?.objectValue
+        if let outputSchema = openAIOptions?["outputSchema"] ?? openAIOptions?["output_schema"], outputSchema != .null {
+            outputSchemaToolNames.insert(name)
+        }
+        let omitFromRequestTools = openAIOptions?["omitFromRequestTools"] ?? openAIOptions?["omit_from_request_tools"]
+        if let omitFromRequestTools, omitFromRequestTools.boolValue == nil {
+            throw AIError.invalidArgument(argument: "tools.\(name).providerOptions.openai.omitFromRequestTools", message: "omitFromRequestTools must be a boolean.")
+        }
+        if omitFromRequestTools?.boolValue == true {
+            continue
+        }
         var function: [String: JSONValue] = [
             "type": .string("function"),
             "name": .string(name),

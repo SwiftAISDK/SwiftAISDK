@@ -689,13 +689,14 @@ private func mapLanguageStreamToOutputStream(
             var sources: [AISource] = []
             var files: [AIStreamFile] = []
             var providerMetadata: [String: JSONValue] = [:]
-            var textProviderMetadata: [String: JSONValue] = [:]
+            var contentStep = LanguageStreamToolStep()
             var responseMetadata = AIResponseMetadata()
             var rawValues: [JSONValue] = []
 
             do {
                 for try await part in stream {
                     try Task.checkCancellation()
+                    contentStep.record(part)
                     switch part {
                     case let .streamStart(partWarnings):
                         warnings.append(contentsOf: partWarnings)
@@ -708,7 +709,6 @@ private func mapLanguageStreamToOutputStream(
                         continuation.yield(.textDelta(delta))
                         continuation.yield(.partialOutput(text))
                     case let .textDeltaPart(_, delta, partProviderMetadata):
-                        textProviderMetadata.merge(partProviderMetadata) { _, new in new }
                         guard !delta.isEmpty else {
                             if !partProviderMetadata.isEmpty {
                                 continuation.yield(.raw(part))
@@ -718,9 +718,7 @@ private func mapLanguageStreamToOutputStream(
                         text += delta
                         continuation.yield(.textDelta(delta))
                         continuation.yield(.partialOutput(text))
-                    case let .textStart(_, partProviderMetadata),
-                         let .textEnd(_, partProviderMetadata):
-                        textProviderMetadata.merge(partProviderMetadata) { _, new in new }
+                    case .textStart, .textEnd, .textEndWithCitations:
                         continuation.yield(.raw(part))
                     case let .reasoningDelta(delta):
                         reasoning += delta
@@ -754,23 +752,11 @@ private func mapLanguageStreamToOutputStream(
                     }
                 }
 
-                let content: [AIResultContentPart] = textProviderMetadata.isEmpty
-                    ? []
-                    : synthesizeResultContent(
-                        text: text,
-                        reasoning: reasoning,
-                        files: files,
-                        toolCalls: [],
-                        toolResults: [],
-                        toolApprovalRequests: [],
-                        toolApprovalResponses: [],
-                        sources: sources
-                    ).map { contentPart in
-                        guard case let .text(text, _) = contentPart else {
-                            return contentPart
-                        }
-                        return .text(text, providerMetadata: textProviderMetadata)
-                    }
+                // Keep Output.text's established text/source/file ordering while
+                // retaining each text block and its attached citations.
+                let content = contentStep.orderedContent.filter { $0.textValue != nil }
+                    + sources.map(AIResultContentPart.source)
+                    + files.map(AIResultContentPart.file)
                 let textResult = TextGenerationResult(
                     text: text,
                     content: content,

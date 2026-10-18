@@ -288,6 +288,8 @@ private func gatewayDecisionQuestion(_ question: AIDecisionQuestion) -> JSONValu
             "instructions": instructions,
             "criteria": .array(criteria)
         ])
+    case let .box(instructions):
+        return .object(["type": "box", "instructions": instructions])
     case let .boolean(instructions, criteria):
         return .object([
             "type": .string("boolean"),

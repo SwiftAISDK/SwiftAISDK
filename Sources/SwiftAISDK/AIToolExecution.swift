@@ -58,11 +58,13 @@ func annotateToolResult(_ result: AIToolResult, toolsByName: [String: AITool]) -
 
 func annotateStreamPart(_ part: LanguageStreamPart, toolsByName: [String: AITool]) -> LanguageStreamPart {
     switch part {
-    case let .toolInputStart(id, name, providerExecuted, dynamic, title, providerMetadata):
+    case let .toolInputStart(id, name, providerExecuted, dynamic, title, providerMetadata),
+         let .toolInputStartText(id, name, providerExecuted, dynamic, title, providerMetadata):
         guard toolsByName[name]?.dynamic == true, !dynamic else { return part }
         return .toolInputStart(
             id: id,
             name: name,
+            inputEncoding: part.inputEncoding ?? .json,
             providerExecuted: providerExecuted,
             dynamic: true,
             title: title,
@@ -246,6 +248,30 @@ private func validatedToolContext(for tool: AITool, toolCall: AIToolCall, reques
 }
 
 func executeToolCalls(
+    _ calls: [AIToolCall], toolsByName: [String: AITool], request: LanguageModelRequest,
+    toolApproval: AIToolApproval?, repairToolCall: AIToolCallRepair? = nil,
+    telemetry: AIToolLoopTelemetryContext? = nil, stepIndex: Int = 0,
+    convertToolErrorsToResults: Bool = false, invokeInputAvailableCallbacks: Bool = true
+) async throws -> AIToolExecutionBatch {
+    let batches = try await mapToolCallsWithConcurrency(calls, concurrency: request.toolCallConcurrency, abortSignal: request.abortSignal) { call in
+        try await executeToolCallsSequentially(
+            [call], toolsByName: toolsByName, request: request, toolApproval: toolApproval,
+            repairToolCall: repairToolCall, telemetry: telemetry, stepIndex: stepIndex,
+            convertToolErrorsToResults: convertToolErrorsToResults,
+            invokeInputAvailableCallbacks: invokeInputAvailableCallbacks
+        )
+    }
+    var batch = AIToolExecutionBatch()
+    for item in batches {
+        batch.results += item.results
+        batch.approvalRequests += item.approvalRequests
+        batch.approvalResponses += item.approvalResponses
+        batch.needsUserApproval = batch.needsUserApproval || item.needsUserApproval
+    }
+    return batch
+}
+
+private func executeToolCallsSequentially(
     _ calls: [AIToolCall],
     toolsByName: [String: AITool],
     request: LanguageModelRequest,

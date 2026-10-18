@@ -159,11 +159,23 @@ private func alibabaVideoMode(_ modelID: String) -> String {
 }
 
 private func alibabaIsWan27Model(_ modelID: String) -> Bool {
-    modelID.hasPrefix("wan2.7")
+    alibabaVideoProtocol(modelID) == "wan27"
 }
 
 private func alibabaIsWan3Model(_ modelID: String) -> Bool {
-    modelID.hasPrefix("wan3")
+    alibabaVideoProtocol(modelID) == "wan3"
+}
+
+private func alibabaVideoProtocol(_ modelID: String) -> String {
+    if let match = modelID.range(of: #"^wanx?\d+(?:\.\d+)?(?=[.-]|$)"#, options: .regularExpression) {
+        let version = modelID[match].replacingOccurrences(of: "wanx", with: "").replacingOccurrences(of: "wan", with: "").split(separator: ".")
+        if let major = version.first.flatMap({ Double($0) }) {
+            let minor = version.count > 1 ? Double(version[1]) ?? 0 : 0
+            if major < 2 || (major == 2 && minor < 7) { return "legacy" }
+            if major == 2 { return "wan27" }
+        }
+    }
+    return "wan3"
 }
 
 func alibabaNativeBaseURL(_ baseURL: String) -> String {

@@ -6,12 +6,12 @@ Source URL: /components/mcp/
 
 | Symbol kind | Count |
 | --- | --- |
-| Case | 40 |
+| Case | 41 |
 | Class | 3 |
 | Enumeration | 17 |
 | Function | 3 |
 | Global Variable | 1 |
-| Initializer | 51 |
+| Initializer | 52 |
 | Instance Method | 91 |
 | Instance Property | 285 |
 | Protocol | 6 |
@@ -43,6 +43,7 @@ Source URL: /components/mcp/
 | Case | `MCPEventTransportMetadata.custom` | `case custom` | [Sources/SwiftAISDK/MCPEventAdapter.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventAdapter.swift) |
 | Case | `MCPEventTransportMetadata.http(url:)` | `case http(url: URL)` | [Sources/SwiftAISDK/MCPEventAdapter.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventAdapter.swift) |
 | Case | `MCPManagedSubscribeInput.Lifetime.expiresAt(_:)` | `case expiresAt(String?)` | [Sources/SwiftAISDK/MCPEventAdapter.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventAdapter.swift) |
+| Case | `MCPManagedSubscribeInput.Lifetime.indefinite` | `case indefinite` | [Sources/SwiftAISDK/MCPEventAdapter.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventAdapter.swift) |
 | Case | `MCPManagedSubscribeInput.Lifetime.milliseconds(_:)` | `case milliseconds(Int)` | [Sources/SwiftAISDK/MCPEventAdapter.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventAdapter.swift) |
 | Case | `MCPManagedSubscription.CleanupStatus.complete` | `case complete` | [Sources/SwiftAISDK/MCPEventAdapter.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventAdapter.swift) |
 | Case | `MCPManagedSubscription.CleanupStatus.exhausted` | `case exhausted` | [Sources/SwiftAISDK/MCPEventAdapter.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventAdapter.swift) |
@@ -112,6 +113,7 @@ Source URL: /components/mcp/
 | Initializer | `init(modelVisible:appVisible:)` | `init(modelVisible: MCPListToolsResult, appVisible: MCPListToolsResult)` | [Sources/SwiftAISDK/MCPApps.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPApps.swift) |
 | Initializer | `init(name:arguments:callbackURL:allowInsecureLocalhost:secret:cursor:lifetime:maxAgeMilliseconds:options:)` | `init(name: String, arguments: [String : JSONValue] = [:], callbackURL: URL, allowInsecureLocalhost: Bool = false, secret: String? = nil, cursor: String? = nil, lifetime: MCPEventLifetime? = nil, maxAgeMilliseconds: Int? = nil, options: MCPRequestOptions? = nil)` | [Sources/SwiftAISDK/MCPEventTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventTypes.swift) |
 | Initializer | `init(name:arguments:context:idempotencyKey:lifetime:options:)` | `init(name: String, arguments: [String : JSONValue] = [:], context: [String : JSONValue]? = nil, idempotencyKey: String, lifetime: Lifetime, options: MCPRequestOptions? = nil)` | [Sources/SwiftAISDK/MCPEventAdapter.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventAdapter.swift) |
+| Initializer | `init(name:arguments:context:idempotencyKey:ttlMs:options:)` | `init(name: String, arguments: [String : JSONValue] = [:], context: [String : JSONValue]? = nil, idempotencyKey: String, ttlMs: Int?, options: MCPRequestOptions? = nil)` | [Sources/SwiftAISDK/MCPEventAdapter.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventAdapter.swift) |
 | Initializer | `init(name:description:delivery:inputSchema:payloadSchema:rawValue:)` | `init(name: String, description: String? = nil, delivery: [MCPEventDeliveryMode], inputSchema: JSONValue, payloadSchema: JSONValue, rawValue: JSONValue? = nil)` | [Sources/SwiftAISDK/MCPEventTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventTypes.swift) |
 | Initializer | `init(name:description:required:rawValue:)` | `init(name: String, description: String? = nil, required: Bool? = nil, rawValue: JSONValue? = nil)` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
 | Initializer | `init(name:title:description:arguments:rawValue:)` | `init(name: String, title: String? = nil, description: String? = nil, arguments: [MCPPromptArgument] = [], rawValue: JSONValue? = nil)` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |

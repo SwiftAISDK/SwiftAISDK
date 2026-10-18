@@ -81,7 +81,7 @@ public final class DecisionLanguageModel: AIDecisionModelV4, @unchecked Sendable
         }
 
         let text = result.content.compactMap { part -> String? in
-            guard case let .text(value, _) = part else { return nil }
+            guard let value = part.textValue else { return nil }
             return value
         }.joined()
         let parsed: JSONValue
@@ -156,6 +156,8 @@ private struct PreparedDecisionQuestion {
                 "type": .string("number"),
                 "description": .string("A finite fractional score from 0 to \(criteria.count - 1), inclusive. Ordered rubric levels are indexed from zero.")
             ])
+        case .box:
+            .object(["type": "object"])
         case .boolean:
             .object([
                 "type": .string("number"),
@@ -189,6 +191,8 @@ private struct PreparedDecisionQuestion {
                 "instructions": instructions,
                 "criteria": .array(criteria)
             ])
+        case let .box(instructions):
+            return .object(["id": .string(id), "type": "box", "instructions": instructions])
         case let .boolean(instructions, criteria):
             return .object([
                 "id": .string(id),
@@ -202,11 +206,11 @@ private struct PreparedDecisionQuestion {
     func answer(from value: JSONValue, providerID: String) throws -> AIDecisionAnswer {
         switch question {
         case .choice:
-            guard case let .string(code) = value,
-                  code.first == "c",
-                  let index = Int(code.dropFirst()),
-                  choiceLabels.indices.contains(index),
-                  code == "c\(index)" else {
+            guard case let .string(code) = value else {
+                throw AIError.invalidResponse(provider: providerID, message: "Question \"\(id)\" selected an unknown option.")
+            }
+            let codedIndex = choiceLabels.indices.first { code == "c\($0)" }
+            guard let index = codedIndex ?? choiceLabels.firstIndex(of: code) else {
                 throw AIError.invalidResponse(
                     provider: providerID,
                     message: "Question \"\(id)\" selected an unknown option."
@@ -224,6 +228,8 @@ private struct PreparedDecisionQuestion {
                 )
             }
             return .score(score: score)
+        case .box:
+            throw AIDecisionUnsupportedFunctionalityError(functionality: "Language-adapted box decisions")
         case .boolean:
             guard case let .number(probability) = value,
                   probability.isFinite,

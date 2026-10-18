@@ -80,6 +80,7 @@ func googleExtraBodyWithoutToolChoice(_ extraBody: [String: JSONValue]) -> [Stri
         "cachedContent",
         "labels",
         "serviceTier",
+        "continuationToken",
         "sharedRequestType",
         "requestType",
         "streamFunctionCallArguments",

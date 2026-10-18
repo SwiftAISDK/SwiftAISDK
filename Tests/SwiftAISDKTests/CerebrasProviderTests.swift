@@ -37,7 +37,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.cerebras.ai/v1/chat/completions")
     #expect(request.headers["authorization"] == "Bearer cerebras-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-cerebras/3.0.67")
+    #expect(request.headers["user-agent"] == "ai-sdk-cerebras/3.0.71")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["messages"]?[1]?["reasoning"]?.stringValue == "I should call a tool.")
     #expect(body["messages"]?[1]?["reasoning_content"] == nil)
@@ -110,7 +110,7 @@ import Testing
     _ = try await model.generate(LanguageModelRequest(messages: [.user("Hi")]))
 
     let request = try #require(await transport.requests().first)
-    #expect(request.headers["user-agent"] == "TestApp/1.0 ai-sdk-cerebras/3.0.67")
+    #expect(request.headers["user-agent"] == "TestApp/1.0 ai-sdk-cerebras/3.0.71")
     #expect(request.headers["authorization"] == "Bearer cerebras-key")
 }
 
@@ -541,7 +541,7 @@ import Testing
             textLifecycle.append("start:\(id)")
         case let .textDeltaPart(id, delta, _):
             textLifecycle.append("delta:\(id):\(delta)")
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             textLifecycle.append("end:\(id)")
         case let .finishMetadata(_, usage, _):
             totalTokens = usage?.totalTokens
@@ -623,7 +623,7 @@ import Testing
             textLifecycle.append("start:\(id)")
         case let .textDeltaPart(id, delta, _):
             textLifecycle.append("delta:\(id):\(delta)")
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             textLifecycle.append("end:\(id)")
         case let .toolInputStart(id, name, _, _, _, _):
             inputLifecycle.append("start:\(id):\(name)")

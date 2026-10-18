@@ -50,7 +50,7 @@ import Testing
             textLifecycle.append("start:\(id)")
         case let .textDeltaPart(id, delta, _):
             textLifecycle.append("delta:\(id):\(delta)")
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             textLifecycle.append("end:\(id)")
         case let .finishMetadata(_, finishUsage, _):
             usage = finishUsage
@@ -102,7 +102,7 @@ import Testing
 
     let request = try #require(await transport.requests().first)
     #expect(request.headers["authorization"] == "Bearer groq-key")
-    #expect(request.headers["user-agent"] == "custom-client/1.0 ai-sdk-groq/4.0.59")
+    #expect(request.headers["user-agent"] == "custom-client/1.0 ai-sdk-groq/4.0.63")
 }
 @Test func groqLanguageMapsMissingFinishReasonToOther() async throws {
     let transport = RecordingTransport(response: jsonResponse(#"{"id":"groq-1","model":"gemma2-9b-it","choices":[{"index":0,"message":{"content":"ok"},"finish_reason":null}]}"#))

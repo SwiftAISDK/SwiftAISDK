@@ -363,7 +363,7 @@ import Testing
             text.append(delta)
         case let .textStart(id, _):
             lifecycle.append("text-start:\(id)")
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             lifecycle.append("text-end:\(id)")
         case let .reasoningDeltaPart(id, delta, _):
             lifecycle.append("reasoning-delta:\(id):\(delta)")
@@ -555,7 +555,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.mistral.ai/v1/audio/speech")
     #expect(request.headers["authorization"] == "Bearer mistral-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-mistral/4.0.62")
+    #expect(request.headers["user-agent"] == "ai-sdk-mistral/4.0.66")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["model"]?.stringValue == "voxtral-mini-tts-2603")
     #expect(body["input"]?.stringValue == "Hello")

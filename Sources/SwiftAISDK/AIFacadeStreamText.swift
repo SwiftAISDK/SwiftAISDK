@@ -332,6 +332,7 @@ extension AI {
                         var stepRequest = try prepareLanguageModelCallOptions(
                             prepared?.request ?? stepCurrentRequest
                         )
+                        stepRequest.toolCallConcurrency = stepRequest.toolCallConcurrency ?? initialRequest.toolCallConcurrency
                         if stepRequest.abortSignal === operationRequest.abortSignal {
                             stepRequest.abortSignal = mergeAbortSignals(
                                 stepRequest.abortSignal,

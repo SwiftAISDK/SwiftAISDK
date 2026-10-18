@@ -226,12 +226,66 @@ struct OpenAIResponsesActiveReasoning {
 
 func openAIResponsesSources(from raw: JSONValue, providerID: String) -> [AISource] {
     var sourceCounter = 0
-    return raw["output"]?.arrayValue?.flatMap { item -> [AISource] in
-        guard item["type"]?.stringValue == "message" else { return [] }
-        return item["content"]?.arrayValue?.flatMap { content in
-            openAIResponsesSources(fromAnnotations: content["annotations"]?.arrayValue ?? [], providerID: providerID, sourceCounter: &sourceCounter)
-        } ?? []
-    } ?? []
+    let output = raw["output"]?.arrayValue ?? []
+    let hasWebSearchSources = output.contains { item in
+        item["type"]?.stringValue == "web_search_call" && item["action"]?["type"]?.stringValue == "search"
+            && item["action"]?["sources"]?.arrayValue?.contains(where: { $0["type"]?.stringValue == "url" }) == true
+    }
+    let hasFileSearchResults = output.contains { item in
+        item["type"]?.stringValue == "file_search_call" && !(item["results"]?.arrayValue ?? []).isEmpty
+    }
+    var retrievedFileIDs: Set<String> = []
+    return output.flatMap { item -> [AISource] in
+        if item["type"]?.stringValue == "message" {
+            return item["content"]?.arrayValue?.flatMap { content in
+                let annotations = (content["annotations"]?.arrayValue ?? []).filter {
+                    !($0["type"]?.stringValue == "url_citation" && hasWebSearchSources)
+                        && !($0["type"]?.stringValue == "file_citation" && hasFileSearchResults)
+                }
+                return openAIResponsesSources(fromAnnotations: annotations, providerID: providerID, sourceCounter: &sourceCounter)
+            } ?? []
+        }
+        return openAIResponsesRetrievedSources(from: item, providerID: providerID, sourceCounter: &sourceCounter, retrievedFileIDs: &retrievedFileIDs)
+    }
+}
+
+func openAIResponsesRetrievedSources(
+    from item: JSONValue,
+    providerID: String,
+    sourceCounter: inout Int,
+    retrievedFileIDs: inout Set<String>
+) -> [AISource] {
+    if item["type"]?.stringValue == "web_search_call", item["action"]?["type"]?.stringValue == "search" {
+        return (item["action"]?["sources"]?.arrayValue ?? []).compactMap { source in
+            guard source["type"]?.stringValue == "url", let url = source["url"]?.stringValue else { return nil }
+            defer { sourceCounter += 1 }
+            return AISource(id: "id-\(sourceCounter)", sourceType: "url", url: url, rawValue: source)
+        }
+    }
+    if item["type"]?.stringValue == "file_search_call" {
+        return (item["results"]?.arrayValue ?? []).compactMap { result in
+            guard let fileID = result["file_id"]?.stringValue,
+                  retrievedFileIDs.insert(fileID).inserted else { return nil }
+            defer { sourceCounter += 1 }
+            return AISource(
+                id: "id-\(sourceCounter)", sourceType: "document", title: result["filename"]?.stringValue,
+                mediaType: "text/plain", filename: result["filename"]?.stringValue,
+                providerMetadata: openAICompatibleNamespacedProviderMetadata(["type": .string("file_search"), "fileId": .string(fileID)], providerID: providerID),
+                rawValue: result
+            )
+        }
+    }
+    return []
+}
+
+func openAIResponsesCitations(from annotations: [JSONValue], providerID: String) -> [AICitation] {
+    annotations.compactMap { annotation in
+        guard annotation["type"]?.stringValue != "file_path",
+              let sourceID = annotation["type"]?.stringValue == "url_citation"
+                ? annotation["url"]?.stringValue : annotation["file_id"]?.stringValue,
+              let source = openAIResponsesSource(from: annotation, id: sourceID, providerID: providerID) else { return nil }
+        return AICitation(source: source, startIndex: annotation["start_index"]?.intValue, endIndex: annotation["end_index"]?.intValue)
+    }
 }
 
 func openAIResponsesSources(fromAnnotations annotations: [JSONValue], providerID: String, sourceCounter: inout Int) -> [AISource] {

@@ -642,7 +642,8 @@ private func parseAnthropicBatchResultLine(
         let generated = anthropicGeneratedContent(
             from: message["content"],
             providerID: providerID,
-            citationDocuments: []
+            citationDocuments: [],
+            isBatchResult: true
         )
         let responseMetadata = AIResponseMetadata(
             id: message["id"]?.stringValue,

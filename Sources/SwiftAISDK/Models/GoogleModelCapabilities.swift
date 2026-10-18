@@ -8,10 +8,9 @@ struct GoogleModelCapabilities: Equatable, Sendable {
 
 func googleModelCapabilities(for modelID: String) -> GoogleModelCapabilities {
     let normalizedModelID = modelID.lowercased()
-    let geminiModel = normalizedModelID
-        .split(separator: "/", omittingEmptySubsequences: true)
-        .map(String.init)
-        .first { $0.hasPrefix("gemini-") }
+    let geminiModel = normalizedModelID.range(of: #"(^|[/.])gemini-"#, options: .regularExpression).map { range in
+        String(normalizedModelID[range.lowerBound...]).trimmingCharacters(in: CharacterSet(charactersIn: "/."))
+    }
 
     let isGeminiModel = geminiModel != nil
     let isGemini2Model = geminiModel.map {

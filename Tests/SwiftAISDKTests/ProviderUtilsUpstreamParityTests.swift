@@ -109,7 +109,7 @@ import Testing
         url: "https://example.com",
         supportedURLs: ["text/plain": [AISupportedURLPattern { $0 == "https://example.com" }]]
     ))
-    #expect(isURLSupported(
+    #expect(!isURLSupported(
         mediaType: "text/plain",
         url: "https://EXAMPLE.com/PATH",
         supportedURLs: ["text/plain": [AISupportedURLPattern { $0 == "https://example.com/path" }]]

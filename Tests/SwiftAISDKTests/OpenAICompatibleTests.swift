@@ -45,7 +45,7 @@ import Testing
     #expect(requests.count == 4)
     #expect(requests.allSatisfy { $0.headers["authorization"] == "Bearer test-key" })
     #expect(requests.allSatisfy { $0.headers["x-client"] == "swift" })
-    #expect(requests.allSatisfy { $0.headers["user-agent"] == "CustomApp/1.0 ai-sdk-openai-compatible/3.0.67" })
+    #expect(requests.allSatisfy { $0.headers["user-agent"] == "CustomApp/1.0 ai-sdk-openai-compatible/3.0.71" })
 }
 
 @Test func openAICompatibleClampsOutputTextTokensWhenReasoningExceedsCompletionLikeUpstream() async throws {
@@ -161,7 +161,7 @@ import Testing
         case let .textDeltaPart(id, delta, _):
             completionDeltas.append(delta)
             completionLifecycle.append("delta:\(id):\(delta)")
-        case let .textEnd(id, _):
+        case let .textEnd(id, _), let .textEndWithCitations(id, _, _):
             completionLifecycle.append("end:\(id)")
         case let .finishMetadata(_, usage, _):
             completionUsage = usage
