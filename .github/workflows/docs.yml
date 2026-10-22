@@ -61,6 +61,9 @@ jobs:
       - name: Build documentation examples
         run: swift build --package-path Examples
 
+      - name: Verify offline MCP OAuth migration
+        run: swift run --package-path Examples MCPOAuthMigration
+
       - name: Check documentation
         run: npm --prefix docs-site run check
 

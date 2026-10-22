@@ -36,6 +36,9 @@ The docs dependency graph uses Astro 7.4.2, Starlight 0.42.6 and Sharp 0.35.5,
 with a full clean-install npm audit reporting zero findings. CI now checks and
 audits documentation as well as building it. The OpenAI fixture assertion that
 failed to compile on hosted CI is split into typed intermediate values.
+The multi-file OAuth example also uses a named entry-point source instead of
+`main.swift` so its `@main` declaration compiles on the supported Swift 6.3
+toolchain. CI executes both offline migration flows before publishing docs.
 
 Bash tooling, UI step APIs and additional provider adapters remain separate
 work, as requested. The historical release audits below describe their original

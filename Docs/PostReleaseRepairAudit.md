@@ -116,6 +116,22 @@ clean build succeeds. These notices are separate from the zero audit findings
 and zero Astro check diagnostics. Hosted compiler/deployment results are
 recorded in the GitHub Release once its exact-commit workflow completes.
 
+### Swift 6.3 hosted follow-up
+
+The 2.7.0 workflow passed `swift test --no-parallel` on Apple Swift 6.3.3:
+3,459 tests in 55 suites, with 33 live tests skipped and zero issues. Its clean
+npm install and audit also passed. The examples build then exposed a compiler
+difference: Swift 6.3 rejects `@main` inside a multi-file target's `main.swift`,
+which the local Swift 6.4 build had accepted. Documentation deployment was
+therefore skipped.
+
+The entry source is now `MCPOAuthMigrationExample.swift`, preserving the exact
+example code and command. CI also runs `swift run --package-path Examples
+MCPOAuthMigration` to verify both offline authentication flows before publishing
+documentation. This is a patch correction with no library API, behavior or
+upstream-baseline changes. The published 2.7.0 tag remains immutable; exact-commit
+verification for the follow-up release is recorded in its GitHub Release notes.
+
 ## Remaining scope
 
 Fresh registry/search and exact-prefix discovery still finds 91 scoped package
