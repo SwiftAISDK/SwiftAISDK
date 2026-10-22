@@ -506,6 +506,7 @@ struct ModelHTTPConfig: @unchecked Sendable {
     var providerID: String
     var baseURL: String
     var modelURL: String?
+    var requestModelID: String?
     var headers: [String: String]
     var dynamicHeaders: (@Sendable () -> [String: String])?
     var userAgentSuffix: String?
@@ -536,6 +537,7 @@ struct ModelHTTPConfig: @unchecked Sendable {
         providerID: String,
         baseURL: String,
         modelURL: String? = nil,
+        requestModelID: String? = nil,
         headers: [String: String],
         transport: any AITransport,
         dynamicHeaders: (@Sendable () -> [String: String])? = nil,
@@ -566,6 +568,7 @@ struct ModelHTTPConfig: @unchecked Sendable {
         let normalizedBaseURL = withoutTrailingSlash(baseURL)
         self.baseURL = normalizedBaseURL
         self.modelURL = modelURL.map(withoutTrailingSlash)
+        self.requestModelID = requestModelID
         self.headers = headers
         self.dynamicHeaders = dynamicHeaders
         self.userAgentSuffix = userAgentSuffix
@@ -617,7 +620,7 @@ struct ModelHTTPConfig: @unchecked Sendable {
         headers["user-agent"] = headers["user-agent"] ?? userAgent(providerID)
         return AIHTTPRequest(
             method: "POST",
-            url: try url(modelID, path),
+            url: try url(requestModelID ?? modelID, path),
             headers: headers,
             body: body,
             abortSignal: abortSignal
@@ -666,6 +669,7 @@ struct ModelHTTPConfig: @unchecked Sendable {
             providerID: providerID,
             baseURL: baseURL,
             modelURL: modelURL,
+            requestModelID: requestModelID,
             headers: headers,
             transport: transport,
             dynamicHeaders: dynamicHeaders,
@@ -694,11 +698,18 @@ struct ModelHTTPConfig: @unchecked Sendable {
         )
     }
 
+    func withRequestModelID(_ requestModelID: String) -> ModelHTTPConfig {
+        var copy = self
+        copy.requestModelID = requestModelID
+        return copy
+    }
+
     func withDeepSeekSupportsThinking(_ supportsThinking: Bool) -> ModelHTTPConfig {
         ModelHTTPConfig(
             providerID: providerID,
             baseURL: baseURL,
             modelURL: modelURL,
+            requestModelID: requestModelID,
             headers: headers,
             transport: transport,
             dynamicHeaders: dynamicHeaders,
@@ -732,6 +743,7 @@ struct ModelHTTPConfig: @unchecked Sendable {
             providerID: providerID,
             baseURL: baseURL,
             modelURL: modelURL,
+            requestModelID: requestModelID,
             headers: headers,
             transport: transport,
             dynamicHeaders: dynamicHeaders,
@@ -765,6 +777,7 @@ struct ModelHTTPConfig: @unchecked Sendable {
             providerID: providerID,
             baseURL: baseURL,
             modelURL: modelURL,
+            requestModelID: requestModelID,
             headers: headers,
             transport: transport,
             dynamicHeaders: dynamicHeaders,

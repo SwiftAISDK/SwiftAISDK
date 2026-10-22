@@ -7,14 +7,14 @@ description: Public SwiftAISDK APIs for mcp.
 
 | Symbol kind | Count |
 | --- | --- |
-| Case | 41 |
+| Case | 44 |
 | Class | 3 |
-| Enumeration | 17 |
+| Enumeration | 18 |
 | Function | 3 |
 | Global Variable | 1 |
 | Initializer | 52 |
 | Instance Method | 91 |
-| Instance Property | 285 |
+| Instance Property | 291 |
 | Protocol | 6 |
 | Structure | 55 |
 | Type Alias | 3 |
@@ -66,6 +66,9 @@ description: Public SwiftAISDK APIs for mcp.
 | Case | `MCPOAuthCredentialScope.client` | `case client` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
 | Case | `MCPOAuthCredentialScope.tokens` | `case tokens` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
 | Case | `MCPOAuthCredentialScope.verifier` | `case verifier` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
+| Case | `MCPStdioShell.disabled` | `case disabled` | [Sources/SwiftAISDK/MCPStdioTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPStdioTransport.swift) |
+| Case | `MCPStdioShell.executable(_:)` | `case executable(String)` | [Sources/SwiftAISDK/MCPStdioTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPStdioTransport.swift) |
+| Case | `MCPStdioShell.system` | `case system` | [Sources/SwiftAISDK/MCPStdioTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPStdioTransport.swift) |
 | Class | `MCPClient` | `actor MCPClient` | [Sources/SwiftAISDK/MCPClientActor.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPClientActor.swift) |
 | Class | `MCPHTTPTransport` | `final class MCPHTTPTransport` | [Sources/SwiftAISDK/MCPHTTPTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPHTTPTransport.swift) |
 | Class | `MCPStdioTransport` | `final class MCPStdioTransport` | [Sources/SwiftAISDK/MCPStdioTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPStdioTransport.swift) |
@@ -86,6 +89,7 @@ description: Public SwiftAISDK APIs for mcp.
 | Enumeration | `MCPOAuthAuthResult` | `enum MCPOAuthAuthResult` | [Sources/SwiftAISDK/MCPOAuthTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPOAuthTypes.swift) |
 | Enumeration | `MCPOAuthClientAuthMethod` | `enum MCPOAuthClientAuthMethod` | [Sources/SwiftAISDK/MCPOAuthTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPOAuthTypes.swift) |
 | Enumeration | `MCPOAuthCredentialScope` | `enum MCPOAuthCredentialScope` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
+| Enumeration | `MCPStdioShell` | `enum MCPStdioShell` | [Sources/SwiftAISDK/MCPStdioTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPStdioTransport.swift) |
 | Function | `createMCPEventSecret()` | `func createMCPEventSecret() -> String` | [Sources/SwiftAISDK/MCPEventWebhook.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventWebhook.swift) |
 | Function | `decodeMCPEventSecret(_:)` | `func decodeMCPEventSecret(_ secret: String) throws -> Data` | [Sources/SwiftAISDK/MCPEventWebhook.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventWebhook.swift) |
 | Function | `verifyMCPEventSignature(headers:body:secret:now:)` | `func verifyMCPEventSignature(headers: [String : String], body: Data, secret: String, now: Date = Date()) throws -> Bool` | [Sources/SwiftAISDK/MCPEventWebhook.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventWebhook.swift) |
@@ -98,8 +102,8 @@ description: Public SwiftAISDK APIs for mcp.
 | Initializer | `init(authorizationURL:codeVerifier:)` | `init(authorizationURL: URL, codeVerifier: String)` | [Sources/SwiftAISDK/MCPOAuthTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPOAuthTypes.swift) |
 | Initializer | `init(clientID:clientSecret:clientIDIssuedAt:clientSecretExpiresAt:issuer:authorizationServerURL:tokenEndpoint:rawValue:)` | `init(clientID: String, clientSecret: String? = nil, clientIDIssuedAt: Int? = nil, clientSecretExpiresAt: Int? = nil, issuer: String? = nil, authorizationServerURL: URL? = nil, tokenEndpoint: URL? = nil, rawValue: JSONValue = .object([:]))` | [Sources/SwiftAISDK/MCPOAuthTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPOAuthTypes.swift) |
 | Initializer | `init(clientInformation:clientMetadata:rawValue:)` | `init(clientInformation: MCPOAuthClientInformation, clientMetadata: MCPOAuthClientMetadata, rawValue: JSONValue = .object([:]))` | [Sources/SwiftAISDK/MCPOAuthTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPOAuthTypes.swift) |
-| Initializer | `init(command:args:env:cwd:)` | `init(command: String, args: [String] = [], env: [String : String] = [:], cwd: String? = nil)` | [Sources/SwiftAISDK/MCPStdioTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPStdioTransport.swift) |
-| Initializer | `init(command:args:env:cwd:)` | `convenience init(command: String, args: [String] = [], env: [String : String] = [:], cwd: String? = nil)` | [Sources/SwiftAISDK/MCPStdioTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPStdioTransport.swift) |
+| Initializer | `init(command:args:env:cwd:shell:)` | `init(command: String, args: [String] = [], env: [String : String] = [:], cwd: String? = nil, shell: MCPStdioShell = .disabled)` | [Sources/SwiftAISDK/MCPStdioTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPStdioTransport.swift) |
+| Initializer | `init(command:args:env:cwd:shell:)` | `convenience init(command: String, args: [String] = [], env: [String : String] = [:], cwd: String? = nil, shell: MCPStdioShell = .disabled)` | [Sources/SwiftAISDK/MCPStdioTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPStdioTransport.swift) |
 | Initializer | `init(config:)` | `init(config: MCPStdioConfig)` | [Sources/SwiftAISDK/MCPStdioTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPStdioTransport.swift) |
 | Initializer | `init(content:structuredContent:toolResult:isError:metadata:resultType:rawValue:)` | `init(content: [JSONValue] = [], structuredContent: JSONValue? = nil, toolResult: JSONValue? = nil, isError: Bool = false, metadata: JSONValue? = nil, resultType: String? = nil, rawValue: JSONValue? = nil)` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
 | Initializer | `init(contents:metadata:resultType:rawValue:)` | `init(contents: [MCPResourceContent], metadata: JSONValue? = nil, resultType: String? = nil, rawValue: JSONValue? = nil)` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
@@ -461,6 +465,7 @@ description: Public SwiftAISDK APIs for mcp.
 | Instance Property | `secret` | `var secret: String?` | [Sources/SwiftAISDK/MCPEventTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventTypes.swift) |
 | Instance Property | `serverCapabilities` | `var serverCapabilities: JSONValue { get }` | [Sources/SwiftAISDK/MCPClientActor.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPClientActor.swift) |
 | Instance Property | `serverInfo` | `var serverInfo: MCPImplementation { get }` | [Sources/SwiftAISDK/MCPClientActor.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPClientActor.swift) |
+| Instance Property | `shell` | `var shell: MCPStdioShell` | [Sources/SwiftAISDK/MCPStdioTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPStdioTransport.swift) |
 | Instance Property | `size` | `var size: Int?` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
 | Instance Property | `softwareID` | `var softwareID: String?` | [Sources/SwiftAISDK/MCPOAuthTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPOAuthTypes.swift) |
 | Instance Property | `softwareStatement` | `var softwareStatement: String?` | [Sources/SwiftAISDK/MCPOAuthTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPOAuthTypes.swift) |
@@ -514,10 +519,15 @@ description: Public SwiftAISDK APIs for mcp.
 | Instance Property | `uriTemplate` | `var uriTemplate: String` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
 | Instance Property | `url` | `var url: URL` | [Sources/SwiftAISDK/MCPEventTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventTypes.swift) |
 | Instance Property | `url` | `var url: String?` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
+| Instance Property | `usesCustomClientAuthentication` | `var usesCustomClientAuthentication: Bool { get }` | [Sources/SwiftAISDK/MCPOAuthTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPOAuthTypes.swift) |
+| Instance Property | `usesCustomClientAuthentication` | `var usesCustomClientAuthentication: Bool { get }` | [Sources/SwiftAISDK/MCPOAuthTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPOAuthTypes.swift) |
 | Instance Property | `value` | `var value: String` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
 | Instance Property | `values` | `var values: [String]` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
 | Instance Property | `version` | `var version: String` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
 | Instance Property | `visibility` | `var visibility: [Visibility]?` | [Sources/SwiftAISDK/MCPApps.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPApps.swift) |
+| Instance Property | `waitsForProtocolVersionDiscovery` | `let waitsForProtocolVersionDiscovery: Bool` | [Sources/SwiftAISDK/MCPHTTPTransport.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPHTTPTransport.swift) |
+| Instance Property | `waitsForProtocolVersionDiscovery` | `var waitsForProtocolVersionDiscovery: Bool { get }` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
+| Instance Property | `waitsForProtocolVersionDiscovery` | `var waitsForProtocolVersionDiscovery: Bool { get }` | [Sources/SwiftAISDK/MCPTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPTypes.swift) |
 | Protocol | `MCPEventAdapter` | `protocol MCPEventAdapter : Sendable` | [Sources/SwiftAISDK/MCPEventAdapter.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventAdapter.swift) |
 | Protocol | `MCPEventOperations` | `protocol MCPEventOperations : Sendable` | [Sources/SwiftAISDK/MCPEventAdapter.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventAdapter.swift) |
 | Protocol | `MCPEventStore` | `protocol MCPEventStore : Sendable` | [Sources/SwiftAISDK/MCPEventTypes.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/MCPEventTypes.swift) |

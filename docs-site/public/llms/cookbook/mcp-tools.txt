@@ -92,3 +92,28 @@ An `invalid_grant` caused by a failed refresh invalidates only that captured
 refresh generation and retries authorization. An authorization-code
 `invalid_grant` propagates without deleting unrelated stored tokens or retrying
 the same code. Event subscriptions are described in the [MCP Events recipe](../mcp-events/).
+
+## Discovery, shell execution, and credential binding
+
+HTTP protocol discovery waits for the response instead of using the one-second
+stdio probe. Set `initializationOptions: .init(timeoutMilliseconds: ...)` on
+`MCPClient.connect` to bound the complete operation; cancellation still applies.
+Custom transports opt in through `waitsForProtocolVersionDiscovery`.
+
+On macOS and Linux, `MCPStdioTransport` and `MCPStdioConfig`
+accept `shell: .disabled` (the default), `.system` (`/bin/sh`), or
+`.executable("/path/to/shell")`. Enabled shells interpret the command and joined
+arguments as shell syntax, including expansions; supply trusted command text.
+Direct execution preserves literal argument boundaries.
+
+OAuth clients with an existing secret must configure the credentials' `issuer`
+or supply stored authorization-server information before starting authorization.
+A matching flow pin cannot override a conflicting credential issuer or token
+endpoint. An `invalid_grant` retry retains the validated token binding after
+credential invalidation. Public clients without custom authentication may still
+start without a preconfigured binding.
+
+Swift custom implementations of `authenticateTokenRequest` must additionally
+return `true` from `usesCustomClientAuthentication` and supply an issuer or stored
+binding. Swift protocols cannot infer whether this optional hook was overridden;
+the explicit capability flag is required to enforce the pre-redirect check.

@@ -912,6 +912,8 @@ public extension MCPOAuthProvider {
 
 public protocol MCPTransport: Sendable {
     var supportsProtocolVersionDiscovery: Bool { get }
+    /// HTTP transports wait for discovery within the initialization deadline.
+    var waitsForProtocolVersionDiscovery: Bool { get }
     var supportsMCPToolParameterHeaders: Bool { get }
     func setRequestHandler(_ handler: (@Sendable (JSONValue) async -> JSONValue)?) async
     func setProtocolVersion(_ protocolVersion: String?) async
@@ -924,6 +926,7 @@ public protocol MCPTransport: Sendable {
 
 public extension MCPTransport {
     var supportsProtocolVersionDiscovery: Bool { false }
+    var waitsForProtocolVersionDiscovery: Bool { false }
     var supportsMCPToolParameterHeaders: Bool { false }
     func setRequestHandler(_ handler: (@Sendable (JSONValue) async -> JSONValue)?) async {}
     func setProtocolVersion(_ protocolVersion: String?) async {}

@@ -678,7 +678,7 @@ private func managedFileMetadata(
         providerReferenceKey: providerReferenceKey
     )
     try request.abortSignal?.throwIfAborted()
-    let url = try config.url("", "/files/\(encodeFilePathSegment(fileID))")
+    let url = try config.url("", "/files/\(encodePathSegment(fileID))")
     let headers = managedFileHeaders(config: config, requestHeaders: request.headers)
     let (httpRequest, response) = try await getFromAPI(
         url: url,
@@ -719,7 +719,7 @@ private func managedFileDownload(
         providerReferenceKey: providerReferenceKey
     )
     try request.abortSignal?.throwIfAborted()
-    let url = try config.url("", "/files/\(encodeFilePathSegment(fileID))/content")
+    let url = try config.url("", "/files/\(encodePathSegment(fileID))/content")
     let headers = managedFileHeaders(config: config, requestHeaders: request.headers)
     let (httpRequest, response) = try await getBinaryStreamFromAPI(
         url: url,
@@ -761,7 +761,7 @@ private func managedFileDelete(
         providerReferenceKey: providerReferenceKey
     )
     try request.abortSignal?.throwIfAborted()
-    let url = try config.url("", "/files/\(encodeFilePathSegment(fileID))")
+    let url = try config.url("", "/files/\(encodePathSegment(fileID))")
     let headers = managedFileHeaders(config: config, requestHeaders: request.headers)
     let (httpRequest, response) = try await deleteFromAPI(
         url: url,
@@ -816,20 +816,6 @@ private func managedFileResponseID(_ raw: JSONValue, providerID: String) throws 
     }
     return id
 }
-
-private func encodeFilePathSegment(_ value: String) -> String {
-    let encoded = value.addingPercentEncoding(withAllowedCharacters: filePathSegmentAllowed) ?? value
-    if encoded == "." { return "%252E" }
-    if encoded == ".." { return "%252E%252E" }
-    return encoded
-}
-
-private let filePathSegmentAllowed: CharacterSet = {
-    // Exact ASCII allow-list used by JavaScript's encodeURIComponent. Using
-    // urlPathAllowed here would leave delimiters such as ':', '@', '&', and
-    // ';' unescaped even though they are data inside a provider file id.
-    CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.!~*'()")
-}()
 
 private func managedFileHeaders(
     config: ModelHTTPConfig,

@@ -55,10 +55,7 @@ func anthropicOptions(from request: LanguageModelRequest, providerID: String) th
     var sendReasoning = request.extraBody["sendReasoning"]?.boolValue ?? true
     var structuredOutputMode = request.extraBody["structuredOutputMode"]?.stringValue
 
-    if let value = request.providerOptions["anthropic"] {
-        guard value != .null else {
-            return AnthropicMappedOptions(body: output, betas: betas, toolChoice: toolChoice, disableParallelToolUse: disableParallelToolUse, toolStreaming: toolStreaming, sendReasoning: sendReasoning, structuredOutputMode: structuredOutputMode)
-        }
+    if let value = request.providerOptions["anthropic"], value != .null {
         guard let nested = value.objectValue else {
             throw AIError.invalidArgument(argument: "providerOptions.anthropic", message: "Anthropic provider options must be an object.")
         }
@@ -73,10 +70,7 @@ func anthropicOptions(from request: LanguageModelRequest, providerID: String) th
     }
 
     let providerOptionsName = anthropicProviderOptionsName(from: providerID)
-    if providerOptionsName != "anthropic", let value = request.providerOptions[providerOptionsName] {
-        guard value != .null else {
-            return AnthropicMappedOptions(body: output, betas: betas, toolChoice: toolChoice, disableParallelToolUse: disableParallelToolUse, toolStreaming: toolStreaming, sendReasoning: sendReasoning, structuredOutputMode: structuredOutputMode)
-        }
+    if providerOptionsName != "anthropic", let value = request.providerOptions[providerOptionsName], value != .null {
         guard let nested = value.objectValue else {
             throw AIError.invalidArgument(argument: "providerOptions.\(providerOptionsName)", message: "Anthropic provider options must be an object.")
         }
@@ -417,6 +411,8 @@ func anthropicSamplingParameters(
     for request: LanguageModelRequest,
     modelID: String,
     capabilities: AnthropicModelCapabilities,
+    maxTemperature: Double = 1,
+    temperatureProvider: String = "anthropic",
     warnings: inout [AIWarning]
 ) -> (temperature: Double?, topK: Int?, topP: Double?) {
     if capabilities.rejectsSamplingParameters {
@@ -445,27 +441,27 @@ func anthropicSamplingParameters(
     }
 
     return (
-        anthropicClampedTemperature(request.temperature, warnings: &warnings),
+        anthropicClampedTemperature(request.temperature, maximum: maxTemperature, provider: temperatureProvider, warnings: &warnings),
         request.topK,
         request.topP
     )
 }
 
-func anthropicClampedTemperature(_ temperature: Double?, warnings: inout [AIWarning]) -> Double? {
+func anthropicClampedTemperature(_ temperature: Double?, maximum: Double = 1, provider: String = "anthropic", warnings: inout [AIWarning]) -> Double? {
     guard let temperature else { return nil }
-    if temperature > 1 {
+    if temperature > maximum {
         warnings.append(AIWarning(
             type: "unsupported",
             feature: "temperature",
-            message: "\(temperature) exceeds anthropic maximum of 1.0. clamped to 1.0"
+            message: "\(temperature) exceeds \(provider) maximum of \(maximum). clamped to \(maximum)"
         ))
-        return 1
+        return maximum
     }
     if temperature < 0 {
         warnings.append(AIWarning(
             type: "unsupported",
             feature: "temperature",
-            message: "\(temperature) is below anthropic minimum of 0. clamped to 0"
+            message: "\(temperature) is below \(provider) minimum of 0. clamped to 0"
         ))
         return 0
     }
@@ -866,6 +862,7 @@ func applyAnthropicThinkingRules(
     requestTemperature: Double?,
     requestTopP: Double?,
     isAnthropicModel: Bool,
+    supportsTemperatureAndTopPWithThinking: Bool = false,
     warnings: inout [AIWarning]
 ) {
     guard var thinking = body["thinking"]?.objectValue,
@@ -892,7 +889,7 @@ func applyAnthropicThinkingRules(
         ))
     }
 
-    if body["temperature"] != nil {
+    if body["temperature"] != nil, !supportsTemperatureAndTopPWithThinking {
         body["temperature"] = nil
         warnings.append(AIWarning(
             type: "unsupported",
@@ -908,7 +905,7 @@ func applyAnthropicThinkingRules(
             message: "topK is not supported when thinking is enabled"
         ))
     }
-    if body["top_p"] != nil {
+    if body["top_p"] != nil, !supportsTemperatureAndTopPWithThinking {
         body["top_p"] = nil
         warnings.append(AIWarning(
             type: "unsupported",

@@ -562,8 +562,8 @@ sequential and nil is unlimited, while returned results retain model order.
 ## Decision V4
 
 `AI.experimentalDecide` answers typed Choice, Score, Boolean and TypeSafe Box
-questions over ordered text, JSON and file evidence. OpenAI, Anthropic, Google, Gateway and
-TypeSafe AI expose `decisionModel(_:)`; registry and custom-provider routing
+questions over ordered text, JSON and file evidence. OpenAI, Anthropic, Google, Gateway,
+Perplexity and TypeSafe AI expose `decisionModel(_:)`; registry and custom-provider routing
 support the same model reference.
 
 ```swift
@@ -577,6 +577,10 @@ let result = try await AI.experimentalDecide(
     questions: ["damaged": .boolean(instructions: "Is there visible damage?")]
 )
 ```
+
+Use optional `maxOutputTokens` and `reasoning` controls with supported adapters;
+unsupported native endpoints return warnings. Non-Box questions may omit
+instructions when their criteria define the judgment.
 
 URL evidence is downloaded and normalized before adapter execution. File
 support depends on the adapter: OpenAI supports image files, generic language
@@ -743,7 +747,7 @@ and URL elicitation remain unsupported and fail without replay. These Swift
 extensions go beyond the currently published upstream MCP client. See the
 [MCP MRTR specification](https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/mrtr).
 
-`MCPClient` mirrors the core of official `@ai-sdk/mcp@2.0.73`: initialize handshake,
+`MCPClient` mirrors the core of official `@ai-sdk/mcp@2.0.81`: initialize handshake,
 tool discovery, dynamic `AITool` conversion, resources, prompts, elicitation,
 HTTP/SSE transport, stdio transport, and OAuth helpers.
 OAuth providers can implement `authorize(resourceMetadataURL:scope:)` to receive
@@ -778,6 +782,13 @@ Experimental MCP Events adds typed catalog/subscriptions, direct durable stores
 or managed adapters, HMAC-verified callback handling, identity-preserving refresh
 and atomic cursor patches. Persist callback work before cursor commit; application
 deduplication is the caller's responsibility. See the [MCP Events guide](https://ozio.github.io/SwiftAISDK/cookbook/mcp-events/).
+
+HTTP discovery waits for its response within the caller's initialization deadline.
+Stdio keeps direct execution by default; `MCPStdioShell.system` or
+`.executable("/bin/sh")` explicitly enables shell syntax. OAuth clients with a
+secret must supply an issuer or stored authorization-server binding. Custom
+`authenticateTokenRequest` implementations must also declare
+`usesCustomClientAuthentication = true` and provide that binding.
 
 Focused examples live in `Tests/SwiftAISDKTests/MCP*Tests.swift`.
 

@@ -129,7 +129,7 @@ public final class AlibabaVideoModel: VideoModel, @unchecked Sendable {
         while true {
             let response = try await config.transport.send(AIHTTPRequest(
                 method: "GET",
-                url: try requireURL("\(base)/api/v1/tasks/\(taskID)"),
+                url: try requireURL("\(base)/api/v1/tasks/\(encodePathSegment(taskID))"),
                 headers: config.headers.mergingHeaders(headers),
                 abortSignal: abortSignal
             ))

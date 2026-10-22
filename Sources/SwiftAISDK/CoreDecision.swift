@@ -72,6 +72,8 @@ public enum AIDecisionAnswer: Equatable, Sendable {
 public struct AIDecisionModelV4CallOptions: Sendable {
     public var state: [AIDecisionStatePart]
     public var questions: [String: AIDecisionQuestion]
+    public var maxOutputTokens: Int?
+    public var reasoning: String?
     public var abortSignal: AIAbortSignal?
     public var headers: [String: String]
     public var providerOptions: [String: JSONValue]
@@ -79,12 +81,16 @@ public struct AIDecisionModelV4CallOptions: Sendable {
     public init(
         state: [AIDecisionStatePart],
         questions: [String: AIDecisionQuestion],
+        maxOutputTokens: Int? = nil,
+        reasoning: String? = nil,
         abortSignal: AIAbortSignal? = nil,
         headers: [String: String] = [:],
         providerOptions: [String: JSONValue] = [:]
     ) {
         self.state = state
         self.questions = questions
+        self.maxOutputTokens = maxOutputTokens
+        self.reasoning = reasoning
         self.abortSignal = abortSignal
         self.headers = headers
         self.providerOptions = providerOptions

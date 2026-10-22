@@ -107,7 +107,7 @@ public final class FalTranscriptionModel: TranscriptionModel, @unchecked Sendabl
         while true {
             let response = try await config.transport.send(AIHTTPRequest(
                 method: "GET",
-                url: try requireURL("https://queue.fal.run/fal-ai/\(modelPath)/requests/\(requestID)"),
+                url: try requireURL("https://queue.fal.run/fal-ai/\(modelPath)/requests/\(encodePathSegment(requestID))"),
                 headers: config.headers.mergingHeaders(headers),
                 abortSignal: abortSignal
             ))

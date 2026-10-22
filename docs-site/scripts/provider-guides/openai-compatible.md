@@ -20,3 +20,7 @@ The standard `AIProviders.openAICompatible(..., transformRequestBodyWithWarnings
 Chat user content and multipart tool-result content accept provider file references for every media type. References resolve against the configured provider identity and preserve compatible content metadata; a missing provider ID raises `AINoSuchProviderReferenceError`.
 
 Image generation and edits accept base64, URL, and mixed image responses. Returned URLs are downloaded through the configured transport with the request abort signal and URL/redirect checks. Credentials and custom headers remain on the API origin. `base64Images` preserves image order, including downloaded bytes, while `urls` retains response URLs for existing callers.
+
+## Generated content order
+
+Unary generation places the separate reasoning block before text, followed by function tool calls. Content-array entries preserve their internal order after the separate reasoning block. This keeps `result.content` in the same reasoning-before-answer order as streamed output.

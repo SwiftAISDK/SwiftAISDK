@@ -162,7 +162,7 @@ private func pruneToolCalls(_ messages: [AIMessage], setting: AIPruneToolCalls) 
         }
 
         var output = message
-        output.content = message.content.filter { part in
+        var keepParts = message.content.map { part in
             switch part {
             case .text, .reasoning, .reasoningFile, .custom, .imageURL, .data, .file, .providerReference:
                 return true
@@ -188,7 +188,30 @@ private func pruneToolCalls(_ messages: [AIMessage], setting: AIPruneToolCalls) 
                 return shouldKeepToolPart(toolName: approvalIDToToolName[response.id], tools: setting.tools)
             }
         }
+        if message.role == .assistant {
+            var index = 0
+            while index < message.content.count {
+                guard isPrunableReasoning(message.content[index]) else { index += 1; continue }
+                let start = index
+                while index < message.content.count && isPrunableReasoning(message.content[index]) { index += 1 }
+                let end = index
+                while index < message.content.count && !isPrunableReasoning(message.content[index]) { index += 1 }
+                if end < index && !keepParts[end..<index].contains(true) {
+                    for reasoningIndex in start..<end { keepParts[reasoningIndex] = false }
+                }
+            }
+            // The native shorthand reasoning field precedes all content.
+            if !message.content.isEmpty && !keepParts.contains(true) { output.reasoning = nil }
+        }
+        output.content = message.content.enumerated().compactMap { keepParts[$0.offset] ? $0.element : nil }
         return output
+    }
+}
+
+private func isPrunableReasoning(_ part: AIContentPart) -> Bool {
+    switch part {
+    case .reasoning, .reasoningFile: return true
+    default: return false
     }
 }
 

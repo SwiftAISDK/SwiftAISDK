@@ -599,8 +599,7 @@ private func miniMaxVideoOperation(from value: JSONValue) throws -> MiniMaxVideo
 }
 
 private func miniMaxVideoPathSegment(_ value: String) -> String {
-    let allowed = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.!~*'()")
-    return value.addingPercentEncoding(withAllowedCharacters: allowed) ?? value
+    encodePathSegment(value)
 }
 
 private struct MiniMaxVideoOptions {

@@ -486,6 +486,8 @@ public protocol MCPOAuthClientProvider: Sendable {
     func authorizationServerInformation() async throws -> MCPOAuthAuthorizationServerInformation?
     func saveAuthorizationServerInformation(_ information: MCPOAuthAuthorizationServerInformation) async throws
     var supportsDynamicClientRegistration: Bool { get }
+    /// Custom token authenticators must return true so credentials are bound before redirect or refresh.
+    var usesCustomClientAuthentication: Bool { get }
 
     func state() async throws -> String?
     func saveState(_ state: String) async throws
@@ -507,6 +509,7 @@ public extension MCPOAuthClientProvider {
     func authorizationServerInformation() async throws -> MCPOAuthAuthorizationServerInformation? { nil }
     func saveAuthorizationServerInformation(_ information: MCPOAuthAuthorizationServerInformation) async throws {}
     var supportsDynamicClientRegistration: Bool { false }
+    var usesCustomClientAuthentication: Bool { false }
 
     func state() async throws -> String? { nil }
     func saveState(_ state: String) async throws {}

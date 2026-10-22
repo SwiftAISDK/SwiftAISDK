@@ -3,11 +3,11 @@ import Foundation
 func validateDecisionInput(state: AIDecisionState, questions: [String: AIDecisionQuestion]) throws {
     switch state {
     case let .text(text):
-        try validateEvaluationInput(state: .string(text), questions: questions)
+        try validateEvaluationInput(state: .string(text), questions: questions, decision: true)
     case let .object(value):
-        try validateEvaluationInput(state: .object(value), questions: questions)
+        try validateEvaluationInput(state: .object(value), questions: questions, decision: true)
     case let .parts(parts):
-        try validateEvaluationInput(state: .string(""), questions: questions)
+        try validateEvaluationInput(state: .string(""), questions: questions, decision: true)
         for part in parts {
             switch part {
             case .text: break

@@ -4,6 +4,7 @@ struct OpenAIResponsesStreamingToolCalls {
     let providerID: String
     let toolNameAliases: [String: String]
     let functionToolNames: Set<String>
+    let shellProviderExecuted: Bool?
     private var buffers: [Int: OpenAICompatibleToolCallBuffer] = [:]
     private var suppressedParallelIndexes: Set<Int> = []
     private var suppressedParallelDeltas: [Int: [String]] = [:]
@@ -14,11 +15,13 @@ struct OpenAIResponsesStreamingToolCalls {
     init(
         providerID: String,
         toolNameAliases: [String: String] = [:],
-        functionToolNames: Set<String> = []
+        functionToolNames: Set<String> = [],
+        shellProviderExecuted: Bool? = nil
     ) {
         self.providerID = providerID
         self.toolNameAliases = toolNameAliases
         self.functionToolNames = functionToolNames
+        self.shellProviderExecuted = shellProviderExecuted
     }
 
     mutating func apply(event raw: JSONValue) -> [LanguageStreamPart] {
@@ -231,7 +234,7 @@ struct OpenAIResponsesStreamingToolCalls {
                 return parts
             case "local_shell_call", "shell_call":
                 buffers[index] = nil
-                return openAIResponsesToolCall(from: item, providerID: providerID, toolNameAliases: toolNameAliases).map { [.toolCall($0)] } ?? []
+                return openAIResponsesToolCall(from: item, providerID: providerID, toolNameAliases: toolNameAliases, shellProviderExecuted: shellProviderExecuted).map { [.toolCall($0)] } ?? []
             default:
                 break
             }

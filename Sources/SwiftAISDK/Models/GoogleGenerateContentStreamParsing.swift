@@ -65,6 +65,8 @@ struct GoogleGenerateContentStreamState {
     private var latestUsage: TokenUsage?
     private var currentUsageMetadata: JSONValue?
     private var continuedUsageMetadata: JSONValue?
+    private var currentRequestGroundingMetadata: JSONValue?
+    private var groundingMetadataPerRequest: [JSONValue] = []
     private var initialPromptTokenCount: JSONValue?
     private var didContinue = false
     private var requestHop = 0
@@ -124,6 +126,9 @@ struct GoogleGenerateContentStreamState {
             latestProviderMetadata,
             googleGenerateContentProviderMetadata(from: raw, includeNullDefaults: false)
         )
+        if let grounding = raw["candidates"]?[0]?["groundingMetadata"], grounding != .null {
+            currentRequestGroundingMetadata = grounding
+        }
         if let usageMetadata = raw["usageMetadata"], usageMetadata != .null {
             currentUsageMetadata = usageMetadata
             latestUsage = googleGenerateContentUsage(fromUsageMetadata: usageMetadata)
@@ -290,6 +295,13 @@ struct GoogleGenerateContentStreamState {
         currentUsageMetadata = nil
     }
 
+    mutating func startContinuationRequest() {
+        // Commit a grounding slot only after the next HTTP request succeeds.
+        // A failed continuation has no response to add to the ordered history.
+        groundingMetadataPerRequest.append(currentRequestGroundingMetadata ?? .null)
+        currentRequestGroundingMetadata = nil
+    }
+
     mutating func finish() -> [LanguageStreamPart] {
         var parts: [LanguageStreamPart] = []
         if !emittedInitialParts {
@@ -312,6 +324,11 @@ struct GoogleGenerateContentStreamState {
         var google = latestProviderMetadata["google"]?.objectValue ?? [:]
         google["usageMetadata"] = usageMetadata ?? .null
         google["serviceTier"] = usageMetadata?["serviceTier"] ?? .null
+        if !groundingMetadataPerRequest.isEmpty {
+            google["groundingMetadataPerRequest"] = .array(
+                groundingMetadataPerRequest + [currentRequestGroundingMetadata ?? .null]
+            )
+        }
         if latestFinishReason != "MAX_TOKENS" && latestFinishReason != "CONTINUATION" { google.removeValue(forKey: "continuationToken") }
         if didContinue, let initialPromptTokenCount, initialPromptTokenCount != .null { google["initialPromptTokenCount"] = initialPromptTokenCount }
         latestProviderMetadata["google"] = .object(google)
@@ -417,6 +434,8 @@ func googleStreamWithContinuation(
                 toolNameMapping: prepared.toolNameMapping,
                 jsonResponseToolName: jsonResponseToolName
             )
+        } else {
+            state!.startContinuationRequest()
         }
         var pendingToken: String?
         var receivedProviderError = false

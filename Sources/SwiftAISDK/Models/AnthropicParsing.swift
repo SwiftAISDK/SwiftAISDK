@@ -548,7 +548,7 @@ func anthropicProviderMetadataKeys(from providerID: String, requestProviderOptio
     let canonicalKey = anthropicProviderMetadataKey(from: providerID)
     guard canonicalKey == "anthropic" else { return [canonicalKey] }
     let providerOptionsName = anthropicProviderOptionsName(from: providerID)
-    guard providerOptionsName != "anthropic", requestProviderOptions[providerOptionsName] != nil else {
+    guard providerOptionsName != "anthropic", let customOptions = requestProviderOptions[providerOptionsName], customOptions != .null else {
         return ["anthropic"]
     }
     return ["anthropic", providerOptionsName]

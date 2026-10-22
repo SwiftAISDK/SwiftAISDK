@@ -1,20 +1,54 @@
 # Core V7 Parity
 
-Snapshot date: 2026-10-18
+Snapshot date: 2026-10-23
 
 This document tracks SwiftAISDK against the current AI SDK Core and Errors
 reference. It is intentionally high-level: product status belongs in
 `PortingStatus.md`, provider package drift belongs in `ProviderVersionLedger.md`,
 and provider behavior belongs in focused tests.
 Implementation-sensitive UI/chat items are also checked against npm source
-snapshots, currently `ai@7.0.143`, `@ai-sdk/provider@4.0.29`,
-`@ai-sdk/provider-utils@5.0.62`, and `@ai-sdk/react@4.0.147`.
+snapshots, currently `ai@7.0.148`, `@ai-sdk/provider@4.0.31`,
+`@ai-sdk/provider-utils@5.0.65`, and `@ai-sdk/react@4.0.152`.
 
 References:
 
 - <https://ai-sdk.dev/docs/reference/ai-sdk-core>
 - <https://ai-sdk.dev/docs/reference/ai-sdk-errors>
 - <https://ai-sdk.dev/docs/reference/ai-sdk-ui>
+
+## 2026-10-23 Native Parity
+
+Decision calls, provider call options, callbacks and telemetry accept optional
+`maxOutputTokens` and `reasoning`; invalid budgets fail before I/O. Language
+adapters forward the controls and default reasoning to none. Choice/Score/Boolean
+instructions default to native `.null`, Score supports one level, and Boolean
+without instructions requires a described criterion. Box and legacy Evaluation
+validation retain their stricter requirements. Perplexity now exposes its native
+Decision adapter with image evidence, full-precision answers, confidence/legends
+and exact answer-key validation. Provider-specific restrictions still apply.
+
+Pruning removes consecutive reasoning/reasoning-file groups when all following
+content up to the next group is pruned. Native UI tool IDs retain the latest
+nonempty tool name. A shared path-segment helper protects reserved characters
+and standalone dot IDs in media status and file/skill routes; downloads reject
+`.internal` hosts. Native owned Data accumulation covers the JS backing-buffer
+retention fix without retaining views.
+
+MCP HTTP discovery waits within the caller's initialization budget; stdio keeps
+its short capability probe. Stdio shell execution is explicitly selectable and
+defaults off. OAuth flow pins cannot override credential issuer/endpoint bindings,
+unbound secrets are rejected, and invalid-grant recovery retains validated token
+binding. Native custom token authenticators declare `usesCustomClientAuthentication`
+and must supply an issuer or stored binding; Swift cannot detect an overridden
+optional protocol hook implicitly.
+
+The renamed JS `experimental_streamTextLowMemory` result/replay/getter API
+remains deferred; native AsyncSequence APIs make no equivalent memory bound
+promise. TypeScript optional tool-set inference and React dependency-only changes
+need no Swift runtime counterpart. Monorepo interrupted-stream/approval follow-up
+fixtures and Gateway parallel-search GA changes remain ahead of this published
+snapshot. Existing UI wire/step, DNS pinning, realtime and provider-specific gaps
+remain in PortingStatus.
 
 ## 2026-10-18 Native Parity
 
@@ -86,6 +120,11 @@ Typed authorization-server mismatch errors; invalidation context captures the fa
 ## Latest Core Package Diff Notes
 
 Checked npm package diffs:
+
+- `ai@7.0.143 -> 7.0.148`
+- `@ai-sdk/provider@4.0.29 -> 4.0.31`
+- `@ai-sdk/provider-utils@5.0.62 -> 5.0.65`
+- `@ai-sdk/react@4.0.147 -> 4.0.152`
 
 - `ai@7.0.137 -> 7.0.143`
 - `@ai-sdk/provider@4.0.26 -> 4.0.29`

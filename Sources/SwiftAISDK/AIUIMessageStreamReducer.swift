@@ -412,7 +412,7 @@ public struct AIUIMessageStreamReducer: Sendable {
     ) {
         if let index = toolCallPartIndexes[id], case let .toolCall(call) = message.parts[index] {
             var updated = call
-            updated.name = call.name.isEmpty ? name : call.name
+            updated.name = name.isEmpty ? call.name : name
             updated.providerExecuted = call.providerExecuted || providerExecuted
             updated.dynamic = call.dynamic || dynamic
             updated.title = call.title ?? title

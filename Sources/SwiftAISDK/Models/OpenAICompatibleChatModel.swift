@@ -66,12 +66,17 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
             }
         }
         if !separateReasoning.isEmpty {
-            orderedContent.append(.reasoning(separateReasoning))
+            orderedContent.insert(.reasoning(separateReasoning), at: 0)
         }
         if contentText.isEmpty, let audioTranscript, !audioTranscript.isEmpty {
             orderedContent.append(.text(audioTranscript))
         }
-        orderedContent.append(contentsOf: toolCalls.map(AIResultContentPart.toolCall))
+        let callContent = toolCalls.map(AIResultContentPart.toolCall)
+        if openAICompatibleProviderRoot(providerID) == "moonshotai" {
+            orderedContent.insert(contentsOf: callContent, at: separateReasoning.isEmpty ? 0 : 1)
+        } else {
+            orderedContent.append(contentsOf: callContent)
+        }
         let contentValue = choice?["message"]?["content"]
         let legacyText = config.allowsEmptyTextResponse
             ? nil
@@ -96,7 +101,7 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         return TextGenerationResult(
             text: text,
             content: orderedContent,
-            reasoning: contentReasoning + separateReasoning,
+            reasoning: separateReasoning + contentReasoning,
             finishReason: openAICompatibleFinishReason(choice?["finish_reason"]?.stringValue),
             usage: usage(from: raw),
             toolCalls: toolCalls,
@@ -307,6 +312,7 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         var body = try Self.body(
             for: request,
             modelID: modelID,
+            requestModelID: config.requestModelID,
             providerID: providerID,
             stream: stream,
             unwrapOpenAIProviderOptions: isOpenAIBackedProvider(providerID, config: config),
@@ -364,6 +370,7 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
     private static func body(
         for request: LanguageModelRequest,
         modelID: String,
+        requestModelID: String?,
         providerID: String,
         stream: Bool,
         unwrapOpenAIProviderOptions: Bool,
@@ -444,7 +451,7 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
             messages = converted
         }
         var body: [String: JSONValue] = [
-            "model": .string(modelID),
+            "model": .string(requestModelID ?? modelID),
             "messages": .array(messages)
         ]
         if stream { body["stream"] = true }

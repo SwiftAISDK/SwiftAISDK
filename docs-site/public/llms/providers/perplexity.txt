@@ -14,24 +14,40 @@ Source URL: /providers/perplexity/
 
 - Language
 - Embedding
+- Decision
 
-## Perplexity 5 migration
+## Perplexity 5 routing
 
-`languageModel(...)` and the callable provider now use the Agent API
-at `/v1/agent`. Existing Sonar Chat Completions users must choose
-`chatModel(...)` or `sonarModel(...)` explicitly.
+`languageModel(...)` and the callable provider use `/v1/agent`.
+Choose `chatModel(...)` or `sonarModel(...)` for legacy Sonar Chat Completions.
+`embeddingModel(...)` uses `/v1/embeddings`.
+
+## Native decisions
 
 ```swift
 let perplexity = try AIProviders.perplexity()
-let agent = try perplexity.languageModel("fast")        // /v1/agent
-let callableAgent = try perplexity("fast")              // /v1/agent
-let sonar = try perplexity.sonarModel("sonar")          // /chat/completions
-let sameSonar = try perplexity.chatModel("sonar")       // /chat/completions
+let result = try await AI.experimentalDecide(
+    model: try perplexity.decisionModel("pplx-judge"),
+    state: .text("The package arrived cracked."),
+    questions: ["damaged": .boolean(criteria: ["true": "Package is damaged"])]
+)
 ```
+
+The `/v1/decisions` endpoint accepts 1–128 named Choice, Score and Boolean
+questions. Choice supports 1–255 options; Score requires 1–10 non-null levels.
+Instructions may be omitted when the rubric defines the judgment. Box is
+unsupported. State preserves ordered text/JSON and up to eight inline PNG,
+JPEG or WebP images, including images nested in JSON. The facade resolves URLs
+before adapter execution.
+
+Answers retain full precision without rounding allowance. Confidence and score
+legends live under `providerMetadata.perplexity`; response metadata keeps
+`x-request-id`, resolved model, headers and raw body. `maxOutputTokens`,
+`reasoning` and Perplexity provider options produce unsupported warnings.
 
 ## Notes
 
-Perplexity Agent language models, legacy Sonar chat, and quantized embeddings mirror upstream Perplexity 5.0.14: `PERPLEXITY_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language Agent surface plus chat/sonar compatibility and embedding/textEmbedding aliases, `/v1/agent`, `/chat/completions`, and `/v1/embeddings`, text/image/PDF message conversion, JSON schema response format, providerOptions.perplexity passthrough including quantized embedding dimensions and signed/binary base64 decoding with a 512-value preflight limit, citations/images/cost metadata, optional and null streaming delta content, reasoning-token separation from completion tokens with corrected total accounting, Perplexity error schema, and warnings for unsupported topK/stop/seed/custom reasoning while treating provider-default reasoning as a no-op. Perplexity 5.0.1 accepts explicit null values for optional Agent SSE fields without failing the stream, including null content indexes that retain the base text-part ID. The 5.0.0 migration makes `languageModel` and the callable provider use the Agent API; use `chatModel` or `sonarModel` for the legacy Sonar Chat Completions API. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The default X-Pplx-Integration header is vercel-ai-sdk; explicit headers override it case-insensitively. The 2026-10-11 pass: Common max effort maps to xhigh; unknown effort warns and is omitted. Embeddings inherit shared dimensions unless a provider override is supplied.
+Perplexity Agent language models, legacy Sonar chat, and quantized embeddings mirror upstream Perplexity 5.0.17: `PERPLEXITY_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language Agent surface plus chat/sonar compatibility and embedding/textEmbedding aliases, `/v1/agent`, `/chat/completions`, and `/v1/embeddings`, text/image/PDF message conversion, JSON schema response format, providerOptions.perplexity passthrough including quantized embedding dimensions and signed/binary base64 decoding with a 512-value preflight limit, citations/images/cost metadata, optional and null streaming delta content, reasoning-token separation from completion tokens with corrected total accounting, Perplexity error schema, and warnings for unsupported topK/stop/seed/custom reasoning while treating provider-default reasoning as a no-op. Perplexity 5.0.1 accepts explicit null values for optional Agent SSE fields without failing the stream, including null content indexes that retain the base text-part ID. The 5.0.0 migration makes `languageModel` and the callable provider use the Agent API; use `chatModel` or `sonarModel` for the legacy Sonar Chat Completions API. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The default X-Pplx-Integration header is vercel-ai-sdk; explicit headers override it case-insensitively. The 2026-10-11 pass: Common max effort maps to xhigh; unknown effort warns and is omitted. Embeddings inherit shared dimensions unless a provider override is supplied. The 2026-10-23 pass: Native decisionModel calls /v1/decisions with named Choice/Score/Boolean questions, up to eight inline images, full-precision answers, confidence/score legends, and unsupported-setting warnings.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

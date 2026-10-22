@@ -483,6 +483,9 @@ private func anthropicBatchBetas(
                 message: "Anthropic provider options must be an object."
             )
         }
+        if options["anthropicBeta"] == .null {
+            throw AIError.invalidArgument(argument: "providerOptions.\(key).anthropicBeta", message: "Anthropic batch betas must be an array of strings; null is not supported.")
+        }
         for beta in try anthropicBetaValues(
             options["anthropicBeta"],
             argument: "providerOptions.\(key).anthropicBeta"

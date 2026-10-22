@@ -24,6 +24,12 @@ public final class GatewayDecisionModel: AIDecisionModelV4, @unchecked Sendable 
             "stateParts": .array(try options.state.map(gatewayDecisionStatePart)),
             "questions": .object(options.questions.mapValues(gatewayDecisionQuestion))
         ]
+        if let maxOutputTokens = options.maxOutputTokens {
+            body["maxOutputTokens"] = .number(Double(maxOutputTokens))
+        }
+        if let reasoning = options.reasoning {
+            body["reasoning"] = .string(reasoning)
+        }
         if !options.providerOptions.isEmpty {
             body["providerOptions"] = .object(options.providerOptions)
         }

@@ -52,11 +52,13 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         }
         let toolNameAliases = openAIResponsesProviderToolNameAliases(from: request.tools)
         let functionToolNames = openAIResponsesFunctionToolNames(from: request.tools)
+        let shellProviderExecuted = openAIResponsesShellIsProviderExecuted(from: request.tools)
         let toolCalls = openAIResponsesToolCalls(
             from: raw,
             providerID: providerID,
             toolNameAliases: toolNameAliases,
-            functionToolNames: functionToolNames
+            functionToolNames: functionToolNames,
+            shellProviderExecuted: shellProviderExecuted
         )
         let toolResults = openAIResponsesToolResults(from: raw, providerID: providerID, toolNameAliases: toolNameAliases)
         let toolApprovalRequests = openAIResponsesToolApprovalRequests(from: raw, providerID: providerID)
@@ -70,14 +72,18 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             providerID: providerID,
             mode: config.responsesRequestMode,
             toolNameAliases: toolNameAliases,
-            functionToolNames: functionToolNames
+            functionToolNames: functionToolNames,
+            shellProviderExecuted: shellProviderExecuted
         )
         let text = openAIResponsesOutputText(from: raw)
             ?? raw["choices"]?[0]?["message"]?["content"]?.stringValue
         let hasReasoning = content.contains { part in
             if case .reasoning = part { true } else { false }
         }
-        guard let text = text ?? ((!toolCalls.isEmpty || hasReasoning) ? "" : nil) else {
+        let isPrewarmResponse = prepared.body["prompt_cache_options"]?["prewarm"]?.boolValue == true
+            && raw["status"]?.stringValue == "completed"
+            && raw["output"]?.arrayValue?.isEmpty == true
+        guard let text = text ?? ((!toolCalls.isEmpty || hasReasoning || isPrewarmResponse) ? "" : nil) else {
             throw AIError.invalidResponse(provider: providerID, message: "No output text found in responses API response.")
         }
         let hasClientToolCalls = toolCalls.contains { !$0.providerExecuted }
@@ -126,10 +132,12 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                     continuation.yield(.streamStart(warnings: prepared.warnings))
                     let toolNameAliases = openAIResponsesProviderToolNameAliases(from: request.tools)
                     let functionToolNames = openAIResponsesFunctionToolNames(from: request.tools)
+                    let shellProviderExecuted = openAIResponsesShellIsProviderExecuted(from: request.tools)
                     var toolCallBuffers = OpenAIResponsesStreamingToolCalls(
                         providerID: providerID,
                         toolNameAliases: toolNameAliases,
-                        functionToolNames: functionToolNames
+                        functionToolNames: functionToolNames,
+                        shellProviderExecuted: shellProviderExecuted
                     )
                     var providerMetadata: [String: JSONValue] = [:]
                     var streamResponseID: JSONValue?
@@ -268,7 +276,8 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             toolCallBuffers = OpenAIResponsesStreamingToolCalls(
                                 providerID: providerID,
                                 toolNameAliases: toolNameAliases,
-                                functionToolNames: functionToolNames
+                                functionToolNames: functionToolNames,
+                                shellProviderExecuted: shellProviderExecuted
                             )
                             streamResponseID = responsePayload["id"]
                             openResponsesHasToolCalls = false
@@ -692,6 +701,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         let isOpenAIBacked = isOpenAIBackedProvider(providerID, config: config)
         var warnings = openResponsesWarnings(for: request)
         if isOpenAIBacked {
+            try openAIResponsesValidatePromptCacheOptions(options["prompt_cache_options"], providerID: providerID)
             warnings.append(contentsOf: openAIResponsesOpenAIBackedWarnings(options: options))
         }
         openAIResponsesValidateReasoningEffort(modelID: modelID, options: &options, warnings: &warnings)
@@ -884,7 +894,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             }
         }
         var body: [String: JSONValue] = [
-            "model": .string(modelID),
+            "model": .string(config.requestModelID ?? modelID),
             "input": .array(input)
         ]
         if stream { body["stream"] = true }
@@ -963,7 +973,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         let providerOptions = try openResponsesProviderOptions(providerOptions: request.providerOptions, providerOptionsName: providerOptionsName)
         var warnings = openResponsesWarnings(for: request, includePenaltyWarnings: false) + preparedInput.warnings
         var body: [String: JSONValue] = [
-            "model": .string(modelID),
+            "model": .string(config.requestModelID ?? modelID),
             "input": preparedInput.input
         ]
         if stream { body["stream"] = .bool(true) }

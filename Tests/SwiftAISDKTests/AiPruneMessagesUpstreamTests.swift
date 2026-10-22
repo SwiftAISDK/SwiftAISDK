@@ -65,7 +65,6 @@ import Testing
 
     #expect(result == [
         .user("Weather in Tokyo and Busan?"),
-        AIMessage(role: .assistant, content: [], reasoning: "I need to get the weather in Tokyo and Busan."),
         AIMessage(
             role: .assistant,
             content: [.text("The weather in Tokyo is sunny. I could not get the weather in Busan.")],

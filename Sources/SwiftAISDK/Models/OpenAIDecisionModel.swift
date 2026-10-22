@@ -153,13 +153,17 @@ public final class OpenAIDecisionModel: AIDecisionModelV4, AIEvaluationModelV4, 
         } else {
             usage = nil
         }
+        var warnings: [AIWarning] = []
+        if options.maxOutputTokens != nil { warnings.append(AIWarning(type: "unsupported", feature: "maxOutputTokens")) }
+        if options.reasoning != nil { warnings.append(AIWarning(type: "unsupported", feature: "reasoning")) }
+        warnings += providerOptions.keys.sorted().filter { $0 != "safetyIdentifier" }.map {
+            AIWarning(type: "unsupported", feature: "providerOptions.openai.\($0)")
+        }
         return AIDecisionModelV4Result(
             answers: answers,
             rounding: AIDecisionRounding(probabilityDecimals: 2, scoreDecimals: 2),
             usage: usage,
-            warnings: providerOptions.keys.sorted().filter { $0 != "safetyIdentifier" }.map {
-                AIWarning(type: "unsupported", feature: "providerOptions.openai.\($0)")
-            },
+            warnings: warnings,
             providerMetadata: ["openai": .object(metadata)],
             response: AIResponseMetadata(modelID: returnedModel ?? modelID, headers: result.response.headers, body: raw)
         )
@@ -213,12 +217,12 @@ private func openAIDecisionContent(_ part: AIDecisionStatePart) throws -> JSONVa
 }
 
 private func openAIDecisionQuestion(name: String, question: AIDecisionQuestion) throws -> JSONValue {
-    let instructions = try decisionInputText(question.instructions)
+    let instructions = question.instructions == .null ? nil : try decisionInputText(question.instructions)
     switch question {
     case .box:
         throw AIDecisionUnsupportedFunctionalityError(functionality: "OpenAI box decisions")
     case let .boolean(_, criteria):
-        var text = [instructions]
+        var text = instructions.map { [$0] } ?? []
         for key in ["true", "false"] {
             if let value = criteria?[key], value != .null {
                 text.append("Criteria for \(key):\n\(try decisionInputText(value))")
@@ -227,14 +231,14 @@ private func openAIDecisionQuestion(name: String, question: AIDecisionQuestion) 
         return .object(["type": .string("predicate"), "name": .string(name), "instructions": .string(text.joined(separator: "\n\n"))])
     case let .choice(_, criteria):
         return .object([
-            "type": .string("choice"), "name": .string(name), "instructions": .string(instructions),
+            "type": .string("choice"), "name": .string(name), "instructions": instructions.map(JSONValue.string),
             "choices": .array(try criteria.keys.sorted().map { key in
                 .object(["value": .string(key), "description": try criteria[key].flatMap { value in value == .null ? nil : .string(try decisionInputText(value)) }])
             })
         ])
     case let .score(_, criteria):
         return .object([
-            "type": .string("score"), "name": .string(name), "instructions": .string(instructions),
+            "type": .string("score"), "name": .string(name), "instructions": instructions.map(JSONValue.string),
             "levels": .array(try criteria.enumerated().map { index, value in
                 var level: [String: JSONValue] = ["label": .string(String(index))]
                 if value != .null { level["description"] = .string(try decisionInputText(value)) }

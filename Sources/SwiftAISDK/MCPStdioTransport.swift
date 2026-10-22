@@ -2,22 +2,32 @@ import Foundation
 
 #if os(macOS) || os(Linux)
 
+/// Shell execution is explicit; command and arguments use shell syntax when enabled.
+public enum MCPStdioShell: Equatable, Sendable {
+    case disabled
+    case system
+    case executable(String)
+}
+
 public struct MCPStdioConfig: Equatable, Sendable {
     public var command: String
     public var args: [String]
     public var env: [String: String]
     public var cwd: String?
+    public var shell: MCPStdioShell
 
     public init(
         command: String,
         args: [String] = [],
         env: [String: String] = [:],
-        cwd: String? = nil
+        cwd: String? = nil,
+        shell: MCPStdioShell = .disabled
     ) {
         self.command = command
         self.args = args
         self.env = env
         self.cwd = cwd
+        self.shell = shell
     }
 }
 
@@ -33,9 +43,10 @@ public final class MCPStdioTransport: MCPTransport, @unchecked Sendable {
         command: String,
         args: [String] = [],
         env: [String: String] = [:],
-        cwd: String? = nil
+        cwd: String? = nil,
+        shell: MCPStdioShell = .disabled
     ) {
-        self.init(config: MCPStdioConfig(command: command, args: args, env: env, cwd: cwd))
+        self.init(config: MCPStdioConfig(command: command, args: args, env: env, cwd: cwd, shell: shell))
     }
 
     public func setRequestHandler(_ handler: (@Sendable (JSONValue) async -> JSONValue)?) async {
@@ -92,12 +103,20 @@ private actor MCPStdioTransportState {
             process.currentDirectoryURL = URL(fileURLWithPath: cwd, isDirectory: true)
         }
 
-        if config.command.contains("/") {
-            process.executableURL = URL(fileURLWithPath: config.command)
-            process.arguments = config.args
-        } else {
-            process.executableURL = mcpStdioEnvExecutableURL()
-            process.arguments = [config.command] + config.args
+        switch config.shell {
+        case .disabled:
+            if config.command.contains("/") {
+                process.executableURL = URL(fileURLWithPath: config.command)
+                process.arguments = config.args
+            } else {
+                process.executableURL = mcpStdioEnvExecutableURL()
+                process.arguments = [config.command] + config.args
+            }
+        case .system, .executable:
+            let shell: String
+            if case let .executable(path) = config.shell { shell = path } else { shell = "/bin/sh" }
+            process.executableURL = URL(fileURLWithPath: shell)
+            process.arguments = ["-c", ([config.command] + config.args).joined(separator: " ")]
         }
 
         outputPipe.fileHandleForReading.readabilityHandler = { [weak self] handle in

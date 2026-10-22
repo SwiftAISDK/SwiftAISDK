@@ -889,14 +889,26 @@ func openAIResponsesShellCallItem(_ call: AIToolCall) -> JSONValue {
     return .object(item)
 }
 
+func openAIResponsesShellIsProviderExecuted(from tools: [String: JSONValue]) -> Bool {
+    tools.values.contains { tool in
+        guard tool["id"]?.stringValue == "openai.shell",
+              let environment = tool["args"]?["environment"]?["type"]?.stringValue else { return false }
+        return environment == "containerAuto" || environment == "containerReference"
+    }
+}
+
 func openAIResponsesShellOutput(_ result: AIToolResult) -> [String: JSONValue] {
     let output = result.modelOutput ?? result.result
     let values = output["value"]?["output"]?.arrayValue ?? output["output"]?.arrayValue ?? []
-    return [
+    var item: [String: JSONValue] = [
         "type": .string("shell_call_output"),
         "call_id": .string(result.toolCallID),
         "output": .array(values.map(openAIResponsesShellOutputItem))
     ]
+    if let maxOutputLength = output["value"]?["maxOutputLength"] ?? output["maxOutputLength"], maxOutputLength != .null {
+        item["max_output_length"] = maxOutputLength
+    }
+    return item
 }
 
 func openAIResponsesShellOutputItem(_ value: JSONValue) -> JSONValue {
@@ -1110,8 +1122,16 @@ func openAIResponsesInputContentPart(
 ) throws -> JSONValue? {
     let (index, part) = indexAndPart
     switch part {
-    case let .text(text, _):
-        return .object(["type": .string("input_text"), "text": .string(text)])
+    case let .text(text, providerMetadata):
+        var input: [String: JSONValue] = ["type": .string("input_text"), "text": .string(text)]
+        let namespace = openAICompatibleProviderMetadataNamespace(providerID)
+        let options = providerMetadata[namespace]?.objectValue
+            ?? providerMetadata["openai"]?.objectValue
+        if let breakpoint = options?["promptCacheBreakpoint"] ?? options?["prompt_cache_breakpoint"],
+           breakpoint != .null {
+            input["prompt_cache_breakpoint"] = breakpoint
+        }
+        return .object(input)
     case let .reasoning(text, _):
         return .object(["type": .string("input_text"), "text": .string(text)])
     case let .imageURL(url, _):
@@ -1195,6 +1215,23 @@ func openAIResponsesOptions(from extraBody: [String: JSONValue]) -> [String: JSO
     }
 
     return output
+}
+
+func openAIResponsesValidatePromptCacheOptions(_ value: JSONValue?, providerID: String) throws {
+    guard let value else { return }
+    let argument = "providerOptions.\(openAICompatibleProviderRoot(providerID)).promptCacheOptions"
+    guard let options = value.objectValue else {
+        throw AIError.invalidArgument(argument: argument, message: "must be an object")
+    }
+    if let mode = options["mode"], ![JSONValue.string("implicit"), .string("explicit")].contains(mode) {
+        throw AIError.invalidArgument(argument: "\(argument).mode", message: "must be implicit or explicit")
+    }
+    if let ttl = options["ttl"], ![JSONValue.string("30m"), .string("12h")].contains(ttl) {
+        throw AIError.invalidArgument(argument: "\(argument).ttl", message: "must be 30m or 12h")
+    }
+    if let prewarm = options["prewarm"], prewarm.boolValue == nil {
+        throw AIError.invalidArgument(argument: "\(argument).prewarm", message: "must be a boolean")
+    }
 }
 
 func openAIResponsesEffectiveReasoningModel(modelID: String, options: [String: JSONValue]) -> Bool {

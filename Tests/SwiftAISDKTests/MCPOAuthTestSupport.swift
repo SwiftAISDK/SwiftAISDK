@@ -55,6 +55,7 @@ actor TestOAuthClientProvider: MCPOAuthClientProvider {
     nonisolated let redirectURL: URL
     nonisolated let clientMetadata: MCPOAuthClientMetadata
     nonisolated let supportsDynamicClientRegistration: Bool
+    nonisolated let usesCustomClientAuthentication: Bool
 
     private var currentTokens: MCPOAuthTokens?
     private var currentClientInformation: MCPOAuthClientInformation?
@@ -100,6 +101,7 @@ actor TestOAuthClientProvider: MCPOAuthClientProvider {
         self.currentState = state
         self.currentStoredState = storedState
         self.customAuthentication = customAuthentication
+        self.usesCustomClientAuthentication = customAuthentication != nil
         self.customAuthorizationServerValidator = customAuthorizationServerValidator
     }
 

@@ -8,12 +8,12 @@ description: Public SwiftAISDK APIs for provider models.
 | Symbol kind | Count |
 | --- | --- |
 | Case | 23 |
-| Class | 135 |
+| Class | 136 |
 | Enumeration | 20 |
 | Function | 3 |
 | Initializer | 19 |
-| Instance Method | 241 |
-| Instance Property | 401 |
+| Instance Method | 242 |
+| Instance Property | 405 |
 | Structure | 15 |
 | Type Alias | 3 |
 | Type Method | 99 |
@@ -153,6 +153,7 @@ description: Public SwiftAISDK APIs for provider models.
 | Class | `OpenAILiveModel` | `final class OpenAILiveModel` | [Sources/SwiftAISDK/Models/OpenAILiveModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/OpenAILiveModel.swift) |
 | Class | `OpenAIResponsesBatchLanguageModel` | `final class OpenAIResponsesBatchLanguageModel` | [Sources/SwiftAISDK/Models/OpenAIResponsesBatchLanguageModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/OpenAIResponsesBatchLanguageModel.swift) |
 | Class | `OpenAISkillsClient` | `final class OpenAISkillsClient` | [Sources/SwiftAISDK/Models/OpenAISkills.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/OpenAISkills.swift) |
+| Class | `PerplexityDecisionModel` | `final class PerplexityDecisionModel` | [Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift) |
 | Class | `PerplexityEmbeddingModel` | `final class PerplexityEmbeddingModel` | [Sources/SwiftAISDK/Models/PerplexityEmbeddingModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityEmbeddingModel.swift) |
 | Class | `PerplexityLanguageModel` | `final class PerplexityLanguageModel` | [Sources/SwiftAISDK/Models/PerplexityModels.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityModels.swift) |
 | Class | `PerplexitySonarLanguageModel` | `final class PerplexitySonarLanguageModel` | [Sources/SwiftAISDK/Models/PerplexityModels.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityModels.swift) |
@@ -240,6 +241,7 @@ description: Public SwiftAISDK APIs for provider models.
 | Instance Method | `doDecide(_:)` | `func doDecide(_ options: AIDecisionModelV4CallOptions) async throws -> AIDecisionModelV4Result` | [Sources/SwiftAISDK/Models/DecisionLanguageModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/DecisionLanguageModel.swift) |
 | Instance Method | `doDecide(_:)` | `func doDecide(_ options: AIDecisionModelV4CallOptions) async throws -> AIDecisionModelV4Result` | [Sources/SwiftAISDK/Models/GatewayDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/GatewayDecisionModel.swift) |
 | Instance Method | `doDecide(_:)` | `func doDecide(_ options: AIDecisionModelV4CallOptions) async throws -> AIDecisionModelV4Result` | [Sources/SwiftAISDK/Models/OpenAIDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/OpenAIDecisionModel.swift) |
+| Instance Method | `doDecide(_:)` | `func doDecide(_ options: AIDecisionModelV4CallOptions) async throws -> AIDecisionModelV4Result` | [Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift) |
 | Instance Method | `doDecide(_:)` | `func doDecide(_ options: AIDecisionModelV4CallOptions) async throws -> AIDecisionModelV4Result` | [Sources/SwiftAISDK/Models/TypesafeAIDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/TypesafeAIDecisionModel.swift) |
 | Instance Method | `doEvaluate(_:)` | `func doEvaluate(_ options: AIDecisionModelV4CallOptions) async throws -> AIDecisionModelV4Result` | [Sources/SwiftAISDK/Models/DecisionLanguageModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/DecisionLanguageModel.swift) |
 | Instance Method | `doEvaluate(_:)` | `func doEvaluate(_ options: AIEvaluationModelV4CallOptions) async throws -> AIEvaluationModelV4Result` | [Sources/SwiftAISDK/Models/EvaluationLanguageModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/EvaluationLanguageModel.swift) |
@@ -629,6 +631,7 @@ description: Public SwiftAISDK APIs for provider models.
 | Instance Property | `modelID` | `let modelID: String` | [Sources/SwiftAISDK/Models/OpenAILiveModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/OpenAILiveModel.swift) |
 | Instance Property | `modelID` | `let modelID: String` | [Sources/SwiftAISDK/Models/OpenAIResponsesBatchLanguageModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/OpenAIResponsesBatchLanguageModel.swift) |
 | Instance Property | `modelID` | `let modelID: String` | [Sources/SwiftAISDK/Models/OpenAIResponsesModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/OpenAIResponsesModel.swift) |
+| Instance Property | `modelID` | `let modelID: String` | [Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift) |
 | Instance Property | `modelID` | `let modelID: String` | [Sources/SwiftAISDK/Models/PerplexityEmbeddingModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityEmbeddingModel.swift) |
 | Instance Property | `modelID` | `let modelID: String` | [Sources/SwiftAISDK/Models/PerplexityModels.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityModels.swift) |
 | Instance Property | `modelID` | `let modelID: String` | [Sources/SwiftAISDK/Models/PerplexityModels.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityModels.swift) |
@@ -770,6 +773,7 @@ description: Public SwiftAISDK APIs for provider models.
 | Instance Property | `providerID` | `let providerID: String` | [Sources/SwiftAISDK/Models/OpenAIResponsesModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/OpenAIResponsesModel.swift) |
 | Instance Property | `providerID` | `let providerID: String` | [Sources/SwiftAISDK/Models/OpenAISkills.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/OpenAISkills.swift) |
 | Instance Property | `providerID` | `let providerID: String` | [Sources/SwiftAISDK/Models/OpenAISkills.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/OpenAISkills.swift) |
+| Instance Property | `providerID` | `let providerID: String` | [Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift) |
 | Instance Property | `providerID` | `let providerID: String` | [Sources/SwiftAISDK/Models/PerplexityEmbeddingModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityEmbeddingModel.swift) |
 | Instance Property | `providerID` | `let providerID: String` | [Sources/SwiftAISDK/Models/PerplexityModels.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityModels.swift) |
 | Instance Property | `providerID` | `let providerID: String` | [Sources/SwiftAISDK/Models/PerplexityModels.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityModels.swift) |
@@ -817,6 +821,7 @@ description: Public SwiftAISDK APIs for provider models.
 | Instance Property | `specificationVersion` | `let specificationVersion: String` | [Sources/SwiftAISDK/Models/GatewayDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/GatewayDecisionModel.swift) |
 | Instance Property | `specificationVersion` | `let specificationVersion: String` | [Sources/SwiftAISDK/Models/GatewayEvaluationModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/GatewayEvaluationModel.swift) |
 | Instance Property | `specificationVersion` | `let specificationVersion: String` | [Sources/SwiftAISDK/Models/OpenAIDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/OpenAIDecisionModel.swift) |
+| Instance Property | `specificationVersion` | `let specificationVersion: String` | [Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift) |
 | Instance Property | `specificationVersion` | `let specificationVersion: String` | [Sources/SwiftAISDK/Models/TypesafeAIDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/TypesafeAIDecisionModel.swift) |
 | Instance Property | `specificationVersion` | `let specificationVersion: String` | [Sources/SwiftAISDK/Models/TypesafeAIEvaluationModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/TypesafeAIEvaluationModel.swift) |
 | Instance Property | `speechBaseURL` | `var speechBaseURL: String?` | [Sources/SwiftAISDK/Models/AzureAudioModels.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/AzureAudioModels.swift) |
@@ -831,6 +836,7 @@ description: Public SwiftAISDK APIs for provider models.
 | Instance Property | `supportedQuestionTypes` | `let supportedQuestionTypes: [AIDecisionQuestionType]` | [Sources/SwiftAISDK/Models/GatewayDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/GatewayDecisionModel.swift) |
 | Instance Property | `supportedQuestionTypes` | `let supportedQuestionTypes: [AIEvaluationQuestionType]` | [Sources/SwiftAISDK/Models/GatewayEvaluationModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/GatewayEvaluationModel.swift) |
 | Instance Property | `supportedQuestionTypes` | `let supportedQuestionTypes: [AIDecisionQuestionType]` | [Sources/SwiftAISDK/Models/OpenAIDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/OpenAIDecisionModel.swift) |
+| Instance Property | `supportedQuestionTypes` | `let supportedQuestionTypes: [AIDecisionQuestionType]` | [Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift) |
 | Instance Property | `supportedQuestionTypes` | `let supportedQuestionTypes: [AIDecisionQuestionType]` | [Sources/SwiftAISDK/Models/TypesafeAIDecisionModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/TypesafeAIDecisionModel.swift) |
 | Instance Property | `supportedQuestionTypes` | `let supportedQuestionTypes: [AIEvaluationQuestionType]` | [Sources/SwiftAISDK/Models/TypesafeAIEvaluationModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/TypesafeAIEvaluationModel.swift) |
 | Instance Property | `supportedURLs` | `let supportedURLs: [String : [AISupportedURLPattern]]` | [Sources/SwiftAISDK/Models/AmazonBedrockLanguageModel.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Models/AmazonBedrockLanguageModel.swift) |

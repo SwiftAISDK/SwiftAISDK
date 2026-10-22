@@ -77,7 +77,7 @@ public enum AIContentPart: Equatable, Hashable, Sendable {
 }
 
 public extension AIContentPart {
-    /// Creates a hosted video input for OpenAI-compatible chat providers.
+    /// Creates a hosted video input for supported OpenAI-compatible chat and MiniMax M3.1+ models.
     static func videoURL(
         _ url: String,
         mediaType: String = "video/*",

@@ -8,14 +8,15 @@ public enum AIEvaluationQuestionType: String, CaseIterable, Codable, Equatable, 
     case box
 }
 
-/// One experimental Evaluation Model V4 judgment over shared JSON state.
+/// Shared question shape for experimental Evaluation and Decision Model V4.
+/// Decision permits omitted non-Box instructions; legacy Evaluation requires them.
 public enum AIEvaluationQuestion: Equatable, Sendable {
     /// Select one label from a nonempty criteria map.
-    case choice(instructions: JSONValue, criteria: [String: JSONValue])
-    /// Return a fractional position over at least two ordered rubric levels.
-    case score(instructions: JSONValue, criteria: [JSONValue])
+    case choice(instructions: JSONValue = .null, criteria: [String: JSONValue])
+    /// Return a fractional position over ordered rubric levels (Decision: one or more; Evaluation: two or more).
+    case score(instructions: JSONValue = .null, criteria: [JSONValue])
     /// Return P(true), optionally using descriptions keyed by `true` and `false`.
-    case boolean(instructions: JSONValue, criteria: [String: JSONValue]? = nil)
+    case boolean(instructions: JSONValue = .null, criteria: [String: JSONValue]? = nil)
     /// Locate a rectangle in image evidence using normalized edges.
     case box(instructions: JSONValue)
 
@@ -317,7 +318,8 @@ func validateEvaluationModelVersion(_ model: any AIEvaluationModelV4) throws -> 
 
 func validateEvaluationInput(
     state: JSONValue,
-    questions: [String: AIEvaluationQuestion]
+    questions: [String: AIEvaluationQuestion],
+    decision: Bool = false
 ) throws {
     guard isEvaluationInput(state) else {
         throw AIError.invalidArgument(
@@ -334,7 +336,7 @@ func validateEvaluationInput(
 
     for (id, question) in questions {
         let argument = "questions.\(id)"
-        guard isEvaluationInput(question.instructions) else {
+        guard (decision && question.type != .box && question.instructions == .null) || isEvaluationInput(question.instructions) else {
             throw AIError.invalidArgument(
                 argument: argument,
                 message: "instructions must be a JSON-compatible string, object, or array"
@@ -354,15 +356,18 @@ func validateEvaluationInput(
             }
             criteria = Array(options.values)
         case let .score(_, levels):
-            guard levels.count >= 2 else {
+            guard levels.count >= (decision ? 1 : 2) else {
                 throw AIError.invalidArgument(
                     argument: argument,
-                    message: "score criteria must contain at least two ordered levels"
+                    message: decision ? "score criteria must contain at least one ordered level" : "score criteria must contain at least two ordered levels"
                 )
             }
             criteria = levels
         case let .boolean(_, descriptions):
             let descriptions = descriptions ?? [:]
+            if decision && question.instructions == .null && !descriptions.values.contains(where: { $0 != .null }) {
+                throw AIError.invalidArgument(argument: argument, message: "boolean questions require instructions or at least one non-null criterion")
+            }
             guard descriptions.keys.allSatisfy({ $0 == "true" || $0 == "false" }) else {
                 throw AIError.invalidArgument(
                     argument: argument,

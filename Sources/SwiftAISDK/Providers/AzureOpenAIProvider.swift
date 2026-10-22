@@ -2,6 +2,15 @@ import Foundation
 
 public typealias AzureOpenAITokenProvider = @Sendable () async throws -> String
 
+/// Identifies the underlying model while Azure requests continue to use the deployment ID.
+public struct AzureOpenAILanguageModelSettings: Equatable, Sendable {
+    public var modelID: String?
+
+    public init(modelID: String? = nil) {
+        self.modelID = modelID
+    }
+}
+
 public final class AzureOpenAIProvider: AIProvider, @unchecked Sendable {
     public let providerID = "azure"
     public let supportedCapabilities: Set<ModelCapability> = [.language, .completion, .embedding, .image, .transcription, .speech]
@@ -46,7 +55,7 @@ public final class AzureOpenAIProvider: AIProvider, @unchecked Sendable {
             }
             headers["api-key"] = headers["api-key"] ?? key
         }
-        headers = withUserAgentSuffix(headers, "ai-sdk-azure/4.0.104")
+        headers = withUserAgentSuffix(headers, "ai-sdk-azure/4.0.107")
         let baseURL = withoutTrailingSlash(basePrefix)
         let baseURLInfo = try azureOpenAIBaseURLInfo(settings.baseURL)
         let transport = tokenProvider.map { AzureOpenAITokenProviderTransport(base: settings.transport, tokenProvider: $0) } ?? settings.transport
@@ -76,6 +85,31 @@ public final class AzureOpenAIProvider: AIProvider, @unchecked Sendable {
     }
 
     public func languageModel(_ modelID: String) throws -> any LanguageModel { try provider.responsesModel(modelID) }
+    public func languageModel(_ deploymentID: String, settings: AzureOpenAILanguageModelSettings) throws -> any LanguageModel {
+        try languageProvider(deploymentID: deploymentID).responsesModel(settings.modelID ?? deploymentID)
+    }
+    public func callAsFunction(_ deploymentID: String, settings: AzureOpenAILanguageModelSettings) throws -> any LanguageModel {
+        try languageModel(deploymentID, settings: settings)
+    }
+    public func chatModel(_ deploymentID: String, settings: AzureOpenAILanguageModelSettings) throws -> any LanguageModel {
+        try languageProvider(deploymentID: deploymentID).chatModel(settings.modelID ?? deploymentID)
+    }
+    public func chat(_ deploymentID: String, settings: AzureOpenAILanguageModelSettings) throws -> any LanguageModel {
+        try chatModel(deploymentID, settings: settings)
+    }
+    public func completionModel(_ deploymentID: String, settings: AzureOpenAILanguageModelSettings) throws -> any LanguageModel {
+        try languageProvider(deploymentID: deploymentID).completionModel(settings.modelID ?? deploymentID)
+    }
+    public func completion(_ deploymentID: String, settings: AzureOpenAILanguageModelSettings) throws -> any LanguageModel {
+        try completionModel(deploymentID, settings: settings)
+    }
+    public func responses(_ deploymentID: String, settings: AzureOpenAILanguageModelSettings) throws -> any LanguageModel {
+        try languageModel(deploymentID, settings: settings)
+    }
+
+    private func languageProvider(deploymentID: String) -> OpenAICompatibleProvider {
+        OpenAICompatibleProvider(providerID: providerID, supportedCapabilities: supportedCapabilities, config: config.withRequestModelID(deploymentID))
+    }
     public func chatModel(_ modelID: String) throws -> any LanguageModel { try provider.chatModel(modelID) }
     public func chat(_ modelID: String) throws -> any LanguageModel { try chatModel(modelID) }
     public func deepseek(_ modelID: String) throws -> any LanguageModel {

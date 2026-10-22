@@ -138,14 +138,7 @@ public final class AnthropicSkillsClient: AISkillsClient, @unchecked Sendable {
 }
 
 private func anthropicSkillPathSegment(_ value: String) -> String {
-    var allowed = CharacterSet.alphanumerics
-    allowed.insert(charactersIn: "-_.~")
-    let encoded = value.addingPercentEncoding(withAllowedCharacters: allowed) ?? value
-    switch encoded {
-    case ".": return "%252E"
-    case "..": return "%252E%252E"
-    default: return encoded
-    }
+    encodePathSegment(value)
 }
 
 private func anthropicSkillMetadata(from raw: JSONValue) -> [String: JSONValue] {

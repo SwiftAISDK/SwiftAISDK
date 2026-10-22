@@ -49,7 +49,7 @@ struct ZAIProviderTests {
         let request = try #require(await transport.requests().first)
         #expect(request.url.absoluteString == "https://api.z.ai/api/paas/v4/chat/completions")
         #expect(request.headers["authorization"] == "Bearer environment-key")
-        #expect(request.headers["user-agent"] == "ai-sdk-zai/3.0.33")
+        #expect(request.headers["user-agent"] == "ai-sdk-zai/3.0.37")
     }
 
     @Test func ZAIProviderDefersMissingAPIKeyUntilRequestTime() async throws {
@@ -116,7 +116,7 @@ struct ZAIProviderTests {
         #expect(request.url.absoluteString == "https://example.com/zai/chat/completions")
         #expect(request.headers["authorization"] == "Bearer custom-key")
         #expect(request.headers["x-custom"] == "value")
-        #expect(request.headers["user-agent"] == "TestApp/1.0 ai-sdk-zai/3.0.33")
+        #expect(request.headers["user-agent"] == "TestApp/1.0 ai-sdk-zai/3.0.37")
         #expect(body["caller_marker"]?.boolValue == true)
     }
 
@@ -227,15 +227,15 @@ struct ZAIProviderTests {
         #expect(result.reasoning == "I should calculate the answer.")
         #expect(result.finishReason == "tool-calls")
         #expect(result.content.count == 3)
-        if case let .text(text, _) = result.content[0] {
+        if case let .text(text, _) = result.content[1] {
             #expect(text == "The answer is 42.")
         } else {
-            Issue.record("Expected text content first")
+            Issue.record("Expected text content second")
         }
-        if case let .reasoning(reasoning, _) = result.content[1] {
+        if case let .reasoning(reasoning, _) = result.content[0] {
             #expect(reasoning == "I should calculate the answer.")
         } else {
-            Issue.record("Expected reasoning content second")
+            Issue.record("Expected reasoning content first")
         }
         if case let .toolCall(call) = result.content[2] {
             #expect(call.id == "call-1")

@@ -17,3 +17,8 @@ tools. Successful missing-tool outputs become an omission message; dynamic
 outputs, errors and tools restored with a current converter keep their intended
 model representation. Browser HTTP/WebSocket framing and explicit UI stream
 step boundaries remain separate deferred surfaces.
+
+When a streamed tool call reuses an ID, its latest nonempty name replaces the
+previous name during input and completion. `pruneMessages` removes a reasoning
+group when all following content before the next reasoning group was pruned;
+reasoning attached to retained text/tools and trailing reasoning survive.

@@ -20,7 +20,7 @@ Set `providerOptions["vertex"]["labels"]` to an object of string values to attac
 
 ## Notes
 
-Vertex Anthropic mirrors upstream Google Vertex 5.0.115 and inherits the shared Anthropic 4.0.82 model recognition, system options, thinking behavior, citations, and beta headers. The 2026-10-18 pass: Validated labels are UTF-8 JSON/base64 encoded into x-vertex-ai-labels after final request-header merging, with explicit caller header precedence.
+Vertex Anthropic mirrors upstream Google Vertex 5.0.119 and inherits the shared Anthropic 4.0.82 model recognition, system options, thinking behavior, citations, and beta headers. The 2026-10-18 pass: Validated labels are UTF-8 JSON/base64 encoded into x-vertex-ai-labels after final request-header merging, with explicit caller header precedence.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

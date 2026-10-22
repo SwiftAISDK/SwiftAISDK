@@ -5,3 +5,7 @@ Groq can combine `.json(schema: ...)` with application function tools using a co
 ## Forward-compatible browser search
 
 Browser search stays enabled for unknown model IDs, alongside ordinary function tools. Known unsupported models, including Gemma, legacy Llama/Mixtral, Kimi K2 and Qwen entries, omit browser search and report a model-specific warning. New compatible model names no longer require a Swift package update merely to retain the requested tool.
+
+## Generated content order
+
+Unary generation places the separate reasoning block before text, followed by function tool calls. This keeps `result.content` in the same reasoning-before-answer order as streamed output.

@@ -6,4 +6,6 @@ Vertex inherits the Google structured JSON plus function-tool handling, error/de
 
 Vertex Gemini shares GenerateContent automatic `CONTINUATION` handling with the Google provider, including appended content, one stream lifecycle, summed billing usage and modality details, and the first request's `initialPromptTokenCount` metadata. `MAX_TOKENS` and failed streaming continuation expose a resumable `continuationToken` under `providerMetadata["google"]`; pass it using the supported `vertex`, `googleVertex`, or `google` provider-options namespace with the original prompt and a larger `maxOutputTokens`.
 
+Automatically continued calls also expose `groundingMetadataPerRequest` under `providerMetadata["google"]`, preserving grounding from each successful request in order and `null` for requests without it. Generation's existing `groundingMetadata` reflects the final response; streaming retains the latest non-null payload. Calls without automatic continuation omit the per-request array.
+
 Explicit thinking budgets or levels override shared reasoning settings. Dotted routed Gemini IDs retain their model capabilities, and Interactions model requests with `background: true` poll until terminal.

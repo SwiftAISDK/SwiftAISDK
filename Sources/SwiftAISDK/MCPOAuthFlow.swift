@@ -27,6 +27,7 @@ public enum MCPOAuth {
                 refreshAttempt: refreshAttempt
             )
         } catch let error as MCPOAuthServerError {
+            var retryAuthorizationServerInformation: MCPOAuthAuthorizationServerInformation?
             switch error.code {
             case "invalid_client", "unauthorized_client":
                 // A callback exchange cannot be restarted safely, and a
@@ -40,6 +41,7 @@ public enum MCPOAuth {
                 await provider.invalidateCredentials(.all)
             case "invalid_grant":
                 guard let context = await refreshAttempt.context else { throw error }
+                retryAuthorizationServerInformation = context.tokens.authorizationServerInformation
                 await provider.invalidateCredentials(.tokens, context: context)
             default:
                 throw error
@@ -53,7 +55,8 @@ public enum MCPOAuth {
                 scope: scope,
                 resourceMetadataURL: resourceMetadataURL,
                 protocolVersion: protocolVersion,
-                transport: transport
+                transport: transport,
+                retryAuthorizationServerInformation: retryAuthorizationServerInformation
             )
         }
     }
@@ -309,7 +312,8 @@ private func authInternal(
     resourceMetadataURL: URL?,
     protocolVersion: String,
     transport: any AITransport,
-    refreshAttempt: MCPOAuthRefreshAttempt? = nil
+    refreshAttempt: MCPOAuthRefreshAttempt? = nil,
+    retryAuthorizationServerInformation: MCPOAuthAuthorizationServerInformation? = nil
 ) async throws -> MCPOAuthAuthResult {
     var resourceMetadata: MCPOAuthProtectedResourceMetadata?
     var authorizationServerURL: URL?
@@ -330,12 +334,14 @@ private func authInternal(
     // unavailable. Prefer the authorization server pinned with the client over
     // incorrectly treating the MCP resource server as a legacy OAuth server.
     var clientInformation = try await provider.clientInformation()
+    let currentTokens = authorizationCode == nil ? try await provider.tokens() : nil
     let storedServerInformation: MCPOAuthAuthorizationServerInformation?
     if let clientInformation {
         storedServerInformation = try await storedAuthorizationServerInformation(
             provider: provider,
-            clientInformation: clientInformation
-        )
+            clientInformation: clientInformation,
+            tokens: currentTokens
+        ) ?? retryAuthorizationServerInformation
     } else {
         storedServerInformation = try await provider.authorizationServerInformation()?.normalized
     }
@@ -387,15 +393,23 @@ private func authInternal(
         clientScope: provider.clientMetadata.scope
     )
 
-    if let clientInformation, clientInformation.issuer != nil,
-       let storedInformation = try await storedAuthorizationServerInformation(
-           provider: provider,
-           clientInformation: clientInformation
-       ) {
-        try assertAuthorizationServerInformationMatches(
-            storedInformation,
-            currentAuthorizationServerInformation
-        )
+    if let retryAuthorizationServerInformation {
+        try assertAuthorizationServerInformationMatches(retryAuthorizationServerInformation, currentAuthorizationServerInformation)
+    }
+    if let clientInformation {
+        if let issuer = clientInformation.issuer, issuer != currentAuthorizationServerInformation.issuer {
+            throw MCPOAuthAuthorizationServerMismatchError(message: "OAuth authorization server does not match the issuer of the client credentials")
+        }
+        if let credentialInformation = clientInformation.authorizationServerInformation {
+            try assertAuthorizationServerInformationMatches(credentialInformation, currentAuthorizationServerInformation)
+        }
+        if let storedServerInformation {
+            try assertAuthorizationServerInformationMatches(storedServerInformation, currentAuthorizationServerInformation)
+        }
+        if (clientInformation.clientSecret != nil || provider.usesCustomClientAuthentication),
+           clientInformation.issuer == nil, storedServerInformation == nil {
+            throw MCPOAuthAuthorizationServerMismatchError(message: "OAuth client credentials must be bound to an authorization server: configure their issuer or store authorization server information")
+        }
     }
     if clientInformation == nil {
         if authorizationCode != nil {
@@ -452,7 +466,7 @@ private func authInternal(
         return .authorized
     }
 
-    if let currentTokens = try await provider.tokens(), let refreshToken = currentTokens.refreshToken {
+    if let currentTokens, let refreshToken = currentTokens.refreshToken {
         if let storedAuthorizationServerInformation = try await storedAuthorizationServerInformation(provider: provider, clientInformation: clientInformation, tokens: currentTokens) {
             try assertAuthorizationServerInformationMatches(storedAuthorizationServerInformation, currentAuthorizationServerInformation)
         } else {

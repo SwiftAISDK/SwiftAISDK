@@ -53,9 +53,11 @@ public final class TypeSafeAIDecisionModel: AIDecisionModelV4, @unchecked Sendab
         if let value = providerOptions["longContext"], value.boolValue == nil {
             throw AIError.invalidArgument(argument: "providerOptions.typesafe.longContext", message: "longContext must be a boolean.")
         }
-        let warnings = providerOptions.keys.sorted().filter { $0 != "longContext" }.map {
+        var warnings = providerOptions.keys.sorted().filter { $0 != "longContext" }.map {
             AIWarning(type: "unsupported", feature: "providerOptions.typesafe.\($0)")
         }
+        if options.maxOutputTokens != nil { warnings.insert(.init(type: "unsupported", feature: "maxOutputTokens"), at: 0) }
+        if options.reasoning != nil { warnings.insert(.init(type: "unsupported", feature: "reasoning"), at: options.maxOutputTokens == nil ? 0 : 1) }
         let state = try prepareTypesafeState(options.state)
         let body: JSONValue = .object([
             "model": .string(modelID), "state": state.state,

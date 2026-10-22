@@ -7,3 +7,7 @@ Tool failures and denials use `functionResponse.error`. Generic embedding dimens
 `decisionModel(...)` uses `DecisionLanguageModel`; see [Decision](../../core/decide/). Batch downloads use the configurable per-row limit.
 
 Gemini image requests merge the typed aspect ratio with provider `imageConfig`; configuring output settings does not discard the caller’s ratio.
+
+## Grounding across continued generation
+
+GenerateContent automatic continuation preserves search evidence under `providerMetadata["google"]["groundingMetadataPerRequest"]`: one entry per successful request, in order, with `null` for requests without grounding. Generation keeps the final response's grounding in `groundingMetadata`; streaming keeps the latest non-null grounding there. Calls without automatic continuation omit the per-request array. See the [Google Generative AI guide](../google-generative-ai/) for continuation and resume behavior.

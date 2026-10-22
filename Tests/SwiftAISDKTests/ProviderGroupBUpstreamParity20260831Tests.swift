@@ -52,12 +52,12 @@ private func providerGroupBParallelMetadata(index: Int, cacheBreakpoint: Bool = 
     ))
 
     #expect(result.text == "hello world")
-    #expect(result.reasoning == "think moretail")
+    #expect(result.reasoning == "tailthink more")
     #expect(result.content == [
+        .reasoning("tail"),
         .text("hello "),
         .reasoning("think more"),
-        .text("world"),
-        .reasoning("tail")
+        .text("world")
     ])
     let body = try decodeJSONBody(try #require((await transport.requests()).first?.body))
     #expect(body["reasoning_effort"]?.stringValue == "none")

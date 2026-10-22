@@ -9,6 +9,8 @@ public struct AIDecisionStartEvent: Equatable, Sendable {
     public var modelID: String
     public var state: AIDecisionState
     public var questions: [String: AIDecisionQuestion]
+    public var maxOutputTokens: Int?
+    public var reasoning: String?
     public var maxRetries: Int
     public var headers: [String: String]
     public var providerOptions: [String: JSONValue]
@@ -21,6 +23,8 @@ public struct AIDecisionStartEvent: Equatable, Sendable {
         modelID: String,
         state: AIDecisionState,
         questions: [String: AIDecisionQuestion],
+        maxOutputTokens: Int? = nil,
+        reasoning: String? = nil,
         maxRetries: Int,
         headers: [String: String],
         providerOptions: [String: JSONValue]
@@ -32,6 +36,8 @@ public struct AIDecisionStartEvent: Equatable, Sendable {
         self.modelID = modelID
         self.state = state
         self.questions = questions
+        self.maxOutputTokens = maxOutputTokens
+        self.reasoning = reasoning
         self.maxRetries = maxRetries
         self.headers = headers
         self.providerOptions = providerOptions
@@ -47,6 +53,8 @@ public struct AIDecisionEndEvent: Equatable, Sendable {
     public var modelID: String
     public var state: AIDecisionState
     public var questions: [String: AIDecisionQuestion]
+    public var maxOutputTokens: Int?
+    public var reasoning: String?
     public var maxRetries: Int
     public var headers: [String: String]
     public var providerOptions: [String: JSONValue]
@@ -65,6 +73,8 @@ public struct AIDecisionEndEvent: Equatable, Sendable {
         modelID: String,
         state: AIDecisionState,
         questions: [String: AIDecisionQuestion],
+        maxOutputTokens: Int? = nil,
+        reasoning: String? = nil,
         maxRetries: Int,
         headers: [String: String],
         providerOptions: [String: JSONValue],
@@ -82,6 +92,8 @@ public struct AIDecisionEndEvent: Equatable, Sendable {
         self.modelID = modelID
         self.state = state
         self.questions = questions
+        self.maxOutputTokens = maxOutputTokens
+        self.reasoning = reasoning
         self.maxRetries = maxRetries
         self.headers = headers
         self.providerOptions = providerOptions
@@ -172,12 +184,16 @@ public typealias Experimental_DecisionModelCallEndEvent = AIDecisionModelCallEnd
 func decisionTelemetryInput(
     state: AIDecisionState,
     questions: [String: AIDecisionQuestion],
+    maxOutputTokens: Int? = nil,
+    reasoning: String? = nil,
     headers: [String: String]? = nil,
     providerOptions: [String: JSONValue]? = nil
 ) -> JSONValue {
     .object([
         "state": decisionStateJSON(state),
         "questions": decisionQuestionsTelemetryJSON(questions),
+        "maxOutputTokens": maxOutputTokens.map { .number(Double($0)) },
+        "reasoning": reasoning.map(JSONValue.string),
         "headers": headers.flatMap { $0.isEmpty ? nil : .object($0.mapValues(JSONValue.string)) },
         "providerOptions": providerOptions.flatMap { $0.isEmpty ? nil : .object($0) }
     ])
@@ -351,8 +367,8 @@ private func decisionResponseTelemetryJSON(_ response: AIDecisionResponseMetadat
     ])
 }
 
-func decisionTelemetryInput(state: [AIDecisionStatePart], questions: [String: AIDecisionQuestion]) -> JSONValue {
-    decisionTelemetryInput(state: .parts(state), questions: questions)
+func decisionTelemetryInput(state: [AIDecisionStatePart], questions: [String: AIDecisionQuestion], maxOutputTokens: Int? = nil, reasoning: String? = nil) -> JSONValue {
+    decisionTelemetryInput(state: .parts(state), questions: questions, maxOutputTokens: maxOutputTokens, reasoning: reasoning)
 }
 
 func decisionStateJSON(_ state: AIDecisionState) -> JSONValue {

@@ -25,7 +25,7 @@ struct DecisionValidationTests {
         ["flag": .boolean(instructions: "True?", criteria: ["yes": "yes"])],
         ["choice": .choice(instructions: "Pick", criteria: [:])],
         ["choice": .choice(instructions: "Pick", criteria: ["a": 42])],
-        ["score": .score(instructions: "Rate", criteria: ["Only one"])],
+        ["score": .score(instructions: "Rate", criteria: [])],
         ["score": .score(instructions: "Rate", criteria: ["Low", ["bad": .number(.nan)]])]
     ])
     func invalidQuestionsFailBeforeIO(questions: [String: AIDecisionQuestion]) async {

@@ -48,6 +48,10 @@ public final class GroqLanguageModel: LanguageModel, @unchecked Sendable {
         if prepared.jsonResponseToolName != nil {
             if !reasoning.isEmpty { content.append(.reasoning(reasoning)) }
             content += allToolCalls.map { $0.name == prepared.jsonResponseToolName ? .text($0.arguments) : .toolCall($0) }
+        } else {
+            if !reasoning.isEmpty { content.append(.reasoning(reasoning)) }
+            if !conversationalText.isEmpty { content.append(.text(conversationalText)) }
+            content += toolCalls.map(AIResultContentPart.toolCall)
         }
         return TextGenerationResult(
             text: text,

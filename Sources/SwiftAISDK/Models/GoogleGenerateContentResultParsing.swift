@@ -168,7 +168,8 @@ func googleGenerateContentProviderMetadata(from raw: JSONValue, includeNullDefau
     if let promptFeedback = raw["promptFeedback"] {
         google["promptFeedback"] = promptFeedback
     }
-    if let groundingMetadata = candidate?["groundingMetadata"] {
+    if let groundingMetadata = candidate?["groundingMetadata"],
+       includeNullDefaults || groundingMetadata != .null {
         google["groundingMetadata"] = groundingMetadata
     }
     if let urlContextMetadata = candidate?["urlContextMetadata"] {
@@ -328,9 +329,15 @@ struct GoogleContinuedGenerateContentResponse {
             throw AIError.invalidResponse(provider: providerID, message: providerID.contains("vertex") ? "No candidate text found in Vertex response." : "No candidate text found in Google response.")
         }
         var metadata = googleGenerateContentProviderMetadata(from: .object(converted))
-        if responses.count > 1, let count = responses.first?["usageMetadata"]?["promptTokenCount"], count != .null {
+        if responses.count > 1 {
             var google = metadata["google"]?.objectValue ?? [:]
-            google["initialPromptTokenCount"] = count
+            google["groundingMetadataPerRequest"] = .array(responses.map {
+                $0["candidates"]?[0]?["groundingMetadata"] ?? .null
+            })
+            google["groundingMetadata"] = raw["candidates"]?[0]?["groundingMetadata"] ?? .null
+            if let count = responses.first?["usageMetadata"]?["promptTokenCount"], count != .null {
+                google["initialPromptTokenCount"] = count
+            }
             metadata["google"] = .object(google)
         }
         let hasMedia = content.contains { if case .file = $0 { return true }; if case .reasoningFile = $0 { return true }; return false }

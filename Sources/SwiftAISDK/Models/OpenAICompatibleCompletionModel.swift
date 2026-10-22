@@ -137,7 +137,7 @@ public final class OpenAICompatibleCompletionModel: LanguageModel, @unchecked Se
         var stopSequences = prompt.stopSequences
         stopSequences.append(contentsOf: request.stopSequences)
         var body: [String: JSONValue] = [
-            "model": .string(modelID),
+            "model": .string(config.requestModelID ?? modelID),
             "prompt": .string(prompt.text)
         ]
         if stream { body["stream"] = .bool(true) }

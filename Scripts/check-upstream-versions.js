@@ -334,7 +334,7 @@ function classifyDiscoveredPackage(pkg) {
   const shortName = name.replace("@ai-sdk/", "");
   const description = (pkg.description || "").toLowerCase();
   const uiPackages = new Set(["angular", "react", "rsc", "solid", "svelte", "vue", "ui-utils"]);
-  const toolingPackages = new Set(["code-mode", "codemod", "devtools"]);
+  const toolingPackages = new Set(["code-mode", "codemod", "devtools", "tool-bash"]);
   const schemaPackages = new Set(["valibot"]);
   const corePackages = new Set(["provider", "provider-utils"]);
   const adapterPackages = new Set(["langchain", "llamaindex", "workflow"]);

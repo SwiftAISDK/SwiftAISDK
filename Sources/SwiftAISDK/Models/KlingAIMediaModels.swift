@@ -114,7 +114,7 @@ public final class KlingAIVideoModel: AsyncVideoModel, @unchecked Sendable {
             )
         }
         let response = try await downloadURL(
-            "\(withoutTrailingSlash(config.baseURL))\(endpoint)/\(klingAIPathSegment(taskID))",
+            "\(withoutTrailingSlash(config.baseURL))\(endpoint)/\(encodePathSegment(taskID))",
             transport: config.transport,
             headers: config.headers.mergingHeaders(operationRequest.headers),
             abortSignal: operationRequest.abortSignal,
@@ -207,7 +207,7 @@ public final class KlingAIVideoModel: AsyncVideoModel, @unchecked Sendable {
                 throw AIError.invalidResponse(provider: providerID, message: "Video generation timed out after \(formatKlingAIMilliseconds(timeoutMilliseconds))ms")
             }
             let response = try await downloadURL(
-                "\(withoutTrailingSlash(config.baseURL))\(endpoint)/\(taskID)",
+                "\(withoutTrailingSlash(config.baseURL))\(endpoint)/\(encodePathSegment(taskID))",
                 transport: config.transport,
                 headers: config.headers.mergingHeaders(headers),
                 abortSignal: abortSignal,
@@ -798,11 +798,7 @@ private let klingAIEndpointPaths: Set<String> = [
     "/v1/videos/motion-control"
 ]
 
-private func klingAIPathSegment(_ value: String) -> String {
-    var allowed = CharacterSet.urlPathAllowed
-    allowed.remove(charactersIn: "/?#[]@!$&'()*+,;=")
-    return value.addingPercentEncoding(withAllowedCharacters: allowed) ?? value
-}
+
 
 private func klingAPIModelName(_ modelID: String, mode: String) -> String {
     let suffix: String

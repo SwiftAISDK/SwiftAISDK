@@ -73,7 +73,7 @@ public final class TopazVideoModel: AsyncVideoModel, Sendable {
                 // attach custom provider/call headers, even on the same origin.
                 let upload = try await config.transport.send(AIHTTPRequest(
                     method: "PUT", url: uploadURL,
-                    headers: withUserAgentSuffix(["content-type": topazContainerMediaTypes[container] ?? "application/octet-stream"], "ai-sdk-topaz/3.0.9"),
+                    headers: withUserAgentSuffix(["content-type": topazContainerMediaTypes[container] ?? "application/octet-stream"], "ai-sdk-topaz/3.0.12"),
                     body: bytes, abortSignal: request.abortSignal, followRedirects: false
                 ))
                 guard (200..<300).contains(upload.statusCode) else {

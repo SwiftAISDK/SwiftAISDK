@@ -15,7 +15,9 @@ func anthropicPrepareTools(
     supportsStructuredOutput: Bool = true,
     supportsStrictTools: Bool = true,
     defaultEagerInputStreaming: Bool = false,
-    rejectsForcedToolUse: Bool = false
+    rejectsForcedToolUse: Bool = false,
+    cacheNamespace: String = "anthropic",
+    initialCacheBreakpointCount: Int = 0
 ) throws -> AnthropicPreparedTools {
     var prepared = AnthropicPreparedTools()
     guard !tools.isEmpty else { return prepared }
@@ -26,14 +28,15 @@ func anthropicPrepareTools(
         }
     }
 
-    var cacheBreakpointCount = 0
+    var cacheBreakpointCount = initialCacheBreakpointCount
     for (name, schema) in tools {
         let object = schema.objectValue
         let isProviderTool = object?["type"]?.stringValue == "provider" || object?["id"]?.stringValue?.hasPrefix("anthropic.") == true
         guard isProviderTool else {
             var tool: [String: JSONValue] = ["name": .string(name)]
             var inputSchema = schema.objectValue
-            let providerOptions = inputSchema?.removeValue(forKey: "providerOptions")?["anthropic"]?.objectValue ?? [:]
+            let allProviderOptions = inputSchema?.removeValue(forKey: "providerOptions")
+            let providerOptions = allProviderOptions?["anthropic"]?.objectValue ?? [:]
             if let strict = inputSchema?.removeValue(forKey: "strict")?.boolValue {
                 if supportsStrictTools {
                     tool["strict"] = .bool(strict)
@@ -72,7 +75,12 @@ func anthropicPrepareTools(
                 })
                 addBeta("advanced-tool-use-2025-11-20")
             }
-            if let cacheControl = providerOptions["cacheControl"], cacheControl != .null {
+            let customCacheOptions = allProviderOptions?[cacheNamespace]
+            let cacheControl = [
+                customCacheOptions?["cacheControl"], customCacheOptions?["cache_control"],
+                providerOptions["cacheControl"], providerOptions["cache_control"]
+            ].compactMap { $0 }.first { $0 != .null }
+            if let cacheControl {
                 cacheBreakpointCount += 1
                 if cacheBreakpointCount <= 4 {
                     tool["cache_control"] = cacheControl

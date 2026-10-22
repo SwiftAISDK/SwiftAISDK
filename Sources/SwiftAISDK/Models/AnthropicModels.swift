@@ -397,7 +397,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
             toolCalls: generatedContent.toolCalls,
             toolResults: generatedContent.toolResults,
             sources: generatedContent.sources,
-            providerMetadata: anthropicProviderMetadata(from: raw, providerID: providerID, requestProviderOptions: request.providerOptions),
+            providerMetadata: anthropicProviderMetadata(from: raw, providerID: providerID, requestProviderOptions: preparedRequest.providerOptions),
             rawValue: raw,
             warnings: preparedRequest.warnings,
             responseMetadata: aiResponseMetadata(from: raw, response: response, modelID: modelID)
@@ -495,7 +495,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                                         inputTransformations: inputTransformations,
                                         safeguardResults: safeguardResults,
                                         providerID: providerID,
-                                        requestProviderOptions: request.providerOptions
+                                        requestProviderOptions: preparedRequest.providerOptions
                                     )
                                 ))
                                 break
@@ -614,7 +614,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                                     inputTransformations: inputTransformations,
                                     safeguardResults: safeguardResults,
                                     providerID: providerID,
-                                    requestProviderOptions: request.providerOptions
+                                    requestProviderOptions: preparedRequest.providerOptions
                                 )
                             ))
                             break
@@ -639,6 +639,11 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
     ) throws -> AnthropicPreparedCall {
         var betas: [String] = []
         var warnings = anthropicStandardWarnings(for: request)
+        let miniMaxM31Features = providerID == "minimax.messages" && miniMaxSupportsM31Features(modelID)
+        var reasoningWarnings: [AIWarning] = []
+        let request = miniMaxM31Features
+            ? try miniMaxReasoningRequest(request, modelID: modelID, warnings: &reasoningWarnings)
+            : request
         let providerOptions = try anthropicOptions(from: request, providerID: providerID)
         let toolNameMapping = createToolNameMapping(
             tools: request.tools,
@@ -649,6 +654,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
             providerID: providerID,
             sendReasoning: providerOptions.sendReasoning ?? true,
             toolNameMapping: toolNameMapping,
+            miniMaxM31Features: miniMaxM31Features,
             betas: &betas,
             warnings: &warnings
         )
@@ -665,6 +671,8 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
             for: request,
             modelID: modelID,
             capabilities: capabilities,
+            maxTemperature: miniMaxM31Features ? 2 : 1,
+            temperatureProvider: miniMaxM31Features ? "minimax" : "anthropic",
             warnings: &warnings
         )
         var body: [String: JSONValue] = [
@@ -724,7 +732,9 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
             supportsStructuredOutput: usesJSONResponseTool ? false : supportsStructuredOutput,
             supportsStrictTools: supportsStrictToolDefinitions,
             defaultEagerInputStreaming: eagerInputStreaming,
-            rejectsForcedToolUse: capabilities.rejectsForcedToolUse || body["thinking"]?["type"]?.stringValue == "enabled"
+            rejectsForcedToolUse: capabilities.rejectsForcedToolUse || body["thinking"]?["type"]?.stringValue == "enabled",
+            cacheNamespace: miniMaxM31Features ? "minimax" : "anthropic",
+            initialCacheBreakpointCount: prompt.cacheBreakpointCount
         )
         if !preparedTools.tools.isEmpty {
             body["tools"] = .array(preparedTools.tools)
@@ -750,6 +760,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
             requestTemperature: sampling.temperature,
             requestTopP: sampling.topP,
             isAnthropicModel: capabilities.isKnownModel || modelID.contains("claude-"),
+            supportsTemperatureAndTopPWithThinking: miniMaxM31Features,
             warnings: &warnings
         )
         anthropicApplyMaxTokenLimit(
@@ -771,6 +782,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         for beta in preparedTools.betas where !betas.contains(beta) {
             betas.append(beta)
         }
+        warnings.append(contentsOf: reasoningWarnings)
         return AnthropicPreparedCall(
             body: body,
             betas: betas,
@@ -779,7 +791,8 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
             toolNameMapping: toolNameMapping,
             markCodeExecutionDynamic: anthropicHasDynamicFilteringWebToolWithoutCodeExecution(
                 preparedTools.tools
-            )
+            ),
+            providerOptions: request.providerOptions
         )
     }
 
@@ -788,9 +801,11 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         providerID: String,
         sendReasoning: Bool,
         toolNameMapping: AIToolNameMapping,
+        miniMaxM31Features: Bool = false,
         betas: inout [String],
         warnings: inout [AIWarning]
-    ) throws -> (system: [JSONValue], messages: [JSONValue]) {
+    ) throws -> (system: [JSONValue], messages: [JSONValue], cacheBreakpointCount: Int) {
+        let cacheNamespace = miniMaxM31Features ? "minimax" : "anthropic"
         var sawConversationMessage = false
         var cacheBreakpointCount = 0
         var system: [JSONValue] = []
@@ -836,7 +851,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                 if !text.isEmpty || (toolChanges.isEmpty && systemOptions.clearAt == nil && systemOptions.effort == nil) {
                     var block: [String: JSONValue] = ["type": .string("text"), "text": .string(text)]
                     anthropicApplyCacheControl(
-                        anthropicCacheControl(from: message.providerMetadata),
+                        anthropicCacheControl(from: message.providerMetadata, namespace: cacheNamespace),
                         to: &block,
                         cacheBreakpointCount: &cacheBreakpointCount,
                         warnings: &warnings
@@ -867,6 +882,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                 providerID: providerID,
                 sendReasoning: sendReasoning,
                 toolNameMapping: toolNameMapping,
+                miniMaxM31Features: miniMaxM31Features,
                 betas: &betas,
                 warnings: &warnings,
                 cacheBreakpointCount: &cacheBreakpointCount,
@@ -902,7 +918,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         }
         anthropicNormalizeHistoricalCallers(in: &conversation, before: lastUserMessageIndex, warnings: &warnings)
         trimTrailingAssistantWhitespace(in: &conversation)
-        return (system, conversation)
+        return (system, conversation, cacheBreakpointCount)
     }
 
     private static func anthropicToolChanges(
@@ -1016,11 +1032,13 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         providerID: String,
         sendReasoning: Bool,
         toolNameMapping: AIToolNameMapping,
+        miniMaxM31Features: Bool = false,
         betas: inout [String],
         warnings: inout [AIWarning],
         cacheBreakpointCount: inout Int,
         applyMessageCacheControl: Bool = true
     ) throws -> JSONValue {
+        let cacheNamespace = miniMaxM31Features ? "minimax" : "anthropic"
         let role: String
         switch message.role {
         case .assistant:
@@ -1053,6 +1071,16 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         }
         var mcpToolCallIDs: Set<String> = []
         parts += try message.content.compactMap { part -> JSONValue? in
+            if miniMaxM31Features, message.role == .user,
+               let media = try miniMaxMediaContent(part) {
+                return anthropicApplyPartProviderOptionsIfNeeded(
+                    part.providerMetadata,
+                    to: media,
+                    cacheNamespace: cacheNamespace,
+                    cacheBreakpointCount: &cacheBreakpointCount,
+                    warnings: &warnings
+                )
+            }
             switch part {
             case let .text(text, providerMetadata):
                 let providerKey = anthropicProviderMetadataKey(from: providerID)
@@ -1075,6 +1103,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                 anthropicApplyPartProviderOptions(
                     providerMetadata,
                     to: &block,
+                    cacheNamespace: cacheNamespace,
                     cacheBreakpointCount: &cacheBreakpointCount,
                     warnings: &warnings
                 )
@@ -1089,7 +1118,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                         block["signature"] = .string(signature)
                     }
                     anthropicApplyCacheControl(
-                        anthropicCacheControl(from: providerMetadata),
+                        anthropicCacheControl(from: providerMetadata, namespace: cacheNamespace),
                         to: &block,
                         cacheBreakpointCount: &cacheBreakpointCount,
                         warnings: &warnings
@@ -1123,6 +1152,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                 return anthropicApplyPartProviderOptionsIfNeeded(
                     providerMetadata,
                     to: content,
+                    cacheNamespace: cacheNamespace,
                     cacheBreakpointCount: &cacheBreakpointCount,
                     warnings: &warnings
                 )
@@ -1131,6 +1161,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                 return anthropicApplyPartProviderOptionsIfNeeded(
                     providerMetadata,
                     to: content,
+                    cacheNamespace: cacheNamespace,
                     cacheBreakpointCount: &cacheBreakpointCount,
                     warnings: &warnings
                 )
@@ -1139,6 +1170,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                 return anthropicApplyPartProviderOptionsIfNeeded(
                     providerMetadata,
                     to: content,
+                    cacheNamespace: cacheNamespace,
                     cacheBreakpointCount: &cacheBreakpointCount,
                     warnings: &warnings
                 )
@@ -1159,6 +1191,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                 return anthropicApplyPartProviderOptionsIfNeeded(
                     providerMetadata,
                     to: content,
+                    cacheNamespace: cacheNamespace,
                     cacheBreakpointCount: &cacheBreakpointCount,
                     warnings: &warnings
                 )
@@ -1179,7 +1212,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                             "input": input
                         ]
                         anthropicApplyCacheControl(
-                            anthropicCacheControl(from: call.providerMetadata),
+                            anthropicCacheControl(from: call.providerMetadata, namespace: cacheNamespace),
                             to: &block,
                             cacheBreakpointCount: &cacheBreakpointCount,
                             warnings: &warnings
@@ -1197,7 +1230,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                         block["caller"] = caller
                     }
                     anthropicApplyCacheControl(
-                        anthropicCacheControl(from: call.providerMetadata),
+                        anthropicCacheControl(from: call.providerMetadata, namespace: cacheNamespace),
                         to: &block,
                         cacheBreakpointCount: &cacheBreakpointCount,
                         warnings: &warnings
@@ -1222,7 +1255,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                     ]
                     if let caller { block["caller"] = caller }
                     anthropicApplyCacheControl(
-                        anthropicCacheControl(from: call.providerMetadata),
+                        anthropicCacheControl(from: call.providerMetadata, namespace: cacheNamespace),
                         to: &block,
                         cacheBreakpointCount: &cacheBreakpointCount,
                         warnings: &warnings
@@ -1239,7 +1272,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                     block["caller"] = caller
                 }
                 anthropicApplyCacheControl(
-                    anthropicCacheControl(from: call.providerMetadata),
+                    anthropicCacheControl(from: call.providerMetadata, namespace: cacheNamespace),
                     to: &block,
                     cacheBreakpointCount: &cacheBreakpointCount,
                     warnings: &warnings
@@ -1270,7 +1303,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                     }
                     if providerToolName == "tool_search" || providerToolName.hasPrefix("tool_search_tool_") {
                         anthropicApplyCacheControl(
-                            anthropicToolResultCacheControl(result),
+                            anthropicToolResultCacheControl(result, namespace: cacheNamespace),
                             to: &block,
                             cacheBreakpointCount: &cacheBreakpointCount,
                             warnings: &warnings
@@ -1291,7 +1324,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                     block["toolset_name"] = .string(toolsetName)
                 }
                 anthropicApplyCacheControl(
-                    anthropicToolResultCacheControl(result),
+                    anthropicToolResultCacheControl(result, namespace: cacheNamespace),
                     to: &block,
                     cacheBreakpointCount: &cacheBreakpointCount,
                     warnings: &warnings
@@ -1317,7 +1350,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         }
         if applyMessageCacheControl {
             anthropicApplyCacheControlToLastPart(
-                anthropicCacheControl(from: message.providerMetadata),
+                anthropicCacheControl(from: message.providerMetadata, namespace: cacheNamespace),
                 parts: &parts,
                 cacheBreakpointCount: &cacheBreakpointCount,
                 warnings: &warnings
@@ -1326,37 +1359,40 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         return .object(["role": .string(role), "content": .array(parts)])
     }
 
-    private static func anthropicCacheControl(from providerMetadata: [String: JSONValue]) -> JSONValue? {
+    private static func anthropicCacheControl(from providerMetadata: [String: JSONValue], namespace: String = "anthropic") -> JSONValue? {
+        let custom = providerMetadata[namespace]
         let anthropic = providerMetadata["anthropic"]
-        return anthropic?["cacheControl"].flatMap(anthropicNonNullCacheControl)
+        return custom?["cacheControl"].flatMap(anthropicNonNullCacheControl)
+            ?? custom?["cache_control"].flatMap(anthropicNonNullCacheControl)
+            ?? anthropic?["cacheControl"].flatMap(anthropicNonNullCacheControl)
             ?? anthropic?["cache_control"].flatMap(anthropicNonNullCacheControl)
     }
 
-    private static func anthropicToolResultCacheControl(_ result: AIToolResult) -> JSONValue? {
-        if let cacheControl = anthropicCacheControl(from: result.providerMetadata) {
+    private static func anthropicToolResultCacheControl(_ result: AIToolResult, namespace: String = "anthropic") -> JSONValue? {
+        if let cacheControl = anthropicCacheControl(from: result.providerMetadata, namespace: namespace) {
             return cacheControl
         }
         let output = result.modelOutput ?? result.result
-        if let cacheControl = anthropicProviderOptionsCacheControl(from: output) {
+        if let cacheControl = anthropicProviderOptionsCacheControl(from: output, namespace: namespace) {
             return cacheControl
         }
         if output["type"]?.stringValue == "content" {
             return (output["value"]?.arrayValue ?? [])
                 .lazy
-                .compactMap(anthropicProviderOptionsCacheControl)
+                .compactMap { anthropicProviderOptionsCacheControl(from: $0, namespace: namespace) }
                 .first
         }
         return nil
     }
 
-    private static func anthropicProviderOptionsCacheControl(from value: JSONValue) -> JSONValue? {
-        value["providerOptions"]?["anthropic"]?["cacheControl"].flatMap(anthropicNonNullCacheControl)
-            ?? value["providerOptions"]?["anthropic"]?["cache_control"].flatMap(anthropicNonNullCacheControl)
+    private static func anthropicProviderOptionsCacheControl(from value: JSONValue, namespace: String = "anthropic") -> JSONValue? {
+        anthropicCacheControl(from: value["providerOptions"]?.objectValue ?? [:], namespace: namespace)
     }
 
     private static func anthropicApplyPartProviderOptionsIfNeeded(
         _ providerMetadata: [String: JSONValue],
         to content: JSONValue,
+        cacheNamespace: String = "anthropic",
         cacheBreakpointCount: inout Int,
         warnings: inout [AIWarning]
     ) -> JSONValue {
@@ -1364,6 +1400,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         anthropicApplyPartProviderOptions(
             providerMetadata,
             to: &block,
+            cacheNamespace: cacheNamespace,
             cacheBreakpointCount: &cacheBreakpointCount,
             warnings: &warnings
         )
@@ -1373,11 +1410,12 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
     private static func anthropicApplyPartProviderOptions(
         _ providerMetadata: [String: JSONValue],
         to block: inout [String: JSONValue],
+        cacheNamespace: String = "anthropic",
         cacheBreakpointCount: inout Int,
         warnings: inout [AIWarning]
     ) {
         anthropicApplyCacheControl(
-            anthropicCacheControl(from: providerMetadata),
+            anthropicCacheControl(from: providerMetadata, namespace: cacheNamespace),
             to: &block,
             cacheBreakpointCount: &cacheBreakpointCount,
             warnings: &warnings
@@ -1398,7 +1436,8 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
     }
 
     private static func anthropicNonNullCacheControl(_ value: JSONValue) -> JSONValue? {
-        value == .null ? nil : value
+        guard value != .null else { return .none }
+        return value
     }
 
     private static func anthropicApplyCacheControlToLastPart(
@@ -1407,7 +1446,8 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
         cacheBreakpointCount: inout Int,
         warnings: inout [AIWarning]
     ) {
-        guard !parts.isEmpty, var block = parts[parts.count - 1].objectValue else { return }
+        guard !parts.isEmpty, var block = parts[parts.count - 1].objectValue,
+              block["cache_control"] == nil else { return }
         anthropicApplyCacheControl(
             cacheControl,
             to: &block,
@@ -2069,6 +2109,7 @@ struct AnthropicPreparedCall {
     var usesJSONToolResponseFormat: Bool = false
     var toolNameMapping: AIToolNameMapping = AIToolNameMapping()
     var markCodeExecutionDynamic: Bool = false
+    var providerOptions: [String: JSONValue] = [:]
 }
 
 private func anthropicSupportedHTTPURL(_ value: String) -> Bool {

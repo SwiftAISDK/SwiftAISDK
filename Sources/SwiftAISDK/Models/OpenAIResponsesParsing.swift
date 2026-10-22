@@ -4,7 +4,8 @@ func openAIResponsesToolCalls(
     from raw: JSONValue,
     providerID: String,
     toolNameAliases: [String: String] = [:],
-    functionToolNames: Set<String> = []
+    functionToolNames: Set<String> = [],
+    shellProviderExecuted: Bool? = nil
 ) -> [AIToolCall] {
     var approvalToolCallIndex = 0
     return raw["output"]?.arrayValue?.flatMap { item -> [AIToolCall] in
@@ -19,7 +20,8 @@ func openAIResponsesToolCalls(
             from: item,
             providerID: providerID,
             toolNameAliases: toolNameAliases,
-            approvalToolCallIDOverride: approvalToolCallIDOverride
+            approvalToolCallIDOverride: approvalToolCallIDOverride,
+            shellProviderExecuted: shellProviderExecuted
         ) else {
             return []
         }
@@ -76,7 +78,8 @@ func openAIResponsesResultContent(
     providerID: String,
     mode: ResponsesRequestMode = .openAICompatible,
     toolNameAliases: [String: String] = [:],
-    functionToolNames: Set<String> = []
+    functionToolNames: Set<String> = [],
+    shellProviderExecuted: Bool? = nil
 ) -> [AIResultContentPart] {
     var content: [AIResultContentPart] = []
     var hostedToolSearchCallIDs: [String] = []
@@ -98,7 +101,8 @@ func openAIResponsesResultContent(
             from: item,
             providerID: providerID,
             toolNameAliases: toolNameAliases,
-            approvalToolCallIDOverride: approvalToolCallIDOverride
+            approvalToolCallIDOverride: approvalToolCallIDOverride,
+            shellProviderExecuted: shellProviderExecuted
         ) {
             let expanded = openAIResponsesExpandedParallelToolCalls(
                 from: toolCall,
@@ -293,7 +297,8 @@ func openAIResponsesToolCall(
     from item: JSONValue,
     providerID: String,
     toolNameAliases: [String: String] = [:],
-    approvalToolCallIDOverride: String? = nil
+    approvalToolCallIDOverride: String? = nil,
+    shellProviderExecuted: Bool? = nil
 ) -> AIToolCall? {
     guard let type = item["type"]?.stringValue else { return nil }
     switch type {
@@ -416,7 +421,7 @@ func openAIResponsesToolCall(
             id: item["call_id"]?.stringValue ?? item["id"]?.stringValue ?? "shell-call",
             name: toolNameAliases["shell"] ?? "shell",
             arguments: openAIResponsesJSONString(.object(["action": openAIResponsesShellCallAction(from: item)])) ?? "{}",
-            providerExecuted: item["environment"] != nil,
+            providerExecuted: shellProviderExecuted ?? (item["environment"] != nil),
             providerMetadata: openAIResponsesItemProviderMetadata(itemID: item["id"]?.stringValue, providerID: providerID),
             rawValue: item
         )
@@ -546,10 +551,16 @@ func openAIResponsesToolResult(from item: JSONValue, providerID: String, toolCal
             providerMetadata: openAIResponsesItemProviderMetadata(itemID: item["id"]?.stringValue, providerID: providerID)
         )
     case "shell_call_output":
+        var result: [String: JSONValue] = [
+            "output": openAIResponsesShellCallOutput(from: item["output"])
+        ]
+        if let maxOutputLength = item["max_output_length"], maxOutputLength != .null {
+            result["maxOutputLength"] = maxOutputLength
+        }
         return AIToolResult(
             toolCallID: item["call_id"]?.stringValue ?? item["id"]?.stringValue ?? "shell-call-output",
             toolName: toolNameAliases["shell"] ?? "shell",
-            result: .object(["output": openAIResponsesShellCallOutput(from: item["output"])])
+            result: .object(result)
         )
     case "mcp_call":
         guard let name = item["name"]?.stringValue else { return nil }
@@ -708,6 +719,12 @@ func openAIResponsesShellCallAction(from item: JSONValue) -> JSONValue {
     var normalized: [String: JSONValue] = [:]
     if let commands = action["commands"] {
         normalized["commands"] = commands
+    }
+    if let timeout = action["timeout_ms"], timeout != .null {
+        normalized["timeoutMs"] = timeout
+    }
+    if let maxOutputLength = action["max_output_length"], maxOutputLength != .null {
+        normalized["maxOutputLength"] = maxOutputLength
     }
     return .object(normalized)
 }

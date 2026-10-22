@@ -65,8 +65,9 @@ public final class DecisionLanguageModel: AIDecisionModelV4, @unchecked Sendable
                 .system(Self.systemPrompt),
                 AIMessage(role: .user, content: [.text(prompt), .text("Shared state:")] + (try options.state.map(decisionLanguageContent)))
             ],
+            maxOutputTokens: options.maxOutputTokens,
             responseFormat: .json(schema: schema, name: "decision"),
-            reasoning: "none",
+            reasoning: options.reasoning ?? "none",
             providerOptions: options.providerOptions,
             headers: options.headers,
             abortSignal: options.abortSignal

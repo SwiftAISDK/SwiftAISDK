@@ -74,7 +74,7 @@ public final class LumaImageModel: ImageModel, @unchecked Sendable {
         for _ in 0..<maxAttempts {
             let response = try await config.transport.send(AIHTTPRequest(
                 method: "GET",
-                url: try requireURL("\(withoutTrailingSlash(config.baseURL))/dream-machine/v1/generations/\(id)"),
+                url: try requireURL("\(withoutTrailingSlash(config.baseURL))/dream-machine/v1/generations/\(encodePathSegment(id))"),
                 headers: config.headers.mergingHeaders(headers),
                 abortSignal: abortSignal
             ))

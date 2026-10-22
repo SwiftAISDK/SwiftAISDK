@@ -499,15 +499,16 @@ public final class OpenAICompatibleTranscriptionModel: TranscriptionModel, @unch
                 "speaker": .string(speaker)
             ])
         } ?? []
+        var metadata: [String: JSONValue] = [:]
+        if !diarizedSegments.isEmpty { metadata["segments"] = .array(diarizedSegments) }
+        if let languages = raw["languages"]?.arrayValue { metadata["languages"] = .array(languages) }
         return TranscriptionResult(
             text: text,
             rawValue: raw,
             segments: segments,
-            language: openAITranscriptionLanguageCode(raw["language"]?.stringValue),
+            language: openAITranscriptionLanguageCode(raw["language"]?.stringValue, languages: raw["languages"]),
             durationInSeconds: raw["duration"]?.doubleValue ?? transcriptionDuration(from: segments),
-            providerMetadata: diarizedSegments.isEmpty
-                ? [:]
-                : ["openai": .object(["segments": .array(diarizedSegments)])],
+            providerMetadata: metadata.isEmpty ? [:] : ["openai": .object(metadata)],
             requestMetadata: AIRequestMetadata(body: .object(metadataBody), headers: request.headers),
             responseMetadata: openAICompatibleResponseMetadata(from: raw, response: response, modelID: modelID),
             usage: raw["usage"]?.objectValue
@@ -517,9 +518,19 @@ public final class OpenAICompatibleTranscriptionModel: TranscriptionModel, @unch
 
 let openAISpeechSupportedOutputFormats: Set<String> = ["mp3", "opus", "aac", "flac", "wav", "pcm"]
 
-func openAITranscriptionLanguageCode(_ language: String?) -> String? {
-    guard let language else { return nil }
-    return openAITranscriptionLanguageMap[language] ?? language
+func openAITranscriptionLanguageCode(_ language: String?, languages: JSONValue? = nil) -> String? {
+    if let language {
+        if openAIIsTranscriptionLanguageCode(language) { return language }
+        if let code = openAITranscriptionLanguageMap[language] { return code }
+    }
+    guard let entries = languages?.arrayValue, entries.count == 1,
+          let code = entries[0]["code"]?.stringValue,
+          openAIIsTranscriptionLanguageCode(code) else { return nil }
+    return code
+}
+
+private func openAIIsTranscriptionLanguageCode(_ value: String) -> Bool {
+    value.utf8.count == 2 && value.utf8.allSatisfy { (97...122).contains($0) }
 }
 
 let openAITranscriptionLanguageMap: [String: String] = [

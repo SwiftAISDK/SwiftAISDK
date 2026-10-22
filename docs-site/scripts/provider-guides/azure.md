@@ -1,3 +1,15 @@
+## Deployment names and underlying models
+
+```swift
+let azure = try AIProviders.azure(resourceName: "my-resource")
+let model = try azure.responses(
+    "production-deployment",
+    settings: AzureOpenAILanguageModelSettings(modelID: "gpt-5")
+)
+```
+
+The deployment name remains in the request body and deployment-based URL. `model.modelID` reports the underlying model, so Responses and Chat apply the correct reasoning, sampling and system-message rules even when the deployment has a custom name. Returned response metadata preserves the server's model ID. The same settings overload is available on the callable provider, `languageModel`, `chat`/`chatModel`, and `completion`/`completionModel`. Omitting settings or leaving `modelID` unset preserves the deployment name as the model identity.
+
 ## MAI image generation and editing
 
 ```swift

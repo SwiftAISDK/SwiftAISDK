@@ -42,7 +42,7 @@ public final class RevAITranscriptionModel: TranscriptionModel, @unchecked Senda
         let submissionLanguage = job["language"]?.stringValue
         job = try await pollRevAIJob(id: jobID, initial: job, request: request)
         let transcriptResponse = try await config.transport.send(try getRequest(
-            path: "/speechtotext/v1/jobs/\(jobID)/transcript",
+            path: "/speechtotext/v1/jobs/\(encodePathSegment(jobID))/transcript",
             headers: request.headers,
             abortSignal: request.abortSignal
         ))
@@ -70,7 +70,7 @@ public final class RevAITranscriptionModel: TranscriptionModel, @unchecked Senda
                 throw AIError.invalidResponse(provider: providerID, message: "Transcription job polling timed out")
             }
             let response = try await config.transport.send(try getRequest(
-                path: "/speechtotext/v1/jobs/\(id)",
+                path: "/speechtotext/v1/jobs/\(encodePathSegment(id))",
                 headers: request.headers,
                 abortSignal: request.abortSignal
             ))

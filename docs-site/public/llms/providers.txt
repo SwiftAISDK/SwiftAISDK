@@ -16,7 +16,7 @@ Dubbing: 1
 Video: 14
 Reranking: 5
 Evaluation: 5
-Decision: 5
+Decision: 6
 Files: 6
 Skills: 3
 
@@ -64,7 +64,7 @@ Skills: 3
 | [`open-responses.responses`](open-responses-responses/) | `@ai-sdk/open-responses` | `AIProviders.openResponses` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | [`openai`](openai/) | `@ai-sdk/openai` | `AIProviders.openAI` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  | ✅ | ✅ | ✅ | ✅ |
 | [`openai-compatible`](openai-compatible/) | `@ai-sdk/openai-compatible` | `AIProviders.openAICompatible` | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |  |
-| [`perplexity`](perplexity/) | `@ai-sdk/perplexity` | `AIProviders.perplexity` | ✅ |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |
+| [`perplexity`](perplexity/) | `@ai-sdk/perplexity` | `AIProviders.perplexity` | ✅ |  | ✅ |  |  |  |  |  |  |  |  |  | ✅ |  |  |
 | [`prodia`](prodia/) | `@ai-sdk/prodia` | `AIProviders.prodia` | ✅ |  |  | ✅ |  |  |  |  |  | ✅ |  |  |  |  |  |
 | [`quiverai`](quiverai/) | `@ai-sdk/quiverai` | `AIProviders.quiverAI` | ✅ |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |
 | [`replicate`](replicate/) | `@ai-sdk/replicate` | `AIProviders.replicate` |  |  |  | ✅ |  |  |  |  |  | ✅ |  |  |  |  |  |

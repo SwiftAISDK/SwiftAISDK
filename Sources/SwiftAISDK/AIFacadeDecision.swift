@@ -1,6 +1,6 @@
 import Foundation
 
-private let aiDecisionUserAgent = "ai/7.0.137"
+private let aiDecisionUserAgent = "ai/7.0.148"
 
 extension AI {
     /// Decides answers using a direct Decision Model V4 instance.
@@ -8,6 +8,8 @@ extension AI {
         model: any AIDecisionModelV4,
         state: AIDecisionState,
         questions: [String: AIDecisionQuestion],
+        maxOutputTokens: Int? = nil,
+        reasoning: String? = nil,
         maxRetries: Int? = nil,
         abortSignal: AIAbortSignal? = nil,
         headers: [String: String] = [:],
@@ -17,7 +19,7 @@ extension AI {
         onStart: AICallback<AIDecisionStartEvent>? = nil,
         onEnd: AICallback<AIDecisionEndEvent>? = nil
     ) async throws -> AIDecisionResult {
-        try await experimentalDecide(model: .model(model), state: state, questions: questions, maxRetries: maxRetries, abortSignal: abortSignal, headers: headers, providerOptions: providerOptions, telemetry: telemetry, runtimeContext: runtimeContext, onStart: onStart, onEnd: onEnd)
+        try await experimentalDecide(model: .model(model), state: state, questions: questions, maxOutputTokens: maxOutputTokens, reasoning: reasoning, maxRetries: maxRetries, abortSignal: abortSignal, headers: headers, providerOptions: providerOptions, telemetry: telemetry, runtimeContext: runtimeContext, onStart: onStart, onEnd: onEnd)
     }
 
     /// Resolves a decision model ID through the configured default provider.
@@ -25,6 +27,8 @@ extension AI {
         model: String,
         state: AIDecisionState,
         questions: [String: AIDecisionQuestion],
+        maxOutputTokens: Int? = nil,
+        reasoning: String? = nil,
         maxRetries: Int? = nil,
         abortSignal: AIAbortSignal? = nil,
         headers: [String: String] = [:],
@@ -34,7 +38,7 @@ extension AI {
         onStart: AICallback<AIDecisionStartEvent>? = nil,
         onEnd: AICallback<AIDecisionEndEvent>? = nil
     ) async throws -> AIDecisionResult {
-        try await experimentalDecide(model: .modelID(model), state: state, questions: questions, maxRetries: maxRetries, abortSignal: abortSignal, headers: headers, providerOptions: providerOptions, telemetry: telemetry, runtimeContext: runtimeContext, onStart: onStart, onEnd: onEnd)
+        try await experimentalDecide(model: .modelID(model), state: state, questions: questions, maxOutputTokens: maxOutputTokens, reasoning: reasoning, maxRetries: maxRetries, abortSignal: abortSignal, headers: headers, providerOptions: providerOptions, telemetry: telemetry, runtimeContext: runtimeContext, onStart: onStart, onEnd: onEnd)
     }
 
     /// Decides with either a direct model or a default-provider model ID.
@@ -42,6 +46,8 @@ extension AI {
         model reference: AIDecisionModelReference,
         state: AIDecisionState,
         questions: [String: AIDecisionQuestion],
+        maxOutputTokens: Int? = nil,
+        reasoning: String? = nil,
         maxRetries: Int? = nil,
         abortSignal: AIAbortSignal? = nil,
         headers: [String: String] = [:],
@@ -52,6 +58,9 @@ extension AI {
         onEnd: AICallback<AIDecisionEndEvent>? = nil
     ) async throws -> AIDecisionResult {
         let model = try resolveDecisionModel(reference)
+        if let maxOutputTokens, maxOutputTokens < 1 {
+            throw AIError.invalidArgument(argument: "maxOutputTokens", message: "must be an integer greater than or equal to 1")
+        }
         try validateDecisionInput(state: state, questions: questions)
 
         for questionID in questions.keys.sorted() {
@@ -81,6 +90,8 @@ extension AI {
             modelID: model.modelID,
             state: state,
             questions: questions,
+            maxOutputTokens: maxOutputTokens,
+            reasoning: reasoning,
             maxRetries: retryPolicy.maxRetries,
             headers: headers,
             providerOptions: providerOptions
@@ -96,6 +107,8 @@ extension AI {
             input: decisionTelemetryInput(
                 state: state,
                 questions: questions,
+                maxOutputTokens: maxOutputTokens,
+                reasoning: reasoning,
                 headers: headers,
                 providerOptions: providerOptions
             ),
@@ -108,6 +121,8 @@ extension AI {
             let callOptions = AIDecisionModelV4CallOptions(
                 state: preparedState,
                 questions: questions,
+                maxOutputTokens: maxOutputTokens,
+                reasoning: reasoning,
                 abortSignal: abortSignal,
                 headers: withUserAgentSuffix(headers, aiDecisionUserAgent),
                 providerOptions: providerOptions
@@ -120,7 +135,7 @@ extension AI {
                 providerID: model.providerID,
                 modelID: model.modelID,
                 options: telemetry,
-                input: decisionTelemetryInput(state: preparedState, questions: questions)
+                input: decisionTelemetryInput(state: preparedState, questions: questions, maxOutputTokens: maxOutputTokens, reasoning: reasoning)
             ))
             let result = try await withRetry(policy: retryPolicy, abortSignal: abortSignal) {
                 try abortSignal?.throwIfAborted()
@@ -146,7 +161,7 @@ extension AI {
                 modelID: model.modelID,
                 options: telemetry,
                 durationNanoseconds: DispatchTime.now().uptimeNanoseconds - modelCallStarted,
-                input: decisionTelemetryInput(state: preparedState, questions: questions),
+                input: decisionTelemetryInput(state: preparedState, questions: questions, maxOutputTokens: maxOutputTokens, reasoning: reasoning),
                 output: decisionModelTelemetryOutput(result),
                 usage: decisionTokenUsage(result.usage),
                 warnings: result.warnings,
@@ -195,6 +210,8 @@ extension AI {
                 modelID: model.modelID,
                 state: state,
                 questions: questions,
+                maxOutputTokens: maxOutputTokens,
+                reasoning: reasoning,
                 maxRetries: retryPolicy.maxRetries,
                 headers: headers,
                 providerOptions: providerOptions,
@@ -214,7 +231,7 @@ extension AI {
                 options: telemetry,
                 maxRetries: retryPolicy.maxRetries,
                 durationNanoseconds: DispatchTime.now().uptimeNanoseconds - started,
-                input: decisionTelemetryInput(state: state, questions: questions, headers: headers, providerOptions: providerOptions),
+                input: decisionTelemetryInput(state: state, questions: questions, maxOutputTokens: maxOutputTokens, reasoning: reasoning, headers: headers, providerOptions: providerOptions),
                 output: decisionResultTelemetryOutput(decisionResult),
                 usage: decisionTokenUsage(decisionResult.usage),
                 warnings: decisionResult.warnings,

@@ -923,7 +923,7 @@ public func validateDownloadURL(_ string: String) throws -> URL {
     }
 
     let host = rawHost.lowercased().strippingTrailingDots()
-    if host == "localhost" || host.hasSuffix(".local") || host.hasSuffix(".localhost") {
+    if host == "localhost" || host.hasSuffix(".local") || host.hasSuffix(".localhost") || host.hasSuffix(".internal") {
         throw AIError.invalidArgument(argument: "url", message: "URL with hostname \(host) is not allowed.")
     }
 
@@ -1470,4 +1470,13 @@ func tokenUsage(from raw: JSONValue) -> TokenUsage? {
         outputReasoningTokens: reasoningTokens,
         rawValue: usage
     )
+}
+
+/// Encodes a raw resource identifier as one path segment, including standalone dots.
+func encodePathSegment(_ value: String) -> String {
+    let allowed = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.!~*'()")
+    let encoded = value.addingPercentEncoding(withAllowedCharacters: allowed) ?? value
+    if encoded == "." { return "%252E" }
+    if encoded == ".." { return "%252E%252E" }
+    return encoded
 }

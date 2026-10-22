@@ -6,6 +6,8 @@ Streaming consumers can inspect `.custom(kind: "anthropic.message_start", ...)` 
 
 Set `ProviderSettings.batchResultDownloads` to bound downloaded JSONL rows. Unicode custom header values remain on Anthropic AWS/Bedrock requests but are excluded from canonical signed headers.
 
+Batch `providerOptions.anthropic.anthropicBeta` must be an array of strings. Omit it when no beta is needed; explicit null, a single string, or mixed-type arrays fail before network I/O. Cache control shares its four-breakpoint limit across prompt blocks and tool definitions. A part's cache marker takes precedence over a message marker on the same block and counts only once.
+
 ## Citations and tool transcripts
 
 Generated text and streamed text-end parts expose normalized `AICitation` values for document pages, character ranges, content blocks, web-search results, and search-result locations. Read `TextGenerationResult.citations` for all cited text blocks. The complete original citation objects remain in the text part's provider metadata; document offsets describe the source document and do not become generated-text offsets. Batch results use available citation titles and file IDs with a plain-text document fallback because original prompt documents are unavailable.

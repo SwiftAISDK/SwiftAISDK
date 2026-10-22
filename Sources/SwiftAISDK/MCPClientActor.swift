@@ -351,7 +351,7 @@ public actor MCPClient {
                 skipCapabilityCheck: true,
                 options: MCPRequestOptions(
                     abortSignal: options.abortSignal,
-                    timeoutMilliseconds: 1_000
+                    timeoutMilliseconds: transport.waitsForProtocolVersionDiscovery ? nil : 1_000
                 )
             )
             try applyDiscoverResult(result)

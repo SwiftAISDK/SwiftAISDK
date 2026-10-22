@@ -48,6 +48,7 @@ public struct MCPRequestOptions: Sendable {
 
 public final class MCPHTTPTransport: MCPTransport, @unchecked Sendable {
     public let supportsProtocolVersionDiscovery = true
+    public let waitsForProtocolVersionDiscovery = true
     public let supportsMCPToolParameterHeaders = true
     private let url: URL
     var eventEndpoint: URL { url }

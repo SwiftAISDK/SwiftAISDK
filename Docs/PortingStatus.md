@@ -1,6 +1,6 @@
 # Porting Status
 
-Snapshot date: 2026-10-18
+Snapshot date: 2026-10-23
 
 SwiftAISDK currently ports the provider-facing parts of Vercel AI SDK into a
 SwiftPM library. The package has a broad Swift-native facade, provider registry,
@@ -23,8 +23,9 @@ for exact evidence.
   tools, approvals, MCP tools, UI messages, chat sessions, agent helpers, and
   provider-neutral realtime sessions.
 - Experimental Decision V4 is available through `AI.experimentalDecide` with
-  ordered text/JSON/file evidence, typed questions/answers/refusals, provider and
-  registry routing, and native telemetry. Existing Evaluation V4 is available through `AI.experimentalEvaluate`
+  ordered text/JSON/file evidence, typed questions/answers/refusals, optional token
+  budgets/reasoning controls, Perplexity native decisions, provider/registry routing,
+  and native telemetry. Existing Evaluation V4 is available through `AI.experimentalEvaluate`
   with Choice, Score, Boolean, and TypeSafe Box questions, provider/default-registry model
   resolution, a native TypeSafe AI provider, and OpenAI, Anthropic, Google, and
   Gateway adapters.
@@ -59,62 +60,59 @@ for exact evidence.
 | Upstream test inventory | `Docs/UpstreamTestInventory.md` |
 | Latest upstream test diff audit | `Docs/FreshUpstreamTestDiffAudit.md` |
 
-Provider and core versions were freshly checked on 2026-10-18. All **54 tracked
+Provider and core versions were freshly checked on 2026-10-23. All **54 tracked
 packages** were reviewed: **52 version drifts and two current rows** (LMNT and
 Vercel). **142 published archives** passed SHA-512 integrity checks. Separate
 source, declaration, manifest and fixture decisions are recorded in
 `Docs/UpstreamPackageDiffAudit.md`; versions advance only after that review.
-The fixture inventory now has **1,019 executable test/spec paths in 81 groups**.
-The latest fixture diff accounts for **106 executable and nine declaration paths**
+The fixture inventory has **1,096 executable test/spec paths in 85 groups**.
+The latest fixture diff accounts for **160 executable and six declaration paths**
 against the previous snapshot, including runtime-specific and unpublished cases.
 
 ## Provider State
 
-The latest pass ports OpenAI/Anthropic citations separately from retrieved
-sources, Responses history/additional-tools/custom-input behavior, safe
-OpenAI-compatible image URL downloads and provider file references, Gemini long
-decode/manual resume with aggregate usage, Vertex Anthropic labels, current BFL
-image controls, numeric/future Wan video routing, future Groq/Mistral/Moonshot/
-DeepSeek/Cartesia model behavior, and conservative Bedrock Claude output gates.
-TypeSafe Decision adds PNG/JPEG evidence, Box questions/answers and explicit
-reference/long-context options. Shared runtime adds bounded tool concurrency,
-restored-approval ordering, case-sensitive URL matching and rounding-aware
-choice validation. Managed MCP subscriptions expose nullable application TTL.
-Provider request identities and generated docs match the reviewed baselines.
+The latest pass adds Perplexity native Decision requests; shared Decision token
+budgets/reasoning and nullable instructions; Azure per-model identity separate
+from deployment routing; OpenAI cache TTL/prewarm/cache-write metadata, shell
+controls and transcription metadata; MiniMax M3.1+ media/effort/cache behavior;
+Google continuation grounding history; compatible/Groq/Moonshot output ordering;
+and safe single-segment media status IDs. MCP adds explicit stdio shell execution,
+HTTP discovery waiting and stronger OAuth credential/issuer/retry binding.
+Shared pruning removes reasoning groups left without their associated content,
+and native UI uses the latest name for a reused tool ID. Provider request
+identities and generated docs match reviewed baselines.
 
 Search returned **73 scoped names**, while exact registry-prefix enumeration
-returned **91**. All **38 untracked scoped packages** have current metadata and
-published-artifact classification. No new unimplemented model provider was
-found. The only new name, `@ai-sdk/tool-bash@0.0.0`, is an empty seed package;
-`@ai-sdk/tools`, SpaceXAI and specification remain empty seeds/reservations.
-HeyGen and Topaz remain implemented. Framework UI, agent harnesses, sandbox,
-workflow and JavaScript schema adapters remain outside provider-model coverage.
-There is no new model-provider implementation to queue from this snapshot.
+returned **91**, unchanged since the previous run. All **38 untracked scoped
+packages** have current metadata and published-artifact classification. **No new
+unimplemented model provider was found.** The previously empty `@ai-sdk/tool-bash`
+now publishes **1.0.0**, a sandbox-backed executable tool. It remains outside
+model-provider scope and was not ported automatically. A future implementation
+needs native sandbox/session, command/file lifecycle, cancellation and output
+truncation design. Empty tools/specification/SpaceXAI reservations still expose
+no model protocol; HeyGen and Topaz remain implemented.
 
-Public constructors retain existing callable signatures. Exhaustive switches
-must handle the new cited text/end, text-input-start and Box enum cases.
-`webSearchPreview` and the managed MCP `expiresAt` path are deprecated; use
-`webSearch` and nullable `ttlMs`. Existing citations are now attached to text;
-retrieved `sources` no longer duplicate those citations. Live paid provider
-checks remain opt-in and were not enabled. The JS minimal-retention result
-facade, native UI wire/step surfaces and provider-specific pre-existing gaps
-remain explicitly deferred below and in the package audit.
+The additive API/capability changes justify **minor 2.6.0** from **2.5.0**.
+No intentional API removals. OAuth clients with existing secrets must supply an
+issuer or stored authorization-server binding; custom token authentication also
+requires `usesCustomClientAuthentication = true`. Swift cannot infer whether an
+optional protocol hook was overridden, so that explicit flag is part of the
+native contract. Existing callers otherwise keep their default behavior.
 
-The preceding **2.4.1** patch adds native MCP 2026 multi round-trip form
-elicitation beyond the published npm client: fresh IDs, opaque per-call state,
-capability validation and operation-wide deadline/abort bounds. Unsupported
-sampling, roots and URL elicitation fail explicitly. Its 3,269-test/40-suite and
-97-page verification is historical; this weekly run records its own final
-results in the package audit. No inherited ahead commits or unrelated working
-changes were present at the start of this pass.
+The renamed `experimental_streamTextLowMemory` JS result/replay/getter facade,
+native UI wire/step surfaces, resolver-backed DNS pinning, realtime/delegation
+variants and provider-specific pre-existing gaps remain explicitly deferred.
+Monorepo interrupted-stream, approval-follow-up and Gateway parallel-search GA
+changes are not in the audited published tarballs. Live paid provider checks
+remain opt-in and were not enabled. No inherited ahead commits or unrelated
+working changes were present at the start of this pass.
 
-Final weekly verification: **3,357 tests in 44 suites**, all 17 Examples targets,
-four public snippets with zero diagnostics, docs dependency installation,
-zero Astro diagnostics across four files and a **97-page** build. Strict npm
-readback reports 54 current baselines, zero drift/errors and no new unported model
-provider. The additive public citation/Box/options/concurrency surface justifies
-**minor 2.5.0** from **2.4.1**. Detailed commands, overlapping focused counts and
-the unchanged private docs dependency audit findings are in the package audit.
+Final local verification passed: 70 new focused tests, 14 repaired existing
+tests, the full 3,427-test / 52-suite run, all 17 example targets, four public
+snippets, and the 97-page documentation build. Astro checked four files with
+zero diagnostics. Fresh registry readback has 54 current packages and no drift.
+Exact commands, overlapping leaf checks and the unchanged docs dependency audit
+findings are recorded in `Docs/UpstreamPackageDiffAudit.md`.
 
 ### Earlier weekly passes
 
