@@ -792,6 +792,10 @@ secret must supply an issuer or stored authorization-server binding. Custom
 
 Focused examples live in `Tests/SwiftAISDKTests/MCP*Tests.swift`.
 
+Run `swift run --package-path Examples MCPOAuthMigration` for a fully offline
+example of issuer-bound secret credentials and explicit custom authentication.
+It uses dummy tokens, validates the code callback, and makes no network calls.
+
 ## Tests And Docs
 
 Run the mock-backed suite:
@@ -801,6 +805,20 @@ swift test
 ```
 
 Optional live smoke tests are available with real keys:
+
+```sh
+node Scripts/run-live-smoke.mjs --plan
+LIVE_AI_TESTS=1 node Scripts/run-live-smoke.mjs --run
+```
+
+The representative runner makes one short request for each configured OpenAI,
+Anthropic, and Google transport family, with no retries and output limits of
+24, 24, and 64 tokens. It reports missing credential variable names without
+printing their values. `--plan` never makes API calls; `--run` requires the
+explicit environment flag and at least one configured key. Disabled live tests
+are reported as skipped by Swift Testing, rather than counted as passed.
+
+The broader suite includes media generation and can incur higher charges:
 
 ```sh
 LIVE_AI_TESTS=1 swift test --filter LiveProviderSmoke
@@ -818,6 +836,8 @@ Useful project docs:
 - [Docs/AgentPortingGuide.md](Docs/AgentPortingGuide.md): workflow for porting upstream code, tests, and docs.
 - [Docs/ProviderCapabilityMatrix.md](Docs/ProviderCapabilityMatrix.md): generated provider/capability table.
 - [Docs/ProviderVersionLedger.md](Docs/ProviderVersionLedger.md): tracked npm package baselines and evidence files.
+- [Docs/DownloadSecurity.md](Docs/DownloadSecurity.md): DNS-pinned downloads and custom transport migration.
+- [Docs/DocumentationDependencies.md](Docs/DocumentationDependencies.md): documentation runtime and security baseline.
 
 Future coding agents should also read [AGENTS.md](AGENTS.md) before making
 porting changes.

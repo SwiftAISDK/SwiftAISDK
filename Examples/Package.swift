@@ -12,6 +12,10 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
+            name: "MCPOAuthMigration",
+            dependencies: [.product(name: "SwiftAISDK", package: "SwiftAISDK")]
+        ),
+        .executableTarget(
             name: "GenerateWithHeyGen",
             dependencies: [.product(name: "SwiftAISDK", package: "SwiftAISDK")]
         ),

@@ -242,7 +242,7 @@ private final class WeeklyBatchCancellationCounter: @unchecked Sendable {
     func increment() { lock.withLock { value += 1 } }
 }
 
-private actor WeeklyBatchResponseCancellationTransport: AIStreamingTransport {
+private actor WeeklyBatchResponseCancellationTransport: FixtureStreamingDownloadTransport {
     let status: AIHTTPResponse
     nonisolated let cancellations = WeeklyBatchCancellationCounter()
 

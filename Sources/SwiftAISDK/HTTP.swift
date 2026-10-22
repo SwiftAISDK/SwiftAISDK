@@ -109,6 +109,18 @@ public struct AIHTTPResponse: Sendable {
 
 public protocol AITransport: Sendable {
     func send(_ request: AIHTTPRequest) async throws -> AIHTTPResponse
+    /// Fetches one untrusted download hop without redirects. Implementations
+    /// must connect only to validated DNS results and retain hostname TLS trust.
+    func sendValidatedDownload(_ request: AIHTTPRequest) async throws -> AIHTTPResponse
+}
+
+public extension AITransport {
+    func sendValidatedDownload(_ request: AIHTTPRequest) async throws -> AIHTTPResponse {
+        throw AIDownloadError(
+            url: request.url.absoluteString,
+            message: "This transport does not implement DNS-pinned downloads. Implement sendValidatedDownload for untrusted URLs."
+        )
+    }
 }
 
 public struct AIHTTPStreamResponse: Sendable {
@@ -199,6 +211,18 @@ public func readResponseWithSizeLimit(
 
 public protocol AIStreamingTransport: AITransport {
     func stream(_ request: AIHTTPRequest) async throws -> AIHTTPStreamResponse
+    /// Streaming counterpart of `sendValidatedDownload`; each redirect is a
+    /// separate validated hop. The returned body must remain cancellable.
+    func streamValidatedDownload(_ request: AIHTTPRequest) async throws -> AIHTTPStreamResponse
+}
+
+public extension AIStreamingTransport {
+    func streamValidatedDownload(_ request: AIHTTPRequest) async throws -> AIHTTPStreamResponse {
+        throw AIDownloadError(
+            url: request.url.absoluteString,
+            message: "This transport does not implement DNS-pinned downloads. Implement streamValidatedDownload for untrusted URLs."
+        )
+    }
 }
 
 func requireStreamingTransport(
@@ -290,6 +314,26 @@ public final class URLSessionTransport: AIStreamingTransport, @unchecked Sendabl
 
     public init(session: URLSession = .shared) {
         self.session = session
+    }
+
+    public func sendValidatedDownload(_ request: AIHTTPRequest) async throws -> AIHTTPResponse {
+        let response = try await streamValidatedDownload(request)
+        let body = try await readResponseWithSizeLimit(
+            response: response,
+            url: request.url.absoluteString,
+            maxBytes: request.maxResponseBytes ?? AIDefaultMaxDownloadSize
+        )
+        return AIHTTPResponse(statusCode: response.statusCode, headers: response.headers, body: body, url: request.url)
+    }
+
+    public func streamValidatedDownload(_ request: AIHTTPRequest) async throws -> AIHTTPStreamResponse {
+        guard session === URLSession.shared else {
+            throw AIDownloadError(
+                url: request.url.absoluteString,
+                message: "A custom URLSession cannot guarantee DNS-pinned downloads. Use the default transport or implement the validated-download transport hooks."
+            )
+        }
+        return try await HTTPDNSPinnedTransport().stream(request)
     }
 
     public func send(_ request: AIHTTPRequest) async throws -> AIHTTPResponse {
@@ -388,58 +432,18 @@ public final class URLSessionTransport: AIStreamingTransport, @unchecked Sendabl
                 )
             )
         }
-        let bodyCancellation = HTTPStreamBodyCancellation()
-        let body = AsyncThrowingStream<Data, Error> { continuation in
-            let task = Task {
-                do {
-                    var totalBytes = 0
-                    for try await byte in bytes {
-                        try Task.checkCancellation()
-                        totalBytes += 1
-                        if totalBytes > maxResponseBytes {
-                            bytes.task.cancel()
-                            throw AIDownloadError(
-                                url: urlText,
-                                message: downloadSizeLimitExceededMessage(url: urlText, maxBytes: maxResponseBytes)
-                            )
-                        }
-                        continuation.yield(Data([byte]))
-                    }
-                    continuation.finish()
-                } catch {
-                    if let abortSignal = request.abortSignal, abortSignal.isAborted {
-                        continuation.finish(throwing: AIAbortError(
-                            reason: abortSignal.reason,
-                            reasonName: abortSignal.reasonName
-                        ))
-                    } else {
-                        continuation.finish(throwing: error)
-                    }
-                }
-            }
-            let registration = request.abortSignal?.addAbortHandler { reason in
-                continuation.finish(throwing: AIAbortError(
-                    reason: reason,
-                    reasonName: request.abortSignal?.reasonName
-                ))
-                bytes.task.cancel()
-                task.cancel()
-            }
-            bodyCancellation.install {
-                registration?.cancel()
-                bytes.task.cancel()
-                task.cancel()
-                continuation.finish()
-            }
-            continuation.onTermination = { _ in
-                bodyCancellation.cancel()
-            }
-        }
+        let body = makeDemandDrivenHTTPBody(
+            bytes: bytes,
+            url: urlText,
+            maxBytes: maxResponseBytes,
+            abortSignal: request.abortSignal,
+            cancel: { bytes.task.cancel() }
+        )
         return AIHTTPStreamResponse(
             statusCode: httpResponse?.statusCode ?? 0,
             headers: headers,
-            body: body,
-            cancelBody: { bodyCancellation.cancel() }
+            body: body.body,
+            cancelBody: body.cancel
         )
     }
 }
@@ -590,36 +594,6 @@ private final class AsyncStreamIteratorBox: @unchecked Sendable {
 
     func next() async throws -> Data? {
         try await iterator.next()
-    }
-}
-
-private final class HTTPStreamBodyCancellation: @unchecked Sendable {
-    private let lock = NSLock()
-    private var cancellation: (@Sendable () -> Void)?
-    private var isCancelled = false
-
-    func install(_ cancellation: @escaping @Sendable () -> Void) {
-        lock.lock()
-        if isCancelled {
-            lock.unlock()
-            cancellation()
-            return
-        }
-        self.cancellation = cancellation
-        lock.unlock()
-    }
-
-    func cancel() {
-        lock.lock()
-        guard !isCancelled else {
-            lock.unlock()
-            return
-        }
-        isCancelled = true
-        let cancellation = self.cancellation
-        self.cancellation = nil
-        lock.unlock()
-        cancellation?()
     }
 }
 
@@ -923,6 +897,7 @@ public func validateDownloadURL(_ string: String) throws -> URL {
     }
 
     let host = rawHost.lowercased().strippingTrailingDots()
+        .trimmingCharacters(in: CharacterSet(charactersIn: "[]"))
     if host == "localhost" || host.hasSuffix(".local") || host.hasSuffix(".localhost") || host.hasSuffix(".internal") {
         throw AIError.invalidArgument(argument: "url", message: "URL with hostname \(host) is not allowed.")
     }
@@ -1000,14 +975,20 @@ func downloadURL(
     let maxRedirects = 10
     for _ in 0...maxRedirects {
         let url = try validatedRemoteURL(current, trustedOrigin: trustedOrigin)
-        let response = try await transport.send(AIHTTPRequest(
+        let request = AIHTTPRequest(
             method: "GET",
             url: url,
             headers: currentHeaders,
             abortSignal: abortSignal,
             maxResponseBytes: maxBytes,
             followRedirects: false
-        ))
+        )
+        let response: AIHTTPResponse
+        if let trustedOrigin, isSameOrigin(url.absoluteString, trustedOrigin) {
+            response = try await transport.send(request)
+        } else {
+            response = try await transport.sendValidatedDownload(request)
+        }
         if httpRedirectStatusCodes.contains(response.statusCode),
            let location = response.headerValue("location"),
            let nextURL = URL(string: location, relativeTo: url)?.absoluteURL {
@@ -1063,7 +1044,12 @@ func streamDownloadURL(
             maxResponseBytes: maxBytes,
             followRedirects: false
         )
-        let response = try await transport.stream(request)
+        let response: AIHTTPStreamResponse
+        if let trustedOrigin, isSameOrigin(url.absoluteString, trustedOrigin) {
+            response = try await transport.stream(request)
+        } else {
+            response = try await transport.streamValidatedDownload(request)
+        }
         if httpRedirectStatusCodes.contains(response.statusCode),
            let location = response.headerValue("location"),
            let nextURL = URL(string: location, relativeTo: url)?.absoluteURL {
@@ -1251,7 +1237,7 @@ private func downloadSizeLimitExceededMessage(url: String, maxBytes: Int, conten
     return "Download of \(url) exceeded maximum size of \(maxBytes) bytes."
 }
 
-private func ipv4Bytes(_ host: String) -> [UInt8]? {
+func ipv4Bytes(_ host: String) -> [UInt8]? {
     let parts = host.split(separator: ".", omittingEmptySubsequences: false)
     guard (1...4).contains(parts.count),
           parts.allSatisfy({ !$0.isEmpty }) else {
@@ -1301,7 +1287,7 @@ private func ipv4PartValue(_ part: String) -> UInt32? {
     return UInt32(lowercased, radix: 10)
 }
 
-private func isPrivateIPv4(_ bytes: [UInt8]) -> Bool {
+func isPrivateIPv4(_ bytes: [UInt8]) -> Bool {
     guard bytes.count == 4 else { return false }
     let first = bytes[0]
     let second = bytes[1]
@@ -1322,7 +1308,7 @@ private func isPrivateIPv4(_ bytes: [UInt8]) -> Bool {
     return false
 }
 
-private func ipv6Bytes(_ host: String) -> [UInt8]? {
+func ipv6Bytes(_ host: String) -> [UInt8]? {
     let normalized = host.lowercased()
     guard normalized.contains(":") else { return nil }
     let sides = normalized.components(separatedBy: "::")
@@ -1371,7 +1357,7 @@ private func parseIPv6Hextets(_ value: String) -> [UInt16]? {
     return hextets
 }
 
-private func isPrivateIPv6(_ bytes: [UInt8]) -> Bool {
+func isPrivateIPv6(_ bytes: [UInt8]) -> Bool {
     guard bytes.count == 16 else { return false }
     if bytes.allSatisfy({ $0 == 0 }) { return true }
     if bytes.prefix(15).allSatisfy({ $0 == 0 }) && bytes[15] == 1 { return true }

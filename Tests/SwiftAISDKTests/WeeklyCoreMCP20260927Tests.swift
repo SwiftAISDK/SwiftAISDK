@@ -306,7 +306,7 @@ struct WeeklyCoreMCP20260927Tests {
     }
 }
 
-private actor Weekly20260927Transport: AITransport {
+private actor Weekly20260927Transport: FixtureDownloadTransport {
     private var scriptedResponses: [AIHTTPResponse]
     private var recordedRequests: [AIHTTPRequest] = []
 

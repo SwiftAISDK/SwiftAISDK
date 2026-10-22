@@ -6,9 +6,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     var ok: Bool
 }
 
-@Test func liveProviderSmokeOpenAIGenerateText() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeOpenAIGenerateText() async throws {
     let provider = try LiveProviderSmoke.openAIProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_OPENAI_MODEL", defaultValue: "gpt-4.1-mini"))
     let result = try await AI.generateText(
@@ -22,9 +21,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(!result.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 }
 
-@Test func liveProviderSmokeOpenAIStreamText() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeOpenAIStreamText() async throws {
     let provider = try LiveProviderSmoke.openAIProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_OPENAI_MODEL", defaultValue: "gpt-4.1-mini"))
     let text = try await LiveProviderSmoke.collectText(
@@ -40,9 +38,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(!text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 }
 
-@Test func liveProviderSmokeOpenAIEmbedding() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeOpenAIEmbedding() async throws {
     let provider = try LiveProviderSmoke.openAIProvider()
     let model = try provider.embeddingModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_OPENAI_EMBEDDING_MODEL", defaultValue: "text-embedding-3-small"))
     let result = try await AI.embed(model: model, value: "live embedding smoke", retryPolicy: .none)
@@ -51,25 +48,22 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(result.embeddings.first?.isEmpty == false)
 }
 
-@Test func liveProviderSmokeOpenAIToolLoop() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeOpenAIToolLoop() async throws {
     let provider = try LiveProviderSmoke.openAIProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_OPENAI_MODEL", defaultValue: "gpt-4.1-mini"))
     try await LiveProviderSmoke.assertToolLoop(model: model, maxOutputTokens: 64)
 }
 
-@Test func liveProviderSmokeOpenAIStreamToolLoop() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeOpenAIStreamToolLoop() async throws {
     let provider = try LiveProviderSmoke.openAIProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_OPENAI_MODEL", defaultValue: "gpt-4.1-mini"))
     try await LiveProviderSmoke.assertStreamToolLoop(model: model, maxOutputTokens: 64, expectsToolInputLifecycle: true)
 }
 
-@Test func liveProviderSmokeAnthropicGenerateText() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeAnthropicGenerateText() async throws {
     let provider = try LiveProviderSmoke.anthropicProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_ANTHROPIC_MODEL", defaultValue: "claude-haiku-4-5-20251001"))
     let result = try await AI.generateText(
@@ -83,9 +77,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(!result.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 }
 
-@Test func liveProviderSmokeAnthropicStreamText() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeAnthropicStreamText() async throws {
     let provider = try LiveProviderSmoke.anthropicProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_ANTHROPIC_MODEL", defaultValue: "claude-haiku-4-5-20251001"))
     let text = try await LiveProviderSmoke.collectText(
@@ -101,25 +94,22 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(!text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 }
 
-@Test func liveProviderSmokeAnthropicToolLoop() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeAnthropicToolLoop() async throws {
     let provider = try LiveProviderSmoke.anthropicProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_ANTHROPIC_MODEL", defaultValue: "claude-haiku-4-5-20251001"))
     try await LiveProviderSmoke.assertToolLoop(model: model, maxOutputTokens: 96)
 }
 
-@Test func liveProviderSmokeAnthropicStreamToolLoop() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeAnthropicStreamToolLoop() async throws {
     let provider = try LiveProviderSmoke.anthropicProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_ANTHROPIC_MODEL", defaultValue: "claude-haiku-4-5-20251001"))
     try await LiveProviderSmoke.assertStreamToolLoop(model: model, maxOutputTokens: 96, expectsToolInputLifecycle: true)
 }
 
-@Test func liveProviderSmokeGoogleGenerateText() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeGoogleGenerateText() async throws {
     let provider = try LiveProviderSmoke.googleProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_GOOGLE_MODEL", defaultValue: "gemini-flash-lite-latest"))
     let result = try await AI.generateText(
@@ -133,9 +123,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(!result.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 }
 
-@Test func liveProviderSmokeGoogleStreamText() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeGoogleStreamText() async throws {
     let provider = try LiveProviderSmoke.googleProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_GOOGLE_MODEL", defaultValue: "gemini-flash-lite-latest"))
     let text = try await LiveProviderSmoke.collectText(
@@ -151,9 +140,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(!text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 }
 
-@Test func liveProviderSmokeGoogleEmbedding() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeGoogleEmbedding() async throws {
     let provider = try LiveProviderSmoke.googleProvider()
     let model = try provider.embeddingModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_GOOGLE_EMBEDDING_MODEL", defaultValue: "gemini-embedding-001"))
     let result = try await AI.embed(model: model, value: "live embedding smoke", retryPolicy: .none)
@@ -162,25 +150,22 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(result.embeddings.first?.isEmpty == false)
 }
 
-@Test func liveProviderSmokeGoogleToolLoop() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeGoogleToolLoop() async throws {
     let provider = try LiveProviderSmoke.googleProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_GOOGLE_MODEL", defaultValue: "gemini-flash-lite-latest"))
     try await LiveProviderSmoke.assertToolLoop(model: model, maxOutputTokens: 96)
 }
 
-@Test func liveProviderSmokeGoogleStreamToolLoop() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeGoogleStreamToolLoop() async throws {
     let provider = try LiveProviderSmoke.googleProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_GOOGLE_MODEL", defaultValue: "gemini-flash-lite-latest"))
     try await LiveProviderSmoke.assertStreamToolLoop(model: model, maxOutputTokens: 96, expectsToolInputLifecycle: true)
 }
 
-@Test func liveProviderSmokeDeepSeekGenerateText() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeDeepSeekGenerateText() async throws {
     let provider = try LiveProviderSmoke.deepSeekProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_DEEPSEEK_MODEL", defaultValue: "deepseek-chat"))
     let result = try await AI.generateText(
@@ -194,9 +179,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(!result.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 }
 
-@Test func liveProviderSmokeDeepSeekStreamText() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeDeepSeekStreamText() async throws {
     let provider = try LiveProviderSmoke.deepSeekProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_DEEPSEEK_MODEL", defaultValue: "deepseek-chat"))
     let text = try await LiveProviderSmoke.collectText(
@@ -212,25 +196,22 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(!text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 }
 
-@Test func liveProviderSmokeDeepSeekToolLoop() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeDeepSeekToolLoop() async throws {
     let provider = try LiveProviderSmoke.deepSeekProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_DEEPSEEK_MODEL", defaultValue: "deepseek-chat"))
     try await LiveProviderSmoke.assertToolLoop(model: model, maxOutputTokens: 96)
 }
 
-@Test func liveProviderSmokeDeepSeekStreamToolLoop() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeDeepSeekStreamToolLoop() async throws {
     let provider = try LiveProviderSmoke.deepSeekProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_DEEPSEEK_MODEL", defaultValue: "deepseek-chat"))
     try await LiveProviderSmoke.assertStreamToolLoop(model: model, maxOutputTokens: 96, expectsToolInputLifecycle: true)
 }
 
-@Test func liveProviderSmokeAssemblyAITranscription() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeAssemblyAITranscription() async throws {
     let provider = try LiveProviderSmoke.assemblyAIProvider()
     let model = try provider.transcriptionModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_ASSEMBLYAI_MODEL", defaultValue: "universal-2"))
     do {
@@ -248,9 +229,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     }
 }
 
-@Test func liveProviderSmokeCartesiaSpeech() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeCartesiaSpeech() async throws {
     let provider = try LiveProviderSmoke.cartesiaProvider()
     let model = try provider.speechModel(LiveProviderSmoke.modelID(
         environmentVariable: "LIVE_CARTESIA_SPEECH_MODEL",
@@ -274,9 +254,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     }
 }
 
-@Test func liveProviderSmokeCartesiaBatchTranscription() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeCartesiaBatchTranscription() async throws {
     let provider = try LiveProviderSmoke.cartesiaProvider()
     do {
         let speechModel = try provider.speechModel(LiveProviderSmoke.modelID(
@@ -313,9 +292,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     }
 }
 
-@Test func liveProviderSmokeElevenLabsSpeech() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeElevenLabsSpeech() async throws {
     let provider = try LiveProviderSmoke.elevenLabsProvider()
     let model = try provider.speechModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_ELEVENLABS_SPEECH_MODEL", defaultValue: "eleven_multilingual_v2"))
     let result: SpeechResult
@@ -345,9 +323,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(result.responseMetadata.modelID == model.modelID)
 }
 
-@Test func liveProviderSmokeElevenLabsTranscription() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeElevenLabsTranscription() async throws {
     let provider = try LiveProviderSmoke.elevenLabsProvider()
     let speechModel = try provider.speechModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_ELEVENLABS_SPEECH_MODEL", defaultValue: "eleven_multilingual_v2"))
     let audio = try await speechModel.speak(SpeechRequest(
@@ -382,9 +359,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(result.responseMetadata.modelID == transcriptionModel.modelID)
 }
 
-@Test func liveProviderSmokeElevenLabsSoundEffects() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeElevenLabsSoundEffects() async throws {
     let provider = try LiveProviderSmoke.elevenLabsProvider()
     let model = try provider.soundEffectsModel()
     do {
@@ -405,9 +381,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     }
 }
 
-@Test func liveProviderSmokeElevenLabsMusic() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeElevenLabsMusic() async throws {
     let provider = try LiveProviderSmoke.elevenLabsProvider()
     let model = try provider.musicModel()
     do {
@@ -428,9 +403,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     }
 }
 
-@Test func liveProviderSmokeElevenLabsVoiceChangerAndIsolator() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeElevenLabsVoiceChangerAndIsolator() async throws {
     let provider = try LiveProviderSmoke.elevenLabsProvider()
     let speechModel = try provider.speechModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_ELEVENLABS_SPEECH_MODEL", defaultValue: "eleven_multilingual_v2"))
     let source = try await speechModel.speak(SpeechRequest(
@@ -479,9 +453,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     }
 }
 
-@Test func liveProviderSmokeElevenLabsDubbing() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeElevenLabsDubbing() async throws {
     let provider = try LiveProviderSmoke.elevenLabsProvider()
     let speechModel = try provider.speechModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_ELEVENLABS_SPEECH_MODEL", defaultValue: "eleven_multilingual_v2"))
     let source = try await speechModel.speak(SpeechRequest(
@@ -513,9 +486,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     }
 }
 
-@Test func liveProviderSmokeOpenAICompatibleGenerateText() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeOpenAICompatibleGenerateText() async throws {
     let provider = try LiveProviderSmoke.openAICompatibleProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_OPENAI_COMPATIBLE_MODEL", defaultValue: "llama"))
     let result = try await AI.generateText(
@@ -529,9 +501,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(!result.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 }
 
-@Test func liveProviderSmokeOpenAICompatibleStreamText() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeOpenAICompatibleStreamText() async throws {
     let provider = try LiveProviderSmoke.openAICompatibleProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_OPENAI_COMPATIBLE_MODEL", defaultValue: "llama"))
     let text = try await LiveProviderSmoke.collectText(
@@ -547,9 +518,8 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(!text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 }
 
-@Test func liveProviderSmokeOpenAICompatibleCompletionGenerateText() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeOpenAICompatibleCompletionGenerateText() async throws {
     let provider = try LiveProviderSmoke.openAICompatibleProvider()
     let model = try provider.completionModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_OPENAI_COMPATIBLE_MODEL", defaultValue: "llama"))
     let result = try await AI.generateText(
@@ -563,25 +533,22 @@ private struct LiveSmokeJSONResult: Decodable, Sendable {
     #expect(!result.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 }
 
-@Test func liveProviderSmokeOpenAICompatibleToolLoop() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeOpenAICompatibleToolLoop() async throws {
     let provider = try LiveProviderSmoke.openAICompatibleProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_OPENAI_COMPATIBLE_MODEL", defaultValue: "llama"))
     try await LiveProviderSmoke.assertToolLoop(model: model, maxOutputTokens: 96)
 }
 
-@Test func liveProviderSmokeOpenAICompatibleStreamToolLoop() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeOpenAICompatibleStreamToolLoop() async throws {
     let provider = try LiveProviderSmoke.openAICompatibleProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_OPENAI_COMPATIBLE_MODEL", defaultValue: "llama"))
     try await LiveProviderSmoke.assertStreamToolLoop(model: model, maxOutputTokens: 96, expectsToolInputLifecycle: true)
 }
 
-@Test func liveProviderSmokeOpenAICompatibleGenerateObject() async throws {
-    guard LiveProviderSmoke.isEnabled else { return }
-
+@Test(.enabled(if: LiveProviderSmoke.isEnabled, "Set LIVE_AI_TESTS=1 to allow paid provider requests."))
+func liveProviderSmokeOpenAICompatibleGenerateObject() async throws {
     let provider = try LiveProviderSmoke.openAICompatibleProvider()
     let model = try provider.languageModel(LiveProviderSmoke.modelID(environmentVariable: "LIVE_OPENAI_COMPATIBLE_MODEL", defaultValue: "llama"))
     let schema = AIJSONSchema<LiveSmokeJSONResult>(

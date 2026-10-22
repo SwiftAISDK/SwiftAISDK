@@ -14,6 +14,33 @@ This file is the readable status page. It replaces the older provider-progress
 journals and product-gap checklist. Use the ledgers and generated inventories
 for exact evidence.
 
+## Post-release repairs (2026-10-23)
+
+The repairs after the 2.6.0 audit retain its npm package baselines and provider
+coverage. A fresh registry readback during this follow-up found 52 newer patch
+versions; their per-package baseline/latest table and separate next-audit
+disposition are in `PostReleaseRepairAudit.md`. Default untrusted downloads now use validated numeric DNS endpoints,
+original-host TLS verification and bounded HTTP/1.1 framing; custom transports
+opt into protected download hooks explicitly. See `DownloadSecurity.md` for
+the custom-session migration and exact trusted-origin exception.
+
+The URLSession byte adapter now reads on demand instead of filling an unbounded
+queue of one-byte Data values. Offline memory measurements and scope limits are
+recorded in `PostReleaseRepairAudit.md`; no whole-facade memory guarantee is
+claimed. `MCPOAuthMigration` is an executable offline example for issuer-bound
+secret credentials and custom token authentication. Live smoke tests now show
+explicit skips, and the representative runner reports credential availability
+before any paid call.
+
+The docs dependency graph uses Astro 7.4.2, Starlight 0.42.6 and Sharp 0.35.5,
+with a full clean-install npm audit reporting zero findings. CI now checks and
+audits documentation as well as building it. The OpenAI fixture assertion that
+failed to compile on hosted CI is split into typed intermediate values.
+
+Bash tooling, UI step APIs and additional provider adapters remain separate
+work, as requested. The historical release audits below describe their original
+snapshots; `PostReleaseRepairAudit.md` records current repair verification.
+
 ## Current Shape
 
 - The `AI` facade covers text, streaming text, durable text batches, structured
@@ -403,10 +430,9 @@ one of these is true:
 | P1 | Google/Vertex Gemini transcription and Open Responses extension codecs remain absent native adapters. | Design and port each complete request/stream/replay surface before advertising parity. |
 | P0 | Completion evidence can drift as npm packages and upstream tests change. | Before release, rerun package discovery, regenerate upstream inventory, compare ledgers, run full `swift test`, and record the audit. |
 | P0 | Live verification is representative, not exhaustive. | Add opt-in live smoke only for distinct transport families or concrete production risks. Keep it disabled by default. |
-| P1 | `URLSessionTransport` currently adapts `URLSession.AsyncBytes` into one `Data` value per byte. This preserves minimum latency and correct cancellation, but adds allocation overhead and offers no demand-aware backpressure. | Introduce a cancelable, demand-driven `AIHTTPBody` sequence backed by a delegate-owned `URLSession`, with bounded lossless buffering and explicit high/low watermarks. Keep the injected-session compatibility path until delegate, authentication, cache, metrics, and lifecycle semantics can be preserved. |
+| P2 | The URLSession byte adapter is now demand-driven, but still produces one Data value per byte; Foundation and higher-level parser/tool-loop buffers do not have a whole-facade memory bound. | Use the offline memory probe before a separate chunked-delegate or low-memory API design; retain injected-session compatibility and cancellation behavior. |
 | P1 | xAI realtime and OpenAI Live server WebSocket are represented, but browser WebRTC/client permissions, provider-backed Responses delegation, non-Live OpenAI Realtime, Google Realtime 3.8, ElevenLabs realtime STT, and streaming translation remain deferred. | Extend `AIRealtimeModelV4` one complete transport/provider vertical at a time; do not advertise browser or delegation modes until their native lifecycle is implemented and tested. |
 | P1 | Batch V4 has Anthropic, OpenAI Responses, Gateway, Google, and xAI adapters. Async Video V4 has Black Forest Labs, Fal, ByteDance, Gateway, Topaz and HeyGen adapters, but other capable providers still use unary or internal-polling paths. | Migrate additional batch/video providers incrementally when persisted operation state, native webhook behavior, and provider-specific cancellation semantics can be translated with focused tests. |
-| P1 | `@ai-sdk/provider-utils@5.0.58` retains resolver-backed DNS address pinning for validated downloads; Swift validates literal/private hosts and every redirect and removes provider credentials across origins, but does not pin the resolved address. | Add resolver-aware connection pinning at the transport layer before claiming DNS-rebinding parity. |
 | P1 | Browser HTTP/WebSocket chat framing, Node stream-response helpers, tracing-channel/workflow codecs and legacy EventSource SSE are not native adapters. | Add a complete native public adapter only after lifecycle, replay, auth and serialization behavior are designed and tested. |
 | P1 | Upstream preserves repeated tool-call IDs across explicit UI stream steps; Swift stream parts do not expose step boundaries. | Add a public step-boundary representation, then scope reducer tool-part identity to the active step with backwards lookup for late results. |
 | P1 | The nonoptional Swift stopSequences array cannot distinguish omitted from explicitly empty input for Bedrock warning parity. | Introduce an additive presence-aware request representation before changing this warning behavior. |

@@ -278,7 +278,7 @@ private struct SendOnlyHTTPTransport: AITransport {
     }
 }
 
-private actor BinarySequenceTransport: AIStreamingTransport {
+private actor BinarySequenceTransport: FixtureStreamingDownloadTransport {
     private var responses: [AIHTTPStreamResponse]
     private var requests: [AIHTTPRequest] = []
 

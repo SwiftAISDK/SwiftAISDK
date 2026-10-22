@@ -13,7 +13,7 @@ description: Public SwiftAISDK APIs for core runtime.
 | Function | 65 |
 | Global Variable | 1 |
 | Initializer | 195 |
-| Instance Method | 161 |
+| Instance Method | 167 |
 | Instance Property | 542 |
 | Instance Subscript | 2 |
 | Operator | 1 |
@@ -702,6 +702,9 @@ description: Public SwiftAISDK APIs for core runtime.
 | Instance Method | `sendAudioMessage(_:)` | `func sendAudioMessage(_ audio: Data) async throws` | [Sources/SwiftAISDK/AIRealtimeSession.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIRealtimeSession.swift) |
 | Instance Method | `sendFunctionCallOutput(callID:name:output:)` | `func sendFunctionCallOutput(callID: String, name: String? = nil, output: String) async throws` | [Sources/SwiftAISDK/AIRealtimeSession.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIRealtimeSession.swift) |
 | Instance Method | `sendText(_:)` | `func sendText(_ text: String) async throws` | [Sources/SwiftAISDK/AIRealtimeSession.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/AIRealtimeSession.swift) |
+| Instance Method | `sendValidatedDownload(_:)` | `func sendValidatedDownload(_ request: AIHTTPRequest) async throws -> AIHTTPResponse` | [Sources/SwiftAISDK/HTTP.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/HTTP.swift) |
+| Instance Method | `sendValidatedDownload(_:)` | `func sendValidatedDownload(_ request: AIHTTPRequest) async throws -> AIHTTPResponse` | [Sources/SwiftAISDK/HTTP.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/HTTP.swift) |
+| Instance Method | `sendValidatedDownload(_:)` | `func sendValidatedDownload(_ request: AIHTTPRequest) async throws -> AIHTTPResponse` | [Sources/SwiftAISDK/HTTP.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/HTTP.swift) |
 | Instance Method | `serializeClientEvent(_:)` | `func serializeClientEvent(_ event: AIRealtimeClientEvent) async throws -> AIRealtimeWireMessage?` | [Sources/SwiftAISDK/CoreRealtime.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreRealtime.swift) |
 | Instance Method | `skills()` | `func skills() throws -> any AISkillsClient` | [Sources/SwiftAISDK/CoreProtocols.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreProtocols.swift) |
 | Instance Method | `speak(_:)` | `func speak(_ request: SpeechRequest) async throws -> SpeechResult` | [Sources/SwiftAISDK/CoreProtocols.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreProtocols.swift) |
@@ -723,6 +726,9 @@ description: Public SwiftAISDK APIs for core runtime.
 | Instance Method | `streamText(_:options:tools:timeoutNanoseconds:)` | `func streamText(_ prompt: String, options: LanguageGenerationOptions = .default, tools: LanguageToolOptions = .none, timeoutNanoseconds: UInt64? = nil) -> AsyncThrowingStream<LanguageStreamPart, Error>` | [Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift) |
 | Instance Method | `streamText(_:output:options:timeoutNanoseconds:jsonInstruction:repairText:)` | `func streamText<FinalOutput, PartialOutput>(_ prompt: String, output: AIOutput<FinalOutput, PartialOutput>, options: LanguageGenerationOptions = .default, timeoutNanoseconds: UInt64? = nil, jsonInstruction: AIJSONInstruction? = nil, repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil) -> AsyncThrowingStream<AIOutputStreamPart<FinalOutput, PartialOutput>, Error> where FinalOutput : Sendable, PartialOutput : Sendable` | [Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift) |
 | Instance Method | `streamText(messages:options:tools:timeoutNanoseconds:)` | `func streamText(messages: [AIMessage], options: LanguageGenerationOptions = .default, tools: LanguageToolOptions = .none, timeoutNanoseconds: UInt64? = nil) -> AsyncThrowingStream<LanguageStreamPart, Error>` | [Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift) |
+| Instance Method | `streamValidatedDownload(_:)` | `func streamValidatedDownload(_ request: AIHTTPRequest) async throws -> AIHTTPStreamResponse` | [Sources/SwiftAISDK/HTTP.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/HTTP.swift) |
+| Instance Method | `streamValidatedDownload(_:)` | `func streamValidatedDownload(_ request: AIHTTPRequest) async throws -> AIHTTPStreamResponse` | [Sources/SwiftAISDK/HTTP.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/HTTP.swift) |
+| Instance Method | `streamValidatedDownload(_:)` | `func streamValidatedDownload(_ request: AIHTTPRequest) async throws -> AIHTTPStreamResponse` | [Sources/SwiftAISDK/HTTP.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/HTTP.swift) |
 | Instance Method | `terminate()` | `func terminate()` | [Sources/SwiftAISDK/CoreUtilities.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreUtilities.swift) |
 | Instance Method | `test(_:)` | `func test(_ url: String) -> Bool` | [Sources/SwiftAISDK/CoreProtocols.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreProtocols.swift) |
 | Instance Method | `textEmbedding(_:)` | `func textEmbedding(_ modelID: String) throws -> any EmbeddingModel` | [Sources/SwiftAISDK/CoreProtocols.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/CoreProtocols.swift) |

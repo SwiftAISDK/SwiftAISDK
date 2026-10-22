@@ -125,7 +125,10 @@ import Testing
     #expect(textEnds[0].1["openai"]?["annotations"]?.arrayValue?.count == 12)
 
     #expect(sources.count == 21)
-    #expect(sources.map(\.url) == toolResults.flatMap { $0.result["sources"]?.arrayValue ?? [] }.map { $0["url"]?.stringValue })
+    let actualSourceURLs = sources.map(\.url)
+    let resultSources: [JSONValue] = toolResults.flatMap { $0.result["sources"]?.arrayValue ?? [] }
+    let expectedSourceURLs = resultSources.map { $0["url"]?.stringValue }
+    #expect(actualSourceURLs == expectedSourceURLs)
     #expect(sources.map(\.id) == (0..<21).map { "id-\($0)" })
     #expect(sources.allSatisfy { $0.sourceType == "url" && $0.title == nil })
 

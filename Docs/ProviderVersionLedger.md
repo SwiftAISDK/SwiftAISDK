@@ -14,6 +14,10 @@ behavior is either ported or covered, or explicitly deferred in the status and
 audit documents. Rows are not silently advanced before a package-by-package
 source and behavior review.
 
+The post-release repairs retain these baselines. Additional shared evidence is
+`HTTPDNSPinningTests`, `HTTPStreamingBackpressureTests` and
+`MCPOAuthMigrationTests`; see `Docs/PostReleaseRepairAudit.md`.
+
 | Package | Version baseline | Main Swift evidence |
 | --- | --- | --- |
 | `@ai-sdk/alibaba` | `2.0.73` | `AIProviders.alibaba`, `AlibabaLanguageModel`, `AlibabaEmbeddingModel`, `AlibabaProviderTests.swift` |

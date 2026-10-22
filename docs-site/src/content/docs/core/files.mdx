@@ -82,3 +82,25 @@ Pass the exact `providerReference` returned by upload. File IDs are encoded as
 path components, including dot-segment-like IDs, rather than concatenated as raw
 URL paths. xAI's `expiresAfter` upload option accepts an integer from 3,600 to
 2,592,000 seconds. OpenAI preserves its provider-native expiry metadata.
+
+## Download transport security
+
+Downloads outside an explicitly trusted provider origin resolve DNS once,
+reject any private or disallowed address in the answer set, and connect to a
+validated numeric address. HTTPS keeps the original hostname for SNI and
+system certificate verification. Each redirect is validated independently;
+credentials are stripped when leaving their allowed origin.
+
+Custom transports must implement `sendValidatedDownload` and, when streaming,
+`streamValidatedDownload`. Their default implementations reject untrusted
+downloads. A `URLSessionTransport` with an injected session also rejects these
+downloads, since DNS pinning cannot preserve arbitrary session proxy, delegate
+and authentication behavior. Ordinary provider requests are unchanged. If a
+custom transport intentionally uses the standard protected downloader, its
+hooks can explicitly delegate to `URLSessionTransport.shared`.
+
+The native protected connector accepts HTTP/HTTPS GET responses with identity
+content encoding, Content-Length, chunked framing or EOF framing. It enforces
+size limits, deadlines and cancellation. An explicit `trustedOrigin` is a
+security exception for that exact scheme, host and port; never derive it from
+an arbitrary URL supplied by a user.

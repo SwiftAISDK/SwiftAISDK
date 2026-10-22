@@ -54,7 +54,7 @@ print(answer.text)
 
 For local processes, use `MCPStdioTransport`. For remote servers, use `MCPHTTPTransport`.
 
-SwiftAISDK tracks `@ai-sdk/mcp@2.0.73`. The current client absorbs its
+SwiftAISDK tracks `@ai-sdk/mcp@2.0.81`. The current client absorbs its
 protocol/HTTP transport and OAuth compatibility hardening behind the same
 `MCPClient.connect` workflow. Non-successful POST/SSE responses retain HTTP
 status, URL, and response-body diagnostics; existing tool-discovery code does
@@ -117,3 +117,76 @@ Swift custom implementations of `authenticateTokenRequest` must additionally
 return `true` from `usesCustomClientAuthentication` and supply an issuer or stored
 binding. Swift protocols cannot infer whether this optional hook was overridden;
 the explicit capability flag is required to enforce the pre-redirect check.
+
+## Migrating pre-registered OAuth providers
+
+Set the issuer from the credential's original registration or trusted app
+configuration before calling `MCPOAuth.auth`. Do not copy an MCP server's newly
+advertised authorization server into an existing credential just to satisfy the
+check. Allowlisting an authorization server also does not establish which server
+issued that credential.
+
+```swift
+let credentials = MCPOAuthClientInformation(
+    clientID: "your-registered-client-id",
+    clientSecret: "read-from-your-secure-store",
+    issuer: "https://auth.example.com"
+)
+```
+
+Return these credentials from `clientInformation()`. Alternatively, restore a
+previously established binding through `authorizationServerInformation()`:
+
+```swift
+let trustedBinding = MCPOAuthAuthorizationServerInformation(
+    authorizationServerURL: URL(string: "https://auth.example.com")!,
+    tokenEndpoint: URL(string: "https://auth.example.com/token")!,
+    issuer: "https://auth.example.com"
+)
+```
+
+Implement `saveAuthorizationServerInformation(_:)`, `saveState(_:)`,
+`storedState()`, `saveCodeVerifier(_:)` and `codeVerifier()` so the validated
+binding, state and PKCE verifier survive the authorization round trip. Pass the
+callback's `code`, `state` and optional `iss` to `MCPOAuth.auth` as
+`authorizationCode`, `callbackState` and `callbackIssuer`.
+The SDK saves the flow binding after checking the configured credential issuer or
+trusted stored binding, before redirecting to authorization. It saves tokens after
+the successful code exchange; persist them in `saveTokens(_:)` for the same account
+and client.
+
+If your provider overrides `authenticateTokenRequest`, also declare
+`usesCustomClientAuthentication` as `true` and configure one of the bindings
+above. A custom actor provider can use:
+
+```swift
+nonisolated let usesCustomClientAuthentication = true
+```
+
+On `MCPOAuthAuthorizationServerMismatchError`, stop authorization and resolve the
+account's expected server. Do not replace a trusted binding with the discovered
+value or retry the same secret against it. A rejected refresh can restart on the
+same validated server after its token generation is invalidated; a changed server
+is still rejected. An authorization-code `invalid_grant` is not retried.
+
+### Run the offline migration example
+
+From the repository root, run:
+
+```sh
+swift run --package-path Examples MCPOAuthMigration
+```
+
+The [complete example](https://github.com/ozio/SwiftAISDK/tree/main/Examples/Sources/MCPOAuthMigration)
+implements an actor provider and a strict mock transport. It executes both an
+issuer-bound secret flow and a custom-authentication flow with a stored binding,
+including the redirect, state/PKCE storage, callback and token exchange. It uses
+only dummy values, makes no network requests, opens no browser, reads no environment
+credentials and prints no tokens or secrets. The custom assertion is an inert mock,
+not an implementation of JWT signing. A successful run ends with
+`MCP_OAUTH_MIGRATION_OFFLINE_OK`.
+
+For a real app, use its secure credential store and authorization-session callback,
+and supply real client authentication from a trusted configuration. The offline
+example proves the SDK flow and migration wiring; it does not verify a live server's
+registration, consent or token policy.

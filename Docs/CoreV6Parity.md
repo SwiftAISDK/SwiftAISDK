@@ -16,6 +16,15 @@ References:
 - <https://ai-sdk.dev/docs/reference/ai-sdk-errors>
 - <https://ai-sdk.dev/docs/reference/ai-sdk-ui>
 
+Post-release native repair: the default download transport now pins validated
+DNS addresses and retains original-host TLS trust. Custom download hooks fail
+closed unless implemented explicitly. URLSession response-byte adaptation is
+demand-driven; its queue is bounded without claiming JS low-memory result
+semantics or a whole-facade retention bound. The offline OAuth migration example
+exercises the existing published MCP 2.0.81 binding contract. See
+`PostReleaseRepairAudit.md` and `DownloadSecurity.md` for current evidence and
+compatibility details; older dated audit sections retain their historical state.
+
 ## 2026-10-23 Native Parity
 
 Decision calls, provider call options, callbacks and telemetry accept optional
@@ -47,8 +56,9 @@ remains deferred; native AsyncSequence APIs make no equivalent memory bound
 promise. TypeScript optional tool-set inference and React dependency-only changes
 need no Swift runtime counterpart. Monorepo interrupted-stream/approval follow-up
 fixtures and Gateway parallel-search GA changes remain ahead of this published
-snapshot. Existing UI wire/step, DNS pinning, realtime and provider-specific gaps
-remain in PortingStatus.
+snapshot. UI wire/step, realtime and provider-specific gaps remain in
+PortingStatus. DNS pinning was still a gap in 2.6.0 and is closed by the
+post-release repair described above.
 
 ## 2026-10-18 Native Parity
 

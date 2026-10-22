@@ -642,7 +642,7 @@ private struct AnthropicBatchStreamResponse: Sendable {
     var chunks: [Data]
 }
 
-private actor AnthropicBatchRedirectTransport: AIStreamingTransport {
+private actor AnthropicBatchRedirectTransport: FixtureStreamingDownloadTransport {
     private var sends: [AIHTTPRequest] = []
     private var streams: [AIHTTPRequest] = []
     private var sendResponses: [AIHTTPResponse]

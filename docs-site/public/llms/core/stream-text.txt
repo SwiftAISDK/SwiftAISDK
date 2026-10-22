@@ -32,6 +32,19 @@ Streaming emits structured lifecycle parts, not just raw strings. That lets you 
 
 Built-in HTTP language providers parse the response incrementally, so the first complete provider event can become a `LanguageStreamPart` while the HTTP response is still open. A provider end marker such as `[DONE]`, caller abort, or stopping iteration cancels the remaining response-body read instead of waiting for EOF.
 
+`URLSessionTransport` converts response bytes to `Data` only when the body
+consumer requests the next element. An unread or paused body no longer creates
+an unbounded queue of one-byte `Data` values. Abort signals, explicit
+`cancelBody()`, task cancellation during a read, and dropping the body release
+the underlying URLSession task. Response byte limits still apply.
+
+This bounds the SDK's byte-adapter queue only. Foundation can buffer network
+data, and higher-level parsers, tool loops, telemetry and application code can
+retain content. The SDK does not claim a whole-stream constant-memory bound.
+The offline macOS probe `python3 Scripts/measure-http-streaming-memory.py`
+measures an unread 1 MiB response in fresh processes; compare measurements on
+the same machine and toolchain.
+
 ## Canonical Stream Contract
 
 Built-in language models emit one semantic family for generated content:
@@ -62,7 +75,7 @@ also exposes the references without matching the case. UI snapshots retain them
 in `AIUITextPart.citations`. Existing `.text` and `.textEnd` constructors remain
 available. Exhaustive switches should handle the companion cases as well.
 
-The JavaScript `experimental_lowMemory` result facade and its replay/final-getter
+The JavaScript `experimental_streamTextLowMemory` result facade and its replay/final-getter
 retention policy are not exposed by this native API. Swift returns async
 sequences without those JavaScript result getters; no equivalent memory bound
 or retention-performance guarantee is claimed.

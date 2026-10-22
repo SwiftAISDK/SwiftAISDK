@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import { unified } from '@astrojs/markdown-remark';
 import starlight from '@astrojs/starlight';
 import remarkGfm from 'remark-gfm';
 
@@ -8,8 +9,10 @@ const site = process.env.DOCS_SITE ?? 'https://ozio.github.io';
 export default defineConfig({
   site,
   base,
+  // Preserve HTML-aware whitespace when upgrading from Astro 6.
+  compressHTML: true,
   markdown: {
-    remarkPlugins: [remarkGfm],
+    processor: unified({ remarkPlugins: [remarkGfm] }),
   },
   integrations: [
     starlight({

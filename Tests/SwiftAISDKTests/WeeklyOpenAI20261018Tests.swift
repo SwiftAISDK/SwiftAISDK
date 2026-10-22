@@ -370,7 +370,7 @@ struct WeeklyOpenAI20261018Tests {
     }
 }
 
-private actor WeeklyOpenAIImageAbortTransport: AITransport {
+private actor WeeklyOpenAIImageAbortTransport: FixtureDownloadTransport {
     let controller: AIAbortController
     init(controller: AIAbortController) { self.controller = controller }
     func send(_ request: AIHTTPRequest) async throws -> AIHTTPResponse {

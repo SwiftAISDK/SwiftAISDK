@@ -7,6 +7,13 @@ SwiftAISDK upstream check. Every changed tracked package was packed at both the
 prior ledger version and the current npm `latest` version, then reviewed
 separately.
 
+Post-release repairs against the same published baselines are recorded in
+`PostReleaseRepairAudit.md`: provider-utils DNS pinning, native transport memory
+behavior, MCP migration verification, CI compatibility and docs dependencies.
+No upstream package versions or provider coverage were advanced in that pass.
+That repair audit also records the 52 newer patch versions found on its final
+registry readback; they are not included in the source comparison below.
+
 Status meanings:
 
 - `ported`: portable runtime behavior and focused Swift coverage changed.

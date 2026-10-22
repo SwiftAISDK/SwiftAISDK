@@ -17,6 +17,9 @@ SwiftAISDK. User-facing guides live in `README.md` and `docs-site`.
 | Review the latest package dispositions | `Docs/UpstreamPackageDiffAudit.md` |
 | Review the latest upstream test diff | `Docs/FreshUpstreamTestDiffAudit.md` |
 | Inspect upstream test inventory | `Docs/UpstreamTestInventory.md` |
+| Configure DNS-pinned downloads and custom transports | `Docs/DownloadSecurity.md` |
+| Maintain documentation dependencies | `Docs/DocumentationDependencies.md` |
+| Review the 2.6.0 follow-up repairs and measurements | `Docs/PostReleaseRepairAudit.md` |
 
 ## Document Roles
 

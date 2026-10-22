@@ -52,11 +52,17 @@ jobs:
       - name: Install docs dependencies
         run: npm ci --prefix docs-site
 
+      - name: Audit docs dependencies
+        run: npm audit --prefix docs-site
+
       - name: Build package
         run: swift build
 
       - name: Build documentation examples
         run: swift build --package-path Examples
+
+      - name: Check documentation
+        run: npm --prefix docs-site run check
 
       - name: Build docs
         run: npm --prefix docs-site run build

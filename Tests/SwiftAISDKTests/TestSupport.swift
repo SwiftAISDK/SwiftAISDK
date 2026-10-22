@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import SwiftAISDK
 
-actor RecordingTransport: AIStreamingTransport {
+actor RecordingTransport: FixtureStreamingDownloadTransport {
     private var _requests: [AIHTTPRequest] = []
     private var _sendRequests: [AIHTTPRequest] = []
     private var _streamRequests: [AIHTTPRequest] = []

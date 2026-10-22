@@ -137,7 +137,7 @@ import Testing
     #expect(await transport.requests().count == 1)
 }
 
-private actor RedirectSecurityTransport: AITransport {
+private actor RedirectSecurityTransport: FixtureDownloadTransport {
     private var scriptedResponses: [AIHTTPResponse]
     private var recordedRequests: [AIHTTPRequest] = []
 
@@ -156,7 +156,7 @@ private actor RedirectSecurityTransport: AITransport {
     }
 }
 
-private actor RedirectStreamingSecurityTransport: AIStreamingTransport {
+private actor RedirectStreamingSecurityTransport: FixtureStreamingDownloadTransport {
     private var scriptedResponses: [AIHTTPStreamResponse]
     private var recordedRequests: [AIHTTPRequest] = []
 

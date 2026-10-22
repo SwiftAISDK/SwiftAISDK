@@ -571,7 +571,7 @@ import Testing
     }
 }
 
-private actor OpenAIImageEditDownloadAbortTransport: AITransport {
+private actor OpenAIImageEditDownloadAbortTransport: FixtureDownloadTransport {
     private var recordedRequests: [AIHTTPRequest] = []
     private var downloadSignal: AIAbortSignal?
     private var didStartDownload = false
