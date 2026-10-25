@@ -24,6 +24,9 @@ public struct AIToolChoiceViolationError: Error, CustomStringConvertible, Sendab
 
     public var description: String {
         let choice = prepareToolChoice(toolChoice)
+        if choice["type"]?.stringValue == "none" {
+            return "Model response contained a tool call even though tool choice was none."
+        }
         if choice["type"]?.stringValue == "tool" {
             let name = choice["toolName"]?.stringValue ?? ""
             return "Model response did not contain a call to the required tool '\(name)'."
@@ -68,9 +71,13 @@ func validateEnforcedToolChoice(
 ) throws {
     let prepared = prepareToolChoice(toolChoice)
     switch prepared["type"]?.stringValue {
+    case "none":
+        guard !result.toolCalls.isEmpty else { return }
     case "required":
+        guard result.finishReason != "interrupted" else { return }
         guard result.toolCalls.isEmpty else { return }
     case "tool":
+        guard result.finishReason != "interrupted" else { return }
         guard let requiredName = prepared["toolName"]?.stringValue,
               !result.toolCalls.contains(where: { $0.name == requiredName }) else {
             return

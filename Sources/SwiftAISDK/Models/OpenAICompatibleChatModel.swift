@@ -98,6 +98,10 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         guard let text = text ?? (toolCalls.isEmpty && !config.allowsEmptyTextResponse ? nil : "") else {
             throw AIError.invalidResponse(provider: providerID, message: "No text content found in chat completion response.")
         }
+        var providerMetadata = openAICompatibleChatProviderMetadata(from: raw, choice: choice, providerID: providerID, namespace: metadataNamespace)
+        if openAICompatibleProviderRoot(providerID) == "moonshotai" {
+            openAICompatibleMergeProviderMetadata(moonshotCacheWriteMetadata(headers: httpResponse.headers, namespace: metadataNamespace), into: &providerMetadata)
+        }
         return TextGenerationResult(
             text: text,
             content: orderedContent,
@@ -105,7 +109,7 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
             finishReason: openAICompatibleFinishReason(choice?["finish_reason"]?.stringValue),
             usage: usage(from: raw),
             toolCalls: toolCalls,
-            providerMetadata: openAICompatibleChatProviderMetadata(from: raw, choice: choice, providerID: providerID, namespace: metadataNamespace),
+            providerMetadata: providerMetadata,
             rawValue: raw,
             warnings: prepared.warnings,
             responseMetadata: openAICompatibleResponseMetadata(
@@ -134,7 +138,8 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                     var toolCalls = OpenAICompatibleStreamingToolCalls(
                         thoughtSignatureNamespace: metadataNamespace
                     )
-                    var providerMetadata: [String: JSONValue] = [:]
+                    var providerMetadata: [String: JSONValue] = openAICompatibleProviderRoot(providerID) == "moonshotai"
+                        ? moonshotCacheWriteMetadata(headers: response.headers, namespace: metadataNamespace) : [:]
                     var didEmitResponseMetadata = false
                     var activeReasoningID: String?
                     var activeTextID: String?
@@ -282,7 +287,9 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                             finishReason = "error"
                             continuation.yield(.error(message: "Response stream ended without a finish reason."))
                         } else {
-                            finishReason = "other"
+                            let root = openAICompatibleProviderRoot(providerID)
+                            finishReason = isOpenAIBackedProvider(providerID, config: config) || root == "moonshotai"
+                                ? "interrupted" : "other"
                         }
                     }
                     continuation.yield(.finishMetadata(

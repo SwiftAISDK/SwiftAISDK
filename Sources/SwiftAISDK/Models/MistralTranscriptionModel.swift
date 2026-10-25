@@ -12,10 +12,17 @@ public final class MistralTranscriptionModel: TranscriptionModel, @unchecked Sen
 
     public func transcribe(_ request: AudioTranscriptionRequest) async throws -> TranscriptionResult {
         let options = try mistralTranscriptionOptions(from: request)
-        if options.language != nil, options.timestampGranularities != nil {
+        if ["voxtral-mini-2507", "voxtral-mini-2602", "voxtral-mini-latest"].contains(modelID),
+           options.language != nil, options.timestampGranularities != nil {
             throw AIError.invalidArgument(
                 argument: "providerOptions",
                 message: "providerOptions.mistral.language cannot be combined with providerOptions.mistral.timestampGranularities"
+            )
+        }
+        if options.language != nil, options.returnLanguage == true {
+            throw AIError.invalidArgument(
+                argument: "providerOptions",
+                message: "providerOptions.mistral.language cannot be combined with providerOptions.mistral.returnLanguage"
             )
         }
 
@@ -35,6 +42,10 @@ public final class MistralTranscriptionModel: TranscriptionModel, @unchecked Sen
         if let language = options.language {
             form.appendField(name: "language", value: language)
             metadataBody["language"] = .string(language)
+        }
+        if let returnLanguage = options.returnLanguage {
+            form.appendField(name: "return_language", value: String(returnLanguage))
+            metadataBody["return_language"] = .bool(returnLanguage)
         }
         if let temperature = options.temperature {
             form.appendField(name: "temperature", value: String(temperature))
@@ -92,6 +103,7 @@ public final class MistralTranscriptionModel: TranscriptionModel, @unchecked Sen
 
 private struct MistralTranscriptionOptions {
     var language: String?
+    var returnLanguage: Bool?
     var temperature: Double?
     var timestampGranularities: [String]?
     var diarize: Bool?
@@ -131,6 +143,15 @@ private func mistralTranscriptionOptions(from request: AudioTranscriptionRequest
     } else {
         temperature = nil
     }
+    let returnLanguage: Bool?
+    if let value = values["returnLanguage"], value != .null {
+        guard let parsed = value.boolValue else {
+            throw AIError.invalidArgument(argument: "providerOptions.mistral.returnLanguage", message: "Mistral returnLanguage must be a boolean.")
+        }
+        returnLanguage = parsed
+    } else {
+        returnLanguage = nil
+    }
     let granularities: [String]?
     if let value = values["timestampGranularities"], value != .null {
         guard let items = value.arrayValue, !items.isEmpty else {
@@ -155,14 +176,14 @@ private func mistralTranscriptionOptions(from request: AudioTranscriptionRequest
     }
     let contextBias: [String]?
     if let value = values["contextBias"], value != .null {
-        guard let items = value.arrayValue, items.count <= 100 else {
-            throw AIError.invalidArgument(argument: "providerOptions.mistral.contextBias", message: "Mistral contextBias must contain at most 100 non-empty strings without commas or whitespace.")
+        guard let items = value.arrayValue else {
+            throw AIError.invalidArgument(argument: "providerOptions.mistral.contextBias", message: "Mistral contextBias must contain non-empty strings.")
         }
         let parsed = items.compactMap(\.stringValue)
         guard parsed.count == items.count, parsed.allSatisfy({ string in
-            !string.isEmpty && string.rangeOfCharacter(from: .whitespacesAndNewlines) == nil && !string.contains(",")
+            !string.isEmpty
         }) else {
-            throw AIError.invalidArgument(argument: "providerOptions.mistral.contextBias", message: "Mistral contextBias must contain at most 100 non-empty strings without commas or whitespace.")
+            throw AIError.invalidArgument(argument: "providerOptions.mistral.contextBias", message: "Mistral contextBias must contain non-empty strings.")
         }
         contextBias = parsed
     } else {
@@ -170,6 +191,7 @@ private func mistralTranscriptionOptions(from request: AudioTranscriptionRequest
     }
     return MistralTranscriptionOptions(
         language: language,
+        returnLanguage: returnLanguage,
         temperature: temperature,
         timestampGranularities: granularities,
         diarize: diarize,

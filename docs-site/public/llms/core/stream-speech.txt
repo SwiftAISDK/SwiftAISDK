@@ -1,0 +1,78 @@
+# Stream speech
+
+Source URL: https://ozio.github.io/SwiftAISDK/core/stream-speech/
+
+`AI.experimentalStreamSpeech` starts native streaming text-to-speech with
+ElevenLabs or AI Gateway. Text can be a complete string, a sequence of chunks,
+or an `AIStreamingTextInput` backed by your producer. The provider consumes
+text while returning audio.
+
+```swift title="Examples/Sources/StreamSpeech/StreamSpeechExample.swift"
+import Foundation
+import SwiftAISDK
+
+@main
+struct StreamSpeechExample {
+    static func main() async throws {
+        let provider = try AIProviders.elevenLabs()
+        let model = try provider.speechModel("eleven_flash_v2_5")
+        let result = try AI.experimentalStreamSpeech(
+            model: model,
+            request: .init(
+                text: .chunks(["Welcome to SwiftAISDK. ", "Audio arrives as text is synthesized."]),
+                voice: ProcessInfo.processInfo.environment["ELEVENLABS_VOICE"] ?? "JBFqnCBsd6RMkjVDRZzb"
+            )
+        )
+
+        let output = URL(fileURLWithPath: "speech.mp3")
+        try Data().write(to: output)
+        let file = try FileHandle(forWritingTo: output)
+        defer { try? file.close() }
+        for try await chunk in try result.audioStream {
+            try file.write(contentsOf: chunk)
+        }
+        let usage = try await result.usage
+        print("Wrote \(output.lastPathComponent); usage: \(usage)")
+    }
+}
+```
+
+The example uses `ELEVENLABS_API_KEY`, optionally `ELEVENLABS_VOICE`, and writes
+MP3 chunks to `speech.mp3`. Running it makes a provider request. Models that
+only support unary speech fail before consuming the input.
+
+## Input and provider controls
+
+`StreamingSpeechRequest` accepts `voice`, `outputFormat`, `instructions`,
+`speed`, `language`, `providerOptions`, `headers`, `includeRawChunks` and
+`abortSignal`. Providers report unsupported controls as warnings.
+`SpeechTextPart` can change voice or provider options at a text boundary when
+the provider supports it. Supply `onConsumerCancel` on `AIStreamingTextInput`
+to stop an external producer when synthesis ends early.
+
+For Gateway, use `gateway.streamingSpeechModel("fish-audio/s2-pro")`.
+`gateway.experimentalSpeech.getToken(...)` mints a speech-bound client secret
+on your trusted server. The client can use that token with a separately
+configured provider. Credentials, team routing, custom base URLs and WebSocket
+transports follow the existing Gateway setup.
+
+## Consumption and results
+
+Choose one stream from each result:
+
+- `try result.audioStream` yields nonempty audio `Data` in generation order.
+- `try result.fullStream` yields audio, raw parts and provider error parts.
+Empty audio parts with provider metadata remain available here. Lifecycle
+warnings, response metadata and final usage are collected into the result.
+
+After consuming the stream, await `usage`, `warnings`, `responses` or
+`providerMetadata`. Awaiting metadata before choosing a stream drains the
+result. A second stream owner is rejected; audio is not retained for replay.
+The facade adds no automatic retry or billing-unit conversion.
+
+`cancel()`, an abort signal, task cancellation or releasing an unfinished
+iterator stops the input and provider connection. A stream that finishes
+without audio throws `AINoSpeechGeneratedError`, retaining response metadata
+and an underlying cause when available. Audio followed by premature EOF still
+fails. Use `fullStream` to observe a provider error part before the terminal
+failure.

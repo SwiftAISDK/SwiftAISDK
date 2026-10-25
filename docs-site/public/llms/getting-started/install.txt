@@ -1,6 +1,6 @@
 # Install
 
-Source URL: /getting-started/install/
+Source URL: https://ozio.github.io/SwiftAISDK/getting-started/install/
 
 Add SwiftAISDK to your package manifest:
 

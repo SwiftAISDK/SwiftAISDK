@@ -44,7 +44,7 @@ struct BedrockStreamState {
     }
 
     var toolCalls: [Int: BedrockStreamingToolCall] = [:]
-    var latestFinishReason: String?
+    var latestFinishReason: String? = "interrupted"
     var latestUsage: TokenUsage?
     var jsonResponseToolName: String?
     var modelID: String
@@ -219,7 +219,6 @@ struct BedrockStreamState {
         }
         contentBlocks.removeAll()
         redactedReasoningContent.removeAll()
-        guard sawTerminalEvent else { return parts }
         parts.append(.finishMetadata(
             reason: latestFinishReason,
             usage: latestUsage,

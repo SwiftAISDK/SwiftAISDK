@@ -1,18 +1,15 @@
 # Upstream Package Diff Audit
 
-Snapshot date: 2026-10-23
+Snapshot date: 2026-10-25
 
 This audit records the published npm tarball comparison used by the weekly
-SwiftAISDK upstream check. Every changed tracked package was packed at both the
+SwiftAISDK upstream check. Every changed tracked package was downloaded at both the
 prior ledger version and the current npm `latest` version, then reviewed
 separately.
 
-Post-release repairs against the same published baselines are recorded in
-`PostReleaseRepairAudit.md`: provider-utils DNS pinning, native transport memory
-behavior, MCP migration verification, CI compatibility and docs dependencies.
-No upstream package versions or provider coverage were advanced in that pass.
-That repair audit also records the 52 newer patch versions found on its final
-registry readback; they are not included in the source comparison below.
+The prior post-release repairs are retained in `PostReleaseRepairAudit.md`.
+Their 52 detected version drifts are covered by the 2026-10-25 comparison below;
+older audit sections retain their historical baselines and limitations.
 
 Status meanings:
 
@@ -28,6 +25,195 @@ Status meanings:
   provider-facing Swift package does not expose.
 - `current`: the tracked package has no published version drift.
 
+
+## 2026-10-25 Weekly Audit
+
+Started on clean, synchronized `main` at `08d1ee4cbded91dfd671e8e53b7f1fe21e24386c`
+/ published **2.7.1**, with zero inherited ahead commits or unrelated dirty files.
+Fresh registry reads cover **54 tracked packages: 52 changed and two current**
+(LMNT and Vercel). **20** changed tracked packages have a runtime/source delta;
+the remaining **32** have identical package-local runtime/declarations apart
+from generated version constants. Each package was compared independently.
+
+**172 published archives** passed SHA-512 checks: 52 old/latest tracked pairs,
+39 latest untracked packages, and 29 old untracked references. Published sources,
+exports, declarations, manifests, builders, parsers, options, headers/identity,
+errors, streaming, telemetry metadata and applicable fixture patterns were
+compared with the nearest native implementation. The durable integrity manifest
+is `UpstreamPackageIntegrity.json`; downloads and intermediate diffs remain
+outside the repository. Unimplemented framework/tooling packages are reviewed
+for classification and scope, without claiming native behavior parity.
+
+Fixture snapshot: [`vercel/ai@682e2dd71456`](https://github.com/vercel/ai/tree/682e2dd71456f14f9da33a1b983d1998c3a1184c).
+The inventory has **1,106 executable test/spec paths in 86 groups** (52 tracked,
+34 untracked). `FreshUpstreamTestDiffAudit.md` accounts for the **40 executable
+and three declaration paths** changed since the last fixture snapshot, plus
+previously inspected interruption/approval fixtures whose behavior is now
+published. Published tarballs control behavior when the monorepo is ahead.
+
+| Package | Previous reference | Published latest | Decision and behavior | Focused / integrated evidence |
+| --- | --- | --- | --- | --- |
+| `@ai-sdk/alibaba` | `2.0.73` | `2.0.76` | **ported** — Missing completion signals now finish as interrupted, preserving partial text and distinguishing malformed stream data from unknown explicit reasons. | `WeeklyLanguage20261025` |
+| `@ai-sdk/amazon-bedrock` | `5.0.121` | `5.0.124` | **ported** — Converse streams default to interrupted until messageStop; explicit provider errors and stop reasons keep their existing mapping. | `WeeklyLanguage20261025; AmazonBedrock suites` |
+| `@ai-sdk/anthropic` | `4.0.85` | `4.0.88` | **ported** — Nonempty unfinished text/reasoning/tool output gains interrupted status before the native response boundary. Explicit message_stop retains its reason and immediately cancels the body; empty/metadata-only output does not invent a fallback finish. JS multi-message bodies remain a documented native difference. | `WeeklyLanguage20261025; Anthropic suites` |
+| `@ai-sdk/anthropic-aws` | `2.0.78` | `2.0.81` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/anthropic, @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. Inherits audited Anthropic stream completion behavior. | `Existing anthropic-aws provider suites; full swift test` |
+| `@ai-sdk/assemblyai` | `3.0.65` | `3.0.68` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing assemblyai provider suites; full swift test` |
+| `@ai-sdk/azure` | `4.0.107` | `4.0.110` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/deepseek, @ai-sdk/openai, @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. Inherits OpenAI/DeepSeek interruption and final-answer selection with Azure deployment/model identity preserved. | `Existing azure provider suites; full swift test` |
+| `@ai-sdk/baseten` | `2.1.53` | `2.1.56` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/openai-compatible, @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing baseten provider suites; full swift test` |
+| `@ai-sdk/black-forest-labs` | `2.0.67` | `2.0.70` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing black-forest-labs provider suites; full swift test` |
+| `@ai-sdk/bytedance` | `2.0.68` | `2.0.71` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing bytedance provider suites; full swift test` |
+| `@ai-sdk/cartesia` | `3.0.60` | `3.0.63` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing cartesia provider suites; full swift test` |
+| `@ai-sdk/cerebras` | `3.0.75` | `3.0.78` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/openai-compatible, @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing cerebras provider suites; full swift test` |
+| `@ai-sdk/cohere` | `4.0.66` | `4.0.69` | **ported** — Clean EOF without message-end is interrupted; invalid JSON remains an in-band error. | `WeeklyLanguage20261025; Cohere suites` |
+| `@ai-sdk/deepgram` | `3.1.36` | `3.1.39` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing deepgram provider suites; full swift test` |
+| `@ai-sdk/deepinfra` | `3.0.75` | `3.0.78` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/openai-compatible, @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing deepinfra provider suites; full swift test` |
+| `@ai-sdk/deepseek` | `3.0.70` | `3.0.73` | **ported** — Unfinished Chat Completions retain partial text and interrupted finish; canonical explicit finish/error behavior remains. | `WeeklyLanguage20261025; DeepSeek suites` |
+| `@ai-sdk/elevenlabs` | `3.0.66` | `3.0.71` | **ported** — Native streaming speech, single-voice and multi-context dialogue, per-part options and cancellation; expanded unary dialogue/music/sound-effects routing and composition-plan validation; transcription duration prefers reported duration. | `WeeklySpeech20261025; WeeklyElevenLabs20261025` |
+| `@ai-sdk/fal` | `3.0.66` | `3.0.69` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing fal provider suites; full swift test` |
+| `@ai-sdk/fish-audio` | `3.0.43` | `3.0.46` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing fish-audio provider suites; full swift test` |
+| `@ai-sdk/fireworks` | `3.0.78` | `3.0.81` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/openai-compatible, @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing fireworks provider suites; full swift test` |
+| `@ai-sdk/gateway` | `4.0.121` | `4.0.126` | **ported; covered model IDs** — Native speech WebSocket envelope, speech-bound short-lived secrets, auth/team subprotocols and typed errors. Parallel Search GA modes, top-level excerpt budget, fetch controls and localization; new model IDs remain open strings. Shared structured output selection is retained in native generation. | `WeeklyGatewaySpeech20261025; WeeklyMistralGateway20261025; Gateway suites` |
+| `@ai-sdk/gmicloud` | `3.0.46` | `3.0.49` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/openai-compatible, @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing gmicloud provider suites; full swift test` |
+| `@ai-sdk/gladia` | `3.0.65` | `3.0.68` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing gladia provider suites; full swift test` |
+| `@ai-sdk/google` | `4.0.102` | `4.0.105` | **ported** — GenerateContent and Interactions preserve interrupted/error terminals. Each continuation resets its own finish state; nested empty object/array partial arguments serialize incrementally and correctly for response tools and ordinary function calls. | `WeeklyLanguage20261025; Google suites` |
+| `@ai-sdk/google-vertex` | `5.0.119` | `5.0.122` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/anthropic, @ai-sdk/google, @ai-sdk/openai-compatible, @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. Inherits audited Google and Anthropic parsers. | `Existing google-vertex provider suites; full swift test` |
+| `@ai-sdk/groq` | `4.0.67` | `4.0.70` | **ported** — Missing finish signals become interrupted; malformed JSON emits one in-band error and an error finish instead of escaping the parser. | `WeeklyLanguage20261025; Groq suites` |
+| `@ai-sdk/heygen` | `3.0.7` | `3.0.10` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing heygen provider suites; full swift test` |
+| `@ai-sdk/huggingface` | `2.0.75` | `2.0.78` | **ported** — Responses EOF is interrupted; explicit tools remain in the request when toolChoice is none so facade enforcement can reject unexpected calls without rewriting the tool catalog. | `WeeklyLanguage20261025; HuggingFace suites` |
+| `@ai-sdk/hume` | `3.0.65` | `3.0.68` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing hume provider suites; full swift test` |
+| `@ai-sdk/klingai` | `4.0.67` | `4.0.70` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing klingai provider suites; full swift test` |
+| `@ai-sdk/lmnt` | `3.0.36` | `3.0.36` | **current** — No npm version drift; existing provider implementation retained. | `AIProviders.lmnt, LMNTSpeechModel, LMNTProviderTests.swift` |
+| `@ai-sdk/luma` | `3.0.66` | `3.0.69` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing luma provider suites; full swift test` |
+| `@ai-sdk/mcp` | `2.0.81` | `2.0.84` | **ported** — Plain strings, including empty and wrapped-execute strings, map to text model output. Null and other primitive/array values remain safe JSON outputs. | `WeeklyMCP20261025` |
+| `@ai-sdk/minimax` | `3.0.62` | `3.0.65` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/anthropic, @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. Inherits audited Anthropic stream completion behavior. | `Existing minimax provider suites; full swift test` |
+| `@ai-sdk/mistral` | `4.0.69` | `4.0.72` | **ported** — Chat truncation distinguishes interrupted from parse error. Voxtral 3 adds expressiveness/IPA hints and detected language; phrase bias accepts punctuation and longer lists, and only recognized legacy models reject pinned language plus timestamps. | `WeeklyLanguage20261025; WeeklyMistralGateway20261025; mistralVoxtral tests` |
+| `@ai-sdk/moonshotai` | `3.0.74` | `3.0.78` | **ported** — Kimi K3.1 aliases inherit K3 behavior. Typed caching options, cache-write usage and per-TTL headers are preserved; MFJS object unions/local references retain an object root. Streaming EOF is interrupted. | `WeeklyMoonshot20261025; WeeklyLanguage20261025` |
+| `@ai-sdk/open-responses` | `2.0.70` | `2.0.73` | **ported** — Responses streams default to interrupted, retaining explicit completed/incomplete/error mappings through shared native parsing. | `WeeklyLanguage20261025; ResponsesEndpoint suites` |
+| `@ai-sdk/openai` | `4.0.99` | `4.0.102` | **ported** — Chat/Completion/Responses streams distinguish missing signals from explicit errors. JSON Responses select the last final_answer message through structuredOutputText without deleting any generated draft/content/metadata. | `WeeklyStructuredOutput20261025; WeeklyLanguage20261025` |
+| `@ai-sdk/openai-compatible` | `3.0.75` | `3.0.78` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing openai-compatible provider suites; full swift test` |
+| `@ai-sdk/perplexity` | `5.0.17` | `5.0.20` | **ported** — Native Responses streams report interrupted on missing completion and retain their explicit provider status/finish mapping. | `WeeklyLanguage20261025; Perplexity suites` |
+| `@ai-sdk/prodia` | `2.0.66` | `2.0.69` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing prodia provider suites; full swift test` |
+| `@ai-sdk/quiverai` | `2.0.66` | `2.0.69` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/open-responses, @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. Inherits the audited OpenResponses codec. | `Existing quiverai provider suites; full swift test` |
+| `@ai-sdk/replicate` | `3.0.66` | `3.0.69` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing replicate provider suites; full swift test` |
+| `@ai-sdk/revai` | `3.0.65` | `3.0.68` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing revai provider suites; full swift test` |
+| `@ai-sdk/togetherai` | `3.0.76` | `3.0.79` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/openai-compatible, @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing togetherai provider suites; full swift test` |
+| `@ai-sdk/topaz` | `3.0.12` | `3.0.15` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing topaz provider suites; full swift test` |
+| `@ai-sdk/typesafe-ai` | `3.0.24` | `3.0.27` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing typesafe-ai provider suites; full swift test` |
+| `@ai-sdk/vercel` | `3.0.30` | `3.0.30` | **current** — No npm version drift; existing provider implementation retained. | `AIProviders.vercel, VercelProvider, ProviderRegistryVercelTests.swift` |
+| `@ai-sdk/voyage` | `2.0.65` | `2.0.68` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing voyage provider suites; full swift test` |
+| `@ai-sdk/xai` | `5.0.27` | `5.0.30` | **ported** — Shared Responses streams default to interrupted while preserving explicit completed/incomplete and unknown-status semantics. | `WeeklyLanguage20261025; XAI suites` |
+| `@ai-sdk/zai` | `3.0.37` | `3.0.40` | **version-only** — Package-local runtime sources and declarations are byte-identical except version.ts. Published dependency updates: @ai-sdk/openai-compatible, @ai-sdk/provider, @ai-sdk/provider-utils. README/build/version propagation; native identity synchronized. | `Existing zai provider suites; full swift test` |
+| `ai` | `7.0.148` | `7.0.153` | **ported; runtime-specific gaps retained** — Streaming speech facade; final-answer JSON selection across Output/object parsing and extraction middleware; none tool-choice isolation; first approval response per call; interrupted responses skip execution, missing-tool violations and automatic native chat continuation. | `WeeklyCore20261025; WeeklyApproval20261025; WeeklyMiddleware20261025; WeeklySpeech20261025` |
+| `@ai-sdk/provider` | `4.0.31` | `4.0.34` | **ported** — Additive native streaming-speech protocol/request/results and structuredOutputText. The existing String finish-reason surface accepts interrupted; consumers now treat it explicitly. | `WeeklySpeech20261025; WeeklyCore20261025; WeeklyLanguage20261025` |
+| `@ai-sdk/provider-utils` | `5.0.65` | `5.0.68` | **ported** — Native speech WebSocket frame parsing/serialization, validation, audio/usage/metadata and forward-compatible unknown frames. Browser/Node-specific types remain platform differences. | `WeeklyGatewaySpeech20261025; WeeklySpeech20261025` |
+| `@ai-sdk/react` | `4.0.152` | `4.0.157` | **version-only** — Package-local runtime/declarations are unchanged. Core/MCP/provider dependencies and README/version propagation only; React hooks remain outside the native product. | `Published source/declaration comparison; core full swift test` |
+
+### Exact discovery, new packages and remaining mentioned packages
+
+The npm replication registry's exact `@ai-sdk/` prefix contains **92 names**;
+relevance-ranked `npm search` returns **73**. All **91 scoped names already
+mentioned** by tracked repository files were present in that exact prefix.
+Sorted prefix-name SHA-256 (newline-terminated):
+`dc7bcf0fda84f9c3503dcd9796d2fc7dc59895aaaba3bb27e099947ef6d0b09b`.
+
+The only newly discovered name is **`@ai-sdk/tool-web-fetch@1.0.3`**. Its published
+export is `experimental_createWebFetchTool`; it is provider-independent tooling,
+not a new model provider. **No new unimplemented model-provider package was
+found.** `@ai-sdk/spacexai`, `@ai-sdk/specification` and `@ai-sdk/tools` remain
+empty seeds. HeyGen and Topaz are already implemented.
+
+Recommended next optional implementation: a native WebFetch tool using the
+existing protected download transport, with explicit domain/user-message
+policy, HTML extraction/conversion, offset/cache semantics, cancellation and
+bounded response/error fixtures. This discovery does not implement or enable it.
+
+The following table separately records every other scoped package's previous
+source-reviewed reference and fresh latest artifact. Stable packages were
+downloaded too; a new package has no previous reference.
+
+| Package | Previous reference | Published latest | Classification and disposition |
+| --- | --- | --- | --- |
+| `@ai-sdk/angular` | `3.0.148` | `3.0.153` | JavaScript framework/browser/terminal product; entry points and published artifact reviewed, not a native model provider. |
+| `@ai-sdk/code-mode` | `1.0.105` | `1.0.110` | QuickJS sandbox product: CPU budget/typed timeout changes. Out of native provider scope. |
+| `@ai-sdk/codemod` | `4.0.3` | `4.0.3` | Unchanged TypeScript migration CLI, no native model runtime. |
+| `@ai-sdk/devtools` | `1.0.51` | `1.0.56` | JavaScript development telemetry/UI product; sources/dependency propagation reviewed, not a native provider. |
+| `@ai-sdk/durable-agent` | `0.0.1` | `0.0.1` | Unchanged JavaScript durable workflow agent; no native workflow runtime exposed. |
+| `@ai-sdk/harness` | `1.0.159` | `1.0.164` | Agent sandbox/bridge product: shared endpoint validation, bridge handshake/reconnect helpers and stream types. Requires native execution/session design; out of provider scope. |
+| `@ai-sdk/harness-acp` | `1.0.98` | `1.0.103` | Harness bridge helper adoption; sandbox/runtime lifecycle remains a separate product. |
+| `@ai-sdk/harness-claude-code` | `1.0.163` | `1.0.168` | Harness bridge helper adoption; sandbox/runtime lifecycle remains a separate product. |
+| `@ai-sdk/harness-cline` | `1.0.86` | `1.0.92` | Harness-specific resume state now uses shared session data paths; external coding runtime is outside the native model port. |
+| `@ai-sdk/harness-codex` | `1.0.161` | `1.0.166` | Harness bridge helper adoption; sandbox/runtime lifecycle remains a separate product. |
+| `@ai-sdk/harness-cursor` | `1.0.73` | `1.0.78` | Runtime/declarations or dependency propagation reviewed; external harness/sandbox product remains out of scope. |
+| `@ai-sdk/harness-deepagents` | `1.0.159` | `1.0.164` | Harness bridge helper adoption; sandbox/runtime lifecycle remains a separate product. |
+| `@ai-sdk/harness-fx` | `1.0.74` | `1.0.80` | Harness-specific resume state now uses shared session data paths; external coding runtime is outside the native model port. |
+| `@ai-sdk/harness-github-copilot` | `1.0.55` | `1.0.60` | Runtime/declarations or dependency propagation reviewed; external harness/sandbox product remains out of scope. |
+| `@ai-sdk/harness-grok-build` | `1.0.97` | `1.0.102` | Runtime/declarations or dependency propagation reviewed; external harness/sandbox product remains out of scope. |
+| `@ai-sdk/harness-opencode` | `1.0.161` | `1.0.166` | Harness bridge helper adoption; sandbox/runtime lifecycle remains a separate product. |
+| `@ai-sdk/harness-pi` | `1.0.161` | `1.0.167` | Pi harness product: typed parked assistant replay, skill command expansion and shared state paths; no native Pi runtime exposed. |
+| `@ai-sdk/langchain` | `3.0.148` | `3.0.153` | JavaScript framework adapter; package-local source unchanged, native provider calls use their own contracts. |
+| `@ai-sdk/llamaindex` | `3.0.148` | `3.0.153` | JavaScript framework adapter; package-local source unchanged, native provider calls use their own contracts. |
+| `@ai-sdk/otel` | `1.0.148` | `1.0.153` | JavaScript OpenTelemetry adapter: configurable agent span naming. Native telemetry has no imported JS span implementation; adapter remains out of scope. |
+| `@ai-sdk/policy-opa` | `1.0.148` | `1.0.153` | JavaScript OPA policy/authorization adapter; package-local source unchanged, no native OPA engine exposed. |
+| `@ai-sdk/rsc` | `3.0.148` | `3.0.153` | JavaScript framework/browser/terminal product; entry points and published artifact reviewed, not a native model provider. |
+| `@ai-sdk/sandbox-just-bash` | `1.0.159` | `1.0.164` | Runtime/declarations or dependency propagation reviewed; external harness/sandbox product remains out of scope. |
+| `@ai-sdk/sandbox-vercel` | `1.0.159` | `1.0.164` | Runtime/declarations or dependency propagation reviewed; external harness/sandbox product remains out of scope. |
+| `@ai-sdk/solid` | `1.2.13` | `1.2.13` | JavaScript framework/browser/terminal product; entry points and published artifact reviewed, not a native model provider. |
+| `@ai-sdk/spacexai` | `0.0.0` | `0.0.0` | Seed/reservation, unchanged empty public runtime; no model API to port. |
+| `@ai-sdk/specification` | `0.0.0` | `0.0.0` | Seed/reservation, unchanged empty public runtime; no model API to port. |
+| `@ai-sdk/svelte` | `5.0.148` | `5.0.153` | JavaScript framework/browser/terminal product; entry points and published artifact reviewed, not a native model provider. |
+| `@ai-sdk/swarm` | `0.1.39` | `0.1.39` | JavaScript framework/browser/terminal product; entry points and published artifact reviewed, not a native model provider. |
+| `@ai-sdk/test-server` | `2.0.4` | `2.0.4` | Unchanged JavaScript test harness, not a model provider. |
+| `@ai-sdk/tool-bash` | `1.0.0` | `1.0.7` | Sandbox tool: new per-command timeout/abort forwarding and experimental export alias. No native sandbox/session/command product is exposed; separate authorized implementation required. |
+| `@ai-sdk/tool-web-fetch` | — | `1.0.3` | NEW tooling, not a model provider. URL/domain and user-message policy, protected redirects/DNS, bounded downloads, HTML-to-Markdown conversion, cached offset paging and structured errors need a separate native tool pass; no automatic port. |
+| `@ai-sdk/tools` | `0.0.0` | `0.0.0` | Seed/reservation, unchanged empty public runtime; no model API to port. |
+| `@ai-sdk/tui` | `1.0.149` | `1.0.154` | JavaScript framework/browser/terminal product; entry points and published artifact reviewed, not a native model provider. |
+| `@ai-sdk/ui-utils` | `1.2.11` | `1.2.11` | JavaScript framework/browser/terminal product; entry points and published artifact reviewed, not a native model provider. |
+| `@ai-sdk/valibot` | `3.0.65` | `3.0.68` | Schema adapter; sources/dependency propagation reviewed, native JSON Schema/Codable validation uses a distinct implementation. |
+| `@ai-sdk/vue` | `4.0.148` | `4.0.153` | JavaScript framework/browser/terminal product; entry points and published artifact reviewed, not a native model provider. |
+| `@ai-sdk/workflow` | `2.0.80` | `2.0.85` | JavaScript durable workflow: none tool-choice enforcement, interrupted handling and custom-part replay; no native workflow runtime. Native facade equivalents are covered in core tests. |
+| `@ai-sdk/workflow-harness` | `1.0.159` | `1.0.164` | Runtime/declarations or dependency propagation reviewed; external harness/sandbox product remains out of scope. |
+
+### Compatibility and deliberately retained gaps
+
+New speech contracts, streaming factories, JSON selection and provider options
+are additive. Existing unary APIs and String model IDs remain available.
+Applications must handle the `interrupted` finish reason and choose whether to
+retry partial output. Required/forced tool choice no longer replaces interrupted
+output with a missing-tool error; none choice rejects actual tool calls before
+callbacks or execution. Restored duplicate/conflicting approvals use the first
+response for each call.
+
+OpenAI JSON output parses only the last `final_answer` while retaining complete
+generated text/content. An empty selection remains explicit. Gateway Parallel
+Search's raw results use GA `search_id` / `excerpts` fields; consumers with custom
+decoders should migrate old camelCase result expectations. Existing maxCharsTotal
+calls now send the canonical top-level budget. No intentional API removals or
+new deprecations were introduced in Swift.
+
+Existing JS low-memory result/replay/getter semantics, browser UI wire/step
+surfaces, framework/workflow/harness/sandbox/tool products and provider-specific
+gaps in `PortingStatus.md` remain separate. This pass makes no whole-facade
+memory-bound claim and performs no paid live provider requests.
+
+Native Anthropic Messages preserves its existing single-response contract:
+first `message_stop` terminates and cancels the body even if EOF never arrives.
+The published JS codec permits later messages in the same body; that
+multi-message/session behavior is not exposed by the native API. Adding it
+would require an explicit lifecycle mode rather than timing-based lookahead.
+The original held-open body cancellation regression test is retained.
+
+### Verification
+
+- `swift test --filter 'Weekly.*20261025|ProviderCapabilityMatrix'`: **88 tests / 11 suites**, including 84 new test declarations and four matrix tests; all passed. The three independent parent reruns covered core 22 / 4 suites, speech 26 / 3 and language 28 / 3 (overlap).
+- `swift test --filter 'anthropicMessageStopTerminates|anthropicInvalidMessageSequence|WeeklyLanguage20261025'`: **18 tests / one suite**, preserving immediate semantic-end cancellation. Seven reconciled existing expectation tests also passed separately.
+- Full `swift test`: **3,543 tests / 66 suites**, **3,510 passed and 33 explicit live skips**, zero issues, on Apple Swift **6.4**. No paid/live provider calls were enabled.
+- `swift build` and `swift build --package-path Examples`: passed; **19 executable targets**, including the new StreamSpeech example. `swift run --package-path Examples MCPOAuthMigration`: both offline flows passed.
+- `swiftc -typecheck` of four complete public API examples (streaming speech, Gateway speech/search, Voxtral delivery and Moonshot caching): zero diagnostics.
+- `npm ci --prefix docs-site`: clean install, **434 packages installed / 435 audited**. `npm audit --prefix docs-site`: **zero vulnerabilities**. npm emitted an optional fsevents install-script notice; no blanket warning-free claim is made.
+- `npm --prefix docs-site run check`: **four files, zero errors/warnings/hints**.
+- `DOCS_BASE=/SwiftAISDK DOCS_SITE=https://ozio.github.io npm --prefix docs-site run build`: **98 pages**, search and sitemap generated successfully.
+- Final live registry readback: **54 current / zero drift / zero errors**, unchanged **92-name prefix**, tool-web-fetch classified as tooling, **zero untracked model providers**.
+- `git diff --check`, task-only staging/cached diff, secret-pattern scan and final commit/ref/release readbacks are required release gates; release evidence is reported with the published release.
 
 ## 2026-10-23 Weekly Audit
 

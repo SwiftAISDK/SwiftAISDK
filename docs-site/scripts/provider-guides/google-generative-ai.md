@@ -17,3 +17,11 @@ After automatic continuation, `providerMetadata["google"]["groundingMetadataPerR
 A response ending with `MAX_TOKENS` exposes `providerMetadata["google"]["continuationToken"]`. Resume with the original prompt, a larger `maxOutputTokens`, and that token in `providerOptions["google"]["continuationToken"]`. Failed streaming continuation emits an error followed by finish metadata containing the resumable token. Cancellation propagates through every hop.
 
 `responseModalities` accepts `AUDIO` alongside `TEXT` and `IMAGE`. Explicit `thinkingConfig.thinkingBudget` or `thinkingConfig.thinkingLevel` takes precedence over the shared `reasoning` setting. Gemini 3+ Pro models normalize `none` and `minimal` reasoning to their supported `low` floor. Routed IDs such as `eu.gemini-2.5-flash` retain the correct model capabilities. Interactions model calls with `background: true` poll until terminal, including Gemini 4 long decode.
+## Continuation and streamed tool arguments
+
+Each successful automatic continuation starts with a fresh completion state;
+an empty next response remains interrupted instead of inheriting the previous
+finish reason. A failed continuation retains the preceding response's state.
+Partial function arguments, including response tools, preserve nested empty
+arrays and objects and produce valid concatenated JSON deltas. Legacy tool-call
+snapshot parts remain available alongside the incremental tool-input lifecycle.

@@ -65,11 +65,13 @@ let result = try await model.generateText(
 
 Each tool-loop result records `steps`, `toolCalls`, `toolResults`, approval parts, and `responseMessages` so you can inspect what happened or continue the conversation.
 
-Tool choice is enforced at the facade boundary. If `toolChoice` is `required`,
-or names a particular tool, and the provider completes without the required
-call, generation throws `AIToolChoiceViolationError`. The error retains the
-requested choice, provider/model identity, finish reason, and returned content
-for diagnostics.
+Tool choice is enforced at the facade boundary. `toolChoice: none` rejects
+returned tool calls before repair, refinement or execution callbacks; streaming
+tool parts are withheld from consumers. If `required`, or a named tool, completes
+without the required call, generation throws `AIToolChoiceViolationError`.
+An `interrupted` response retains its partial answer and skips this missing-call
+check, tool execution and automatic continuation. The error retains the requested
+choice, provider/model identity, finish reason and returned content.
 
 ## Tool execution concurrency
 
@@ -92,6 +94,9 @@ let result = try await AI.generateText(
 Approved history is scheduled in original model order even when approvals arrive
 out of order. An approval alone does not replace a local tool result in a direct
 model prompt; use the executable-tool facade to run approved calls first.
+
+For repeated or conflicting restored approval responses, the first response for
+each tool call wins, including different approval IDs referring to the same call.
 
 ## Approvals
 

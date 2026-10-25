@@ -86,7 +86,7 @@ public final class GroqLanguageModel: LanguageModel, @unchecked Sendable {
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
                     continuation.yield(.streamStart(warnings: prepared.warnings))
                     var latestUsage: TokenUsage?
-                    var finishReason: String? = "other"
+                    var finishReason: String? = "interrupted"
                     var toolCalls = GroqStreamingToolCalls()
                     var didEmitResponseMetadata = false
                     var activeReasoningID: String?
@@ -94,7 +94,13 @@ public final class GroqLanguageModel: LanguageModel, @unchecked Sendable {
                     var jsonConverter = GroqJSONResponseToolConverter(name: prepared.jsonResponseToolName)
                     for try await event in serverSentEvents(from: response.body) {
                         if event.data == "[DONE]" { break }
-                        let raw = try decodeJSONBody(Data(event.data.utf8))
+                        let raw: JSONValue
+                        do { raw = try decodeJSONBody(Data(event.data.utf8)) }
+                        catch {
+                            finishReason = "error"
+                            continuation.yield(.error(message: error.localizedDescription))
+                            continue
+                        }
                         if request.includeRawChunks {
                             continuation.yield(.raw(raw))
                         }

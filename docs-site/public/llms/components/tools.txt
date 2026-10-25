@@ -1,6 +1,6 @@
 # Tools
 
-Source URL: /components/tools/
+Source URL: https://ozio.github.io/SwiftAISDK/components/tools/
 
 ## Symbol counts
 

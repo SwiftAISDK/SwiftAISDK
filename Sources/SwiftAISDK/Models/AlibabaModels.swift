@@ -74,7 +74,7 @@ public final class AlibabaLanguageModel: LanguageModel, @unchecked Sendable {
 
                     continuation.yield(.streamStart(warnings: prepared.warnings))
                     var latestUsage: TokenUsage? = TokenUsage(inputTokensNoCache: 0, inputTokensCacheWrite: 0)
-                    var finishReason: String? = "other"
+                    var finishReason: String? = "interrupted"
                     var toolCalls = AlibabaStreamingToolCalls()
                     var emittedResponseMetadata = false
                     var activeText = false

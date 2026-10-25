@@ -1,6 +1,6 @@
 # MCP
 
-Source URL: /components/mcp/
+Source URL: https://ozio.github.io/SwiftAISDK/components/mcp/
 
 ## Symbol counts
 

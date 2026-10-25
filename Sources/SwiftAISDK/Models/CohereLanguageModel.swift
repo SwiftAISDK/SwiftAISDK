@@ -62,7 +62,7 @@ public final class CohereLanguageModel: LanguageModel, @unchecked Sendable {
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
                     continuation.yield(.streamStart(warnings: prepared.warnings))
                     continuation.yield(.responseMetadata(cohereResponseMetadata(response: responseHead, modelID: modelID)))
-                    var finishReason: String? = "other"
+                    var finishReason: String? = "interrupted"
                     var usage: TokenUsage?
                     var pendingToolCall: CoherePendingToolCall?
                     var activeTextIDs: Set<String> = []

@@ -72,6 +72,7 @@ public final class AIChatSession: ObservableObject {
     private var activeConsumedApprovalMessageID: String?
     private var pendingApprovalMessageID: String?
     private var consumedApprovalMessageIDs: Set<String> = []
+    private var interruptedMessageIDs: Set<String> = []
     private var activeRequestOptions = AIChatSessionRequestOptions()
 
     public init(
@@ -457,6 +458,13 @@ public final class AIChatSession: ObservableObject {
         let isDisconnect = error.map(isDisconnectError) ?? false
         let isError = error != nil
         let consumedApprovalMessageID = activeConsumedApprovalMessageID
+        if let messageID = finishedMessage?.id {
+            if finishReason == "interrupted" {
+                interruptedMessageIDs.insert(messageID)
+            } else if !isAbort && !isError {
+                interruptedMessageIDs.remove(messageID)
+            }
+        }
 
         currentTask = nil
         currentAbortController = nil
@@ -487,7 +495,7 @@ public final class AIChatSession: ObservableObject {
             isError: isError,
             finishReason: finishReason
         ))
-        if !isAbort && !isError && stopGeneration == finishedGeneration {
+        if !isAbort && !isError && finishReason != "interrupted" && stopGeneration == finishedGeneration {
             triggerAutomaticSendIfNeeded(options: activeRequestOptions)
         }
     }
@@ -522,6 +530,9 @@ public final class AIChatSession: ObservableObject {
         approvalMessageID: String? = nil
     ) {
         guard activeStopCount == 0, !isRunning else { return }
+        guard messages.last.map({ !interruptedMessageIDs.contains($0.id) }) ?? true,
+              messages.last(where: { $0.role == .assistant }).map({ !interruptedMessageIDs.contains($0.id) }) ?? true,
+              approvalMessageID.map({ !interruptedMessageIDs.contains($0) }) ?? true else { return }
         let generation = stopGeneration
         guard sendAutomaticallyWhen?(messages) == true,
               activeStopCount == 0,

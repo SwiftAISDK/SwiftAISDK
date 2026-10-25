@@ -1,6 +1,6 @@
 # Porting Status
 
-Snapshot date: 2026-10-23
+Snapshot date: 2026-10-25
 
 SwiftAISDK currently ports the provider-facing parts of Vercel AI SDK into a
 SwiftPM library. The package has a broad Swift-native facade, provider registry,
@@ -13,6 +13,14 @@ root `LICENSE` file.
 This file is the readable status page. It replaces the older provider-progress
 journals and product-gap checklist. Use the ledgers and generated inventories
 for exact evidence.
+
+## Weekly upstream parity (2026-10-25)
+
+The current pass covers ai 7.0.153, provider 4.0.34, provider-utils 5.0.68 and
+all reviewed provider baselines. It adds streaming speech, incomplete-stream
+semantics, final-answer JSON parsing, safer tool execution and new provider
+options. See the per-package audit, current Provider State below and public
+Stream speech guide. Prior dated sections preserve historical evidence.
 
 ## Post-release repairs (2026-10-23)
 
@@ -47,7 +55,7 @@ snapshots; `PostReleaseRepairAudit.md` records current repair verification.
 ## Current Shape
 
 - The `AI` facade covers text, streaming text, durable text batches, structured
-  output, embeddings, images, unary and asynchronous video, speech, batch and
+  output, embeddings, images, unary and asynchronous video, unary and streaming speech, batch and
   streaming transcription, reranking, Files V4 operations, skill uploads,
   middleware, telemetry, warnings, setup and in-band stream retries, aborts,
   tools, approvals, MCP tools, UI messages, chat sessions, agent helpers, and
@@ -90,59 +98,60 @@ snapshots; `PostReleaseRepairAudit.md` records current repair verification.
 | Upstream test inventory | `Docs/UpstreamTestInventory.md` |
 | Latest upstream test diff audit | `Docs/FreshUpstreamTestDiffAudit.md` |
 
-Provider and core versions were freshly checked on 2026-10-23. All **54 tracked
+Provider and core versions were freshly checked on 2026-10-25. All **54 tracked
 packages** were reviewed: **52 version drifts and two current rows** (LMNT and
-Vercel). **142 published archives** passed SHA-512 integrity checks. Separate
+Vercel). **172 published archives** passed SHA-512 verification, including
+prior/current references for mentioned framework/tooling packages. Separate
 source, declaration, manifest and fixture decisions are recorded in
-`Docs/UpstreamPackageDiffAudit.md`; versions advance only after that review.
-The fixture inventory has **1,096 executable test/spec paths in 85 groups**.
-The latest fixture diff accounts for **160 executable and six declaration paths**
-against the previous snapshot, including runtime-specific and unpublished cases.
+`Docs/UpstreamPackageDiffAudit.md`; `Docs/UpstreamPackageIntegrity.json` records
+all archive identities. The fixture inventory has **1,106 executable paths in
+86 groups**; the latest diff has **40 executable and three declaration paths**.
 
 ## Provider State
 
-The latest pass adds Perplexity native Decision requests; shared Decision token
-budgets/reasoning and nullable instructions; Azure per-model identity separate
-from deployment routing; OpenAI cache TTL/prewarm/cache-write metadata, shell
-controls and transcription metadata; MiniMax M3.1+ media/effort/cache behavior;
-Google continuation grounding history; compatible/Groq/Moonshot output ordering;
-and safe single-segment media status IDs. MCP adds explicit stdio shell execution,
-HTTP discovery waiting and stronger OAuth credential/issuer/retry binding.
-Shared pruning removes reasoning groups left without their associated content,
-and native UI uses the latest name for a reused tool ID. Provider request
-identities and generated docs match reviewed baselines.
+The 2026-10-25 pass adds native experimental streaming speech through ElevenLabs
+and Gateway, with incremental text, ordered audio, provider metadata, errors,
+one stream owner and cancellation. ElevenLabs also forwards dialogue, music,
+sound-effect and composition-plan requests through speech factories. Mistral
+Voxtral 3 supports expressiveness/IPA hints, detected language and phrase bias.
 
-Search returned **73 scoped names**, while exact registry-prefix enumeration
-returned **91**, unchanged since the previous run. All **38 untracked scoped
-packages** have current metadata and published-artifact classification. **No new
-unimplemented model provider was found.** The previously empty `@ai-sdk/tool-bash`
-now publishes **1.0.0**, a sandbox-backed executable tool. It remains outside
-model-provider scope and was not ported automatically. A future implementation
-needs native sandbox/session, command/file lifecycle, cancellation and output
-truncation design. Empty tools/specification/SpaceXAI reservations still expose
-no model protocol; HeyGen and Topaz remain implemented.
+Audited language providers distinguish incomplete `interrupted` output from
+explicit finishes/errors. The facade preserves partial answers and skips tool
+execution and automatic continuation; native chat remembers interrupted messages
+for late tool updates. None tool choice rejects calls before user callbacks or
+stream consumers can act. Restored approvals use the first response per call.
 
-The additive API/capability changes justify **minor 2.6.0** from **2.5.0**.
-No intentional API removals. OAuth clients with existing secrets must supply an
-issuer or stored authorization-server binding; custom token authentication also
-requires `usesCustomClientAuthentication = true`. Swift cannot infer whether an
-optional protocol hook was overridden, so that explicit flag is part of the
-native contract. Existing callers otherwise keep their default behavior.
+OpenAI JSON output selects the last `final_answer` without dropping drafts or
+metadata. Native middleware and Output parsing honor explicit empty selections.
+Google continuation state resets per successful hop, and partial tool arguments
+retain nested empty containers. Moonshot K3.1 adds cache mode/TTL, cache-write
+usage/headers and MFJS object unions. Gateway Parallel Search exposes GA modes,
+fetch controls, localization and canonical raw results. MCP strings become text
+model output. Runtime identities, public docs and baselines are synchronized.
 
-The renamed `experimental_streamTextLowMemory` JS result/replay/getter facade,
-native UI wire/step surfaces, resolver-backed DNS pinning, realtime/delegation
-variants and provider-specific pre-existing gaps remain explicitly deferred.
-Monorepo interrupted-stream, approval-follow-up and Gateway parallel-search GA
-changes are not in the audited published tarballs. Live paid provider checks
-remain opt-in and were not enabled. No inherited ahead commits or unrelated
-working changes were present at the start of this pass.
+Fresh npm search returned **73 scoped names**, while exact prefix enumeration
+returned **92**. All **39 untracked scoped packages** have fresh metadata,
+integrity-verified artifacts and separate dispositions. The only new name,
+`@ai-sdk/tool-web-fetch@1.0.3`, is a provider-independent tool. No new
+unimplemented model provider was found. A separate native WebFetch pass would
+need URL/domain and user-message policy, protected redirects/DNS, bounded
+HTML-to-Markdown conversion, offset/cache semantics and cancellation. It was
+not implemented automatically. Sandbox-backed `tool-bash@1.0.7` remains a
+separate tool product; tools/specification/SpaceXAI seeds remain empty.
 
-Final local verification passed: 70 new focused tests, 14 repaired existing
-tests, the full 3,427-test / 52-suite run, all 17 example targets, four public
-snippets, and the 97-page documentation build. Astro checked four files with
-zero diagnostics. Fresh registry readback has 54 current packages and no drift.
-Exact commands, overlapping leaf checks and the unchanged docs dependency audit
-findings are recorded in `Docs/UpstreamPackageDiffAudit.md`.
+The additive streaming speech and provider/core APIs justify a **minor** bump
+from **2.7.1**. Existing unary APIs remain available; applications should handle
+`interrupted` and custom Gateway Search decoders should adopt GA snake_case
+results. Existing OAuth/custom-download migration requirements still apply.
+Known shared/provider gaps remain below; paid live tests were not enabled.
+
+Final local verification: **3,543 tests / 66 suites**, **3,510 passed and 33
+explicit live skips**, zero issues; **88 focused tests / 11 suites**; all **19
+examples** and two offline OAuth flows; four public API examples typechecked
+without diagnostics. Docs clean install/audit has zero vulnerabilities, Astro
+checks four files with zero diagnostics, and the production-base build generates
+**98 pages**. Final registry readback has 54 current packages and no drift.
+The original Anthropic held-open-body cancellation proof remains intact.
 
 ### Earlier weekly passes
 
@@ -433,6 +442,7 @@ one of these is true:
 | P1 | Google/Vertex Gemini transcription and Open Responses extension codecs remain absent native adapters. | Design and port each complete request/stream/replay surface before advertising parity. |
 | P0 | Completion evidence can drift as npm packages and upstream tests change. | Before release, rerun package discovery, regenerate upstream inventory, compare ledgers, run full `swift test`, and record the audit. |
 | P0 | Live verification is representative, not exhaustive. | Add opt-in live smoke only for distinct transport families or concrete production risks. Keep it disabled by default. |
+| P2 | Native Anthropic Messages ends and cancels its body at the first message_stop; the JS codec can consume multiple messages in one body. | Keep the existing single-response cancellation contract. A future multi-message session needs an explicit lifecycle/EOF mode and independent cleanup tests. |
 | P2 | The URLSession byte adapter is now demand-driven, but still produces one Data value per byte; Foundation and higher-level parser/tool-loop buffers do not have a whole-facade memory bound. | Use the offline memory probe before a separate chunked-delegate or low-memory API design; retain injected-session compatibility and cancellation behavior. |
 | P1 | xAI realtime and OpenAI Live server WebSocket are represented, but browser WebRTC/client permissions, provider-backed Responses delegation, non-Live OpenAI Realtime, Google Realtime 3.8, ElevenLabs realtime STT, and streaming translation remain deferred. | Extend `AIRealtimeModelV4` one complete transport/provider vertical at a time; do not advertise browser or delegation modes until their native lifecycle is implemented and tested. |
 | P1 | Batch V4 has Anthropic, OpenAI Responses, Gateway, Google, and xAI adapters. Async Video V4 has Black Forest Labs, Fal, ByteDance, Gateway, Topaz and HeyGen adapters, but other capable providers still use unary or internal-polling paths. | Migrate additional batch/video providers incrementally when persisted operation state, native webhook behavior, and provider-specific cancellation semantics can be translated with focused tests. |

@@ -87,7 +87,7 @@ public final class PerplexityLanguageModel: LanguageModel, @unchecked Sendable {
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
                     continuation.yield(.streamStart(warnings: prepared.warnings))
 
-                    var finishReason: String? = "other"
+                    var finishReason: String? = "interrupted"
                     var usage: TokenUsage?
                     var providerMetadata = perplexityAgentProviderMetadata(from: nil)
                     var hasResponseMetadata = false
@@ -262,6 +262,8 @@ public final class PerplexityLanguageModel: LanguageModel, @unchecked Sendable {
                                     incompleteReason: responseValue["incomplete_details"]?["reason"]?.stringValue,
                                     hasFunctionCall: hasFunctionCall
                                 )
+                            } else if finishReason == "interrupted" {
+                                finishReason = "other"
                             }
                         case "response.failed":
                             finishReason = "error"

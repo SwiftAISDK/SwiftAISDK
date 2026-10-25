@@ -15,3 +15,12 @@ Generated text and streamed text-end parts expose normalized `AICitation` values
 Retrieved web-search results remain standalone sources. Citations do not add duplicate sources when search results are present; citation-only responses still expose fallback sources, emitted before the stream finishes.
 
 `toolChoice: ["type": "none"]` keeps tool definitions in the request. Manual `thinking: enabled` changes required or named tool choices to automatic with a warning; a named choice retains only its selected tool. Adaptive or disabled thinking retains supported forced choices. Tool transcripts can replay provider-referenced files in tool results and JSON/error-JSON tool-search failures.
+## Incomplete streams and the native response boundary
+
+Nonempty text, reasoning or tool input that ends before the provider's
+`message_stop` finishes as `interrupted`; partial content remains available.
+An explicit stop retains its mapped finish reason. The native API ends one
+logical response and cancels its HTTP body at the first `message_stop`, even
+if the server leaves the body open. Unlike the JavaScript codec, it does not
+consume additional Messages responses from the same body. A multi-message
+session would require a separate explicit lifecycle contract.

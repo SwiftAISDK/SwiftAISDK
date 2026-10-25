@@ -321,15 +321,18 @@ public final class GatewayRerankingModel: RerankingModel, @unchecked Sendable {
     }
 }
 
-public final class GatewaySpeechModel: SpeechModel, @unchecked Sendable {
+public final class GatewaySpeechModel: StreamingSpeechModel, @unchecked Sendable {
     public let providerID: String
     public let modelID: String
-    private let config: ModelHTTPConfig
+    let config: ModelHTTPConfig
 
-    init(modelID: String, config: ModelHTTPConfig) {
+    let webSocketTransport: any AIDuplexWebSocketTransport
+
+    init(modelID: String, config: ModelHTTPConfig, webSocketTransport: any AIDuplexWebSocketTransport = URLSessionDuplexWebSocketTransport.shared) {
         self.providerID = config.providerID
         self.modelID = modelID
         self.config = config
+        self.webSocketTransport = webSocketTransport
     }
 
     public func speak(_ request: SpeechRequest) async throws -> SpeechResult {
@@ -344,7 +347,7 @@ public final class GatewaySpeechModel: SpeechModel, @unchecked Sendable {
         let response = try await config.sendJSONResponse(path: "/speech-model", modelID: modelID, body: .object(body), headers: request.headers.mergingHeaders([
             "ai-speech-model-specification-version": "4",
             "ai-model-id": modelID
-        ]))
+        ]), abortSignal: request.abortSignal)
         let raw = response.json
         guard let audio = raw["audio"]?.stringValue, let data = Data(base64Encoded: audio) else {
             throw AIError.invalidResponse(provider: providerID, message: "No base64 audio found in Gateway speech response.")

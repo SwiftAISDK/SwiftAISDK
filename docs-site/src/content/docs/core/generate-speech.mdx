@@ -8,6 +8,8 @@ import generateSpeechExample from '../../../../../Examples/Sources/GenerateSpeec
 
 Use `generateSpeech` when a provider exposes text-to-speech.
 
+For incremental text input and audio output, see [Stream speech](../stream-speech/).
+
 <Code code={generateSpeechExample} lang="swift" title="Examples/Sources/GenerateSpeech/main.swift" />
 
 The protocol method is named `speak(_:)` for low-level model implementations. Application code should usually prefer the facade spelling `generateSpeech`.

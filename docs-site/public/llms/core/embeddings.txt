@@ -1,6 +1,6 @@
 # Embeddings
 
-Source URL: /core/embeddings/
+Source URL: https://ozio.github.io/SwiftAISDK/core/embeddings/
 
 Use `embed` for a single text value and `embedMany` when you want one request to cover multiple inputs.
 

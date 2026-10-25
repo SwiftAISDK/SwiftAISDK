@@ -1,6 +1,6 @@
 # Structured output
 
-Source URL: /core/structured-output/
+Source URL: https://ozio.github.io/SwiftAISDK/core/structured-output/
 
 Use structured output when your app needs a Swift value rather than free-form prose.
 
@@ -78,6 +78,13 @@ final result outside those bounds.
 - `Output.json()` returns schema-free `JSONValue`.
 
 All strategies preserve text, reasoning, usage, warnings, provider metadata, response metadata, and the underlying `TextGenerationResult`.
+
+A provider may set `TextGenerationResult.structuredOutputText` to select the
+JSON answer while retaining all generated text and content. OpenAI Responses
+selects the last `final_answer` message for JSON requests. A nil selection falls
+back to concatenated text; an empty selection is explicit and can fail parsing.
+Plain text output continues to expose every draft and final message. JSON and
+reasoning extraction middleware transform the selected text alongside content.
 
 ```swift
 let labels = Output.array(

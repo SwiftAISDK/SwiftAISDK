@@ -516,7 +516,7 @@ func googleInteractionsFinishReason(status: String?, hasFunctionCall: Bool) -> S
     case "cancelled":
         return "other"
     default:
-        return status
+        return "other"
     }
 }
 

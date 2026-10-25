@@ -107,8 +107,13 @@ extension AI {
                     canonicalStream,
                     abortSignal: downloadedRequest.abortSignal
                 )
+                // With `none`, raw tool parts reach timing and validation only.
+                // They must not resolve approvals or invoke input callbacks.
+                let forwardedStream = prepareToolChoice(downloadedRequest.toolChoice)["type"]?.stringValue == "none"
+                    ? resolvedFileStream
+                    : forwardedLanguageStream(resolvedFileStream, request: downloadedRequest)
                 let outputTimedStream = streamWithSemanticOutputTimeouts(
-                    forwardedLanguageStream(resolvedFileStream, request: downloadedRequest),
+                    forwardedStream,
                     firstChunkNanoseconds: timeout?.firstChunkNanoseconds,
                     chunkNanoseconds: timeout?.chunkNanoseconds,
                     abortController: semanticTimeoutController

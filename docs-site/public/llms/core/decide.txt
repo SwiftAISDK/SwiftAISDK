@@ -1,6 +1,6 @@
 # Decision
 
-Source URL: /core/decide/
+Source URL: https://ozio.github.io/SwiftAISDK/core/decide/
 
 `AI.experimentalDecide` returns validated answers to a named question map.
 OpenAI uses `/decisions`, Perplexity uses `/v1/decisions`, Gateway uses `/decision-model`, TypeSafe AI uses

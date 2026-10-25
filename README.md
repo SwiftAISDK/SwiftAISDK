@@ -5,6 +5,10 @@ It provides provider factories plus an `AI` facade for text, durable batches,
 structured output, decisions, evaluation, embeddings, media, streaming and realtime audio, reranking,
 file operations, middleware, MCP tools, and typed tool execution.
 
+Experimental [streaming speech](https://ozio.github.io/SwiftAISDK/core/stream-speech/)
+accepts incremental text and produces ordered audio through ElevenLabs or AI Gateway.
+See the compile-checked `StreamSpeech` example for input, cancellation and usage.
+
 Licensed under the [Apache License 2.0](LICENSE). SwiftAISDK is an independent
 Swift port; references to Vercel AI SDK describe compatibility and provenance,
 not affiliation or endorsement.

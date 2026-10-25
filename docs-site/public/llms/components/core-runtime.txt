@@ -1,6 +1,6 @@
 # Core runtime
 
-Source URL: /components/core-runtime/
+Source URL: https://ozio.github.io/SwiftAISDK/components/core-runtime/
 
 ## Symbol counts
 

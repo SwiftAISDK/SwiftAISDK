@@ -290,8 +290,8 @@ func validateEnforcedToolChoice(
 }
 
 /// Validates semantic tool-choice requirements after the provider stream has
-/// completed. Keeping this outside the provider retry wrapper guarantees that
-/// a violation is surfaced once and is never retried as a transport failure.
+/// completed. A violation is a non-retryable semantic error, and validation
+/// precedes the terminal part so consumers cannot mistake it for success.
 func validatedEnforcedToolChoiceStream(
     _ stream: AsyncThrowingStream<LanguageStreamPart, Error>,
     toolChoice: JSONValue?,
@@ -300,7 +300,8 @@ func validatedEnforcedToolChoiceStream(
 ) -> AsyncThrowingStream<LanguageStreamPart, Error> {
     let prepared = prepareToolChoice(toolChoice)
     guard prepared["type"]?.stringValue == "required"
-        || prepared["type"]?.stringValue == "tool" else {
+        || prepared["type"]?.stringValue == "tool"
+        || prepared["type"]?.stringValue == "none" else {
         return stream
     }
     return AsyncThrowingStream { continuation in
@@ -324,6 +325,15 @@ func validatedEnforcedToolChoiceStream(
                         validatedAtTerminalPart = true
                     default:
                         break
+                    }
+                    if prepared["type"]?.stringValue == "none" {
+                        switch part {
+                        case .toolInputStart, .toolInputStartText, .toolInputDelta, .toolInputEnd,
+                             .toolCall, .toolResult, .toolApprovalRequest, .toolApprovalResponse:
+                            continue
+                        default:
+                            break
+                        }
                     }
                     continuation.yield(part)
                 }

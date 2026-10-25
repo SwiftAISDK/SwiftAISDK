@@ -1,6 +1,6 @@
 # Evaluation
 
-Source URL: /core/evaluate/
+Source URL: https://ozio.github.io/SwiftAISDK/core/evaluate/
 
 `AI.experimentalEvaluate` remains a source-compatible facade for existing JSON-state callers. New code can use [Decision V4](../decide/) for ordered text/JSON/file evidence and refusal handling. TypeSafe uses `/systemone`, OpenAI uses native `/decisions`, Gateway uses `/decision-model`, and Anthropic/Google use language adapters. Custom endpoint emulators should update these experimental envelopes and the `decision` structured-schema name.
 

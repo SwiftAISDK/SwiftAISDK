@@ -244,6 +244,7 @@ func collectToolApprovals(messages: [AIMessage]) throws -> AICollectedToolApprov
 
     var approvedToolApprovals: [AICollectedToolApproval] = []
     var deniedToolApprovals: [AICollectedToolApproval] = []
+    var collectedToolCallIDs = Set<String>()
     for part in lastMessage.content {
         guard case let .toolApprovalResponse(response) = part else { continue }
         guard let request = approvalRequestsByID[response.id] else {
@@ -259,6 +260,7 @@ func collectToolApprovals(messages: [AIMessage]) throws -> AICollectedToolApprov
         if toolResultsByToolCallID[toolCallID] != nil {
             continue
         }
+        guard collectedToolCallIDs.insert(toolCallID).inserted else { continue }
 
         let approval = AICollectedToolApproval(
             approvalRequest: request,

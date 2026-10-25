@@ -1,6 +1,6 @@
 # "gateway"
 
-Source URL: /providers/gateway/
+Source URL: https://ozio.github.io/SwiftAISDK/providers/gateway/
 
 ## Package
 
@@ -32,10 +32,57 @@ Both provider-owned and language-model batch result routes use `ProviderSettings
 
 When xAI/SpaceXAI diarization is requested but no nested raw speaker evidence is returned, transcription adds an unsupported-option warning. Existing provider metadata remains available for callers that receive speaker evidence.
 
+## Streaming speech
+
+`streamingSpeechModel("fish-audio/s2-pro")` or the existing `speechModel(...)`
+factory can feed `AI.experimentalStreamSpeech`. Incremental text, speaker
+boundaries, requested audio format, provider options and cancellation use the
+native speech contract described in [Stream speech](../../core/stream-speech/).
+
+On a trusted server, mint a speech-bound short-lived token:
+
+```swift
+let secret = try await gateway.experimentalSpeech.getToken(.init(
+    model: "fish-audio/s2-pro", expiresAfterSeconds: 60
+))
+```
+
+The result includes `token`, the speech WebSocket `url`, and optional `expiresAt`
+in epoch seconds. Give the token to a client configured with its own Gateway
+provider. Keep the server credential on the server. Speech connects with
+`ai-gateway-speech.v1` plus the shared auth/team subprotocols. Unknown envelope
+parts are ignored; typed server errors and premature close remain observable.
+
+## Parallel Search
+
+`GatewayTools.parallelSearch` accepts the current `turbo`, `fast`, `basic` and
+`advanced` modes, plus the legacy `one-shot` and `agentic` aliases. Omitted mode
+uses the server's `basic` default. `turbo` supports English and Japanese. Domain
+filters may include paths, for example `docs.python.org/3`.
+
+```swift
+let search = GatewayTools.parallelSearch(
+    mode: "fast",
+    includeDomains: ["docs.python.org/3"],
+    maxCharsTotal: 8_000,
+    maxAgeSeconds: 600,
+    timeoutSeconds: 10,
+    disableCacheFallback: true,
+    location: "jp"
+)
+```
+
+`maxCharsTotal` is sent at the top level. `timeoutSeconds` and
+`disableCacheFallback` configure fetch freshness; the service raises cache ages
+below 600 seconds to 600. Search results retain their raw GA fields:
+`search_id`, `results[].excerpts`, nullable titles/publication dates, optional
+warnings, usage and `session_id`. Consumers that decoded the old camelCase
+result fields should adopt the GA response names.
+
 ## Notes
 
-Gateway mirrors upstream 4.0.121: default `/v4/ai` base URL, `AI_GATEWAY_API_KEY`/`VERCEL_OIDC_TOKEN` auth, team scoping, protocol/auth-method headers, versioned user-agent suffix, language/embedding/image/video/reranking/speech/transcription aliases, durable Batch V4 start/status/results with ordered mixed content, callback URL forwarding, reconciled nonnegative native request counts, typed `not_found` errors, Tako Search, async-video start/status and native callback registration, unary transcription plus duplex streaming transcription, and a callable experimental transcription factory that mints short-lived route-bound tokens. Gateway providerOptions cover BYOK, routing order/fallbacks, provider allow-lists, prompt-training restrictions, `has` filtering, sort, serviceTier, quota, and tags; response/provider metadata, model/credits/spend/generation APIs, retryable structured errors, and provider tools are retained. Full realtime model sessions, Vercel o11y headers, metadata-cache refresh policy, ProviderV4 type names, ESM-only packaging, Node 22 engines, and workflow serialization helpers remain JS/runtime-only gaps. The 2026-09-20 pass adds native Evaluation V4 models, catalog discovery, headers, abort propagation, result metadata, and structured error mapping. The 2026-09-27 pass adds Browserbase search and fetch tools, forward-compatible has filters, and provider-owned batch cancellation with lifecycle-status validation. Gateway 4.0.95 also validates conditional Evaluation V4 fallbacks and attributes results to the model that actually answered. The 2026-10-04 pass routes credits team IDs/slugs through query parameters, accepts all-question conditional evaluation fallback thresholds, and preserves native audio usage including stream finishes. The 2026-10-11 pass: Decision V4 uses /decision-model with normalized inline file evidence; batch JSONL downloads have a configurable 64 MiB default line limit. Shared embedding dimensions and missing xAI diarization evidence are handled. The 2026-10-23 pass: Decision requests forward optional maxOutputTokens and reasoning without adding absent defaults.
+Gateway mirrors upstream 4.0.126: default `/v4/ai` base URL, `AI_GATEWAY_API_KEY`/`VERCEL_OIDC_TOKEN` auth, team scoping, protocol/auth-method headers, versioned user-agent suffix, language/embedding/image/video/reranking/speech/transcription aliases, durable Batch V4 start/status/results with ordered mixed content, callback URL forwarding, reconciled nonnegative native request counts, typed `not_found` errors, Tako Search, async-video start/status and native callback registration, unary transcription plus duplex streaming transcription, and a callable experimental transcription factory that mints short-lived route-bound tokens. Gateway providerOptions cover BYOK, routing order/fallbacks, provider allow-lists, prompt-training restrictions, `has` filtering, sort, serviceTier, quota, and tags; response/provider metadata, model/credits/spend/generation APIs, retryable structured errors, and provider tools are retained. Full realtime model sessions, Vercel o11y headers, metadata-cache refresh policy, ProviderV4 type names, ESM-only packaging, Node 22 engines, and workflow serialization helpers remain JS/runtime-only gaps. The 2026-09-20 pass adds native Evaluation V4 models, catalog discovery, headers, abort propagation, result metadata, and structured error mapping. The 2026-09-27 pass adds Browserbase search and fetch tools, forward-compatible has filters, and provider-owned batch cancellation with lifecycle-status validation. Gateway 4.0.95 also validates conditional Evaluation V4 fallbacks and attributes results to the model that actually answered. The 2026-10-04 pass routes credits team IDs/slugs through query parameters, accepts all-question conditional evaluation fallback thresholds, and preserves native audio usage including stream finishes. The 2026-10-11 pass: Decision V4 uses /decision-model with normalized inline file evidence; batch JSONL downloads have a configurable 64 MiB default line limit. Shared embedding dimensions and missing xAI diarization evidence are handled. The 2026-10-23 pass: Decision requests forward optional maxOutputTokens and reasoning without adding absent defaults. The 2026-10-25 pass: Native streaming speech, speech-bound client secrets and interoperable WebSocket envelopes are available. Parallel Search supports GA modes, top-level maxCharsTotal, fetch timeout/cache policy and location; raw results preserve GA snake_case fields.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Return to the [provider matrix](/providers/).
+Return to the [provider matrix](/SwiftAISDK/providers/).

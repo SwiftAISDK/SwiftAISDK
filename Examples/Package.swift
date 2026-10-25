@@ -72,6 +72,10 @@ let package = Package(
             ]
         ),
         .executableTarget(
+            name: "StreamSpeech",
+            dependencies: [.product(name: "SwiftAISDK", package: "SwiftAISDK")]
+        ),
+        .executableTarget(
             name: "GenerateAudio",
             dependencies: [
                 .product(name: "SwiftAISDK", package: "SwiftAISDK"),

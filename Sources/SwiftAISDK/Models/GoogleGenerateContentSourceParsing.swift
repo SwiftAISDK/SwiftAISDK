@@ -171,16 +171,21 @@ struct GoogleGenerateContentStreamingToolCalls {
                     emitted.append(.toolInputDelta(id: id, delta: delta, providerMetadata: buffer.providerMetadata))
                 }
             } else {
+                var accumulator = buffer.responseAccumulator ?? GoogleJSONResponseArgumentAccumulator()
                 for partialArg in partialArgs {
-                    guard let path = partialArg["jsonPath"]?.stringValue else { continue }
-                    let value = googlePartialArgValue(partialArg)
-                    googleSetPartialArgument(path: path, value: value, in: &buffer.arguments)
+                    let textDelta = accumulator.apply([partialArg])
+                    var snapshot = accumulator
+                    _ = snapshot.finish()
+                    if let parsed = try? decodeJSONBody(Data(snapshot.jsonText.utf8)), let arguments = parsed.objectValue {
+                        buffer.arguments = arguments
+                    }
                     let argumentsDelta = googleGenerateContentArguments(.object(buffer.arguments))
                     emitted.append(.toolCallDelta(id: buffer.id, name: buffer.name, argumentsDelta: argumentsDelta, index: index))
-                    if buffer.inputStarted {
-                        emitted.append(.toolInputDelta(id: id, delta: argumentsDelta, providerMetadata: buffer.providerMetadata))
+                    if buffer.inputStarted, !textDelta.isEmpty {
+                        emitted.append(.toolInputDelta(id: id, delta: textDelta, providerMetadata: buffer.providerMetadata))
                     }
                 }
+                buffer.responseAccumulator = accumulator
             }
         }
 
@@ -229,12 +234,16 @@ struct GoogleJSONResponseArgumentAccumulator {
     private var containers: [Container] = []
     private var stringOpen = false
     private var stringPaths: Set<String> = []
+    private var seenPaths: Set<String> = []
     private(set) var jsonText = ""
 
     mutating func apply(_ partialArgs: [JSONValue]) -> String {
         var delta = ""
         for arg in partialArgs {
-            guard let path = arg["jsonPath"]?.stringValue, path.hasPrefix("$."), path.count > 2 else { continue }
+            guard let rawPath = arg["jsonPath"]?.stringValue else { continue }
+            let isArrayTerminator = rawPath.hasSuffix("[]")
+            let path = isArrayTerminator ? String(rawPath.dropLast(2)) : rawPath
+            guard path.hasPrefix("$."), path.count > 2 else { continue }
             let segments = Self.pathSegments(String(path.dropFirst(2)))
             guard let leaf = segments.last else { continue }
             if let string = arg["stringValue"]?.stringValue, stringPaths.contains(path) {
@@ -243,11 +252,18 @@ struct GoogleJSONResponseArgumentAccumulator {
                 continue
             }
             let value: JSONValue
+            var isEmptyContainer = false
             if let text = arg["stringValue"]?.stringValue { value = .string(text) }
             else if let number = arg["numberValue"]?.doubleValue { value = .number(number) }
             else if let bool = arg["boolValue"]?.boolValue { value = .bool(bool) }
             else if arg.objectValue?["nullValue"] != nil { value = .null }
-            else { continue }
+            else if let supplied = arg["value"] { value = supplied }
+            else {
+                guard !seenPaths.contains(segments.joined(separator: "/")), arg["willContinue"] != true else { continue }
+                isEmptyContainer = true
+                value = isArrayTerminator ? .array([JSONValue]()) : .object([:])
+            }
+            for depth in 1...segments.count { seenPaths.insert(segments.prefix(depth).joined(separator: "/")) }
             if stringOpen { delta += "\""; stringOpen = false }
             if containers.isEmpty { containers.append(Container(segment: "", isArray: false)); delta += "{" }
             let parents = Array(segments.dropLast())
@@ -263,6 +279,11 @@ struct GoogleJSONResponseArgumentAccumulator {
                 containers.append(Container(segment: parents[position], isArray: isArray))
             }
             delta += startChild(leaf)
+            if isEmptyContainer {
+                delta += isArrayTerminator ? "[" : "{"
+                containers.append(Container(segment: leaf, isArray: isArrayTerminator))
+                continue
+            }
             let json = googleGenerateContentArguments(value)
             if value.stringValue != nil {
                 stringPaths.insert(path)

@@ -1,6 +1,6 @@
 # Video and reranking
 
-Source URL: /components/video-and-reranking/
+Source URL: https://ozio.github.io/SwiftAISDK/components/video-and-reranking/
 
 ## Symbol counts
 

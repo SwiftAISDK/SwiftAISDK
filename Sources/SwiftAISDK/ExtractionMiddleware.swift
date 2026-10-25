@@ -7,7 +7,23 @@ public func extractJsonMiddleware(
     return AILanguageModelMiddleware(
         wrapGenerate: { context in
             var result = try await context.doGenerate()
-            result.text = transformText(result.text)
+            result.content = result.content.map { part in
+                switch part {
+                case let .text(text, metadata):
+                    return .text(transformText(text), providerMetadata: metadata)
+                case let .citedText(text, citations, metadata):
+                    return .citedText(transformText(text), citations: citations, providerMetadata: metadata)
+                default: return part
+                }
+            }
+            result.structuredOutputText = result.structuredOutputText.map(transformText)
+            result.text = result.content.compactMap { part -> String? in
+                switch part {
+                case let .text(text, _), let .citedText(text, _, _): return text
+                default: return nil
+                }
+            }.joined()
+            result.refreshDerivedContent()
             return result
         },
         wrapStream: { context in
@@ -51,12 +67,38 @@ private func makeExtractReasoningMiddleware(opening: String, closing: String, se
     AILanguageModelMiddleware(
         wrapGenerate: { context in
             var result = try await context.doGenerate()
-            let input = startWithReasoning ? opening + result.text : result.text
-            guard let extracted = extractDelimitedSections(text: input, opening: opening, closing: closing, separator: separator) else {
-                return result
+            func extract(_ text: String) -> (reasoning: String, text: String)? {
+                let input = startWithReasoning ? opening + text : text
+                return extractDelimitedSections(text: input, opening: opening, closing: closing, separator: separator)
             }
-            result.text = extracted.text
-            result.reasoning = appendSeparated(result.reasoning, extracted.reasoning, separator: separator)
+            result.content = result.content.flatMap { part -> [AIResultContentPart] in
+                let text: String
+                let metadata: [String: JSONValue]
+                switch part {
+                case let .text(value, providerMetadata), let .citedText(value, _, providerMetadata):
+                    text = value; metadata = providerMetadata
+                default: return [part]
+                }
+                guard let extracted = extract(text) else { return [part] }
+                let remainingText: AIResultContentPart = part.citations.isEmpty
+                    ? .text(extracted.text, providerMetadata: metadata)
+                    : .citedText(extracted.text, citations: part.citations, providerMetadata: metadata)
+                return [.reasoning(extracted.reasoning), remainingText]
+            }
+            if let selected = result.structuredOutputText {
+                result.structuredOutputText = extract(selected)?.text ?? selected
+            }
+            result.text = result.content.compactMap { part -> String? in
+                switch part {
+                case let .text(text, _), let .citedText(text, _, _): return text
+                default: return nil
+                }
+            }.joined()
+            result.reasoning = result.content.compactMap { part -> String? in
+                if case let .reasoning(reasoning, _) = part { return reasoning }
+                return nil
+            }.joined(separator: separator)
+            result.refreshDerivedContent()
             return result
         },
         wrapStream: { context in

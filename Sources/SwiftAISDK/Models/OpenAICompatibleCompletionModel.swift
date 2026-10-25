@@ -49,7 +49,7 @@ public final class OpenAICompatibleCompletionModel: LanguageModel, @unchecked Se
                     continuation.yield(.responseMetadata(openAICompatibleResponseMetadata(response: responseHead, modelID: modelID)))
                     var providerMetadata: [String: JSONValue] = [:]
                     var activeTextID: String?
-                    var finishReason: String? = "other"
+                    var finishReason: String? = isOpenAIBackedProvider(providerID, config: config) ? "interrupted" : "other"
                     var finishUsage: TokenUsage?
                     let shouldThrowPreOutputStreamErrors = isOpenAIBackedProvider(providerID, config: config)
                     var hasOutputStarted = false

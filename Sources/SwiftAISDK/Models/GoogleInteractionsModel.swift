@@ -62,9 +62,16 @@ public final class GoogleInteractionsLanguageModel: LanguageModel, @unchecked Se
                     var didEmitFinish = false
                     var didReceiveStreamError = false
                     var interactionID: String?
+                    var finishStatus: String?
                     for try await event in serverSentEvents(from: response.body) {
                         if event.data == "[DONE]" { break }
-                        let raw = try decodeJSONBody(Data(event.data.utf8))
+                        let raw: JSONValue
+                        do { raw = try decodeJSONBody(Data(event.data.utf8)) }
+                        catch {
+                            didReceiveStreamError = true
+                            continuation.yield(.error(message: error.localizedDescription))
+                            continue
+                        }
                         if request.includeRawChunks {
                             continuation.yield(.raw(raw))
                         }
@@ -74,6 +81,10 @@ public final class GoogleInteractionsLanguageModel: LanguageModel, @unchecked Se
                             continue
                         }
                         let eventType = raw["event_type"]?.stringValue
+                        if ["interaction.status_update", "interaction.in_progress", "interaction.requires_action"].contains(eventType ?? "") {
+                            finishStatus = raw["status"]?.stringValue
+                                ?? (eventType == "interaction.requires_action" ? "requires_action" : "in_progress")
+                        }
                         let stepType = raw["step"]?["type"]?.stringValue
                         let defersBuiltinResultSources = eventType == "step.start"
                             && stepType.map { googleInteractionsBuiltinToolResultTypes.contains($0) } == true
@@ -141,7 +152,7 @@ public final class GoogleInteractionsLanguageModel: LanguageModel, @unchecked Se
                                 continuation.yield(part)
                             }
                             continuation.yield(.finishMetadata(
-                                reason: googleInteractionsFinishReason(status: interaction["status"]?.stringValue, hasFunctionCall: hasFunctionCall),
+                                reason: googleInteractionsFinishReason(status: interaction["status"]?.stringValue ?? finishStatus, hasFunctionCall: hasFunctionCall),
                                 usage: googleInteractionsUsage(from: interaction),
                                 providerMetadata: googleInteractionsProviderMetadata(from: interaction)
                             ))
@@ -149,7 +160,7 @@ public final class GoogleInteractionsLanguageModel: LanguageModel, @unchecked Se
                             break
                         }
                     }
-                    if didReceiveStreamError, !didEmitFinish {
+                    if !didEmitFinish {
                         for part in content.finishParts(
                             sourceCounter: &sourceCounter,
                             emittedSourceKeys: &emittedSourceKeys
@@ -157,7 +168,8 @@ public final class GoogleInteractionsLanguageModel: LanguageModel, @unchecked Se
                             continuation.yield(part)
                         }
                         continuation.yield(.finishMetadata(
-                            reason: "error",
+                            reason: didReceiveStreamError ? "error" : finishStatus == nil || finishStatus == "in_progress"
+                                ? "interrupted" : googleInteractionsFinishReason(status: finishStatus, hasFunctionCall: hasFunctionCall),
                             usage: nil,
                             providerMetadata: [:]
                         ))

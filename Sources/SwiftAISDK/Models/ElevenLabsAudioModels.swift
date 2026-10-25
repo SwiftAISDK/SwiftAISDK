@@ -1,18 +1,27 @@
 import Foundation
 
-public final class ElevenLabsSpeechModel: SpeechModel, @unchecked Sendable {
+public final class ElevenLabsSpeechModel: StreamingSpeechModel, @unchecked Sendable {
     public let providerID = "elevenlabs.speech"
     public let modelID: String
-    private let config: ModelHTTPConfig
+    let config: ModelHTTPConfig
 
-    init(modelID: String, config: ModelHTTPConfig) {
+    let webSocketTransport: any AIDuplexWebSocketTransport
+
+    init(modelID: String, config: ModelHTTPConfig, webSocketTransport: any AIDuplexWebSocketTransport = URLSessionDuplexWebSocketTransport.shared) {
         self.modelID = modelID
         self.config = config
+        self.webSocketTransport = webSocketTransport
     }
 
     public func speak(_ request: SpeechRequest) async throws -> SpeechResult {
         let options = try elevenLabsProviderOptions(from: request)
-        let warnings = elevenLabsSpeechWarnings(for: request)
+        var warnings = elevenLabsSpeechWarnings(for: request)
+        if modelID.hasPrefix("music_") || modelID.hasPrefix("eleven_text_to_sound") || options["inputs"] != nil {
+            return try await elevenLabsSpecialSpeech(model: self, request: request, options: options)
+        }
+        for key in ["streaming", "dialogue", "musicLengthMs", "forceInstrumental", "compositionPlan", "durationSeconds", "promptInfluence", "loop"] where options[key] != nil {
+            warnings.append(elevenLabsIgnoredWarning(key))
+        }
         let voice = request.voice ?? "21m00Tcm4TlvDq8ikWAM"
         var query: [String: String] = [
             "output_format": elevenLabsOutputFormat(request.format)
@@ -44,7 +53,7 @@ public final class ElevenLabsSpeechModel: SpeechModel, @unchecked Sendable {
         }
         for (key, value) in options {
             switch key {
-            case "languageCode", "language_code", "voiceSettings", "voice_settings", "enableLogging", "enable_logging", "speed":
+            case "languageCode", "language_code", "voiceSettings", "voice_settings", "enableLogging", "enable_logging", "speed", "streaming", "dialogue", "musicLengthMs", "forceInstrumental", "compositionPlan", "durationSeconds", "promptInfluence", "loop":
                 continue
             case "pronunciationDictionaryLocators":
                 body["pronunciation_dictionary_locators"] = elevenLabsPronunciationLocators(value)
@@ -79,6 +88,7 @@ public final class ElevenLabsSpeechModel: SpeechModel, @unchecked Sendable {
             audio: response.body,
             contentType: response.headers.contentType,
             warnings: warnings,
+            providerMetadata: ["elevenlabs": .object(["outputFormat": .string(query["output_format"] ?? "mp3_44100_128")])],
             requestMetadata: AIRequestMetadata(body: .object(body), headers: request.headers),
             responseMetadata: aiResponseMetadata(response: response, modelID: modelID)
         )
@@ -141,14 +151,14 @@ public final class ElevenLabsTranscriptionModel: TranscriptionModel, @unchecked 
             rawValue: raw,
             segments: segments,
             language: raw["language_code"]?.stringValue,
-            durationInSeconds: elevenLabsTranscriptionDuration(from: raw),
+            durationInSeconds: raw["audio_duration_secs"]?.doubleValue ?? elevenLabsTranscriptionDuration(from: raw),
             providerMetadata: raw["words"]?.arrayValue.map { ["elevenlabs": .object(["words": .array($0)])] } ?? [:],
             responseMetadata: aiResponseMetadata(from: raw, response: response, modelID: modelID)
         )
     }
 }
 
-private func elevenLabsOutputFormat(_ outputFormat: String?) -> String {
+func elevenLabsOutputFormat(_ outputFormat: String?) -> String {
     switch outputFormat {
     case "mp3":
         return "mp3_44100_128"
@@ -181,7 +191,7 @@ private func elevenLabsProviderOptions(from extraBody: [String: JSONValue]) -> [
     return output
 }
 
-private func elevenLabsProviderOptions(from request: SpeechRequest) throws -> [String: JSONValue] {
+func elevenLabsProviderOptions(from request: SpeechRequest) throws -> [String: JSONValue] {
     try elevenLabsProviderOptions(
         extraBody: request.extraBody,
         providerOptions: request.providerOptions,
@@ -216,7 +226,7 @@ private func elevenLabsProviderOptions(extraBody: [String: JSONValue], providerO
     return output
 }
 
-private func elevenLabsValidateSpeechProviderOptions(_ options: [String: JSONValue]) throws -> [String: JSONValue] {
+func elevenLabsValidateSpeechProviderOptions(_ options: [String: JSONValue]) throws -> [String: JSONValue] {
     var output: [String: JSONValue] = [:]
     for (key, value) in options where elevenLabsSpeechProviderOptionKeys.contains(key) {
         switch key {
@@ -242,6 +252,8 @@ private func elevenLabsValidateSpeechProviderOptions(_ options: [String: JSONVal
         case "applyLanguageTextNormalization", "enableLogging":
             try elevenLabsRequireBoolean(value, argument: "providerOptions.elevenlabs.\(key)", message: "ElevenLabs \(key) must be a boolean.")
             output[key] = value
+        case "streaming", "dialogue", "inputs", "musicLengthMs", "forceInstrumental", "compositionPlan", "durationSeconds", "promptInfluence", "loop":
+            output[key] = try elevenLabsValidateNewSpeechOption(key, value)
         default:
             break
         }
@@ -292,7 +304,7 @@ private let elevenLabsSpeechProviderOptionKeys: Set<String> = [
     "nextRequestIds",
     "applyTextNormalization",
     "applyLanguageTextNormalization",
-    "enableLogging"
+    "enableLogging", "streaming", "dialogue", "inputs", "musicLengthMs", "forceInstrumental", "compositionPlan", "durationSeconds", "promptInfluence", "loop"
 ]
 
 private let elevenLabsTranscriptionProviderOptionKeys: Set<String> = [
@@ -312,6 +324,9 @@ private let elevenLabsTranscriptionProviderOptionDefaults: [String: JSONValue] =
 ]
 
 private func elevenLabsValidateTranscriptionResponse(_ raw: JSONValue) throws {
+    if let duration = raw["audio_duration_secs"], duration != .null, duration.doubleValue == nil {
+        throw AIError.invalidResponse(provider: "elevenlabs.transcription", message: "ElevenLabs audio_duration_secs must be a number or null.")
+    }
     guard raw["language_code"]?.stringValue != nil else {
         throw AIError.invalidResponse(provider: "elevenlabs.transcription", message: "ElevenLabs transcription response did not contain a valid language_code.")
     }
@@ -368,7 +383,7 @@ private func elevenLabsSpeechWarnings(for request: SpeechRequest) -> [AIWarning]
     ]
 }
 
-private func elevenLabsVoiceSettings(_ value: JSONValue) -> JSONValue {
+func elevenLabsVoiceSettings(_ value: JSONValue) -> JSONValue {
     guard let settings = value.objectValue else { return value }
     var mapped: [String: JSONValue] = [:]
     for (key, item) in settings {
@@ -406,7 +421,7 @@ private func elevenLabsValidatedVoiceSettings(_ value: JSONValue) throws -> JSON
     return .object(output)
 }
 
-private func elevenLabsPronunciationLocators(_ value: JSONValue) -> JSONValue {
+func elevenLabsPronunciationLocators(_ value: JSONValue) -> JSONValue {
     guard let array = value.arrayValue else { return value }
     return .array(array.map { item in
         guard let object = item.objectValue else { return item }

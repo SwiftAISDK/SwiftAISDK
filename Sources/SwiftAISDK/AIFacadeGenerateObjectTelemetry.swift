@@ -79,7 +79,7 @@ func generateObjectResult<Output: Sendable>(
                 providerMetadata: generatedResult.providerMetadata,
                 responseMetadata: generatedResult.responseMetadata
             ))
-            let parsed = try await parse(generatedResult.text, model.providerID)
+            let parsed = try await parse(generatedResult.structuredOutputText ?? generatedResult.text, model.providerID)
 
             let result = ObjectGenerationResult(
                 object: parsed.object,

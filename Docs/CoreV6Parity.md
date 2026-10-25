@@ -1,14 +1,14 @@
 # Core V7 Parity
 
-Snapshot date: 2026-10-23
+Snapshot date: 2026-10-25
 
 This document tracks SwiftAISDK against the current AI SDK Core and Errors
 reference. It is intentionally high-level: product status belongs in
 `PortingStatus.md`, provider package drift belongs in `ProviderVersionLedger.md`,
 and provider behavior belongs in focused tests.
 Implementation-sensitive UI/chat items are also checked against npm source
-snapshots, currently `ai@7.0.148`, `@ai-sdk/provider@4.0.31`,
-`@ai-sdk/provider-utils@5.0.65`, and `@ai-sdk/react@4.0.152`.
+snapshots, currently `ai@7.0.153`, `@ai-sdk/provider@4.0.34`,
+`@ai-sdk/provider-utils@5.0.68`, and `@ai-sdk/react@4.0.157`.
 
 References:
 
@@ -24,6 +24,33 @@ semantics or a whole-facade retention bound. The offline OAuth migration example
 exercises the existing published MCP 2.0.81 binding contract. See
 `PostReleaseRepairAudit.md` and `DownloadSecurity.md` for current evidence and
 compatibility details; older dated audit sections retain their historical state.
+
+## 2026-10-25 Native Parity
+
+`AI.experimentalStreamSpeech` accepts complete or incremental text through native
+speech models and returns one owned audio/full stream with async result metadata.
+ElevenLabs and Gateway implement the additive StreamingSpeechModel contract.
+Cancellation stops input/provider work; no-audio and premature EOF are explicit
+failures. Provider usage remains JSON and audio is not retained for replay.
+Native speech frame parsing/serialization mirrors the published envelope.
+
+`TextGenerationResult.structuredOutputText` is optional, defaults to nil and
+selects JSON parsing text independently of complete generated content. OpenAI
+Responses selects the last final_answer; an explicit empty selection is not a
+fallback. Object/Output facades and JSON/reasoning extraction preserve this
+selection, drafts, citations and metadata.
+
+`toolChoice: none` rejects calls before repair/refinement/execution callbacks and
+withholds tool parts from streaming consumers. Interrupted output bypasses
+required/forced missing-tool checks, execution and automatic continuation.
+Restored repeated/conflicting approvals collect only the first response per call.
+Native chat retains interruption state after response cleanup. MCP strings map
+to text model output while null/other primitives remain safe JSON.
+
+The earlier monorepo interruption, approval and Gateway Search GA follow-ups are
+now published and covered. Browser UI wire/steps, JS low-memory result/getter
+semantics, framework/workflow/OTel adapters and sandbox tools remain separate
+products or documented gaps; no equivalent whole-facade memory claim is made.
 
 ## 2026-10-23 Native Parity
 

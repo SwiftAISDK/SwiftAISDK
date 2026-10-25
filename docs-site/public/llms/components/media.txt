@@ -1,6 +1,6 @@
 # Media
 
-Source URL: /components/media/
+Source URL: https://ozio.github.io/SwiftAISDK/components/media/
 
 ## Symbol counts
 

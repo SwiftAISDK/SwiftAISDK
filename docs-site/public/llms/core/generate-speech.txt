@@ -1,8 +1,10 @@
 # Generate speech
 
-Source URL: /core/generate-speech/
+Source URL: https://ozio.github.io/SwiftAISDK/core/generate-speech/
 
 Use `generateSpeech` when a provider exposes text-to-speech.
+
+For incremental text input and audio output, see [Stream speech](../stream-speech/).
 
 ```swift title="Examples/Sources/GenerateSpeech/main.swift"
 import Foundation

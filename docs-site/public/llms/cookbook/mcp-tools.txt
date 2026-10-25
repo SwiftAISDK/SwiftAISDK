@@ -1,6 +1,6 @@
 # MCP tools
 
-Source URL: /cookbook/mcp-tools/
+Source URL: https://ozio.github.io/SwiftAISDK/cookbook/mcp-tools/
 
 Modern MCP `2026-07-28` tool calls can return `input_required`. Advertise
 `clientCapabilities: ["elicitation": ["form": [:]]]` and register

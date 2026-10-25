@@ -100,8 +100,19 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                 hasToolCalls: hasClientToolCalls
             )
         }
+        let structuredOutputText: String?
+        if isOpenAIBackedProvider(providerID, config: config), case .json? = request.responseFormat {
+            structuredOutputText = (raw["output"]?.arrayValue ?? []).last {
+                $0["type"] == "message" && $0["phase"] == "final_answer"
+            }.map { item in
+                (item["content"]?.arrayValue ?? []).compactMap { $0["text"]?.stringValue }.joined()
+            }
+        } else {
+            structuredOutputText = nil
+        }
         return TextGenerationResult(
             text: text,
+            structuredOutputText: structuredOutputText,
             content: content,
             finishReason: finishReason,
             usage: tokenUsage(from: raw),
@@ -155,7 +166,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                     var openResponsesHasToolCalls = false
                     var hasOutputStarted = false
                     var encounteredStreamError = false
-                    var fallbackFinishReason: String? = "other"
+                    var fallbackFinishReason: String? = "interrupted"
                     let shouldThrowPreOutputStreamErrors = isOpenAIBackedProvider(providerID, config: config)
                     var sourceCounter = 0
                     var hasWebSearchActionSources = false
@@ -183,7 +194,15 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                     }
                     for try await event in serverSentEvents(from: response.body) {
                         if event.data == "[DONE]" { break }
-                        let raw = try decodeJSONBody(Data(event.data.utf8))
+                        let raw: JSONValue
+                        do {
+                            raw = try decodeJSONBody(Data(event.data.utf8))
+                        } catch {
+                            encounteredStreamError = true
+                            fallbackFinishReason = "error"
+                            continuation.yield(.error(message: error.localizedDescription))
+                            continue
+                        }
                         if request.includeRawChunks {
                             continuation.yield(.raw(raw))
                         }

@@ -1,6 +1,6 @@
 # Providers
 
-Source URL: /components/providers/
+Source URL: https://ozio.github.io/SwiftAISDK/components/providers/
 
 ## Symbol counts
 
@@ -12,8 +12,8 @@ Source URL: /components/providers/
 | Function | 20 |
 | Global Variable | 7 |
 | Initializer | 50 |
-| Instance Method | 261 |
-| Instance Property | 186 |
+| Instance Method | 263 |
+| Instance Property | 187 |
 | Structure | 27 |
 | Type Alias | 4 |
 | Type Method | 83 |
@@ -349,6 +349,8 @@ Source URL: /components/providers/
 | Instance Method | `speechModel(_:)` | `func speechModel(_ modelID: String) throws -> any SpeechModel` | [Sources/SwiftAISDK/Providers/VercelProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/VercelProvider.swift) |
 | Instance Method | `speechModel(_:)` | `func speechModel(_ modelID: String) throws -> any SpeechModel` | [Sources/SwiftAISDK/Providers/ZAIProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/ZAIProvider.swift) |
 | Instance Method | `speechModel()` | `func speechModel() throws -> any SpeechModel` | [Sources/SwiftAISDK/Providers/OpenAICompatibleProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/OpenAICompatibleProvider.swift) |
+| Instance Method | `streamingSpeechModel(_:)` | `func streamingSpeechModel(_ modelID: String) throws -> any StreamingSpeechModel` | [Sources/SwiftAISDK/Providers/GatewayProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/GatewayProvider.swift) |
+| Instance Method | `streamingSpeechModel(_:webSocketTransport:)` | `func streamingSpeechModel(_ modelID: String, webSocketTransport: any AIDuplexWebSocketTransport = URLSessionDuplexWebSocketTransport.shared) throws -> any StreamingSpeechModel` | [Sources/SwiftAISDK/Providers/OpenAICompatibleProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/OpenAICompatibleProvider.swift) |
 | Instance Method | `streamingTranscription(_:)` | `func streamingTranscription(_ modelID: String) throws -> any StreamingTranscriptionModel` | [Sources/SwiftAISDK/Providers/CartesiaProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/CartesiaProvider.swift) |
 | Instance Method | `streamingTranscription(_:)` | `func streamingTranscription(_ modelID: String) throws -> any StreamingTranscriptionModel` | [Sources/SwiftAISDK/Providers/GatewayProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/GatewayProvider.swift) |
 | Instance Method | `streamingTranscriptionModel(_:)` | `func streamingTranscriptionModel(_ modelID: String) throws -> any StreamingTranscriptionModel` | [Sources/SwiftAISDK/Providers/AzureOpenAIProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/AzureOpenAIProvider.swift) |
@@ -452,6 +454,7 @@ Source URL: /components/providers/
 | Instance Property | `environment` | `var environment: [String : String]?` | [Sources/SwiftAISDK/Providers/CartesiaProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/CartesiaProvider.swift) |
 | Instance Property | `environment` | `var environment: [String : String]?` | [Sources/SwiftAISDK/Providers/KlingAIProviderSettings.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/KlingAIProviderSettings.swift) |
 | Instance Property | `environment` | `var environment: [String : String]?` | [Sources/SwiftAISDK/Providers/MiniMaxProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/MiniMaxProvider.swift) |
+| Instance Property | `experimentalSpeech` | `var experimentalSpeech: GatewaySpeechFactory { get }` | [Sources/SwiftAISDK/Providers/GatewayProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/GatewayProvider.swift) |
 | Instance Property | `experimentalTranscription` | `var experimentalTranscription: GatewayTranscriptionFactory { get }` | [Sources/SwiftAISDK/Providers/GatewayProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/GatewayProvider.swift) |
 | Instance Property | `expiresAfterSeconds` | `var expiresAfterSeconds: Int?` | [Sources/SwiftAISDK/Providers/GatewayProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/GatewayProvider.swift) |
 | Instance Property | `expiresAt` | `var expiresAt: Int?` | [Sources/SwiftAISDK/Providers/GatewayProvider.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/GatewayProvider.swift) |

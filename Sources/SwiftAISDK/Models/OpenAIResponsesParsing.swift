@@ -834,9 +834,10 @@ func openResponsesStreamFinishReason(
     if case .openResponses = mode {
         return openResponsesFinishReason(incompleteReason: incompleteReason, hasToolCalls: hasToolCalls)
     }
-    return openAIResponsesFinishReason(
+    let reason = openAIResponsesFinishReason(
         status: response["status"]?.stringValue,
         incompleteReason: incompleteReason,
         hasToolCalls: hasToolCalls
     )
+    return ["stop", "length", "content-filter", "tool-calls", "error", "other"].contains(reason ?? "") ? reason : "other"
 }

@@ -18,6 +18,9 @@ public enum AIResultContentPart: Equatable, Hashable, Sendable {
 public struct TextGenerationResult: Sendable {
     public var content: [AIResultContentPart]
     public var text: String
+    /// Optional text selected by the provider for JSON output parsing. An empty
+    /// selection is explicit; generated text and content remain unchanged.
+    public var structuredOutputText: String?
     public var reasoning: String
     public var finishReason: String?
     public var usage: TokenUsage?
@@ -41,6 +44,7 @@ public struct TextGenerationResult: Sendable {
 
     public init(
         text: String,
+        structuredOutputText: String? = nil,
         content: [AIResultContentPart] = [],
         reasoning: String = "",
         finishReason: String? = nil,
@@ -73,6 +77,7 @@ public struct TextGenerationResult: Sendable {
             : content
         self.content = resolvedContent
         self.text = text
+        self.structuredOutputText = structuredOutputText
         self.reasoning = reasoning
         self.finishReason = finishReason
         self.usage = usage

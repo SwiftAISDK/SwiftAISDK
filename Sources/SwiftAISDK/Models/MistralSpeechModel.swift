@@ -49,6 +49,8 @@ public final class MistralSpeechModel: SpeechModel, @unchecked Sendable {
         } else if let voice = request.voice {
             body["voice_id"] = .string(voice)
         }
+        body["expressiveness"] = options["expressiveness"]
+        body["phoneme_hints"] = options["phonemeHints"]
 
         let response = try await config.sendJSONResponse(
             path: "/audio/speech",
@@ -94,21 +96,37 @@ private func mistralSpeechProviderOptions(_ request: SpeechRequest) throws -> [S
             guard let nested = value.objectValue else {
                 throw AIError.invalidArgument(argument: "providerOptions.mistral", message: "Mistral provider options must be an object.")
             }
-            output.removeValue(forKey: "refAudio")
-            output.merge(try mistralValidateSpeechProviderOptions(nested)) { _, nested in nested }
+            for key in ["refAudio", "expressiveness", "phonemeHints"] {
+                output.removeValue(forKey: key)
+            }
+            output.merge(nested) { _, nested in nested }
         }
     }
-    return output
+    return try mistralValidateSpeechProviderOptions(output)
 }
 
 private func mistralValidateSpeechProviderOptions(_ options: [String: JSONValue]) throws -> [String: JSONValue] {
     var output: [String: JSONValue] = [:]
-    if let refAudio = options["refAudio"] {
-        guard refAudio != .null else { return output }
+    if let refAudio = options["refAudio"], refAudio != .null {
         guard let value = refAudio.stringValue, !value.isEmpty else {
             throw AIError.invalidArgument(argument: "providerOptions.mistral.refAudio", message: "Mistral refAudio must be a non-empty string.")
         }
         output["refAudio"] = .string(value)
+    }
+    if let value = options["expressiveness"], value != .null {
+        guard let amount = value.doubleValue, amount.isFinite, (1...5).contains(amount) else {
+            throw AIError.invalidArgument(argument: "providerOptions.mistral.expressiveness", message: "Mistral expressiveness must be a finite number from 1 through 5.")
+        }
+        output["expressiveness"] = value
+    }
+    if let value = options["phonemeHints"], value != .null {
+        guard let hints = value.objectValue, hints.allSatisfy({ word, phonemes in
+            guard !word.isEmpty, let items = phonemes.arrayValue, !items.isEmpty else { return false }
+            return items.allSatisfy { $0.stringValue?.isEmpty == false }
+        }) else {
+            throw AIError.invalidArgument(argument: "providerOptions.mistral.phonemeHints", message: "Mistral phonemeHints must map non-empty words to non-empty arrays of non-empty phonemes.")
+        }
+        output["phonemeHints"] = value
     }
     return output
 }

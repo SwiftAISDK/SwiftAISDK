@@ -437,8 +437,31 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                         )
                     }
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
-                    continuation.yield(.responseMetadata(aiResponseMetadata(response: responseHead, modelID: modelID)))
-                    continuation.yield(.streamStart(warnings: preparedRequest.warnings))
+                    var hasUnfinishedOutput = false
+                    var hasStreamError = false
+                    var lastFinishUsage: TokenUsage?
+                    var lastFinishMetadata: [String: JSONValue] = [:]
+                    func emit(_ part: LanguageStreamPart) {
+                        switch part {
+                        case let .textDelta(delta), let .reasoningDelta(delta),
+                             let .textDeltaPart(_, delta, _), let .reasoningDeltaPart(_, delta, _),
+                             let .toolInputDelta(_, delta, _):
+                            hasUnfinishedOutput = hasUnfinishedOutput || !delta.isEmpty
+                        case .toolCall:
+                            hasUnfinishedOutput = true
+                        case .error:
+                            hasStreamError = true
+                        case let .finishMetadata(_, usage, metadata):
+                            hasUnfinishedOutput = false
+                            lastFinishUsage = usage
+                            lastFinishMetadata = metadata
+                        default:
+                            break
+                        }
+                        continuation.yield(part)
+                    }
+                    emit(.responseMetadata(aiResponseMetadata(response: responseHead, modelID: modelID)))
+                    emit(.streamStart(warnings: preparedRequest.warnings))
                     var contentBlocks = AnthropicStreamingContentBlocks(
                         providerID: providerID,
                         ignoresTextBlocks: preparedRequest.usesJSONToolResponseFormat
@@ -472,18 +495,18 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                         let raw = try decodeJSONBody(Data(event.data.utf8))
                         try anthropicValidateFallbackEvent(raw, providerID: providerID)
                         if request.includeRawChunks {
-                            continuation.yield(.raw(raw))
+                            emit(.raw(raw))
                         }
                         if let providerError = anthropicStreamProviderError(from: raw) {
                             if didReceiveMessageStart {
-                                continuation.yield(.providerError(providerError))
+                                emit(.providerError(providerError))
                                 for part in contentBlocks.finishParts(citationDocuments: streamingSources.citationDocuments) {
-                                    continuation.yield(part)
+                                    emit(part)
                                 }
                                 for part in jsonToolText.finishParts() {
-                                    continuation.yield(part)
+                                    emit(part)
                                 }
-                                continuation.yield(.finishMetadata(
+                                emit(.finishMetadata(
                                     reason: "error",
                                     usage: finishUsage,
                                     providerMetadata: anthropicProviderMetadata(
@@ -512,12 +535,14 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                                 }
                                 let incomingID = messageID.map { anthropicJSONString(.string($0)) ?? "\"\($0)\"" } ?? "null"
                                 let activeID = activeMessageID.map { anthropicJSONString(.string($0)) ?? "\"\($0)\"" } ?? "null"
-                                continuation.yield(.error(
+                                emit(.error(
                                     message: "Received message_start for message \(incomingID) while message \(activeID) is still open.",
                                     rawValue: raw
                                 ))
                                 break streamEvents
                             }
+                            hasUnfinishedOutput = false
+                            finishReason = nil
                             isMessageOpen = true
                             activeMessageID = messageID
                             didReceiveMessageStart = true
@@ -525,7 +550,7 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                                 rawUsage = usage
                                 finishUsage = anthropicTokenUsage(from: usage)
                             }
-                            continuation.yield(.custom(
+                            emit(.custom(
                                 ["kind": "anthropic.message_start"],
                                 providerMetadata: ["anthropic": .object([
                                     "id": raw["message"]?["id"] ?? .null,
@@ -572,38 +597,38 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                             if case .toolCall = part {
                                 realToolCallCount += 1
                             }
-                            continuation.yield(part)
+                            emit(part)
                         }
                         for part in contentBlocks.apply(event: raw, citationDocuments: streamingSources.citationDocuments) {
-                            continuation.yield(part)
+                            emit(part)
                         }
                         for part in jsonToolText.apply(event: raw) {
-                            continuation.yield(part)
+                            emit(part)
                         }
                         for part in providerToolResults.apply(event: raw) {
-                            continuation.yield(part)
+                            emit(part)
                         }
                         for source in streamingSources.apply(event: raw) {
-                            continuation.yield(.source(source))
+                            emit(.source(source))
                         }
                         for part in toolCalls.apply(event: raw) {
                             if case .toolCall = part {
                                 realToolCallCount += 1
                             }
-                            continuation.yield(part)
+                            emit(part)
                         }
                         if raw["type"]?.stringValue == "message_stop" {
                             for source in streamingSources.finishSources() {
-                                continuation.yield(.source(source))
+                                emit(.source(source))
                             }
                             for part in contentBlocks.finishParts(citationDocuments: streamingSources.citationDocuments) {
-                                continuation.yield(part)
+                                emit(part)
                             }
                             for part in jsonToolText.finishParts() {
-                                continuation.yield(part)
+                                emit(part)
                             }
-                            continuation.yield(.finishMetadata(
-                                reason: finishReason,
+                            emit(.finishMetadata(
+                                reason: finishReason ?? "other",
                                 usage: finishUsage,
                                 providerMetadata: anthropicProviderMetadata(
                                     usage: rawUsage,
@@ -617,8 +642,17 @@ public final class AnthropicLanguageModel: LanguageModel, @unchecked Sendable {
                                     requestProviderOptions: preparedRequest.providerOptions
                                 )
                             ))
-                            break
+                            // The native API owns one logical Messages response.
+                            // End at its semantic boundary even if the HTTP body
+                            // remains open; consuming later messages requires a
+                            // distinct session contract.
+                            break streamEvents
                         }
+                    }
+                    if hasUnfinishedOutput, !hasStreamError {
+                        for part in contentBlocks.finishParts(citationDocuments: streamingSources.citationDocuments) { emit(part) }
+                        for part in jsonToolText.finishParts() { emit(part) }
+                        emit(.finishMetadata(reason: "interrupted", usage: lastFinishUsage, providerMetadata: lastFinishMetadata))
                     }
                     continuation.finish()
                 } catch {
@@ -2229,6 +2263,7 @@ public final class AmazonBedrockAnthropicLanguageModel: LanguageModel, @unchecke
                     var inputTransformations: JSONValue = .null
                     var safeguardResults: JSONValue = .null
                     var didEmitTerminal = false
+                    var hasOutput = false
 
                     func emitTerminal() {
                         guard !didEmitTerminal else { return }
@@ -2242,7 +2277,7 @@ public final class AmazonBedrockAnthropicLanguageModel: LanguageModel, @unchecke
                             continuation.yield(part)
                         }
                         continuation.yield(.finishMetadata(
-                            reason: finishReason,
+                            reason: finishReason ?? "other",
                             usage: finishUsage,
                             providerMetadata: anthropicProviderMetadata(
                                 usage: rawUsage,
@@ -2271,6 +2306,11 @@ public final class AmazonBedrockAnthropicLanguageModel: LanguageModel, @unchecke
                                 item = event
                             }
                             let raw = item.rawValue
+                            if raw["type"] == "content_block_delta" {
+                                let delta = raw["delta"]
+                                hasOutput = hasOutput || !(delta?["text"]?.stringValue ?? delta?["thinking"]?.stringValue ?? delta?["partial_json"]?.stringValue ?? delta?["content"]?.stringValue ?? "").isEmpty
+                            }
+                            if raw["message"]?["content"]?.arrayValue?.contains(where: { $0["type"] == "tool_use" }) == true || raw["type"] == "content_block_stop" && realToolCallCount > 0 { hasOutput = true }
                             try anthropicValidateFallbackEvent(raw, providerID: providerID)
                             if request.includeRawChunks {
                                 continuation.yield(.raw(raw))
@@ -2375,8 +2415,10 @@ public final class AmazonBedrockAnthropicLanguageModel: LanguageModel, @unchecke
                     if !reachedMessageStop {
                         reachedMessageStop = try process(parser.finish())
                     }
-                    if !reachedMessageStop, !didEmitTerminal,
-                       finishReason != nil || finishUsage != nil || rawUsage != nil {
+                    if !reachedMessageStop, !didEmitTerminal, hasOutput {
+                        finishReason = "interrupted"
+                        finishUsage = nil
+                        rawUsage = nil
                         emitTerminal()
                     }
                     if !Task.isCancelled {

@@ -78,6 +78,9 @@ func moonshotChatBody(
     if let value = body.removeValue(forKey: "promptCacheKey") {
         body["prompt_cache_key"] = value
     }
+    if let options = body.removeValue(forKey: "promptCacheOptions")?.objectValue {
+        body["prompt_cache_options"] = .object(["mode": options["mode"] ?? "implicit"].merging(options) { _, value in value })
+    }
     if let value = body.removeValue(forKey: "safetyIdentifier") {
         body["safety_identifier"] = value
     }
@@ -85,7 +88,7 @@ func moonshotChatBody(
         body["tools"] = .array(try tools.map(moonshotNormalizeTool))
     }
 
-    moonshotStripTopLevelDollarSchema(from: &body)
+    try moonshotStripTopLevelDollarSchema(from: &body)
 
     return body
 }
@@ -95,7 +98,7 @@ func moonshotSupportsStructuredOutputs(modelID: String) -> Bool {
 }
 
 func moonshotSupportsThinkingKeep(modelID: String) -> Bool {
-    modelID == "kimi-k2.6" || modelID == "kimi-k3" || modelID.hasPrefix("kimi-k2.7-code")
+    modelID == "kimi-k2.6" || ["kimi-k3", "kimi-k3.1-pro", "kimi-k3.1-pro-highspeed"].contains(modelID) || modelID.hasPrefix("kimi-k2.7-code")
 }
 
 func moonshotProviderOptions(from providerOptions: [String: JSONValue]) throws -> [String: JSONValue] {
@@ -154,6 +157,21 @@ func moonshotValidateLanguageProviderOptions(_ options: [String: JSONValue], arg
         }
         output["reasoningEffort"] = .string(value)
     }
+    if let cache = options["promptCacheOptions"] {
+        guard let values = cache.objectValue else {
+            throw AIError.invalidArgument(argument: "\(argumentPrefix).promptCacheOptions", message: "MoonshotAI promptCacheOptions must be an object.")
+        }
+        var mapped: [String: JSONValue] = [:]
+        if let mode = values["mode"] {
+            guard mode == "implicit" else { throw AIError.invalidArgument(argument: "\(argumentPrefix).promptCacheOptions.mode", message: "MoonshotAI cache mode must be implicit.") }
+            mapped["mode"] = mode
+        }
+        if let ttl = values["ttl"] {
+            guard ttl == "5m" || ttl == "1h" else { throw AIError.invalidArgument(argument: "\(argumentPrefix).promptCacheOptions.ttl", message: "MoonshotAI cache ttl must be 5m or 1h.") }
+            mapped["ttl"] = ttl
+        }
+        output["promptCacheOptions"] = .object(mapped)
+    }
     for key in ["promptCacheKey", "safetyIdentifier"] {
         if let option = options[key] {
             guard let value = option.stringValue else {
@@ -169,14 +187,18 @@ func moonshotIsInteger(_ value: Double) -> Bool {
     value.rounded(.towardZero) == value
 }
 
-private func moonshotStripTopLevelDollarSchema(from body: inout [String: JSONValue]) {
+private func moonshotStripTopLevelDollarSchema(from body: inout [String: JSONValue]) throws {
     guard var responseFormat = body["response_format"]?.objectValue,
           var jsonSchema = responseFormat["json_schema"]?.objectValue,
-          var schema = jsonSchema["schema"]?.objectValue else {
+          let rawSchema = jsonSchema["schema"] else {
         return
     }
-    schema.removeValue(forKey: "$schema")
-    jsonSchema["schema"] = .object(schema)
+    var schema = rawSchema
+    if var object = schema.objectValue {
+        object.removeValue(forKey: "$schema")
+        schema = .object(object)
+    }
+    jsonSchema["schema"] = try moonshotNormalizeJSONSchemaForMFJS(schema)
     responseFormat["json_schema"] = .object(jsonSchema)
     body["response_format"] = .object(responseFormat)
 }
@@ -188,6 +210,7 @@ func moonshotChatUsage(from raw: JSONValue) -> TokenUsage? {
     let cacheReadTokens = usage["cached_tokens"]?.intValue
         ?? usage["prompt_tokens_details"]?["cached_tokens"]?.intValue
         ?? 0
+    let cacheWriteTokens = usage["prompt_tokens_details"]?["cache_write_tokens"]?.intValue
     let reasoningTokens = usage["completion_tokens_details"]?["reasoning_tokens"]?.intValue ?? 0
     let totalTokens = usage["total_tokens"]?.intValue ?? {
         return inputTokens + outputTokens
@@ -196,8 +219,9 @@ func moonshotChatUsage(from raw: JSONValue) -> TokenUsage? {
         inputTokens: inputTokens,
         outputTokens: outputTokens,
         totalTokens: totalTokens,
-        inputTokensNoCache: inputTokens - cacheReadTokens,
+        inputTokensNoCache: inputTokens - cacheReadTokens - (cacheWriteTokens ?? 0),
         inputTokensCacheRead: cacheReadTokens,
+        inputTokensCacheWrite: cacheWriteTokens,
         outputTextTokens: outputTokens - reasoningTokens,
         outputReasoningTokens: reasoningTokens,
         rawValue: usage
@@ -338,15 +362,18 @@ func moonshotNormalizeJSONSchemaForMFJS(_ schema: JSONValue, isRoot: Bool = true
         if isRoot {
             throw AIError.invalidArgument(
                 argument: "tools",
-                message: "MoonshotAI tool parameters must be a JSON Schema object with type object."
+                message: "MoonshotAI tool and response schemas must be a JSON Schema object with type object."
             )
         }
         return schema
     }
+    if isRoot, object["type"] == nil, moonshotIsObjectUnion(object) {
+        object["type"] = "object"
+    }
     if isRoot, object["type"]?.stringValue != "object" {
         throw AIError.invalidArgument(
             argument: "tools",
-            message: "MoonshotAI tool parameters must be a JSON Schema object with type object."
+            message: "MoonshotAI tool and response schemas must be a JSON Schema object with type object."
         )
     }
 
@@ -360,7 +387,7 @@ func moonshotNormalizeJSONSchemaForMFJS(_ schema: JSONValue, isRoot: Bool = true
         object["items"] = try moonshotNormalizeJSONSchemaForMFJS(items, isRoot: false)
     }
 
-    if let parentType = object["type"]?.stringValue, let anyOf = object["anyOf"]?.arrayValue {
+    if !isRoot, let parentType = object["type"]?.stringValue, let anyOf = object["anyOf"]?.arrayValue {
         object.removeValue(forKey: "type")
         object["anyOf"] = .array(try anyOf.map { branch in
             guard var branchObject = branch.objectValue else {
@@ -378,7 +405,7 @@ func moonshotNormalizeJSONSchemaForMFJS(_ schema: JSONValue, isRoot: Bool = true
             object[key] = .array(try values.map { try moonshotNormalizeJSONSchemaForMFJS($0, isRoot: false) })
         }
     }
-    for key in ["properties", "patternProperties", "$defs", "dependentSchemas"] {
+    for key in ["properties", "patternProperties", "$defs", "definitions", "dependentSchemas"] {
         if let values = object[key]?.objectValue {
             object[key] = .object(try values.mapValues { try moonshotNormalizeJSONSchemaForMFJS($0, isRoot: false) })
         }
@@ -389,4 +416,34 @@ func moonshotNormalizeJSONSchemaForMFJS(_ schema: JSONValue, isRoot: Bool = true
         }
     }
     return .object(object)
+}
+
+private func moonshotIsObjectUnion(_ root: [String: JSONValue]) -> Bool {
+    let unions = [root["anyOf"], root["oneOf"]].compactMap { $0 }
+    return !unions.isEmpty && unions.allSatisfy { value in
+        guard let branches = value.arrayValue, !branches.isEmpty else { return false }
+        return branches.allSatisfy { branch in
+            var resolved = branch
+            if let ref = branch["$ref"]?.stringValue {
+                let parts = ref.split(separator: "/", omittingEmptySubsequences: false)
+                if parts.count == 3, parts[0] == "#", parts[1] == "$defs" || parts[1] == "definitions" {
+                    resolved = root[String(parts[1])]?[String(parts[2])] ?? branch
+                }
+            }
+            return resolved["type"] == "object" || resolved["type"] == nil && resolved["properties"]?.objectValue != nil
+        }
+    }
+}
+
+func moonshotCacheWriteMetadata(headers: [String: String], namespace: String?) -> [String: JSONValue] {
+    func tokenCount(_ name: String) -> Int? {
+        guard let raw = headers.first(where: { $0.key.lowercased() == name })?.value else { return nil }
+        let value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !value.isEmpty, value.utf8.allSatisfy({ $0 >= 48 && $0 <= 57 }) else { return nil }
+        return Int(value)
+    }
+    let short = tokenCount("msh-usage-cache-write-tokens-5m")
+    let long = tokenCount("msh-usage-cache-write-tokens-1h")
+    guard short != nil || long != nil else { return [:] }
+    return [namespace ?? "moonshotai": ["cacheWriteTokens": ["ttl5m": .number(Double(short ?? 0)), "ttl1h": .number(Double(long ?? 0))]]]
 }

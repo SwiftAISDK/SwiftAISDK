@@ -69,12 +69,18 @@ public final class HuggingFaceResponsesLanguageModel: LanguageModel, @unchecked 
 
                     var activeTextIDs: Set<String> = []
                     var activeReasoningIDs: Set<String> = []
-                    var finishReason: String? = "other"
+                    var finishReason: String? = "interrupted"
                     var finishUsage: TokenUsage?
                     var finishProviderMetadata: [String: JSONValue] = [:]
                     eventLoop: for try await event in serverSentEvents(from: response.body) {
                         if event.data == "[DONE]" { break }
-                        let raw = try decodeJSONBody(Data(event.data.utf8))
+                        let raw: JSONValue
+                        do { raw = try decodeJSONBody(Data(event.data.utf8)) }
+                        catch {
+                            finishReason = "error"
+                            continuation.yield(.error(message: error.localizedDescription))
+                            continue
+                        }
                         if request.includeRawChunks {
                             continuation.yield(.raw(raw))
                         }
@@ -430,10 +436,8 @@ private func huggingFaceToolChoice(from value: JSONValue?) -> JSONValue? {
     if let string = value.stringValue { return .string(string) }
     guard let object = value.objectValue else { return nil }
     switch object["type"]?.stringValue {
-    case "auto", "required":
+    case "auto", "required", "none":
         return object["type"]
-    case "none":
-        return nil
     case "tool":
         guard let toolName = object["toolName"]?.stringValue ?? object["tool_name"]?.stringValue else { return nil }
         return .object([

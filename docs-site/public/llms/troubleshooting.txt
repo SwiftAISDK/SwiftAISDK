@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Source URL: /troubleshooting/
+Source URL: https://ozio.github.io/SwiftAISDK/troubleshooting/
 
 ## Missing API Key
 

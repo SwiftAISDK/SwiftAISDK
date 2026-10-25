@@ -1,6 +1,6 @@
 # "mistral"
 
-Source URL: /providers/mistral/
+Source URL: https://ozio.github.io/SwiftAISDK/providers/mistral/
 
 ## Package
 
@@ -37,10 +37,40 @@ A schema plus application tools on Chat Completions uses the synthetic JSON tool
 
 Unknown chat model IDs inherit support for top-level reasoning and the `mistral.reasoningEffort` override. The override keeps precedence. Known non-reasoning Codestral, Ministral, legacy Mistral Large and Voxtral IDs retain their previous unsupported behavior.
 
+## Voxtral 3 speech and transcription
+
+Speech IDs such as `voxtral-mini-tts-3-0` and `voxtral-mini-tts-3` accept
+`providerOptions.mistral.expressiveness` from 1 through 5 and `phonemeHints`, a
+dictionary mapping words to nonempty arrays of IPA phonemes. Inline delivery
+tags remain in the input text. Existing `refAudio` still takes precedence over
+`voice`.
+
+```swift
+let speech = try mistral.speech("voxtral-mini-tts-3")
+let audio = try await speech.speak(.init(
+    text: "[emotion=happy] I like tomato soup.",
+    voice: "gb_jane_neutral",
+    providerOptions: ["mistral": [
+        "expressiveness": 1.5,
+        "phonemeHints": ["tomato": ["t", "ə", "m", "ɑ", "t", "oʊ"]]
+    ]]
+))
+```
+
+Voxtral 3 transcription supports `voxtral-mini-transcribe-3` and
+`voxtral-small-transcribe-3`, including their `-3-0` and `-latest` aliases.
+`returnLanguage: true` requests detected language and cannot be combined with
+a pinned `language`. Context bias accepts nonempty phrases and punctuation,
+including more than 100 entries. Language plus timestamps is rejected only for
+the known legacy `voxtral-mini-2507`, `voxtral-mini-2602` and
+`voxtral-mini-latest` IDs. Current, future and custom model IDs forward that
+combination. The API validates model-specific word timestamps and diarization
+requirements.
+
 ## Notes
 
-Mistral chat, embeddings, Voxtral transcription, and speech mirror upstream Mistral 4.0.69: `MISTRAL_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language/chat, embedding/textEmbedding, transcription, and speech/speechModel aliases, chat `/v1/chat/completions`, embeddings `/v1/embeddings`, transcription `/v1/audio/transcriptions`, speech `/v1/audio/speech`, structured outputs, JSON-object instruction injection, stop sequences via native `stop`, top-level reasoning mapped to supported Mistral reasoning effort with providerOptions precedence, provider option schema validation including speech `refAudio`, tool/tool-choice mapping, fragmented streaming tool-call buffering, tool-result output conversion, image/PDF user file support, typed assistant thinking blocks, Voxtral option validation and rich segment/usage metadata, streaming text/reasoning/tool lifecycle, `promptCacheKey` to `prompt_cache_key` mapping, complete raw usage and cached-token accounting, speech reference-audio metadata redaction, response metadata, Mistral error schema, and unsupported image family. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-04 pass maps error finish reasons, injects JSON schemas when structuredOutputs is false, and retains native transcription usage. The 2026-10-11 pass: conversation(modelID) provides stateless /conversations generation and SSE with replayable builtin tools, sources, usage and errors. MistralTools.webSearch/webSearchPremium, Large 4 reasoning and common embedding dimensions are available. The 2026-10-18 pass: Known non-reasoning exclusions retain warnings while future model IDs inherit reasoning-effort support.
+Mistral chat, embeddings, Voxtral transcription, and speech mirror upstream Mistral 4.0.72: `MISTRAL_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language/chat, embedding/textEmbedding, transcription, and speech/speechModel aliases, chat `/v1/chat/completions`, embeddings `/v1/embeddings`, transcription `/v1/audio/transcriptions`, speech `/v1/audio/speech`, structured outputs, JSON-object instruction injection, stop sequences via native `stop`, top-level reasoning mapped to supported Mistral reasoning effort with providerOptions precedence, provider option schema validation including speech `refAudio`, tool/tool-choice mapping, fragmented streaming tool-call buffering, tool-result output conversion, image/PDF user file support, typed assistant thinking blocks, Voxtral option validation and rich segment/usage metadata, streaming text/reasoning/tool lifecycle, `promptCacheKey` to `prompt_cache_key` mapping, complete raw usage and cached-token accounting, speech reference-audio metadata redaction, response metadata, Mistral error schema, and unsupported image family. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-04 pass maps error finish reasons, injects JSON schemas when structuredOutputs is false, and retains native transcription usage. The 2026-10-11 pass: conversation(modelID) provides stateless /conversations generation and SSE with replayable builtin tools, sources, usage and errors. MistralTools.webSearch/webSearchPremium, Large 4 reasoning and common embedding dimensions are available. The 2026-10-18 pass: Known non-reasoning exclusions retain warnings while future model IDs inherit reasoning-effort support. The 2026-10-25 pass: Voxtral 3 speech forwards validated expressiveness and IPA phoneme hints; transcription supports detected language, phrase context bias and model-aware language/timestamp validation. Missing chat completion signals are interrupted.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Return to the [provider matrix](/providers/).
+Return to the [provider matrix](/SwiftAISDK/providers/).

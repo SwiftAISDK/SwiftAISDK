@@ -228,8 +228,9 @@ import Testing
     let call = try #require(finalCall)
     #expect(inputLifecycle == [
         "start:tool-call-0:weather",
-        #"delta:tool-call-0:{"location":"San "}"#,
-        #"delta:tool-call-0:{"location":"San Francisco"}"#,
+        #"delta:tool-call-0:{"location":"San "#,
+        "delta:tool-call-0:Francisco",
+        #"delta:tool-call-0:"}"#,
         "end:tool-call-0"
     ])
     #expect(call.id == "tool-call-0")

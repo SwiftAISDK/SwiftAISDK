@@ -1,6 +1,6 @@
 # Realtime sessions
 
-Source URL: /core/realtime/
+Source URL: https://ozio.github.io/SwiftAISDK/core/realtime/
 
 `AIRealtimeModelV4` is the provider-neutral model contract for ephemeral client
 secrets, direct WebSocket configuration, session options, normalized server

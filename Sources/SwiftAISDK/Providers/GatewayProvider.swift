@@ -252,7 +252,7 @@ public final class GatewayProvider: AIProvider, AIEvaluationProvider, AIDecision
         if normalizedHeaders["ai-gateway-auth-method"] == nil {
             settings.headers["ai-gateway-auth-method"] = auth.method
         }
-        let headers = withUserAgentSuffix(settings.headers, "ai-sdk-gateway/4.0.121")
+        let headers = withUserAgentSuffix(settings.headers, "ai-sdk-gateway/4.0.126")
         config = ModelHTTPConfig(
             providerID: providerID,
             baseURL: settings.baseURL ?? "https://ai-gateway.vercel.sh/v4/ai",
@@ -323,7 +323,15 @@ public final class GatewayProvider: AIProvider, AIEvaluationProvider, AIDecision
     }
 
     public func speechModel(_ modelID: String) throws -> any SpeechModel {
-        GatewaySpeechModel(modelID: modelID, config: config)
+        GatewaySpeechModel(modelID: modelID, config: config, webSocketTransport: webSocketTransport)
+    }
+
+    public func streamingSpeechModel(_ modelID: String) throws -> any StreamingSpeechModel {
+        GatewaySpeechModel(modelID: modelID, config: config, webSocketTransport: webSocketTransport)
+    }
+
+    public var experimentalSpeech: GatewaySpeechFactory {
+        GatewaySpeechFactory(config: config, webSocketTransport: webSocketTransport)
     }
 
     public func videoModel(_ modelID: String) throws -> any VideoModel {

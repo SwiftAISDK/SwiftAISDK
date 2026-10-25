@@ -244,7 +244,7 @@ public enum Output {
                 }
                 let parsed = try await parseObject(
                     Object.self,
-                    from: result.text,
+                    from: result.structuredOutputText ?? result.text,
                     schema: schema,
                     repairText: repairText,
                     providerID: providerID
@@ -252,7 +252,7 @@ public enum Output {
                 return optionalOutputResult(
                     output: parsed.object,
                     rawOutput: parsed.rawObject,
-                    text: parsed.text,
+                    text: result.structuredOutputText == nil ? parsed.text : result.text,
                     textResult: result
                 )
             },
@@ -397,7 +397,7 @@ public enum Output {
                 }
                 let parsed = try await parseObjectArray(
                     Element.self,
-                    from: result.text,
+                    from: result.structuredOutputText ?? result.text,
                     elementSchema: element,
                     repairText: repairText,
                     providerID: providerID
@@ -407,7 +407,7 @@ public enum Output {
                 return optionalOutputResult(
                     output: parsed.object,
                     rawOutput: parsed.rawObject,
-                    text: parsed.text,
+                    text: result.structuredOutputText == nil ? parsed.text : result.text,
                     textResult: result
                 )
             },
@@ -506,7 +506,7 @@ public enum Output {
                     return optionalOutputResult(output: nil, rawOutput: .null, textResult: result)
                 }
                 let parsed = try await parseEnum(
-                    from: result.text,
+                    from: result.structuredOutputText ?? result.text,
                     values: options,
                     repairText: repairText,
                     providerID: providerID
@@ -514,7 +514,7 @@ public enum Output {
                 return optionalOutputResult(
                     output: parsed.object,
                     rawOutput: parsed.rawObject,
-                    text: parsed.text,
+                    text: result.structuredOutputText == nil ? parsed.text : result.text,
                     textResult: result
                 )
             },
@@ -577,14 +577,14 @@ public enum Output {
                     return optionalOutputResult(output: nil, rawOutput: .null, textResult: result)
                 }
                 let parsed = try await parseJSONValueObject(
-                    from: result.text,
+                    from: result.structuredOutputText ?? result.text,
                     repairText: repairText,
                     providerID: providerID
                 )
                 return optionalOutputResult(
                     output: parsed.object,
                     rawOutput: parsed.rawObject,
-                    text: parsed.text,
+                    text: result.structuredOutputText == nil ? parsed.text : result.text,
                     textResult: result
                 )
             },
@@ -597,6 +597,7 @@ func structuredOutputTextResult(_ result: TextGenerationResult) -> TextGeneratio
     guard let finalStep = result.finalStep else { return result }
     return TextGenerationResult(
         text: finalStep.text,
+        structuredOutputText: result.structuredOutputText,
         content: finalStep.content,
         reasoning: finalStep.reasoning,
         finishReason: finalStep.finishReason,
@@ -663,7 +664,7 @@ public extension AIOutputGenerationResult {
     init(objectResult: ObjectGenerationResult<Output>) {
         self.init(
             output: objectResult.object,
-            text: objectResult.text,
+            text: objectResult.textResult.structuredOutputText == nil ? objectResult.text : objectResult.textResult.text,
             rawOutput: objectResult.rawObject,
             reasoning: objectResult.reasoning,
             finishReason: objectResult.finishReason,

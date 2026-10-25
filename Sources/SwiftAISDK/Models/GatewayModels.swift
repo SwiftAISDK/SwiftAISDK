@@ -165,7 +165,10 @@ public enum GatewayTools {
         afterDate: String? = nil,
         maxCharsPerResult: Int? = nil,
         maxCharsTotal: Int? = nil,
-        maxAgeSeconds: Int? = nil
+        maxAgeSeconds: Int? = nil,
+        timeoutSeconds: Int? = nil,
+        disableCacheFallback: Bool? = nil,
+        location: String? = nil
     ) -> JSONValue {
         var args: [String: JSONValue] = [:]
         if let mode { args["mode"] = .string(mode) }
@@ -179,18 +182,21 @@ public enum GatewayTools {
             args["sourcePolicy"] = sourcePolicy
         }
         let excerpts = JSONValue.object([
-            "maxCharsPerResult": maxCharsPerResult.map { .number(Double($0)) },
-            "maxCharsTotal": maxCharsTotal.map { .number(Double($0)) }
+            "maxCharsPerResult": maxCharsPerResult.map { .number(Double($0)) }
         ])
         if excerpts.objectValue?.isEmpty == false {
             args["excerpts"] = excerpts
         }
         let fetchPolicy = JSONValue.object([
-            "maxAgeSeconds": maxAgeSeconds.map { .number(Double($0)) }
+            "maxAgeSeconds": maxAgeSeconds.map { .number(Double($0)) },
+            "timeoutSeconds": timeoutSeconds.map { .number(Double($0)) },
+            "disableCacheFallback": disableCacheFallback.map(JSONValue.bool)
         ])
         if fetchPolicy.objectValue?.isEmpty == false {
             args["fetchPolicy"] = fetchPolicy
         }
+        if let maxCharsTotal { args["maxCharsTotal"] = .number(Double(maxCharsTotal)) }
+        if let location { args["location"] = .string(location) }
         return providerTool(id: "gateway.parallel_search", name: "parallel_search", args: args)
     }
 
@@ -297,6 +303,7 @@ public final class GatewayLanguageModel: LanguageModel, @unchecked Sendable {
         }
         return TextGenerationResult(
             text: text ?? "",
+            structuredOutputText: raw["structuredOutputText"]?.stringValue,
             finishReason: gatewayFinishReason(raw["finishReason"]?.stringValue ?? raw["finish_reason"]?.stringValue, hasToolCalls: !toolCalls.isEmpty),
             usage: tokenUsage(from: raw),
             toolCalls: toolCalls,

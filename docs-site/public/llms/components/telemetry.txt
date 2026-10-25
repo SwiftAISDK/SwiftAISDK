@@ -1,6 +1,6 @@
 # Telemetry
 
-Source URL: /components/telemetry/
+Source URL: https://ozio.github.io/SwiftAISDK/components/telemetry/
 
 ## Symbol counts
 

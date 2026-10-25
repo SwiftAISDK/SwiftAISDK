@@ -54,6 +54,7 @@ export default defineConfig({
             { label: 'Generate image', slug: 'core/generate-image' },
             { label: 'Transcribe audio', slug: 'core/transcribe' },
             { label: 'Generate speech', slug: 'core/generate-speech' },
+            { label: 'Stream speech', slug: 'core/stream-speech' },
             { label: 'Realtime sessions', slug: 'core/realtime' },
             { label: 'Generate audio', slug: 'core/generate-audio' },
             { label: 'Transform audio', slug: 'core/transform-audio' },

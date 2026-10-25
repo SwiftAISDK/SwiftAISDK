@@ -1,21 +1,21 @@
 # Components
 
-Source URL: /components/
+Source URL: https://ozio.github.io/SwiftAISDK/components/
 
 SwiftAISDK groups public APIs into component areas so you can browse exact types without starting from the full symbol table.
 
 | Component | Public symbols |
 | --- | --- |
-| [Audio](audio/) | 194 |
+| [Audio](audio/) | 285 |
 | [Chat and UI messages](chat-and-ui-messages/) | 154 |
 | [Core runtime](core-runtime/) | 1571 |
 | [Errors](errors/) | 124 |
 | [MCP](mcp/) | 597 |
 | [Media](media/) | 117 |
 | [Middleware](middleware/) | 109 |
-| [Provider models](provider-models/) | 965 |
-| [Providers](providers/) | 684 |
-| [Structured output](structured-output/) | 300 |
+| [Provider models](provider-models/) | 972 |
+| [Providers](providers/) | 687 |
+| [Structured output](structured-output/) | 301 |
 | [Telemetry](telemetry/) | 188 |
 | [Tools](tools/) | 278 |
 | [Video and reranking](video-and-reranking/) | 109 |

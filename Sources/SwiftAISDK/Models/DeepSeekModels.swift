@@ -163,7 +163,7 @@ public final class DeepSeekLanguageModel: LanguageModel, @unchecked Sendable {
 
                     continuation.yield(.streamStart(warnings: prepared.warnings))
                     var latestUsage: TokenUsage? = TokenUsage()
-                    var finishReason: String? = "other"
+                    var finishReason: String? = "interrupted"
                     var providerMetadata: [String: JSONValue] = [:]
                     var toolCalls = DeepSeekStreamingToolCalls()
                     var didEmitResponseMetadata = false

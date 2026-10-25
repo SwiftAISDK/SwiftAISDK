@@ -1,8 +1,13 @@
 # Stream text
 
-Source URL: /core/stream-text/
+Source URL: https://ozio.github.io/SwiftAISDK/core/stream-text/
 
 Use `streamText` when the UI or caller should receive partial output as it is generated.
+
+Providers may finish with `interrupted` when the stream ends without its
+completion signal. Partial output remains available. The facade skips local
+tool execution and automatic continuation for that response; the caller decides
+whether to retry. Explicit provider/parse errors retain their error semantics.
 
 ```swift title="Examples/Sources/StreamText/main.swift"
 import SwiftAISDK

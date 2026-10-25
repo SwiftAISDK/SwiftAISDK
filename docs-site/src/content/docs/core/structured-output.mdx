@@ -46,6 +46,13 @@ loggers still receive every warning.
 
 All strategies preserve text, reasoning, usage, warnings, provider metadata, response metadata, and the underlying `TextGenerationResult`.
 
+A provider may set `TextGenerationResult.structuredOutputText` to select the
+JSON answer while retaining all generated text and content. OpenAI Responses
+selects the last `final_answer` message for JSON requests. A nil selection falls
+back to concatenated text; an empty selection is explicit and can fail parsing.
+Plain text output continues to expose every draft and final message. JSON and
+reasoning extraction middleware transform the selected text alongside content.
+
 ```swift
 let labels = Output.array(
     element: ["type": "string"],

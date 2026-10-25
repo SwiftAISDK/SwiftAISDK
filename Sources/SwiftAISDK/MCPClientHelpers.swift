@@ -1,6 +1,9 @@
 import Foundation
 
 func mcpToolModelOutput(from result: JSONValue) -> JSONValue {
+    if let text = result.stringValue {
+        return ["type": "text", "value": .string(text)]
+    }
     guard let content = result["content"]?.arrayValue else {
         return .object([
             "type": .string("json"),

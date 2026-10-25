@@ -1,6 +1,6 @@
 # Errors
 
-Source URL: /components/errors/
+Source URL: https://ozio.github.io/SwiftAISDK/components/errors/
 
 ## Symbol counts
 

@@ -23,3 +23,14 @@ Shell calls are marked `providerExecuted` for container environments and remain 
 ## Transcription languages
 
 Transcription normalizes recognized English language names and lowercase two-letter codes. When `language` is absent or unrecognized, exactly one valid entry in the returned `languages` list supplies `result.language`; mixed-language responses leave it unset. `providerMetadata.openai.languages` preserves the detected list, including an empty list, alongside diarized `segments`. Unknown language names and locale strings such as `en-US` no longer appear as normalized language codes.
+## Final-answer JSON and incomplete streams
+
+For JSON Responses, the last message marked `final_answer` is exposed as
+`TextGenerationResult.structuredOutputText` for structured parsing. Full `text`,
+`content`, citations and message metadata still include draft messages. A missing
+selection uses concatenated text; an empty selection stays explicit. Ordinary
+text requests retain their existing full-content behavior.
+
+Chat, Completion and Responses streams that end without a provider completion
+signal finish as `interrupted`. Preserve the partial output and choose whether
+to retry; tool execution and automatic continuation stop for that response.

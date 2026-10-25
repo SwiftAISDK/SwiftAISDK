@@ -120,10 +120,10 @@ import Testing
             providerOptions: ["mistral": ["language": "en", "timestampGranularities": ["segment"]]]
         ))
     }
-    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.mistral.contextBias", message: "Mistral contextBias must contain at most 100 non-empty strings without commas or whitespace.")) {
+    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.mistral.contextBias", message: "Mistral contextBias must contain non-empty strings.")) {
         _ = try await model.transcribe(AudioTranscriptionRequest(
             audio: Data(),
-            providerOptions: ["mistral": ["contextBias": ["two words"]]]
+            providerOptions: ["mistral": ["contextBias": [""]]]
         ))
     }
 }

@@ -15,9 +15,19 @@ description: "huggingface provider capabilities and factories."
 
 - Language
 
+Hugging Face language calls use its Responses endpoint. A tool choice of
+`["type": "none"]` is forwarded as `tool_choice: "none"` while preserving the
+supplied function definitions.
+
+If the SSE body ends before a completion event, the terminal part reports
+`finishReason == "interrupted"`. Malformed JSON and provider errors remain
+observable error parts and finish with `"error"`. Received text, reasoning,
+usage and metadata remain available through the native stream parts.
+
+
 ## Notes
 
-Hugging Face Responses language models mirror upstream Hugging Face 2.0.75: `HUGGINGFACE_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language/responses aliases, `/v1/responses` request builder, providerOptions.huggingface metadata/instructions/strictJsonSchema/reasoningEffort schema, structured text formats, function tools/tool choice, reasoning and MCP/tool-call parsing, streaming lifecycle and metadata, image URL/data file parts including top-level `image` and `image/*` MIME resolution, explicit provider-reference file rejection, and unsupported embedding/image families. Streamed provider failures preserve normalized type, code, status, retryability, and raw metadata. ProviderV4 type names, ESM-only packaging, Node 22 engines, default export rename to `huggingFace`, optional JS headers config, TypeScript option export split, and workflow serialization helpers are JS-only upstream concerns.
+Hugging Face Responses language models mirror upstream Hugging Face 2.0.78: `HUGGINGFACE_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language/responses aliases, `/v1/responses` request builder, providerOptions.huggingface metadata/instructions/strictJsonSchema/reasoningEffort schema, structured text formats, function tools/tool choice, reasoning and MCP/tool-call parsing, streaming lifecycle and metadata, image URL/data file parts including top-level `image` and `image/*` MIME resolution, explicit provider-reference file rejection, and unsupported embedding/image families. Streamed provider failures preserve normalized type, code, status, retryability, and raw metadata. ProviderV4 type names, ESM-only packaging, Node 22 engines, default export rename to `huggingFace`, optional JS headers config, TypeScript option export split, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-25 pass: Responses toolChoice none retains definitions for facade enforcement; missing completion signals report interrupted.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

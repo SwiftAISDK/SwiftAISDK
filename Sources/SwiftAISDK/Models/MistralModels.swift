@@ -57,7 +57,7 @@ public final class MistralLanguageModel: LanguageModel, @unchecked Sendable {
                     }
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
                     continuation.yield(.streamStart(warnings: prepared.warnings))
-                    var finishReason: String? = "other"
+                    var finishReason: String? = "interrupted"
                     var usage: TokenUsage?
                     var emittedResponseMetadata = false
                     var activeText = false
@@ -65,7 +65,13 @@ public final class MistralLanguageModel: LanguageModel, @unchecked Sendable {
                     var toolCalls = OpenAIStyleStreamingToolCalls()
                     for try await event in serverSentEvents(from: response.body) {
                         if event.data == "[DONE]" { break }
-                        let raw = try decodeJSONBody(Data(event.data.utf8))
+                        let raw: JSONValue
+                        do { raw = try decodeJSONBody(Data(event.data.utf8)) }
+                        catch {
+                            finishReason = "error"
+                            continuation.yield(.error(message: error.localizedDescription))
+                            continue
+                        }
                         if request.includeRawChunks {
                             continuation.yield(.raw(raw))
                         }

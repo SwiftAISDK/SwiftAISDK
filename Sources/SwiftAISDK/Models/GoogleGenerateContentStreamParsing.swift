@@ -300,6 +300,14 @@ struct GoogleGenerateContentStreamState {
         // A failed continuation has no response to add to the ordered history.
         groundingMetadataPerRequest.append(currentRequestGroundingMetadata ?? .null)
         currentRequestGroundingMetadata = nil
+        // This runs after all prior response events have been consumed, including
+        // its CONTINUATION reason, and even when the next response is empty.
+        latestFinishReason = nil
+        confirmedPromptBlockReason = nil
+    }
+
+    mutating func recordParseError() {
+        if latestFinishReason == nil { receivedProviderError = true }
     }
 
     mutating func finish() -> [LanguageStreamPart] {
@@ -337,7 +345,7 @@ struct GoogleGenerateContentStreamState {
             : googleGenerateContentFinishReason(
                 latestFinishReason,
                 hasToolCalls: sawToolCalls || !finishedToolParts.isEmpty
-            ) ?? "other"
+            ) ?? "interrupted"
         let providerMetadata = googleFinalizeGenerateContentProviderMetadata(latestProviderMetadata)
         parts.append(.finishMetadata(reason: finishReason, usage: latestUsage, providerMetadata: providerMetadata))
         return convertJSONResponseParts(parts)
@@ -443,7 +451,13 @@ func googleStreamWithContinuation(
             try Task.checkCancellation()
             try request.abortSignal?.throwIfAborted()
             if event.data == "[DONE]" { break }
-            let raw = try decodeJSONBody(Data(event.data.utf8))
+            let raw: JSONValue
+            do { raw = try decodeJSONBody(Data(event.data.utf8)) }
+            catch {
+                state!.recordParseError()
+                continuation.yield(.error(message: error.localizedDescription))
+                continue
+            }
             if raw["error"] != nil && raw["error"] != .null { receivedProviderError = true }
             if let candidate = raw["candidates"]?[0], candidate["finishReason"] == "CONTINUATION", let token = candidate["continuationToken"]?.stringValue {
                 pendingToken = token

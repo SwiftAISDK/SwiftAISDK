@@ -8,6 +8,11 @@ import streamTextExample from '../../../../../Examples/Sources/StreamText/main.s
 
 Use `streamText` when the UI or caller should receive partial output as it is generated.
 
+Providers may finish with `interrupted` when the stream ends without its
+completion signal. Partial output remains available. The facade skips local
+tool execution and automatic continuation for that response; the caller decides
+whether to retry. Explicit provider/parse errors retain their error semantics.
+
 <Code code={streamTextExample} lang="swift" title="Examples/Sources/StreamText/main.swift" />
 
 Streaming emits structured lifecycle parts, not just raw strings. That lets you render text, reasoning, tool input deltas, tool calls, tool approval requests and responses, tool results, source citations, files, raw chunks, response metadata, and finish metadata with one loop.

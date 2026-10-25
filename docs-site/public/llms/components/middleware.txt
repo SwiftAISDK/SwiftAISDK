@@ -1,6 +1,6 @@
 # Middleware
 
-Source URL: /components/middleware/
+Source URL: https://ozio.github.io/SwiftAISDK/components/middleware/
 
 ## Symbol counts
 

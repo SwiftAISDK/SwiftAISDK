@@ -1,6 +1,6 @@
 import Foundation
 
-private let aiDecisionUserAgent = "ai/7.0.148"
+private let aiDecisionUserAgent = "ai/7.0.153"
 
 extension AI {
     /// Decides answers using a direct Decision Model V4 instance.
