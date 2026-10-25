@@ -49,15 +49,27 @@ let provider = try AIProviders.openAI(
 
 Use explicit settings when you need custom headers, a custom base URL, a mock transport, or per-environment credentials.
 
-## Modular development preview
+## Independent modular packages
 
-A local checkout now includes independently buildable core, Anthropic,
-OpenAI-compatible and OpenAI packages. They are not published modular releases.
-Continue using the versioned installation above until the distribution release.
+Core, Anthropic, OpenAI-compatible and OpenAI are available as separate Swift
+packages, initially released at `1.0.0`. Other providers, MCP and UI remain in the
+2.x aggregate above while migration continues.
 
-For a local OpenAI client, add the `Packages/swift-ai-core` and
-`Packages/swift-ai-openai` paths as package dependencies, then select the `SwiftAI`
-and `SwiftAIOpenAI` products respectively:
+For a modular OpenAI client:
+
+```swift
+// Package.swift
+ dependencies: [
+    .package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.0.0"),
+    .package(url: "https://github.com/SwiftAISDK/swift-ai-openai.git", from: "1.0.0"),
+ ],
+ targets: [
+    .target(name: "YourApp", dependencies: [
+        .product(name: "SwiftAI", package: "swift-ai-core"),
+        .product(name: "SwiftAIOpenAI", package: "swift-ai-openai"),
+    ]),
+ ]
+```
 
 ```swift
 import SwiftAI
@@ -85,4 +97,15 @@ The canonical repository contains complete offline `AnthropicOnly`,
 chat/completion, embedding and image wire code with the compatible package;
 selecting it does not require unrelated providers, MCP or UI. See the
 [migration report](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/Migration/M3/README.md)
-for the verification boundary and remaining publication work.
+for extraction evidence. The [M5 release report](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/Migration/M5/README.md) records the public tags, hosted compiler checks and clean clients.
+
+Provider versions can be selected independently as long as their shared dependency
+requirements intersect. SwiftPM resolves one version per package identity. Swift
+release numbers do not track npm release numbers. Applications should commit their
+`Package.resolved`; reusable libraries should normally express compatible ranges.
+See the [verified mixed-provider lockfile](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/Migration/M5/MixedProviders.Package.resolved).
+
+Tagged 2.x and the new modular packages own different model/request types. Their
+values are not interchangeable. The development compatibility facade shares the
+modular core types, but its versioned aggregate release belongs to the later 3.0
+migration. Use each published API with its own model and request values.

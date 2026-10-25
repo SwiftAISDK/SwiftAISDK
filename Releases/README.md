@@ -1,8 +1,8 @@
 # Swift package release records
 
 Release records describe Swift versions. npm baselines remain independent in
-`Porting/upstream-lock.json`. The current modular pilot is an unreleased candidate;
-there are no published modular release-set records in `sets/` yet.
+`Porting/upstream-lock.json`. The initial modular pilot is published;
+`sets/modular-pilot.json` records its four independent 1.0.0 releases.
 
 ## Reviewed changes
 
@@ -97,9 +97,8 @@ set rather than deleted.
 
 Do not create a published record from a dry run. Attempt journals remain in
 staging; published sets are finalized only after actual remote readback and clean
-consumer checks. M4 provides local mechanics and the record contract. M5 still
-owns destination/auth setup, actual publication, hosted compiler checks, upstream
-provenance disposition review and documentation continuity.
+consumer checks. M4 provides local mechanics and the record contract. M5 adds the production
+publisher and records actual GitHub refs, compiler and consumer evidence.
 
 
 ## GitHub publication

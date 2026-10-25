@@ -31,26 +31,49 @@ Then depend on the library product:
 .product(name: "SwiftAISDK", package: "SwiftAISDK")
 ```
 
-## Modular development
+## Modular packages
 
-Four packages are available from a local checkout:
-[core](Packages/swift-ai-core/README.md),
-[Anthropic](Packages/swift-ai-anthropic/README.md),
-[OpenAI-compatible](Packages/swift-ai-openai-compatible/README.md), and
-[OpenAI](Packages/swift-ai-openai/README.md). Native clients import `SwiftAI` plus
-the provider module and use typed `configuration:` settings. Core has no built-in
-providers; provider packages build without the legacy aggregate, MCP or UI.
-The root `SwiftAISDK` product preserves its existing `settings:` factories and
-implicit provider resolution. See [MixedProviders](Examples/MixedProviders) for
-a normal-import client with an explicit registry.
+Four independent Swift packages are published under [SwiftAISDK](https://github.com/SwiftAISDK):
 
-These are local development packages, not published releases. The proposed
-GitHub organization is created; distribution repositories and releases are pending. Use
-the released installation above for a versioned dependency. The
-[migration plan](Docs/ModularizationPlan.md), [provider extraction](Docs/Migration/M3/README.md)
-and [release rehearsal](Docs/Migration/M4/README.md) describe independent version
-resolution and remaining publication gates. Maintainers use the
-[release record workflow](Releases/README.md) to export and verify package releases.
+| Package | Initial Swift version | Products |
+| --- | --- | --- |
+| [swift-ai-core](https://github.com/SwiftAISDK/swift-ai-core) | 1.0.0 | SwiftAI, SwiftAIProvider, SwiftAITransport, SwiftAIProviderUtilities |
+| [swift-ai-anthropic](https://github.com/SwiftAISDK/swift-ai-anthropic) | 1.0.0 | SwiftAIAnthropic |
+| [swift-ai-openai-compatible](https://github.com/SwiftAISDK/swift-ai-openai-compatible) | 1.0.0 | SwiftAIOpenAICompatible |
+| [swift-ai-openai](https://github.com/SwiftAISDK/swift-ai-openai) | 1.0.0 | SwiftAIOpenAI |
+
+For an OpenAI application, add these dependencies:
+
+```swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.0.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-openai.git", from: "1.0.0"),
+```
+
+Select `.product(name: "SwiftAI", package: "swift-ai-core")` and
+`.product(name: "SwiftAIOpenAI", package: "swift-ai-openai")`. Import `SwiftAI` and
+`SwiftAIOpenAI`, then use `AIProviders.openAI(configuration: OpenAIProviderSettings(...))`.
+Anthropic uses `SwiftAIAnthropic` and `AnthropicProviderSettings`. Core has no
+built-in providers; applications supply model objects or an explicit registry.
+OpenAI brings the compatible wire package transitively, without Anthropic, MCP or UI.
+
+Swift package versions are independent of npm versions. Providers can be updated
+separately when their shared core requirements intersect; SwiftPM selects one
+version of each package identity. Commit `Package.resolved` in applications for
+reproducible builds. See the verified [public mixed-client lockfile](Docs/Migration/M5/MixedProviders.Package.resolved).
+
+The released 2.x aggregate above remains the option for the complete provider/MCP/UI
+surface and the existing `settings:` factories. The development root uses local
+packages; it is not a new aggregate release. Remaining extraction and the 3.0
+umbrella are M6/M7 work. Tagged 2.x owns its original model/request types; those
+values are not interchangeable with the new modular types. The development
+compatibility facade that shares core types will be released with the 3.0 migration.
+
+Development happens in this canonical repository. Distribution repositories are
+generated from it. See the [migration plan](Docs/ModularizationPlan.md),
+[M5 publication evidence](Docs/Migration/M5/README.md), and
+[release workflow](Releases/README.md). Canonical [examples](Examples/MixedProviders)
+use local paths for development; the M5 consumer report contains their tested
+public manifests and resolved revisions.
 
 ## Quick Start
 

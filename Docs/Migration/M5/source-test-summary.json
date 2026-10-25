@@ -1,0 +1,31 @@
+{
+  "counts": [
+    126,
+    135,
+    7,
+    270,
+    3007
+  ],
+  "reportedTests": 3545,
+  "liveSkipLines": 33,
+  "logSHA256": "13fb69fee2c5ed636b91d5d8f8948ccd7dd8fe35d9fd37a79d4b268323d3dc30",
+  "summaries": [
+    "2026-10-25T15:06:13.2007910Z swift --version | grep -q 'Swift version 6.3.3'",
+    "2026-10-25T15:06:16.7897850Z Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)",
+    "2026-10-25T15:06:18.5499720Z Testing swift-ai-core",
+    "2026-10-25T15:07:16.2851900Z \u21b3 Testing Library Version: 1902",
+    "2026-10-25T15:07:16.5086350Z \u2714 Test run with 126 tests in 2 suites passed after 0.252 seconds.",
+    "2026-10-25T15:07:16.5135360Z Testing swift-ai-anthropic",
+    "2026-10-25T15:08:23.0958580Z \u21b3 Testing Library Version: 1902",
+    "2026-10-25T15:08:23.4237780Z \u2714 Test run with 135 tests in 1 suite passed after 0.120 seconds.",
+    "2026-10-25T15:08:23.4238110Z Testing swift-ai-openai-compatible",
+    "2026-10-25T15:09:10.1428170Z \u21b3 Testing Library Version: 1902",
+    "2026-10-25T15:09:10.1469380Z \u2714 Test run with 7 tests in 0 suites passed after 0.011 seconds.",
+    "2026-10-25T15:09:10.1481600Z Testing swift-ai-openai",
+    "2026-10-25T15:11:09.1117570Z \u21b3 Testing Library Version: 1902",
+    "2026-10-25T15:11:09.1890950Z \u2714 Test run with 270 tests in 0 suites passed after 1.395 seconds.",
+    "2026-10-25T15:11:09.1891230Z Testing SwiftAISDK",
+    "2026-10-25T15:18:51.9573120Z \u21b3 Testing Library Version: 1902",
+    "2026-10-25T15:19:08.5916460Z \u2714 Test run with 3007 tests in 64 suites passed after 20.985 seconds."
+  ]
+}

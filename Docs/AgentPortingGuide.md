@@ -22,7 +22,7 @@ status docs together.
 | `Docs/Migration/M0/README.md` | Frozen ownership/API inventory, extraction boundary register, and Swift 6.4 / exact-commit Swift 6.3.3 baseline evidence. |
 | `Docs/Migration/M2/README.md` | Frozen core/module extraction evidence. |
 | `Docs/Migration/M3/README.md` | Provider boundaries, standalone consumers and preserved migration evidence. |
-| `Releases/README.md` and `Docs/Migration/M4/README.md` | Change records, deterministic exports, local release rehearsal and current verification evidence. |
+| `Releases/README.md`, `Docs/Migration/M4/README.md` and `Docs/Migration/M5/README.md` | Change records, deterministic exports, rehearsal, production publication and verified release evidence. |
 | `Docs/Migration/M1/README.md` | Catalog import, generation/scaffold verification, and handoff to core extraction. |
 
 ## Standard Porting Flow
@@ -241,6 +241,10 @@ integration mappings; do not promote them to parity proof because packaging pass
 
 The reusable `.github/workflows/package-check.yml` is the single standalone CI
 recipe; every exported repository receives the same bytes and a minimal caller.
-It uploads no artifacts. Actual remote publication, minimum hosted compiler proof
-and finalized release-set records remain M5 gates. A local rehearsal never creates
-a `published` record in the canonical `Releases/sets/` directory.
+It uploads no artifacts. For real releases, commit the canonical source, require
+its successful hosted workflow, export with `--publication`, and publish using
+`release publish --ci-run ...`. Reuse the attempt directory to resume; never move
+an existing tag. Verify standalone hosted CI and public consumers before adding
+the immutable release-set record. A local rehearsal never creates a `published`
+record in canonical `Releases/sets/`. Publication currently uses the authorized
+local GitHub CLI/SSH identity; no cross-repository write secret is stored in Actions.

@@ -1,0 +1,20 @@
+{
+  "status": "resolved",
+  "compiled": false,
+  "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"LegacyInstall\", platforms: [.macOS(.v12)], dependencies: [.package(url: \"https://github.com/ozio/SwiftAISDK.git\", exact: \"2.8.1\")])\n",
+  "lockfile": {
+    "originHash": "98a4b8498ac303d1a6aa259d1466ec59f19361ca1cb5cb6891284710295bd15d",
+    "pins": [
+      {
+        "identity": "swiftaisdk",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/ozio/SwiftAISDK.git",
+        "state": {
+          "revision": "fc4e5dc5116435d995c71ef36062662b38c42181",
+          "version": "2.8.1"
+        }
+      }
+    ],
+    "version": 3
+  }
+}

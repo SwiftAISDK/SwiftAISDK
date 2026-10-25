@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "modular-pilot",
+  "status": "published",
+  "sourceCommit": "f91f47882ebaba0d602474fdd5ddc9f249eecce2",
+  "changeIDs": [
+    "modular-pilot"
+  ],
+  "packages": [
+    {
+      "package": "swift-ai-core",
+      "version": "1.0.0",
+      "exportSHA256": "d8b749559a7baa3e56579760ccbfd7163b31a655368c46facecf4d2d56dc0a0c",
+      "sourceCommit": "f91f47882ebaba0d602474fdd5ddc9f249eecce2",
+      "exportCommit": "0e80d5a02bcc157b8cd0292b9fadcdfaa9cb8f21",
+      "tagObject": "6858b54deea10469a131faadc6f344d11e283daa",
+      "dependencies": []
+    },
+    {
+      "package": "swift-ai-anthropic",
+      "version": "1.0.0",
+      "exportSHA256": "0b0b4d06e22e1649fc6c26b8bd456577d1b6122e5b02e64077474f373f22fbbe",
+      "sourceCommit": "f91f47882ebaba0d602474fdd5ddc9f249eecce2",
+      "exportCommit": "c7f5099e3949dc24bf814d9e38d88517a56ea8f2",
+      "tagObject": "6630aa9c8705713648f9f4ca81bd811b1574f3d1",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-openai-compatible",
+      "version": "1.0.0",
+      "exportSHA256": "1dd6271b9ed77fbe9654a153cb9fd39d9285eb90ab278cf981d2bf5bdb7a2198",
+      "sourceCommit": "f91f47882ebaba0d602474fdd5ddc9f249eecce2",
+      "exportCommit": "7c6d26317ac8985b6e805a8a636a87fbb6a187e4",
+      "tagObject": "0d663d37cacd932df21127eda89d74bf77782239",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-openai",
+      "version": "1.0.0",
+      "exportSHA256": "6b49ca306e429c8c4483ec561ec092a3341f7c125c5eddf010a0337b484ccc17",
+      "sourceCommit": "f91f47882ebaba0d602474fdd5ddc9f249eecce2",
+      "exportCommit": "7bb202cb77dd023b0aad3ef0d46cd15ea07754de",
+      "tagObject": "482221270891b47af40a3eb7941837709dad3ff0",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    }
+  ],
+  "consumerVerificationSHA256": "aed53b6dcfcd06a37d6874faf4a1b148461c40520f05ad22332a181c101d6b6c"
+}

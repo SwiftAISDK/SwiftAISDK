@@ -1,6 +1,6 @@
 # Porting Status
 
-Snapshot date: 2026-10-25
+Snapshot date: 2026-10-26
 
 SwiftAISDK currently ports the provider-facing parts of Vercel AI SDK into a
 SwiftPM library. The package has a broad Swift-native facade, provider registry,
@@ -43,11 +43,16 @@ versions, an independent OpenAI upgrade, the minimum core requirement and a
 provider-to-provider core conflict. All 6762 M0 public records still match after
 module normalization. See the M3 report for compiler, documentation and log receipts.
 
-Verification is local Swift 6.4 on macOS, with additional iOS 15 deployment-target
-compilation for the provider closures against the installed simulator SDK. No
-simulator app/device run or fresh hosted Swift 6.3.3 result is claimed. M4 publication rehearsal is complete; M5 is next,
-with one stage per run. The SwiftAISDK organization has now been created for M5; repository transfer and
-public releases remain pending. M3/M4 fixture tags are disposable local test data.
+M3 verification was local Swift 6.4 on macOS, with iOS 15 deployment-target
+compilation against the installed simulator SDK. M5 adds fresh hosted Swift 6.3.3
+checks for the committed canonical source and all four actual distributions.
+There is no simulator/device runtime or paid-provider-call claim.
+[M5 publication](Migration/M5/README.md) is complete: `SwiftAISDK/SwiftAISDK`
+preserves the old repository history, 67 tag refs and 24 prior Releases. Core,
+Anthropic, compatible and OpenAI are published at `1.0.0`; five clean clients
+resolve and execute against the public tags without mirrors. The old 2.8.1 URL
+still resolves to its original commit. Documentation and old-URL redirects work.
+M6/M7 remain pending; M3/M4 tags remain explicitly disposable fixture data.
 
 [M4 release rehearsal](Migration/M4/README.md) adds reviewed Swift change records,
 SemVer planning, deterministic allowlisted exports, standalone provenance and CI,
