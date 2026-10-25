@@ -69,7 +69,8 @@ from its existing history, and old tags remain unchanged. Each attempt owns its
 scratch directories; export and staging trees must not overlap.
 
 The second command is the complete M4 gate. It snapshots the current canonical
-files into a disposable Git commit, exports twice, verifies deterministic hashes,
+files, seeds a synthetic pilot change history only inside that disposable checkout
+(so real changes can already be consumed), and makes a disposable Git commit. It exports twice, verifies deterministic hashes,
 exercises interruption/resume, runs all standalone package tests, and builds five
 ordinary-import clients using the exported Git tags. SwiftPM mirrors redirect the
 public URLs to local bare repositories without editing exported manifests. It then

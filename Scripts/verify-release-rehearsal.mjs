@@ -8,6 +8,7 @@ import { pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 import catalog from "./lib/catalog.cjs";
 import release from "./lib/release.cjs";
+import fixtures from "./lib/release-fixture.cjs";
 const { rootDefault: root, json, ensure } = catalog;
 const args = process.argv.slice(2);
 ensure(
@@ -220,6 +221,9 @@ try {
     fs.mkdirSync(path.dirname(to), { recursive: true });
     fs.copyFileSync(file, to);
   }
+  // Production change records may already be consumed. Rehearse an isolated
+  // synthetic history without altering canonical records or public versions.
+  fixtures.seedPilot(canonical);
   release.git(["init", "-q", "--initial-branch=main"], canonical);
   release.git(["add", "."], canonical);
   release.git(

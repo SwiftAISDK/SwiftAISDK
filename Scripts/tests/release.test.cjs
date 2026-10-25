@@ -5,6 +5,7 @@ const os = require("node:os");
 const path = require("node:path");
 const { rootDefault: root, json } = require("../lib/catalog.cjs");
 const release = require("../lib/release.cjs");
+const { seedPilot } = require("../lib/release-fixture.cjs");
 function fixture(t) {
   const parent = fs.mkdtempSync(
     path.join(os.tmpdir(), "swift-ai-release-test-"),
@@ -42,6 +43,7 @@ function fixture(t) {
             ].includes(x),
           ),
     });
+  seedPilot(dir);
   release.git(["init", "-q", "--initial-branch=main"], dir);
   release.git(["add", "."], dir);
   release.git(["commit", "-q", "-m", "Disposable canonical snapshot"], dir);
@@ -396,4 +398,14 @@ test("production rejects dirty source and conflicting public tags before depende
   } }), /Unrecorded existing destination refs/);
   assert.equal(writes, 0);
   assert.equal(release.git(["rev-parse", "1.0.0"], remote), tag);
+});
+
+
+test("rehearsal fixtures remain usable after production changes are consumed", (t) => {
+  assert.throws(() => seedPilot(root), /canonical checkout/);
+  const { dir } = fixture(t), candidate = release.plan(dir);
+  publishedSnapshot(dir, candidate);
+  assert.equal(release.plan(dir, "after-publication").packages.length, 0);
+  seedPilot(dir);
+  assert.equal(release.plan(dir, "isolated-rehearsal").packages.length, 4);
 });
