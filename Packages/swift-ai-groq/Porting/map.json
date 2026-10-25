@@ -22,14 +22,17 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/GroqLanguageHelpers.swift",
-      "Sources/SwiftAISDK/Models/GroqModels.swift",
-      "Sources/SwiftAISDK/Models/GroqProviderOptions.swift",
-      "Sources/SwiftAISDK/Models/GroqTranscriptionModel.swift"
+      "Packages/swift-ai-groq/Sources/SwiftAIGroq/GroqLanguageHelpers.swift",
+      "Packages/swift-ai-groq/Sources/SwiftAIGroq/GroqModels.swift",
+      "Packages/swift-ai-groq/Sources/SwiftAIGroq/GroqProvider.swift",
+      "Packages/swift-ai-groq/Sources/SwiftAIGroq/GroqProviderOptions.swift",
+      "Packages/swift-ai-groq/Sources/SwiftAIGroq/GroqTranscriptionModel.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/GroqProviderTests.swift",
-      "Tests/SwiftAISDKTests/GroqStreamingAndTranscriptionTests.swift"
+      "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/GroqProviderTests.swift",
+      "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/GroqStreamingAndTranscriptionTests.swift",
+      "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -39,5 +42,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: Groq runtime and focused upstream-derived tests own their package; HTTP construction is shared, options and wire policy remain local. Prior baselines and known gaps are retained."
 }

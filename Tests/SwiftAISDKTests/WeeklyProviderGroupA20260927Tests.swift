@@ -1,3 +1,10 @@
+@testable import SwiftAIXAI
+@testable import SwiftAIFal
+@testable import SwiftAIAlibaba
+@testable import SwiftAIMistral
+@testable import SwiftAIAmazonBedrock
+@testable import SwiftAIGoogle
+@testable import SwiftAIGoogleVertex
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI
@@ -231,11 +238,11 @@ private func weeklyProviderGroupABedrockCall(
 }
 
 @Test func WeeklyProviderGroupA20260927GoogleEmbeddingOptionsSlicePreservesNullEntries() async throws {
-    let config = ModelHTTPConfig(
-        providerID: "google.generative-ai",
-        baseURL: "https://example.test/v1beta",
-        headers: [:],
-        transport: RecordingTransport(response: jsonResponse("{}"))
+    let config = GoogleModelConfiguration(
+        http: AIProviderHTTPClient(providerID: "google.generative-ai",
+            transport: RecordingTransport(response: jsonResponse("{}")),
+            url: { _, path in try providerURL("https://example.test/v1beta\(path)", queryParams: [:]) }),
+        baseURL: "https://example.test/v1beta"
     )
     let model = GoogleEmbeddingModel(modelID: "gemini-embedding-001", config: config)
     let transformer = try #require(model.providerOptionsTransformer)

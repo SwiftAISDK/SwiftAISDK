@@ -31,18 +31,25 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
-      "Sources/SwiftAISDK/Models/FileClients.swift",
-      "Sources/SwiftAISDK/Models/OpenAICompatibleChatXAI.swift",
-      "Sources/SwiftAISDK/Models/XAIModels.swift",
-      "Sources/SwiftAISDK/Models/XAIRealtimeModel.swift",
-      "Sources/SwiftAISDK/Models/XAIResponses.swift",
-      "Sources/SwiftAISDK/Models/XAIResponsesBatchLanguageModel.swift"
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/FileClients.swift",
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/ImageInputCapabilities.swift",
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/OpenAICompatibleChatUsage.swift",
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/OpenAICompatibleChatXAI.swift",
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/XAIModels.swift",
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/XAIProvider.swift",
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/XAIRealtimeModel.swift",
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/XAIResponses.swift",
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/XAIResponsesBatchLanguageModel.swift",
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/XAIResponsesOptions.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/XAIChatProviderTests.swift",
-      "Tests/SwiftAISDKTests/XAIProviderTests.swift",
-      "Tests/SwiftAISDKTests/XAIRealtimeModelTests.swift"
+      "Packages/swift-ai-xai/Tests/SwiftAIXAITests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-xai/Tests/SwiftAIXAITests/TestSupport.swift",
+      "Packages/swift-ai-xai/Tests/SwiftAIXAITests/XAIChatProviderTests.swift",
+      "Packages/swift-ai-xai/Tests/SwiftAIXAITests/XAIProviderTests.swift",
+      "Packages/swift-ai-xai/Tests/SwiftAIXAITests/XAIRealtimeModelTests.swift",
+      "Packages/swift-ai-xai/Tests/SwiftAIXAITests/XAIResponsesUpstreamParityTests.swift",
+      "Packages/swift-ai-xai/Tests/SwiftAIXAITests/XAISocketTestSupport.swift"
     ],
     "resources": []
   },
@@ -52,5 +59,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: xAI owns Responses request policy, legacy Chat dialect, native audio/image/video/files/realtime/batch behavior and tests. Reuses the public OpenAI Responses engine and file helpers without OpenAI credentials or routing. Baseline and gaps unchanged."
 }

@@ -1,0 +1,23 @@
+{
+  "baselinePublicSymbols": 6762,
+  "currentPublicSymbols": 9498,
+  "matchedBaselineSymbols": 6761,
+  "nonPublicSynthesizedMembers": [
+    {
+      "access": "public",
+      "declaration": "func generateSpeech(_ text: String, voice: String? = nil, format: String? = nil, speed: Double? = nil, language: String? = nil, instructions: String? = nil, providerOptions: [String : JSONValue] = [:], extraBody: [String : JSONValue] = [:], headers: [String : String] = [:], abortSignal: AIAbortSignal? = nil, retryPolicy: AIRetryPolicy = .default, telemetry: Telemetry.Options? = nil) async throws -> SpeechResult",
+      "kind": "swift.method",
+      "line": 434,
+      "locationFromParent": false,
+      "name": "GoogleVertexCloudTTSSpeechModel.generateSpeech(_:voice:format:speed:language:instructions:providerOptions:extraBody:headers:abortSignal:retryPolicy:telemetry:)",
+      "owner": "swift-ai-core/SwiftAI",
+      "source": "Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift",
+      "usr": "s:10SwiftAISDK11SpeechModelPAAE08generateC0_5voice6format5speed8language12instructions15providerOptions9extraBody7headers11abortSignal11retryPolicy9telemetryAA0C6ResultVSS_SSSgARSdSgA2RSDySSAA9JSONValueOGAVSDyS2SGAA07AIAbortQ0CSgAA07AIRetryS0VAA9TelemetryO0L0VSgtYaKF::SYNTHESIZED::s:10SwiftAISDK31GoogleVertexCloudTTSSpeechModelC",
+      "normalized": "SpeechModel.generateSpeech(_: Swift.String, voice: Swift.String?, format: Swift.String?, speed: Swift.Double?, language: Swift.String?, instructions: Swift.String?, providerOptions: [Swift.String : JSONValue], extraBody: [Swift.String : JSONValue], headers: [Swift.String : Swift.String], abortSignal: AIAbortSignal?, retryPolicy: AIRetryPolicy, telemetry: Telemetry.Options?) async throws -> SpeechResult::SYNTHESIZED::GoogleVertexCloudTTSSpeechModel",
+      "currentParentAccess": "internal",
+      "reason": "Synthesized convenience on a non-public nominal type; parent absent from M0 public declarations and still non-public."
+    }
+  ],
+  "unmatchedBaselineSymbols": [],
+  "comparison": "Compiler public symbols with runtime module qualifiers normalized. Unmatched convenience members on non-public conformers are recorded separately, never silently discarded. Not an ABI guarantee."
+}

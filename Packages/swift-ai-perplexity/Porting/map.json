@@ -21,12 +21,18 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift",
-      "Sources/SwiftAISDK/Models/PerplexityEmbeddingModel.swift",
-      "Sources/SwiftAISDK/Models/PerplexityModels.swift"
+      "Packages/swift-ai-perplexity/Sources/SwiftAIPerplexity/PerplexityDecisionModel.swift",
+      "Packages/swift-ai-perplexity/Sources/SwiftAIPerplexity/PerplexityEmbeddingModel.swift",
+      "Packages/swift-ai-perplexity/Sources/SwiftAIPerplexity/PerplexityModels.swift",
+      "Packages/swift-ai-perplexity/Sources/SwiftAIPerplexity/PerplexityProvider.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/PerplexityStreamingErrorTests.swift"
+      "Packages/swift-ai-perplexity/Tests/SwiftAIPerplexityTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-perplexity/Tests/SwiftAIPerplexityTests/PerplexityEmbeddingTests.swift",
+      "Packages/swift-ai-perplexity/Tests/SwiftAIPerplexityTests/PerplexitySonarTests.swift",
+      "Packages/swift-ai-perplexity/Tests/SwiftAIPerplexityTests/PerplexityStreamingErrorTests.swift",
+      "Packages/swift-ai-perplexity/Tests/SwiftAIPerplexityTests/TestSupport.swift",
+      "Packages/swift-ai-perplexity/Tests/SwiftAIPerplexityTests/WeeklyPerplexity20261023Tests.swift"
     ],
     "resources": []
   },
@@ -36,5 +42,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: Perplexity owns Agent, legacy Sonar, embedding and Decisions surfaces, typed settings and focused tests. Shared transport stays neutral. Existing upstream baselines and gaps are retained."
 }

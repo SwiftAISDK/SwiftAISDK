@@ -37,9 +37,9 @@
       "Packages/swift-ai-openai-compatible/Sources/SwiftAIOpenAICompatible/OpenAICompatibleProviderOptions.swift",
       "Packages/swift-ai-openai-compatible/Sources/SwiftAIOpenAICompatible/WireKeyMapping.swift",
       "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAICompatibleMetadata.swift",
-      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/ImageInputCapabilities.swift",
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/OpenAICompatibleChatUsage.swift",
       "Sources/SwiftAISDK/Models/OpenAICompatibleChatCommon.swift",
-      "Sources/SwiftAISDK/Models/OpenAICompatibleChatUsage.swift",
       "Sources/SwiftAISDK/Models/OpenAICompatibleConfig.swift",
       "Sources/SwiftAISDK/Models/OpenAICompatibleProviderOptions.swift",
       "Sources/SwiftAISDK/Models/OpenAICompatibleURL.swift"

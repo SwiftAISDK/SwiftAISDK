@@ -1,3 +1,8 @@
+@testable import SwiftAIGateway
+@testable import SwiftAITypeSafeAI
+@testable import SwiftAIDeepSeek
+@testable import SwiftAIGoogle
+@testable import SwiftAIGoogleVertex
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI

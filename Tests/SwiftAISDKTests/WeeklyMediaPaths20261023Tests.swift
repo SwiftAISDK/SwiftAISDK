@@ -1,3 +1,8 @@
+@testable import SwiftAIKlingAI
+@testable import SwiftAIFal
+@testable import SwiftAILuma
+@testable import SwiftAIRevAI
+@testable import SwiftAIAlibaba
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI

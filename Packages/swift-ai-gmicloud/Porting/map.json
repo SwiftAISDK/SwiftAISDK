@@ -17,10 +17,13 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Providers/GMICloudProvider.swift"
+      "Packages/swift-ai-gmicloud/Sources/SwiftAIGMICloud/GMICloudProvider.swift",
+      "Packages/swift-ai-gmicloud/Sources/SwiftAIGMICloud/GMICloudProviderSettings.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/GMICloudProviderTests.swift"
+      "Packages/swift-ai-gmicloud/Tests/SwiftAIGMICloudTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-gmicloud/Tests/SwiftAIGMICloudTests/GMICloudProviderTests.swift",
+      "Packages/swift-ai-gmicloud/Tests/SwiftAIGMICloudTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -30,5 +33,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider-owned settings and error policy compose the generic OpenAI-compatible wire adapter; native and legacy surfaces retain existing behavior. Baselines and gaps unchanged."
 }

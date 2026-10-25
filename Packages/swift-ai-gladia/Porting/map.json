@@ -17,11 +17,15 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/GladiaAudioModels.swift"
+      "Packages/swift-ai-gladia/Sources/SwiftAIGladia/GladiaAudioModels.swift",
+      "Packages/swift-ai-gladia/Sources/SwiftAIGladia/GladiaProvider.swift",
+      "Packages/swift-ai-gladia/Sources/SwiftAIGladia/GladiaTranscriptionParsing.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/GladiaProviderTests.swift",
-      "Tests/SwiftAISDKTests/GladiaTranscriptionSchemaAndLifecycleTests.swift"
+      "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/GladiaProviderTests.swift",
+      "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/GladiaTranscriptionSchemaAndLifecycleTests.swift",
+      "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -31,5 +35,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
 }

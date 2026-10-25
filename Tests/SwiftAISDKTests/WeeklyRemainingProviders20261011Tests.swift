@@ -1,3 +1,11 @@
+@testable import SwiftAIXAI
+@testable import SwiftAIGateway
+@testable import SwiftAIFal
+@testable import SwiftAIElevenLabs
+@testable import SwiftAIAlibaba
+@testable import SwiftAIDeepSeek
+@testable import SwiftAIPerplexity
+@testable import SwiftAIVoyage
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI

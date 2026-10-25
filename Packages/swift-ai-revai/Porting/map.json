@@ -17,10 +17,14 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/RevAIAudioModels.swift"
+      "Packages/swift-ai-revai/Sources/SwiftAIRevAI/RevAIAudioModels.swift",
+      "Packages/swift-ai-revai/Sources/SwiftAIRevAI/RevAIProvider.swift",
+      "Packages/swift-ai-revai/Sources/SwiftAIRevAI/RevAITranscriptionParsing.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/RevAIProviderTests.swift"
+      "Packages/swift-ai-revai/Tests/SwiftAIRevAITests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-revai/Tests/SwiftAIRevAITests/RevAIProviderTests.swift",
+      "Packages/swift-ai-revai/Tests/SwiftAIRevAITests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -30,5 +34,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
 }

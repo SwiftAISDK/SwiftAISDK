@@ -17,11 +17,14 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/ZAILanguageModel.swift",
-      "Sources/SwiftAISDK/Providers/ZAIProvider.swift"
+      "Packages/swift-ai-zai/Sources/SwiftAIZAI/ZAILanguageModel.swift",
+      "Packages/swift-ai-zai/Sources/SwiftAIZAI/ZAIProvider.swift",
+      "Packages/swift-ai-zai/Sources/SwiftAIZAI/ZAIProviderSettings.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/ZAIProviderTests.swift"
+      "Packages/swift-ai-zai/Tests/SwiftAIZAITests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-zai/Tests/SwiftAIZAITests/TestSupport.swift",
+      "Packages/swift-ai-zai/Tests/SwiftAIZAITests/ZAIProviderTests.swift"
     ],
     "resources": []
   },
@@ -31,5 +34,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: native GLM policy and lazy-authenticated compatible adapter extracted with typed settings. Legacy settings alias and factories remain in the aggregate. Baselines and gaps unchanged."
 }

@@ -1,0 +1,482 @@
+@testable import SwiftAIFireworks
+@testable import SwiftAI
+@testable import SwiftAIProvider
+@testable import SwiftAIProviderUtilities
+@testable import SwiftAITransport
+import Foundation
+import Testing
+
+@Test func fireworksLanguageTransformsThinkingOptions() async throws {
+    let transport = RecordingTransport(response: jsonResponse("""
+    {"choices":[{"message":{"content":"fw"},"finish_reason":"stop"}],"usage":{"prompt_tokens":1,"completion_tokens":1,"total_tokens":2}}
+    """))
+    let provider = try AIProviders.fireworks(configuration: FireworksProviderSettings(apiKey: "fireworks-key", transport: transport))
+    let model = try provider.languageModel("accounts/fireworks/models/kimi-k2-thinking")
+
+    #expect(model.providerID == "fireworks.chat")
+    let result = try await model.generate(LanguageModelRequest(
+        messages: [.user("Hi")],
+        extraBody: [
+            "thinking": .object(["type": "enabled", "budgetTokens": 2048]),
+            "reasoningHistory": "interleaved",
+            "reasoning_effort": "xhigh",
+            "prompt_cache_key": "raw-session",
+            "promptCacheKey": "typed-session",
+            "service_tier": "standard",
+            "serviceTier": "priority"
+        ]
+    ))
+
+    #expect(result.text == "fw")
+    let request = try #require(await transport.requests().first)
+    #expect(request.url.absoluteString == "https://api.fireworks.ai/inference/v1/chat/completions")
+    #expect(request.headers["authorization"] == "Bearer fireworks-key")
+    #expect(request.headers["user-agent"] == "ai-sdk-fireworks/3.0.81")
+    let body = try decodeJSONBody(try #require(request.body))
+    #expect(body["thinking"]?["type"]?.stringValue == "enabled")
+    #expect(body["thinking"]?["budget_tokens"]?.intValue == 2048)
+    #expect(body["thinking"]?["budgetTokens"] == nil)
+    #expect(body["reasoning_history"]?.stringValue == "interleaved")
+    #expect(body["reasoningHistory"] == nil)
+    #expect(body["reasoning_effort"]?.stringValue == "high")
+    #expect(body["prompt_cache_key"]?.stringValue == "typed-session")
+    #expect(body["promptCacheKey"] == nil)
+    #expect(body["service_tier"]?.stringValue == "priority")
+    #expect(body["serviceTier"] == nil)
+}
+
+@Test func fireworksCurrentKimiK26ModelIDUsesChatRoute() async throws {
+    let transport = RecordingTransport(response: jsonResponse("""
+    {"choices":[{"message":{"content":"fw"},"finish_reason":"stop"}],"usage":{"prompt_tokens":1,"completion_tokens":1,"total_tokens":2}}
+    """))
+    let provider = try AIProviders.fireworks(configuration: FireworksProviderSettings(apiKey: "fireworks-key", transport: transport))
+    let model = try provider.chatModel("accounts/fireworks/models/kimi-k2p6")
+
+    _ = try await model.generate(LanguageModelRequest(messages: [.user("Hi")]))
+
+    let request = try #require(await transport.requests().first)
+    let body = try decodeJSONBody(try #require(request.body))
+    #expect(request.url.absoluteString == "https://api.fireworks.ai/inference/v1/chat/completions")
+    #expect(body["model"]?.stringValue == "accounts/fireworks/models/kimi-k2p6")
+}
+
+@Test func fireworksForwardsJSONSchemaStructuredOutputsByDefault() async throws {
+    let transport = RecordingTransport(response: jsonResponse(
+        #"{"choices":[{"message":{"content":"{\"value\":\"structured\"}"},"finish_reason":"stop"}],"usage":{"total_tokens":3}}"#
+    ))
+    let provider = try AIProviders.fireworks(configuration: FireworksProviderSettings(
+        apiKey: "fireworks-key",
+        transport: transport
+    ))
+
+    _ = try await provider.chatModel("accounts/fireworks/models/kimi-k2p6").generate(LanguageModelRequest(
+        messages: [.user("Return JSON")],
+        extraBody: [
+            "responseFormat": [
+                "type": "json",
+                "name": "answer",
+                "schema": [
+                    "type": "object",
+                    "properties": ["value": ["type": "string"]],
+                    "required": ["value"]
+                ]
+            ]
+        ]
+    ))
+
+    let body = try decodeJSONBody(try #require((await transport.requests()).first?.body))
+    #expect(body["response_format"]?["type"]?.stringValue == "json_schema")
+    #expect(body["response_format"]?["json_schema"]?["name"]?.stringValue == "answer")
+    #expect(body["response_format"]?["json_schema"]?["schema"]?["properties"]?["value"]?["type"]?.stringValue == "string")
+}
+
+@Test func fireworksLanguageStreamsIncludeUsageByDefaultLikeUpstream() async throws {
+    let transport = RecordingTransport(response: sseResponse("""
+    data: {"choices":[{"delta":{"content":"fw"},"finish_reason":"stop"}],"usage":{"prompt_tokens":1,"completion_tokens":2,"total_tokens":3}}
+
+    data: [DONE]
+
+    """))
+    let provider = try AIProviders.fireworks(configuration: FireworksProviderSettings(apiKey: "fireworks-key", transport: transport))
+    let model = try provider.chatModel("accounts/fireworks/models/kimi-k2-thinking")
+
+    var usage: TokenUsage?
+    for try await part in model.stream(LanguageModelRequest(messages: [.user("Hi")])) {
+        if case let .finishMetadata(_, finishUsage, _) = part {
+            usage = finishUsage
+        }
+    }
+
+    #expect(usage?.totalTokens == 3)
+    let body = try decodeJSONBody(try #require((await transport.requests()).first?.body))
+    #expect(body["stream"] == true)
+    #expect(body["stream_options"]?["include_usage"]?.boolValue == true)
+}
+
+@Test func fireworksImageUsesWorkflowBinaryEndpoint() async throws {
+    let transport = RecordingTransport(response: AIHTTPResponse(statusCode: 200, headers: ["content-type": "image/png"], body: Data("png".utf8)))
+    let provider = try AIProviders.fireworks(configuration: FireworksProviderSettings(apiKey: "fireworks-key", transport: transport))
+    let model = try provider.imageModel("accounts/fireworks/models/flux-1-schnell-fp8")
+
+    let result = try await model.generateImage(ImageGenerationRequest(prompt: "cat", aspectRatio: "16:9", seed: 42, count: 1))
+
+    #expect(result.base64Images == [Data("png".utf8).base64EncodedString()])
+    #expect(result.warnings.isEmpty)
+    let request = try #require(await transport.requests().first)
+    #expect(request.url.absoluteString == "https://api.fireworks.ai/inference/v1/workflows/accounts/fireworks/models/flux-1-schnell-fp8/text_to_image")
+    #expect(request.headers["authorization"] == "Bearer fireworks-key")
+    #expect(request.headers["user-agent"] == "ai-sdk-fireworks/3.0.81")
+    let body = try decodeJSONBody(try #require(request.body))
+    #expect(body["prompt"]?.stringValue == "cat")
+    #expect(body["samples"]?.intValue == 1)
+    #expect(body["aspect_ratio"]?.stringValue == "16:9")
+    #expect(body["seed"]?.intValue == 42)
+}
+
+@Test func fireworksAsyncImagePollsAndDownloadsResult() async throws {
+    let transport = RecordingTransport(responses: [
+        jsonResponse(#"{"request_id":"fw-1"}"#),
+        jsonResponse(#"{"status":"Ready","result":{"sample":"https://assets.example.com/fireworks.png"}}"#),
+        AIHTTPResponse(statusCode: 200, headers: ["content-type": "image/png", "download-header": "yes"], body: Data("async-png".utf8))
+    ])
+    let provider = try AIProviders.fireworks(configuration: FireworksProviderSettings(apiKey: "fireworks-key", transport: transport))
+    let model = try provider.imageModel("accounts/fireworks/models/flux-kontext-pro")
+
+    let result = try await model.generateImage(ImageGenerationRequest(prompt: "cat", size: "1024x768", count: 2))
+
+    #expect(result.urls == ["https://assets.example.com/fireworks.png"])
+    #expect(result.base64Images == [Data("async-png".utf8).base64EncodedString()])
+    #expect(result.responseMetadata.headers["download-header"] == "yes")
+    #expect(result.responseMetadata.body == nil)
+    #expect(result.warnings == [
+        AIWarning(type: "unsupported", feature: "size", message: "This model does not support the `size` option. Use `aspectRatio` instead.")
+    ])
+    let requests = await transport.requests()
+    #expect(requests.count == 3)
+    #expect(requests[0].url.absoluteString == "https://api.fireworks.ai/inference/v1/workflows/accounts/fireworks/models/flux-kontext-pro")
+    #expect(requests[0].headers["authorization"] == "Bearer fireworks-key")
+    #expect(requests[0].headers["user-agent"] == "ai-sdk-fireworks/3.0.81")
+    let submitBody = try decodeJSONBody(try #require(requests[0].body))
+    #expect(submitBody["prompt"]?.stringValue == "cat")
+    #expect(submitBody["samples"]?.intValue == 2)
+    #expect(submitBody["width"]?.stringValue == "1024")
+    #expect(submitBody["height"]?.stringValue == "768")
+    #expect(requests[1].url.absoluteString == "https://api.fireworks.ai/inference/v1/workflows/accounts/fireworks/models/flux-kontext-pro/get_result")
+    #expect(requests[1].headers["authorization"] == "Bearer fireworks-key")
+    #expect(requests[1].headers["user-agent"] == "ai-sdk-fireworks/3.0.81")
+    let pollBody = try decodeJSONBody(try #require(requests[1].body))
+    #expect(pollBody["id"]?.stringValue == "fw-1")
+    #expect(requests[2].method == "GET")
+    #expect(requests[2].url.absoluteString == "https://assets.example.com/fireworks.png")
+    #expect(requests[2].headers["authorization"] == nil)
+    #expect(requests[2].headers["user-agent"] == nil)
+}
+
+@Test func fireworksAppendsVersionedUserAgentToCustomHeader() async throws {
+    let transport = RecordingTransport(response: AIHTTPResponse(statusCode: 200, headers: ["content-type": "image/png"], body: Data("png".utf8)))
+    let provider = try AIProviders.fireworks(configuration: FireworksProviderSettings(
+        apiKey: "fireworks-key",
+        headers: ["User-Agent": "CustomApp/1.0"],
+        transport: transport
+    ))
+    let model = try provider.imageModel("accounts/fireworks/models/flux-1-schnell-fp8")
+
+    _ = try await model.generateImage(ImageGenerationRequest(prompt: "cat"))
+
+    let request = try #require(await transport.requests().first)
+    #expect(request.headers["authorization"] == "Bearer fireworks-key")
+    #expect(request.headers["user-agent"] == "CustomApp/1.0 ai-sdk-fireworks/3.0.81")
+}
+
+@Test func fireworksImageMapsProviderOptionsAndInputImage() async throws {
+    let transport = RecordingTransport(responses: [
+        jsonResponse(#"{"request_id":"fw-edit"}"#),
+        jsonResponse(#"{"status":"Ready","result":{"sample":"https://assets.example.com/fireworks-edit.png"}}"#),
+        AIHTTPResponse(statusCode: 200, headers: ["content-type": "image/png"], body: Data("edit-png".utf8))
+    ])
+    let provider = try AIProviders.fireworks(configuration: FireworksProviderSettings(apiKey: "fireworks-key", transport: transport))
+    let model = try provider.imageModel("accounts/fireworks/models/flux-kontext-pro")
+
+    let result = try await model.generateImage(ImageGenerationRequest(
+        prompt: "restyle",
+        aspectRatio: "16:9",
+        seed: 7,
+        files: [
+            ImageInputFile(data: Data([1, 2, 3]), mediaType: "image/png"),
+            ImageInputFile(data: Data([4, 5, 6]), mediaType: "image/png")
+        ],
+        mask: ImageInputFile(data: Data([7, 8, 9]), mediaType: "image/png"),
+        providerOptions: [
+            "fireworks": .object([
+                "seed": 99,
+                "output_format": "jpeg"
+            ]),
+            "openai": .object([
+                "quality": "hd"
+            ])
+        ],
+        extraBody: [
+            "raw_param": .string("raw"),
+            "fireworks": .object([
+                "seed": 11,
+                "strength": 0.7
+            ])
+        ]
+    ))
+    #expect(result.warnings == [
+        AIWarning(type: "other", message: "Fireworks only supports a single input image. Additional images are ignored."),
+        AIWarning(type: "unsupported", feature: "mask", message: "Fireworks Kontext models do not support explicit masks. Use the prompt to describe the areas to edit.")
+    ])
+
+    let submitBody = try decodeJSONBody(try #require((await transport.requests()).first?.body))
+    #expect(submitBody["prompt"]?.stringValue == "restyle")
+    #expect(submitBody["input_image"]?.stringValue == "data:image/png;base64,\(Data([1, 2, 3]).base64EncodedString())")
+    #expect(submitBody["aspect_ratio"]?.stringValue == "16:9")
+    #expect(submitBody["seed"]?.intValue == 99)
+    #expect(submitBody["output_format"]?.stringValue == "jpeg")
+    #expect(submitBody["raw_param"]?.stringValue == "raw")
+    #expect(submitBody["strength"]?.doubleValue == 0.7)
+    #expect(submitBody["quality"] == nil)
+    #expect(submitBody["fireworks"] == nil)
+}
+
+@Test func fireworksImageWarningsAndSizeMappingMatchBackendSupport() async throws {
+    let workflowTransport = RecordingTransport(response: AIHTTPResponse(statusCode: 200, body: Data("png".utf8)))
+    let workflowProvider = try AIProviders.fireworks(configuration: FireworksProviderSettings(apiKey: "fireworks-key", transport: workflowTransport))
+    let workflowModel = try workflowProvider.imageModel("accounts/fireworks/models/flux-1-dev-fp8")
+
+    let workflowResult = try await workflowModel.generateImage(ImageGenerationRequest(prompt: "cat", size: "1024", aspectRatio: "1:1"))
+    #expect(workflowResult.warnings == [
+        AIWarning(type: "unsupported", feature: "size", message: "This model does not support the `size` option. Use `aspectRatio` instead.")
+    ])
+    let workflowBody = try decodeJSONBody(try #require((await workflowTransport.requests()).first?.body))
+    #expect(workflowBody["width"]?.stringValue == "1024")
+    #expect(workflowBody["height"] == nil)
+    #expect(workflowBody["aspect_ratio"]?.stringValue == "1:1")
+
+    let sizeTransport = RecordingTransport(response: AIHTTPResponse(statusCode: 200, body: Data("png".utf8)))
+    let sizeProvider = try AIProviders.fireworks(configuration: FireworksProviderSettings(apiKey: "fireworks-key", transport: sizeTransport))
+    let sizeModel = try sizeProvider.imageModel("accounts/fireworks/models/playground-v2-5-1024px-aesthetic")
+
+    let sizeResult = try await sizeModel.generateImage(ImageGenerationRequest(prompt: "cat", size: "1024x768", aspectRatio: "1:1", seed: 42))
+    #expect(sizeResult.warnings == [
+        AIWarning(type: "unsupported", feature: "aspectRatio", message: "This model does not support the `aspectRatio` option.")
+    ])
+    let body = try decodeJSONBody(try #require((await sizeTransport.requests()).first?.body))
+    #expect(body["width"]?.stringValue == "1024")
+    #expect(body["height"]?.stringValue == "768")
+    #expect(body["aspect_ratio"]?.stringValue == "1:1")
+    #expect(body["seed"]?.intValue == 42)
+}
+
+@Test func fireworksAsyncImagePollErrorsUseUpstreamMessages() async throws {
+    let failedTransport = RecordingTransport(responses: [
+        jsonResponse(#"{"request_id":"fw-error"}"#),
+        jsonResponse(#"{"status":"Error","result":null}"#)
+    ])
+    let failedProvider = try AIProviders.fireworks(configuration: FireworksProviderSettings(apiKey: "fireworks-key", transport: failedTransport))
+    let failedModel = try failedProvider.imageModel("accounts/fireworks/models/flux-kontext-pro")
+
+    await #expect(throws: AIError.invalidResponse(provider: "fireworks.image", message: "Fireworks image generation failed with status: Error")) {
+        _ = try await failedModel.generateImage(ImageGenerationRequest(prompt: "cat"))
+    }
+
+    let missingSampleTransport = RecordingTransport(responses: [
+        jsonResponse(#"{"request_id":"fw-ready"}"#),
+        jsonResponse(#"{"status":"Ready","result":{}}"#)
+    ])
+    let missingSampleProvider = try AIProviders.fireworks(configuration: FireworksProviderSettings(apiKey: "fireworks-key", transport: missingSampleTransport))
+    let missingSampleModel = try missingSampleProvider.imageModel("accounts/fireworks/models/flux-kontext-pro")
+
+    await #expect(throws: AIError.invalidResponse(provider: "fireworks.image", message: "Fireworks poll response is Ready but missing result.sample.")) {
+        _ = try await missingSampleModel.generateImage(ImageGenerationRequest(prompt: "cat"))
+    }
+}
+
+@Test func fireworksImageDeadlineAbortsHungPollLikeUpstream() async throws {
+    let transport = FireworksHungPollTransport()
+    let model = FireworksImageModel(
+        modelID: "accounts/fireworks/models/flux-kontext-pro",
+        config: fireworksTestConfiguration(
+            providerID: "fireworks",
+            baseURL: "https://api.async-example.com",
+            headers: ["authorization": "Bearer fireworks-key"],
+            transport: transport
+        ),
+        pollIntervalMillis: 10,
+        pollTimeoutMillis: 25
+    )
+
+    await #expect(throws: AIError.invalidResponse(provider: "fireworks.image", message: "Fireworks image generation timed out after 25ms")) {
+        _ = try await model.generateImage(ImageGenerationRequest(prompt: "cat"))
+    }
+
+    let requests = await transport.requests()
+    #expect(requests.count == 2)
+    #expect(requests[0].url.absoluteString == "https://api.async-example.com/workflows/accounts/fireworks/models/flux-kontext-pro")
+    #expect(requests[1].url.absoluteString == "https://api.async-example.com/workflows/accounts/fireworks/models/flux-kontext-pro/get_result")
+    #expect(await transport.observedPollSignal()?.isAborted == true)
+}
+
+@Test func fireworksImagePreservesCallerAbortDuringHungPoll() async throws {
+    let transport = FireworksHungPollTransport()
+    let model = FireworksImageModel(
+        modelID: "accounts/fireworks/models/flux-kontext-pro",
+        config: fireworksTestConfiguration(
+            providerID: "fireworks",
+            baseURL: "https://api.async-example.com",
+            headers: ["authorization": "Bearer fireworks-key"],
+            transport: transport
+        ),
+        pollIntervalMillis: 10,
+        pollTimeoutMillis: 1_000
+    )
+    let controller = AIAbortController()
+    let generation = Task {
+        try await model.generateImage(ImageGenerationRequest(prompt: "cat", abortSignal: controller.signal))
+    }
+    await transport.waitUntilPollStarted()
+    controller.abort(reason: "caller stopped generation", reasonName: "AbortError")
+
+    do {
+        _ = try await generation.value
+        Issue.record("Expected caller abort")
+    } catch let error as AIAbortError {
+        #expect(error.reason == "caller stopped generation")
+        #expect(error.reasonName == "AbortError")
+    }
+}
+
+@Test func fireworksParsesStringAndObjectErrorEnvelopes() async throws {
+    let objectTransport = RecordingTransport(response: AIHTTPResponse(
+        statusCode: 404,
+        body: Data(#"{"error":{"object":"error","type":"not_found_error","param":null,"code":"model_not_found","message":"Model not found, inaccessible, and/or not deployed"}}"#.utf8)
+    ))
+    let objectProvider = try AIProviders.fireworks(configuration: FireworksProviderSettings(apiKey: "fireworks-key", transport: objectTransport))
+
+    await #expect(throws: AIError.apiCall(
+        provider: "fireworks.chat",
+        statusCode: 404,
+        body: "Model not found, inaccessible, and/or not deployed"
+    )) {
+        _ = try await objectProvider.languageModel("accounts/fireworks/models/missing").generate(
+            LanguageModelRequest(messages: [.user("Hi")])
+        )
+    }
+
+    let stringTransport = RecordingTransport(response: AIHTTPResponse(
+        statusCode: 400,
+        body: Data(#"{"error":"Invalid Fireworks request"}"#.utf8)
+    ))
+    let stringProvider = try AIProviders.fireworks(configuration: FireworksProviderSettings(apiKey: "fireworks-key", transport: stringTransport))
+
+    await #expect(throws: AIError.apiCall(
+        provider: "fireworks.chat",
+        statusCode: 400,
+        body: "Invalid Fireworks request"
+    )) {
+        _ = try await stringProvider.languageModel("accounts/fireworks/models/kimi-k2p6").generate(
+            LanguageModelRequest(messages: [.user("Hi")])
+        )
+    }
+}
+
+@Test func fireworksCompletionAndEmbeddingParseStringAndObjectErrorEnvelopes() async throws {
+    let objectBody = Data(#"{"error":{"object":"error","type":"not_found_error","param":null,"code":"model_not_found","message":"Model not found, inaccessible, and/or not deployed"}}"#.utf8)
+    let objectCompletionProvider = try AIProviders.fireworks(configuration: FireworksProviderSettings(
+        apiKey: "fireworks-key",
+        transport: RecordingTransport(response: AIHTTPResponse(statusCode: 404, body: objectBody))
+    ))
+
+    await #expect(throws: AIError.apiCall(
+        provider: "fireworks.completion",
+        statusCode: 404,
+        body: "Model not found, inaccessible, and/or not deployed"
+    )) {
+        _ = try await objectCompletionProvider.completionModel("accounts/fireworks/models/missing").generate(
+            LanguageModelRequest(messages: [.user("Hi")])
+        )
+    }
+
+    let objectEmbeddingProvider = try AIProviders.fireworks(configuration: FireworksProviderSettings(
+        apiKey: "fireworks-key",
+        transport: RecordingTransport(response: AIHTTPResponse(statusCode: 404, body: objectBody))
+    ))
+
+    await #expect(throws: AIError.apiCall(
+        provider: "fireworks.embedding",
+        statusCode: 404,
+        body: "Model not found, inaccessible, and/or not deployed"
+    )) {
+        _ = try await objectEmbeddingProvider.embeddingModel("nomic-ai/nomic-embed-text-v1.5").embed(
+            EmbeddingRequest(values: ["Hi"])
+        )
+    }
+
+    let stringBody = Data(#"{"error":"Invalid Fireworks request"}"#.utf8)
+    let stringCompletionProvider = try AIProviders.fireworks(configuration: FireworksProviderSettings(
+        apiKey: "fireworks-key",
+        transport: RecordingTransport(response: AIHTTPResponse(statusCode: 400, body: stringBody))
+    ))
+
+    await #expect(throws: AIError.apiCall(
+        provider: "fireworks.completion",
+        statusCode: 400,
+        body: "Invalid Fireworks request"
+    )) {
+        _ = try await stringCompletionProvider.completionModel("accounts/fireworks/models/missing").generate(
+            LanguageModelRequest(messages: [.user("Hi")])
+        )
+    }
+
+    let stringEmbeddingProvider = try AIProviders.fireworks(configuration: FireworksProviderSettings(
+        apiKey: "fireworks-key",
+        transport: RecordingTransport(response: AIHTTPResponse(statusCode: 400, body: stringBody))
+    ))
+
+    await #expect(throws: AIError.apiCall(
+        provider: "fireworks.embedding",
+        statusCode: 400,
+        body: "Invalid Fireworks request"
+    )) {
+        _ = try await stringEmbeddingProvider.embeddingModel("nomic-ai/nomic-embed-text-v1.5").embed(
+            EmbeddingRequest(values: ["Hi"])
+        )
+    }
+}
+
+private actor FireworksHungPollTransport: AITransport {
+    private var recordedRequests: [AIHTTPRequest] = []
+    private var pollSignal: AIAbortSignal?
+    private var pollWaiters: [CheckedContinuation<Void, Never>] = []
+
+    func requests() -> [AIHTTPRequest] { recordedRequests }
+    func observedPollSignal() -> AIAbortSignal? { pollSignal }
+
+    func waitUntilPollStarted() async {
+        if pollSignal != nil { return }
+        await withCheckedContinuation { pollWaiters.append($0) }
+    }
+
+    func send(_ request: AIHTTPRequest) async throws -> AIHTTPResponse {
+        recordedRequests.append(request)
+        if recordedRequests.count == 1 {
+            return jsonResponse(#"{"request_id":"test-request-123"}"#)
+        }
+
+        pollSignal = request.abortSignal
+        let waiters = pollWaiters
+        pollWaiters.removeAll()
+        waiters.forEach { $0.resume() }
+        guard let pollSignal else {
+            throw AIError.invalidResponse(provider: "fireworks.image", message: "Expected poll abort signal")
+        }
+        _ = await pollSignal.waitUntilAborted()
+        throw AIAbortError(reason: pollSignal.reason, reasonName: pollSignal.reasonName)
+    }
+}
+
+private func fireworksTestConfiguration(providerID: String, baseURL: String, headers: [String: String], transport: any AITransport) -> FireworksModelConfiguration {
+    .init(http: .init(providerID: providerID, headers: headers, transport: transport,
+                     url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: [:]) }), baseURL: baseURL)
+}

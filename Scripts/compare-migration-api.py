@@ -23,6 +23,7 @@ packages = [(ROOT, ['SwiftAISDK'])] + [
 ]
 modules = {m for _, names in packages for m in names}
 current = {}
+all_current = {}
 for package, names in packages:
     # SwiftPM Xcode and native build systems use different build directories.
     paths = [p for p in (package / '.build').glob('**/symbolgraph/*.symbols.json')
@@ -35,6 +36,7 @@ for package, names in packages:
             continue
         found.add(module)
         for symbol in graph['symbols']:
+            all_current[symbol['identifier']['precise']] = symbol
             if symbol.get('accessLevel') == 'public':
                 current[symbol['identifier']['precise']] = symbol
     if found != set(names):
@@ -42,7 +44,7 @@ for package, names in packages:
 
 # Mangling substitutions change when a referenced type moves to another module.
 # Demangle each side of synthesized IDs before normalizing module qualifiers.
-identifiers = [row['usr'] for row in baseline] + list(current)
+identifiers = [row['usr'] for row in baseline] + list(all_current)
 parts = sorted({p for u in identifiers for p in u.split('::') if p != 'SYNTHESIZED'})
 mangled = [('$s' + p[2:]) if p.startswith('s:') else p for p in parts]
 lines = subprocess.check_output(['xcrun', 'swift-demangle', '--compact'],
@@ -57,15 +59,33 @@ lookup = dict(zip(parts, map(normalize, lines)))
 def key(identifier):
     return '::'.join(lookup.get(p, p) for p in identifier.split('::'))
 current_keys = {key(u) for u in current}
-missing = [dict(row, normalized=key(row['usr'])) for row in baseline if key(row['usr']) not in current_keys]
+baseline_keys = {key(row['usr']) for row in baseline}
+current_declarations = {key(u): symbol for u, symbol in all_current.items()}
+unmatched = [dict(row, normalized=key(row['usr'])) for row in baseline if key(row['usr']) not in current_keys]
+missing, nonpublic_synthesized = [], []
+for row in unmatched:
+    # With minimum-access=internal, Swift also labels protocol convenience
+    # members synthesized on an internal conformer as public. Such a conformer
+    # was never a public nominal declaration in M0. Keep the discrepancy visible
+    # without promoting an implementation detail merely to reproduce that graph.
+    parent = row['usr'].split('::SYNTHESIZED::', 1)
+    declaration = current_declarations.get(key(parent[1])) if len(parent) == 2 else None
+    if (declaration and key(parent[1]) not in baseline_keys
+            and declaration.get('accessLevel') in ('internal', 'fileprivate', 'private')):
+        nonpublic_synthesized.append(dict(row, currentParentAccess=declaration['accessLevel'],
+            reason='Synthesized convenience on a non-public nominal type; parent absent from M0 public declarations and still non-public.'))
+    else:
+        missing.append(row)
 report = {
     'baselinePublicSymbols': len(baseline),
     'currentPublicSymbols': len(current),
+    'matchedBaselineSymbols': len(baseline) - len(unmatched),
+    'nonPublicSynthesizedMembers': nonpublic_synthesized,
     'unmatchedBaselineSymbols': missing,
-    'comparison': 'Compiler public symbols including inherited/synthesized members; demangled names with runtime module qualifiers normalized. Not an ABI guarantee.',
+    'comparison': 'Compiler public symbols with runtime module qualifiers normalized. Unmatched convenience members on non-public conformers are recorded separately, never silently discarded. Not an ABI guarantee.',
 }
 if args.output:
     args.output.write_text(json.dumps(report, indent=2) + '\n')
-print(json.dumps({k: v for k, v in report.items() if k not in ['unmatchedBaselineSymbols', 'comparison']}
-    | {'unmatchedBaselineSymbols': len(missing)}, indent=2))
+print(json.dumps({k: v for k, v in report.items() if k not in ['unmatchedBaselineSymbols', 'nonPublicSynthesizedMembers', 'comparison']}
+    | {'unmatchedBaselineSymbols': len(missing), 'nonPublicSynthesizedMembers': len(nonpublic_synthesized)}, indent=2))
 raise SystemExit(1 if missing else 0)

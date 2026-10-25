@@ -3,16 +3,20 @@ title: Errors
 description: Public SwiftAISDK APIs for errors.
 ---
 
+:::note[Development API reference]
+These declarations follow the canonical repository's main branch, including modular APIs awaiting release. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for published packages and version-compatible examples.
+:::
+
 ## Symbol counts
 
 | Symbol kind | Count |
 | --- | --- |
 | Case | 16 |
 | Enumeration | 2 |
-| Function | 2 |
-| Initializer | 15 |
-| Instance Property | 74 |
-| Structure | 14 |
+| Function | 1 |
+| Initializer | 14 |
+| Instance Property | 68 |
+| Structure | 13 |
 | Type Method | 1 |
 | Type Property | 1 |
 
@@ -38,7 +42,6 @@ description: Public SwiftAISDK APIs for errors.
 | Case | `SwiftAIProvider.GatewayErrorType.timeoutError` | `case timeoutError` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
 | Enumeration | `SwiftAI.AINoOutputKind` | `enum AINoOutputKind` | [Packages/swift-ai-core/Sources/SwiftAI/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Errors.swift) |
 | Enumeration | `SwiftAIProvider.GatewayErrorType` | `enum GatewayErrorType` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
-| Function | `SwiftAIOpenAI.openAIProviderStreamError(from:)` | `func openAIProviderStreamError(from frame: JSONValue) -> AIStreamProviderError?` | [Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIStreamErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIStreamErrors.swift) |
 | Function | `SwiftAIProvider.getErrorMessage(_:)` | `func getErrorMessage(_ value: Any?) -> String` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Initializer | `SwiftAI.init(provider:kind:structuredOutputKind:responses:calls:message:)` | `init(provider: String? = nil, kind: AINoOutputKind = .output, structuredOutputKind: AIOutputKind? = nil, responses: [AIResponseMetadata] = [], calls: [ImageGenerationCall] = [], message: String? = nil)` | [Packages/swift-ai-core/Sources/SwiftAI/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Errors.swift) |
 | Initializer | `SwiftAI.init(provider:kind:structuredOutputKind:responses:message:)` | `init(provider: String? = nil, kind: AINoOutputKind = .output, structuredOutputKind: AIOutputKind? = nil, responses: [AIResponseMetadata] = [], message: String? = nil)` | [Packages/swift-ai-core/Sources/SwiftAI/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Errors.swift) |
@@ -54,7 +57,6 @@ description: Public SwiftAISDK APIs for errors.
 | Initializer | `SwiftAIProvider.init(toolName:toolCallID:originalError:repairedInput:)` | `init(toolName: String, toolCallID: String? = nil, originalError: String, repairedInput: JSONValue? = nil)` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Initializer | `SwiftAIProvider.init(type:message:statusCode:generationID:modelID:response:headers:isRetryable:cause:)` | `init(type: GatewayErrorType, message: String, statusCode: Int = 500, generationID: String? = nil, modelID: String? = nil, response: JSONValue? = nil, headers: [String : String] = [:], isRetryable: Bool? = nil, cause: AIAPICallError? = nil)` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
 | Initializer | `SwiftAIProvider.init(value:schema:path:message:context:)` | `init(value: JSONValue? = nil, schema: JSONValue? = nil, path: String, message: String, context: AITypeValidationContext? = nil)` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
-| Initializer | `SwiftAISDK.init(message:chunkType:chunkID:rawValue:validationIssues:)` | `init(message: String, chunkType: String? = nil, chunkID: String? = nil, rawValue: JSONValue? = nil, validationIssues: [AIUIMessageValidationIssue] = [])` | [Sources/SwiftAISDK/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Sources/SwiftAISDK/Errors.swift) |
 | Instance Property | `SwiftAI.calls` | `var calls: [ImageGenerationCall]` | [Packages/swift-ai-core/Sources/SwiftAI/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Errors.swift) |
 | Instance Property | `SwiftAI.description` | `var description: String { get }` | [Packages/swift-ai-core/Sources/SwiftAI/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Errors.swift) |
 | Instance Property | `SwiftAI.kind` | `var kind: AINoOutputKind` | [Packages/swift-ai-core/Sources/SwiftAI/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Errors.swift) |
@@ -123,12 +125,6 @@ description: Public SwiftAISDK APIs for errors.
 | Instance Property | `SwiftAIProvider.validationError` | `var validationError: AITypeValidationError?` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Instance Property | `SwiftAIProvider.value` | `var value: JSONValue?` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Instance Property | `SwiftAIProvider.values` | `var values: [String]` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
-| Instance Property | `SwiftAISDK.chunkID` | `var chunkID: String?` | [Sources/SwiftAISDK/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Sources/SwiftAISDK/Errors.swift) |
-| Instance Property | `SwiftAISDK.chunkType` | `var chunkType: String?` | [Sources/SwiftAISDK/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Sources/SwiftAISDK/Errors.swift) |
-| Instance Property | `SwiftAISDK.description` | `var description: String { get }` | [Sources/SwiftAISDK/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Sources/SwiftAISDK/Errors.swift) |
-| Instance Property | `SwiftAISDK.message` | `var message: String` | [Sources/SwiftAISDK/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Sources/SwiftAISDK/Errors.swift) |
-| Instance Property | `SwiftAISDK.rawValue` | `var rawValue: JSONValue?` | [Sources/SwiftAISDK/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Sources/SwiftAISDK/Errors.swift) |
-| Instance Property | `SwiftAISDK.validationIssues` | `var validationIssues: [AIUIMessageValidationIssue]` | [Sources/SwiftAISDK/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Sources/SwiftAISDK/Errors.swift) |
 | Structure | `SwiftAI.AINoOutputError` | `struct AINoOutputError` | [Packages/swift-ai-core/Sources/SwiftAI/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Errors.swift) |
 | Structure | `SwiftAIProvider.AIAPICallError` | `struct AIAPICallError` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Structure | `SwiftAIProvider.AIInvalidToolApprovalError` | `struct AIInvalidToolApprovalError` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
@@ -142,6 +138,5 @@ description: Public SwiftAISDK APIs for errors.
 | Structure | `SwiftAIProvider.AITypeValidationContext` | `struct AITypeValidationContext` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Structure | `SwiftAIProvider.AITypeValidationError` | `struct AITypeValidationError` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Structure | `SwiftAIProvider.GatewayError` | `struct GatewayError` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
-| Structure | `SwiftAISDK.AIUIMessageStreamError` | `struct AIUIMessageStreamError` | [Sources/SwiftAISDK/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Sources/SwiftAISDK/Errors.swift) |
 | Type Method | `SwiftAIProvider.apiCall(provider:statusCode:body:headers:)` | `static func apiCall(provider: String, statusCode: Int, body: String, headers: [String : String] = [:]) -> AIError` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Type Property | `SwiftAIProvider.notFound` | `static let notFound: GatewayErrorType` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |

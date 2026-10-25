@@ -1,3 +1,6 @@
+@testable import SwiftAIXAI
+@testable import SwiftAIMCP
+@testable import SwiftAIFal
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI
@@ -221,31 +224,6 @@ import Testing
             ])
         ]))
     }
-}
-@Test func anthropicAWSRequestUsesAWSProviderReferenceKeyForUploadedFiles() async throws {
-    let transport = RecordingTransport(response: jsonResponse("""
-    {"content":[{"type":"text","text":"aws"}],"stop_reason":"end_turn","usage":{"input_tokens":2,"output_tokens":1}}
-    """))
-    let provider = try AIProviders.anthropicAWS(settings: AnthropicAWSProviderSettings(
-        region: "us-west-2",
-        workspaceID: "wrkspc_test",
-        apiKey: "aws-api-key",
-        transport: transport
-    ))
-    let model = try provider.languageModel("claude-sonnet-4-6")
-
-    _ = try await model.generate(LanguageModelRequest(messages: [
-        AIMessage(role: .user, content: [
-            .providerReference(mimeType: "application/pdf", reference: ["anthropic-aws": "file_aws"])
-        ])
-    ]))
-
-    let request = try #require(await transport.requests().first)
-    #expect(request.headers["anthropic-beta"]?.contains("files-api-2025-04-14") == true)
-    let body = try decodeJSONBody(try #require(request.body))
-    #expect(body["messages"]?[0]?["content"]?[0]?["type"]?.stringValue == "document")
-    #expect(body["messages"]?[0]?["content"]?[0]?["source"]?["type"]?.stringValue == "file")
-    #expect(body["messages"]?[0]?["content"]?[0]?["source"]?["file_id"]?.stringValue == "file_aws")
 }
 @Test func anthropicToolsHelpersMirrorProviderExecutedToolFactories() async throws {
     let transport = RecordingTransport(response: jsonResponse("""

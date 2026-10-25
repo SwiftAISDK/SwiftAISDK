@@ -1,3 +1,15 @@
+@testable import SwiftAIGateway
+@testable import SwiftAITopaz
+@testable import SwiftAIHeyGen
+@testable import SwiftAIZAI
+@testable import SwiftAIGMICloud
+@testable import SwiftAITypeSafeAI
+@testable import SwiftAIMiniMax
+@testable import SwiftAIFishAudio
+@testable import SwiftAICartesia
+@testable import SwiftAIVoyage
+@testable import SwiftAIGoogle
+@testable import SwiftAIGoogleVertex
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI

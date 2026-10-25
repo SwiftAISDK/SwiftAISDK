@@ -1,3 +1,5 @@
+@testable import SwiftAIMCP
+@testable import SwiftAIFal
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI
@@ -176,54 +178,6 @@ import Testing
     let requests = await transport.requests()
     #expect(requests.count == 2)
     #expect(requests[1].url.absoluteString == "https://api.anthropic.com/v1/skills/skill%2F..%2F..%2Fadmin/versions/%252E%252E")
-}
-
-@Test func anthropicAWSFilesAndSkillsUseUpstreamProviderIDs() async throws {
-    let transport = RecordingTransport(responses: [
-        jsonResponse("""
-        {"id":"file_aws","type":"file","filename":"data.pdf","mime_type":"application/pdf","size_bytes":10}
-        """),
-        jsonResponse("""
-        {"id":"skill_aws","display_title":"AWS Skill","latest_version":"v1","source":"custom"}
-        """),
-        jsonResponse("""
-        {"type":"skill_version","skill_id":"skill_aws","name":"aws-skill","description":"AWS hosted skill"}
-        """)
-    ])
-    let provider = try AIProviders.anthropicAWS(settings: AnthropicAWSProviderSettings(
-        region: "us-west-2",
-        workspaceID: "wrkspc_test",
-        apiKey: "aws-api-key",
-        transport: transport
-    ))
-
-    let files = provider.files()
-    #expect(files.providerID == "anthropic-aws.messages")
-    let file = try await files.uploadFile(FileUploadRequest(data: Data([1, 2, 3]), mediaType: "application/pdf", filename: "data.pdf"))
-    #expect(file.providerReference["anthropic-aws"] == "file_aws")
-
-    let skills = provider.skills()
-    #expect(skills.providerID == "anthropic-aws.skills")
-    let skill = try await skills.uploadSkill(SkillUploadRequest(
-        files: [
-            SkillUploadFile(path: "index.ts", data: Data("console.log('hi')".utf8), mediaType: "text/typescript")
-        ],
-        displayTitle: "AWS Skill"
-    ))
-    #expect(skill.providerReference["anthropic-aws"] == "skill_aws")
-    #expect(skill.providerMetadata["anthropic-aws"]?["source"]?.stringValue == "custom")
-
-    let requests = await transport.requests()
-    #expect(requests.count == 3)
-    #expect(requests[0].url.absoluteString == "https://aws-external-anthropic.us-west-2.api.aws/v1/files")
-    #expect(requests[0].headers["x-api-key"] == "aws-api-key")
-    #expect(requests[0].headers["anthropic-beta"] == "files-api-2025-04-14")
-    #expect(requests[0].headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.81")
-    #expect(requests[1].url.absoluteString == "https://aws-external-anthropic.us-west-2.api.aws/v1/skills")
-    #expect(requests[1].headers["anthropic-beta"] == "skills-2025-10-02")
-    #expect(requests[1].headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.81")
-    #expect(requests[2].url.absoluteString == "https://aws-external-anthropic.us-west-2.api.aws/v1/skills/skill_aws/versions/v1")
-    #expect(requests[2].headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.81")
 }
 
 @Test func anthropicLanguageStreamsMessagesEvents() async throws {

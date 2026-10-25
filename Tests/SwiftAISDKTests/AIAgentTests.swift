@@ -1,3 +1,4 @@
+@testable import SwiftAIUI
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI
@@ -229,38 +230,6 @@ import Testing
 
     let request = try #require(model.streamRequests.first)
     #expect(request.messages == messages)
-}
-
-@Test func createAgentUIStreamConvertsUIMessagesAndStreamsSnapshots() async throws {
-    let model = AgentRecordingLanguageModel(streamParts: [
-        .streamStart(warnings: []),
-        .textStart(id: "text-1"),
-        .textDeltaPart(id: "text-1", delta: "Hel"),
-        .textDeltaPart(id: "text-1", delta: "lo"),
-        .textEnd(id: "text-1"),
-        .finish(reason: "stop", usage: TokenUsage(totalTokens: 5))
-    ])
-    let agent = AIToolLoopAgent(model: model, instructions: "Answer shortly.")
-
-    var snapshots: [AIUIMessage] = []
-    let stream = try createAgentUIStream(
-        agent: agent,
-        uiMessages: [.user("Hi", id: "user-1")],
-        messageID: "assistant-1"
-    )
-    for try await snapshot in stream {
-        snapshots.append(snapshot)
-    }
-
-    let request = try #require(model.streamRequests.first)
-    #expect(request.messages == [.system("Answer shortly."), .user("Hi")])
-
-    let finalMessage = try #require(snapshots.last)
-    #expect(finalMessage.id == "assistant-1")
-    #expect(finalMessage.role == .assistant)
-    #expect(finalMessage.text == "Hello")
-    #expect(finalMessage.metadata["finishReason"]?.stringValue == "stop")
-    #expect(finalMessage.metadata["usage"]?["totalTokens"]?.intValue == 5)
 }
 
 private func agentRoutedLocalCallerTools() -> (tools: [AITool], routing: AIToolCallerRouting) {

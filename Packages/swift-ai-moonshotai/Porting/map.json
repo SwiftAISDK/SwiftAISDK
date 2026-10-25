@@ -21,12 +21,15 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/OpenAICompatibleChatMoonshot.swift"
+      "Packages/swift-ai-moonshotai/Sources/SwiftAIMoonshotAI/MoonshotAIProvider.swift",
+      "Packages/swift-ai-moonshotai/Sources/SwiftAIMoonshotAI/OpenAICompatibleChatMoonshot.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/MoonshotAIProviderTests.swift",
-      "Tests/SwiftAISDKTests/Upstream/Providers/MoonshotAI/MoonshotAIProviderUpstreamTests.swift",
-      "Tests/SwiftAISDKTests/WeeklyMoonshot20261025Tests.swift"
+      "Packages/swift-ai-moonshotai/Tests/SwiftAIMoonshotAITests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-moonshotai/Tests/SwiftAIMoonshotAITests/MoonshotAIProviderTests.swift",
+      "Packages/swift-ai-moonshotai/Tests/SwiftAIMoonshotAITests/MoonshotAIProviderUpstreamTests.swift",
+      "Packages/swift-ai-moonshotai/Tests/SwiftAIMoonshotAITests/TestSupport.swift",
+      "Packages/swift-ai-moonshotai/Tests/SwiftAIMoonshotAITests/WeeklyMoonshot20261025Tests.swift"
     ],
     "resources": []
   },
@@ -36,5 +39,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
 }

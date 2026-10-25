@@ -33,9 +33,10 @@ support. Existing npm versions and capability rows are preserved.
 the generated legacy facade preserve explicit and default provider resolution.
 [M3 provider extraction](Migration/M3/README.md) adds independently buildable
 Anthropic, generic OpenAI-compatible and OpenAI packages. The aggregate now uses
-these local packages; remaining providers, MCP and UI stay in the aggregate.
+these local packages. M6 now moves the remaining providers, MCP and UI into their
+own packages; its final verification is in progress.
 
-The full suite retains 3545 tests: 3007 aggregate, 126 core, 135 Anthropic,
+The M3/M5 full suite retained 3545 tests: 3007 aggregate, 126 core, 135 Anthropic,
 7 compatible and 270 OpenAI, including 33 explicit live skips. Four external
 provider clients and the existing core consumer run without aggregate sources;
 19 existing examples build. Synthetic Git version fixtures verify mixed provider
@@ -52,7 +53,16 @@ preserves the old repository history, 67 tag refs and 24 prior Releases. Core,
 Anthropic, compatible and OpenAI are published at `1.0.0`; five clean clients
 resolve and execute against the public tags without mirrors. The old 2.8.1 URL
 still resolves to its original commit. Documentation and old-URL redirects work.
-M6/M7 remain pending; M3/M4 tags remain explicitly disposable fixture data.
+[M6 extraction](Migration/M6/README.md) is in progress: all 52 packages now own
+their implementations. The syntax inventory retains all 3545 previous tests plus
+four new compatibility/transport tests. All 3549 tests and the 52 exported package
+suites passed; 105 normal-import clients checked minimum/latest compatible
+dependencies and a mixed published/candidate selection. The API comparison has
+no missing public declaration; one compiler-synthesized record on an internal
+Vertex class is documented separately. Final hosted CI remains required, and the
+receipt retains observed failures of a pre-existing 1 ms timeout test. M7 has not started. M3/M4 tags
+remain explicitly disposable fixture data; no additional package is published by
+the extraction itself.
 
 [M4 release rehearsal](Migration/M4/README.md) adds reviewed Swift change records,
 SemVer planning, deterministic allowlisted exports, standalone provenance and CI,

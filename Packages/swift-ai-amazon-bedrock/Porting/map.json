@@ -39,22 +39,26 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
-      "Sources/SwiftAISDK/Models/AmazonBedrockEmbeddingModel.swift",
-      "Sources/SwiftAISDK/Models/AmazonBedrockImageModel.swift",
-      "Sources/SwiftAISDK/Models/AmazonBedrockLanguageModel.swift",
-      "Sources/SwiftAISDK/Models/AmazonBedrockModels.swift",
-      "Sources/SwiftAISDK/Models/AmazonBedrockRerankingModel.swift",
-      "Sources/SwiftAISDK/Models/AmazonBedrockShared.swift",
-      "Sources/SwiftAISDK/Models/AnthropicBedrockAdapter.swift",
-      "Sources/SwiftAISDK/Models/BedrockStreamParsing.swift",
-      "Sources/SwiftAISDK/Providers/AmazonBedrockProvider.swift"
+      "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AmazonBedrockAnthropicLanguageModel.swift",
+      "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AmazonBedrockEmbeddingModel.swift",
+      "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AmazonBedrockImageInputCapabilities.swift",
+      "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AmazonBedrockImageModel.swift",
+      "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AmazonBedrockLanguageModel.swift",
+      "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AmazonBedrockModels.swift",
+      "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AmazonBedrockProvider.swift",
+      "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AmazonBedrockRerankingModel.swift",
+      "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AmazonBedrockShared.swift",
+      "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AnthropicBedrockAdapter.swift",
+      "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/BedrockStreamParsing.swift",
+      "Packages/swift-ai-xai/Sources/SwiftAIXAI/ImageInputCapabilities.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/AmazonBedrockEventStreamParserTests.swift",
-      "Tests/SwiftAISDKTests/AmazonBedrockMediaAndRerankingTests.swift",
-      "Tests/SwiftAISDKTests/AmazonBedrockTests.swift",
-      "Tests/SwiftAISDKTests/AmazonBedrockUpstream5068Tests.swift"
+      "Packages/swift-ai-amazon-bedrock/Tests/SwiftAIAmazonBedrockTests/AmazonBedrockEventStreamParserTests.swift",
+      "Packages/swift-ai-amazon-bedrock/Tests/SwiftAIAmazonBedrockTests/AmazonBedrockMediaAndRerankingTests.swift",
+      "Packages/swift-ai-amazon-bedrock/Tests/SwiftAIAmazonBedrockTests/AmazonBedrockTests.swift",
+      "Packages/swift-ai-amazon-bedrock/Tests/SwiftAIAmazonBedrockTests/AmazonBedrockUpstream5068Tests.swift",
+      "Packages/swift-ai-amazon-bedrock/Tests/SwiftAIAmazonBedrockTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-amazon-bedrock/Tests/SwiftAIAmazonBedrockTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -64,5 +68,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider implementation and focused tests extracted; neutral AWS signing lives in core, Anthropic behavior is shared without copies. Baselines, capabilities and known gaps remain unchanged."
 }

@@ -1,3 +1,44 @@
+@testable import SwiftAIXAI
+@testable import SwiftAIGateway
+@testable import SwiftAIAzure
+@testable import SwiftAIQuiverAI
+@testable import SwiftAIKlingAI
+@testable import SwiftAIProdia
+@testable import SwiftAIFireworks
+@testable import SwiftAIDeepInfra
+@testable import SwiftAIBaseten
+@testable import SwiftAIMoonshotAI
+@testable import SwiftAITogetherAI
+@testable import SwiftAIFal
+@testable import SwiftAIReplicate
+@testable import SwiftAILuma
+@testable import SwiftAIBlackForestLabs
+@testable import SwiftAIByteDance
+@testable import SwiftAIZAI
+@testable import SwiftAIVercel
+@testable import SwiftAIHuggingFace
+@testable import SwiftAITypeSafeAI
+@testable import SwiftAIMiniMax
+@testable import SwiftAIElevenLabs
+@testable import SwiftAICartesia
+@testable import SwiftAIRevAI
+@testable import SwiftAIGladia
+@testable import SwiftAIAssemblyAI
+@testable import SwiftAIAlibaba
+@testable import SwiftAIDeepSeek
+@testable import SwiftAIPerplexity
+@testable import SwiftAILMNT
+@testable import SwiftAIHume
+@testable import SwiftAIDeepgram
+@testable import SwiftAIMistral
+@testable import SwiftAIGroq
+@testable import SwiftAIVoyage
+@testable import SwiftAICohere
+@testable import SwiftAICerebras
+@testable import SwiftAIAnthropicAWS
+@testable import SwiftAIAmazonBedrock
+@testable import SwiftAIGoogle
+@testable import SwiftAIGoogleVertex
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI
@@ -114,110 +155,4 @@ import Testing
     #expect(speech.providerID == "gateway")
     #expect(video.providerID == "gateway")
     #expect(reranking.providerID == "gateway")
-}
-
-@Test func vercelLanguageUsesV0EndpointAndChatProviderID() async throws {
-    let transport = RecordingTransport(response: jsonResponse("""
-    {"choices":[{"message":{"content":"v0 response"},"finish_reason":"stop"}],"usage":{"total_tokens":3}}
-    """))
-    let provider = try AIProviders.vercel(settings: ProviderSettings(apiKey: "vercel-key", transport: transport))
-    let model = try provider.languageModel("v0-1.5-md")
-
-    let result = try await model.generate(LanguageModelRequest(messages: [.user("Build UI")]))
-
-    #expect(provider.providerID == "vercel")
-    #expect(model.providerID == "vercel.chat")
-    #expect(result.text == "v0 response")
-    let request = try #require(await transport.requests().first)
-    #expect(request.url.absoluteString == "https://api.v0.dev/v1/chat/completions")
-    #expect(request.headers["authorization"] == "Bearer vercel-key")
-    #expect(request.headers["user-agent"] == "ai-sdk/vercel/3.0.30")
-    let body = try decodeJSONBody(try #require(request.body))
-    #expect(body["model"]?.stringValue == "v0-1.5-md")
-    #expect(body["messages"]?[0]?["content"]?.stringValue == "Build UI")
-}
-
-@Test func vercelCallableProviderReturnsChatModelLikeUpstream() async throws {
-    let transport = RecordingTransport(response: jsonResponse("""
-    {"choices":[{"message":{"content":"callable v0"},"finish_reason":"stop"}],"usage":{"total_tokens":3}}
-    """))
-    let provider = try AIProviders.vercel(settings: ProviderSettings(apiKey: "vercel-key", transport: transport))
-    let model = try provider("v0-1.5-lg")
-
-    let result = try await model.generate(LanguageModelRequest(messages: [.user("Build UI")]))
-
-    #expect(model.providerID == "vercel.chat")
-    #expect(model.modelID == "v0-1.5-lg")
-    #expect(result.text == "callable v0")
-    let request = try #require(await transport.requests().first)
-    #expect(request.url.absoluteString == "https://api.v0.dev/v1/chat/completions")
-    #expect(request.headers["authorization"] == "Bearer vercel-key")
-    #expect(request.headers["user-agent"] == "ai-sdk/vercel/3.0.30")
-    let body = try decodeJSONBody(try #require(request.body))
-    #expect(body["model"]?.stringValue == "v0-1.5-lg")
-}
-
-@Test func vercelLanguageUsesCustomSettingsLikeUpstreamProvider() async throws {
-    let transport = RecordingTransport(response: jsonResponse("""
-    {"choices":[{"message":{"content":"custom v0"},"finish_reason":"stop"}]}
-    """))
-    let provider = try AIProviders.vercel(settings: ProviderSettings(
-        apiKey: "ignored-key",
-        baseURL: "https://custom.v0.example/v1/",
-        headers: [
-            "Authorization": "Bearer custom-key",
-            "Custom-Header": "custom-value",
-            "User-Agent": "CustomApp/1.0"
-        ],
-        transport: transport
-    ))
-    let model = try provider("v0-1.0-md")
-
-    _ = try await model.generate(LanguageModelRequest(messages: [.user("Build custom UI")]))
-
-    let request = try #require(await transport.requests().first)
-    #expect(request.url.absoluteString == "https://custom.v0.example/v1/chat/completions")
-    #expect(request.headers["authorization"] == "Bearer custom-key")
-    #expect(request.headers["custom-header"] == "custom-value")
-    #expect(request.headers["user-agent"] == "CustomApp/1.0 ai-sdk/vercel/3.0.30")
-    let body = try decodeJSONBody(try #require(request.body))
-    #expect(body["model"]?.stringValue == "v0-1.0-md")
-}
-
-@Test func vercelProviderLoadsAPIKeyBeforeCustomAuthorizationOverrideLikeUpstream() async throws {
-    #expect(throws: AIError.missingAPIKey(provider: "vercel", environmentVariables: ["VERCEL_API_KEY"])) {
-        _ = try AIProviders.vercel(settings: ProviderSettings(
-            headers: ["Authorization": "Bearer custom-key"],
-            transport: RecordingTransport(response: jsonResponse("{}"))
-        ))
-    }
-
-    let transport = RecordingTransport(response: jsonResponse("""
-    {"choices":[{"message":{"content":"custom auth"},"finish_reason":"stop"}]}
-    """))
-    let provider = try AIProviders.vercel(settings: ProviderSettings(
-        apiKey: "loaded-key",
-        headers: ["Authorization": "Bearer custom-key"],
-        transport: transport
-    ))
-    let model = try provider.languageModel("v0-1.5-md")
-
-    _ = try await model.generate(LanguageModelRequest(messages: [.user("Hi")]))
-
-    let request = try #require(await transport.requests().first)
-    #expect(request.headers["authorization"] == "Bearer custom-key")
-}
-
-@Test func vercelProviderRejectsUnsupportedModelFamiliesWithVercelID() throws {
-    let provider = try AIProviders.vercel(settings: ProviderSettings(apiKey: "vercel-key", transport: RecordingTransport(response: jsonResponse("{}"))))
-
-    #expect(throws: AIError.unsupportedModel(provider: "vercel", capability: .embedding, modelID: "embed")) {
-        _ = try provider.embeddingModel("embed")
-    }
-    #expect(throws: AIError.unsupportedModel(provider: "vercel", capability: .embedding, modelID: "embed")) {
-        _ = try provider.textEmbeddingModel("embed")
-    }
-    #expect(throws: AIError.unsupportedModel(provider: "vercel", capability: .image, modelID: "image")) {
-        _ = try provider.imageModel("image")
-    }
 }

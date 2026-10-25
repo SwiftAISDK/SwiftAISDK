@@ -1,3 +1,10 @@
+@testable import SwiftAIXAI
+@testable import SwiftAIQuiverAI
+@testable import SwiftAIFireworks
+@testable import SwiftAIDeepInfra
+@testable import SwiftAITogetherAI
+@testable import SwiftAIFal
+@testable import SwiftAIReplicate
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI

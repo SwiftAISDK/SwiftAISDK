@@ -1,0 +1,444 @@
+import Foundation
+import Security
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAIGoogle
+
+
+public struct GoogleServiceAccountCredentials: Sendable {
+    public var clientEmail: String
+    public var privateKey: String
+    public var privateKeyID: String?
+
+    public init(clientEmail: String, privateKey: String, privateKeyID: String? = nil) {
+        self.clientEmail = clientEmail
+        self.privateKey = privateKey
+        self.privateKeyID = privateKeyID
+    }
+}
+
+public struct GoogleVertexToolResultDownloadSettings: Sendable, Equatable {
+    /// Maximum number of bytes downloaded for each remote tool-result file.
+    /// When omitted, Vertex uses a 7 MiB limit.
+    public var maxBytes: Int?
+
+    public init(maxBytes: Int? = nil) {
+        self.maxBytes = maxBytes
+    }
+}
+
+public struct GoogleVertexProviderSettings: Sendable {
+    public var project: String?
+    public var location: String?
+    public var apiKey: String?
+    public var accessToken: String?
+    public var serviceAccount: GoogleServiceAccountCredentials?
+    public var baseURL: String?
+    public var toolResultDownloads: GoogleVertexToolResultDownloadSettings?
+    public var headers: [String: String]
+    public var transport: any AITransport
+    public var date: @Sendable () -> Date
+
+    /// Source-compatible initializer retained from 1.6.0, before bounded
+    /// remote tool-result downloads became configurable.
+    public init(
+        project: String? = nil,
+        location: String? = nil,
+        apiKey: String? = nil,
+        accessToken: String? = nil,
+        serviceAccount: GoogleServiceAccountCredentials? = nil,
+        baseURL: String? = nil,
+        headers: [String: String] = [:],
+        transport: any AITransport = URLSessionTransport.shared,
+        date: @escaping @Sendable () -> Date = Date.init
+    ) {
+        self.init(
+            project: project,
+            location: location,
+            apiKey: apiKey,
+            accessToken: accessToken,
+            serviceAccount: serviceAccount,
+            baseURL: baseURL,
+            toolResultDownloads: nil,
+            headers: headers,
+            transport: transport,
+            date: date
+        )
+    }
+
+    public init(
+        project: String? = nil,
+        location: String? = nil,
+        apiKey: String? = nil,
+        accessToken: String? = nil,
+        serviceAccount: GoogleServiceAccountCredentials? = nil,
+        baseURL: String? = nil,
+        toolResultDownloads: GoogleVertexToolResultDownloadSettings?,
+        headers: [String: String] = [:],
+        transport: any AITransport = URLSessionTransport.shared,
+        date: @escaping @Sendable () -> Date = Date.init
+    ) {
+        self.project = project
+        self.location = location
+        self.apiKey = apiKey
+        self.accessToken = accessToken
+        self.serviceAccount = serviceAccount
+        self.baseURL = baseURL
+        self.toolResultDownloads = toolResultDownloads
+        self.headers = headers
+        self.transport = transport
+        self.date = date
+    }
+}
+
+public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
+    public let providerID = "google.vertex"
+    public let supportedCapabilities: Set<ModelCapability> = [.language, .embedding, .image, .speech, .transcription, .video]
+    private let config: GoogleVertexConfig
+
+    public init(settings: GoogleVertexProviderSettings = GoogleVertexProviderSettings()) throws {
+        let apiKey = settings.apiKey ?? environmentValue(["GOOGLE_VERTEX_API_KEY"])
+        let project = settings.project ?? environmentValue(["GOOGLE_VERTEX_PROJECT"])
+        let location = settings.location ?? environmentValue(["GOOGLE_VERTEX_LOCATION"])
+        let auth: GoogleVertexAuth
+        if let apiKey, !apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            auth = .apiKey(apiKey)
+        } else if let accessToken = settings.accessToken ?? environmentValue(["GOOGLE_VERTEX_ACCESS_TOKEN", "GOOGLE_ACCESS_TOKEN"]) {
+            auth = .accessToken(accessToken)
+        } else if let serviceAccount = settings.serviceAccount ?? Self.environmentServiceAccount() {
+            auth = .serviceAccount(serviceAccount)
+        } else {
+            throw AIError.missingAPIKey(provider: providerID, environmentVariables: ["GOOGLE_VERTEX_API_KEY", "GOOGLE_VERTEX_ACCESS_TOKEN", "GOOGLE_CLIENT_EMAIL", "GOOGLE_PRIVATE_KEY"])
+        }
+
+        let baseURL: String
+        if apiKey != nil {
+            baseURL = withoutTrailingSlash(settings.baseURL ?? "https://aiplatform.googleapis.com/v1/publishers/google")
+        } else if let explicit = settings.baseURL {
+            baseURL = withoutTrailingSlash(explicit)
+        } else {
+            guard let project, let location else {
+                throw AIError.invalidURL("Google Vertex OAuth mode requires project/location or baseURL.")
+            }
+            try validateHostnamePart(location, argument: "location")
+            let host = googleVertexRegionalHost(location: location)
+            baseURL = "https://\(host)/v1beta1/projects/\(project)/locations/\(location)/publishers/google"
+        }
+
+        let headers = withUserAgentSuffix(settings.headers, "ai-sdk-google-vertex/5.0.122")
+        config = GoogleVertexConfig(
+            providerID: providerID,
+            baseURL: baseURL,
+            project: project,
+            location: location,
+            headers: headers,
+            auth: auth,
+            transport: settings.transport,
+            date: settings.date,
+            toolResultDownloadsMaxBytes: settings.toolResultDownloads?.maxBytes ?? 7 * 1024 * 1024
+        )
+    }
+
+    public func languageModel(_ modelID: String) throws -> any LanguageModel {
+        if googleVertexIsEndpointModelID(modelID) {
+            guard !config.usesAPIKey else {
+                throw AIError.invalidArgument(argument: "modelID", message: "Google Vertex tuned models do not support Express Mode API keys. Use standard Google Cloud credentials instead.")
+            }
+            return GoogleVertexLanguageModel(
+                modelID: modelID,
+                config: config.withProviderID("google.vertex.chat").withBaseURL(googleVertexEndpointBaseURL(from: config.baseURL))
+            )
+        }
+        return GoogleVertexLanguageModel(modelID: modelID, config: config.withProviderID("google.vertex.chat"))
+    }
+
+    public func interactionsModel(_ modelID: String) throws -> any LanguageModel {
+        guard !config.usesAPIKey else {
+            throw AIError.invalidArgument(argument: "modelID", message: "Google Vertex Interactions models do not support Express Mode API keys. Use standard Google Cloud credentials instead.")
+        }
+        return GoogleVertexInteractionsLanguageModel(
+            modelID: modelID,
+            agent: nil,
+            config: config.withProviderID("google.vertex.interactions").withBaseURL(googleVertexEndpointBaseURL(from: config.baseURL))
+        )
+    }
+
+    public func interactionsAgent(_ agentName: String) throws -> any LanguageModel {
+        guard !config.usesAPIKey else {
+            throw AIError.invalidArgument(argument: "agentName", message: "Google Vertex Interactions models do not support Express Mode API keys. Use standard Google Cloud credentials instead.")
+        }
+        return GoogleVertexInteractionsLanguageModel(
+            modelID: agentName,
+            agent: agentName,
+            config: config.withProviderID("google.vertex.interactions").withBaseURL(googleVertexEndpointBaseURL(from: config.baseURL))
+        )
+    }
+
+    public func embeddingModel(_ modelID: String) throws -> any EmbeddingModel {
+        GoogleVertexEmbeddingModel(modelID: modelID, config: config.withProviderID("google.vertex.embedding"))
+    }
+
+    public func imageModel(_ modelID: String) throws -> any ImageModel {
+        GoogleVertexImageModel(modelID: modelID, config: config.withProviderID("google.vertex.image"))
+    }
+
+    public func videoModel(_ modelID: String) throws -> any VideoModel {
+        GoogleVertexVideoModel(modelID: modelID, config: config.withProviderID("google.vertex.video"))
+    }
+
+    public func transcriptionModel(_ modelID: String) throws -> any TranscriptionModel {
+        if let location = config.location { try validateHostnamePart(location, argument: "location") }
+        return GoogleVertexTranscriptionModel(modelID: modelID, config: config.withProviderID("google.vertex.transcription"))
+    }
+
+    public func speechModel(_ modelID: String) throws -> any SpeechModel {
+        if modelID.hasPrefix("chirp") {
+            guard !config.usesAPIKey else {
+                throw AIError.invalidArgument(
+                    argument: "modelID",
+                    message: "Google Vertex Chirp speech models do not support Express Mode API keys. Use standard Google Cloud credentials instead."
+                )
+            }
+            return GoogleVertexCloudTTSSpeechModel(
+                modelID: modelID,
+                config: config.withProviderID("google.vertex.speech")
+            )
+        }
+        return GoogleVertexSpeechModel(modelID: modelID, config: config.withProviderID("google.vertex.speech"))
+    }
+
+    public func rerankingModel(_ modelID: String) throws -> any RerankingModel {
+        throw AIError.unsupportedModel(provider: providerID, capability: .reranking, modelID: modelID)
+    }
+
+    private static func environmentServiceAccount() -> GoogleServiceAccountCredentials? {
+        guard let email = environmentValue(["GOOGLE_CLIENT_EMAIL"]),
+              let key = environmentValue(["GOOGLE_PRIVATE_KEY"])?.replacingOccurrences(of: "\\n", with: "\n") else {
+            return nil
+        }
+        return GoogleServiceAccountCredentials(clientEmail: email, privateKey: key, privateKeyID: environmentValue(["GOOGLE_PRIVATE_KEY_ID"]))
+    }
+}
+
+enum GoogleVertexAuth: Sendable {
+    case apiKey(String)
+    case accessToken(String)
+    case serviceAccount(GoogleServiceAccountCredentials)
+}
+
+struct GoogleVertexConfig: @unchecked Sendable {
+    var providerID: String
+    var baseURL: String
+    var project: String?
+    var location: String?
+    var headers: [String: String]
+    var auth: GoogleVertexAuth
+    var transport: any AITransport
+    var date: @Sendable () -> Date
+    var toolResultDownloadsMaxBytes: Int
+
+    var usesAPIKey: Bool {
+        if case .apiKey = auth {
+            return true
+        }
+        return false
+    }
+
+    func sendJSON(path: String, body: JSONValue, headers requestHeaders: [String: String] = [:], abortSignal: AIAbortSignal? = nil) async throws -> JSONValue {
+        try await sendJSONResponse(path: path, body: body, headers: requestHeaders, abortSignal: abortSignal).json
+    }
+
+    func sendJSONResponse(path: String, body: JSONValue, headers requestHeaders: [String: String] = [:], abortSignal: AIAbortSignal? = nil) async throws -> (json: JSONValue, response: AIHTTPResponse) {
+        let response = try await transport.send(try await request(path: path, body: body, headers: requestHeaders, abortSignal: abortSignal))
+        guard (200..<300).contains(response.statusCode) else {
+            throw apiCallError(provider: providerID, response: response)
+        }
+        return (try response.jsonValue(), response)
+    }
+
+    func sendJSONResponse(url: String, body: JSONValue, headers requestHeaders: [String: String] = [:], abortSignal: AIAbortSignal? = nil) async throws -> (json: JSONValue, response: AIHTTPResponse) {
+        let response = try await transport.send(try await request(url: url, body: body, headers: requestHeaders, abortSignal: abortSignal))
+        guard (200..<300).contains(response.statusCode) else {
+            throw apiCallError(provider: providerID, response: response)
+        }
+        return (try response.jsonValue(), response)
+    }
+
+    func streamRequest(_ request: AIHTTPRequest) async throws -> AIHTTPStreamResponse {
+        let streamingTransport = try requireStreamingTransport(transport, providerID: providerID)
+        return try await streamingTransport.stream(request)
+    }
+
+    func request(path: String, body: JSONValue, headers requestHeaders: [String: String] = [:], abortSignal: AIAbortSignal? = nil) async throws -> AIHTTPRequest {
+        try await request(url: "\(withoutTrailingSlash(baseURL))\(path)", body: body, headers: requestHeaders, abortSignal: abortSignal)
+    }
+
+    func request(url: String, body: JSONValue, headers requestHeaders: [String: String] = [:], abortSignal: AIAbortSignal? = nil) async throws -> AIHTTPRequest {
+        let mergedHeaders = try await authenticatedHeaders(requestHeaders)
+        return AIHTTPRequest(method: "POST", url: try requireURL(url), headers: mergedHeaders, body: try encodeJSONBody(body), abortSignal: abortSignal)
+    }
+
+    func authenticatedHeaders(_ requestHeaders: [String: String] = [:]) async throws -> [String: String] {
+        var mergedHeaders = headers.mergingHeaders(requestHeaders)
+        mergedHeaders["content-type"] = mergedHeaders["content-type"] ?? "application/json"
+        switch auth {
+        case let .apiKey(apiKey):
+            mergedHeaders["x-goog-api-key"] = apiKey
+        case let .accessToken(token):
+            mergedHeaders["Authorization"] = mergedHeaders["Authorization"] ?? "Bearer \(token)"
+        case let .serviceAccount(credentials):
+            let token = try await GoogleServiceAccountTokenGenerator.generateAccessToken(credentials: credentials, now: date())
+            mergedHeaders["Authorization"] = mergedHeaders["Authorization"] ?? "Bearer \(token)"
+        }
+        return mergedHeaders
+    }
+
+    func withProviderID(_ providerID: String) -> GoogleVertexConfig {
+        GoogleVertexConfig(
+            providerID: providerID,
+            baseURL: baseURL,
+            project: project,
+            location: location,
+            headers: headers,
+            auth: auth,
+            transport: transport,
+            date: date,
+            toolResultDownloadsMaxBytes: toolResultDownloadsMaxBytes
+        )
+    }
+
+    func withBaseURL(_ baseURL: String) -> GoogleVertexConfig {
+        GoogleVertexConfig(
+            providerID: providerID,
+            baseURL: baseURL,
+            project: project,
+            location: location,
+            headers: headers,
+            auth: auth,
+            transport: transport,
+            date: date,
+            toolResultDownloadsMaxBytes: toolResultDownloadsMaxBytes
+        )
+    }
+}
+
+private func googleVertexIsEndpointModelID(_ modelID: String) -> Bool {
+    modelID.hasPrefix("endpoints/")
+}
+
+private func googleVertexEndpointBaseURL(from baseURL: String) -> String {
+    let suffix = "/publishers/google"
+    guard baseURL.hasSuffix(suffix) else { return baseURL }
+    return String(baseURL.dropLast(suffix.count))
+}
+
+private func googleVertexRegionalHost(location: String) -> String {
+    if location == "global" {
+        return "aiplatform.googleapis.com"
+    }
+    if location == "eu" || location == "us" {
+        return "aiplatform.\(location).rep.googleapis.com"
+    }
+    return "\(location)-aiplatform.googleapis.com"
+}
+
+enum GoogleServiceAccountTokenGenerator {
+    static func generateAccessToken(credentials: GoogleServiceAccountCredentials, now: Date) async throws -> String {
+        let assertion = try buildJWT(credentials: credentials, now: now)
+        let body = "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=\(urlFormEncode(assertion))"
+        var request = URLRequest(url: try requireURL("https://oauth2.googleapis.com/token"))
+        request.httpMethod = "POST"
+        request.httpBody = Data(body.utf8)
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+            let http = response as? HTTPURLResponse
+            let headers = http?.allHeaderFields.reduce(into: [String: String]()) { partial, element in
+                guard let key = element.key as? String else { return }
+                partial[key] = String(describing: element.value)
+            } ?? [:]
+            throw apiCallError(
+                provider: "google.vertex",
+                statusCode: http?.statusCode ?? 0,
+                body: String(data: data, encoding: .utf8) ?? "",
+                headers: headers
+            )
+        }
+        let raw = try decodeJSONBody(data)
+        guard let token = raw["access_token"]?.stringValue else {
+            throw AIError.invalidResponse(provider: "google.vertex", message: "OAuth token response did not contain access_token.")
+        }
+        return token
+    }
+
+    static func buildJWT(credentials: GoogleServiceAccountCredentials, now: Date) throws -> String {
+        let issuedAt = Int(now.timeIntervalSince1970)
+        var header: [String: JSONValue] = ["alg": "RS256", "typ": "JWT"]
+        if let privateKeyID = credentials.privateKeyID {
+            header["kid"] = .string(privateKeyID)
+        }
+        let payload: [String: JSONValue] = [
+            "iss": .string(credentials.clientEmail),
+            "scope": "https://www.googleapis.com/auth/cloud-platform",
+            "aud": "https://oauth2.googleapis.com/token",
+            "exp": .number(Double(issuedAt + 3600)),
+            "iat": .number(Double(issuedAt))
+        ]
+        let signingInput = "\(base64URL(try encodeJSONBody(.object(header)))).\(base64URL(try encodeJSONBody(.object(payload))))"
+        let signature = try signRS256(Data(signingInput.utf8), privateKeyPEM: credentials.privateKey)
+        return "\(signingInput).\(base64URL(signature))"
+    }
+
+    private static func signRS256(_ data: Data, privateKeyPEM: String) throws -> Data {
+        let pem = privateKeyPEM
+            .replacingOccurrences(of: "-----BEGIN PRIVATE KEY-----", with: "")
+            .replacingOccurrences(of: "-----END PRIVATE KEY-----", with: "")
+            .components(separatedBy: .whitespacesAndNewlines)
+            .joined()
+        guard let keyData = Data(base64Encoded: pem) else {
+            throw AIError.invalidResponse(provider: "google.vertex", message: "Invalid service account private key PEM.")
+        }
+        let attributes: [String: Any] = [
+            kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+            kSecAttrKeyClass as String: kSecAttrKeyClassPrivate
+        ]
+        var error: Unmanaged<CFError>?
+        guard let privateKey = SecKeyCreateWithData(keyData as CFData, attributes as CFDictionary, &error) else {
+            throw error?.takeRetainedValue() ?? AIError.invalidResponse(provider: "google.vertex", message: "Could not import service account private key.")
+        }
+        guard let signature = SecKeyCreateSignature(privateKey, .rsaSignatureMessagePKCS1v15SHA256, data as CFData, &error) else {
+            throw error?.takeRetainedValue() ?? AIError.invalidResponse(provider: "google.vertex", message: "Could not sign service account JWT.")
+        }
+        return signature as Data
+    }
+
+    private static func base64URL(_ data: Data) -> String {
+        data.base64EncodedString()
+            .replacingOccurrences(of: "+", with: "-")
+            .replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "=", with: "")
+    }
+
+    private static func urlFormEncode(_ value: String) -> String {
+        var allowed = CharacterSet.urlQueryAllowed
+        allowed.remove(charactersIn: "&+=")
+        return value.addingPercentEncoding(withAllowedCharacters: allowed) ?? value
+    }
+}
+
+/// Vertex Anthropic labels are sent in a UTF-8 JSON, base64-encoded header.
+public func googleVertexAnthropicRequestHeaders(_ headers: [String: String], _ providerOptions: [String: JSONValue]) async throws -> [String: String] {
+    guard let vertex = providerOptions["vertex"], vertex != .null else { return headers }
+    guard let options = vertex.objectValue else {
+        throw AIError.invalidArgument(argument: "providerOptions.vertex", message: "Vertex provider options must be an object.")
+    }
+    guard let labels = options["labels"] else { return headers }
+    guard let values = labels.objectValue, values.values.allSatisfy({ $0.stringValue != nil }) else {
+        throw AIError.invalidArgument(argument: "providerOptions.vertex.labels", message: "Vertex labels must be an object with string values.")
+    }
+    guard !headers.keys.contains(where: { $0.caseInsensitiveCompare("x-vertex-ai-labels") == .orderedSame }) else { return headers }
+    var transformed = headers
+    transformed["x-vertex-ai-labels"] = try encodeJSONBody(labels).base64EncodedString()
+    return transformed
+}

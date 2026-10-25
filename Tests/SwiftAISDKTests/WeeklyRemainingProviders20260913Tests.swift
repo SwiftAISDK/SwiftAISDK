@@ -1,3 +1,7 @@
+@testable import SwiftAIKlingAI
+@testable import SwiftAIByteDance
+@testable import SwiftAIMiniMax
+@testable import SwiftAIGladia
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI

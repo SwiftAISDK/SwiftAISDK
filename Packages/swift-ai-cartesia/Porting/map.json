@@ -19,16 +19,19 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/CartesiaSpeechModel.swift",
-      "Sources/SwiftAISDK/Models/CartesiaStreamingTranscriptionModel.swift",
-      "Sources/SwiftAISDK/Models/CartesiaTranscriptionModel.swift",
-      "Sources/SwiftAISDK/Providers/CartesiaProvider.swift"
+      "Packages/swift-ai-cartesia/Sources/SwiftAICartesia/CartesiaHTTPConfiguration.swift",
+      "Packages/swift-ai-cartesia/Sources/SwiftAICartesia/CartesiaProvider.swift",
+      "Packages/swift-ai-cartesia/Sources/SwiftAICartesia/CartesiaSpeechModel.swift",
+      "Packages/swift-ai-cartesia/Sources/SwiftAICartesia/CartesiaStreamingTranscriptionModel.swift",
+      "Packages/swift-ai-cartesia/Sources/SwiftAICartesia/CartesiaTranscriptionModel.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/CartesiaProviderTests.swift",
-      "Tests/SwiftAISDKTests/CartesiaSpeechModelTests.swift",
-      "Tests/SwiftAISDKTests/CartesiaStreamingTranscriptionModelTests.swift",
-      "Tests/SwiftAISDKTests/CartesiaTranscriptionModelTests.swift"
+      "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/CartesiaProviderTests.swift",
+      "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/CartesiaSpeechModelTests.swift",
+      "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/CartesiaStreamingTranscriptionModelTests.swift",
+      "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/CartesiaTranscriptionModelTests.swift",
+      "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -38,5 +41,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: native audio provider, models and focused suites extracted with the existing batch and streaming contract. Prior baselines and gaps unchanged."
 }

@@ -1,3 +1,13 @@
+@testable import SwiftAIFal
+@testable import SwiftAIMiniMax
+@testable import SwiftAIElevenLabs
+@testable import SwiftAIRevAI
+@testable import SwiftAIGladia
+@testable import SwiftAIAssemblyAI
+@testable import SwiftAILMNT
+@testable import SwiftAIHume
+@testable import SwiftAIDeepgram
+@testable import SwiftAIGroq
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI

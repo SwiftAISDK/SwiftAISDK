@@ -21,13 +21,7 @@ extension ModelHTTPConfig {
         result.explicitMessageItemType = explicitMessageItemType
         result.supportsStructuredOutputs = supportsStructuredOutputs
         result.errorHandler = { self.httpStatusError($0) }
-        if providerID.hasPrefix("xai.") {
-            result.prepareResponses = { modelID, request, stream in
-                try xaiResponsesPreparedRequest(modelID: modelID, providerID: self.providerID, request: request,
-                    stream: stream, transformRequestBody: self.transformRequestBody)
-            }
-        }
-        if providerID == "xai.responses" { result.streamErrorParser = xaiResponsesStreamProviderError }
+        if providerID.hasPrefix("xai.") { configureXAIResponses(&result) }
         return result
     }
 }

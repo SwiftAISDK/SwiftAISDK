@@ -108,7 +108,9 @@ test("release plan separates initial Swift versions, provenance and dependent ve
     next.packages.map((p) => [p.package, p.version]),
     [["swift-ai-core", "1.0.1"]],
   );
-  assert.equal(next.verificationPackages.length, 4);
+  const extracted = read(path.join(dir, "Porting/packages.json")).packages
+    .filter((p) => p.state === "extracted").map((p) => p.id).sort();
+  assert.deepEqual(next.verificationPackages.slice().sort(), extracted);
   const catalog = read(path.join(dir, "Porting/packages.json"));
   catalog.packages.find(
     (p) => p.id === "swift-ai-openai",
@@ -129,7 +131,14 @@ test("drafts do not release; invalid changes and unavailable dependencies fail",
     ...original,
     packages: [{ ...original.packages[0], package: "swift-ai-google" }],
   });
+  const catalog = read(path.join(dir, "Porting/packages.json"));
+  const google = catalog.packages.find((p) => p.id === "swift-ai-google");
+  const previousState = google.state;
+  google.state = "planned";
+  write(dir, "Porting/packages.json", catalog);
   assert.throws(() => release.plan(dir), /unextracted/);
+  google.state = previousState;
+  write(dir, "Porting/packages.json", catalog);
   write(dir, file, { ...original, packages: [original.packages[1]] });
   assert.throws(() => release.plan(dir), /Unavailable compatible dependency/);
   write(dir, file, {

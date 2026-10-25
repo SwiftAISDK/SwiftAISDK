@@ -1,0 +1,99 @@
+import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+
+
+/// The published `@ai-sdk/typesafe-ai` package version mirrored by this port.
+public let typeSafeAIProviderVersion = "3.0.27"
+
+/// Creates a TypeSafe AI provider using the same defaults as
+/// `createTypeSafeAi` from `@ai-sdk/typesafe-ai`.
+///
+/// Authentication is resolved lazily when an evaluation is performed, matching
+/// upstream and allowing an environment key to be installed after the provider
+/// or model is created.
+public func createTypeSafeAI(
+    configuration settings: TypeSafeAIProviderSettings
+) -> TypeSafeAIProvider {
+    TypeSafeAIProvider(configuration: settings)
+}
+
+/// Exact-casing alias for upstream `createTypeSafeAi`.
+public func createTypeSafeAi(
+    configuration settings: TypeSafeAIProviderSettings
+) -> TypeSafeAIProvider {
+    createTypeSafeAI(configuration: settings)
+}
+
+/// The default TypeSafe AI provider, equivalent to upstream `typeSafeAi`.
+public let typeSafeAI = TypeSafeAIProvider(configuration: .init())
+
+/// Exact-casing alias for upstream `typeSafeAi`.
+public let typeSafeAi = typeSafeAI
+
+/// TypeSafe AI's Decision and legacy Evaluation Provider V4 surfaces.
+public final class TypeSafeAIProvider: AIProvider, AIEvaluationProvider, AIDecisionProvider, @unchecked Sendable {
+    public let providerID = "typesafe"
+    public let supportedCapabilities: Set<ModelCapability> = [.evaluation, .decision]
+
+    private let configuration: TypeSafeAIEvaluationModelConfiguration
+
+    public init(configuration settings: TypeSafeAIProviderSettings) {
+        configuration = TypeSafeAIEvaluationModelConfiguration(
+            providerID: "typesafe.evaluation",
+            baseURL: withoutTrailingSlash(settings.baseURL ?? "https://api.typesafe.ai/v1"),
+            apiKey: settings.apiKey,
+            headers: settings.headers,
+            environment: settings.environment,
+            transport: settings.transport
+        )
+    }
+
+    public func decisionModel(_ modelID: String) throws -> any AIDecisionModelV4 {
+        var config = configuration
+        config.providerID = "typesafe.decision"
+        return TypeSafeAIDecisionModel(modelID: modelID, configuration: config)
+    }
+
+    public func decision(_ modelID: String) throws -> any AIDecisionModelV4 { try decisionModel(modelID) }
+
+    public func evaluationModel(_ modelID: String) throws -> any AIEvaluationModelV4 {
+        TypeSafeAIEvaluationModel(modelID: modelID, configuration: configuration)
+    }
+
+    public func languageModel(_ modelID: String) throws -> any LanguageModel {
+        throw unsupported(.language, modelID: modelID)
+    }
+
+    public func embeddingModel(_ modelID: String) throws -> any EmbeddingModel {
+        throw unsupported(.embedding, modelID: modelID)
+    }
+
+    public func imageModel(_ modelID: String) throws -> any ImageModel {
+        throw unsupported(.image, modelID: modelID)
+    }
+
+    public func transcriptionModel(_ modelID: String) throws -> any TranscriptionModel {
+        throw unsupported(.transcription, modelID: modelID)
+    }
+
+    public func speechModel(_ modelID: String) throws -> any SpeechModel {
+        throw unsupported(.speech, modelID: modelID)
+    }
+
+    public func videoModel(_ modelID: String) throws -> any VideoModel {
+        throw unsupported(.video, modelID: modelID)
+    }
+
+    public func rerankingModel(_ modelID: String) throws -> any RerankingModel {
+        throw unsupported(.reranking, modelID: modelID)
+    }
+
+    private func unsupported(_ capability: ModelCapability, modelID: String) -> AIError {
+        .unsupportedModel(provider: providerID, capability: capability, modelID: modelID)
+    }
+}
+public extension AIProviders {
+    static func typeSafeAI(configuration: TypeSafeAIProviderSettings) -> TypeSafeAIProvider { TypeSafeAIProvider(configuration: configuration) }
+}

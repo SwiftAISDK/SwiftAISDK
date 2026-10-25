@@ -19,13 +19,18 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/ElevenLabsAudioModels.swift",
-      "Sources/SwiftAISDK/Models/ElevenLabsExtendedAudioModels.swift",
-      "Sources/SwiftAISDK/Models/ElevenLabsStreamingSpeechModel.swift"
+      "Packages/swift-ai-elevenlabs/Sources/SwiftAIElevenLabs/ElevenLabsAudioModels.swift",
+      "Packages/swift-ai-elevenlabs/Sources/SwiftAIElevenLabs/ElevenLabsExtendedAudioModels.swift",
+      "Packages/swift-ai-elevenlabs/Sources/SwiftAIElevenLabs/ElevenLabsProvider.swift",
+      "Packages/swift-ai-elevenlabs/Sources/SwiftAIElevenLabs/ElevenLabsStreamingSpeechModel.swift",
+      "Packages/swift-ai-elevenlabs/Sources/SwiftAIElevenLabs/ElevenLabsTranscriptionParsing.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/ElevenLabsProviderTests.swift",
-      "Tests/SwiftAISDKTests/WeeklyElevenLabs20261025Tests.swift"
+      "Packages/swift-ai-elevenlabs/Tests/SwiftAIElevenLabsTests/ElevenLabsProviderTests.swift",
+      "Packages/swift-ai-elevenlabs/Tests/SwiftAIElevenLabsTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-elevenlabs/Tests/SwiftAIElevenLabsTests/SpeechSocketTestSupport.swift",
+      "Packages/swift-ai-elevenlabs/Tests/SwiftAIElevenLabsTests/TestSupport.swift",
+      "Packages/swift-ai-elevenlabs/Tests/SwiftAIElevenLabsTests/WeeklyElevenLabs20261025Tests.swift"
     ],
     "resources": []
   },
@@ -35,5 +40,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
 }

@@ -1,3 +1,6 @@
+@testable import SwiftAIFal
+@testable import SwiftAIGroq
+@testable import SwiftAICohere
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI

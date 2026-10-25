@@ -220,33 +220,25 @@
   ],
   "swift": {
     "sources": [
-      "Packages/swift-ai-core/Sources/SwiftAI/AIAgent.swift",
-      "Packages/swift-ai-core/Sources/SwiftAI/AIChatTransport.swift",
-      "Packages/swift-ai-core/Sources/SwiftAI/Errors.swift",
-      "Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift",
-      "Sources/SwiftAISDK/AIAgent.swift",
-      "Sources/SwiftAISDK/AIChatSession.swift",
-      "Sources/SwiftAISDK/AIChatTransport.swift",
-      "Sources/SwiftAISDK/AIUIMessageConversion.swift",
-      "Sources/SwiftAISDK/AIUIMessageStreamReducer.swift",
-      "Sources/SwiftAISDK/AIUIMessageValidation.swift",
-      "Sources/SwiftAISDK/CoreUIMessages.swift",
-      "Sources/SwiftAISDK/Errors.swift"
+      "Packages/swift-ai-ui/Sources/SwiftAIUI/AIAgent.swift",
+      "Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatSession.swift",
+      "Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatTransport.swift",
+      "Packages/swift-ai-ui/Sources/SwiftAIUI/AIUIMessageConversion.swift",
+      "Packages/swift-ai-ui/Sources/SwiftAIUI/AIUIMessageStreamReducer.swift",
+      "Packages/swift-ai-ui/Sources/SwiftAIUI/AIUIMessageValidation.swift",
+      "Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift",
+      "Packages/swift-ai-ui/Sources/SwiftAIUI/Errors.swift"
     ],
     "tests": [
-      "Packages/swift-ai-core/Tests/SwiftAIProviderTests/CoreContractTests.swift",
-      "Tests/SwiftAISDKTests/AIAgentTests.swift",
-      "Tests/SwiftAISDKTests/AIChatSessionTests.swift",
-      "Tests/SwiftAISDKTests/AiConvertToModelMessagesUpstreamTests.swift",
-      "Tests/SwiftAISDKTests/AiUIMessageStreamUpstreamTests.swift",
-      "Tests/SwiftAISDKTests/AiValidateUIMessagesUpstreamTests.swift",
-      "Tests/SwiftAISDKTests/CoreContractTests.swift",
-      "Tests/SwiftAISDKTests/LanguageStreamContractTests.swift",
-      "Tests/SwiftAISDKTests/WeeklyCore20261023Tests.swift",
-      "Tests/SwiftAISDKTests/WeeklyCore20261025Tests.swift",
-      "Tests/SwiftAISDKTests/WeeklyCoreGeneratedFiles20260927Tests.swift",
-      "Tests/SwiftAISDKTests/WeeklyCoreMCP20260920Tests.swift",
-      "Tests/SwiftAISDKTests/WeeklyUI20261011Tests.swift"
+      "Packages/swift-ai-ui/Tests/SwiftAIUITests/AIChatSessionTests.swift",
+      "Packages/swift-ai-ui/Tests/SwiftAIUITests/AgentUIStreamTests.swift",
+      "Packages/swift-ai-ui/Tests/SwiftAIUITests/AiConvertToModelMessagesUpstreamTests.swift",
+      "Packages/swift-ai-ui/Tests/SwiftAIUITests/AiUIMessageStreamUpstreamTests.swift",
+      "Packages/swift-ai-ui/Tests/SwiftAIUITests/AiValidateUIMessagesUpstreamTests.swift",
+      "Packages/swift-ai-ui/Tests/SwiftAIUITests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-ui/Tests/SwiftAIUITests/TestSupport.swift",
+      "Packages/swift-ai-ui/Tests/SwiftAIUITests/UIContractTests.swift",
+      "Packages/swift-ai-ui/Tests/SwiftAIUITests/WeeklyUI20261011Tests.swift"
     ],
     "resources": []
   },
@@ -256,5 +248,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: optional native UI messages, validation/conversion/reducer, direct chat transport, observable session and agent UI stream bridge extracted. Core agent and AIChatRequestOptions declarations stay in core. Whole UI suites and UI-only contract/agent cases move; mixed core/UI/MCP integration cases remain in the workspace. Existing React/browser-specific gaps remain unchanged."
 }

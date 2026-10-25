@@ -17,15 +17,19 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/HeyGenVideoInputs.swift",
-      "Sources/SwiftAISDK/Models/HeyGenVideoModel.swift",
-      "Sources/SwiftAISDK/Models/HeyGenVideoModelOptions.swift"
+      "Packages/swift-ai-heygen/Sources/SwiftAIHeyGen/HeyGenProvider.swift",
+      "Packages/swift-ai-heygen/Sources/SwiftAIHeyGen/HeyGenVideoInputs.swift",
+      "Packages/swift-ai-heygen/Sources/SwiftAIHeyGen/HeyGenVideoModel.swift",
+      "Packages/swift-ai-heygen/Sources/SwiftAIHeyGen/HeyGenVideoModelOptions.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/HeyGenProviderTests.swift",
-      "Tests/SwiftAISDKTests/HeyGenVideoOperationTests.swift",
-      "Tests/SwiftAISDKTests/HeyGenVideoRequestTests.swift",
-      "Tests/SwiftAISDKTests/HeyGenVideoValidationTests.swift"
+      "Packages/swift-ai-heygen/Tests/SwiftAIHeyGenTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-heygen/Tests/SwiftAIHeyGenTests/HeyGenProviderTests.swift",
+      "Packages/swift-ai-heygen/Tests/SwiftAIHeyGenTests/HeyGenTestSupport.swift",
+      "Packages/swift-ai-heygen/Tests/SwiftAIHeyGenTests/HeyGenVideoOperationTests.swift",
+      "Packages/swift-ai-heygen/Tests/SwiftAIHeyGenTests/HeyGenVideoRequestTests.swift",
+      "Packages/swift-ai-heygen/Tests/SwiftAIHeyGenTests/HeyGenVideoValidationTests.swift",
+      "Packages/swift-ai-heygen/Tests/SwiftAIHeyGenTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -35,5 +39,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
 }

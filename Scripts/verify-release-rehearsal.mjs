@@ -68,7 +68,8 @@ function command(cmd, argv, cwd, name) {
   return r.stdout;
 }
 function mirror(cwd, stage, data) {
-  for (const p of data.catalog.packages.filter((p) => p.state === "extracted"))
+  for (const p of data.catalog.packages.filter((p) => p.state === "extracted" &&
+    fs.existsSync(path.join(stage, "remotes", p.id + ".git"))))
     command(
       "swift",
       [
@@ -103,10 +104,12 @@ function consumer(name, stage, data, receipts, label) {
   for (const p of data.catalog.packages.filter(
     (p) => p.state === "extracted",
   )) {
+    const localDependency = `.package(path: "../../Packages/${p.id}")`;
+    if (!manifest.includes(localDependency)) continue;
     const r = receipts.find((r) => r.package === p.id);
     ensure(r, "Missing candidate receipt " + p.id);
     manifest = manifest.replaceAll(
-      `.package(path: "../../Packages/${p.id}")`,
+      localDependency,
       `.package(url: "${p.repository}", exact: "${r.version}")`,
     );
   }

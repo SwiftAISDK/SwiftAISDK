@@ -20,11 +20,16 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
-      "Sources/SwiftAISDK/Models/QuiverAIModels.swift"
+      "Packages/swift-ai-quiverai/Sources/SwiftAIQuiverAI/ImageInputCapabilities.swift",
+      "Packages/swift-ai-quiverai/Sources/SwiftAIQuiverAI/QuiverAIErrors.swift",
+      "Packages/swift-ai-quiverai/Sources/SwiftAIQuiverAI/QuiverAIModels.swift",
+      "Packages/swift-ai-quiverai/Sources/SwiftAIQuiverAI/QuiverAIProvider.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/QuiverAIProviderTests.swift"
+      "Packages/swift-ai-quiverai/Tests/SwiftAIQuiverAITests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-quiverai/Tests/SwiftAIQuiverAITests/QuiverAIProviderTests.swift",
+      "Packages/swift-ai-quiverai/Tests/SwiftAIQuiverAITests/QuiverResponsesCompatibilityTests.swift",
+      "Packages/swift-ai-quiverai/Tests/SwiftAIQuiverAITests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -34,5 +39,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
 }

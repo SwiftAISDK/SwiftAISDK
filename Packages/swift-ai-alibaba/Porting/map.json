@@ -25,17 +25,20 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/AlibabaEmbeddingModel.swift",
-      "Sources/SwiftAISDK/Models/AlibabaModels.swift",
-      "Sources/SwiftAISDK/Models/AlibabaOptions.swift",
-      "Sources/SwiftAISDK/Models/AlibabaParsing.swift",
-      "Sources/SwiftAISDK/Models/AlibabaRequestPreparation.swift",
-      "Sources/SwiftAISDK/Models/AlibabaTools.swift",
-      "Sources/SwiftAISDK/Models/AlibabaVideoModels.swift"
+      "Packages/swift-ai-alibaba/Sources/SwiftAIAlibaba/AlibabaEmbeddingModel.swift",
+      "Packages/swift-ai-alibaba/Sources/SwiftAIAlibaba/AlibabaModels.swift",
+      "Packages/swift-ai-alibaba/Sources/SwiftAIAlibaba/AlibabaOptions.swift",
+      "Packages/swift-ai-alibaba/Sources/SwiftAIAlibaba/AlibabaParsing.swift",
+      "Packages/swift-ai-alibaba/Sources/SwiftAIAlibaba/AlibabaProvider.swift",
+      "Packages/swift-ai-alibaba/Sources/SwiftAIAlibaba/AlibabaRequestPreparation.swift",
+      "Packages/swift-ai-alibaba/Sources/SwiftAIAlibaba/AlibabaTools.swift",
+      "Packages/swift-ai-alibaba/Sources/SwiftAIAlibaba/AlibabaVideoModels.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/AlibabaProviderLanguageAndVideoTests.swift",
-      "Tests/SwiftAISDKTests/AlibabaProviderTests.swift"
+      "Packages/swift-ai-alibaba/Tests/SwiftAIAlibabaTests/AlibabaProviderLanguageAndVideoTests.swift",
+      "Packages/swift-ai-alibaba/Tests/SwiftAIAlibabaTests/AlibabaProviderTests.swift",
+      "Packages/swift-ai-alibaba/Tests/SwiftAIAlibabaTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-alibaba/Tests/SwiftAIAlibabaTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -45,5 +48,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
 }

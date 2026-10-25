@@ -1,3 +1,4 @@
+@testable import SwiftAIGateway
 import Testing
 import SwiftAISDK
 

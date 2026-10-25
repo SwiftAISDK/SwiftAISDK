@@ -1,0 +1,436 @@
+{
+  "command": "node Scripts/test-packages.mjs",
+  "toolchain": "Swift 6.4",
+  "totalTests": 3549,
+  "skippedLiveTests": 33,
+  "logSHA256": "d4cc3b3cd4449404919e0dfa9bd2aca1309255acf18c6c195f8dcf25dd49caed",
+  "packages": [
+    {
+      "package": "swift-ai-core",
+      "tests": 128,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 77 tests in 2 suites passed after 0.057 seconds.",
+        "\udbc4\udc5b  Test run with 12 tests in 0 suites passed after 0.002 seconds.",
+        "\udbc4\udc5b  Test run with 37 tests in 0 suites passed after 0.006 seconds.",
+        "\udbc4\udc5b  Test run with 2 tests in 0 suites passed after 0.001 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-alibaba",
+      "tests": 32,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 32 tests in 0 suites passed after 0.014 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-anthropic",
+      "tests": 135,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 135 tests in 1 suite passed after 0.057 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-openai-compatible",
+      "tests": 7,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 7 tests in 0 suites passed after 0.003 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-openai",
+      "tests": 270,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 270 tests in 0 suites passed after 0.315 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-amazon-bedrock",
+      "tests": 49,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 49 tests in 0 suites passed after 0.035 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-anthropic-aws",
+      "tests": 9,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 9 tests in 0 suites passed after 0.007 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-assemblyai",
+      "tests": 16,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 16 tests in 0 suites passed after 0.006 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-deepseek",
+      "tests": 41,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 41 tests in 0 suites passed after 0.016 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-azure",
+      "tests": 29,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 29 tests in 0 suites passed after 0.021 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-baseten",
+      "tests": 16,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 16 tests in 0 suites passed after 0.010 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-black-forest-labs",
+      "tests": 32,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 32 tests in 0 suites passed after 0.330 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-bytedance",
+      "tests": 24,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 24 tests in 0 suites passed after 0.013 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-cartesia",
+      "tests": 25,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 25 tests in 0 suites passed after 0.012 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-cerebras",
+      "tests": 25,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 25 tests in 0 suites passed after 0.011 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-cohere",
+      "tests": 23,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 23 tests in 0 suites passed after 0.008 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-deepgram",
+      "tests": 20,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 20 tests in 0 suites passed after 0.005 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-deepinfra",
+      "tests": 13,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.005 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-elevenlabs",
+      "tests": 30,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 30 tests in 1 suite passed after 0.026 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-fal",
+      "tests": 21,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 21 tests in 0 suites passed after 1.072 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-fireworks",
+      "tests": 14,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 14 tests in 0 suites passed after 0.038 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-fish-audio",
+      "tests": 16,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 16 tests in 0 suites passed after 0.010 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-gateway",
+      "tests": 35,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 35 tests in 1 suite passed after 0.025 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-gladia",
+      "tests": 15,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 15 tests in 0 suites passed after 0.007 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-gmicloud",
+      "tests": 8,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 8 tests in 0 suites passed after 0.008 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-google",
+      "tests": 69,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 69 tests in 0 suites passed after 0.260 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-google-vertex",
+      "tests": 26,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 26 tests in 0 suites passed after 0.015 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-groq",
+      "tests": 28,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 28 tests in 0 suites passed after 0.009 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-heygen",
+      "tests": 38,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 38 tests in 4 suites passed after 0.023 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-huggingface",
+      "tests": 13,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.006 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-hume",
+      "tests": 13,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.008 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-klingai",
+      "tests": 25,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 25 tests in 0 suites passed after 0.168 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-lmnt",
+      "tests": 13,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.008 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-luma",
+      "tests": 16,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 16 tests in 0 suites passed after 0.006 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-mcp",
+      "tests": 130,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 130 tests in 5 suites passed after 3.463 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-minimax",
+      "tests": 40,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 40 tests in 1 suite passed after 0.066 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-mistral",
+      "tests": 32,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 32 tests in 0 suites passed after 0.014 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-moonshotai",
+      "tests": 32,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 32 tests in 1 suite passed after 0.019 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-open-responses",
+      "tests": 11,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 11 tests in 0 suites passed after 0.004 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-perplexity",
+      "tests": 17,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 17 tests in 1 suite passed after 0.015 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-prodia",
+      "tests": 15,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 15 tests in 0 suites passed after 0.011 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-quiverai",
+      "tests": 22,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 22 tests in 1 suite passed after 0.012 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-replicate",
+      "tests": 23,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 23 tests in 0 suites passed after 0.027 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-revai",
+      "tests": 13,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.008 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-togetherai",
+      "tests": 13,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.005 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-topaz",
+      "tests": 34,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 34 tests in 1 suite passed after 1.087 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-typesafe-ai",
+      "tests": 11,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 11 tests in 2 suites passed after 0.010 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-ui",
+      "tests": 84,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 84 tests in 1 suite passed after 0.020 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-vercel",
+      "tests": 5,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 5 tests in 0 suites passed after 0.003 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-voyage",
+      "tests": 10,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 10 tests in 0 suites passed after 0.004 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-xai",
+      "tests": 47,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 47 tests in 0 suites passed after 0.073 seconds."
+      ]
+    },
+    {
+      "package": "swift-ai-zai",
+      "tests": 15,
+      "skipped": 0,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 15 tests in 1 suite passed after 0.012 seconds."
+      ]
+    },
+    {
+      "package": "SwiftAISDK",
+      "tests": 1721,
+      "skipped": 33,
+      "summaries": [
+        "\udbc4\udc5b  Test run with 1721 tests in 45 suites passed after 8.521 seconds."
+      ]
+    }
+  ]
+}

@@ -1,3 +1,18 @@
+@testable import SwiftAIXAI
+@testable import SwiftAIUI
+@testable import SwiftAIAzure
+@testable import SwiftAIQuiverAI
+@testable import SwiftAIProdia
+@testable import SwiftAIFireworks
+@testable import SwiftAIDeepInfra
+@testable import SwiftAITogetherAI
+@testable import SwiftAIFal
+@testable import SwiftAIReplicate
+@testable import SwiftAILuma
+@testable import SwiftAIBlackForestLabs
+@testable import SwiftAIAmazonBedrock
+@testable import SwiftAIGoogle
+@testable import SwiftAIGoogleVertex
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI
@@ -14,6 +29,8 @@ import Testing
 
 @Test func Weekly20261004ImageInputCapabilitiesAreTriStateAcrossProviders() async throws {
     let config = ModelHTTPConfig(providerID: "openai.image", baseURL: "https://example.com", headers: [:], transport: RecordingTransport(response: jsonResponse("{}")))
+    let googleConfig = GoogleModelConfiguration(http: AIProviderHTTPClient(providerID: config.providerID, headers: config.headers,
+        transport: config.transport, url: config.url), baseURL: config.baseURL)
     let cases: [(any ImageModel, Bool?, Bool?)] = [
         (OpenAICompatibleImageModel(modelID: "gpt-image-2", config: config), true, true),
         (OpenAICompatibleImageModel(modelID: "dall-e-3", config: config), false, false),
@@ -37,8 +54,8 @@ import Testing
         (TogetherAIImageModel(modelID: "black-forest-labs/FLUX.2-pro", config: config), true, false),
         (TogetherAIImageModel(modelID: "black-forest-labs/FLUX.2-dev", config: config), false, false),
         (XAIImageModel(modelID: "grok-imagine-image-pro", config: config), true, false),
-        (GoogleImageGenerationModel(modelID: "gemini-3.1-flash-image-preview", config: config), true, false),
-        (GoogleImageGenerationModel(modelID: "imagen-4.0-generate-001", config: config), nil, nil),
+        (GoogleImageGenerationModel(modelID: "gemini-3.1-flash-image-preview", config: googleConfig), true, false),
+        (GoogleImageGenerationModel(modelID: "imagen-4.0-generate-001", config: googleConfig), nil, nil),
         (ProdiaImageModel(modelID: "any", config: config), false, false)
     ]
     for (model, files, masks) in cases {

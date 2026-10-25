@@ -1,3 +1,4 @@
+@testable import SwiftAIGateway
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI

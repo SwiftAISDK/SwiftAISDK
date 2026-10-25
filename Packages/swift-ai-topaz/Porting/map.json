@@ -18,12 +18,15 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/TopazImageModel.swift",
-      "Sources/SwiftAISDK/Models/TopazShared.swift",
-      "Sources/SwiftAISDK/Models/TopazVideoModel.swift"
+      "Packages/swift-ai-topaz/Sources/SwiftAITopaz/TopazImageModel.swift",
+      "Packages/swift-ai-topaz/Sources/SwiftAITopaz/TopazProvider.swift",
+      "Packages/swift-ai-topaz/Sources/SwiftAITopaz/TopazShared.swift",
+      "Packages/swift-ai-topaz/Sources/SwiftAITopaz/TopazVideoModel.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/TopazProviderTests.swift"
+      "Packages/swift-ai-topaz/Tests/SwiftAITopazTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-topaz/Tests/SwiftAITopazTests/TestSupport.swift",
+      "Packages/swift-ai-topaz/Tests/SwiftAITopazTests/TopazProviderTests.swift"
     ],
     "resources": []
   },
@@ -33,5 +36,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
 }

@@ -22,16 +22,20 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/AzureAudioModels.swift",
-      "Sources/SwiftAISDK/Models/AzureMAIImageModel.swift",
-      "Sources/SwiftAISDK/Models/AzureMaiStreamingTranscription.swift",
-      "Sources/SwiftAISDK/Models/OpenAICompatibleConfig.swift",
-      "Sources/SwiftAISDK/Providers/AzureOpenAIProvider.swift"
+      "Packages/swift-ai-azure/Sources/SwiftAIAzure/AzureAudioModels.swift",
+      "Packages/swift-ai-azure/Sources/SwiftAIAzure/AzureMAIImageModel.swift",
+      "Packages/swift-ai-azure/Sources/SwiftAIAzure/AzureMaiStreamingTranscription.swift",
+      "Packages/swift-ai-azure/Sources/SwiftAIAzure/AzureOpenAIProvider.swift",
+      "Packages/swift-ai-azure/Sources/SwiftAIAzure/AzureOpenAIProviderSettings.swift",
+      "Packages/swift-ai-azure/Sources/SwiftAIAzure/AzureOpenAITools.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/AlibabaProdiaAzureQuiverTests.swift",
-      "Tests/SwiftAISDKTests/WeeklyAzure20261011Tests.swift",
-      "Tests/SwiftAISDKTests/WeeklyAzureAudio20261004Tests.swift"
+      "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/AzureProviderTests.swift",
+      "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/AzureSocketTestSupport.swift",
+      "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/TestSupport.swift",
+      "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/WeeklyAzure20261011Tests.swift",
+      "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/WeeklyAzureAudio20261004Tests.swift"
     ],
     "resources": []
   },
@@ -41,5 +45,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: Azure routing, token authentication, MAI/Speech adapters, tool factories and focused tests extracted. Native configuration composes OpenAI/compatible and DeepSeek hosting APIs; the aggregate retains old ProviderSettings initializers. Existing URLs, model/deployment identity, auth and capabilities preserved."
 }

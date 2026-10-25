@@ -17,11 +17,14 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
-      "Sources/SwiftAISDK/Models/LumaMediaModels.swift"
+      "Packages/swift-ai-luma/Sources/SwiftAILuma/ImageInputCapabilities.swift",
+      "Packages/swift-ai-luma/Sources/SwiftAILuma/LumaMediaModels.swift",
+      "Packages/swift-ai-luma/Sources/SwiftAILuma/LumaProvider.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/LumaProviderTests.swift"
+      "Packages/swift-ai-luma/Tests/SwiftAILumaTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-luma/Tests/SwiftAILumaTests/LumaProviderTests.swift",
+      "Packages/swift-ai-luma/Tests/SwiftAILumaTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -31,5 +34,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
 }

@@ -13,9 +13,14 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Providers/VercelProvider.swift"
+      "Packages/swift-ai-vercel/Sources/SwiftAIVercel/VercelProvider.swift",
+      "Packages/swift-ai-vercel/Sources/SwiftAIVercel/VercelProviderSettings.swift"
     ],
-    "tests": [],
+    "tests": [
+      "Packages/swift-ai-vercel/Tests/SwiftAIVercelTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-vercel/Tests/SwiftAIVercelTests/TestSupport.swift",
+      "Packages/swift-ai-vercel/Tests/SwiftAIVercelTests/VercelProviderTests.swift"
+    ],
     "resources": []
   },
   "differences": [
@@ -24,5 +29,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider-owned settings and error policy compose the generic OpenAI-compatible wire adapter; native and legacy surfaces retain existing behavior. Baselines and gaps unchanged."
 }

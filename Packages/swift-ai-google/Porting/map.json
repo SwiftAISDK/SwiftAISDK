@@ -49,32 +49,35 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
-      "Sources/SwiftAISDK/Models/FileClients.swift",
-      "Sources/SwiftAISDK/Models/GoogleBatchLanguageModel.swift",
-      "Sources/SwiftAISDK/Models/GoogleGenerateContentMetadata.swift",
-      "Sources/SwiftAISDK/Models/GoogleGenerateContentResultParsing.swift",
-      "Sources/SwiftAISDK/Models/GoogleGenerateContentSourceParsing.swift",
-      "Sources/SwiftAISDK/Models/GoogleGenerateContentStreamParsing.swift",
-      "Sources/SwiftAISDK/Models/GoogleGenerationOptions.swift",
-      "Sources/SwiftAISDK/Models/GoogleGenerativeLanguageModel.swift",
-      "Sources/SwiftAISDK/Models/GoogleGenerativeMediaModels.swift",
-      "Sources/SwiftAISDK/Models/GoogleGenerativeMediaOptions.swift",
-      "Sources/SwiftAISDK/Models/GoogleInteractionsMetadata.swift",
-      "Sources/SwiftAISDK/Models/GoogleInteractionsModel.swift",
-      "Sources/SwiftAISDK/Models/GoogleInteractionsRequest.swift",
-      "Sources/SwiftAISDK/Models/GoogleInteractionsStreaming.swift",
-      "Sources/SwiftAISDK/Models/GoogleModelCapabilities.swift",
-      "Sources/SwiftAISDK/Models/GoogleSchemaConversion.swift",
-      "Sources/SwiftAISDK/Models/GoogleToolPreparation.swift",
-      "Sources/SwiftAISDK/Models/GoogleTools.swift",
-      "Sources/SwiftAISDK/Providers/GoogleGenerativeAIProvider.swift"
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleBatchLanguageModel.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleConfiguration.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleFileClient.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleGenerateContentMetadata.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleGenerateContentResultParsing.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleGenerateContentSourceParsing.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleGenerateContentStreamParsing.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleGenerationOptions.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleGenerativeAIProvider.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleGenerativeLanguageModel.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleGenerativeMediaModels.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleGenerativeMediaOptions.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleImageInputCapabilities.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleInteractionsMetadata.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleInteractionsModel.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleInteractionsRequest.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleInteractionsStreaming.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleModelCapabilities.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleSchemaConversion.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleToolPreparation.swift",
+      "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleTools.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/GoogleBatchUpstreamTests.swift",
-      "Tests/SwiftAISDKTests/GoogleGenerativeAIFilesAndStreamingTests.swift",
-      "Tests/SwiftAISDKTests/GoogleGenerativeAITests.swift",
-      "Tests/SwiftAISDKTests/GoogleGenerativeAIVideoAndInteractionsTests.swift"
+      "Packages/swift-ai-google/Tests/SwiftAIGoogleTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-google/Tests/SwiftAIGoogleTests/GoogleBatchUpstreamTests.swift",
+      "Packages/swift-ai-google/Tests/SwiftAIGoogleTests/GoogleGenerativeAIFilesAndStreamingTests.swift",
+      "Packages/swift-ai-google/Tests/SwiftAIGoogleTests/GoogleGenerativeAITests.swift",
+      "Packages/swift-ai-google/Tests/SwiftAIGoogleTests/GoogleGenerativeAIVideoAndInteractionsTests.swift",
+      "Packages/swift-ai-google/Tests/SwiftAIGoogleTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -84,5 +87,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: Google runtime and its single-provider tests extracted. Shared Google/Vertex algorithms remain owned here; native configuration uses the core HTTP client. Upstream baselines, capabilities and deferred behavior are unchanged."
 }

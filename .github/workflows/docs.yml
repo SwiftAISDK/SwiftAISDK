@@ -86,6 +86,12 @@ jobs:
       - name: Rehearse standalone package releases
         run: node Scripts/verify-release-rehearsal.mjs
 
+      - name: Verify every extracted distribution and dependency bounds
+        run: node Scripts/verify-package-distributions.mjs --report .build/distribution-verification.json
+
+      - name: Compile the complete compatibility facade for iOS
+        run: swift build --triple arm64-apple-ios15.0-simulator --sdk "$(xcrun --sdk iphonesimulator --show-sdk-path)" --scratch-path .build/ios-verification
+
       - name: Build documentation examples
         run: swift build --package-path Examples
 

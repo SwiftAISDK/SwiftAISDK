@@ -17,12 +17,18 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/TypesafeAIDecisionModel.swift",
-      "Sources/SwiftAISDK/Models/TypesafeAIDecisionOptions.swift",
-      "Sources/SwiftAISDK/Models/TypesafeAIEvaluationModel.swift",
-      "Sources/SwiftAISDK/Providers/TypesafeAIProvider.swift"
+      "Packages/swift-ai-typesafe-ai/Sources/SwiftAITypeSafeAI/TypeSafeAIProviderSettings.swift",
+      "Packages/swift-ai-typesafe-ai/Sources/SwiftAITypeSafeAI/TypesafeAIDecisionModel.swift",
+      "Packages/swift-ai-typesafe-ai/Sources/SwiftAITypeSafeAI/TypesafeAIDecisionOptions.swift",
+      "Packages/swift-ai-typesafe-ai/Sources/SwiftAITypeSafeAI/TypesafeAIEvaluationModel.swift",
+      "Packages/swift-ai-typesafe-ai/Sources/SwiftAITypeSafeAI/TypesafeAIProvider.swift"
     ],
-    "tests": [],
+    "tests": [
+      "Packages/swift-ai-typesafe-ai/Tests/SwiftAITypeSafeAITests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-typesafe-ai/Tests/SwiftAITypeSafeAITests/TestSupport.swift",
+      "Packages/swift-ai-typesafe-ai/Tests/SwiftAITypeSafeAITests/TypeSafeAIDecisionCompatibilityTests.swift",
+      "Packages/swift-ai-typesafe-ai/Tests/SwiftAITypeSafeAITests/TypesafeAIProviderTests.swift"
+    ],
     "resources": []
   },
   "differences": [
@@ -31,5 +37,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: TypeSafe Decision and legacy Evaluation runtime, lazy authentication and focused suites extracted. Prior baselines, aliases and documented gaps retained."
 }

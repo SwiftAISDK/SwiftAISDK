@@ -429,28 +429,10 @@ extension AIProviders {
     }
 
     public static func klingAI(settings: KlingAIProviderSettings = KlingAIProviderSettings()) throws -> OpenAICompatibleProvider {
-        var headers = settings.headers
-        var transport = settings.transport
-        if !headers.keys.contains(where: { $0.caseInsensitiveCompare("Authorization") == .orderedSame }) {
-            switch try resolveKlingAIAuth(settings: settings) {
-            case let .bearerToken(token):
-                headers["Authorization"] = "Bearer \(token)"
-            case let .legacy(accessKey, secretKey):
-                transport = KlingAILegacyAuthTransport(
-                    transport: transport,
-                    accessKey: accessKey,
-                    secretKey: secretKey,
-                    currentDate: settings.currentDate
-                )
-            }
-        }
-        return try OpenAICompatibleProvider(
-            providerID: "klingai",
-            defaultBaseURL: "https://api-singapore.klingai.com",
-            authorization: .none,
-            supportedCapabilities: [.video],
-            settings: ProviderSettings(baseURL: settings.baseURL, headers: headers, transport: transport)
-        )
+        let native = try KlingAIModelConfiguration(settings: settings)
+        return OpenAICompatibleProvider(providerID: "klingai", supportedCapabilities: [.video],
+            config: ModelHTTPConfig(providerID: "klingai", baseURL: native.baseURL,
+                                    headers: native.headers, transport: native.transport, url: native.url))
     }
 
     public static func klingAI(settings: ProviderSettings) throws -> OpenAICompatibleProvider {
@@ -477,52 +459,6 @@ extension AIProviders {
         return try OpenAICompatibleProvider(providerID: "quiverai", defaultBaseURL: "https://api.quiver.ai/v1", authorization: .bearer(environmentVariables: ["QUIVERAI_API_KEY"]), supportedCapabilities: [.language, .image], settings: settings)
     }
 
-}
-
-private func googleVertexOpenAIBaseURL(project: String?, location: String?) throws -> String {
-    guard let project = project ?? environmentValue(["GOOGLE_VERTEX_PROJECT"]) else {
-        throw AIError.invalidURL("Google Vertex OpenAI-compatible mode requires project or GOOGLE_VERTEX_PROJECT.")
-    }
-    let location = location ?? environmentValue(["GOOGLE_VERTEX_LOCATION"]) ?? "global"
-    try validateHostnamePart(location, argument: "location")
-    let host = googleVertexRegionalHost(location: location)
-    return "https://\(host)/v1/projects/\(project)/locations/\(location)/endpoints/openapi"
-}
-
-private let googleVertexMaaSMaxOutputTokensByModel: [String: Int] = [
-    "meta/llama-4-maverick-17b-128e-instruct-maas": 8_192,
-    "meta/llama-4-scout-17b-16e-instruct-maas": 8_192
-]
-
-private func googleVertexMaaSRequestBody(_ body: [String: JSONValue]) -> [String: JSONValue] {
-    guard body["max_tokens"] == nil,
-          let modelID = body["model"]?.stringValue,
-          let maxOutputTokens = googleVertexMaaSMaxOutputTokensByModel[modelID] else {
-        return body
-    }
-    var body = body
-    body["max_tokens"] = .number(Double(maxOutputTokens))
-    return body
-}
-
-private func googleVertexAnthropicBaseURL(project: String?, location: String?) throws -> String {
-    guard let project = project ?? environmentValue(["GOOGLE_VERTEX_PROJECT"]) else {
-        throw AIError.invalidURL("Google Vertex Anthropic mode requires project or GOOGLE_VERTEX_PROJECT.")
-    }
-    let location = location ?? environmentValue(["GOOGLE_VERTEX_LOCATION"]) ?? "global"
-    try validateHostnamePart(location, argument: "location")
-    let host = googleVertexRegionalHost(location: location)
-    return "https://\(host)/v1/projects/\(project)/locations/\(location)/publishers/anthropic/models"
-}
-
-private func googleVertexRegionalHost(location: String) -> String {
-    if location == "global" {
-        return "aiplatform.googleapis.com"
-    }
-    if location == "eu" || location == "us" {
-        return "aiplatform.\(location).rep.googleapis.com"
-    }
-    return "\(location)-aiplatform.googleapis.com"
 }
 
 private func perplexityHeaders(settings: ProviderSettings) throws -> [String: String] {

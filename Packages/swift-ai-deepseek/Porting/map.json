@@ -23,14 +23,18 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/DeepSeekModels.swift",
-      "Sources/SwiftAISDK/Models/DeepSeekOptions.swift",
-      "Sources/SwiftAISDK/Models/DeepSeekRequestPreparation.swift",
-      "Sources/SwiftAISDK/Models/DeepSeekToolsAndParsing.swift",
-      "Sources/SwiftAISDK/Models/FileClients.swift"
+      "Packages/swift-ai-deepseek/Sources/SwiftAIDeepSeek/DeepSeekFiles.swift",
+      "Packages/swift-ai-deepseek/Sources/SwiftAIDeepSeek/DeepSeekModels.swift",
+      "Packages/swift-ai-deepseek/Sources/SwiftAIDeepSeek/DeepSeekOptions.swift",
+      "Packages/swift-ai-deepseek/Sources/SwiftAIDeepSeek/DeepSeekProvider.swift",
+      "Packages/swift-ai-deepseek/Sources/SwiftAIDeepSeek/DeepSeekRequestPreparation.swift",
+      "Packages/swift-ai-deepseek/Sources/SwiftAIDeepSeek/DeepSeekToolsAndParsing.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/DeepSeekVisionAndFilesUpstreamParityTests.swift"
+      "Packages/swift-ai-deepseek/Tests/SwiftAIDeepSeekTests/DeepSeekProviderTests.swift",
+      "Packages/swift-ai-deepseek/Tests/SwiftAIDeepSeekTests/DeepSeekVisionAndFilesUpstreamParityTests.swift",
+      "Packages/swift-ai-deepseek/Tests/SwiftAIDeepSeekTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-deepseek/Tests/SwiftAIDeepSeekTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -40,5 +44,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: DeepSeek owns chat, Files, its typed settings, Azure hosting configuration and focused tests. Prior baseline and documented gaps retained. The Azure-specific test remains in the workspace."
 }

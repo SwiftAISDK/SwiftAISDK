@@ -17,10 +17,13 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/HumeAudioModels.swift"
+      "Packages/swift-ai-hume/Sources/SwiftAIHume/HumeAudioModels.swift",
+      "Packages/swift-ai-hume/Sources/SwiftAIHume/HumeProvider.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/HumeProviderTests.swift"
+      "Packages/swift-ai-hume/Tests/SwiftAIHumeTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-hume/Tests/SwiftAIHumeTests/HumeProviderTests.swift",
+      "Packages/swift-ai-hume/Tests/SwiftAIHumeTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -30,5 +33,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: Hume runtime and focused upstream-derived tests own their package; HTTP construction is shared, options and wire policy remain local. Prior baselines and known gaps are retained."
 }

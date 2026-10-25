@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "id": "remaining-package-extraction",
+  "status": "draft",
+  "summary": "M6 extraction candidates. Publication waits for the completed stage evidence and the M7 release set.",
+  "packages": [
+    {
+      "package": "swift-ai-alibaba",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-amazon-bedrock",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-anthropic",
+      "bump": "minor",
+      "notes": "Allow a host adapter to select the Files provider namespace explicitly.",
+      "compatibility": "Existing initializer remains unchanged. Anthropic AWS hosting requires Anthropic from 1.1.0."
+    },
+    {
+      "package": "swift-ai-anthropic-aws",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-assemblyai",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-azure",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-baseten",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-black-forest-labs",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-bytedance",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-cartesia",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-cerebras",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-cohere",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-core",
+      "bump": "minor",
+      "notes": "Add neutral provider HTTP configuration, shared audio/media/socket/reranking utilities, AWS SigV4 signing and generic JSON media adapters; expose video-operation contracts in the provider module.",
+      "compatibility": "Additive core APIs and preserved facade exports. Packages using the new helpers require core from 1.1.0."
+    },
+    {
+      "package": "swift-ai-deepgram",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-deepinfra",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-deepseek",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-elevenlabs",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-fal",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-fireworks",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-fish-audio",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-gateway",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-gladia",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-gmicloud",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-google",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-google-vertex",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-groq",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-heygen",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-huggingface",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-hume",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-klingai",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-lmnt",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-luma",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-mcp",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-minimax",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-mistral",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-moonshotai",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-open-responses",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-perplexity",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-prodia",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-quiverai",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-replicate",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-revai",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-togetherai",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-topaz",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-typesafe-ai",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-ui",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-vercel",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-voyage",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-xai",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    },
+    {
+      "package": "swift-ai-zai",
+      "bump": "initial",
+      "notes": "Extract the existing runtime, typed settings and standalone tests from the compatibility aggregate. Preserve the reviewed npm baseline and existing capability/gap boundaries.",
+      "compatibility": "Initial independent Swift package version. Existing SwiftAISDK entry points remain in the development compatibility facade; no npm-version equivalence is implied."
+    }
+  ]
+}

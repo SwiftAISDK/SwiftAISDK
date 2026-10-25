@@ -19,11 +19,17 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/FishAudioModels.swift",
-      "Sources/SwiftAISDK/Providers/FishAudioProvider.swift"
+      "Packages/swift-ai-fish-audio/Sources/SwiftAIFishAudio/FishAudioHTTPConfiguration.swift",
+      "Packages/swift-ai-fish-audio/Sources/SwiftAIFishAudio/FishAudioModels.swift",
+      "Packages/swift-ai-fish-audio/Sources/SwiftAIFishAudio/FishAudioProvider.swift",
+      "Packages/swift-ai-fish-audio/Sources/SwiftAIFishAudio/FishAudioProviderSettings.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/FishAudioProviderTests.swift"
+      "Packages/swift-ai-fish-audio/Tests/SwiftAIFishAudioTests/FishAudioProviderTests.swift",
+      "Packages/swift-ai-fish-audio/Tests/SwiftAIFishAudioTests/FishAudioSpeechModelTests.swift",
+      "Packages/swift-ai-fish-audio/Tests/SwiftAIFishAudioTests/FishAudioTranscriptionModelTests.swift",
+      "Packages/swift-ai-fish-audio/Tests/SwiftAIFishAudioTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-fish-audio/Tests/SwiftAIFishAudioTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -33,5 +39,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: native audio provider, models and focused suites extracted with the existing batch and streaming contract. Prior baselines and gaps unchanged."
 }

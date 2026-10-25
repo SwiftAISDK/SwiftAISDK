@@ -192,6 +192,8 @@ test("one registration scaffolds every derived surface without claiming support"
       .includes(id),
   );
   assert.deepEqual(JSON.parse(run(r, ["generate", "--check"])).changed, []);
+  assert(!fs.readFileSync(path.join(r, "Package.swift"), "utf8").includes(id));
+  assert(!fs.readFileSync(path.join(r, "Sources/SwiftAISDK/ProviderExports.swift"), "utf8").includes("SwiftAIMigrationFixture"));
   edit(r, "Porting/packages.json", (c) => {
     const p = c.packages.find((p) => p.id === id);
     p.capabilityRows = [
@@ -205,6 +207,17 @@ test("one registration scaffolds every derived surface without claiming support"
     ];
   });
   assert.throws(() => readCatalog(r), /advertises capabilities/);
+  // Exercise only the workspace-registration transition in this disposable
+  // fixture. It remains unreviewed and advertises no upstream implementation.
+  edit(r, "Porting/packages.json", c => {
+    const p = c.packages.find(p => p.id === id);
+    p.capabilityRows = [];
+    p.state = "extracted";
+  });
+  run(r, ["generate"]);
+  assert(fs.readFileSync(path.join(r, "Package.swift"), "utf8").includes(`.package(path: "Packages/${id}")`));
+  assert(fs.readFileSync(path.join(r, "Sources/SwiftAISDK/ProviderExports.swift"), "utf8").includes("@_exported import SwiftAIMigrationFixture"));
+  assert.deepEqual(JSON.parse(run(r, ["generate", "--check"])).changed, []);
 });
 test("legacy version CLI consumes catalog and preserves output contract without network", (t) => {
   const r = fixture(t),

@@ -1,3 +1,13 @@
+@testable import SwiftAIXAI
+@testable import SwiftAIMoonshotAI
+@testable import SwiftAIFireworks
+@testable import SwiftAIFal
+@testable import SwiftAIDeepSeek
+@testable import SwiftAICohere
+@testable import SwiftAIAnthropicAWS
+@testable import SwiftAIAmazonBedrock
+@testable import SwiftAIGoogle
+@testable import SwiftAIGoogleVertex
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI
@@ -87,7 +97,7 @@ struct WeeklyMajorProviders20261011Tests {
 
     @Test func sigV4PreservesUnicodeHeadersWithoutSigningThem() throws {
         let request = AIHTTPRequest(method: "POST", url: URL(string: "https://bedrock-runtime.us-east-1.amazonaws.com/model/test/invoke")!, headers: ["x-title": "Example · App", "x-ascii": "safe"], body: Data("{}".utf8))
-        let signed = try AWSSigV4.sign(request: request, body: Data("{}".utf8), credentials: AWSCredentials(accessKeyID: "access", secretAccessKey: "secret", sessionToken: nil), region: "us-east-1", service: "bedrock", date: Date(timeIntervalSince1970: 0))
+        let signed = try AWSSigV4.sign(request: request, body: Data("{}".utf8), credentials: AWSSigningCredentials(accessKeyID: "access", secretAccessKey: "secret", sessionToken: nil), region: "us-east-1", service: "bedrock", date: Date(timeIntervalSince1970: 0))
         #expect(signed.headers["x-title"] == "Example · App")
         let authorization = try #require(signed.headers["authorization"])
         #expect(authorization.contains("x-ascii"))

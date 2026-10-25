@@ -3,6 +3,7 @@
   "Docs/PackageCatalog.md",
   "Docs/ProviderCapabilityMatrix.md",
   "Docs/ProviderVersionLedger.md",
+  "Package.swift",
   "Packages/swift-ai-alibaba/Package.swift",
   "Packages/swift-ai-amazon-bedrock/Package.swift",
   "Packages/swift-ai-anthropic-aws/Package.swift",
@@ -60,5 +61,6 @@
   "Porting/Generated/exports.json",
   "Porting/Generated/files.json",
   "Sources/SwiftAISDK/Compatibility.swift",
+  "Sources/SwiftAISDK/ProviderExports.swift",
   "Sources/SwiftAISDK/Providers/ProviderCapabilityMatrix.swift"
 ]

@@ -68,7 +68,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-alibaba",
       "repository": "https://github.com/SwiftAISDK/swift-ai-alibaba.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIAlibaba",
@@ -76,6 +76,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -85,7 +88,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -115,14 +118,20 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-amazon-bedrock",
       "repository": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIAmazonBedrock",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-anthropic/SwiftAIAnthropic",
+            "swift-ai-openai/SwiftAIOpenAI",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -132,6 +141,18 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-anthropic",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
           "from": "1.0.0"
         }
       ],
@@ -241,14 +262,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-anthropic-aws",
       "repository": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIAnthropicAWS",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-anthropic/SwiftAIAnthropic"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -258,7 +283,11 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-anthropic",
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -286,7 +315,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-assemblyai",
       "repository": "https://github.com/SwiftAISDK/swift-ai-assemblyai.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIAssemblyAI",
@@ -294,6 +323,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -303,7 +335,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -329,14 +361,20 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-azure",
       "repository": "https://github.com/SwiftAISDK/swift-ai-azure.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIAzure",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-openai/SwiftAIOpenAI",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+            "swift-ai-deepseek/SwiftAIDeepSeek"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -346,6 +384,18 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-deepseek",
           "from": "1.0.0"
         }
       ],
@@ -379,14 +429,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-baseten",
       "repository": "https://github.com/SwiftAISDK/swift-ai-baseten.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIBaseten",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -396,6 +450,10 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
           "from": "1.0.0"
         }
       ],
@@ -423,7 +481,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-black-forest-labs",
       "repository": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIBlackForestLabs",
@@ -431,6 +489,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -440,7 +501,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -469,7 +530,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-bytedance",
       "repository": "https://github.com/SwiftAISDK/swift-ai-bytedance.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIByteDance",
@@ -477,6 +538,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -486,7 +550,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -512,7 +576,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-cartesia",
       "repository": "https://github.com/SwiftAISDK/swift-ai-cartesia.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAICartesia",
@@ -520,6 +584,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -529,7 +596,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -558,14 +625,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-cerebras",
       "repository": "https://github.com/SwiftAISDK/swift-ai-cerebras.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAICerebras",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -575,6 +646,10 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
           "from": "1.0.0"
         }
       ],
@@ -601,7 +676,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-cohere",
       "repository": "https://github.com/SwiftAISDK/swift-ai-cohere.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAICohere",
@@ -609,6 +684,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -618,7 +696,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -690,7 +768,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-deepgram",
       "repository": "https://github.com/SwiftAISDK/swift-ai-deepgram.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIDeepgram",
@@ -698,6 +776,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -707,7 +788,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -734,14 +815,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-deepinfra",
       "repository": "https://github.com/SwiftAISDK/swift-ai-deepinfra.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIDeepInfra",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -751,6 +836,10 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
           "from": "1.0.0"
         }
       ],
@@ -780,7 +869,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-deepseek",
       "repository": "https://github.com/SwiftAISDK/swift-ai-deepseek.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIDeepSeek",
@@ -788,6 +877,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -797,7 +889,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -825,7 +917,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-elevenlabs",
       "repository": "https://github.com/SwiftAISDK/swift-ai-elevenlabs.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIElevenLabs",
@@ -833,6 +925,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -842,7 +937,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -874,7 +969,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-fal",
       "repository": "https://github.com/SwiftAISDK/swift-ai-fal.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIFal",
@@ -882,6 +977,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -891,7 +989,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -920,14 +1018,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-fireworks",
       "repository": "https://github.com/SwiftAISDK/swift-ai-fireworks.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIFireworks",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -937,6 +1039,10 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
           "from": "1.0.0"
         }
       ],
@@ -966,7 +1072,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-fish-audio",
       "repository": "https://github.com/SwiftAISDK/swift-ai-fish-audio.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIFishAudio",
@@ -974,6 +1080,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -983,7 +1092,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1010,14 +1119,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-gateway",
       "repository": "https://github.com/SwiftAISDK/swift-ai-gateway.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIGateway",
           "dependencies": [
+            "swift-ai-core/SwiftAI",
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1027,7 +1140,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1063,7 +1176,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-gladia",
       "repository": "https://github.com/SwiftAISDK/swift-ai-gladia.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIGladia",
@@ -1071,6 +1184,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1080,7 +1196,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1106,14 +1222,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-gmicloud",
       "repository": "https://github.com/SwiftAISDK/swift-ai-gmicloud.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIGMICloud",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1123,6 +1243,10 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
           "from": "1.0.0"
         }
       ],
@@ -1149,7 +1273,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-google",
       "repository": "https://github.com/SwiftAISDK/swift-ai-google.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIGoogle",
@@ -1157,6 +1281,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1166,7 +1293,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1200,14 +1327,21 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-google-vertex",
       "repository": "https://github.com/SwiftAISDK/swift-ai-google-vertex.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIGoogleVertex",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-google/SwiftAIGoogle",
+            "swift-ai-anthropic/SwiftAIAnthropic",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+            "swift-ai-openai/SwiftAIOpenAI"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1217,6 +1351,22 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-google",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-anthropic",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai",
           "from": "1.0.0"
         }
       ],
@@ -1296,7 +1446,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-groq",
       "repository": "https://github.com/SwiftAISDK/swift-ai-groq.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIGroq",
@@ -1304,6 +1454,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1313,7 +1466,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1342,7 +1495,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-heygen",
       "repository": "https://github.com/SwiftAISDK/swift-ai-heygen.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIHeyGen",
@@ -1350,6 +1503,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1359,7 +1515,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1387,7 +1543,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-huggingface",
       "repository": "https://github.com/SwiftAISDK/swift-ai-huggingface.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIHuggingFace",
@@ -1395,6 +1551,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1404,7 +1563,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1432,7 +1591,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-hume",
       "repository": "https://github.com/SwiftAISDK/swift-ai-hume.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIHume",
@@ -1440,6 +1599,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1449,7 +1611,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1475,7 +1637,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-klingai",
       "repository": "https://github.com/SwiftAISDK/swift-ai-klingai.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIKlingAI",
@@ -1483,6 +1645,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1492,7 +1657,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1518,7 +1683,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-lmnt",
       "repository": "https://github.com/SwiftAISDK/swift-ai-lmnt.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAILMNT",
@@ -1526,6 +1691,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1535,7 +1703,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1561,7 +1729,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-luma",
       "repository": "https://github.com/SwiftAISDK/swift-ai-luma.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAILuma",
@@ -1569,6 +1737,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1578,7 +1749,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1604,11 +1775,17 @@
       "kind": "mcp",
       "directory": "Packages/swift-ai-mcp",
       "repository": "https://github.com/SwiftAISDK/swift-ai-mcp.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIMCP",
           "dependencies": [
+            "swift-ai-core/SwiftAI",
+            "swift-ai-core/SwiftAIProvider",
+            "swift-ai-core/SwiftAITransport",
+            "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
             "swift-ai-core/SwiftAI"
           ]
         }
@@ -1630,14 +1807,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-minimax",
       "repository": "https://github.com/SwiftAISDK/swift-ai-minimax.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIMiniMax",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-anthropic/SwiftAIAnthropic"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1647,6 +1828,10 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-anthropic",
           "from": "1.0.0"
         }
       ],
@@ -1676,7 +1861,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-mistral",
       "repository": "https://github.com/SwiftAISDK/swift-ai-mistral.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIMistral",
@@ -1684,6 +1869,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1693,7 +1881,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1724,14 +1912,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-moonshotai",
       "repository": "https://github.com/SwiftAISDK/swift-ai-moonshotai.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIMoonshotAI",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1741,6 +1933,10 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
           "from": "1.0.0"
         }
       ],
@@ -1769,14 +1965,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-open-responses",
       "repository": "https://github.com/SwiftAISDK/swift-ai-open-responses.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIOpenResponses",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-openai/SwiftAIOpenAI"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1786,6 +1986,10 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai",
           "from": "1.0.0"
         }
       ],
@@ -1926,7 +2130,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-perplexity",
       "repository": "https://github.com/SwiftAISDK/swift-ai-perplexity.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIPerplexity",
@@ -1934,6 +2138,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1943,7 +2150,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -1973,7 +2180,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-prodia",
       "repository": "https://github.com/SwiftAISDK/swift-ai-prodia.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIProdia",
@@ -1981,6 +2188,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -1990,7 +2200,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -2018,14 +2228,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-quiverai",
       "repository": "https://github.com/SwiftAISDK/swift-ai-quiverai.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIQuiverAI",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-open-responses/SwiftAIOpenResponses"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -2035,6 +2249,10 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-open-responses",
           "from": "1.0.0"
         }
       ],
@@ -2062,7 +2280,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-replicate",
       "repository": "https://github.com/SwiftAISDK/swift-ai-replicate.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIReplicate",
@@ -2070,6 +2288,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -2079,7 +2300,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -2106,7 +2327,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-revai",
       "repository": "https://github.com/SwiftAISDK/swift-ai-revai.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIRevAI",
@@ -2114,6 +2335,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -2123,7 +2347,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -2149,14 +2373,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-togetherai",
       "repository": "https://github.com/SwiftAISDK/swift-ai-togetherai.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAITogetherAI",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -2166,6 +2394,10 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
           "from": "1.0.0"
         }
       ],
@@ -2196,7 +2428,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-topaz",
       "repository": "https://github.com/SwiftAISDK/swift-ai-topaz.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAITopaz",
@@ -2204,6 +2436,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -2213,7 +2448,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -2242,7 +2477,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-typesafe-ai",
       "repository": "https://github.com/SwiftAISDK/swift-ai-typesafe-ai.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAITypeSafeAI",
@@ -2250,6 +2485,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -2288,11 +2526,17 @@
       "kind": "ui",
       "directory": "Packages/swift-ai-ui",
       "repository": "https://github.com/SwiftAISDK/swift-ai-ui.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIUI",
           "dependencies": [
+            "swift-ai-core/SwiftAI",
+            "swift-ai-core/SwiftAIProvider",
+            "swift-ai-core/SwiftAITransport",
+            "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
             "swift-ai-core/SwiftAI"
           ]
         }
@@ -2315,14 +2559,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-vercel",
       "repository": "https://github.com/SwiftAISDK/swift-ai-vercel.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIVercel",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -2332,6 +2580,10 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
           "from": "1.0.0"
         }
       ],
@@ -2358,7 +2610,7 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-voyage",
       "repository": "https://github.com/SwiftAISDK/swift-ai-voyage.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIVoyage",
@@ -2366,6 +2618,9 @@
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -2375,7 +2630,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.1.0"
         }
       ],
       "capabilityRows": [
@@ -2402,14 +2657,19 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-xai",
       "repository": "https://github.com/SwiftAISDK/swift-ai-xai.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIXAI",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-openai/SwiftAIOpenAI",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -2419,6 +2679,14 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
           "from": "1.0.0"
         }
       ],
@@ -2451,14 +2719,18 @@
       "kind": "provider",
       "directory": "Packages/swift-ai-zai",
       "repository": "https://github.com/SwiftAISDK/swift-ai-zai.git",
-      "state": "planned",
+      "state": "extracted",
       "modules": [
         {
           "name": "SwiftAIZAI",
           "dependencies": [
             "swift-ai-core/SwiftAIProvider",
             "swift-ai-core/SwiftAITransport",
-            "swift-ai-core/SwiftAIProviderUtilities"
+            "swift-ai-core/SwiftAIProviderUtilities",
+            "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
+          ],
+          "testDependencies": [
+            "swift-ai-core/SwiftAI"
           ]
         }
       ],
@@ -2468,6 +2740,10 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
           "from": "1.0.0"
         }
       ],

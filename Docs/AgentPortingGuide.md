@@ -65,6 +65,11 @@ Before declaring a tooling or metadata change complete, run
 with `node Scripts/sdk.mjs package add --upstream @ai-sdk/name --module SwiftAIName`;
 the result is explicitly unimplemented until its behavior and tests are ported.
 
+The development root manifest and provider re-exports are also generated from
+extracted catalog entries. Keep package ownership and dependencies in the catalog;
+do not add a separate hand-maintained root list. Catalog-wide distribution checks
+are documented in `Porting/README.md` and `Docs/Migration/M6/README.md`.
+
 ## Upstream Reading Order
 
 For a provider package, inspect in this order:

@@ -53,7 +53,10 @@ Use explicit settings when you need custom headers, a custom base URL, a mock tr
 
 Core, Anthropic, OpenAI-compatible and OpenAI are available as separate Swift
 packages, initially released at `1.0.0`. Other providers, MCP and UI remain in the
-2.x aggregate above while migration continues.
+published 2.x aggregate above while migration continues. Their independent
+implementations now live in the development monorepo, but those distribution
+packages are not published yet. The generated API reference follows `main` and
+can therefore include native module names and APIs unavailable in released tags.
 
 For a modular OpenAI client:
 

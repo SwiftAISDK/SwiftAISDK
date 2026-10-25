@@ -1,3 +1,5 @@
+@testable import SwiftAIAnthropicAWS
+@testable import SwiftAIAmazonBedrock
 @testable import SwiftAIAnthropic
 @testable import SwiftAIOpenAICompatible
 @testable import SwiftAIOpenAI

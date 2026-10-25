@@ -3,6 +3,10 @@ import SwiftAIProvider
 import SwiftAITransport
 import SwiftAIProviderUtilities
 import SwiftAIOpenAICompatible
+import SwiftAIGMICloud
+import SwiftAIDeepInfra
+import SwiftAIFireworks
+import SwiftAIMoonshotAI
 
 extension ModelHTTPConfig {
     var compatibleConfiguration: OpenAICompatibleModelConfiguration {
@@ -36,29 +40,15 @@ extension ModelHTTPConfig {
         result.mapsReasoningEffort = openAICompatibleProviderRoot(providerID) == "openai"
         let root = openAICompatibleProviderRoot(providerID)
         result.toolCallsBeforeText = root == "moonshotai"
-        if root == "moonshotai" {
-            result.responseHeaderMetadata = { moonshotCacheWriteMetadata(headers: $0, namespace: $1) }
-            result.convertMessages = moonshotChatMessages
-            result.supportsStructuredOutputForModel = moonshotSupportsStructuredOutputs
-            result.usage = moonshotChatUsage
-        } else if root == "xai" {
-            result.usage = xaiChatUsage
-            result.responseMetadata = { raw, namespace in
-                guard let tier = raw["service_tier"], tier != .null else { return [:] }
-                return openAICompatibleNamespacedProviderMetadata(["serviceTier": tier], providerID: self.providerID, namespace: namespace)
-            }
-        } else if root == "deepinfra" {
-            result.usage = deepInfraChatUsage
-        }
-        result.additionalWarnings = { request in self.providerID.hasPrefix("xai.") ? xaiChatWarnings(for: request) : [] }
+        if root == "deepinfra" { result.usage = deepInfraChatUsage }
         result.prepareBody = { body, request, modelID, warnings in
             var body = body
             if root == "fireworks" { body = fireworksChatBody(from: body, warnings: &warnings) }
-            if root == "moonshotai" { body = try moonshotChatBody(from: body, request: request, modelID: modelID, warnings: &warnings) }
             if self.providerID == "googleVertex.xai" { body.removeValue(forKey: "reasoning_effort") }
-            if self.providerID.hasPrefix("xai.") { body = try xaiChatBody(from: body, request: request, warnings: &warnings) }
             return body
         }
+        if root == "moonshotai" { configureMoonshotChat(&result) }
+        if root == "xai" { configureXAIChat(&result) }
         if isOpenAIBackedProvider(providerID, config: self) {
             result.maximumImages = openAIImageMaxImagesPerCall
             result.imageHasDefaultResponseFormat = openAIImageHasDefaultResponseFormat
@@ -89,7 +79,5 @@ func openAICompatibleHTTPStatusError(provider: String, response: AIHTTPResponse)
     guard provider == "gmicloud.chat" else {
         return SwiftAIOpenAICompatible.openAICompatibleHTTPStatusError(provider: provider, response: response)
     }
-    let body = gmiCloudErrorMessage(from: response.body) ?? response.bodyText
-    if response.headers.isEmpty { return .apiCall(provider: provider, statusCode: response.statusCode, body: body) }
-    return .apiCall(provider: provider, statusCode: response.statusCode, body: body, headers: response.headers)
+    return gmiCloudHTTPStatusError(response)
 }

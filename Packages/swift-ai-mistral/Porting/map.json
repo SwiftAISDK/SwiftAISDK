@@ -27,20 +27,25 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/MistralConversationLanguageModel.swift",
-      "Sources/SwiftAISDK/Models/MistralConversationOptions.swift",
-      "Sources/SwiftAISDK/Models/MistralConversationTools.swift",
-      "Sources/SwiftAISDK/Models/MistralEmbeddingModel.swift",
-      "Sources/SwiftAISDK/Models/MistralLanguageOptions.swift",
-      "Sources/SwiftAISDK/Models/MistralMessageParsing.swift",
-      "Sources/SwiftAISDK/Models/MistralModels.swift",
-      "Sources/SwiftAISDK/Models/MistralSpeechModel.swift",
-      "Sources/SwiftAISDK/Models/MistralTools.swift",
-      "Sources/SwiftAISDK/Models/MistralTranscriptionModel.swift"
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralConversationLanguageModel.swift",
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralConversationOptions.swift",
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralConversationTools.swift",
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralEmbeddingModel.swift",
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralLanguageOptions.swift",
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralMessageParsing.swift",
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralModels.swift",
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralProvider.swift",
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralSpeechModel.swift",
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralTools.swift",
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralTranscriptionModel.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/MistralLanguageAndEmbeddingTests.swift",
-      "Tests/SwiftAISDKTests/WeeklyMistral20261011Tests.swift"
+      "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/MistralLanguageAndEmbeddingTests.swift",
+      "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/MistralStreamingAndOptionsTests.swift",
+      "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/MistralTests.swift",
+      "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/TestSupport.swift",
+      "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/WeeklyMistral20261011Tests.swift"
     ],
     "resources": []
   },
@@ -50,5 +55,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: Mistral runtime and focused upstream-derived tests own their package; HTTP construction is shared, options and wire policy remain local. Prior baselines and known gaps are retained."
 }

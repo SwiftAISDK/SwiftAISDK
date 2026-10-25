@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "stage": "M6",
+  "status": "local gates passed; exact-commit hosted CI pending",
+  "baseCommit": "20bebd6b0a8aef866b96c6eafc8c2ad406257292",
+  "localToolchain": "Apple Swift 6.4",
+  "hostedToolchainRequired": "Apple Swift 6.3.3",
+  "checks": [
+    {
+      "command": "node Scripts/test-packages.mjs",
+      "result": "passed",
+      "scope": "3549 tests, 33 live skips",
+      "localLog": "all-tests.log",
+      "logSHA256": "a4e4cd6c2f1a9de4048e60a7752721611244e5af0e87a7acd38b9606bf1d5372"
+    },
+    {
+      "command": "swift test --no-parallel",
+      "result": "passed",
+      "scope": "1721 root integration tests, 33 live skips",
+      "localLog": "root-serial-tests.log",
+      "logSHA256": "63d21567f0660f90962758808b040ab94aa3e36a7412bacb70ad9492378fe5a5"
+    },
+    {
+      "command": "swift build --triple arm64-apple-ios15.0-simulator --sdk <installed simulator SDK> --scratch-path <isolated scratch>",
+      "result": "passed",
+      "scope": "iOS 15 compile, not runtime/device verification",
+      "localLog": "ios-build.log",
+      "logSHA256": "0d7201c4b756df84f8d1a41f2ca4e034c2b209d8558afb0a6a87481d39776437"
+    },
+    {
+      "command": "swift build --package-path Examples",
+      "result": "passed",
+      "scope": "19 examples",
+      "localLog": "examples-build.log",
+      "logSHA256": "45fb547f96d85db4253d52a3267d4ae4e63ed9cffd3f9f0fd7af512fc8f6b39e"
+    },
+    {
+      "command": "swift run --package-path Examples MCPOAuthMigration",
+      "result": "passed",
+      "scope": "two offline OAuth flows",
+      "localLog": "oauth-example.log",
+      "logSHA256": "2dd7d1d5751b33dea0343fa8079925ba264c84d88e2befccd652e6152e3cabf4"
+    },
+    {
+      "command": "node Scripts/verify-core-isolation.mjs",
+      "result": "passed",
+      "scope": "core-only consumer",
+      "localLog": "core-isolation.log",
+      "logSHA256": "639aa4a327376ba7ac86d7d638a9cd8e455be83680537e6c22228cef61f82bca"
+    },
+    {
+      "command": "node Scripts/verify-provider-isolation.mjs",
+      "result": "passed",
+      "scope": "four ordinary-import consumers",
+      "localLog": "provider-isolation.log",
+      "logSHA256": "7349f8d7b33c2d6922756206799d4a5181ae660cc23a598b769019edeb154626"
+    },
+    {
+      "command": "node Scripts/verify-provider-versions.mjs",
+      "result": "passed",
+      "scope": "independent upgrade and incompatible-core rejection",
+      "localLog": "provider-versions.log",
+      "logSHA256": "3efd7a92469f491d7c917ee8e0f717bd18bbcfd17ef4550be6ca74dcf8151659"
+    },
+    {
+      "command": "node Scripts/verify-release-rehearsal.mjs --report <new report>",
+      "result": "passed",
+      "scope": "deterministic pilot exports, resume, immutable tags and provider-only patch",
+      "localLog": "pilot-rehearsal-retry.log",
+      "logSHA256": "48fb9da6436106e7866de9d21c38f258f7e4ced6eebb1aa02e4f7c39ff70ca80"
+    },
+    {
+      "command": "python3 Scripts/compare-migration-api.py --output <report>",
+      "result": "passed",
+      "scope": "6761 matched, no unmatched public declarations, one internal-conformer synthesized member",
+      "localLog": "api-comparison-reviewed.log",
+      "logSHA256": "9c164d5c0c0b246c1741ab4ff995e30eadd1c76ef4e5f3e0a77232f254f1138e"
+    },
+    {
+      "command": "disposable ordinary-import positive and negative SwiftPM clients",
+      "result": "passed",
+      "scope": "public speech convenience retained, internal Vertex class inaccessible",
+      "localLog": "internal-conformer-review.log",
+      "logSHA256": "38d819beef06e883dff5d79be23e2b66ccdbe2fb916f33a3cdca3a8b23c515d3"
+    },
+    {
+      "command": "node --test Scripts/tests/*.test.cjs",
+      "result": "passed",
+      "scope": "19 passed, 1 historical M1 snapshot check skipped, 0 failed",
+      "localLog": "tooling-final2-tests.log",
+      "logSHA256": "0590f1b62ded803dd8b14265236a37e947d413cc70d1b0a1606b4e2d1e9c9553"
+    },
+    {
+      "command": "npm ci --prefix docs-site",
+      "result": "passed",
+      "scope": "dependency install; 0 vulnerabilities",
+      "localLog": "docs-install.log",
+      "logSHA256": "45ddf2cafc0f3456fa21184122e64ad1d6dc9d1cf0ceefeb9568c3034ecdc594"
+    },
+    {
+      "command": "npm --prefix docs-site run check",
+      "result": "passed",
+      "scope": "0 errors, 0 warnings, 0 hints",
+      "localLog": "docs-final-check.log",
+      "logSHA256": "6dd068c766b1dca69c8be8bd23db510d4146abcfd91d534b361edbb70ca99b4c"
+    },
+    {
+      "command": "DOCS_BASE=/SwiftAISDK DOCS_SITE=https://swiftaisdk.github.io npm --prefix docs-site run build",
+      "result": "passed",
+      "scope": "98 pages",
+      "localLog": "docs-final-build.log",
+      "logSHA256": "2612ff225e109d6de84dd92cd10c38c0ce12a4cc6608f51d7fcaf11eca7d56d3"
+    }
+  ],
+  "distributionReport": "distribution-verification.json",
+  "testPreservationReport": "test-and-resource-preservation.json",
+  "knownTestSensitivity": "timeout-test-investigation.json",
+  "limits": [
+    "No paid/provider calls; 33 live tests explicitly skipped.",
+    "iOS compilation uses installed simulator SDK 27.1 and deployment target 15; no simulator/device runtime claim.",
+    "Local synthetic distribution tags verify package boundaries and version constraints; only the four M5 1.0.0 distributions are public.",
+    "M7 has not started; no root release tag is created from relative development dependencies."
+  ],
+  "coreRuntimeImports": [
+    "Combine",
+    "CryptoKit",
+    "Darwin",
+    "Foundation",
+    "FoundationNetworking",
+    "Network",
+    "Security",
+    "SwiftAIProvider",
+    "SwiftAIProviderUtilities",
+    "SwiftAITransport"
+  ],
+  "secretScan": {
+    "filesScanned": 960,
+    "credentialFindings": 0,
+    "reviewedPatternMatch": "GoogleVertexProvider.swift:395 contains the unchanged PEM header delimiter string used by the parser, not private key material.",
+    "logSHA256": "c7c79c5e979aacbc66b5323bc46f836a5d1f57a42ccc147551be3172bf44fa0b"
+  },
+  "finalFormattingOnlyChanges": [
+    {
+      "path": "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AmazonBedrockImageInputCapabilities.swift",
+      "beforeSHA256": "dec0edddd3e757b2c34275c490f9791051698b1458c5f997a185632ab07659e9",
+      "afterSHA256": "2ef4b2bb89452d58697e8af4206f6ee205c7502584c298fe4519dfe143c69d46",
+      "change": "Remove extra blank line at EOF only; no Swift tokens change."
+    },
+    {
+      "path": "Packages/swift-ai-core/Sources/SwiftAIProvider/VideoGenerationOperationContracts.swift",
+      "beforeSHA256": "8afe1cf934651d06d275f7dcd99d95ab26722f42d55c2e4744fab404a4875c86",
+      "afterSHA256": "95ee799631ee10240a66f76567e94cbf2430ceb7063b1f5f42033632280eeee9",
+      "change": "Remove extra blank line at EOF only; no Swift tokens change."
+    },
+    {
+      "path": "Packages/swift-ai-deepseek/Sources/SwiftAIDeepSeek/DeepSeekFiles.swift",
+      "beforeSHA256": "0dc6178d6e4c18e8b19625a9a368d688926a798f55b6b48e444c8751b88108dd",
+      "afterSHA256": "12a28b17f65c69875f9e5cf751e3b9059f1a2f37f0a6356ff0223397cbb20acd",
+      "change": "Remove extra blank line at EOF only; no Swift tokens change."
+    },
+    {
+      "path": "Packages/swift-ai-gateway/Sources/SwiftAIGateway/GatewayStreamingSpeechModel.swift",
+      "beforeSHA256": "6bef5a715a089882672f98c9a55ea823600a6334ad44a9fbe9e2fcabd14c2fdb",
+      "afterSHA256": "c8189825cbac5aa74d9e06ace929826d0be1a02e5b5fc0412369346380244a42",
+      "change": "Remove extra blank line at EOF only; no Swift tokens change."
+    },
+    {
+      "path": "Packages/swift-ai-google-vertex/Sources/SwiftAIGoogleVertex/GoogleVertexHostedRouting.swift",
+      "beforeSHA256": "9878849bd2e409b35b2826864423b96c71d4a35d95c7f463d312ea7e022baf0b",
+      "afterSHA256": "e05045a1481372f30e3077ebf33d709273939881cade3f9106c55418ccba26a8",
+      "change": "Remove extra blank line at EOF only; no Swift tokens change."
+    },
+    {
+      "path": "Packages/swift-ai-google-vertex/Sources/SwiftAIGoogleVertex/GoogleVertexImageInputCapabilities.swift",
+      "beforeSHA256": "76bb07d198d3a681a4fbcd1367f3541d3d2f97072b4ada42e9520032ae9da1ff",
+      "afterSHA256": "f33715b7e04f2c270b9221e3774716062f8a08c8c3c4582a8dda04f70b784758",
+      "change": "Remove extra blank line at EOF only; no Swift tokens change."
+    },
+    {
+      "path": "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleImageInputCapabilities.swift",
+      "beforeSHA256": "4b80b087296df5aae6c0189816283fff2c86036bfb57a001253576cf71d1dce0",
+      "afterSHA256": "2e9ce3eabcfb3b37d8de95c01856798635f2f0e97ef960e017b63b2fb40109d3",
+      "change": "Remove extra blank line at EOF only; no Swift tokens change."
+    },
+    {
+      "path": "Packages/swift-ai-huggingface/Sources/SwiftAIHuggingFace/HuggingFaceProviderSettings.swift",
+      "beforeSHA256": "df6204423be01f4cee2214166a2c5870b224d35f25c8986f6f69c1005c18f144",
+      "afterSHA256": "f081776506a0f7dd0c72f4c345ef254a903438fc19063cb6128a986de0c106fc",
+      "change": "Remove extra blank line at EOF only; no Swift tokens change."
+    }
+  ]
+}

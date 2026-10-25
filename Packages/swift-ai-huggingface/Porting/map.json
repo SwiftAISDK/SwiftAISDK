@@ -17,11 +17,14 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/HuggingFaceModels.swift",
-      "Sources/SwiftAISDK/Providers/HuggingFaceProvider.swift"
+      "Packages/swift-ai-huggingface/Sources/SwiftAIHuggingFace/HuggingFaceModels.swift",
+      "Packages/swift-ai-huggingface/Sources/SwiftAIHuggingFace/HuggingFaceProvider.swift",
+      "Packages/swift-ai-huggingface/Sources/SwiftAIHuggingFace/HuggingFaceProviderSettings.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/HuggingFaceProviderTests.swift"
+      "Packages/swift-ai-huggingface/Tests/SwiftAIHuggingFaceTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-huggingface/Tests/SwiftAIHuggingFaceTests/HuggingFaceProviderTests.swift",
+      "Packages/swift-ai-huggingface/Tests/SwiftAIHuggingFaceTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -31,5 +34,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: Hugging Face Responses adapter and focused suite extracted with native settings; existing transport, header and response semantics retained. No upstream baseline or gap change."
 }

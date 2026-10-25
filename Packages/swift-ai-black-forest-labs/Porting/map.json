@@ -18,14 +18,17 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
-      "Sources/SwiftAISDK/Models/BlackForestLabsMediaModels.swift",
-      "Sources/SwiftAISDK/Models/BlackForestLabsVideoModel.swift"
+      "Packages/swift-ai-black-forest-labs/Sources/SwiftAIBlackForestLabs/BlackForestLabsMediaModels.swift",
+      "Packages/swift-ai-black-forest-labs/Sources/SwiftAIBlackForestLabs/BlackForestLabsProvider.swift",
+      "Packages/swift-ai-black-forest-labs/Sources/SwiftAIBlackForestLabs/BlackForestLabsVideoModel.swift",
+      "Packages/swift-ai-black-forest-labs/Sources/SwiftAIBlackForestLabs/ImageInputCapabilities.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/BlackForestLabsProviderTests.swift",
-      "Tests/SwiftAISDKTests/BlackForestLabsVideoModelTests.swift",
-      "Tests/SwiftAISDKTests/BlackForestLabsVideoOperationTests.swift"
+      "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/BlackForestLabsProviderTests.swift",
+      "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/BlackForestLabsVideoModelTests.swift",
+      "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/BlackForestLabsVideoOperationTests.swift",
+      "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -35,5 +38,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
 }

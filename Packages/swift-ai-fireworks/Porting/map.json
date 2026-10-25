@@ -17,11 +17,16 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
-      "Sources/SwiftAISDK/Models/FireworksModels.swift",
-      "Sources/SwiftAISDK/Models/OpenAICompatibleChatFireworks.swift"
+      "Packages/swift-ai-fireworks/Sources/SwiftAIFireworks/FireworksModels.swift",
+      "Packages/swift-ai-fireworks/Sources/SwiftAIFireworks/FireworksProvider.swift",
+      "Packages/swift-ai-fireworks/Sources/SwiftAIFireworks/ImageInputCapabilities.swift",
+      "Packages/swift-ai-fireworks/Sources/SwiftAIFireworks/OpenAICompatibleChatFireworks.swift"
     ],
-    "tests": [],
+    "tests": [
+      "Packages/swift-ai-fireworks/Tests/SwiftAIFireworksTests/FireworksProviderTests.swift",
+      "Packages/swift-ai-fireworks/Tests/SwiftAIFireworksTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-fireworks/Tests/SwiftAIFireworksTests/TestSupport.swift"
+    ],
     "resources": []
   },
   "differences": [
@@ -30,5 +35,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
 }

@@ -3,6 +3,7 @@ import SwiftAIProvider
 import SwiftAITransport
 import SwiftAIProviderUtilities
 import SwiftAIAnthropic
+import SwiftAIMiniMax
 
 extension ModelHTTPConfig {
     var anthropicConfiguration: AnthropicModelConfiguration {
@@ -13,17 +14,7 @@ extension ModelHTTPConfig {
             transformRequestBody: transformRequestBody, batchResultMaxLineBytes: batchResultMaxLineBytes
         )
         if providerID == "minimax.messages" {
-            configuration.requestPolicy = { modelID in
-                var policy = AnthropicRequestPolicy()
-                if miniMaxSupportsM31Features(modelID) {
-                    policy.metadataNamespace = "minimax"
-                    policy.maximumTemperature = 2
-                    policy.supportsSamplingWithThinking = true
-                    policy.prepareRequest = { try miniMaxReasoningRequest($0, modelID: $1, warnings: &$2) }
-                    policy.userMediaContent = miniMaxMediaContent
-                }
-                return policy
-            }
+            configuration.requestPolicy = miniMaxRequestPolicy
         }
         return configuration
     }

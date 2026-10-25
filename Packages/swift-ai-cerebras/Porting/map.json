@@ -16,13 +16,16 @@
   ],
   "swift": {
     "sources": [
-      "Sources/SwiftAISDK/Models/CerebrasModels.swift",
-      "Sources/SwiftAISDK/Models/CerebrasParsing.swift",
-      "Sources/SwiftAISDK/Models/CerebrasRequestOptions.swift",
-      "Sources/SwiftAISDK/Models/CerebrasToolsAndMessages.swift"
+      "Packages/swift-ai-cerebras/Sources/SwiftAICerebras/CerebrasModels.swift",
+      "Packages/swift-ai-cerebras/Sources/SwiftAICerebras/CerebrasParsing.swift",
+      "Packages/swift-ai-cerebras/Sources/SwiftAICerebras/CerebrasProvider.swift",
+      "Packages/swift-ai-cerebras/Sources/SwiftAICerebras/CerebrasRequestOptions.swift",
+      "Packages/swift-ai-cerebras/Sources/SwiftAICerebras/CerebrasToolsAndMessages.swift"
     ],
     "tests": [
-      "Tests/SwiftAISDKTests/CerebrasProviderTests.swift"
+      "Packages/swift-ai-cerebras/Tests/SwiftAICerebrasTests/CerebrasProviderTests.swift",
+      "Packages/swift-ai-cerebras/Tests/SwiftAICerebrasTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-cerebras/Tests/SwiftAICerebrasTests/TestSupport.swift"
     ],
     "resources": []
   },
@@ -32,5 +35,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "M6: Cerebras owns its typed settings, provider, wire mapping and focused tests; shared HTTP and compatible message conversion remain dependencies. Existing upstream baseline and gaps are unchanged."
 }

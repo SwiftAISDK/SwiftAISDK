@@ -12,10 +12,10 @@ maps are coarse candidate relationships, not assertions that every listed
 upstream test has been ported. Refine them during extraction while preserving
 existing dispositions and known gaps.
 
-The root remains the compatibility aggregate. Of 52 catalog packages, four are
-`extracted`: core, Anthropic, OpenAI-compatible and OpenAI. They have sources,
-tests and working local manifests; the other 48 are planned. Those four packages
-are published at Swift version 1.0.0 under the SwiftAISDK organization. Actual
+The root remains the compatibility facade. All 52 catalog packages are now
+`extracted`, with their own sources, tests and local manifests. M6 verification is
+in progress; see `Docs/Migration/M6/README.md`. Core, Anthropic, OpenAI-compatible
+and OpenAI are published at Swift version 1.0.0 under the SwiftAISDK organization. Actual
 release availability is recorded in `Releases/sets/`; extraction state alone does
 not imply publication. Planned/scaffold URLs are not installation endpoints.
 
@@ -95,6 +95,16 @@ order, then the aggregate. `--list` prints that command plan. CI also runs norma
 external core/provider clients and synthetic Git version-resolution fixtures,
 plus tooling and documentation checks.
 
+`node Scripts/verify-package-distributions.mjs --report <output.json>` checks every
+extracted package from deterministic standalone exports, including its tests and
+ordinary-import release builds at minimum and latest eligible dependency versions.
+It fetches recorded published tags read-only for lower-bound verification; all
+candidate tags and pushes stay in disposable local repositories.
+
+The development root `Package.swift` and `ProviderExports.swift` are generated
+from extracted catalog entries. Do not maintain a second package/product list in
+those files. The root remains a local workspace until the M7 umbrella release.
+
 The generated CI matrix is input for later package jobs. Planned/scaffold entries
 have no independent build command. Export metadata is a file plan, not an export
 or a release approval. Development workspace data records matching local and
@@ -155,8 +165,10 @@ aggregate so importing its re-exported core does not create ambiguous functions.
 Anthropic and the generic compatible layer depend only on lower core products.
 OpenAI also depends on the compatible package for shared chat/completion,
 embedding and image wire implementations. OpenAI-specific model policy, Responses,
-audio, Live, files and skills remain in OpenAI. Anthropic hosting adapters and
-other concrete provider policies remain in the aggregate and inject hooks.
+audio, Live, files and skills remain in OpenAI. At the M3 checkpoint, Anthropic
+hosting adapters and other concrete provider policies remained in the aggregate
+and injected hooks. M6 moves those policies to their owning packages while
+retaining the shared hooks.
 
 Provider settings, factories and runtime tests are owned by their package. A test
 may depend on the `SwiftAI` orchestration product without adding it to the runtime
