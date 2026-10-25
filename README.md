@@ -64,25 +64,23 @@ MCP or UI. Add those packages only when your application needs them.
 Swift package versions are independent of npm versions. Providers can be updated
 separately when their shared core requirements intersect; SwiftPM selects one
 version of each package identity. Commit `Package.resolved` in applications for
-reproducible builds. The [tested release set](Releases/umbrella/3.0.0.json) and
-[public mixed-client lockfile](Docs/Migration/M7/MixedProviders.Package.resolved)
-record the verified versions and revisions.
+reproducible builds. The [tested release set](Releases/umbrella/3.0.0.json) records the verified
+versions and revisions.
 
 The 3.0 umbrella above provides the complete provider/MCP/UI surface, existing
 `settings:` factories and `import SwiftAISDK`. It shares the modular core types.
 Existing 2.x tags remain available, but their separately defined model/request
 values cannot be mixed with modular values. See the
-[3.0 migration guide](Docs/Migration/3.0.md) for the compatibility boundary and
+[3.0 migration guide](Docs/Migration.md) for the compatibility boundary and
 native package examples.
 
 Development happens in this canonical repository. Distribution repositories are
 generated from it; edit their owning `Packages/*` sources here. Use
 `node Scripts/sdk.mjs dev build` for the local workspace and
 `node Scripts/test-packages.mjs` for all package and compatibility tests.
-See the [migration plan](Docs/ModularizationPlan.md),
-[M7 evidence](Docs/Migration/M7/README.md), and [release workflow](Releases/README.md).
+See the [porting guide](Docs/AgentPortingGuide.md) and [release workflow](Releases/README.md).
 Canonical [examples](Examples/MixedProviders) use local paths for development;
-the public consumer report contains their verified remote manifests and lockfiles.
+the migration guide shows the corresponding public dependencies.
 
 ## Quick Start
 

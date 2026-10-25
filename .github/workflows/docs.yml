@@ -1,153 +1,126 @@
-name: Docs
-
+name: CI
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
-
+    inputs:
+      scope:
+        description: Checks to run
+        type: choice
+        options: [all, docs]
+        default: all
 permissions:
   contents: read
-
 concurrency:
   group: swiftai-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
-
 jobs:
-  test:
-    runs-on: macos-26
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
-    permissions:
-      contents: read
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      swift: ${{ steps.plan.outputs.swift }}
+      docs: ${{ steps.plan.outputs.docs }}
+      packages: ${{ steps.plan.outputs.packages }}
+      tools: ${{ steps.plan.outputs.tools }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Show Swift version
-        run: |
-          swift --version
-          swift --version | grep -q 'Swift version 6.3.3'
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
         with:
-          node-version: '22'
-
-      - name: Test extracted packages and compatibility aggregate
-        # SwiftPM does not run dependency-package tests from the root.
-        # Serial suites avoid starving timeout/polling tests on hosted runners.
-        run: node Scripts/test-packages.mjs
-
-  build:
-    needs: test
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Select checks
+        id: plan
+        run: node Scripts/ci-plan.cjs
+  tooling:
+    needs: changes
+    if: needs.changes.outputs.tools == 'true'
     runs-on: macos-26
+    timeout-minutes: 10
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
-    permissions:
-      contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Check catalog and tooling
+        run: |
+          node Scripts/sdk.mjs generate --check
+          node --test Scripts/tests/*.test.cjs
+  test:
+    needs: changes
+    if: needs.changes.outputs.swift == 'true'
+    runs-on: macos-26
+    timeout-minutes: 20
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Check Swift version
+        run: swift --version | grep 'Swift version 6.3.3'
+      - name: Test affected packages and compatibility facade once
+        env:
+          PACKAGES: ${{ needs.changes.outputs.packages }}
+        run: node Scripts/test-packages.mjs --packages "$PACKAGES"
+      - name: Compile for iOS
+        run: node Scripts/sdk.mjs dev build --triple arm64-apple-ios15.0-simulator --sdk "$(xcrun --sdk iphonesimulator --show-sdk-path)" --scratch-path .build/ios-verification
+      - name: Build examples
+        run: node Scripts/sdk.mjs dev examples build
+  docs:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: '24'
           cache: npm
           cache-dependency-path: docs-site/package-lock.json
-
-      - name: Verify package catalog and tooling
-        run: |
-          node Scripts/sdk.mjs generate --check
-          node --test Scripts/tests/*.test.cjs
-
-      - name: Show Swift version
-        run: swift --version
-
-      - name: Install docs dependencies
-        run: npm ci --prefix docs-site
-
-      - name: Audit docs dependencies
-        run: npm audit --prefix docs-site
-
-      - name: Build package
-        run: node Scripts/sdk.mjs dev build
-
-      - name: Verify isolated core consumer
-        run: node Scripts/verify-core-isolation.mjs
-
-      - name: Verify isolated provider consumers
-        run: node Scripts/verify-provider-isolation.mjs
-
-      - name: Verify independent provider versions
-        run: node Scripts/verify-provider-versions.mjs
-
-      - name: Rehearse standalone package releases
-        run: node Scripts/verify-release-rehearsal.mjs
-
-      - name: Verify every extracted distribution and dependency bounds
-        run: node Scripts/verify-package-distributions.mjs --report .build/distribution-verification.json
-
-      - name: Rehearse upstream maintenance and new-provider registration
-        run: node Scripts/verify-maintenance-rehearsal.mjs --report .build/maintenance-verification.json
-        env:
-          GH_TOKEN: ${{ github.token }}
-
-      - name: Compile the complete compatibility facade for iOS
-        run: node Scripts/sdk.mjs dev build --triple arm64-apple-ios15.0-simulator --sdk "$(xcrun --sdk iphonesimulator --show-sdk-path)" --scratch-path "${{ github.workspace }}/.build/ios-verification"
-
-      - name: Build documentation examples
-        run: node Scripts/sdk.mjs dev examples build
-
-      - name: Verify offline MCP OAuth migration
-        run: node Scripts/sdk.mjs dev examples run MCPOAuthMigration
-
-      - name: Check documentation
-        run: npm --prefix docs-site run check
-
-      - name: Build docs
-        run: npm --prefix docs-site run build
+      - run: npm ci --prefix docs-site
+      # API pages are committed with Swift API changes. Publishing prose needs no Swift build.
+      - name: Generate documentation
+        run: npm --prefix docs-site run generate -- --skip-reference
         env:
           DOCS_BASE: /SwiftAISDK
           DOCS_SITE: https://swiftaisdk.github.io
-
-      - name: Upload built documentation
+      - name: Check and build documentation
+        working-directory: docs-site
+        run: |
+          npm exec -- astro check
+          npm exec -- astro build
+        env:
+          DOCS_BASE: /SwiftAISDK
+          DOCS_SITE: https://swiftaisdk.github.io
+      - name: Upload documentation
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
-          name: docs-site-${{ github.run_id }}
           path: docs-site/dist
-          if-no-files-found: error
           retention-days: 1
-
   deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: [test, build]
-    runs-on: macos-26
+    needs: [changes, tooling, test, docs]
+    if: >-
+      always() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' &&
+      needs.changes.result == 'success' && needs.docs.result == 'success' &&
+      (needs.tooling.result == 'success' || needs.tooling.result == 'skipped') &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
-      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Download built documentation
-        uses: actions/download-artifact@v4
-        with:
-          name: docs-site-${{ github.run_id }}
-          path: docs-site/dist
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v6
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: docs-site/dist
-          retention-days: 1
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5

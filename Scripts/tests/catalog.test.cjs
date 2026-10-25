@@ -37,7 +37,7 @@ function fixture(t) {
           .split(path.sep)
           .some((x) =>
             [".build", ".swiftpm", "node_modules", "__pycache__"].includes(x),
-          ) && !p.includes("/Docs/Migration/M0/"),
+          ),
     });
   }
   return dir;
@@ -63,24 +63,6 @@ test("all generated outputs match and a repeat generation changes no bytes", () 
   const again = generate(root, false);
   assert.deepEqual(again.changed, []);
 });
-test(
-  "M1 import preserves reviewed versions, capability rows and notes",
-  { skip: process.env.M1_VERIFY_IMPORT !== "1" },
-  () => {
-    const baseline = read(root, "Docs/Migration/M1/import-baseline.json"),
-      data = readCatalog(root);
-    assert.deepEqual(data.rows, baseline.capabilities);
-    assert.deepEqual(
-      data.lock.packages.map((p) => ({
-        name: p.name,
-        version: p.reviewedVersion,
-        kind: p.ledgerKind,
-        evidence: p.evidence,
-      })),
-      baseline.upstream,
-    );
-  },
-);
 test("invalid schema fields, duplicate identity, cycles and unsafe paths fail closed", (t) => {
   const r = fixture(t),
     file = "Porting/packages.json",

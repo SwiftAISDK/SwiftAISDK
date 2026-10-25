@@ -1,6 +1,0 @@
-{
-  "baseline": "6db350e085c0b70d1eb8ce552a963edbd99a1693",
-  "releaseSource": "f91f47882ebaba0d602474fdd5ddc9f249eecce2",
-  "runtimeAndSwiftTestsChanged": [],
-  "scope": "M5 publication/metadata tooling leaves M2/M3 runtime and Swift test source bytes unchanged"
-}

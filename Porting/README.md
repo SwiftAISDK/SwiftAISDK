@@ -9,15 +9,13 @@ Each `Packages/<identity>/Porting/map.json` owns upstream implementation/test pa
 and current Swift source/test/resource paths. `workspace-map.json` retains the
 legacy aggregate, mixed integration tests, test support, and examples. Imported
 maps are coarse candidate relationships, not assertions that every listed
-upstream test has been ported. Refine them during extraction while preserving
+upstream test has been ported. Refine them while porting, preserving
 existing dispositions and known gaps.
 
-The root remains the compatibility facade. All 52 catalog packages are now
-`extracted`, with their own sources, tests and local manifests. M6 verification is
-complete under the user-directed local-check policy; see `Docs/Migration/M6/README.md`. Core, Anthropic, OpenAI-compatible
-and OpenAI are published at Swift version 1.0.0 under the SwiftAISDK organization. Actual
-release availability is recorded in `Releases/sets/`; extraction state alone does
-not imply publication. Planned/scaffold URLs are not installation endpoints.
+The root is the optional compatibility facade. All 52 packages are published
+under `SwiftAISDK`; current versions and dependencies are in `Releases/sets/`
+and `Docs/PackageCatalog.md`. Canonical development uses local package paths;
+public distribution manifests use compatible remote version ranges.
 
 ## Commands
 
@@ -92,11 +90,19 @@ node Scripts/sdk.mjs verify --affected --files Packages/swift-ai-openai/Sources/
 
 This command selects packages; its JSON explicitly says `selection-only`. It does
 not execute Swift tests. It includes downstream dependencies and widens unknown
-or coarse mappings to all packages. During the aggregate phase, the required
-current check is `node Scripts/test-packages.mjs`: extracted packages in dependency
-order, then the aggregate. `--list` prints that command plan. CI also runs normal
-external core/provider clients and synthetic Git version-resolution fixtures,
-plus tooling and documentation checks.
+or coarse mappings to all packages. `node Scripts/test-packages.mjs` runs all
+package suites and the compatibility facade once. `--packages id1,id2` selects
+package suites plus the facade; `--list` previews commands without running tests.
+
+CI selects changed packages and their dependents from the catalog. Core changes
+select all packages. Documentation-only changes do not run Swift tests. Tooling
+checks and site checks run only for their own inputs. iOS compilation and example
+builds accompany SDK changes. Expensive distribution/version/publication rehearsals
+are local release-tooling checks, not automatic push/PR work.
+
+The site CI uses committed API-reference pages and generates metadata/LLM pages
+once without Swift. When public Swift API changes, regenerate the reference locally
+with the normal docs commands and commit it with the implementation.
 
 `node Scripts/verify-package-distributions.mjs --report <output.json>` checks every
 extracted package from deterministic standalone exports, including its tests and
@@ -112,15 +118,13 @@ to canonical sources/tests and catalog-derived local dependencies. The root
 manifest stays remote-only. `dev examples build` builds the complete examples.
 Plain root SwiftPM commands intentionally resolve published dependencies.
 
-The generated CI matrix is input for later package jobs. Planned/scaffold entries
+The generated CI matrix describes package checks. Planned/scaffold entries
 have no independent build command. Export metadata is a file plan, not an export
 or a release approval. Development workspace data records matching local and
 remote identities. Extracted manifests use local path dependencies. The same
 renderer can emit distribution ranges for disposable Git fixtures; independent
 provider upgrades and incompatible core majors are tested outside the monorepo.
-M4 adds deterministic export and local publication rehearsal from these same
-identities; M5 adds verified GitHub publication and public consumers. See
-`Releases/README.md` and `Docs/Migration/M5/README.md`.
+See `Releases/README.md` for deterministic exports and publication.
 
 ## Imported provenance
 
@@ -130,30 +134,18 @@ inventory supplied integrity strings for 52 of them; `@ai-sdk/lmnt@3.0.36` and
 silently fetched from a newer version.
 
 Imported test refs point to the pinned upstream test-inventory snapshot and are
-marked `inventory-snapshot-not-release-verified`. M5 reviewed published contract
-declarations for the six pilot upstream entries; other contract families remain
+marked `inventory-snapshot-not-release-verified`. Published contract declarations were reviewed for the six initial upstream entries; other contract families remain
 unimported until their declarations are reviewed. Upgrading an entry to
 `reviewed` requires archive integrity, a matching release test ref, and recorded
 contract families; metadata validation is still not runtime parity proof.
 
-The migration-only baseline comparison is:
+Historical relative report paths in reviewed metadata refer to the source commit
+recorded in release history. Temporary migration reports remain in Git history.
 
-```sh
-M1_VERIFY_IMPORT=1 node --test Scripts/tests/*.test.cjs
-```
+## Compatibility facade
 
-It compares against the frozen M1 import record and is deliberately excluded from
-normal CI after future legitimate upstream updates. Do not rewrite that record
-to make a new port pass. Normal CI checks the current catalog and generated
-outputs. The original M0 artifacts likewise remain a historical snapshot.
-
-## M2 core extraction
-
-`swift-ai-core` is now an extracted local package with four runtime modules and
-four test targets. The root package consumes its products with a relative SwiftPM
-path dependency. Planned provider manifests remain unpublished and unbuildable
-until their source extraction; their proposed `1.0.0` ranges are not releases.
-Run all package suites through `node Scripts/test-packages.mjs`.
+Core owns four modules: SwiftAI, SwiftAIProvider, SwiftAITransport and
+SwiftAIProviderUtilities. The optional root facade re-exports all published packages.
 
 The generator derives the compatibility `AI` and `AIProviders` methods and the
 `AICustomProvider` forwarding adapter from core Swift signatures. The development
@@ -167,15 +159,12 @@ its existing default-provider/Gateway lookup lazily, including `AIDefaultProvide
 core. The four short legacy global `customProvider` overloads remain in the
 aggregate so importing its re-exported core does not create ambiguous functions.
 
-## M3 provider pilot
+## Provider boundaries
 
 Anthropic and the generic compatible layer depend only on lower core products.
 OpenAI also depends on the compatible package for shared chat/completion,
 embedding and image wire implementations. OpenAI-specific model policy, Responses,
-audio, Live, files and skills remain in OpenAI. At the M3 checkpoint, Anthropic
-hosting adapters and other concrete provider policies remained in the aggregate
-and injected hooks. M6 moves those policies to their owning packages while
-retaining the shared hooks.
+audio, Live, files and skills remain in OpenAI.. Provider-specific policies live in their owning packages.
 
 Provider settings, factories and runtime tests are owned by their package. A test
 may depend on the `SwiftAI` orchestration product without adding it to the runtime
@@ -185,10 +174,9 @@ are relative to `Tests/<Module>Tests` and must exist within the checkout.
 `verify-provider-isolation.mjs` copies only each provider's dependency closure and
 its ordinary-import consumer to a temporary directory. `verify-provider-versions.mjs`
 uses local Git repositories and synthetic tags; it makes no claim about historical
-release compatibility. Both delete their temporary files. Source/test moves and
-all verification receipts are in `Docs/Migration/M3`.
+release compatibility. Both delete their temporary files.
 
-## M4 deterministic export
+## Deterministic export
 
 Release planning reads reviewed `Releases/changes` entries and immutable released
 sets. It selects version bumps independently of downstream test selection. Export
@@ -199,23 +187,17 @@ are rendered. Relative canonical map references are preserved separately from
 standalone paths so integration evidence remains traceable without copying siblings.
 
 Use `node Scripts/sdk.mjs release plan --id <new-release-id>`, `release export --dry-run` and
-`release rehearse` as described in `Releases/README.md`. The complete gate is
+`release rehearse` as described in `Releases/README.md`. The optional publication-tooling rehearsal is
 `node Scripts/verify-release-rehearsal.mjs`. Local SwiftPM mirrors preserve the
 remote distribution manifests during verification. No generated repository or
 published release is implied by `state: extracted` or a successful dry run.
 
 
-## M5 production publication
+## Publication
 
-The canonical repository is `SwiftAISDK/SwiftAISDK`; the four distributions are
-`swift-ai-core`, `swift-ai-anthropic`, `swift-ai-openai-compatible` and
-`swift-ai-openai`. Each starts at independent Swift version 1.0.0. Their initial
-published set identifies canonical source, exact exports, annotated tags and
-public consumer verification. Original 2.x tags and the old repository URL work.
-
-Use a clean committed source and its successful hosted workflow with
-`release export --publication` and `release publish --ci-run ...`. Reuse the
-attempt directory to resume; conflicting existing tags stop publication. Check
-standalone hosted CI and `verify-public-packages.mjs` before finalizing a published
-set. The local rehearsal seeds its own synthetic history and remains usable after
-production changes are consumed. See `Releases/README.md` for exact commands.
+Use a clean committed source and a successful hosted run that executed Swift tests
+with `release export --publication` and `release publish --ci-run ...`.
+A docs-only green run does not authorize package publication. Reuse the attempt
+directory to resume; conflicting tags stop publication. Verify actual remote tags,
+exports and public consumers before recording an immutable released set.
+See `Releases/README.md` for commands.

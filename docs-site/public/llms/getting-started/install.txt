@@ -99,14 +99,12 @@ The canonical repository contains complete offline `AnthropicOnly`,
 `OpenAICompatibleOnly`, `OpenAIOnly` and `MixedProviders` examples. OpenAI shares
 chat/completion, embedding and image wire code with the compatible package;
 selecting it does not require unrelated providers, MCP or UI. See the
-[migration report](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/Migration/M3/README.md)
-for extraction evidence. The [M7 release report](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/Migration/M7/README.md) records public tags, clean consumers and the final verification.
+[3.0 migration guide](/SwiftAISDK/getting-started/migrating-to-3/).
 
 Provider versions can be selected independently as long as their shared dependency
 requirements intersect. SwiftPM resolves one version per package identity. Swift
 release numbers do not track npm release numbers. Applications should commit their
 `Package.resolved`; reusable libraries should normally express compatible ranges.
-See the [verified mixed-provider lockfile](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/Migration/M7/MixedProviders.Package.resolved).
 
 The 3.0 umbrella shares model and request types with the modular packages and
 preserves the ordinary `import SwiftAISDK` API. Existing 2.x tags remain usable,

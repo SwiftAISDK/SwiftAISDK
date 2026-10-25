@@ -24,16 +24,22 @@ function verifyRefs(actual, receipt, requireHead = false) {
     (!requireHead || actual["refs/heads/main"] === receipt.exportCommit),
   `Remote refs differ: ${receipt.package}@${receipt.version}; immutable tags will not be replaced`);
 }
+function verifyHostedCI(result, jobs, commit) {
+  ensure(result.head_sha === commit && result.conclusion === "success" &&
+    result.status === "completed" && result.path === ".github/workflows/docs.yml" &&
+    ["push", "workflow_dispatch"].includes(result.event) &&
+    jobs.some(j => j.name === "test" && j.status === "completed" && j.conclusion === "success"),
+    "Canonical Swift tests have not passed for this exact source commit");
+  return { id: result.id, url: result.html_url, sourceCommit: result.head_sha };
+}
 function github(root, canonical) {
   const api = (endpoint) => JSON.parse(run("gh", ["api", endpoint], root));
   return {
     verifyCI(commit, runID) {
       ensure(/^\d+$/.test(String(runID)), "A completed canonical CI run is required");
       const result = api(`repos/${canonical}/actions/runs/${runID}`);
-      ensure(result.head_sha === commit && result.conclusion === "success" &&
-        result.status === "completed" && result.path === ".github/workflows/docs.yml" &&
-        result.event === "push", "Canonical CI has not passed for this exact source commit");
-      return { id: result.id, url: result.html_url, sourceCommit: result.head_sha };
+      const jobs = api(`repos/${canonical}/actions/runs/${runID}/jobs`).jobs;
+      return verifyHostedCI(result, jobs, commit);
     },
     remote(entry) {
       const match = /^https:\/\/github\.com\/([A-Za-z0-9-]+\/swift-ai-[a-z0-9-]+)\.git$/.exec(entry.repository);
@@ -63,7 +69,7 @@ function github(root, canonical) {
     },
   };
 }
-function publish(root, directory, staging, { ciRun, localVerification, canonical = "SwiftAISDK/SwiftAISDK",
+function publish(root, directory, staging, { ciRun, canonical = "SwiftAISDK/SwiftAISDK",
   // Internal transport seam for offline failure/recovery tests; not exposed by CLI.
   backend = null, afterPush = null } = {}) {
   root = path.resolve(root); directory = path.resolve(directory); staging = path.resolve(staging);
@@ -84,10 +90,7 @@ function publish(root, directory, staging, { ciRun, localVerification, canonical
   ensure(!fs.lstatSync(staging).isSymbolicLink() && disjoint(fs.realpathSync(staging), fs.realpathSync(directory)),
     "Publication staging overlaps through a symlink");
   const transport = backend || github(root, canonical);
-  ensure(!(ciRun && localVerification), "Choose hosted CI or user-directed local migration verification");
-  const ci = localVerification
-    ? require("./local-verification.cjs").verify(root, path.resolve(localVerification), candidate.source.commit)
-    : transport.verifyCI(candidate.source.commit, ciRun);
+  const ci = transport.verifyCI(candidate.source.commit, ciRun);
   const identity = {
     name: run("git", ["show", "-s", "--format=%an", candidate.source.commit], root),
     email: run("git", ["show", "-s", "--format=%ae", candidate.source.commit], root),
@@ -183,4 +186,4 @@ function publish(root, directory, staging, { ciRun, localVerification, canonical
     return journal;
   } finally { unlock(); }
 }
-module.exports = { publish, verifyRefs };
+module.exports = { publish, verifyRefs, verifyHostedCI };

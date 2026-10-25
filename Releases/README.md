@@ -13,8 +13,7 @@ Add one `changes/<id>.json` for a meaningful implementation, public metadata or
 minimum-dependency change. `schema.json` validates the shape. Use `draft` while
 investigating and `reviewed` after the compatibility rationale and evidence have
 been reviewed. A reviewed entry selects extracted release units only; it does not
-authorize publication or claim upstream parity. The initial pilot entry relies on
-the M2/M3 extraction evidence and retains their recorded limitations.
+authorize publication or claim upstream parity. Historical entries retain their original source commits and limitations.
 
 Each package entry records `initial`, `patch`, `minor` or `major`, consumer-facing
 notes and the compatibility assessment. Initial units start at `1.0.0`. Subsequent
@@ -71,7 +70,7 @@ verified local tags. Dependencies are reused, the selected provider commit advan
 from its existing history, and old tags remain unchanged. Each attempt owns its
 scratch directories; export and staging trees must not overlap.
 
-The second command is the complete M4 gate. It snapshots the current canonical
+The second command is an optional, expensive publication-tooling rehearsal. It snapshots the current canonical
 files, seeds a synthetic pilot change history only inside that disposable checkout
 (so real changes can already be consumed), and makes a disposable Git commit. It exports twice, verifies deterministic hashes,
 exercises interruption/resume, runs all standalone package tests, and builds five
@@ -84,8 +83,7 @@ retained beside the report. The temporary repositories are deleted afterward.
 
 The snapshot commit and local tag versions are rehearsal evidence, not canonical
 commits or public releases. Consumer lockfiles contain local mirror locations and
-fixture revisions; do not copy them into applications. The public-consumer check
-produces [published installation and lockfile evidence](../Docs/Migration/M7/public-consumers.json).
+fixture revisions; do not copy them into applications. Run public consumers after publication; keep command logs in ignored local storage.
 
 ## Immutable released sets
 
@@ -100,8 +98,8 @@ set rather than deleted.
 
 Do not create a published record from a dry run. Attempt journals remain in
 staging; published sets are finalized only after actual remote readback and clean
-consumer checks. M4 provides local mechanics and the record contract. M5 adds the production
-publisher and records actual GitHub refs, compiler and consumer evidence.
+consumer checks. Historical report paths in immutable records refer to the recorded source commit,
+not the current checkout. The reports remain available in Git history.
 
 
 ## GitHub publication
@@ -118,7 +116,7 @@ node Scripts/sdk.mjs release publish --export /tmp/export --staging /tmp/attempt
 ```
 
 Keep the attempt directory to resume. The publisher regenerates exports before
-writing, requires the exact successful canonical push workflow, verifies destination
+writing, requires the exact successful canonical workflow with an executed Swift test job, verifies destination
 ownership/access and dependency tags, commits using the canonical source author
 and timestamp, and pushes annotated tags with `main` atomically. Existing tags and
 Releases must match exactly; conflicts stop publication. Fresh remote clones verify
@@ -129,23 +127,10 @@ No per-provider publication workflow or hand-edited distribution source is neede
 public consumer checks, retain their evidence, then finalize the published set.
 No new canonical root tag is made while its manifest depends on local packages.
 
-## Temporary M7 verification policy
+## Optional tooling verification
 
-The user requested that CI remain suspended until the migration's final handoff.
-For this migration, commit the complete source and run:
-
-```sh
-node Scripts/verify-local-migration.mjs .build/migration-m7/local-verification.json
-node Scripts/sdk.mjs release plan --id modular-3 --output .build/migration-m7/plan.json
-node Scripts/sdk.mjs release export --publication --plan .build/migration-m7/plan.json --output .build/migration-m7/export
-node Scripts/sdk.mjs release publish --export .build/migration-m7/export --staging .build/migration-m7/publication --local-verification .build/migration-m7/local-verification.json
-```
-
-This explicit alternative validates the exact committed source tree and the
-required local check/log receipts. It does not claim hosted CI passed. The ordinary
-`--ci-run` gate remains available; the two modes are mutually exclusive. Preserve
-logs while resuming a publication. After public dependency/umbrella verification,
-restore all suspended CI and finish the final hosted documentation handoff.
+These expensive rehearsals run locally when changing publication or synchronization
+tooling. They are not part of ordinary push/PR CI.
 
 `verify-maintenance-rehearsal.mjs --report <new-path>` replays the already-ported
 OpenAI 4.0.101 → 4.0.102 update using integrity-checked archives and release-matched

@@ -1,8 +1,0 @@
-M0 auditor verification, 2026-10-25. Negative controls used temporary ownership data and mocked reads; runtime files were never edited.
-PASS repeated compiler symbol export: normalized hashes and generated inventory verified unchanged.
-PASS missing source ownership: rejected with Source ownership mismatch
-PASS unknown owner: rejected with Unknown module in Sources/SwiftAISDK/AI.swift
-PASS overlapping source ranges: rejected with Overlapping/invalid split in Sources/SwiftAISDK/AI.swift
-PASS stale generated artifact: rejected with M0 INVENTORY MISMATCH
-PASS changed source fingerprint: rejected with M0 INVENTORY MISMATCH
-M0 INVENTORY VERIFIED: {"capabilityRows": 54, "example": 22, "publicSymbols": 6762, "publicSymbolsUsingParentLocation": 704, "resource": 26, "source": 311, "test": 365, "test-support": 12, "upstreamPackages": 54}

@@ -513,12 +513,12 @@ const providersOnly = process.argv.includes('--providers-only');
 
 generateProviders();
 if (!providersOnly) {
-  const migration = readFileSync(join(repoRoot, 'Docs/Migration/3.0.md'), 'utf8')
+  const migration = readFileSync(join(repoRoot, 'Docs/Migration.md'), 'utf8')
     .replace('# Migrating to SwiftAISDK 3.0\n', '')
-    .replace('(../AgentPortingGuide.md)', '(https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/AgentPortingGuide.md)')
-    .replace('(../../Releases/README.md)', '(https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Releases/README.md)');
+    .replace('(AgentPortingGuide.md)', '(https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/AgentPortingGuide.md)')
+    .replace('(../Releases/README.md)', '(https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Releases/README.md)');
   writeGenerated(join(contentRoot, 'getting-started/migrating-to-3.mdx'),
     '---\ntitle: Migrate to 3.0\ndescription: Choose independent Swift packages or keep the complete compatibility API.\n---\n' + migration);
-  generateReference();
+  if (!process.argv.includes('--skip-reference')) generateReference();
   generateLLMSFiles();
 }

@@ -7,7 +7,6 @@ const crypto = require('node:crypto');
 const catalog = require('../lib/catalog.cjs');
 const upstream = require('../lib/upstream.cjs');
 const release = require('../lib/release.cjs');
-const local = require('../lib/local-verification.cjs');
 const development = require('../lib/development.cjs');
 const { umbrellaManifest } = require('../lib/generate.cjs');
 test('published archive integrity rejects missing, corrupt and altered input', () => {
@@ -39,18 +38,4 @@ test('published root uses ranges while development links the identical source by
     assert.equal(fs.realpathSync(path.join(workspace, name)), fs.realpathSync(path.join(data.root, name)));
   assert(fs.readFileSync(path.join(workspace, 'Package.swift'), 'utf8').includes('.package(path: "../../../Packages/'));
   assert.deepEqual(fs.readFileSync(path.join(workspace, 'Examples/Package.swift')), fs.readFileSync(path.join(data.root, 'Examples/Package.swift')));
-});
-test('local migration publication evidence rejects another source, missing checks and tampered logs', t => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'swift-ai-local-evidence-'));
-  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
-  const commit = release.git(['rev-parse','HEAD'], catalog.rootDefault);
-  const log = path.join(dir, 'check.log'); fs.writeFileSync(log, 'passed');
-  const record = { kind: 'local-migration-verification', status: 'passed', sourceCommit: commit,
-    sourceTree: release.git(['rev-parse', 'HEAD^{tree}'], catalog.rootDefault), policy: 'Docs/Migration/M6/ci-budget-policy.json',
-    checks: local.required.map(name => ({name,exitCode:0,log,logSHA256:release.hash('passed')})) };
-  const file = path.join(dir, 'receipt.json'); const write = v => fs.writeFileSync(file, JSON.stringify(v));
-  write(record); assert.equal(local.verify(catalog.rootDefault,file,commit).sourceCommit,commit);
-  assert.throws(() => local.verify(catalog.rootDefault,file,'a'.repeat(40)), /exact canonical/);
-  write({...record,checks:record.checks.slice(1)}); assert.throws(() => local.verify(catalog.rootDefault,file,commit), /Incomplete/);
-  write(record); fs.writeFileSync(log, 'tampered'); assert.throws(() => local.verify(catalog.rootDefault,file,commit), /log missing or changed/);
 });

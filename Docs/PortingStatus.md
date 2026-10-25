@@ -14,75 +14,21 @@ This file is the readable status page. It replaces the older provider-progress
 journals and product-gap checklist. Use the ledgers and generated inventories
 for exact evidence.
 
-## Modular package migration
+## Modular packages
 
-[ModularizationPlan.md](ModularizationPlan.md) defines independent provider
-packages published under a SwiftAISDK GitHub organization, with one canonical
-development repository and generated distribution repositories. It keeps
-upstream package/test mappings and introduces structured metadata to reduce
-synchronization and new-provider setup work. [M0 inventory and package map](Migration/M0/README.md)
-is complete: all 54 tracked upstream packages, 311 runtime files, 377 test/support
-files, 26 fixtures, and 6762 public symbols have recorded destinations. Baseline
-verification covers fresh local Swift 6.4 and existing Swift 6.3.3 CI at the exact
-unchanged source commit. [M1 catalog/tooling](Migration/M1/README.md) is also
-complete: structured metadata now drives the legacy CLIs, compiled capability
-rows, docs, 52 planned manifests, and generated CI/export/workspace inputs. A
-disposable provider was scaffolded through one registration without advertising
-support. Existing npm versions and capability rows are preserved.
-[M2 core extraction](Migration/M2/README.md) is complete; four core modules and
-the generated legacy facade preserve explicit and default provider resolution.
-[M3 provider extraction](Migration/M3/README.md) adds independently buildable
-Anthropic, generic OpenAI-compatible and OpenAI packages. The 3.0 aggregate uses the independently published packages. M6 completed
-extraction of the remaining providers, MCP and UI into their own verified packages.
+SwiftAISDK 3.0 is published under `SwiftAISDK/SwiftAISDK`. The canonical repository
+owns development; 52 generated distribution repositories provide independent
+SwiftPM versions. Core and Anthropic are at 1.1.0; the other distributions are at
+1.0.0. The optional compatibility umbrella retains `import SwiftAISDK`.
+See [Migration.md](Migration.md), [PackageCatalog.md](PackageCatalog.md), and
+[the release workflow](../Releases/README.md).
 
-The M3/M5 full suite retained 3545 tests: 3007 aggregate, 126 core, 135 Anthropic,
-7 compatible and 270 OpenAI, including 33 explicit live skips. Four external
-provider clients and the existing core consumer run without aggregate sources;
-19 existing examples build. Synthetic Git version fixtures verify mixed provider
-versions, an independent OpenAI upgrade, the minimum core requirement and a
-provider-to-provider core conflict. All 6762 M0 public records still match after
-module normalization. See the M3 report for compiler, documentation and log receipts.
-
-M3 verification was local Swift 6.4 on macOS, with iOS 15 deployment-target
-compilation against the installed simulator SDK. M5 adds fresh hosted Swift 6.3.3
-checks for the committed canonical source and all four actual distributions.
-There is no simulator/device runtime or paid-provider-call claim.
-[M5 publication](Migration/M5/README.md) is complete: `SwiftAISDK/SwiftAISDK`
-preserves the old repository history, 67 tag refs and 24 prior Releases. Core,
-Anthropic, compatible and OpenAI are published at `1.0.0`; five clean clients
-resolve and execute against the public tags without mirrors. The old 2.8.1 URL
-still resolves to its original commit. Documentation and old-URL redirects work.
-[M6 extraction](Migration/M6/README.md) is complete: all 52 packages now own
-their implementations. The syntax inventory retains all 3545 previous tests plus
-four new compatibility/transport tests. The 3549-test suite passed with 33 live
-skips, and all 52 exported package suites passed; 105 normal-import clients checked minimum/latest compatible
-dependencies and a mixed published/candidate selection. The API comparison has
-no missing public declaration; one compiler-synthesized record on an internal
-Vertex class is documented separately. The exact-source Swift 6.3.3 test job
-passed; remaining checks completed locally after the user suspended intermediate
-CI to conserve the Actions budget. Full hosted verification and documentation
-deployment move to the end of the overall migration. The receipt retains observed
-local failures of a pre-existing 1 ms timeout test, reproduced on unchanged M5.
-[M7](Migration/M7/README.md) publishes the remaining 48 distributions at `1.0.0`,
-core and Anthropic at `1.1.0`, and the remote-only 3.0 compatibility umbrella.
-OpenAI and compatible remain at `1.0.0`. All 59 clean modular consumers pass
-against actual public Git tags, including an independent Anthropic update with
-the other three dependency pins unchanged. A separate generated development
-workspace tests current local sources. The real-upstream maintenance rehearsal
-and one-command provider registration pass without adding hard-coded package
-lists. Final CI restoration and hosted deployment are recorded in the M7 receipt.
-M3/M4 synthetic tags remain disposable fixture evidence; production npm baselines
-and all previous behavior/gaps are preserved.
-
-
-[M4 release rehearsal](Migration/M4/README.md) adds reviewed Swift change records,
-SemVer planning, deterministic allowlisted exports, standalone provenance and CI,
-and resumable dependency-ordered local Git publication. The rehearsal includes
-clean exported package tests and ordinary-import consumers, plus an independent
-OpenAI patch with unchanged dependency tags. Fresh local checks passed: 538 tests from exported Git clones, six clean clients
-and 17 tooling tests; no failures. Deterministic exports, recovery after SIGKILL
-and immutable refs are verified in the M4 receipt.
-These fixtures do not create public releases or advance upstream baselines.
+The migration retained existing runtime behavior, upstream baselines, capabilities
+and known gaps. Local verification passed 3549 source tests (33 explicit live
+skips), exported-package tests, independent-version consumers and iOS compilation.
+Public 3.0.0 and 2.8.1 consumers compiled and ran. Hosted Swift 6.3.3 source tests
+also passed; the redundant full migration workflow was cancelled to conserve CI.
+Automatic CI now selects relevant checks, without migration rehearsals.
 
 ## Weekly upstream parity (2026-10-25)
 

@@ -1,10 +1,5 @@
 # Agent Porting Guide
 
-During the modular migration, intermediate checks run locally under the user's
-[temporary CI policy](ModularizationPlan.md#temporary-ci-policy-during-migration).
-Restore automatic CI only at the end of the overall migration goal, not after
-each stage.
-
 This is the operational guide for agents porting Vercel AI SDK behavior into
 SwiftAISDK. The rule is simple: update runtime behavior, tests, public docs, and
 status docs together.
@@ -23,12 +18,8 @@ status docs together.
 | `Docs/UpstreamTestInventory.md` | Generated upstream test/spec inventory. |
 | `README.md` and `docs-site` | Public product documentation. |
 | `AGENTS.md` | Repository-level agent rules. |
-| `Docs/ModularizationPlan.md` | Package migration stages; execute one stage per run and inspect its recorded evidence. |
-| `Docs/Migration/M0/README.md` | Frozen ownership/API inventory, extraction boundary register, and Swift 6.4 / exact-commit Swift 6.3.3 baseline evidence. |
-| `Docs/Migration/M2/README.md` | Frozen core/module extraction evidence. |
-| `Docs/Migration/M3/README.md` | Provider boundaries, standalone consumers and preserved migration evidence. |
-| `Releases/README.md`, `Docs/Migration/M4/README.md` and `Docs/Migration/M5/README.md` | Change records, deterministic exports, rehearsal, production publication and verified release evidence. |
-| `Docs/Migration/M1/README.md` | Catalog import, generation/scaffold verification, and handoff to core extraction. |
+| `Releases/README.md` | Change records, deterministic exports and publication. |
+| `Docs/Migration.md` | User migration from 2.x to independent packages or the 3.0 umbrella. |
 
 ## Standard Porting Flow
 
@@ -79,7 +70,7 @@ The public root manifest and provider re-exports are generated from extracted
 catalog entries. Use `node Scripts/sdk.mjs dev <Swift command>` for the generated
 local workspace; plain root SwiftPM commands resolve public releases. Keep package ownership and dependencies in the catalog;
 do not add a separate hand-maintained root list. Catalog-wide distribution checks
-are documented in `Porting/README.md` and `Docs/Migration/M6/README.md`.
+are documented in `Porting/README.md`.
 
 ## Upstream Reading Order
 
@@ -245,8 +236,9 @@ When finishing a porting pass, summarize:
 ## Modular release rehearsal
 
 Record reviewed Swift changes in `Releases/changes/`; keep npm baselines in the
-upstream lock. Run `release plan`, `release export --dry-run`, and the complete
-`node Scripts/verify-release-rehearsal.mjs` gate described in `Releases/README.md`.
+upstream lock. Run `release plan` and `release export --dry-run` as described in `Releases/README.md`.
+Run the expensive publication rehearsal when changing publication tooling; it is
+not required on every push.
 The plan must be regenerated after input changes. Dirty working-tree exports are
 explicit previews with a null canonical source commit.
 

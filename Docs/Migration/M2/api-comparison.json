@@ -1,6 +1,0 @@
-{
-  "baselinePublicSymbols": 6762,
-  "currentPublicSymbols": 7020,
-  "unmatchedBaselineSymbols": [],
-  "comparison": "Compiler public symbols including inherited/synthesized members; demangled names with runtime module qualifiers normalized. Not an ABI guarantee."
-}

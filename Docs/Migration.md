@@ -127,8 +127,8 @@ integrity, resolves immutable test revisions, records changed files/declarations
 maps Swift owners and selects downstream checks. A missing release test ref is
 explicitly recorded as a gap. Preparation never advances reviewed baselines.
 Translate behavior and tests, record dispositions, then update the structured
-ledger and release entry. See [the porting guide](../AgentPortingGuide.md) and
-[release workflow](../../Releases/README.md).
+ledger and release entry. See [the porting guide](AgentPortingGuide.md) and
+[release workflow](../Releases/README.md).
 
 Adding a selected provider starts with one `sdk.mjs package add` registration.
 Manifests, package indexes, CI selection and export inputs are generated. An empty
