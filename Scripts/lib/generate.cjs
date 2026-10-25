@@ -181,17 +181,18 @@ function render(data) {
       "",
       "Generated from `Porting/packages.json`. All package states are explicit; planned/scaffold manifests are not published installation endpoints.",
       "",
-      "| Package | State | Modules | Upstream |",
-      "| --- | --- | --- | --- |",
+      "| Package | State | Modules | Upstream | Dependencies |",
+      "| --- | --- | --- | --- | --- |",
     ];
   for (const p of catalog.packages) {
     outputs.set(`${p.directory}/Package.swift`, manifest(data, p));
     index.push(
       row([
-        ticks(p.id),
+        `[${p.id}](${p.repository.replace(/\.git$/, "")})`,
         p.state,
         p.modules.map((m) => ticks(m.name)).join(", "),
         p.upstream.map(ticks).join(", "),
+        p.dependencies.map((d) => `${ticks(d.package)} from ${ticks(d.from)}`).join(", ") || "None",
       ]),
     );
     matrix.push({

@@ -52,7 +52,9 @@ function closure(roots, selected) {
   roots.forEach(visit); return [...found].sort();
 }
 function runClient(name, manifest, sources, roots, selected, executable, marker, rootReceipt = null) {
-  const cwd = path.join(temp, name); fs.mkdirSync(cwd);
+  // SwiftPM derives the root identity from the folder too. A client named after
+  // its dependency would resolve its own product instead of the remote package.
+  const cwd = path.join(temp, 'consumer-' + name); fs.mkdirSync(cwd);
   if (typeof sources === 'string') {
     const directory = path.join(cwd, 'Sources', executable); fs.mkdirSync(directory, { recursive: true });
     fs.writeFileSync(path.join(directory, 'main.swift'), sources);

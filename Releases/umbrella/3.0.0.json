@@ -1,0 +1,841 @@
+{
+  "schemaVersion": 1,
+  "kind": "tested umbrella dependency selection",
+  "umbrellaVersion": "3.0.0",
+  "manifestSourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+  "umbrellaManifestSHA256": "bf4fdebe79773951bd07f219a6ac4f8d10a173ced8dd17e4220d6bc347340610",
+  "compatibility": "Compatible ranges in Package.swift; this record is a tested selection, not a lock on every application.",
+  "consumerEvidence": [
+    "Docs/Migration/M7/public-consumers.json",
+    "Docs/Migration/M7/complete-candidate.json"
+  ],
+  "packages": [
+    {
+      "package": "swift-ai-alibaba",
+      "version": "1.0.0",
+      "exportSHA256": "c805e968ce5a06f9e86137ad444690b335944aac4f523f5276def753c633a0c0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "57bc1561e898e56b88b9efd8e801b3385835cf61",
+      "tagObject": "93ce8cf32f4709818021e142795ca3431c92937d",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-amazon-bedrock",
+      "version": "1.0.0",
+      "exportSHA256": "77e4bf2aaea380a1d5b8d78a808ef8783348fb33a6dc23ac55c6c5b0fae4ed0f",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "d09ded81b08cff1a21d063a33433fc3918b5f3f3",
+      "tagObject": "7f55041eda531aaba7d33e1c8fe40af28ee2dcb7",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-anthropic",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-anthropic",
+      "version": "1.1.0",
+      "exportSHA256": "611d4996eab214ee5b100fab579df7b6eafc626ff7696215d647edb0128df777",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "34b0bd78996e0b8e23e98990ea0e7dc512f9a750",
+      "tagObject": "3a5c12203c6ef7e0753983ce0d18710a9a4e3e24",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-anthropic-aws",
+      "version": "1.0.0",
+      "exportSHA256": "2146c9bdb8111e7762fbe03c41a5dc1b0de553cbe458172e7fbe11af4664ffb3",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "494417cafe291fa248c73bfe012c600028c1a7e1",
+      "tagObject": "d637297c6d7ad0b64f6857cab7f8efda3b3bae5d",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-anthropic",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-assemblyai",
+      "version": "1.0.0",
+      "exportSHA256": "90697ae176576fe735d994ebed517cf2d1dc1e218f2640517e728ec4de7407e6",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "ad3a74993e184ee3faba12b7ec1e34a7f03f9a9b",
+      "tagObject": "2432faf3afff718354c8fb24cd751841d24731a7",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-azure",
+      "version": "1.0.0",
+      "exportSHA256": "aa3f6d1396d1f4d8708464c52a705102cbf41511aa5b4e3ee66a304016d2f2cc",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "7582d15d08cbb78046163d52dc044b50150ac977",
+      "tagObject": "a13d784184eb23f3751c29b6df2049ec5e00b384",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-deepseek",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-baseten",
+      "version": "1.0.0",
+      "exportSHA256": "b82d66ba6aa3cd8e865911f7fb0f963b4154e2afad614ddfee359dd0b2280e0a",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "54bf1eeeab9e43d4a60e8715a2013ba6d78729ba",
+      "tagObject": "5fabbd08f24da616d9980d653b3bb5a852b64de0",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-black-forest-labs",
+      "version": "1.0.0",
+      "exportSHA256": "aa77494c54e6d270fd7df474aac594805648f1541869a40a8d3aad6342e75891",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "59455f35a1e8e9a9494db246e21a1f2db45b8074",
+      "tagObject": "6e6ed9cce0ad4291e0628698ac043c4ece63afb7",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-bytedance",
+      "version": "1.0.0",
+      "exportSHA256": "001b6bbffd5c7fbc963e44f4b142f9908b81c1d2d03d61009e89fd635b317fa5",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "873fc0663154897c2e384370f3bee91f2a8a5f5b",
+      "tagObject": "46f1aed6b643b56613cb64adb2b2de6183c62a8d",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-cartesia",
+      "version": "1.0.0",
+      "exportSHA256": "15fa106ee072270c6696eb0f778207a833b83dedbbd5a6f58d85323eb570d2df",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "91c6df744fa8aed1dd8bdc3ff1670f26d4294999",
+      "tagObject": "13e51dc66fe901915bb84e2c14a2c3dadfb4d2ba",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-cerebras",
+      "version": "1.0.0",
+      "exportSHA256": "f069ab310a53e897d25a9df29a9b4acbeb82a526796018fea32b2b9087068cea",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "bb062e78c25cfd15741afcacbf0fd82b8c94051b",
+      "tagObject": "cf4624ab1bd1c0299cee93d5a4cfd2aeebdd616f",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-cohere",
+      "version": "1.0.0",
+      "exportSHA256": "1ea17887022ddc16f1dd92deb384828d2d608adb337e87f5966736e1ddc5e6db",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "19c2ab0874f7946a542404828cb20d2ea69455ec",
+      "tagObject": "bcb901d6d41e25baadbc2a4121804ab3835b8f6c",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-core",
+      "version": "1.1.0",
+      "exportSHA256": "3b90d9d6957b83310a61c396b6f3d62cbd1ed0fe1b93cee5796c8158a8d1b867",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "7092fc4779a118e9037bf3c06fdf810d1f7f9ee3",
+      "tagObject": "5098f24e276c594dd303ea69ca9836184e1e1043",
+      "dependencies": []
+    },
+    {
+      "package": "swift-ai-deepgram",
+      "version": "1.0.0",
+      "exportSHA256": "d83b4d801b031c38083db3b5a2e5a30ef8b968b07afa67c6d774d514788d6a4b",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "41284a8cd56415b9ec6a52391520772e56c50de4",
+      "tagObject": "964c3a576848009991a8c675f377d1b9a52e28a9",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-deepinfra",
+      "version": "1.0.0",
+      "exportSHA256": "11e1b3daafa0273a83a1e94ab18365ce8b25c3bbb3f81271710e12aa10397e2a",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "a167ab0c8a6940c7074c9665126ba9066c863400",
+      "tagObject": "772cb5812ed6fcf865afd1a81199358fdb932b3c",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-deepseek",
+      "version": "1.0.0",
+      "exportSHA256": "6f5576d5f19a5b6e3b1c8c64c659b4b13e5d5941be1bc28fb73a7d8f458c98ab",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "4f8c74c99fa461cce612599a147b27d4521390a1",
+      "tagObject": "3c01e056d048b86194ed0f70761fe72967826eed",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-elevenlabs",
+      "version": "1.0.0",
+      "exportSHA256": "55cd0aff52e2b6503b8e782f715d405a960a7483d314e8a67c3e416818138743",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "b4ae62bb24b2ce4a57da3aace6261029ac459478",
+      "tagObject": "78546f72a9e9daeb1e594dc1bdc819a0dd39dca1",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-fal",
+      "version": "1.0.0",
+      "exportSHA256": "3179867848e8691b29cd43eca53ebf1e08ff72c550c7fea18af6ce5fc075829e",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "07b6aed3500a63c6d62ccb21e68045627b61669a",
+      "tagObject": "a66dd5985d5fd5ec8ddfb051847dab99ce2d5a0e",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-fireworks",
+      "version": "1.0.0",
+      "exportSHA256": "8e4ef7e4fc3ec84adc49c02a1d82017b20615cd938e082d61e5cccbae4703faf",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "63c52c71186eb3ecd3cf9702b5475a04a8195d98",
+      "tagObject": "8c31d1a0879af71c7ac8b2a746a47716c408261a",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-fish-audio",
+      "version": "1.0.0",
+      "exportSHA256": "5fdba853c79bc8c53113e2d4403374674a469fa994f2dc59817a70e164de7c64",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "83b390e0b09568fd1a2d69e5c8a4cffa9ead4bd7",
+      "tagObject": "5558eafe5472a6cd8c23881442742f84c9fc6337",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-gateway",
+      "version": "1.0.0",
+      "exportSHA256": "ba02c9fa882244e2f5dd5972caad2883f518e498ee3c4729fec23d46008356fa",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "87a911283e233d046284f21c898438aaab70ae80",
+      "tagObject": "ba426f097af1ab710ab82c2589728eb042f7dd61",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-gladia",
+      "version": "1.0.0",
+      "exportSHA256": "5b1c6f974efb757fa56072de2e6c0f1043eb884fd3c5b1b949784ae1ba7dc866",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "348075408172e51706fc8e387952b5ad25b31847",
+      "tagObject": "ba273270e68345719780c9417634ddccce82cc41",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-gmicloud",
+      "version": "1.0.0",
+      "exportSHA256": "c30658865d31334ac4dd1947a3429b4b2a63756083b0699c5864102d7dd8b122",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "92970737419fb03e4302b0c2c41024d30600c4dd",
+      "tagObject": "8e42f7794c2ae88355e73196d91b1455d828072a",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-google",
+      "version": "1.0.0",
+      "exportSHA256": "37229ade5beac92b0c055b04fad83129d49988093f4c424204937e828eb5c7cd",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "5e7ff2f2c00ea3afde5c20466eb0d699baada7b1",
+      "tagObject": "954c124d70b951d64804308059fb02c8ee08bd3f",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-google-vertex",
+      "version": "1.0.0",
+      "exportSHA256": "0cee29a3c63ecb95ed867ce59e90fd43ebc23a78f9a1eff96c7ec9064bc5e31e",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "3596f1fd34fd4aa8f3117c7fe065144a4ee7ba45",
+      "tagObject": "a23ac5d392aa86cda8596adf1960c0e83aacb1b4",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-google",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-anthropic",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-groq",
+      "version": "1.0.0",
+      "exportSHA256": "9ad4b8032ffcea6c1dea75429ea663f710936381d38ae21a6606c1e2576b7613",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "871740a4d7e32aa164513f08ccb1083a349d83c5",
+      "tagObject": "b6efd977608b9d0a65ec352b061db1315ce7b65e",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-heygen",
+      "version": "1.0.0",
+      "exportSHA256": "db8b55d0c1592e069c7665ed69e45027859f253583aca48bdb0ded36819dd6b4",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "465f843297ed753e4658bf6bc76f5f80262e99d2",
+      "tagObject": "0c7c7e737b417adf8d2563813b6e040afbd6b74a",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-huggingface",
+      "version": "1.0.0",
+      "exportSHA256": "1fbca70e3d73a725c0511fd98e0e864f11af69997f39f3f1d5d3ea7cf1ef8cb5",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "fcea55e50d421add6cd497cec9c3790fe3013205",
+      "tagObject": "71d8c0751439ecc75f860defcef02cac9d303f38",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-hume",
+      "version": "1.0.0",
+      "exportSHA256": "195006a30fa58ca57da9d4f7d11517f6c768f39c6853432a3b4f5d975f58ee5f",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "f7527e28b2b96e1b5ff478da06ee2471db312311",
+      "tagObject": "e20dd4445837dbe613199132521441581a136a06",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-klingai",
+      "version": "1.0.0",
+      "exportSHA256": "d2dd1d82410004a1fc82188933185f250bdd0dbbec1f06dc22f84f41ea681300",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "c2b42310b3d2cc43c25d1cad6daf970109ec5f70",
+      "tagObject": "46d71721a56eb61c4012fd01469aa157dfaa888e",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-lmnt",
+      "version": "1.0.0",
+      "exportSHA256": "ed32c57d05bdd9268ac994f601bc9e8291d712d785d32bee7f8dac4916d8a9ef",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "41f346d0a3085662d592090c535959d1c36d578d",
+      "tagObject": "32abc41bf059b59043d0dd6a193735505c0f76f7",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-luma",
+      "version": "1.0.0",
+      "exportSHA256": "b837e58cd08a30bd294eb7e53ba1048a3502241eae4ef39a179a980e54797021",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "8b5109f3d402096c98be147747b05a87aa8c8dc6",
+      "tagObject": "e3a2d1ca594c7fe0999ff2ce9462b4a7337dda1d",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-mcp",
+      "version": "1.0.0",
+      "exportSHA256": "a4c30b44330dd3d1ea4e2e2b65941b856e9594d4c09589d829dd52a57cf75ffd",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "26a5f83bfd802cb6294d89a1a77c8f28262d452d",
+      "tagObject": "4e70b481d399319b3a2fb49fa205957a927b0e80",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-minimax",
+      "version": "1.0.0",
+      "exportSHA256": "2747fd22d88b373d78b16b625ad052fa1b86d6f506a176287324d356d02e402e",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "379481c5534b5f889e1cc05584f4bb4d11ad4fdf",
+      "tagObject": "41eb46c70b16a4037748ed33b852d701eca456d3",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-anthropic",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-mistral",
+      "version": "1.0.0",
+      "exportSHA256": "227769cfbb01f596f1041d708fc6ae73749bf3110cb35854447fce5f6d6635aa",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "c9f42cfd5315184c0ab33efbfe43032e24f135ae",
+      "tagObject": "2230fcbe51d831d1208bad38ad60255b9f20243b",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-moonshotai",
+      "version": "1.0.0",
+      "exportSHA256": "6f8997cc2d93083da09297fa05a4e3417b2e7e4d22aaa06db05fd015443819a5",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "23f23d8ec7f60faecd4b9e1bbd3f83cdaa9ce1cc",
+      "tagObject": "08e48e50b4a69557f118c94b010424060f6c4aa6",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-open-responses",
+      "version": "1.0.0",
+      "exportSHA256": "42540c420c6a9ad4cc9dcbb86c48dc8a1454c4ed193331fd5e8d6290dbd2edb3",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "4c89cc816d0bf68b8ba57e2b74672deb0030d3ce",
+      "tagObject": "795100a04a11a76061157e4978304995fc8c9817",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-openai",
+      "version": "1.0.0",
+      "exportSHA256": "6b49ca306e429c8c4483ec561ec092a3341f7c125c5eddf010a0337b484ccc17",
+      "sourceCommit": "f91f47882ebaba0d602474fdd5ddc9f249eecce2",
+      "exportCommit": "7bb202cb77dd023b0aad3ef0d46cd15ea07754de",
+      "tagObject": "482221270891b47af40a3eb7941837709dad3ff0",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-openai-compatible",
+      "version": "1.0.0",
+      "exportSHA256": "1dd6271b9ed77fbe9654a153cb9fd39d9285eb90ab278cf981d2bf5bdb7a2198",
+      "sourceCommit": "f91f47882ebaba0d602474fdd5ddc9f249eecce2",
+      "exportCommit": "7c6d26317ac8985b6e805a8a636a87fbb6a187e4",
+      "tagObject": "0d663d37cacd932df21127eda89d74bf77782239",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-perplexity",
+      "version": "1.0.0",
+      "exportSHA256": "b57fac3b52e96bb79bcd7fcfe43860e425285975cd14457c6022050fe49f7b19",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "4efc553ffd65e7f731ef6dae2ec81d74014e9479",
+      "tagObject": "8de83bee760015551198c1e487e017133065450d",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-prodia",
+      "version": "1.0.0",
+      "exportSHA256": "17bd2ebc59d1cde56b96c7324447d4976391df737b8fb3409fb75d4debf01cf4",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "e66f065f00dbb20a6372588e15189287926d6a92",
+      "tagObject": "54accb163333a27ea82f76778fe787f4e3f92354",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-quiverai",
+      "version": "1.0.0",
+      "exportSHA256": "7c55dbf1af1f8f0db37c2af08843357c64e00b5da19461ae80752075129aeb58",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "cf2495e11338fbdf23cc3963f49824047d4da33a",
+      "tagObject": "80968551855bf5cae92a3fb5a8c3d9c7d69f3a91",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-open-responses",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-replicate",
+      "version": "1.0.0",
+      "exportSHA256": "f95607c5dd6d18ef0ce1e22dbd4e84c183e409c68ae39404a5634bf9c3817188",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "11d673294ca7725a8c226c054169c9d97e7ef7b8",
+      "tagObject": "cdd18303ae2e461d9a5e8c7a7f50405389b2106c",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-revai",
+      "version": "1.0.0",
+      "exportSHA256": "d3a3c1a4e81234e76caabfadacb8d83550e9a78bb2d74aeb2891d41212c8be62",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "a32cdc3fd988fb6ffbe6254167db5ea9a038687a",
+      "tagObject": "551fcf3114239521b20cef3c516fae9759343a79",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-togetherai",
+      "version": "1.0.0",
+      "exportSHA256": "572f23abda2b566b66ec3ef53d1c15356e6c6fa23e0510d45759d6500b10fc11",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "2ec1c301f0e2517601f6bb2e9167d36ae3c4bcc0",
+      "tagObject": "838235b1432684a4c11194962a257f6f6bafc999",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-topaz",
+      "version": "1.0.0",
+      "exportSHA256": "5979746d0384ba67c56518366c32d452ecd0668be86e95d768bc1fdf814e2131",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "95b9c2ce09b6b162580e8c57479059d1bc4d0196",
+      "tagObject": "69869d8c58a82e44586bdcec04c46c786a040a91",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-typesafe-ai",
+      "version": "1.0.0",
+      "exportSHA256": "c4fc123319b7e5b7ea97b46e7b4ecd1d03071e5084fd9b722d0b8677e2ae4527",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "9960d272edd8a1f2488c58b8192e3fa3dc2d9dd5",
+      "tagObject": "2955229bdf8f9aa5390e64f188bee18d9c72b9a2",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-ui",
+      "version": "1.0.0",
+      "exportSHA256": "eb8a140082ca41f9d52c84ecc76d1de82e51a6687647f15bee8783d8824435b6",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "00ab4f50c024ef2290b9f409a98087c135a4424b",
+      "tagObject": "532042181869580f6516f462ed93689cee8c47fe",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-vercel",
+      "version": "1.0.0",
+      "exportSHA256": "f734791603a50cf1416759119530f411219d90466abf8de77d4bcd2741e56571",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "01cb843a414be82c1f1dc35108ac3bc461969c8c",
+      "tagObject": "dd4146db82ee1f5007b3703b741ef3bf13d90049",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-voyage",
+      "version": "1.0.0",
+      "exportSHA256": "87ef9964d31b0fa22ccc9ff41244aa53aed7555e37dbbd47849d45aea8c290cd",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "6ec8b8fd118e95f5b6a930b99608d30e281a0cce",
+      "tagObject": "c970a00337263c28ec3645017074f72750cd568b",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-xai",
+      "version": "1.0.0",
+      "exportSHA256": "0957c8fa4eceb599c85a368928db9bfb19a28f217655d5014c07cfc84ddf7518",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "ec3abd933c81a8bfe4297760c51e9495695af08f",
+      "tagObject": "e7d8b028b63fa162543a73547307b20164c015b7",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-zai",
+      "version": "1.0.0",
+      "exportSHA256": "fa24c9ad41cebd41b1001239c22bdd1a9b18bba9d60cd8716efbf90136b8e54a",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportCommit": "f2f928613100b10bb33244b18b6d621aa51add62",
+      "tagObject": "e33556551ac5c96573ff9ee248c23283dc0186a2",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    }
+  ]
+}

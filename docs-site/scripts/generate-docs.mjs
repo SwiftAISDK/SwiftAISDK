@@ -41,7 +41,7 @@ function publicDocsUrl(slug) {
 }
 
 function referenceVersionNotice() {
-  return `:::note[Development API reference]\nThese declarations follow the canonical repository's main branch, including modular APIs awaiting release. See [Install](${publicDocsUrl('/getting-started/install/')}) for published packages and version-compatible examples.\n:::\n\n`;
+  return `:::note[Development API reference]\nThese declarations follow the canonical repository's main branch. Match your installed versions to the published release documentation. See [Install](${publicDocsUrl('/getting-started/install/')}) for published packages and version-compatible examples.\n:::\n\n`;
 }
 
 function readProviderRows() {

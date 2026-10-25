@@ -1,0 +1,1154 @@
+[
+  {
+    "repository": "SwiftAISDK/swift-ai-alibaba",
+    "id": 25837314,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-amazon-bedrock",
+    "id": 25837316,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-anthropic-aws",
+    "id": 25837317,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-assemblyai",
+    "id": 25837318,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-deepseek",
+    "id": 25837320,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-azure",
+    "id": 25837322,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-baseten",
+    "id": 25837323,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-black-forest-labs",
+    "id": 25837324,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-bytedance",
+    "id": 25837326,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-cartesia",
+    "id": 25837327,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-cerebras",
+    "id": 25837328,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-cohere",
+    "id": 25837329,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-deepgram",
+    "id": 25837330,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-deepinfra",
+    "id": 25837332,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-elevenlabs",
+    "id": 25837334,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-fal",
+    "id": 25837335,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-fireworks",
+    "id": 25837336,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-fish-audio",
+    "id": 25837339,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-gateway",
+    "id": 25837341,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-gladia",
+    "id": 25837343,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-gmicloud",
+    "id": 25837344,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-google",
+    "id": 25837345,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-google-vertex",
+    "id": 25837348,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-groq",
+    "id": 25837349,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-heygen",
+    "id": 25837350,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-huggingface",
+    "id": 25837352,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-hume",
+    "id": 25837353,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-klingai",
+    "id": 25837354,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-lmnt",
+    "id": 25837356,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-luma",
+    "id": 25837357,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-mcp",
+    "id": 25837359,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-minimax",
+    "id": 25837360,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-mistral",
+    "id": 25837361,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-moonshotai",
+    "id": 25837362,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-open-responses",
+    "id": 25837363,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-perplexity",
+    "id": 25837367,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-prodia",
+    "id": 25837371,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-quiverai",
+    "id": 25837373,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-replicate",
+    "id": 25837375,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-revai",
+    "id": 25837376,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-togetherai",
+    "id": 25837378,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-topaz",
+    "id": 25837379,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-typesafe-ai",
+    "id": 25837380,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-ui",
+    "id": 25837383,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-vercel",
+    "id": 25837384,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-voyage",
+    "id": 25837385,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-xai",
+    "id": 25837386,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftAISDK/swift-ai-zai",
+    "id": 25837387,
+    "name": "Immutable release tags",
+    "target": "tag",
+    "enforcement": "active",
+    "bypass_actors": [],
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/tags/*"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "update"
+      },
+      {
+        "type": "deletion"
+      }
+    ]
+  }
+]

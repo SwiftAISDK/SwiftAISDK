@@ -32,9 +32,8 @@ support. Existing npm versions and capability rows are preserved.
 [M2 core extraction](Migration/M2/README.md) is complete; four core modules and
 the generated legacy facade preserve explicit and default provider resolution.
 [M3 provider extraction](Migration/M3/README.md) adds independently buildable
-Anthropic, generic OpenAI-compatible and OpenAI packages. The aggregate now uses
-these local packages. M6 completes extraction of the remaining providers, MCP
-and UI into their own verified packages.
+Anthropic, generic OpenAI-compatible and OpenAI packages. The 3.0 aggregate uses the independently published packages. M6 completed
+extraction of the remaining providers, MCP and UI into their own verified packages.
 
 The M3/M5 full suite retained 3545 tests: 3007 aggregate, 126 core, 135 Anthropic,
 7 compatible and 270 OpenAI, including 33 explicit live skips. Four external
@@ -64,11 +63,17 @@ passed; remaining checks completed locally after the user suspended intermediate
 CI to conserve the Actions budget. Full hosted verification and documentation
 deployment move to the end of the overall migration. The receipt retains observed
 local failures of a pre-existing 1 ms timeout test, reproduced on unchanged M5.
-[M7](Migration/M7/README.md) is in progress: remote-only umbrella generation,
-a local development workspace, release-matched upstream preparation and the
-maintenance rehearsal are implemented. Publication and final hosted handoff remain pending. M3/M4 tags
-remain explicitly disposable fixture data; no additional package is published by
-the extraction itself.
+[M7](Migration/M7/README.md) publishes the remaining 48 distributions at `1.0.0`,
+core and Anthropic at `1.1.0`, and the remote-only 3.0 compatibility umbrella.
+OpenAI and compatible remain at `1.0.0`. All 59 clean modular consumers pass
+against actual public Git tags, including an independent Anthropic update with
+the other three dependency pins unchanged. A separate generated development
+workspace tests current local sources. The real-upstream maintenance rehearsal
+and one-command provider registration pass without adding hard-coded package
+lists. Final CI restoration and hosted deployment are recorded in the M7 receipt.
+M3/M4 synthetic tags remain disposable fixture evidence; production npm baselines
+and all previous behavior/gaps are preserved.
+
 
 [M4 release rehearsal](Migration/M4/README.md) adds reviewed Swift change records,
 SemVer planning, deterministic allowlisted exports, standalone provenance and CI,

@@ -1,8 +1,11 @@
 # Swift package release records
 
 Release records describe Swift versions. npm baselines remain independent in
-`Porting/upstream-lock.json`. The initial modular pilot is published;
-`sets/modular-pilot.json` records its four independent 1.0.0 releases.
+`Porting/upstream-lock.json`. All 52 packages are published.
+`sets/modular-pilot.json` preserves the four initial releases;
+`sets/modular-3.json` records 48 initial packages plus core/Anthropic 1.1.0.
+`umbrella/3.0.0.json` records the complete tested selection without imposing an
+exact dependency graph on every consumer.
 
 ## Reviewed changes
 
@@ -81,12 +84,12 @@ retained beside the report. The temporary repositories are deleted afterward.
 
 The snapshot commit and local tag versions are rehearsal evidence, not canonical
 commits or public releases. Consumer lockfiles contain local mirror locations and
-fixture revisions; do not copy them into applications. The M5 real-consumer check
-produces [published installation and lockfile evidence](../Docs/Migration/M5/public-consumers.json).
+fixture revisions; do not copy them into applications. The public-consumer check
+produces [published installation and lockfile evidence](../Docs/Migration/M7/public-consumers.json).
 
 ## Immutable released sets
 
-After real publication and consumer verification, M5 records
+After real publication and consumer verification, record
 `sets/<release-id>.json` with `status: published`, one canonical source commit,
 consumed change IDs, package versions, dependency requirements, export hashes,
 export commits, annotated tag objects and the consumer-verification digest.

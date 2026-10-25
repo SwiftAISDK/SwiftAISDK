@@ -1,0 +1,1311 @@
+{
+  "schemaVersion": 1,
+  "kind": "github-publication",
+  "status": "tags-and-releases-ready",
+  "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+  "bundleSHA256": "92054f26050ab8c2d5af70fad2ea2e54983be0f6093ad4e5757ba02ca33a370f",
+  "ci": {
+    "kind": "local-migration-verification",
+    "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+    "receiptSHA256": "924f8b0e8fd8fca4d8fbe3f0e98b48221efb12a944d7d66d54aa776715bdce4d",
+    "policy": "Docs/Migration/M6/ci-budget-policy.json",
+    "hostedVerification": "Deferred until the final migration handoff by user instruction"
+  },
+  "packages": [
+    {
+      "package": "swift-ai-core",
+      "version": "1.1.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "3b90d9d6957b83310a61c396b6f3d62cbd1ed0fe1b93cee5796c8158a8d1b867",
+      "exportCommit": "7092fc4779a118e9037bf3c06fdf810d1f7f9ee3",
+      "tagObject": "5098f24e276c594dd303ea69ca9836184e1e1043",
+      "dependencies": [],
+      "githubRelease": {
+        "id": 423678615,
+        "url": "https://github.com/SwiftAISDK/swift-ai-core/releases/tag/1.1.0",
+        "target": "7092fc4779a118e9037bf3c06fdf810d1f7f9ee3"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-core.git",
+        "name": "SwiftAISDK/swift-ai-core",
+        "id": 1433311368
+      }
+    },
+    {
+      "package": "swift-ai-alibaba",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "c805e968ce5a06f9e86137ad444690b335944aac4f523f5276def753c633a0c0",
+      "exportCommit": "57bc1561e898e56b88b9efd8e801b3385835cf61",
+      "tagObject": "93ce8cf32f4709818021e142795ca3431c92937d",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423678749,
+        "url": "https://github.com/SwiftAISDK/swift-ai-alibaba/releases/tag/1.0.0",
+        "target": "57bc1561e898e56b88b9efd8e801b3385835cf61"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-alibaba.git",
+        "name": "SwiftAISDK/swift-ai-alibaba",
+        "id": 1433623260
+      }
+    },
+    {
+      "package": "swift-ai-anthropic",
+      "version": "1.1.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "611d4996eab214ee5b100fab579df7b6eafc626ff7696215d647edb0128df777",
+      "exportCommit": "34b0bd78996e0b8e23e98990ea0e7dc512f9a750",
+      "tagObject": "3a5c12203c6ef7e0753983ce0d18710a9a4e3e24",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423678891,
+        "url": "https://github.com/SwiftAISDK/swift-ai-anthropic/releases/tag/1.1.0",
+        "target": "34b0bd78996e0b8e23e98990ea0e7dc512f9a750"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-anthropic.git",
+        "name": "SwiftAISDK/swift-ai-anthropic",
+        "id": 1433311287
+      }
+    },
+    {
+      "package": "swift-ai-amazon-bedrock",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "77e4bf2aaea380a1d5b8d78a808ef8783348fb33a6dc23ac55c6c5b0fae4ed0f",
+      "exportCommit": "d09ded81b08cff1a21d063a33433fc3918b5f3f3",
+      "tagObject": "7f55041eda531aaba7d33e1c8fe40af28ee2dcb7",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-anthropic",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423679086,
+        "url": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock/releases/tag/1.0.0",
+        "target": "d09ded81b08cff1a21d063a33433fc3918b5f3f3"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-amazon-bedrock.git",
+        "name": "SwiftAISDK/swift-ai-amazon-bedrock",
+        "id": 1433623330
+      }
+    },
+    {
+      "package": "swift-ai-anthropic-aws",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "2146c9bdb8111e7762fbe03c41a5dc1b0de553cbe458172e7fbe11af4664ffb3",
+      "exportCommit": "494417cafe291fa248c73bfe012c600028c1a7e1",
+      "tagObject": "d637297c6d7ad0b64f6857cab7f8efda3b3bae5d",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-anthropic",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423679203,
+        "url": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws/releases/tag/1.0.0",
+        "target": "494417cafe291fa248c73bfe012c600028c1a7e1"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-anthropic-aws.git",
+        "name": "SwiftAISDK/swift-ai-anthropic-aws",
+        "id": 1433623382
+      }
+    },
+    {
+      "package": "swift-ai-assemblyai",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "90697ae176576fe735d994ebed517cf2d1dc1e218f2640517e728ec4de7407e6",
+      "exportCommit": "ad3a74993e184ee3faba12b7ec1e34a7f03f9a9b",
+      "tagObject": "2432faf3afff718354c8fb24cd751841d24731a7",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423679327,
+        "url": "https://github.com/SwiftAISDK/swift-ai-assemblyai/releases/tag/1.0.0",
+        "target": "ad3a74993e184ee3faba12b7ec1e34a7f03f9a9b"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-assemblyai.git",
+        "name": "SwiftAISDK/swift-ai-assemblyai",
+        "id": 1433623445
+      }
+    },
+    {
+      "package": "swift-ai-deepseek",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "6f5576d5f19a5b6e3b1c8c64c659b4b13e5d5941be1bc28fb73a7d8f458c98ab",
+      "exportCommit": "4f8c74c99fa461cce612599a147b27d4521390a1",
+      "tagObject": "3c01e056d048b86194ed0f70761fe72967826eed",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423679464,
+        "url": "https://github.com/SwiftAISDK/swift-ai-deepseek/releases/tag/1.0.0",
+        "target": "4f8c74c99fa461cce612599a147b27d4521390a1"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-deepseek.git",
+        "name": "SwiftAISDK/swift-ai-deepseek",
+        "id": 1433623492
+      }
+    },
+    {
+      "package": "swift-ai-azure",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "aa3f6d1396d1f4d8708464c52a705102cbf41511aa5b4e3ee66a304016d2f2cc",
+      "exportCommit": "7582d15d08cbb78046163d52dc044b50150ac977",
+      "tagObject": "a13d784184eb23f3751c29b6df2049ec5e00b384",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-deepseek",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423679623,
+        "url": "https://github.com/SwiftAISDK/swift-ai-azure/releases/tag/1.0.0",
+        "target": "7582d15d08cbb78046163d52dc044b50150ac977"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-azure.git",
+        "name": "SwiftAISDK/swift-ai-azure",
+        "id": 1433623560
+      }
+    },
+    {
+      "package": "swift-ai-baseten",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "b82d66ba6aa3cd8e865911f7fb0f963b4154e2afad614ddfee359dd0b2280e0a",
+      "exportCommit": "54bf1eeeab9e43d4a60e8715a2013ba6d78729ba",
+      "tagObject": "5fabbd08f24da616d9980d653b3bb5a852b64de0",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423679744,
+        "url": "https://github.com/SwiftAISDK/swift-ai-baseten/releases/tag/1.0.0",
+        "target": "54bf1eeeab9e43d4a60e8715a2013ba6d78729ba"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-baseten.git",
+        "name": "SwiftAISDK/swift-ai-baseten",
+        "id": 1433623607
+      }
+    },
+    {
+      "package": "swift-ai-black-forest-labs",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "aa77494c54e6d270fd7df474aac594805648f1541869a40a8d3aad6342e75891",
+      "exportCommit": "59455f35a1e8e9a9494db246e21a1f2db45b8074",
+      "tagObject": "6e6ed9cce0ad4291e0628698ac043c4ece63afb7",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423679879,
+        "url": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs/releases/tag/1.0.0",
+        "target": "59455f35a1e8e9a9494db246e21a1f2db45b8074"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-black-forest-labs.git",
+        "name": "SwiftAISDK/swift-ai-black-forest-labs",
+        "id": 1433623656
+      }
+    },
+    {
+      "package": "swift-ai-bytedance",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "001b6bbffd5c7fbc963e44f4b142f9908b81c1d2d03d61009e89fd635b317fa5",
+      "exportCommit": "873fc0663154897c2e384370f3bee91f2a8a5f5b",
+      "tagObject": "46f1aed6b643b56613cb64adb2b2de6183c62a8d",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423679994,
+        "url": "https://github.com/SwiftAISDK/swift-ai-bytedance/releases/tag/1.0.0",
+        "target": "873fc0663154897c2e384370f3bee91f2a8a5f5b"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-bytedance.git",
+        "name": "SwiftAISDK/swift-ai-bytedance",
+        "id": 1433623711
+      }
+    },
+    {
+      "package": "swift-ai-cartesia",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "15fa106ee072270c6696eb0f778207a833b83dedbbd5a6f58d85323eb570d2df",
+      "exportCommit": "91c6df744fa8aed1dd8bdc3ff1670f26d4294999",
+      "tagObject": "13e51dc66fe901915bb84e2c14a2c3dadfb4d2ba",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423680122,
+        "url": "https://github.com/SwiftAISDK/swift-ai-cartesia/releases/tag/1.0.0",
+        "target": "91c6df744fa8aed1dd8bdc3ff1670f26d4294999"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-cartesia.git",
+        "name": "SwiftAISDK/swift-ai-cartesia",
+        "id": 1433623771
+      }
+    },
+    {
+      "package": "swift-ai-cerebras",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "f069ab310a53e897d25a9df29a9b4acbeb82a526796018fea32b2b9087068cea",
+      "exportCommit": "bb062e78c25cfd15741afcacbf0fd82b8c94051b",
+      "tagObject": "cf4624ab1bd1c0299cee93d5a4cfd2aeebdd616f",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423680280,
+        "url": "https://github.com/SwiftAISDK/swift-ai-cerebras/releases/tag/1.0.0",
+        "target": "bb062e78c25cfd15741afcacbf0fd82b8c94051b"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-cerebras.git",
+        "name": "SwiftAISDK/swift-ai-cerebras",
+        "id": 1433623838
+      }
+    },
+    {
+      "package": "swift-ai-cohere",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "1ea17887022ddc16f1dd92deb384828d2d608adb337e87f5966736e1ddc5e6db",
+      "exportCommit": "19c2ab0874f7946a542404828cb20d2ea69455ec",
+      "tagObject": "bcb901d6d41e25baadbc2a4121804ab3835b8f6c",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423680399,
+        "url": "https://github.com/SwiftAISDK/swift-ai-cohere/releases/tag/1.0.0",
+        "target": "19c2ab0874f7946a542404828cb20d2ea69455ec"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-cohere.git",
+        "name": "SwiftAISDK/swift-ai-cohere",
+        "id": 1433623903
+      }
+    },
+    {
+      "package": "swift-ai-deepgram",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "d83b4d801b031c38083db3b5a2e5a30ef8b968b07afa67c6d774d514788d6a4b",
+      "exportCommit": "41284a8cd56415b9ec6a52391520772e56c50de4",
+      "tagObject": "964c3a576848009991a8c675f377d1b9a52e28a9",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423680536,
+        "url": "https://github.com/SwiftAISDK/swift-ai-deepgram/releases/tag/1.0.0",
+        "target": "41284a8cd56415b9ec6a52391520772e56c50de4"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-deepgram.git",
+        "name": "SwiftAISDK/swift-ai-deepgram",
+        "id": 1433623953
+      }
+    },
+    {
+      "package": "swift-ai-deepinfra",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "11e1b3daafa0273a83a1e94ab18365ce8b25c3bbb3f81271710e12aa10397e2a",
+      "exportCommit": "a167ab0c8a6940c7074c9665126ba9066c863400",
+      "tagObject": "772cb5812ed6fcf865afd1a81199358fdb932b3c",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423680665,
+        "url": "https://github.com/SwiftAISDK/swift-ai-deepinfra/releases/tag/1.0.0",
+        "target": "a167ab0c8a6940c7074c9665126ba9066c863400"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-deepinfra.git",
+        "name": "SwiftAISDK/swift-ai-deepinfra",
+        "id": 1433624021
+      }
+    },
+    {
+      "package": "swift-ai-elevenlabs",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "55cd0aff52e2b6503b8e782f715d405a960a7483d314e8a67c3e416818138743",
+      "exportCommit": "b4ae62bb24b2ce4a57da3aace6261029ac459478",
+      "tagObject": "78546f72a9e9daeb1e594dc1bdc819a0dd39dca1",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423680782,
+        "url": "https://github.com/SwiftAISDK/swift-ai-elevenlabs/releases/tag/1.0.0",
+        "target": "b4ae62bb24b2ce4a57da3aace6261029ac459478"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-elevenlabs.git",
+        "name": "SwiftAISDK/swift-ai-elevenlabs",
+        "id": 1433624064
+      }
+    },
+    {
+      "package": "swift-ai-fal",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "3179867848e8691b29cd43eca53ebf1e08ff72c550c7fea18af6ce5fc075829e",
+      "exportCommit": "07b6aed3500a63c6d62ccb21e68045627b61669a",
+      "tagObject": "a66dd5985d5fd5ec8ddfb051847dab99ce2d5a0e",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423680890,
+        "url": "https://github.com/SwiftAISDK/swift-ai-fal/releases/tag/1.0.0",
+        "target": "07b6aed3500a63c6d62ccb21e68045627b61669a"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-fal.git",
+        "name": "SwiftAISDK/swift-ai-fal",
+        "id": 1433624127
+      }
+    },
+    {
+      "package": "swift-ai-fireworks",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "8e4ef7e4fc3ec84adc49c02a1d82017b20615cd938e082d61e5cccbae4703faf",
+      "exportCommit": "63c52c71186eb3ecd3cf9702b5475a04a8195d98",
+      "tagObject": "8c31d1a0879af71c7ac8b2a746a47716c408261a",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423681015,
+        "url": "https://github.com/SwiftAISDK/swift-ai-fireworks/releases/tag/1.0.0",
+        "target": "63c52c71186eb3ecd3cf9702b5475a04a8195d98"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-fireworks.git",
+        "name": "SwiftAISDK/swift-ai-fireworks",
+        "id": 1433624198
+      }
+    },
+    {
+      "package": "swift-ai-fish-audio",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "5fdba853c79bc8c53113e2d4403374674a469fa994f2dc59817a70e164de7c64",
+      "exportCommit": "83b390e0b09568fd1a2d69e5c8a4cffa9ead4bd7",
+      "tagObject": "5558eafe5472a6cd8c23881442742f84c9fc6337",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423681123,
+        "url": "https://github.com/SwiftAISDK/swift-ai-fish-audio/releases/tag/1.0.0",
+        "target": "83b390e0b09568fd1a2d69e5c8a4cffa9ead4bd7"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-fish-audio.git",
+        "name": "SwiftAISDK/swift-ai-fish-audio",
+        "id": 1433624276
+      }
+    },
+    {
+      "package": "swift-ai-gateway",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "ba02c9fa882244e2f5dd5972caad2883f518e498ee3c4729fec23d46008356fa",
+      "exportCommit": "87a911283e233d046284f21c898438aaab70ae80",
+      "tagObject": "ba426f097af1ab710ab82c2589728eb042f7dd61",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423681246,
+        "url": "https://github.com/SwiftAISDK/swift-ai-gateway/releases/tag/1.0.0",
+        "target": "87a911283e233d046284f21c898438aaab70ae80"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-gateway.git",
+        "name": "SwiftAISDK/swift-ai-gateway",
+        "id": 1433624347
+      }
+    },
+    {
+      "package": "swift-ai-gladia",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "5b1c6f974efb757fa56072de2e6c0f1043eb884fd3c5b1b949784ae1ba7dc866",
+      "exportCommit": "348075408172e51706fc8e387952b5ad25b31847",
+      "tagObject": "ba273270e68345719780c9417634ddccce82cc41",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423681363,
+        "url": "https://github.com/SwiftAISDK/swift-ai-gladia/releases/tag/1.0.0",
+        "target": "348075408172e51706fc8e387952b5ad25b31847"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-gladia.git",
+        "name": "SwiftAISDK/swift-ai-gladia",
+        "id": 1433624401
+      }
+    },
+    {
+      "package": "swift-ai-gmicloud",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "c30658865d31334ac4dd1947a3429b4b2a63756083b0699c5864102d7dd8b122",
+      "exportCommit": "92970737419fb03e4302b0c2c41024d30600c4dd",
+      "tagObject": "8e42f7794c2ae88355e73196d91b1455d828072a",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423681497,
+        "url": "https://github.com/SwiftAISDK/swift-ai-gmicloud/releases/tag/1.0.0",
+        "target": "92970737419fb03e4302b0c2c41024d30600c4dd"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-gmicloud.git",
+        "name": "SwiftAISDK/swift-ai-gmicloud",
+        "id": 1433624459
+      }
+    },
+    {
+      "package": "swift-ai-google",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "37229ade5beac92b0c055b04fad83129d49988093f4c424204937e828eb5c7cd",
+      "exportCommit": "5e7ff2f2c00ea3afde5c20466eb0d699baada7b1",
+      "tagObject": "954c124d70b951d64804308059fb02c8ee08bd3f",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423681628,
+        "url": "https://github.com/SwiftAISDK/swift-ai-google/releases/tag/1.0.0",
+        "target": "5e7ff2f2c00ea3afde5c20466eb0d699baada7b1"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-google.git",
+        "name": "SwiftAISDK/swift-ai-google",
+        "id": 1433624516
+      }
+    },
+    {
+      "package": "swift-ai-google-vertex",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "0cee29a3c63ecb95ed867ce59e90fd43ebc23a78f9a1eff96c7ec9064bc5e31e",
+      "exportCommit": "3596f1fd34fd4aa8f3117c7fe065144a4ee7ba45",
+      "tagObject": "a23ac5d392aa86cda8596adf1960c0e83aacb1b4",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-google",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-anthropic",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423681918,
+        "url": "https://github.com/SwiftAISDK/swift-ai-google-vertex/releases/tag/1.0.0",
+        "target": "3596f1fd34fd4aa8f3117c7fe065144a4ee7ba45"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-google-vertex.git",
+        "name": "SwiftAISDK/swift-ai-google-vertex",
+        "id": 1433624585
+      }
+    },
+    {
+      "package": "swift-ai-groq",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "9ad4b8032ffcea6c1dea75429ea663f710936381d38ae21a6606c1e2576b7613",
+      "exportCommit": "871740a4d7e32aa164513f08ccb1083a349d83c5",
+      "tagObject": "b6efd977608b9d0a65ec352b061db1315ce7b65e",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423682045,
+        "url": "https://github.com/SwiftAISDK/swift-ai-groq/releases/tag/1.0.0",
+        "target": "871740a4d7e32aa164513f08ccb1083a349d83c5"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-groq.git",
+        "name": "SwiftAISDK/swift-ai-groq",
+        "id": 1433624642
+      }
+    },
+    {
+      "package": "swift-ai-heygen",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "db8b55d0c1592e069c7665ed69e45027859f253583aca48bdb0ded36819dd6b4",
+      "exportCommit": "465f843297ed753e4658bf6bc76f5f80262e99d2",
+      "tagObject": "0c7c7e737b417adf8d2563813b6e040afbd6b74a",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423682173,
+        "url": "https://github.com/SwiftAISDK/swift-ai-heygen/releases/tag/1.0.0",
+        "target": "465f843297ed753e4658bf6bc76f5f80262e99d2"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-heygen.git",
+        "name": "SwiftAISDK/swift-ai-heygen",
+        "id": 1433624682
+      }
+    },
+    {
+      "package": "swift-ai-huggingface",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "1fbca70e3d73a725c0511fd98e0e864f11af69997f39f3f1d5d3ea7cf1ef8cb5",
+      "exportCommit": "fcea55e50d421add6cd497cec9c3790fe3013205",
+      "tagObject": "71d8c0751439ecc75f860defcef02cac9d303f38",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423682308,
+        "url": "https://github.com/SwiftAISDK/swift-ai-huggingface/releases/tag/1.0.0",
+        "target": "fcea55e50d421add6cd497cec9c3790fe3013205"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-huggingface.git",
+        "name": "SwiftAISDK/swift-ai-huggingface",
+        "id": 1433624743
+      }
+    },
+    {
+      "package": "swift-ai-hume",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "195006a30fa58ca57da9d4f7d11517f6c768f39c6853432a3b4f5d975f58ee5f",
+      "exportCommit": "f7527e28b2b96e1b5ff478da06ee2471db312311",
+      "tagObject": "e20dd4445837dbe613199132521441581a136a06",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423682416,
+        "url": "https://github.com/SwiftAISDK/swift-ai-hume/releases/tag/1.0.0",
+        "target": "f7527e28b2b96e1b5ff478da06ee2471db312311"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-hume.git",
+        "name": "SwiftAISDK/swift-ai-hume",
+        "id": 1433624805
+      }
+    },
+    {
+      "package": "swift-ai-klingai",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "d2dd1d82410004a1fc82188933185f250bdd0dbbec1f06dc22f84f41ea681300",
+      "exportCommit": "c2b42310b3d2cc43c25d1cad6daf970109ec5f70",
+      "tagObject": "46d71721a56eb61c4012fd01469aa157dfaa888e",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423682529,
+        "url": "https://github.com/SwiftAISDK/swift-ai-klingai/releases/tag/1.0.0",
+        "target": "c2b42310b3d2cc43c25d1cad6daf970109ec5f70"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-klingai.git",
+        "name": "SwiftAISDK/swift-ai-klingai",
+        "id": 1433624869
+      }
+    },
+    {
+      "package": "swift-ai-lmnt",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "ed32c57d05bdd9268ac994f601bc9e8291d712d785d32bee7f8dac4916d8a9ef",
+      "exportCommit": "41f346d0a3085662d592090c535959d1c36d578d",
+      "tagObject": "32abc41bf059b59043d0dd6a193735505c0f76f7",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423682665,
+        "url": "https://github.com/SwiftAISDK/swift-ai-lmnt/releases/tag/1.0.0",
+        "target": "41f346d0a3085662d592090c535959d1c36d578d"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-lmnt.git",
+        "name": "SwiftAISDK/swift-ai-lmnt",
+        "id": 1433624916
+      }
+    },
+    {
+      "package": "swift-ai-luma",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "b837e58cd08a30bd294eb7e53ba1048a3502241eae4ef39a179a980e54797021",
+      "exportCommit": "8b5109f3d402096c98be147747b05a87aa8c8dc6",
+      "tagObject": "e3a2d1ca594c7fe0999ff2ce9462b4a7337dda1d",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423682800,
+        "url": "https://github.com/SwiftAISDK/swift-ai-luma/releases/tag/1.0.0",
+        "target": "8b5109f3d402096c98be147747b05a87aa8c8dc6"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-luma.git",
+        "name": "SwiftAISDK/swift-ai-luma",
+        "id": 1433624986
+      }
+    },
+    {
+      "package": "swift-ai-mcp",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "a4c30b44330dd3d1ea4e2e2b65941b856e9594d4c09589d829dd52a57cf75ffd",
+      "exportCommit": "26a5f83bfd802cb6294d89a1a77c8f28262d452d",
+      "tagObject": "4e70b481d399319b3a2fb49fa205957a927b0e80",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423682911,
+        "url": "https://github.com/SwiftAISDK/swift-ai-mcp/releases/tag/1.0.0",
+        "target": "26a5f83bfd802cb6294d89a1a77c8f28262d452d"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-mcp.git",
+        "name": "SwiftAISDK/swift-ai-mcp",
+        "id": 1433625047
+      }
+    },
+    {
+      "package": "swift-ai-minimax",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "2747fd22d88b373d78b16b625ad052fa1b86d6f506a176287324d356d02e402e",
+      "exportCommit": "379481c5534b5f889e1cc05584f4bb4d11ad4fdf",
+      "tagObject": "41eb46c70b16a4037748ed33b852d701eca456d3",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-anthropic",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423683082,
+        "url": "https://github.com/SwiftAISDK/swift-ai-minimax/releases/tag/1.0.0",
+        "target": "379481c5534b5f889e1cc05584f4bb4d11ad4fdf"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-minimax.git",
+        "name": "SwiftAISDK/swift-ai-minimax",
+        "id": 1433625105
+      }
+    },
+    {
+      "package": "swift-ai-mistral",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "227769cfbb01f596f1041d708fc6ae73749bf3110cb35854447fce5f6d6635aa",
+      "exportCommit": "c9f42cfd5315184c0ab33efbfe43032e24f135ae",
+      "tagObject": "2230fcbe51d831d1208bad38ad60255b9f20243b",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423683219,
+        "url": "https://github.com/SwiftAISDK/swift-ai-mistral/releases/tag/1.0.0",
+        "target": "c9f42cfd5315184c0ab33efbfe43032e24f135ae"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-mistral.git",
+        "name": "SwiftAISDK/swift-ai-mistral",
+        "id": 1433625160
+      }
+    },
+    {
+      "package": "swift-ai-moonshotai",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "6f8997cc2d93083da09297fa05a4e3417b2e7e4d22aaa06db05fd015443819a5",
+      "exportCommit": "23f23d8ec7f60faecd4b9e1bbd3f83cdaa9ce1cc",
+      "tagObject": "08e48e50b4a69557f118c94b010424060f6c4aa6",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423683385,
+        "url": "https://github.com/SwiftAISDK/swift-ai-moonshotai/releases/tag/1.0.0",
+        "target": "23f23d8ec7f60faecd4b9e1bbd3f83cdaa9ce1cc"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-moonshotai.git",
+        "name": "SwiftAISDK/swift-ai-moonshotai",
+        "id": 1433625211
+      }
+    },
+    {
+      "package": "swift-ai-open-responses",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "42540c420c6a9ad4cc9dcbb86c48dc8a1454c4ed193331fd5e8d6290dbd2edb3",
+      "exportCommit": "4c89cc816d0bf68b8ba57e2b74672deb0030d3ce",
+      "tagObject": "795100a04a11a76061157e4978304995fc8c9817",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423683515,
+        "url": "https://github.com/SwiftAISDK/swift-ai-open-responses/releases/tag/1.0.0",
+        "target": "4c89cc816d0bf68b8ba57e2b74672deb0030d3ce"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-open-responses.git",
+        "name": "SwiftAISDK/swift-ai-open-responses",
+        "id": 1433625270
+      }
+    },
+    {
+      "package": "swift-ai-perplexity",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "b57fac3b52e96bb79bcd7fcfe43860e425285975cd14457c6022050fe49f7b19",
+      "exportCommit": "4efc553ffd65e7f731ef6dae2ec81d74014e9479",
+      "tagObject": "8de83bee760015551198c1e487e017133065450d",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423683651,
+        "url": "https://github.com/SwiftAISDK/swift-ai-perplexity/releases/tag/1.0.0",
+        "target": "4efc553ffd65e7f731ef6dae2ec81d74014e9479"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-perplexity.git",
+        "name": "SwiftAISDK/swift-ai-perplexity",
+        "id": 1433625335
+      }
+    },
+    {
+      "package": "swift-ai-prodia",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "17bd2ebc59d1cde56b96c7324447d4976391df737b8fb3409fb75d4debf01cf4",
+      "exportCommit": "e66f065f00dbb20a6372588e15189287926d6a92",
+      "tagObject": "54accb163333a27ea82f76778fe787f4e3f92354",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423683762,
+        "url": "https://github.com/SwiftAISDK/swift-ai-prodia/releases/tag/1.0.0",
+        "target": "e66f065f00dbb20a6372588e15189287926d6a92"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-prodia.git",
+        "name": "SwiftAISDK/swift-ai-prodia",
+        "id": 1433625404
+      }
+    },
+    {
+      "package": "swift-ai-quiverai",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "7c55dbf1af1f8f0db37c2af08843357c64e00b5da19461ae80752075129aeb58",
+      "exportCommit": "cf2495e11338fbdf23cc3963f49824047d4da33a",
+      "tagObject": "80968551855bf5cae92a3fb5a8c3d9c7d69f3a91",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-open-responses",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423683883,
+        "url": "https://github.com/SwiftAISDK/swift-ai-quiverai/releases/tag/1.0.0",
+        "target": "cf2495e11338fbdf23cc3963f49824047d4da33a"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-quiverai.git",
+        "name": "SwiftAISDK/swift-ai-quiverai",
+        "id": 1433625467
+      }
+    },
+    {
+      "package": "swift-ai-replicate",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "f95607c5dd6d18ef0ce1e22dbd4e84c183e409c68ae39404a5634bf9c3817188",
+      "exportCommit": "11d673294ca7725a8c226c054169c9d97e7ef7b8",
+      "tagObject": "cdd18303ae2e461d9a5e8c7a7f50405389b2106c",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423684009,
+        "url": "https://github.com/SwiftAISDK/swift-ai-replicate/releases/tag/1.0.0",
+        "target": "11d673294ca7725a8c226c054169c9d97e7ef7b8"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-replicate.git",
+        "name": "SwiftAISDK/swift-ai-replicate",
+        "id": 1433625533
+      }
+    },
+    {
+      "package": "swift-ai-revai",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "d3a3c1a4e81234e76caabfadacb8d83550e9a78bb2d74aeb2891d41212c8be62",
+      "exportCommit": "a32cdc3fd988fb6ffbe6254167db5ea9a038687a",
+      "tagObject": "551fcf3114239521b20cef3c516fae9759343a79",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423684135,
+        "url": "https://github.com/SwiftAISDK/swift-ai-revai/releases/tag/1.0.0",
+        "target": "a32cdc3fd988fb6ffbe6254167db5ea9a038687a"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-revai.git",
+        "name": "SwiftAISDK/swift-ai-revai",
+        "id": 1433625596
+      }
+    },
+    {
+      "package": "swift-ai-togetherai",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "572f23abda2b566b66ec3ef53d1c15356e6c6fa23e0510d45759d6500b10fc11",
+      "exportCommit": "2ec1c301f0e2517601f6bb2e9167d36ae3c4bcc0",
+      "tagObject": "838235b1432684a4c11194962a257f6f6bafc999",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423684271,
+        "url": "https://github.com/SwiftAISDK/swift-ai-togetherai/releases/tag/1.0.0",
+        "target": "2ec1c301f0e2517601f6bb2e9167d36ae3c4bcc0"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-togetherai.git",
+        "name": "SwiftAISDK/swift-ai-togetherai",
+        "id": 1433625660
+      }
+    },
+    {
+      "package": "swift-ai-topaz",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "5979746d0384ba67c56518366c32d452ecd0668be86e95d768bc1fdf814e2131",
+      "exportCommit": "95b9c2ce09b6b162580e8c57479059d1bc4d0196",
+      "tagObject": "69869d8c58a82e44586bdcec04c46c786a040a91",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423684396,
+        "url": "https://github.com/SwiftAISDK/swift-ai-topaz/releases/tag/1.0.0",
+        "target": "95b9c2ce09b6b162580e8c57479059d1bc4d0196"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-topaz.git",
+        "name": "SwiftAISDK/swift-ai-topaz",
+        "id": 1433625717
+      }
+    },
+    {
+      "package": "swift-ai-typesafe-ai",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "c4fc123319b7e5b7ea97b46e7b4ecd1d03071e5084fd9b722d0b8677e2ae4527",
+      "exportCommit": "9960d272edd8a1f2488c58b8192e3fa3dc2d9dd5",
+      "tagObject": "2955229bdf8f9aa5390e64f188bee18d9c72b9a2",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423684520,
+        "url": "https://github.com/SwiftAISDK/swift-ai-typesafe-ai/releases/tag/1.0.0",
+        "target": "9960d272edd8a1f2488c58b8192e3fa3dc2d9dd5"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-typesafe-ai.git",
+        "name": "SwiftAISDK/swift-ai-typesafe-ai",
+        "id": 1433625781
+      }
+    },
+    {
+      "package": "swift-ai-ui",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "eb8a140082ca41f9d52c84ecc76d1de82e51a6687647f15bee8783d8824435b6",
+      "exportCommit": "00ab4f50c024ef2290b9f409a98087c135a4424b",
+      "tagObject": "532042181869580f6516f462ed93689cee8c47fe",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423684647,
+        "url": "https://github.com/SwiftAISDK/swift-ai-ui/releases/tag/1.0.0",
+        "target": "00ab4f50c024ef2290b9f409a98087c135a4424b"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-ui.git",
+        "name": "SwiftAISDK/swift-ai-ui",
+        "id": 1433625847
+      }
+    },
+    {
+      "package": "swift-ai-vercel",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "f734791603a50cf1416759119530f411219d90466abf8de77d4bcd2741e56571",
+      "exportCommit": "01cb843a414be82c1f1dc35108ac3bc461969c8c",
+      "tagObject": "dd4146db82ee1f5007b3703b741ef3bf13d90049",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423684771,
+        "url": "https://github.com/SwiftAISDK/swift-ai-vercel/releases/tag/1.0.0",
+        "target": "01cb843a414be82c1f1dc35108ac3bc461969c8c"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-vercel.git",
+        "name": "SwiftAISDK/swift-ai-vercel",
+        "id": 1433625897
+      }
+    },
+    {
+      "package": "swift-ai-voyage",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "87ef9964d31b0fa22ccc9ff41244aa53aed7555e37dbbd47849d45aea8c290cd",
+      "exportCommit": "6ec8b8fd118e95f5b6a930b99608d30e281a0cce",
+      "tagObject": "c970a00337263c28ec3645017074f72750cd568b",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423684879,
+        "url": "https://github.com/SwiftAISDK/swift-ai-voyage/releases/tag/1.0.0",
+        "target": "6ec8b8fd118e95f5b6a930b99608d30e281a0cce"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-voyage.git",
+        "name": "SwiftAISDK/swift-ai-voyage",
+        "id": 1433625952
+      }
+    },
+    {
+      "package": "swift-ai-xai",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "0957c8fa4eceb599c85a368928db9bfb19a28f217655d5014c07cfc84ddf7518",
+      "exportCommit": "ec3abd933c81a8bfe4297760c51e9495695af08f",
+      "tagObject": "e7d8b028b63fa162543a73547307b20164c015b7",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.1.0"
+        },
+        {
+          "package": "swift-ai-openai",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423685031,
+        "url": "https://github.com/SwiftAISDK/swift-ai-xai/releases/tag/1.0.0",
+        "target": "ec3abd933c81a8bfe4297760c51e9495695af08f"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-xai.git",
+        "name": "SwiftAISDK/swift-ai-xai",
+        "id": 1433626008
+      }
+    },
+    {
+      "package": "swift-ai-zai",
+      "version": "1.0.0",
+      "sourceCommit": "7fc9b4cd72f8f83b75ba7eee2e38d37127539317",
+      "exportSHA256": "fa24c9ad41cebd41b1001239c22bdd1a9b18bba9d60cd8716efbf90136b8e54a",
+      "exportCommit": "f2f928613100b10bb33244b18b6d621aa51add62",
+      "tagObject": "e33556551ac5c96573ff9ee248c23283dc0186a2",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ],
+      "githubRelease": {
+        "id": 423685165,
+        "url": "https://github.com/SwiftAISDK/swift-ai-zai/releases/tag/1.0.0",
+        "target": "f2f928613100b10bb33244b18b6d621aa51add62"
+      },
+      "repository": {
+        "url": "git@github.com:SwiftAISDK/swift-ai-zai.git",
+        "name": "SwiftAISDK/swift-ai-zai",
+        "id": 1433626080
+      }
+    }
+  ]
+}
