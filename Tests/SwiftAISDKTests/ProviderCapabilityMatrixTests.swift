@@ -1,3 +1,12 @@
+@testable import SwiftAIAnthropic
+@testable import SwiftAIOpenAICompatible
+@testable import SwiftAIOpenAI
+@testable import SwiftAI
+@testable import SwiftAIProvider
+@testable import SwiftAITransport
+private typealias AI = SwiftAISDK.AI
+private typealias AIProviders = SwiftAISDK.AIProviders
+private typealias AICustomProvider = SwiftAISDK.AICustomProvider
 import Foundation
 import Testing
 @testable import SwiftAISDK
@@ -10,58 +19,16 @@ import Testing
     #expect(document == AIProviderCapabilities.markdownDocument())
 }
 
-@Test func providerCapabilityMatrixCoversDiscoveredProviderPackages() {
-    let expectedPackages: Set<String> = [
-        "@ai-sdk/alibaba",
-        "@ai-sdk/amazon-bedrock",
-        "@ai-sdk/anthropic",
-        "@ai-sdk/anthropic-aws",
-        "@ai-sdk/assemblyai",
-        "@ai-sdk/azure",
-        "@ai-sdk/baseten",
-        "@ai-sdk/black-forest-labs",
-        "@ai-sdk/bytedance",
-        "@ai-sdk/cartesia",
-        "@ai-sdk/cerebras",
-        "@ai-sdk/cohere",
-        "@ai-sdk/deepgram",
-        "@ai-sdk/deepinfra",
-        "@ai-sdk/deepseek",
-        "@ai-sdk/elevenlabs",
-        "@ai-sdk/fal",
-        "@ai-sdk/fish-audio",
-        "@ai-sdk/fireworks",
-        "@ai-sdk/gateway",
-        "@ai-sdk/gmicloud",
-        "@ai-sdk/gladia",
-        "@ai-sdk/google",
-        "@ai-sdk/google-vertex",
-        "@ai-sdk/groq",
-        "@ai-sdk/heygen",
-        "@ai-sdk/huggingface",
-        "@ai-sdk/hume",
-        "@ai-sdk/klingai",
-        "@ai-sdk/lmnt",
-        "@ai-sdk/luma",
-        "@ai-sdk/minimax",
-        "@ai-sdk/mistral",
-        "@ai-sdk/moonshotai",
-        "@ai-sdk/open-responses",
-        "@ai-sdk/openai",
-        "@ai-sdk/openai-compatible",
-        "@ai-sdk/perplexity",
-        "@ai-sdk/prodia",
-        "@ai-sdk/quiverai",
-        "@ai-sdk/replicate",
-        "@ai-sdk/revai",
-        "@ai-sdk/togetherai",
-        "@ai-sdk/topaz",
-        "@ai-sdk/typesafe-ai",
-        "@ai-sdk/vercel",
-        "@ai-sdk/voyage",
-        "@ai-sdk/xai",
-        "@ai-sdk/zai"
-    ]
+@Test func providerCapabilityMatrixCoversDiscoveredProviderPackages() throws {
+    // Read the same registration catalog as CLI/docs, then compare the compiled API.
+    let url = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
+        .appendingPathComponent("Porting/packages.json")
+    let data = try Data(contentsOf: url)
+    let catalog = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+    let packages = try #require(catalog["packages"] as? [[String: Any]])
+    let rows = packages.flatMap { $0["capabilityRows"] as? [[String: Any]] ?? [] }
+    let expectedPackages = Set(rows.compactMap { $0["upstreamPackage"] as? String })
+    #expect(!expectedPackages.isEmpty)
 
     let actualPackages = Set(AIProviderCapabilities.all.map(\.upstreamPackage))
     #expect(actualPackages == expectedPackages)

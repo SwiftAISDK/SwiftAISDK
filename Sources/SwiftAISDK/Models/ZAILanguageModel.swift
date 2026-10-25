@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// Z.AI's provider-specific chat model. It layers the published GLM option and
 /// finish-reason behavior over SwiftAISDK's audited OpenAI-compatible runtime.

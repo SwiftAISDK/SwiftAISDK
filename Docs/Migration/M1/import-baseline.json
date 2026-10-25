@@ -1,0 +1,1912 @@
+{
+  "sourceCommit": "fc4e5dc5116435d995c71ef36062662b38c42181",
+  "upstream": [
+    {
+      "name": "@ai-sdk/alibaba",
+      "version": "2.0.76",
+      "kind": "provider",
+      "evidence": "`AIProviders.alibaba`, `AlibabaLanguageModel`, `AlibabaEmbeddingModel`, `AlibabaProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/amazon-bedrock",
+      "version": "5.0.124",
+      "kind": "provider",
+      "evidence": "`AIProviders.amazonBedrock`, `AIProviders.amazonBedrockAnthropic`, `AIProviders.bedrockMantle`, `AmazonBedrockModels.swift`, `AmazonBedrockTests.swift`, `AnthropicBedrockUpstream202609Tests.swift`"
+    },
+    {
+      "name": "@ai-sdk/anthropic",
+      "version": "4.0.88",
+      "kind": "provider",
+      "evidence": "`AIProviders.anthropic`, `AnthropicLanguageModel`, `AnthropicBatchLanguageModel`, `AnthropicTools`, `AnthropicTests.swift`, `AnthropicBatchV4UpstreamTests.swift`, `AnthropicBedrockUpstream202609Tests.swift`"
+    },
+    {
+      "name": "@ai-sdk/anthropic-aws",
+      "version": "2.0.81",
+      "kind": "provider",
+      "evidence": "`AIProviders.anthropicAWS`, `AnthropicAWSProvider`, `AnthropicTests.swift`, `AnthropicBedrockUpstream202609Tests.swift`"
+    },
+    {
+      "name": "@ai-sdk/assemblyai",
+      "version": "3.0.68",
+      "kind": "provider",
+      "evidence": "`AIProviders.assemblyAI`, `AssemblyAITranscriptionModel`, `AssemblyAIProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/azure",
+      "version": "4.0.110",
+      "kind": "provider",
+      "evidence": "`AIProviders.azure`, `AzureOpenAIProvider`, `AzureOpenAITools`, `AlibabaProdiaAzureQuiverTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/baseten",
+      "version": "2.1.56",
+      "kind": "provider",
+      "evidence": "`AIProviders.baseten`, `OpenAICompatibleProvider`, `BasetenProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/black-forest-labs",
+      "version": "2.0.70",
+      "kind": "provider",
+      "evidence": "`AIProviders.blackForestLabs`, `BlackForestLabsImageModel`, `BlackForestLabsVideoModel`, `AsyncVideoModel`, `BlackForestLabsVideoModelTests.swift`, `BlackForestLabsVideoOperationTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/bytedance",
+      "version": "2.0.71",
+      "kind": "provider",
+      "evidence": "`AIProviders.byteDance`, `ByteDanceVideoModel`, `AsyncVideoModel`, `ByteDanceProviderTests.swift`, `ByteDanceAsyncVideoUpstreamParityTests.swift`, `MediaStatusRedirectUpstreamTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/cartesia",
+      "version": "3.0.63",
+      "kind": "provider",
+      "evidence": "`AIProviders.cartesia`, `CartesiaProvider`, `CartesiaSpeechModel`, `CartesiaTranscriptionModel`, `CartesiaStreamingTranscriptionModel`, `Cartesia*Tests.swift`"
+    },
+    {
+      "name": "@ai-sdk/cerebras",
+      "version": "3.0.78",
+      "kind": "provider",
+      "evidence": "`AIProviders.cerebras`, `CerebrasLanguageModel`, `CerebrasProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/cohere",
+      "version": "4.0.69",
+      "kind": "provider",
+      "evidence": "`AIProviders.cohere`, `CohereLanguageModel`, `CohereEmbeddingModel`, `CohereRerankingModel`, `CohereMistralVoyageTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/deepgram",
+      "version": "3.1.39",
+      "kind": "provider",
+      "evidence": "`AIProviders.deepgram`, `DeepgramTranscriptionModel`, `DeepgramSpeechModel`, `DeepgramProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/deepinfra",
+      "version": "3.0.78",
+      "kind": "provider",
+      "evidence": "`AIProviders.deepInfra`, `OpenAICompatibleProvider`, `DeepInfraProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/deepseek",
+      "version": "3.0.73",
+      "kind": "provider",
+      "evidence": "`AIProviders.deepSeek`, `DeepSeekLanguageModel`, `DeepSeekFileClient`, `DeepSeekProviderTests.swift`, `DeepSeekVisionAndFilesUpstreamParityTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/elevenlabs",
+      "version": "3.0.71",
+      "kind": "provider",
+      "evidence": "`AIProviders.elevenLabs`, `ElevenLabsSpeechModel`, `ElevenLabsTranscriptionModel`, `ElevenLabsProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/fal",
+      "version": "3.0.69",
+      "kind": "provider",
+      "evidence": "`AIProviders.fal`, `FalMediaProviderTests.swift`, `FalProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/fish-audio",
+      "version": "3.0.46",
+      "kind": "provider",
+      "evidence": "`AIProviders.fishAudio`, `FishAudioProvider`, `FishAudioSpeechModel`, `FishAudioTranscriptionModel`, `FishAudio*Tests.swift`"
+    },
+    {
+      "name": "@ai-sdk/fireworks",
+      "version": "3.0.81",
+      "kind": "provider",
+      "evidence": "`AIProviders.fireworks`, `FireworksProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/gateway",
+      "version": "4.0.126",
+      "kind": "provider",
+      "evidence": "`AIProviders.gateway`, `GatewayProvider`, `GatewayModels.swift`, `GatewayStreamingTranscriptionModel.swift`, `GatewayTests.swift`, `Gateway*UpstreamParityTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/gmicloud",
+      "version": "3.0.49",
+      "kind": "provider",
+      "evidence": "`AIProviders.gmiCloud`, `GMICloudProvider`, `OpenAICompatibleChatModel`, `GMICloudProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/gladia",
+      "version": "3.0.68",
+      "kind": "provider",
+      "evidence": "`AIProviders.gladia`, `GladiaTranscriptionModel`, `GladiaProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/google",
+      "version": "4.0.105",
+      "kind": "provider",
+      "evidence": "`AIProviders.google`, `GoogleGenerativeAIProvider`, `GoogleGenerativeAI.swift`, `GoogleGenerativeMediaModels.swift`, `GoogleGenerativeAITests.swift`, `GoogleGenerativeAIMediaAndToolsTests.swift`, `GoogleBatchLanguageModel`, `GoogleBatchUpstreamTests.swift`, `GoogleGenerativeAIVideoAndInteractionsTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/google-vertex",
+      "version": "5.0.122",
+      "kind": "provider",
+      "evidence": "`AIProviders.googleVertex`, `GoogleVertexProvider`, `GoogleVertexProvider.swift`, `GoogleVertexModels.swift`, `GoogleVertexTests.swift`, `GoogleVertexMediaAndMaaSTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/groq",
+      "version": "4.0.70",
+      "kind": "provider",
+      "evidence": "`AIProviders.groq`, `GroqLanguageModel`, `GroqTranscriptionModel`, `GroqProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/heygen",
+      "version": "3.0.10",
+      "kind": "provider",
+      "evidence": "`AIProviders.heyGen`, `HeyGenVideoModel`, `HeyGenVideoModelOptions`, `HeyGenVideoAsset`, `HeyGen*Tests.swift`"
+    },
+    {
+      "name": "@ai-sdk/huggingface",
+      "version": "2.0.78",
+      "kind": "provider",
+      "evidence": "`AIProviders.huggingFace`, `HuggingFaceProvider`, `HuggingFaceResponsesLanguageModel`, `HuggingFaceProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/hume",
+      "version": "3.0.68",
+      "kind": "provider",
+      "evidence": "`AIProviders.hume`, `HumeSpeechModel`, `HumeProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/klingai",
+      "version": "4.0.70",
+      "kind": "provider",
+      "evidence": "`AIProviders.klingAI`, `KlingAIVideoModel`, `KlingAIProviderTests.swift`, `MediaStatusRedirectUpstreamTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/lmnt",
+      "version": "3.0.36",
+      "kind": "provider",
+      "evidence": "`AIProviders.lmnt`, `LMNTSpeechModel`, `LMNTProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/luma",
+      "version": "3.0.69",
+      "kind": "provider",
+      "evidence": "`AIProviders.luma`, `LumaImageModel`, `LumaProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/mcp",
+      "version": "2.0.84",
+      "kind": "provider",
+      "evidence": "`MCPClient`, `MCPHTTPTransport`, `MCPStdioTransport`, `MCPApps`, `MCPClientTests.swift`, `MCPOAuthTests.swift`, `MCPStdioTransportTests.swift`, `MCPModernProtocolTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/minimax",
+      "version": "3.0.65",
+      "kind": "provider",
+      "evidence": "`AIProviders.miniMax`, `MiniMaxProvider`, `AnthropicLanguageModel`, `MiniMaxVideoModel`, `MiniMaxProviderTests.swift`, `MediaStatusRedirectUpstreamTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/mistral",
+      "version": "4.0.72",
+      "kind": "provider",
+      "evidence": "`AIProviders.mistral`, `MistralLanguageModel`, `MistralEmbeddingModel`, `MistralTranscriptionModel`, `MistralSpeechModel`, `PerplexityMistralUpstreamTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/moonshotai",
+      "version": "3.0.78",
+      "kind": "provider",
+      "evidence": "`AIProviders.moonshotAI`, `MoonshotLanguageModel`, `MoonshotAIProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/open-responses",
+      "version": "2.0.73",
+      "kind": "provider",
+      "evidence": "`AIProviders.openResponses`, `ResponsesRequestMode.openResponses`, `OpenResponsesTools`, `ResponsesEndpointTests.swift`, `OpenAIResponsesMessageConversionTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/openai",
+      "version": "4.0.102",
+      "kind": "provider",
+      "evidence": "`AIProviders.openAI`, `OpenAICompatible*Model`, `OpenAITools`, `OpenAI*Tests.swift`, `FileAndSkillClientTests.swift`, `CoreOpenAIUpstream202609Tests.swift`, `OpenAIResponsesBatchV4UpstreamTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/openai-compatible",
+      "version": "3.0.78",
+      "kind": "provider",
+      "evidence": "`AIProviders.openAICompatible`, `OpenAICompatibleProvider`, `OpenAICompatibleTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/perplexity",
+      "version": "5.0.20",
+      "kind": "provider",
+      "evidence": "`AIProviders.perplexity`, `PerplexityLanguageModel`, `PerplexitySonarLanguageModel`, `PerplexityEmbeddingModel`, `PerplexityDecisionModel`, `WeeklyPerplexity20261023Tests.swift`, `PerplexityMistralUpstreamTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/prodia",
+      "version": "2.0.69",
+      "kind": "provider",
+      "evidence": "`AIProviders.prodia`, `ProdiaLanguageModel`, `ProdiaMediaModel`, `ProdiaProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/quiverai",
+      "version": "2.0.69",
+      "kind": "provider",
+      "evidence": "`AIProviders.quiverAI`, `OpenAICompatibleResponsesModel`, `QuiverAITools`, `QuiverAIImageModel`, `QuiverAIProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/replicate",
+      "version": "3.0.69",
+      "kind": "provider",
+      "evidence": "`AIProviders.replicate`, `ReplicateImageModel`, `ReplicateVideoModel`, `ReplicateProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/revai",
+      "version": "3.0.68",
+      "kind": "provider",
+      "evidence": "`AIProviders.revAI`, `RevAITranscriptionModel`, `RevAIProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/togetherai",
+      "version": "3.0.79",
+      "kind": "provider",
+      "evidence": "`AIProviders.togetherAI`, `TogetherAIImageModel`, `TogetherAIRerankingModel`, `TogetherAIProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/topaz",
+      "version": "3.0.15",
+      "kind": "provider",
+      "evidence": "`AIProviders.topaz`, `TopazImageModel`, `TopazVideoModel`, `TopazProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/typesafe-ai",
+      "version": "3.0.27",
+      "kind": "provider",
+      "evidence": "`AIProviders.typeSafeAI`, `TypeSafeAIProvider`, `TypeSafeAIEvaluationModel`, `TypeSafeAIDecisionModel`, `TypeSafeAIDecisionModelOptions`, `WeeklyCore20261018Tests.swift`, `TypesafeAIProviderTests.swift`, `DecisionProviderTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/vercel",
+      "version": "3.0.30",
+      "kind": "provider",
+      "evidence": "`AIProviders.vercel`, `VercelProvider`, `ProviderRegistryVercelTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/voyage",
+      "version": "2.0.68",
+      "kind": "provider",
+      "evidence": "`AIProviders.voyage`, `VoyageEmbeddingModel`, `VoyageRerankingModel`, `VoyageProviderOptionSchemaTests.swift`"
+    },
+    {
+      "name": "@ai-sdk/xai",
+      "version": "5.0.30",
+      "kind": "provider",
+      "evidence": "`AIProviders.xAI`, `XAIResponses.swift`, `XAIResponsesBatchLanguageModel.swift`, `XAITools`, `XAIImageModel`, `XAIVideoModel`, `XAIProviderTests.swift`, `ProviderGroupBUpstreamParity20260831Tests.swift`"
+    },
+    {
+      "name": "@ai-sdk/zai",
+      "version": "3.0.40",
+      "kind": "provider",
+      "evidence": "`AIProviders.zai`, `ZAIProvider`, `ZAILanguageModel`, `ZAIProviderTests.swift`"
+    },
+    {
+      "name": "ai",
+      "version": "7.0.153",
+      "kind": "core",
+      "evidence": "Docs/CoreV6Parity.md"
+    },
+    {
+      "name": "@ai-sdk/provider",
+      "version": "4.0.34",
+      "kind": "core",
+      "evidence": "Docs/CoreV6Parity.md"
+    },
+    {
+      "name": "@ai-sdk/provider-utils",
+      "version": "5.0.68",
+      "kind": "core",
+      "evidence": "Docs/CoreV6Parity.md"
+    },
+    {
+      "name": "@ai-sdk/react",
+      "version": "4.0.157",
+      "kind": "core",
+      "evidence": "Docs/CoreV6Parity.md"
+    }
+  ],
+  "capabilities": [
+    {
+      "order": 0,
+      "providerID": "alibaba",
+      "upstreamPackage": "@ai-sdk/alibaba",
+      "factoryNames": [
+        "AIProviders.alibaba"
+      ],
+      "capabilities": [
+        "language",
+        "embedding",
+        "video"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Alibaba mirrors upstream 2.0.76: `ALIBABA_API_KEY`, versioned user-agent suffix, chat/language callable aliases, DashScope chat completions with thinking/reasoning mapping, generated fallback IDs for missing tool-call IDs, cache-aware usage with nonnegative reasoning-adjusted output text tokens, historical assistant reasoning omission including removal of reasoning-only turns, DashScope embedding endpoint with dense and sparse option mapping, video submit/poll flow, wan2.6 legacy video protocol, wan2.7 media/ratio video protocol, WAN 3 all-in-one media/resolution/aspect-ratio/audio mapping and usage metadata, provider option validation, warnings, provider metadata, and unsupported image families. ProviderV4 type names, ESM-only packaging, Node 22 engines, and workflow serialization helpers are JS-only upstream concerns. The 2026-09-20 pass adds typed `preserveThinking`, model-aware defaults, and assistant reasoning-history replay. The 2026-09-27 pass adds model-aware Qwen 3.7/3.8 JSON Schema routing and preserves unsupported-structured-output warnings for other model families. The 2026-10-11 pass: Common max reasoning uses a 95 percent token budget; embedding dimensions default from the shared request and provider dimension overrides it. The 2026-10-18 pass: Wan video routing parses numeric versions: pre-2.7 IDs retain legacy requests, later 2.x IDs use the Wan 2.7 tiered protocol, and 3+ or unknown future IDs use the current all-in-one media protocol. The 2026-10-23 pass: Polling and status resource IDs are encoded as one path segment, including reserved characters and standalone dots."
+    },
+    {
+      "order": 1,
+      "providerID": "amazon-bedrock",
+      "upstreamPackage": "@ai-sdk/amazon-bedrock",
+      "factoryNames": [
+        "AIProviders.amazonBedrock"
+      ],
+      "capabilities": [
+        "language",
+        "embedding",
+        "image",
+        "reranking"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Amazon Bedrock Converse, embeddings, images, and reranking mirror upstream 5.0.124: SigV4 and bearer auth, versioned user-agent suffix, Converse request/stream parsing, ordered generated content with signature, legacy redacted-data, and current redacted-content replay metadata, event-stream decode/process failure propagation and incomplete-frame EOF rejection, empty tool-call ID normalization, provider options under `amazonBedrock`/`bedrock`, service tiers, guardrails, top-level reasoning mapping, cache points, Converse inline and S3 video sources across ten supported MIME types, document citations, rich tool-result content, strict-tool warnings and JSON response fallback that preserves ordinary tools, Cohere batch embeddings up to 96 inputs, Nova/Titan/Cohere embedding response shapes, and the current `bedrockRerankingConfiguration` rerank request key. The latest pass omits assistant turns left empty after unsigned-reasoning filtering, and also preserves exact case-sensitive `s3://` image sources in user and tool-result content, sanitizes replayed tool names, percent-encodes ARN model paths, and omits strict/native structured-output fields for Claude families that Bedrock rejects. The 5.0.68 pass also adds inference-profile reasoning, cache-only assistant omission, ARN embedding-family detection, citations, parallel-tool disabling, guardrail block handling, complete raw usage, model-specific reasoning shapes, and typed stream errors. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 5.0.76 delta adds `structuredOutputMode`, separate native-output and strict-tool model gates including Claude Sonnet 4.6 and Haiku 4.5, sibling-safe `output_config` filtering, citation-nested text extraction, sanitized document names, and alternating user turns for replayed provider-executed tool results. The 2026-09-20 pass adds opaque Anthropic-family settings, recursive strict-schema validation, current web-tool warnings/bindings, and non-2xx stream error parity. The 2026-09-27 pass adds current model capability gates, forced-tool and sampling rules, reasoning normalization, Claude Opus 5.5 and Mistral ID handling, and Mantle routing; Swift still cannot distinguish omitted from explicitly empty `stopSequences`. The 2026-10-04 pass passes string requestMetadata, omits Nova 2 Lite maxTokens for high thinking, validates generated region hosts, and reports Nova Canvas image-input capabilities. The 2026-10-11 pass: Claude Haiku 5.5 capability gates, explicit disabled thinking, max reasoning and embedding dimensions follow the published baseline. SigV4 omits non-ASCII header values from the signed set while retaining outgoing headers. The 2026-10-18 pass: Recognizable supported Claude generations receive strict/native-output fields; unknown Claude IDs use conservative prompt JSON instructions in automatic mode. Non-Claude and opaque inference profiles retain their prior behavior."
+    },
+    {
+      "order": 2,
+      "providerID": "amazon-bedrock.anthropic",
+      "upstreamPackage": "@ai-sdk/amazon-bedrock",
+      "factoryNames": [
+        "AIProviders.amazonBedrockAnthropic"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Bedrock Anthropic mirrors upstream 5.0.124 invoke-model behavior: Anthropic Messages request conversion, Bedrock auth and user-agent handling, URL/data media resolution, native Anthropic tool helpers, model-specific structured-output and strict-tool omissions, event-stream decoding that surfaces decode/process failures and rejects incomplete frames at EOF, response metadata, and Bedrock-specific request URLs. JS fetch/header injection hooks remain JS-only. The 5.0.76 pass shares the new structured-output mode selection, model capability gates, document sanitization, citation extraction, and provider-executed tool-result replay. The 2026-09-27 pass inherits current Claude capability, tool-choice, sampling, and reasoning gates. The 2026-10-18 pass: The shared Messages implementation carries attached citations, separates retrieved web sources, and preserves tools under none/manual-thinking tool choices."
+    },
+    {
+      "order": 3,
+      "providerID": "bedrock-mantle",
+      "upstreamPackage": "@ai-sdk/amazon-bedrock",
+      "factoryNames": [
+        "AIProviders.bedrockMantle"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Bedrock Mantle mirrors upstream 5.0.124 chat and responses surfaces with Bedrock Mantle hostnames, SigV4 or bearer auth, OpenAI-compatible request builders, versioned user-agent suffix, and provider metadata. JavaScript module-format exports are not applicable in Swift. The 2026-09-27 pass aligns model-family routing and current Responses behavior."
+    },
+    {
+      "order": 4,
+      "providerID": "anthropic",
+      "upstreamPackage": "@ai-sdk/anthropic",
+      "factoryNames": [
+        "AIProviders.anthropic"
+      ],
+      "capabilities": [
+        "language",
+        "evaluation",
+        "decision"
+      ],
+      "files": true,
+      "skills": true,
+      "notes": "Anthropic mirrors upstream 4.0.88 across Messages, files, and skills: thinking, citations, cache control, hosted/provider-defined tools, streamed code-execution input subtypes, `fallbacks: default` beta routing, caller metadata replay for client/server tools and web-search results across generated and streamed responses, Claude Opus 5 and forward-compatible Claude capabilities, structured-output tool safeguards, reasoning-token usage details, and provider metadata. Advisor tools map per-inference `maxTokens` and replay `stopReason`; stream parsing rejects spliced message IDs while tolerating duplicate starts for the active message; code-execution transcripts retain their complete prompt-cache-compatible wire shape. Generic adaptive reasoning requests include `display: summarized`. Generated response blocks retain upstream order across reasoning, text, citations, sources, tool calls/results, and compaction; signed/redacted thinking and text citation metadata are preserved. Mid-conversation system-message `toolChanges` map to tool-addition/removal content blocks with automatic beta headers, while initial-system changes warn and are ignored; toolChanges-only empty text does not consume an invisible cache breakpoint. `thinking: disabled` is forwarded and incompatible `xhigh`/`max` effort is lowered with a warning. Files and skills clients add the required Anthropic beta headers. The language wrapper also implements durable Batch V4 start/status/result streaming with strict response validation, redirect-safe JSONL retrieval, per-item terminal failures, and programmatic deferred-result replay without leaking the internal discriminator. Current Batch parity forwards the full request setting/content surface, preserves native counts and raw status, isolates invalid or unknown result items, safely encodes returned skill identifiers, and warns because completion webhooks are unsupported. The 4.0.49 delta adds Fable 5.1 and Vertex Claude 4 recognition, mid-conversation `clearAt` and `effort`, updated adaptive display and binding-only thinking behavior, plus the context-management, structured-outputs, interleaved-thinking, and web-search beta headers. Streaming multipart file bodies remain JS-specific because the Swift file client accepts buffered `Data`. The 2026-09-20 pass adds the 20260318 web tools and deferred lifecycle, normalizes implicit code execution, preserves custom aliases, and exposes a Messages-backed Evaluation V4 adapter. The 2026-09-27 pass adds Claude Opus 5.5 and Fable 5.1 recognition, `computerToolset_20260801`, current structured-output safeguards, and compaction, toolset, and effort behavior. The 2026-10-04 pass adds Sonnet 5.5 between_tools thinking, replayable native fallback markers, historical missing-caller normalization, and lossless toolset action replay. The 2026-10-11 pass: Claude Haiku 5.5 adaptive thinking, sampling, structured output and effort behavior is recognized; message_start provider metadata is retained. Batch downloads accept a positive maxLineBytes limit, defaulting to 64 MiB. The 2026-10-18 pass: Text blocks and stream endings expose normalized citations while retaining complete raw provider citation metadata. Retrieved web results remain independent sources with citation fallback only when retrieval is absent. Manual thinking downgrades forced tools; none preserves tool definitions. Tool-result file references and tool-search error/cache replay follow the current Messages protocol. The 2026-10-23 pass: Compatible Messages configuration supports provider-specific media/cache/sampling behavior; batch beta options reject explicit null. The 2026-10-25 pass: Nonempty unfinished Messages output reports interrupted; explicit provider stops/errors retain their mapped semantics and metadata."
+    },
+    {
+      "order": 5,
+      "providerID": "anthropic-aws",
+      "upstreamPackage": "@ai-sdk/anthropic-aws",
+      "factoryNames": [
+        "AIProviders.anthropicAWS"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": true,
+      "skills": true,
+      "notes": "Anthropic AWS mirrors upstream 2.0.81 request signing, regional endpoint handling, and the shared Anthropic Messages behavior represented by the Swift provider. JavaScript AWS credential-provider hooks remain runtime-specific. The 2.0.41 pass inherits the shared Anthropic 4.0.49 system-option, thinking, model-recognition, and beta-header behavior through AWS signing. The 2026-09-27 delta is version-identity-only and continues to inherit shared Anthropic behavior. Generated-host regions are validated as complete single DNS labels; custom endpoints bypass unused region validation. The 2026-10-11 pass: Inherits current Messages/Haiku behavior; non-ASCII headers remain outgoing but are excluded from SigV4 signing. The 2026-10-18 pass: Shared Messages citation, thinking/tool-choice and tool-result file-reference behavior follows the current Anthropic adapter, including the native AWS provider-reference namespace."
+    },
+    {
+      "order": 6,
+      "providerID": "assemblyai",
+      "upstreamPackage": "@ai-sdk/assemblyai",
+      "factoryNames": [
+        "AIProviders.assemblyAI"
+      ],
+      "capabilities": [
+        "transcription"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "AssemblyAI transcription mirrors upstream 3.0.68: `ASSEMBLYAI_API_KEY`, custom headers, versioned user-agent suffix, `transcription`/`transcriptionModel` aliases, `/v2/upload` plus `/v2/transcript` submit/poll flow, legacy `best` via `speech_model`, current `universal-3-5-pro`/`universal-3-pro`/`universal-2` via `speech_models`, deprecation and migration warnings, providerOptions.assemblyai schema including Universal 3 Pro and GA nested options, millisecond-to-second word segment conversion, audio-intelligence provider metadata, raw final response metadata, AssemblyAI error schema, and unsupported language/embedding/image families. ProviderV4, ESM-only packaging, Node 22 engines, and workflow serialization helpers are JS-only upstream concerns."
+    },
+    {
+      "order": 7,
+      "providerID": "azure",
+      "upstreamPackage": "@ai-sdk/azure",
+      "factoryNames": [
+        "AIProviders.azure"
+      ],
+      "capabilities": [
+        "language",
+        "completion",
+        "embedding",
+        "image",
+        "transcription",
+        "speech"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Azure OpenAI mirrors upstream 4.0.110: `AZURE_API_KEY` or per-request Microsoft Entra token provider auth, `AZURE_RESOURCE_NAME`, versioned user-agent suffix, Responses as default callable/language surface, chat/deepseek/completion/embedding/textEmbedding/image/transcription/speech aliases, Azure provider metadata namespace, deployment-based transcription URLs, Azure OpenAI base URLs with `/v1` and `api-version`, custom non-Azure gateway base URLs used as-is, DeepSeek reasoning mapping without thinking support, OpenAI option namespace mapping, Azure content-filter placeholder metadata suppression, and Azure-specific hosted tool helpers. The 4.0.63 pass normalizes Azure OpenAI, Foundry, Cognitive Services, custom gateway, deployment, and `/v1` URL shapes without duplicating `/v1` or `api-version`, and inherits the shared OpenAI GPT-6 request behavior. Files V4 remains exposed by the OpenAI and xAI file clients. The 2026-09-27 pass inherits strict-false function tools and validated, positioned GPT-6 reasoning-effort updates from the shared OpenAI Responses path. The 2026-10-04 pass adds MAI Voice 2/2.1 and Flash Speech synthesis with SSML/style/voice/format handling, MAI Transcribe 1.5/2 file transcription with timed phrase metadata, and MAI Transcribe 2 streaming over an injectable cancellable WebSocket. AzureOpenAIAudioSettings configures separate Speech/MAI base URLs. Entra auth applies to both audio hosts; generated resource names must be single DNS labels. Azure image file/mask capabilities are unknown. The 2026-10-11 pass: MAI Image supports generation and image editing, multiple references and grouped results, API-key or Entra auth, and native error handling; the OpenAI image path remains available. The 2026-10-18 pass: Current Responses citations/history/additional-tool behavior is inherited. webSearchPreview is deprecated in favor of webSearch. The 2026-10-23 pass: Per-model AzureOpenAILanguageModelSettings separates model identity/capability gates from deployment routing for Responses, chat and completion. The 2026-10-25 pass: Inherits OpenAI final-answer JSON selection and interrupted stream completion while retaining deployment/model identity separation."
+    },
+    {
+      "order": 8,
+      "providerID": "baseten",
+      "upstreamPackage": "@ai-sdk/baseten",
+      "factoryNames": [
+        "AIProviders.baseten"
+      ],
+      "capabilities": [
+        "language",
+        "embedding"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Chat and embedding endpoints mirror upstream Baseten 2.1.56: `BASETEN_API_KEY`, versioned user-agent suffix, custom Model API base URL, `/sync/v1` chat model URLs, `/sync` or `/sync/v1` embedding model URLs, OpenAI-compatible HTTP embedding bodies/options with 128-input batching, native JSON Schema structured output enabled by default, streamed chat usage enabled by default, unsupported image models, and both string and nested OpenAI-shaped `error` envelope parsing. The optional native NAPI performance client is JavaScript-specific."
+    },
+    {
+      "order": 9,
+      "providerID": "black-forest-labs",
+      "upstreamPackage": "@ai-sdk/black-forest-labs",
+      "factoryNames": [
+        "AIProviders.blackForestLabs"
+      ],
+      "capabilities": [
+        "image",
+        "video"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Black Forest Labs image and FLUX 3 video generation mirror upstream 2.0.70: `BFL_API_KEY`, `x-key` auth, custom base URL and headers, versioned user-agent suffix, `image`/`imageModel` and `video`/`videoModel` aliases, `black-forest-labs.image` and `black-forest-labs.video` provider IDs, `/v1/{model}` submit URLs, response-supplied polling with trusted `bfl.ai` sibling-host credential forwarding, signed result URLs, provider options and warnings, response/provider metadata, and structured errors. Video supports text-to-video, first/last/timed keyframes, continuation, draft generation/enhancement, and settled cost metadata. Unary generation remains source compatible; `AsyncVideoModel` adds serializable V4 start/status operations, stable idempotent start retries, and shared facade polling. BFL has no native webhook, so a supplied webhook warns and falls back to polling. Language and embedding families remain unsupported. The 2026-09-20 pass enforces wall-clock image polling deadlines that can abort a hung request. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown. The 2026-10-11 pass: FLUX 3 Image supports reference images, grounded prompts, resolution/ratio/seed mapping, terminal failure parsing and credential-isolated result downloads. The 2026-10-18 pass: Latest and future image IDs use the current model-specific submit protocol with file inputs, dimension/ratio/resolution controls and safetyTolerance up to 7; known legacy IDs retain their original protocols."
+    },
+    {
+      "order": 10,
+      "providerID": "bytedance",
+      "upstreamPackage": "@ai-sdk/bytedance",
+      "factoryNames": [
+        "AIProviders.byteDance"
+      ],
+      "capabilities": [
+        "video"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "ByteDance Seedance video models mirror upstream ByteDance 2.0.71: `ARK_API_KEY`, versioned user-agent suffix, current Dreamina/Seedance model IDs, prompt/image/frameImages/inputReferences mapping, standard unary generation plus public AsyncVideoModel start/status operations, provider options for watermark/camera/returnLastFrame/serviceTier/draft/reference media/polling, resolution mapping, warnings, polling/error metadata including returned last-frame URLs, and unsupported non-video families. Upstream image-token usage has no local analogue because this provider exposes video only. Status polling now follows only validated redirects and never forwards credentials away from the configured origin. The 2026-09-20 pass emits `reference_image` when a start image is combined with additional references."
+    },
+    {
+      "order": 11,
+      "providerID": "cartesia",
+      "upstreamPackage": "@ai-sdk/cartesia",
+      "factoryNames": [
+        "AIProviders.cartesia"
+      ],
+      "capabilities": [
+        "transcription",
+        "speech"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Cartesia REST speech, batch transcription, and Ink 2 streaming transcription mirror upstream 3.0.63: `CARTESIA_API_KEY`, Bearer auth, `Cartesia-Version` default `2026-03-01`, custom headers and Swift base-URL override, versioned user-agent suffix, speech/transcription aliases, `/tts/bytes` JSON speech, `/stt` multipart batch transcription, and `/access-token` plus duplex `/stt/turns/websocket` or `/stt/websocket` streaming. Streaming supports raw PCM/G.711 encodings, server turn detection or explicit finalization, partial/final events, raw chunks, token-redacted metadata, cancellation, and an injectable `AIDuplexWebSocketTransport`. Full realtime speech-session generation remains a broader protocol gap; `ink-2` batch calls still fail locally before network I/O. The 2026-10-18 pass: Only ink-whisper and dated ink-whisper-* IDs are batch-only. Other current and future IDs use the existing duplex transcription protocol."
+    },
+    {
+      "order": 12,
+      "providerID": "cerebras",
+      "upstreamPackage": "@ai-sdk/cerebras",
+      "factoryNames": [
+        "AIProviders.cerebras"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Cerebras chat models mirror upstream Cerebras 3.0.78: `CEREBRAS_API_KEY`, custom base URL and headers, callable provider plus `languageModel`/`chat` aliases, `cerebras.chat` provider IDs, versioned user-agent suffix, typed provider-option validation, `maxOutputTokens` mapped to `max_completion_tokens`, current model IDs such as `gpt-oss-120b` and `qwen-3-235b-a22b-thinking-2507`, structured outputs, reasoning transform, structured-output tool-call normalization, flat Cerebras error schema, empty tool-call ID normalization, and unsupported embedding/image families."
+    },
+    {
+      "order": 13,
+      "providerID": "cohere",
+      "upstreamPackage": "@ai-sdk/cohere",
+      "factoryNames": [
+        "AIProviders.cohere"
+      ],
+      "capabilities": [
+        "language",
+        "embedding",
+        "reranking"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Cohere mirrors upstream 4.0.69: `COHERE_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language aliases, embedding/textEmbedding aliases, reranking aliases, chat `/v2/chat`, embedding `/v2/embed`, reranking `/v2/rerank`, prompt conversion for text/images/documents/tool calls, providerOptions.cohere schemas, top-level reasoning to Cohere `thinking` budget mapping, providerOptions thinking precedence, response format and tool choice mapping, streaming lifecycle/tool-call/reasoning parts, response metadata with complete raw usage, embedding/reranking response bodies, object-document reranking warnings, and unsupported non-text document media. ProviderV4 type names, ESM-only packaging, Node 22 engines, TypeScript option export renames, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-11 pass: Embeddings select float, int8, uint8, binary or ubinary responses, support 768/2048 dimensions and common-dimension defaults; chat retains cached token accounting."
+    },
+    {
+      "order": 14,
+      "providerID": "deepgram",
+      "upstreamPackage": "@ai-sdk/deepgram",
+      "factoryNames": [
+        "AIProviders.deepgram"
+      ],
+      "capabilities": [
+        "transcription",
+        "speech"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Deepgram transcription and speech mirror upstream 3.1.39: `DEEPGRAM_API_KEY`, `Token` auth, custom headers, versioned user-agent suffix, `transcription`/`transcriptionModel` and `speech`/`speechModel` aliases, `/v1/listen` raw-audio transcription with explicit-only diarization and providerOptions.deepgram query mapping, `/v1/speak` JSON TTS with output format to encoding/container/sample-rate mapping, Aura family plus voice/language model-ID composition, speech speed, incompatible audio cleanup and unsupported-instruction warnings, response-header usage/provider metadata, structured `err_code`/`err_msg` errors, and unsupported language/embedding/image families. ProviderV4, ESM-only packaging, Node 22 engines, experimental streaming transcription types, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. Native seconds/characters audio usage is exposed without converting billing units into token counts."
+    },
+    {
+      "order": 15,
+      "providerID": "deepinfra",
+      "upstreamPackage": "@ai-sdk/deepinfra",
+      "factoryNames": [
+        "AIProviders.deepInfra"
+      ],
+      "capabilities": [
+        "language",
+        "completion",
+        "embedding",
+        "image"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "DeepInfra mirrors upstream 3.0.78: `DEEPINFRA_API_KEY`, bearer auth, custom base URL and headers, versioned user-agent suffix, callable/chat/language aliases, completion/embedding/textEmbedding aliases, image/imageModel aliases, `deepinfra.chat`/`.completion`/`.embedding`/`.image` provider IDs, `/openai/*` language/embedding routes, `/inference/{model}` image generation, OpenAI-compatible multipart image edits, Gemma/Gemini reasoning usage correction, native JSON Schema structured output enabled by default, `providerOptions.deepinfra` passthrough, max-one generated image per call, and response metadata. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown."
+    },
+    {
+      "order": 16,
+      "providerID": "deepseek",
+      "upstreamPackage": "@ai-sdk/deepseek",
+      "factoryNames": [
+        "AIProviders.deepSeek"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": true,
+      "skills": false,
+      "notes": "DeepSeek chat models mirror upstream DeepSeek 3.0.73: `DEEPSEEK_API_KEY`, custom base URL and headers, callable/language/chat aliases, `deepseek.chat` provider IDs, versioned user-agent suffix, reasoning/thinking mapping, providerOptions.deepseek thinking and reasoningEffort schema, cache-aware usage/provider metadata, JSON response instruction injection, generated fallback IDs for missing generate tool-call IDs, streaming response metadata, stream usage, OpenAI-compatible tool calls including strict mode, DeepSeek V4 assistant reasoning_content rules, V4 Flash Vision Exp inline, URL, and provider-reference images, Files V4 upload with `user_data`, expiry validation and structured errors, and unsupported embedding/image-generation families. The 3.0.37 pass also covered model-aware reasoning/sampling rules, log probabilities, user/message metadata, strict function-tool preparation, upload preflight and response metadata, complete usage, and typed stream failures. ProviderV4 type names, ESM-only packaging, Node 22 engines, and workflow serialization helpers are JS-only upstream concerns. The 2026-09-20 pass aligns empty-choice failures with the exact upstream structural error. The 2026-09-27 pass preserves multimodal V4 and Flash tool-result text, provider references, URL and base64 images, and rejects unsupported image URL media types. Standard cached prompt-token details are used when provider-specific cache-hit counts are absent. The 2026-10-11 pass: Common xhigh and max reasoning both map to max; native file bytes already cover the published Blob type-only cleanup. The 2026-10-18 pass: Future DeepSeek models use the V4 protocol unless recognized as legacy chat/reasoner/R1/V3 identifiers."
+    },
+    {
+      "order": 17,
+      "providerID": "elevenlabs",
+      "upstreamPackage": "@ai-sdk/elevenlabs",
+      "factoryNames": [
+        "AIProviders.elevenLabs"
+      ],
+      "capabilities": [
+        "transcription",
+        "speech",
+        "audioGeneration",
+        "audioTransformation",
+        "dubbing"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "ElevenLabs speech and transcription mirror upstream 3.0.71: `ELEVENLABS_API_KEY`, `xi-api-key` auth, custom headers, versioned user-agent suffix, camel-case Swift `AIProviders.elevenLabs` factory, `speech`/`speechModel` and `transcription`/`transcriptionModel` aliases, speech `/v1/text-to-speech/{voice}` request builder with output format aliases, voice settings, pronunciation dictionaries, normalization options and warnings, transcription `/v1/speech-to-text` multipart builder with `scribe_v2`, providerOptions.elevenlabs defaults and schema validation, response text/language/segments/duration, response metadata, ElevenLabs error schema, and unsupported language/embedding/image families. SwiftAISDK additionally exposes locally ported ElevenLabs music, sound effects, voice changer, voice isolator, and dubbing helpers. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, TypeScript export split, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-11 pass: Scribe response word metadata retains speaker and confidence evidence without altering the default diarize=true behavior. The 2026-10-25 pass: Native streaming speech accepts incremental text and v3/v4 dialogue with per-part voices/options, cancellation and typed failures. Unary speech routes dialogue, music and sound effects with validated native composition plans; reported transcription duration wins."
+    },
+    {
+      "order": 18,
+      "providerID": "fal",
+      "upstreamPackage": "@ai-sdk/fal",
+      "factoryNames": [
+        "AIProviders.fal"
+      ],
+      "capabilities": [
+        "image",
+        "transcription",
+        "speech",
+        "video"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Fal image, transcription, speech, and video models mirror upstream Fal 3.0.69: `FAL_API_KEY`/`FAL_KEY`, `Key` auth, custom base URL and headers, versioned user-agent suffix, image/transcription/speech/video aliases, image `/fal.run/{model}` requests with file and mask data URI mapping, native speech generation plus unauthenticated audio download, queue-based transcription and video polling, same-origin credential forwarding for video response URLs, foreign response URL credential stripping, providerOptions.fal schemas and camelCase-to-snake_case mapping, deprecated image snake_case warnings, video `video/mp4` media type fallback, response/provider metadata, Fal error schema, and unsupported language/embedding families. Fal video additionally implements Async Video V4 start/status operations and native webhook registration; the shared facade splits requests by `maxVideosPerCall`, preserves stable idempotency, and can complete by webhook or polling while unary generation remains source compatible. ProviderV4 type names, ESM-only packaging, Node 22 engines, TypeScript option export splits, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown. The 2026-10-23 pass: Polling and status resource IDs are encoded as one path segment, including reserved characters and standalone dots."
+    },
+    {
+      "order": 19,
+      "providerID": "fish-audio",
+      "upstreamPackage": "@ai-sdk/fish-audio",
+      "factoryNames": [
+        "AIProviders.fishAudio"
+      ],
+      "capabilities": [
+        "transcription",
+        "speech"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Fish Audio mirrors upstream 3.0.46: `FISH_AUDIO_API_KEY`, bearer auth, custom base URL and headers, versioned user-agent suffix, binary `/v1/tts` speech generation with model headers, output formats, latency/normalization/sampling controls and warnings, plus multipart `/v1/asr` transcription with language, duration, and timed text segments. Request/response metadata, abort propagation, and Fish `{status,message}` error handling follow the published package."
+    },
+    {
+      "order": 20,
+      "providerID": "fireworks",
+      "upstreamPackage": "@ai-sdk/fireworks",
+      "factoryNames": [
+        "AIProviders.fireworks"
+      ],
+      "capabilities": [
+        "language",
+        "completion",
+        "embedding",
+        "image"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Fireworks mirrors upstream Fireworks 3.0.81: `FIREWORKS_API_KEY`, bearer auth, custom base URL and headers, versioned user-agent suffix, callable/chat/language/completion/embedding/textEmbedding/image/imageModel aliases, chat/completion/embedding string and structured object error-envelope messages, native JSON Schema structured outputs, includeUsage streaming by default, current Kimi K2.6 and Minimax M2 model IDs, thinking/reasoningHistory/promptCacheKey/serviceTier mapping, reasoning_effort minimal/xhigh normalization, sync and async image endpoints, same-origin credential forwarding for async downloads, providerOptions.fireworks passthrough, warnings, and response metadata. ProviderV4, ESM-only packaging, Node 22 engines, and workflow serialization helpers are JS-only upstream concerns. The 2026-09-20 pass enforces a wall-clock image polling deadline that aborts hung requests. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown. The 2026-10-11 pass: Common max effort maps to high through the shared chat helper."
+    },
+    {
+      "order": 21,
+      "providerID": "gateway",
+      "upstreamPackage": "@ai-sdk/gateway",
+      "factoryNames": [
+        "AIProviders.gateway"
+      ],
+      "capabilities": [
+        "language",
+        "embedding",
+        "image",
+        "transcription",
+        "speech",
+        "video",
+        "reranking",
+        "evaluation",
+        "decision"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Gateway mirrors upstream 4.0.126: default `/v4/ai` base URL, `AI_GATEWAY_API_KEY`/`VERCEL_OIDC_TOKEN` auth, team scoping, protocol/auth-method headers, versioned user-agent suffix, language/embedding/image/video/reranking/speech/transcription aliases, durable Batch V4 start/status/results with ordered mixed content, callback URL forwarding, reconciled nonnegative native request counts, typed `not_found` errors, Tako Search, async-video start/status and native callback registration, unary transcription plus duplex streaming transcription, and a callable experimental transcription factory that mints short-lived route-bound tokens. Gateway providerOptions cover BYOK, routing order/fallbacks, provider allow-lists, prompt-training restrictions, `has` filtering, sort, serviceTier, quota, and tags; response/provider metadata, model/credits/spend/generation APIs, retryable structured errors, and provider tools are retained. Full realtime model sessions, Vercel o11y headers, metadata-cache refresh policy, ProviderV4 type names, ESM-only packaging, Node 22 engines, and workflow serialization helpers remain JS/runtime-only gaps. The 2026-09-20 pass adds native Evaluation V4 models, catalog discovery, headers, abort propagation, result metadata, and structured error mapping. The 2026-09-27 pass adds Browserbase search and fetch tools, forward-compatible has filters, and provider-owned batch cancellation with lifecycle-status validation. Gateway 4.0.95 also validates conditional Evaluation V4 fallbacks and attributes results to the model that actually answered. The 2026-10-04 pass routes credits team IDs/slugs through query parameters, accepts all-question conditional evaluation fallback thresholds, and preserves native audio usage including stream finishes. The 2026-10-11 pass: Decision V4 uses /decision-model with normalized inline file evidence; batch JSONL downloads have a configurable 64 MiB default line limit. Shared embedding dimensions and missing xAI diarization evidence are handled. The 2026-10-23 pass: Decision requests forward optional maxOutputTokens and reasoning without adding absent defaults. The 2026-10-25 pass: Native streaming speech, speech-bound client secrets and interoperable WebSocket envelopes are available. Parallel Search supports GA modes, top-level maxCharsTotal, fetch timeout/cache policy and location; raw results preserve GA snake_case fields."
+    },
+    {
+      "order": 22,
+      "providerID": "gmicloud",
+      "upstreamPackage": "@ai-sdk/gmicloud",
+      "factoryNames": [
+        "AIProviders.gmiCloud"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "GMI Cloud chat mirrors upstream 3.0.49: `GMI_CLOUD_APIKEY`, bearer auth, custom base URL and headers, versioned user-agent suffix, callable/language/chat aliases, forward-compatible string model IDs, OpenAI-compatible chat streaming, usage enabled by default with unknown usage fields preserved, and nested JSON `error.details` unwrapping for actionable backend diagnostics. Embedding and image families remain unsupported."
+    },
+    {
+      "order": 23,
+      "providerID": "gladia",
+      "upstreamPackage": "@ai-sdk/gladia",
+      "factoryNames": [
+        "AIProviders.gladia"
+      ],
+      "capabilities": [
+        "transcription"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Gladia transcription mirrors upstream 3.0.68: `GLADIA_API_KEY`, `x-gladia-key` auth, custom headers, versioned user-agent suffix, `transcription`/`transcriptionModel` aliases, `/v2/upload` multipart audio upload, `/v2/pre-recorded` initiation, provider-supplied result polling with same-origin credential forwarding, foreign result URL credential stripping, providerOptions.gladia schema and snake_case mapping, result text/language/segments/duration, response/provider metadata, Gladia error schema, lifecycle errors, and unsupported language/embedding/image families. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns."
+    },
+    {
+      "order": 24,
+      "providerID": "google.generative-ai",
+      "upstreamPackage": "@ai-sdk/google",
+      "factoryNames": [
+        "AIProviders.google"
+      ],
+      "capabilities": [
+        "language",
+        "embedding",
+        "image",
+        "speech",
+        "video",
+        "evaluation",
+        "decision"
+      ],
+      "files": true,
+      "skills": false,
+      "notes": "Google Generative AI's implemented Gemini language, embedding, image, TTS speech, Veo video, files, interactions, and agents surface was audited against upstream Google 4.0.105. The current pass adds the published 100-input embedding preflight limit. Imagen factories remain locally available for source compatibility after their removal from the current upstream package. Gemini 3.7 Flash normalizes `none` and `minimal` reasoning to the supported `low` thinking floor. Primitive JSON Schema enum/const values and local `$ref` expansion, including boolean-schema references, map to Gemini's OpenAPI-compatible wire form, while strict forced/named tools use `ANY` and strict automatic tools retain `VALIDATED`. Interactions forwards topK and seed while warning for unsupported penalties and agent-dropped settings; Files resumable uploads leave payload length to the transport. Generate and stream results surface Gemini `responseId`; multiple code-execution results retain their originating call ID; parallel unsigned function calls reuse an earlier signed standard call; and unknown future Gemini IDs default to the newest supported tool, thinking, file-search, and multimodal response capabilities while known legacy families stay conservative. Speech maps Gemini TTS generateContent requests with WAV-wrapped PCM by default, raw PCM opt-in, multi-speaker provider options, response sample-rate metadata, and upstream warnings. Gemini 3.5 unary/live transcription, Files URL recognition, recursive-tool behavior, and Gemini 2.5 penalty warnings remain deferred to a dedicated provider pass. Realtime/WebSocket speech translation and lifecycle events and JS ProviderV4 runtime helpers also remain gaps. The 4.0.64 pass adds JSON Schema `minItems` and `maxItems`, preserves caller function aliases, forwards file headers and cancellation, supplies a durable Batch V4 adapter with tool content and input-file metadata, and supports Interactions video plus processing-call/result request, response, stream, warning, and metadata handling. Final integration also round-trips Interactions response history, function and built-in tool items, reasoning items, compaction state, provider references, `mediaResolution`, and `systemInstruction` precedence; Google Batch rejects empty result keys and preserves thought signatures even when their associated text is empty. The 2026-09-20 pass adds lossless schema conversion, corrected block reasons, accumulated stream metadata and usage, exact image-count behavior, custom provider names, and a Gemini-backed Evaluation V4 adapter. The 2026-09-27 pass adds embedding provider-option slicing, image metadata, video offsets, code-execution replay, JSON Schema `$ref` URIs, and current TTS behavior. The 2026-10-04 pass reports Gemini image file/mask capabilities and retains speech usageMetadata. Gemini transcription and Google Realtime remain deferred. The 2026-10-11 pass adds collision-safe JSON response tools with application tools, incremental nested JSON parsing and real-tool/signature preservation, Gemini 3 native automatic selection, shared embedding dimensions and Decision V4. Batch downloads default to a configurable 64 MiB UTF-8 line limit. The 2026-10-18 pass: GenerateContent auto-continues long decodes with cumulative output budgets, summed per-hop usage and initialPromptTokenCount metadata. Checkpoint tokens support explicit resume. AUDIO output, explicit thinking precedence, dotted route IDs and background Interactions polling are supported."
+    },
+    {
+      "order": 25,
+      "providerID": "google.vertex",
+      "upstreamPackage": "@ai-sdk/google-vertex",
+      "factoryNames": [
+        "AIProviders.googleVertex"
+      ],
+      "capabilities": [
+        "language",
+        "embedding",
+        "image",
+        "speech",
+        "transcription",
+        "video"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Vertex's implemented Gemini language, tuned endpoint, embedding, Gemini TTS speech, Cloud Speech-to-Text transcription, Veo video, and Interactions surface was audited against upstream Google Vertex 5.0.122. The current pass exposes the published embedding limits: 250 inputs for standard models and one input for Gemini multimodal embeddings. Imagen image generation/editing factories remain locally available for source compatibility after their removal from the current upstream package. Shared Gemini request behavior includes local JSON Schema `$ref` expansion with boolean-schema references, the Gemini 3.7 Flash `low` thinking floor, forward-compatible future-model capabilities, and response IDs; standard Vertex function-call and function-response IDs are omitted while server-tool IDs remain intact. Video supports first/last frame images, reference images, and top-level generateAudio precedence. Speech routes `chirp*` model IDs to authenticated Cloud TTS `text:synthesize` with Chirp voice/language defaults, LINEAR16/WAV handling, speed mapping, warnings, and metadata; other IDs keep Gemini TTS generateContent with WAV-wrapped PCM by default, raw PCM opt-in, multi-speaker provider options, sample-rate metadata, and upstream warnings. Google Batch, Gemini 3.5 transcription, and the broader shared Google language/safety/usage/request changes remain deferred to a dedicated Vertex pass. Node google-auth-library options, workflow serialization, ProviderV4 type names, and ESM-only packaging remain JS-runtime/package-surface concerns. The 5.0.76 pass adds an exact Maverick/Scout MaaS default of `max_tokens: 8192` without overwriting caller values and inherits the audited Google, Anthropic, and OpenAI-compatible shared behavior. The 2026-09-27 pass adds `gs://` tool-result media and the shared current TTS behavior. The 2026-10-04 pass validates generated location/Chirp region hosts, reports Gemini image capabilities, and retains speech usageMetadata; Vertex Gemini transcription remains deferred. The 2026-10-11 pass inherits JSON-with-tools conversion and shared embedding dimensions; native Gemini transcription remains a declared gap. The 2026-10-18 pass: Inherited GenerateContent continuation/usage/AUDIO/thinking and background Interactions behavior is current. Vertex Anthropic labels are covered by its separate adapter."
+    },
+    {
+      "order": 26,
+      "providerID": "googleVertex.maas",
+      "upstreamPackage": "@ai-sdk/google-vertex",
+      "factoryNames": [
+        "AIProviders.googleVertexMaaS"
+      ],
+      "capabilities": [
+        "language",
+        "completion",
+        "embedding",
+        "image"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Vertex MaaS mirrors upstream 5.0.122 with OpenAI-compatible language, completion, embedding, and image factories. Maverick and Scout default `max_tokens` to 8192 while preserving an explicit caller value."
+    },
+    {
+      "order": 27,
+      "providerID": "googleVertex.xai",
+      "upstreamPackage": "@ai-sdk/google-vertex",
+      "factoryNames": [
+        "AIProviders.googleVertexXAI"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Vertex xAI mirrors upstream Google Vertex 5.0.122 through the shared OpenAI-compatible request and response surface."
+    },
+    {
+      "order": 28,
+      "providerID": "googleVertex.anthropic",
+      "upstreamPackage": "@ai-sdk/google-vertex",
+      "factoryNames": [
+        "AIProviders.googleVertexAnthropic"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Vertex Anthropic mirrors upstream Google Vertex 5.0.122 and inherits the shared Anthropic 4.0.82 model recognition, system options, thinking behavior, citations, and beta headers. The 2026-10-18 pass: Validated labels are UTF-8 JSON/base64 encoded into x-vertex-ai-labels after final request-header merging, with explicit caller header precedence."
+    },
+    {
+      "order": 29,
+      "providerID": "groq",
+      "upstreamPackage": "@ai-sdk/groq",
+      "factoryNames": [
+        "AIProviders.groq"
+      ],
+      "capabilities": [
+        "language",
+        "transcription"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Groq mirrors upstream 4.0.70: `GROQ_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language aliases, transcription aliases, chat `/openai/v1/chat/completions`, transcription `/openai/v1/audio/transcriptions`, OpenAI-compatible prompt conversion, Qwen/gpt-oss reasoning content, top-level reasoning to reasoning_effort mapping with providerOptions precedence and compatibility warnings, Groq provider options, browser_search provider tool gating, service tiers, structured outputs, stream usage/metadata, tool-call streaming validation, transcription multipart options/validation, plain-text responses, and words-to-segments fallback, response metadata, Groq error schema, and unsupported embedding/image families. Current parity makes top-level `reasoning: none` model-aware, clamps reasoning-adjusted text usage, preserves complete usage, and normalizes provider stream errors. ProviderV4 type names, ESM-only packaging, Node 22 engines, TypeScript option export renames, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2026-09-27 pass rejects successful responses whose choices array is empty with the exact structural response error. The 2026-10-11 pass: JSON schema with tools uses a collision-safe response tool and converts its arguments to text without leaking synthetic tool events; common max effort maps to high. The 2026-10-18 pass: Browser search is enabled for unknown/future IDs while the published explicit legacy exclusion set retains unsupported-tool warnings. The 2026-10-23 pass: Generated reasoning precedes text and tool calls."
+    },
+    {
+      "order": 30,
+      "providerID": "heygen",
+      "upstreamPackage": "@ai-sdk/heygen",
+      "factoryNames": [
+        "AIProviders.heyGen"
+      ],
+      "capabilities": [
+        "video"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "HeyGen mirrors @ai-sdk/heygen 3.0.10: HEYGEN_API_KEY / x-api-key authentication, custom base URL/headers/transport and ai-sdk-heygen/3.0.10 user-agent; video/videoModel aliases and open model IDs; heygen-video-1 text-to-video, first-frame image-to-video and grouped image/video/audio reference conditioning. Typed HeyGenVideoModelOptions and HeyGenVideoAsset validate HTTPS URL/asset/base64 inputs, mode conflicts, 9 image/3 video/3 audio/12 total reference limits, prompt/duration/seed bounds, all documented frame sizes and size-class/aspect-ratio constraints before I/O. AsyncVideoModel start/status operations retain videoId/mode/resolution, support durable JSON persistence and shared polling/idempotent retries, and return refreshed signed MP4 URLs without downloading. Reported output duration/dimensions/seed/inference timing and failure codes are preserved without inventing token or credit usage. Native credentials resolve at factory creation. Unary generation, remote cancellation, webhooks, avatar/voice/translation APIs and JavaScript model/workflow serialization are absent from this provider surface; unsupported fps/audio/count settings warn."
+    },
+    {
+      "order": 31,
+      "providerID": "huggingface",
+      "upstreamPackage": "@ai-sdk/huggingface",
+      "factoryNames": [
+        "AIProviders.huggingFace"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Hugging Face Responses language models mirror upstream Hugging Face 2.0.78: `HUGGINGFACE_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language/responses aliases, `/v1/responses` request builder, providerOptions.huggingface metadata/instructions/strictJsonSchema/reasoningEffort schema, structured text formats, function tools/tool choice, reasoning and MCP/tool-call parsing, streaming lifecycle and metadata, image URL/data file parts including top-level `image` and `image/*` MIME resolution, explicit provider-reference file rejection, and unsupported embedding/image families. Streamed provider failures preserve normalized type, code, status, retryability, and raw metadata. ProviderV4 type names, ESM-only packaging, Node 22 engines, default export rename to `huggingFace`, optional JS headers config, TypeScript option export split, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-25 pass: Responses toolChoice none retains definitions for facade enforcement; missing completion signals report interrupted."
+    },
+    {
+      "order": 32,
+      "providerID": "hume",
+      "upstreamPackage": "@ai-sdk/hume",
+      "factoryNames": [
+        "AIProviders.hume"
+      ],
+      "capabilities": [
+        "speech"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Hume speech mirrors upstream 3.0.68: `HUME_API_KEY`, `X-Hume-Api-Key` auth, custom headers, versioned user-agent suffix, no-argument `speech`/`speechModel` aliases, default voice ID, `/v0/tts/file`, binary audio responses, mp3/pcm/wav output formats, language warnings, `providerOptions.hume.context` schema mapping, response metadata, and unsupported language/embedding/image families."
+    },
+    {
+      "order": 33,
+      "providerID": "klingai",
+      "upstreamPackage": "@ai-sdk/klingai",
+      "factoryNames": [
+        "AIProviders.klingAI"
+      ],
+      "capabilities": [
+        "video"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "KlingAI video models mirror upstream KlingAI 4.0.70: trimmed `KLINGAI_API_KEY` bearer auth or explicit/environment legacy access and secret keys with upstream precedence, custom base URL and headers, versioned user-agent suffix, `video`/`videoModel` aliases, text-to-video, image-to-video, reference-to-video multi-image, and motion-control endpoints, first/last `frameImages`, `inputReferences`, top-level `generateAudio` to `sound` mapping with provider-option override behavior, providerOptions.klingai schema and snake_case passthrough, polling, `video/mp4` media type, provider metadata, KlingAI error schema, and warnings for unsupported standard video options. ProviderV4 type names, ESM-only packaging, Node 22 engines, TypeScript option export split, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. Status polling now follows only validated redirects and never forwards credentials away from the configured origin. The 2026-10-23 pass: Polling and status resource IDs are encoded as one path segment, including reserved characters and standalone dots."
+    },
+    {
+      "order": 34,
+      "providerID": "lmnt",
+      "upstreamPackage": "@ai-sdk/lmnt",
+      "factoryNames": [
+        "AIProviders.lmnt"
+      ],
+      "capabilities": [
+        "speech"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "LMNT speech mirrors upstream 3.0.36: `LMNT_API_KEY`, `x-api-key` auth, custom headers, versioned user-agent suffix, `speech`/`speechModel` aliases, default voice `ava`, `/v1/ai/speech/bytes`, binary audio responses, output format warnings/fallback, `providerOptions.lmnt` speech schema defaults, response metadata, and unsupported language/embedding/image families."
+    },
+    {
+      "order": 35,
+      "providerID": "luma",
+      "upstreamPackage": "@ai-sdk/luma",
+      "factoryNames": [
+        "AIProviders.luma"
+      ],
+      "capabilities": [
+        "image"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Luma images mirror upstream Luma 3.0.69: `LUMA_API_KEY`, bearer auth, custom base URL and headers, versioned user-agent suffix, `image`/`imageModel` aliases, `luma.image` provider IDs, `photon-1` and `photon-flash-1` model IDs, `/dream-machine/v1/generations/image`, async polling, unauthenticated generated image download, warnings for unsupported size/seed, `providerOptions.luma` referenceType/images/polling schema, URL-only image references, response metadata, and unsupported language/embedding families. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown. The 2026-10-23 pass: Polling and status resource IDs are encoded as one path segment, including reserved characters and standalone dots."
+    },
+    {
+      "order": 36,
+      "providerID": "minimax",
+      "upstreamPackage": "@ai-sdk/minimax",
+      "factoryNames": [
+        "AIProviders.miniMax"
+      ],
+      "capabilities": [
+        "language",
+        "video"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "MiniMax language and video models mirror upstream 3.0.65: `MINIMAX_API_KEY`, separate language/video base URLs, custom headers, versioned user-agent suffix, callable provider plus `languageModel`/`chat` and `video`/`videoModel` aliases, and `minimax.messages`/`minimax.video` provider IDs. Language reuses the Anthropic Messages request builder, error handling, streaming lifecycle, telemetry metadata, and ordered generate-content parser, including signed/redacted reasoning, citation metadata, compaction, and adaptive/disabled thinking options. MiniMax H3/H3-Max video uses model-aware 480P/768P/2K tiers, duration bounds, audio support, and reference-input validation, and covers text-to-video, first/last-frame and reference-to-video inputs, 2K resolution and ratio mapping, reference audio, text-to-video `16:9` default/fallback behavior, duration/cap warnings, submit/poll lifecycle, aborts, structured errors, response/provider metadata, and custom polling controls. Embedding and image families remain unsupported. Status polling now follows only validated redirects and never forwards credentials away from the configured origin. The 2026-10-23 pass: M3.1+ and future model IDs support image/video inputs and reasoning effort; older M2 families remain text-only. MiniMax cache options and sampling semantics use the compatible Messages hooks."
+    },
+    {
+      "order": 37,
+      "providerID": "mistral",
+      "upstreamPackage": "@ai-sdk/mistral",
+      "factoryNames": [
+        "AIProviders.mistral"
+      ],
+      "capabilities": [
+        "language",
+        "embedding",
+        "transcription",
+        "speech"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Mistral chat, embeddings, Voxtral transcription, and speech mirror upstream Mistral 4.0.72: `MISTRAL_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language/chat, embedding/textEmbedding, transcription, and speech/speechModel aliases, chat `/v1/chat/completions`, embeddings `/v1/embeddings`, transcription `/v1/audio/transcriptions`, speech `/v1/audio/speech`, structured outputs, JSON-object instruction injection, stop sequences via native `stop`, top-level reasoning mapped to supported Mistral reasoning effort with providerOptions precedence, provider option schema validation including speech `refAudio`, tool/tool-choice mapping, fragmented streaming tool-call buffering, tool-result output conversion, image/PDF user file support, typed assistant thinking blocks, Voxtral option validation and rich segment/usage metadata, streaming text/reasoning/tool lifecycle, `promptCacheKey` to `prompt_cache_key` mapping, complete raw usage and cached-token accounting, speech reference-audio metadata redaction, response metadata, Mistral error schema, and unsupported image family. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-04 pass maps error finish reasons, injects JSON schemas when structuredOutputs is false, and retains native transcription usage. The 2026-10-11 pass: conversation(modelID) provides stateless /conversations generation and SSE with replayable builtin tools, sources, usage and errors. MistralTools.webSearch/webSearchPremium, Large 4 reasoning and common embedding dimensions are available. The 2026-10-18 pass: Known non-reasoning exclusions retain warnings while future model IDs inherit reasoning-effort support. The 2026-10-25 pass: Voxtral 3 speech forwards validated expressiveness and IPA phoneme hints; transcription supports detected language, phrase context bias and model-aware language/timestamp validation. Missing chat completion signals are interrupted."
+    },
+    {
+      "order": 38,
+      "providerID": "moonshotai",
+      "upstreamPackage": "@ai-sdk/moonshotai",
+      "factoryNames": [
+        "AIProviders.moonshotAI"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "MoonshotAI was audited against upstream 3.0.78; its implemented chat-model surface remains at 3.0.37 semantics: `MOONSHOT_API_KEY`, custom base URL and headers, callable provider plus `languageModel`/`chat` aliases, `moonshotai.chat` provider IDs, versioned user-agent suffix, stream usage by default, current model IDs such as `kimi-k2.5`, `kimi-k2.6`, and `kimi-k2.7-code`, `providerOptions.moonshotai` thinking, reasoning effort/history, prompt-cache, and safety mapping, owned image/video/text input conversion with local unsupported-media errors, MFJS tool-schema normalization, structured outputs for `kimi-k*` models with top-level `$schema` stripping, Moonshot error schema, and unsupported embedding/image families. The 3.0.43 V1/Kimi partial and predicted output, message-name, log-probability, media-reference, reasoning/sampling, structured-output, response-metadata, raw-usage, and error-code delta remains deferred to a dedicated provider pass. The 2026-10-11 pass: Common max effort maps to high through the shared chat helper. The 2026-10-18 pass: All current and future model IDs inherit structured-output support; older separately deferred V1/Kimi codec gaps remain explicit. The 2026-10-23 pass: Generated content orders reasoning, function calls, then text; the broader V1/Kimi gaps remain deferred. The 2026-10-25 pass: Kimi K3.1 aliases inherit K3 reasoning history. Cache mode/TTL, cache-write token accounting and per-TTL headers are preserved; MFJS object unions retain their required object root. Missing stream completion signals are interrupted."
+    },
+    {
+      "order": 39,
+      "providerID": "open-responses.responses",
+      "upstreamPackage": "@ai-sdk/open-responses",
+      "factoryNames": [
+        "AIProviders.openResponses"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Custom URL factory mirrors upstream open-responses 2.0.73: provider ID is derived from the caller supplied name, optional API key and custom headers receive the versioned user-agent suffix, request building covers file URL/data inputs, rich tool-result content, function tools, tool choice, structured text formats, top-level reasoning effort mapping, providerOptions reasoningSummary, precise denied-tool fallback text, finish reasons, usage, and response metadata. Manual replay retains output order, item IDs, URL annotations, structured/encrypted reasoning, and provider-native effort precedence; unsupported provider tools warn explicitly, and stream reasoning keeps its original IDs through EOF closure. The 2.0.36 pass streams reasoning summaries, preserves error finishes for failed/error events, and surfaces validation failures for malformed known events. The experimental extension item/tool/event codec registry and lossless custom-event replay remain deferred until Swift has a public extension design. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2.0.39 pass adds `strictResponseInput`: ID-less assistant history becomes simple input text while ID-bearing history remains completed output content. The 2026-09-27 pass adds reusable custom tools, history and tool-choice mapping, schema-less JSON mode, strict-false function tools, dynamic headers, custom user agents and error hooks, complete streamed tool-input fallbacks, configurable custom-tool and structured-output behavior, and validated regex or lark grammar formats."
+    },
+    {
+      "order": 40,
+      "providerID": "openai",
+      "upstreamPackage": "@ai-sdk/openai",
+      "factoryNames": [
+        "AIProviders.openAI"
+      ],
+      "capabilities": [
+        "language",
+        "completion",
+        "embedding",
+        "image",
+        "transcription",
+        "speech",
+        "evaluation",
+        "decision"
+      ],
+      "files": true,
+      "skills": true,
+      "notes": "OpenAI mirrors upstream 4.0.102 across Chat Completions, Responses language models, completions, embeddings, images, speech, transcription, files, skills, hosted Responses tools, provider tool helpers, organization/project headers, structured output, usage details, response/provider metadata, warnings, raw stream chunks, provider references, Responses allowedTools for built-in and provider-defined tools with validated allow-list mappings and warnings, tool-search/namespace handling including blocked-domain filters, server-side compaction items, retryable pre-output stream failures, and Chat file-part mapping for image/audio/PDF inputs. File uploads serialize expiry options as nested `expires_after[anchor]` and `expires_after[seconds]` multipart fields; Chat metadata ignores zero-valued Azure content-filter placeholder timestamps while generic compatible providers preserve explicit epoch timestamps. The latest pass JSON-encodes function outputs that declare output schemas, keeps streaming output-item identity stable across rotating IDs through `output_index`, supports `serviceTier: fast`, and adds Responses programmatic tool calling with caller controls, output schemas, streamed/generated program items, and multi-step continuation; preserves stored tool-search IDs; and applies reasoning, sampling, service-tier, and image defaults to recognizable future OpenAI model versions. The current pass also adds terminal compaction triggers, previous-response function/output pairing, storage-disabled shell replay, MCP approval reference deduplication, distinct `openai.computer` actions/safety-check parsing and screenshot replay, plus durable Responses Batch V4 file upload, status, and streamed result conversion. Chat reasoning models strip unsupported sampling and penalty fields with upstream warnings, while `topLogprobs` is always omitted even when GPT-5.1+ permits non-reasoning parameters at effort `none`. The 4.0.52 pass also adds Batch webhook warnings and reconciled results/counts, embedding byte budgets, typed and schema-invalid stream failures, non-object tool-argument replay, function-name-aware tool-search history, scalar cache breakpoints, and safe identifier encoding. Browser WebRTC, ProviderV4 type names, ESM-only packaging, Node 22 engines, and workflow serialization helpers remain JS-runtime/package-surface concerns. The 4.0.60 pass adds GPT-6 and `reasoningEffortUpdate`, image-generation actions, diarized transcription and chunking, complete Files V4 metadata/download/delete and streaming upload operations, and Batch tool content plus input-file and expiry provider metadata. The 2026-09-20 pass adds the Evaluation V4 adapter, current Responses assistant/reference conversion and media abort handling, plus the portable server-WebSocket OpenAI Live adapter over continuous realtime sessions; browser WebRTC remains deferred. The 2026-09-27 pass makes audio transcripts a fallback for nil or empty chat content, supports GPT-6 Sol and Luna none reasoning updates with positioned validation and deduplication, defaults function tools to strict false, and removes unsupported regex lookarounds recursively. The 2026-10-04 pass expands recursive singleton allOf references while preserving true intersections, reports image file/mask capabilities, and preserves transcription billing usage. The 2026-10-11 pass: Decision V4 uses native /decisions with image evidence and refusals. GPT-6-sol/luna reasoning gates, failed web-search results, stored assistant IDs, typed OpenAI error codes and line-bounded batch downloads follow published behavior. The 2026-10-18 pass: Attached citations are separate from retrieved URL/document sources. History-loaded additionalTools, omitted top-level function definitions, pruned-reasoning replay and storage-disabled web-search replay are supported. Custom-tool deltas declare text encoding and final string inputs remain JSON encoded. webSearchPreview is deprecated. The 2026-10-23 pass: Responses supports 12h cache TTL, prewarm, nested cache-write token metadata and shell timeout/max-output fields; transcription normalizes language and retains metadata. Decision omits absent Choice/Score instructions and reports unsupported shared controls. The 2026-10-25 pass: JSON Responses select the last final_answer through structuredOutputText while retaining drafts and all content. Chat, Completion and Responses cutoffs report interrupted."
+    },
+    {
+      "order": 41,
+      "providerID": "openai-compatible",
+      "upstreamPackage": "@ai-sdk/openai-compatible",
+      "factoryNames": [
+        "AIProviders.openAICompatible"
+      ],
+      "capabilities": [
+        "language",
+        "completion",
+        "embedding",
+        "image"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Generic OpenAI-compatible factory mirrors upstream 3.0.78: caller supplies provider ID and base URL, custom headers/query params, versioned user-agent suffix, upstream surface IDs, chat/completion/embedding/image models, providerOptions namespace unwrapping with raw and camelCase keys, deprecated raw-key warnings, structured outputs, stream usage, hosted and data-URL video message input, image token usage, truncated-stream errors, nonempty Gemini thought signatures under custom provider namespaces, preservation of unknown raw usage fields including nested prompt and completion details, response/provider metadata, camelCase provider metadata namespace selection when camelCase providerOptions are used, extensible image provider options, provider-controlled image response formats instead of a forced `response_format`, non-negative text-token usage when reasoning counts exceed completion counts, and ID/index/latest streamed tool-call correlation. Current parity preserves ordered array-based text/thinking content, ignores unknown future content parts, and maps top-level reasoning disablement to `reasoning_effort: none`. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 3.0.44 pass keeps streamed reasoning open across empty `tool_calls` arrays and closes it only when real text or tool output begins. Rich tool-result content is opt-in through ProviderSettings.supportsMultiPartToolContent; the default string representation is retained. Generic image input capabilities remain unknown. The 2026-10-11 pass: Warning-aware request transforms are exposed through settings and the standard factory while preserving the existing callback; embeddings accept shared dimensions with provider overrides. The 2026-10-18 pass: Provider file references map to provider-native file IDs. URL-only and mixed image results are materialized into ordered base64 images with validated redirects, aborts and origin-bound credentials. The 2026-10-23 pass: Generated reasoning precedes text and tool calls. Shared Moonshot generation orders reasoning, tools, then text."
+    },
+    {
+      "order": 42,
+      "providerID": "perplexity",
+      "upstreamPackage": "@ai-sdk/perplexity",
+      "factoryNames": [
+        "AIProviders.perplexity"
+      ],
+      "capabilities": [
+        "language",
+        "embedding",
+        "decision"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Perplexity Agent language models, legacy Sonar chat, and quantized embeddings mirror upstream Perplexity 5.0.20: `PERPLEXITY_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language Agent surface plus chat/sonar compatibility and embedding/textEmbedding aliases, `/v1/agent`, `/chat/completions`, and `/v1/embeddings`, text/image/PDF message conversion, JSON schema response format, providerOptions.perplexity passthrough including quantized embedding dimensions and signed/binary base64 decoding with a 512-value preflight limit, citations/images/cost metadata, optional and null streaming delta content, reasoning-token separation from completion tokens with corrected total accounting, Perplexity error schema, and warnings for unsupported topK/stop/seed/custom reasoning while treating provider-default reasoning as a no-op. Perplexity 5.0.1 accepts explicit null values for optional Agent SSE fields without failing the stream, including null content indexes that retain the base text-part ID. The 5.0.0 migration makes `languageModel` and the callable provider use the Agent API; use `chatModel` or `sonarModel` for the legacy Sonar Chat Completions API. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The default X-Pplx-Integration header is vercel-ai-sdk; explicit headers override it case-insensitively. The 2026-10-11 pass: Common max effort maps to xhigh; unknown effort warns and is omitted. Embeddings inherit shared dimensions unless a provider override is supplied. The 2026-10-23 pass: Native decisionModel calls /v1/decisions with named Choice/Score/Boolean questions, up to eight inline images, full-precision answers, confidence/score legends, and unsupported-setting warnings."
+    },
+    {
+      "order": 43,
+      "providerID": "prodia",
+      "upstreamPackage": "@ai-sdk/prodia",
+      "factoryNames": [
+        "AIProviders.prodia"
+      ],
+      "capabilities": [
+        "language",
+        "image",
+        "video"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Prodia language, image, and video models mirror upstream Prodia 2.0.69: `PRODIA_TOKEN`/`PRODIA_API_KEY`, custom base URL and headers, versioned user-agent suffix, language/image/video aliases, `/v2/job?price=true` JSON and multipart job submission, multipart text/image/video responses, language image input MIME detection, providerOptions.prodia schemas, custom reasoning warnings with provider-default no-op, an explicit warning for unsupported language-model `seed`, request/response metadata, Prodia job provider metadata including price, Prodia error schema, SSRF-guarded video image downloads, and unsupported embedding/speech/transcription families. ProviderV4 type names, ESM-only packaging, Node 22 engines, TypeScript option export renames, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown."
+    },
+    {
+      "order": 44,
+      "providerID": "quiverai",
+      "upstreamPackage": "@ai-sdk/quiverai",
+      "factoryNames": [
+        "AIProviders.quiverAI"
+      ],
+      "capabilities": [
+        "language",
+        "image"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Responses language generation, SVG image generation, and vectorization mirror upstream QuiverAI 2.0.69: `QUIVERAI_API_KEY`/`QUIVERAI_BASE_URL`, versioned user-agent suffix, `arrow-1`/`arrow-1.1`/`arrow-1.1-max`, `providerOptions.quiverai` generation and vectorize options, reference limits, warnings for unsupported standard image options, and retryable API error metadata. The 2026-09-20 pass adds Arrow 2 and Telos generation, animation, editing, vectorization, reference preparation, credits, metadata, and revised limits. The 2026-09-27 pass adds the Arrow Responses language surface, custom tools, reasoning options, and explicit structured-output warnings. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown."
+    },
+    {
+      "order": 45,
+      "providerID": "replicate",
+      "upstreamPackage": "@ai-sdk/replicate",
+      "factoryNames": [
+        "AIProviders.replicate"
+      ],
+      "capabilities": [
+        "image",
+        "video"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Replicate image and video models mirror upstream Replicate 3.0.69: `REPLICATE_API_TOKEN`, custom base URL and headers, versioned user-agent suffix, `image`/`imageModel` and `video`/`videoModel` aliases, versioned and unversioned prediction endpoints, `prefer: wait` headers, image output downloads without credential forwarding, image editing inputs and masks, Flux-2 multi-image input mapping and warnings, loose providerOptions.replicate schemas, video polling with same-origin credential forwarding, provider metadata, `video/mp4` media type, Replicate error schema, and unsupported language/embedding families. ProviderV4 type names, ESM-only packaging, Node 22 engines, TypeScript option export renames, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2026-09-20 pass continues image prediction polling after synchronous wait expiry with trusted-origin credentials and strict terminal-output validation. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown."
+    },
+    {
+      "order": 46,
+      "providerID": "revai",
+      "upstreamPackage": "@ai-sdk/revai",
+      "factoryNames": [
+        "AIProviders.revAI"
+      ],
+      "capabilities": [
+        "transcription"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Rev.ai transcription mirrors upstream 3.0.68: `REVAI_API_KEY`, bearer auth, custom headers, versioned user-agent suffix, `transcription`/`transcriptionModel` aliases, `revai.transcription` provider IDs, `/speechtotext/v1/jobs` submit/poll/transcript flow, multipart `media` plus JSON `config`, providerOptions.revai schema/defaults, job/transcript response validation, Rev.ai error schema, text/segment/duration extraction, response metadata, and unsupported language/embedding/image families. ProviderV4, ESM-only packaging, Node 22 engines, experimental streaming transcription types, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-23 pass: Polling and status resource IDs are encoded as one path segment, including reserved characters and standalone dots."
+    },
+    {
+      "order": 47,
+      "providerID": "togetherai",
+      "upstreamPackage": "@ai-sdk/togetherai",
+      "factoryNames": [
+        "AIProviders.togetherAI"
+      ],
+      "capabilities": [
+        "language",
+        "completion",
+        "embedding",
+        "image",
+        "reranking"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "TogetherAI mirrors upstream TogetherAI 3.0.79: `TOGETHER_API_KEY` with deprecated `TOGETHER_AI_API_KEY` fallback, versioned user-agent suffix, language/completion/embedding/image/reranking factories, chat and completion stream usage enabled by default, image `n` request mapping despite upstream `maxImagesPerCall = 1`, loose image provider options, reranking `rankFields`, and upstream-focused image/reranking response validation, and DeepSeek V4 Flash native JSON Schema structured-output routing without enabling it for unrelated models. ProviderV4, ESM-only packaging, Node 22 engines, and workflow serialization helpers are JS-only upstream concerns. The 2026-09-20 pass gives Gemini image models their exact omission and seed-warning behavior while preserving supported size/provider options. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown."
+    },
+    {
+      "order": 48,
+      "providerID": "topaz",
+      "upstreamPackage": "@ai-sdk/topaz",
+      "factoryNames": [
+        "AIProviders.topaz"
+      ],
+      "capabilities": [
+        "image",
+        "video"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Topaz image and video enhancement mirror @ai-sdk/topaz 3.0.15: TOPAZ_API_KEY / X-API-Key authentication, custom base URL and headers, ai-sdk-topaz/3.0.15 user-agent, Wonder 3.5 image uploads or source URLs, validated enhancement options, cancellable polling and downloaded images; Proteus and Starlight Precise 2.6 video express requests, presigned uploads or remote sources, source/output/filter options, resumable V4 start/status operations, final credit estimates, output containers and structured errors. Image input is supported; masks and text-to-image are unsupported. API keys stay on the configured origin. Video generation uses AI.generateVideo or AI.startVideo/AI.getVideoStatus; unary video, video webhooks and a public video cancellation operation are absent upstream. Swift resolves credentials at factory creation and uses Data plus JSONValue options; JavaScript workflow serialization remains out of scope."
+    },
+    {
+      "order": 49,
+      "providerID": "typesafe",
+      "upstreamPackage": "@ai-sdk/typesafe-ai",
+      "factoryNames": [
+        "AIProviders.typeSafeAI"
+      ],
+      "capabilities": [
+        "evaluation",
+        "decision"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "TypeSafe AI mirrors upstream 3.0.27 with native Decision V4 text/JSON/PNG/JPEG evidence and /systemone Choice/Score/Boolean/Box decisions. Validated multipart image references preserve state ordering and explicit insertion controls. Box answers expose normalized finite ordered edges; experimental longContext enables the separate 262k-token header. Typed model/file options, question limits, two-decimal rounding, confidence/usage, lazy bearer auth and strict errors are represented. Existing Evaluation adapters remain callable; JavaScript workflow serialization and unrelated model families stay out of scope. The 2026-10-23 pass: Decision requests report unsupported maxOutputTokens and reasoning controls."
+    },
+    {
+      "order": 50,
+      "providerID": "vercel",
+      "upstreamPackage": "@ai-sdk/vercel",
+      "factoryNames": [
+        "AIProviders.vercel"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Vercel v0 chat models mirror upstream Vercel 3.0.30: `VERCEL_API_KEY`, custom base URL and headers, callable provider and `languageModel` aliases, `vercel.chat` provider IDs, versioned user-agent suffix, and unsupported embedding/image families."
+    },
+    {
+      "order": 51,
+      "providerID": "voyage",
+      "upstreamPackage": "@ai-sdk/voyage",
+      "factoryNames": [
+        "AIProviders.voyage"
+      ],
+      "capabilities": [
+        "embedding",
+        "reranking"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Voyage embeddings and reranking mirror upstream Voyage 2.0.68: `VOYAGE_API_KEY`, custom base URL and headers, versioned user-agent suffix, `embedding`/`embeddingModel`/`textEmbedding`/`textEmbeddingModel` aliases, `reranking`/`rerankingModel` aliases, current Voyage 4/3.5/code and rerank model IDs, provider option schema mapping, 128-input embedding preflight, sorted embedding responses by index, nullish embedding usage as zero tokens, object-document reranking warnings, and v4 rerank response validation without required usage. The 2026-10-11 pass: Embedding output dimensions inherit the shared request and preserve provider override precedence."
+    },
+    {
+      "order": 52,
+      "providerID": "xai",
+      "upstreamPackage": "@ai-sdk/xai",
+      "factoryNames": [
+        "AIProviders.xAI"
+      ],
+      "capabilities": [
+        "language",
+        "image",
+        "transcription",
+        "speech",
+        "video"
+      ],
+      "files": true,
+      "skills": false,
+      "notes": "xAI mirrors upstream 5.0.30: `XAI_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language Responses default, chat/responses/image/video/files aliases, no-argument `speech`/`speechModel` and `transcription`/`transcriptionModel` aliases, Responses provider options and hosted tools with blocked-domain filters and complete unsupported-sampling warnings, Grok 4.6 `xhigh` reasoning and priority service-tier metadata, streamed/generated Responses image-generation calls with prompt and failure results, image generation/editing, Imagine Video 1.5 generation/edit/extend/reference modes with 1080p, reference voices, resilient polling, and terminal moderation/missing-URL errors, `/tts` speech generation with voice/language/output_format, timestamps, pronunciation replacements, trace/usage metadata, and provider options, `/stt` multipart batch transcription with options and word segments, Files API provider references, response metadata, and xAI error schema. Responses Batch uploads requests, forwards callback URLs, paginates durable results, preserves full content/counts, and isolates provider errors or cancellations per item; current parity also preserves complete raw usage, web-search action data, encoded follow-up identifiers, dot-segment-safe IDs, and typed stream failures. The provider-neutral Realtime V4 contract and duplex session are implemented with xAI ephemeral-secret creation, expiry metadata, authenticated WebSocket configuration, session/audio/text/tool/custom event serialization and parsing, pre-open queuing, health replies, cancellation, and close metadata. Google realtime adapters, browser WebRTC, ProviderV4 type names, ESM-only packaging, Node 22 engines, and workflow serialization helpers remain deferred or JS-only concerns. The 4.0.54 pass adds complete Files V4 metadata/download/delete and cancellable streaming uploads with expiry validation, plus Batch tool content, input-file expiry/metadata, final-assistant finish data, and raw provider finish reasons. The 2026-09-20 pass aligns Responses schema and batch behavior to xAI 5 while retaining chat as a legacy source-compatible Swift shim; new code should use Responses. The 2026-09-27 pass adds current Responses options and Imagine Video 1.5 storage, keyframe, last-frame, and audio controls; image or audio references select reference-to-video even alongside frame images, with a combined three-item voice and audio-reference limit. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown. The 2026-10-11 pass: Streaming transcription supports model selection, Opus/VAD controls, interim/final multi-channel reconstruction and producer cleanup over native duplex WebSockets. Imagine Image 2.0 accepts files, 1.5k resolution and auto quality; X search allows 20 handles."
+    },
+    {
+      "order": 53,
+      "providerID": "zai",
+      "upstreamPackage": "@ai-sdk/zai",
+      "factoryNames": [
+        "AIProviders.zai"
+      ],
+      "capabilities": [
+        "language"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Z.AI mirrors upstream 3.0.40: lazy `ZAI_API_KEY` bearer authentication, custom base URL and headers, callable/language/chat aliases plus the default `zai` provider, `zai.chat` provider IDs, versioned user-agent suffix, current and forward-compatible GLM model IDs, HTTP(S) image/video inputs, validated `providerOptions.zai` sampling/thinking/reasoning/tool-stream/request/user controls, published unsupported-option and tool-choice warnings, exact request transforms, ordered reasoning/text/tool content including null-content terminal responses, cache-aware usage, transformed request and provider metadata, raw streaming chunks, incremental tool arguments, special finish-reason mappings, abort propagation, and flat or nested Z.AI errors. Embedding and image-generation families are unsupported. ProviderV4 type names, ESM-only packaging, Node 22 engines, TypeScript inference, and workflow serialization helpers are JS-only upstream concerns."
+    }
+  ],
+  "sourceInventory": {
+    "Examples/Package.swift": "980818b69668a05d002d56334b34c92d7f542113dcb2c9b42fe708d14abc6cbb",
+    "Examples/Sources/Dubbing/main.swift": "70862252a481f8c536d98586b62301c4689685a5bc0d34e2f9b289582ecb9df8",
+    "Examples/Sources/Embeddings/main.swift": "9619e24db8610897d3a64646e8ea0da657dddf5b7e402a762e10d26239f66442",
+    "Examples/Sources/EnhanceWithTopaz/main.swift": "e1c085667b7e706f36564015681562feffffff27bbdb991ba83169e21bdb9545",
+    "Examples/Sources/ErrorHandling/main.swift": "54733f088d43cc68a524425da24ace3eaea69d82be6a238556a9cae291f4ab06",
+    "Examples/Sources/GenerateAudio/main.swift": "bb74d81284283b6a6b3e7398087b6e8ea28d3edccf0657baac314295b898abea",
+    "Examples/Sources/GenerateImage/main.swift": "415957d3b374f04bb5c92620683227544db477637395b597a8b228798ca0e2aa",
+    "Examples/Sources/GenerateSpeech/main.swift": "f72a1a5accfdaf7aa3f5116894bcd7b951decdbc39aa045571ea012be9d9b0be",
+    "Examples/Sources/GenerateText/main.swift": "9c6afdceec9f0a7669f762f421cd9e833137b8ebe0ca99eb2f1e080081206463",
+    "Examples/Sources/GenerateVideo/main.swift": "9c277e2e9128c17a46d6a95c641707d156bf08bc7cd3a05f53931a2a4606c0ac",
+    "Examples/Sources/GenerateWithHeyGen/main.swift": "134aa581e83f1bcab88f5e3bf42e072cb8e1da760a4a6144a003bbae27d74b44",
+    "Examples/Sources/MCPOAuthMigration/MCPOAuthMigrationExample.swift": "7ff8b43d0f2f2a3ef1c57451e04290ad16bd519c2955a2577cf849183f603a7b",
+    "Examples/Sources/MCPOAuthMigration/OAuthProvider.swift": "570404343c7cb7670394e80401b7b6f3906f81ba24d3eb23f43d792f987937ee",
+    "Examples/Sources/MCPOAuthMigration/OfflineTransport.swift": "c3c45b7e3bae348d7c814cdad216dbfec900d072ed6719449f7c9b3de3b12ebb",
+    "Examples/Sources/Rerank/main.swift": "f37840d8768d7756262ee3e1690d6cbef93331cfdb1cdd83ce602aec811eb867",
+    "Examples/Sources/StreamSpeech/StreamSpeechExample.swift": "73c51c3099b444ec45d168ccd904b2e3699d8080816e8be0f7d4a2a408a19169",
+    "Examples/Sources/StreamText/main.swift": "542713134bbcf43dbb66678c385de58204b3ac86492ebc5d67b56602f6c95a9e",
+    "Examples/Sources/StructuredOutput/main.swift": "abd1f383024b6dc8f5c44178ea0baf273e8ea8e6df846f0f07d33919f69ada6a",
+    "Examples/Sources/Telemetry/main.swift": "e0f827ec3992faf1e9321cec9391bf294109240cb842aa208bad22db298f772e",
+    "Examples/Sources/Tools/main.swift": "eab23172a1b1a7ded949de8ac8024d70b7afbd018fbd5d76e45ec702dbe20dde",
+    "Examples/Sources/TranscribeAudio/main.swift": "4aec10a372d9d4cae648b8e10066d718d7180693efa99c9b83ceec21e8eec21c",
+    "Examples/Sources/TransformAudio/main.swift": "cf8075761d685ff3b781e6581e816b8e44516df048d8b5bfaec18eee944b6064",
+    "Sources/SwiftAISDK/AI.swift": "d97eb73058eb23a8c0cbd459b4779b15d4ea07d4a82bf6a739872f127e2afbd2",
+    "Sources/SwiftAISDK/AIAgent.swift": "79a2ba91622d9406c682b16da1b849f59b8d77ccedc40273c860cc2055274aef",
+    "Sources/SwiftAISDK/AIChatSession.swift": "336429cdcb2c8f295dea30617b58f6c3ab5c4ac6992cf65c29334ee531c24a64",
+    "Sources/SwiftAISDK/AIChatTransport.swift": "b449abdec7d834203dee893715c5d6e6ae97ffe061039569320d37c2a035c84a",
+    "Sources/SwiftAISDK/AIDecisionTelemetry.swift": "8d11bf18a6b4f40180bcea09be3a84266ce9802c93c64360c0ba5c80e54385ae",
+    "Sources/SwiftAISDK/AIEvaluationTelemetry.swift": "a16ab829ad4f60163c16da3b1d9f4ffa9ff9e852e503a62d9eda4d4526cdad67",
+    "Sources/SwiftAISDK/AIFacadeBatch.swift": "9e8793f62f9187b45266b3bde6bd41573ce4d2d6cb4bdadfe818f4dd75591622",
+    "Sources/SwiftAISDK/AIFacadeDecision.swift": "a5fc93354c5f65067b30686c0bde29d38634359f2637581c75e8185b8d14b116",
+    "Sources/SwiftAISDK/AIFacadeEvaluation.swift": "bd0512b5b105657d7f32a28bb1c290e0eb5a96d7ba504fe87dbcf3e34cb4e0d6",
+    "Sources/SwiftAISDK/AIFacadeGenerateObject.swift": "5ab8fa375073f2b4a8baa3bba715972b7faa33deb2175fea4fd74645001ee4df",
+    "Sources/SwiftAISDK/AIFacadeGenerateObjectTelemetry.swift": "32e2336d7cc044a7dbb622d21fb93aec792d3a8af906f20f7deddc4e0d114ab2",
+    "Sources/SwiftAISDK/AIFacadeGenerateText.swift": "d8adb75484141697a60cc69b05a9b28b79e29a5514f4af11a346f91a85b02de4",
+    "Sources/SwiftAISDK/AIFacadeMedia.swift": "424e5781584130a5844e6615004a37f9e420492f9c0ff40fcca21b820185cca2",
+    "Sources/SwiftAISDK/AIFacadeObjectCallbacks.swift": "e99ca2a02594194fa05d9b991e3cdabbbf1829a95a7ffe9f588d49e24232b0d9",
+    "Sources/SwiftAISDK/AIFacadeObjectStreamTelemetry.swift": "d2104e5600d4bae0bfcb14d34ff49aae483168551343c616753a20aea31b1ef6",
+    "Sources/SwiftAISDK/AIFacadeStreamEnumJSON.swift": "ea18d31e94b46ea223a2efa0f2cf63484d03c6470da830e0e434981631ee05f4",
+    "Sources/SwiftAISDK/AIFacadeStreamObject.swift": "70b636f5e3db6bd6711a1ff529f2df85714c452931543ed82692521a31b44fbe",
+    "Sources/SwiftAISDK/AIFacadeStreamObjectArray.swift": "6d8d9fc82738bb3a3d9ef61cb40b1f11de21868977250b38907cf701c0ead7af",
+    "Sources/SwiftAISDK/AIFacadeStreamObjectSchema.swift": "d814313ae48f574399cc02e3a7c42a85e41ad5831745b61707f50bf6ba41b630",
+    "Sources/SwiftAISDK/AIFacadeStreamText.swift": "c87e3bd5acda987ef5cd940b74df1d45501bfde1b94e11dc8a5ef5265b86dc83",
+    "Sources/SwiftAISDK/AIFacadeStreamTextCompatibility.swift": "6fda2c523f3aa347d75bb09361ce137fa872286b76b69a38b9dc67ac22afd343",
+    "Sources/SwiftAISDK/AIFacadeStreamTextTelemetry.swift": "4f8619bb9b0e82d3a1a6939c2700208e4dd6e9f5a4a5c5cc2b85f6cdd13c127b",
+    "Sources/SwiftAISDK/AIFacadeStreamingSpeech.swift": "97377036e3dc0b3d9f5bf4bad10609e62c5225578d40a412c21b504194240b2f",
+    "Sources/SwiftAISDK/AIFacadeStreamingTranscription.swift": "23b047c828b32d0ba690334d346ebe3d2593b5448f473928744147e79b2cbae9",
+    "Sources/SwiftAISDK/AIFacadeTelemetryCalls.swift": "e8cd59d9ebff5efc5300e7569607eea228cfe1184e41b85fab18c4085accf65b",
+    "Sources/SwiftAISDK/AIFacadeTelemetryEvent.swift": "a2f38fc0746101e39fd02d81a9881af1c380bbc2e349e24c38c451618b4cd1d0",
+    "Sources/SwiftAISDK/AIModelResolution.swift": "967c24cf8ffd42142562eba050c547180ed580a3a97e509e55e261af4f733810",
+    "Sources/SwiftAISDK/AIObjectDecoding.swift": "53a4bb4d45f3ecbf04e8a18fc314fac5e2793c49d63729183fa1babb8f2fd8f8",
+    "Sources/SwiftAISDK/AIObjectGenerationSession.swift": "c449cad10b57f2b825703672164ef2e9f55a3204c20cd5d109323dab8537749a",
+    "Sources/SwiftAISDK/AIObjectJSONTextExtraction.swift": "c933b7f5be9ddcdafa1106ef38c5b68567045de6a3bcb5658de9f5a174c5ece3",
+    "Sources/SwiftAISDK/AIObjectParsing.swift": "9be9ba58c68a2bd233ca243b7e2f4fce95b3f34767c7ce047b52a1a37dd80e22",
+    "Sources/SwiftAISDK/AIObjectPartialJSON.swift": "f6bcf4de285ae782f6384de6664c00a300aa887c86a70df2f453e1dbe0cf8f85",
+    "Sources/SwiftAISDK/AIRealtimeSession.swift": "c17a98e0a6589e6c764955827ebc0a4b92d65310d33a3ab8f7c6e4e155a35422",
+    "Sources/SwiftAISDK/AIRetryRuntime.swift": "40e3dd5041e13015eb0ab2247cb929278c3760f2a391789a48dae79f55b9b485",
+    "Sources/SwiftAISDK/AIStreamTimeouts.swift": "d275680c942a7135b8e6d8b3782b316d6e9223c3a01e417b2fb7fb804ad1f3db",
+    "Sources/SwiftAISDK/AITelemetryRuntime.swift": "935d02a4db4118d7522a0af7f48c976457c6b0a4aab02fe6c4943251a634b32a",
+    "Sources/SwiftAISDK/AITelemetrySerialization.swift": "01d398bac68cccf362e5633f41c7d5366da35b7d336019666551a078ffaddb6b",
+    "Sources/SwiftAISDK/AITokenUsageAndStreamRuntime.swift": "2a440b622992b6a30a5483e98270b2416d39f33ae035499ed3283d70da1094b0",
+    "Sources/SwiftAISDK/AIToolExecution.swift": "870a7cf1131b3001ef0a271cf4f748e631786ae0d32df8086fb45598fbf426b2",
+    "Sources/SwiftAISDK/AIUIMessageConversion.swift": "5ae46d7524e501b45403a892d849e5762ca2cbc230109f12f3f87492470b5592",
+    "Sources/SwiftAISDK/AIUIMessageStreamReducer.swift": "1c2624d43a884a7455f17f1b0f1ebbc49d4c032fabe17a09e0525f162ca540e7",
+    "Sources/SwiftAISDK/AIUIMessageValidation.swift": "0d6c9847b1a7486a59b6bd59a0f9c8a3d820d74755d2efc46441c97af1a25378",
+    "Sources/SwiftAISDK/Core.swift": "47440fb7227971ab8d9370e7ccf4f030994c1d980ad0c2453f8775ca5e14f6fe",
+    "Sources/SwiftAISDK/CoreAbort.swift": "1552f442503be9994edd4d826b218b5fce4516d91822425f48c8d447cc63c6ac",
+    "Sources/SwiftAISDK/CoreAudioResults.swift": "19bb3b9ec009aed09f2b995d5c5e545342257f7e6354a733df13e7cf01d54ec7",
+    "Sources/SwiftAISDK/CoreBatch.swift": "c19484083a1f3dd4c884b1ed08944db834456c2f105e472f60b463aa8fd1b711",
+    "Sources/SwiftAISDK/CoreCitations.swift": "7adb27c6485e63781f703cd77da834440ee8da980c358da3e3397865c64cea0e",
+    "Sources/SwiftAISDK/CoreDecision.swift": "0c09a92076b456a3ad53f3d966ac49a6faf8c688b7cfbf9e7ed1d5cdc18e3b2f",
+    "Sources/SwiftAISDK/CoreDelayedPromise.swift": "9e8e6be02e53e5504e485c4db4ffcfcbd3f8b49de74cbc7e3318b993116cd36b",
+    "Sources/SwiftAISDK/CoreEvaluation.swift": "9c0e4714a5e8887dc4fdbd6996d6bac02ac711a12f413b54d2caf9ac2c63ca23",
+    "Sources/SwiftAISDK/CoreFileSkillResults.swift": "2be2c24df3af806d4417c8477966f17f444bb2c750b355189779779708500d64",
+    "Sources/SwiftAISDK/CoreLanguageRequest.swift": "7b81a55808197ae7068b50c53c0e229f10d996d16ff06ca5cf2c0383b9422762",
+    "Sources/SwiftAISDK/CoreMediaResults.swift": "4431fc451c092c8d7bed6d5e19cc8445b23b97721df0a693ad0470acbfdcf9ca",
+    "Sources/SwiftAISDK/CoreMessages.swift": "eb1e4cf774332ea59cf48889b2c74ec827c0491f4e5b4110179ab2c81aa81090",
+    "Sources/SwiftAISDK/CoreObjectSchema.swift": "b6170d4a9f380e2cece35a7281b560642b3b99e5135a47915ae9f97b8e660b98",
+    "Sources/SwiftAISDK/CoreProtocols.swift": "39687772dc18a20179e329211904b8de08e496924020eab50420082c293efa92",
+    "Sources/SwiftAISDK/CoreRealtime.swift": "267ba65ca5c181710e826d2d1ba65a65838828ec8e01485e1b92910576e33202",
+    "Sources/SwiftAISDK/CoreSerialJobExecutor.swift": "e939c891d2d5de0ddfbbe3b985b2cfefc4e4febeedead92dbe041c917127add0",
+    "Sources/SwiftAISDK/CoreStreamingSpeech.swift": "154c765c714667586dafaa07a6eadbbfc7cd3d04f99bcd81c37f3957d6b66d73",
+    "Sources/SwiftAISDK/CoreStreamingTranscription.swift": "5724b18748246b629a4b836bbabb7a869331156029419f5cb21fe33b3dd45aa3",
+    "Sources/SwiftAISDK/CoreTextObjectResults.swift": "e24e7ef44650e7feee424d76cf696ec019be3b84ef3119188b255375efb44575",
+    "Sources/SwiftAISDK/CoreTools.swift": "2a5a175fb57c051392cf586ee3eb38bceafe95517bfa8c62eb6c7dccfd056511",
+    "Sources/SwiftAISDK/CoreUIMessages.swift": "8ba2890a50e4978e5efc408b09ff728bbc35c0ca1c902426dccd3c2cae8c1314",
+    "Sources/SwiftAISDK/CoreUtilities.swift": "d1c1cd25299c780d812df7c76d6776e04e769de8754a310282047dff9591ecff",
+    "Sources/SwiftAISDK/CoreVideoRerankingResults.swift": "77bf98c5ba3d02e107bfe71c37b5d7d99b7a056e41c0154ce20e1eba8b812100",
+    "Sources/SwiftAISDK/DecisionBox.swift": "95ccf37d89592225a7ecdac792cea34a11b4f9bfd492c1b3d4d4503a5df0a42b",
+    "Sources/SwiftAISDK/DecisionValidation.swift": "ea577a7487625f974b3949b139494533282632169780b7705f2d5b2cc45048c4",
+    "Sources/SwiftAISDK/DefaultSettingsMiddleware.swift": "1a32f01989af5dafd02343cc2b8c950d5942b56efb6e9d1d4dc60c3c66deb472",
+    "Sources/SwiftAISDK/DuplexWebSocketTransport.swift": "3e180162ab3e8c2c42eb58d2cb3da00e44097feac87f0099d46d5ec8bc784d7f",
+    "Sources/SwiftAISDK/Errors.swift": "ed98934c02564ff6b7a743d2709c699acbd2e61bc5fd7bcb00a940fcc9d289f6",
+    "Sources/SwiftAISDK/ExtractionMiddleware.swift": "2e101f91c6b9c8375c54b35d9f8ef44fb7ec642af53100677f8ef7078fa81a89",
+    "Sources/SwiftAISDK/GatewayErrors.swift": "5bf652efacb1d0b701bb2977fadbeb2dd55c6faab3fe0e7d2b5ba22c6b674c44",
+    "Sources/SwiftAISDK/HTTP.swift": "93175d07653e5dc813b8a974f1680609aadfe23dc3621276c31d95d2b2531b61",
+    "Sources/SwiftAISDK/HTTPDNSPinning.swift": "1061c828ef1f5da1993317b279b9e5f3cb0cb344d31770e60b6758cdb40c1a81",
+    "Sources/SwiftAISDK/HTTPPinnedConnection.swift": "6d6bb175896b16d367e6691569b60d1169664e67b82b6832c110090fa4f22239",
+    "Sources/SwiftAISDK/HTTPStreamBody.swift": "e471946d4032456dae93231059616e588e979fd4bc5eaeb4998eb3de86c43759",
+    "Sources/SwiftAISDK/HostnameValidation.swift": "4c35b27e760f1b293dfbd7f98d7e76a1dbac5c44db0e043cdec4dedeae6aa4ac",
+    "Sources/SwiftAISDK/ImageInputCapabilities.swift": "25705cdb15079202532365e0697f0cdeb6181cc9e16052f9577452f01d61e928",
+    "Sources/SwiftAISDK/JSONParsing.swift": "60406e64205a03a1754d2f0b170f60ddfce37f3838d1e138a16ceda0311d62cc",
+    "Sources/SwiftAISDK/JSONSchemaValidator.swift": "5d02e3852f6c0280799d56fded9f6d5a419dad4404551170928d91c7d4a80f42",
+    "Sources/SwiftAISDK/JSONValue.swift": "4d713959b7f6b4948deb4739bf22be7cfedaf196b545f67ef25682457c1e8846",
+    "Sources/SwiftAISDK/LanguageModelCallOptions.swift": "73c85602d64a5da263a359e4763596bfcea70eb4df1b7264cd762e1e709117cb",
+    "Sources/SwiftAISDK/LanguageStreamNormalization.swift": "6807a2f557431217d72c431182c150356aac2a693d061d80d5f7637efe10f76b",
+    "Sources/SwiftAISDK/MCPApps.swift": "62ef11ac92602835a857acd013daf7951319759eac3cf3da5a0f80c27f8a91c6",
+    "Sources/SwiftAISDK/MCPClient.swift": "dda9b75f64b106eb544de201f599122d75abc483c5b156bba6c05c0f956dbc3c",
+    "Sources/SwiftAISDK/MCPClientActor.swift": "84b7778c755dc91f89d4950b9cabe39d2ba83579a62b35f9db3262d2bd39d5f6",
+    "Sources/SwiftAISDK/MCPClientHelpers.swift": "507fb629ebe6c20e567f07e9c0b2f7cd3be153cbde1bdc6a67e3faf7b5b0cfce",
+    "Sources/SwiftAISDK/MCPEventAdapter.swift": "102d59e22c8001b15fae139b963290672c7986c7b165dd4d231c1f1d612a1b83",
+    "Sources/SwiftAISDK/MCPEventTypes.swift": "52fa7dae63e634fda7ef6e72b97101e66b1654604ec27dae80d66acc6fcc492f",
+    "Sources/SwiftAISDK/MCPEventWebhook.swift": "15c6f27e10387ce17c822556c10efb96eeddc220a42e5572a27e2b5c0eeebab8",
+    "Sources/SwiftAISDK/MCPEvents.swift": "d60cd1d4a70195e2d374cf20bf0bd1fb0324bc11700d0af538e8d51fb8c8b4db",
+    "Sources/SwiftAISDK/MCPHTTPHeaders.swift": "639971eb22767c13fdcf7e42b354085a25a4e9391a808f7a1798c53e957d8932",
+    "Sources/SwiftAISDK/MCPHTTPTransport.swift": "0e6b6c883d3036d94e5839c8d63a836b35d67cafad4fcbc9056c23da942de7d8",
+    "Sources/SwiftAISDK/MCPOAuth.swift": "dda9b75f64b106eb544de201f599122d75abc483c5b156bba6c05c0f956dbc3c",
+    "Sources/SwiftAISDK/MCPOAuthDiscovery.swift": "6466ae82987bfd5a49dc7c2e816c925887c394643f89b5310d29b2181d49f268",
+    "Sources/SwiftAISDK/MCPOAuthFlow.swift": "c2d3ef02aac2d103856efd9e8b6496dd84bb13783073d94965c6226da34b2217",
+    "Sources/SwiftAISDK/MCPOAuthHelpers.swift": "0a8baa63ead5aef877672e399548e0e4ec8ea59562492370413103990dbe83cb",
+    "Sources/SwiftAISDK/MCPOAuthToken.swift": "c79742f5642bf6e62b663e9173569830ef7faeabb8f3bc635dc1445803439ec7",
+    "Sources/SwiftAISDK/MCPOAuthTypes.swift": "87b30ec6ec2dc0c24491cb723ca01fadfa67b5a6f418c16adcc3d158f2cd841e",
+    "Sources/SwiftAISDK/MCPStdioTransport.swift": "1d844aef754eaf98646845283d741f532f5c2e616ba33dca5a5db904aad60dcc",
+    "Sources/SwiftAISDK/MCPTypes.swift": "1037cac47414f00cdefddef799a830a347533d701fa52bcab5f112c6f181e71e",
+    "Sources/SwiftAISDK/MediaType.swift": "48b09c893465eb882fa29dd932d3f8f35ff7ff7ce8997fad4813b400741aa6f5",
+    "Sources/SwiftAISDK/Middleware.swift": "dda9b75f64b106eb544de201f599122d75abc483c5b156bba6c05c0f956dbc3c",
+    "Sources/SwiftAISDK/MiddlewareTypes.swift": "576b976757a816ad9321964bddf6a22aa34aac55838eefa154bb9a2f31a604c7",
+    "Sources/SwiftAISDK/MiddlewareWrapping.swift": "a02d6010838d4537873cb0f01865fbd9829fe9ad9f83fe805b3b2b24466ea664",
+    "Sources/SwiftAISDK/Models/AlibabaEmbeddingModel.swift": "a35a93e5a9b738dd2dad2068ab9e591a9bed8952aaa8bda94226d079fae28c80",
+    "Sources/SwiftAISDK/Models/AlibabaModels.swift": "4f75dbe185949cdc2fb337cefed83a22990a426db19ec4096c3430b890bc58aa",
+    "Sources/SwiftAISDK/Models/AlibabaOptions.swift": "0ad801f46dbc09d262e1c6c29ae70fb385ce57511489e67600ceea36b26e2fa7",
+    "Sources/SwiftAISDK/Models/AlibabaParsing.swift": "333914e78b92f4e4d387f8c7703cba871998f064861ffaea54329bb88150d3e0",
+    "Sources/SwiftAISDK/Models/AlibabaRequestPreparation.swift": "1f88d22d4eb65c1a1c9b932623c551831bd8e6c14a1e8f5145e4041c17d6b2f2",
+    "Sources/SwiftAISDK/Models/AlibabaTools.swift": "ed61c2fc9aebd949d42dfc2e7382d3115270b6043673b3bf724207a48e506740",
+    "Sources/SwiftAISDK/Models/AlibabaVideoModels.swift": "866901ea4d2fc7a49cdab7059894f792ea759e10a473b0ac96ac9b896ed938b2",
+    "Sources/SwiftAISDK/Models/AmazonBedrockEmbeddingModel.swift": "99ed2cb4521ddb4aeabf19ff17d1fe405744448f55c2d24571e85db27adab9d6",
+    "Sources/SwiftAISDK/Models/AmazonBedrockImageModel.swift": "7afed27f61e15d6aa3c62a86a8fd5c1b84a89cf0f8d6c288e236fbe59c9c27e6",
+    "Sources/SwiftAISDK/Models/AmazonBedrockLanguageModel.swift": "bc81027eb1621c9efbbc8ca946ef6682d1eb7dc7d3b43f6acab57c72a90dd215",
+    "Sources/SwiftAISDK/Models/AmazonBedrockModels.swift": "6d94e1d107afed0e887930c221e0de940c3a7c87fd8f8c0e3c9ab27bf29a0c6c",
+    "Sources/SwiftAISDK/Models/AmazonBedrockRerankingModel.swift": "dda01905225a27a5665da54dabdc3bbe79d044a94dee03c8003da9696af13d32",
+    "Sources/SwiftAISDK/Models/AmazonBedrockShared.swift": "62ddf900085e491e7b3412dc0f1756ac3c8693f2aaf5f2a6529facf74c64031d",
+    "Sources/SwiftAISDK/Models/Anthropic.swift": "dda9b75f64b106eb544de201f599122d75abc483c5b156bba6c05c0f956dbc3c",
+    "Sources/SwiftAISDK/Models/AnthropicBatchLanguageModel.swift": "23f1fbdedfe050700f21fc78fa2a8d33f3b6ec0db18f07b786560f010174c90c",
+    "Sources/SwiftAISDK/Models/AnthropicBedrockAdapter.swift": "7ee80c8f158f5a6a49672d8e698c2fe3a4873b4b5c0a30c4e950450d7e30d580",
+    "Sources/SwiftAISDK/Models/AnthropicModels.swift": "a3aa44f358af2140fa3a59251a5a7afe9a0ccfdc80a69f257d4efcae8b3f7511",
+    "Sources/SwiftAISDK/Models/AnthropicOptions.swift": "d64aa2308ceb74605733f8ba189a108974166827f00c70e71d012d3c94b987e9",
+    "Sources/SwiftAISDK/Models/AnthropicParsing.swift": "c3979cb31d06166547b951f6125c0edc339f1c08ba5d4e4c266e19d7557262de",
+    "Sources/SwiftAISDK/Models/AnthropicStreaming.swift": "5dc45543a02288c92ffb3c16323d620cf6dff99c970ce21066bc75d3cf8b811c",
+    "Sources/SwiftAISDK/Models/AnthropicToolPreparation.swift": "3e920b4af1b4adc7dd4fbf3d9e5095e095656052abe54dbabf31f0b5f5f7c4d8",
+    "Sources/SwiftAISDK/Models/AssemblyAIAudioModels.swift": "4b89d346e4849a38ee7d6c82e8115e827fe972e32062c497e3a49cf93c80e5c3",
+    "Sources/SwiftAISDK/Models/AudioProviderModels.swift": "dda9b75f64b106eb544de201f599122d75abc483c5b156bba6c05c0f956dbc3c",
+    "Sources/SwiftAISDK/Models/AudioProviderShared.swift": "9d4807d63d2c1aa4e7de17c281d3dc0bc4118f0bcf875da4291bc5b7aadf875c",
+    "Sources/SwiftAISDK/Models/AzureAudioModels.swift": "0098edf10d9b61f33ba152e8513506af790e960de793b06b4492438bd4344634",
+    "Sources/SwiftAISDK/Models/AzureMAIImageModel.swift": "a71c072d4e4478e45b3aa038bbb4dec72f0cd32d9af6421fb3cfbe092307f7e3",
+    "Sources/SwiftAISDK/Models/AzureMaiStreamingTranscription.swift": "1e67ba601b16fd49c0bc230437538f4592405d041d584f3c39f4b286a1c5894b",
+    "Sources/SwiftAISDK/Models/BasetenModels.swift": "b2836c05889858eba3ccbf630ab7454053c153e76c1ed82169facffcc2bf93e4",
+    "Sources/SwiftAISDK/Models/BedrockStreamParsing.swift": "d17dcd76a545b051f07a5bcc471ecc988705190538e985bf12bc8c2f08e3bae9",
+    "Sources/SwiftAISDK/Models/BlackForestLabsMediaModels.swift": "9145d52e90d3f2bec2f95d127b285fda7b654776b64de0431f26003bda5c80bf",
+    "Sources/SwiftAISDK/Models/BlackForestLabsVideoModel.swift": "36c60106a7fde852f78833f26657b713ff07ff69b23887d2960cdd7d5c9ce258",
+    "Sources/SwiftAISDK/Models/ByteDanceMediaModels.swift": "607c212b6b979578cd6995ca96bc6c31623eda58bbfe566499e52d979e1644fd",
+    "Sources/SwiftAISDK/Models/CartesiaSpeechModel.swift": "615665b2dc0f73e3fffcce81170aa445f285fa09aed76f5370c837652acb94c5",
+    "Sources/SwiftAISDK/Models/CartesiaStreamingTranscriptionModel.swift": "1e0605fdc1499840a06efc103184920d1393ed950f2916e17dc4e5bc68e80d93",
+    "Sources/SwiftAISDK/Models/CartesiaTranscriptionModel.swift": "2da387df52ef272bb8986bca93a1b27e8746b77d9fedbae894c5d435e8c9b379",
+    "Sources/SwiftAISDK/Models/CerebrasModels.swift": "ac4cbf9f6e6266c005bfe6d9724b968b729ad7725c21ae80cc48d8326c092191",
+    "Sources/SwiftAISDK/Models/CerebrasParsing.swift": "f4d714add4f259a4b187e880503f498974acced5d8addc58433e0af60b832482",
+    "Sources/SwiftAISDK/Models/CerebrasRequestOptions.swift": "347a7b0eb5547ed6cf04f796f0210815565326b5860b2f113070d74511ce70cc",
+    "Sources/SwiftAISDK/Models/CerebrasToolsAndMessages.swift": "49a430c71dd2e6fea4ee8af8a2c1d582541d58bbb48c2ff98ba8e16ce74ab8a9",
+    "Sources/SwiftAISDK/Models/CohereEmbeddingRerankingModels.swift": "3c97b6c8694662e988215cb9ae6b5c002eda718a83a672730de048477a17ca5a",
+    "Sources/SwiftAISDK/Models/CohereLanguageModel.swift": "be5dfb541d1c1c9f46a7398f70ceb5102bd4e546370e7fbeab74fcb89400dc25",
+    "Sources/SwiftAISDK/Models/CohereVoyageModels.swift": "dda9b75f64b106eb544de201f599122d75abc483c5b156bba6c05c0f956dbc3c",
+    "Sources/SwiftAISDK/Models/CohereVoyageShared.swift": "bbb516681e25ddd81a816ac92d8e27ace70592adf6395194930a06c30dd09a2c",
+    "Sources/SwiftAISDK/Models/DecisionLanguageModel.swift": "f2824f434db105172ba120c7d29e580875ee7fb7848713c1bf820bea45f6600a",
+    "Sources/SwiftAISDK/Models/DeepInfraModels.swift": "670f8331f7ad4f13261dadbb392c7d86a1c0a9cd973d2c7e06574db11a9efb9e",
+    "Sources/SwiftAISDK/Models/DeepSeekModels.swift": "6cd5e214363e0d5531f921f0fd2487b3103991ac1b31d1a0663ddafeff91705e",
+    "Sources/SwiftAISDK/Models/DeepSeekOptions.swift": "7c863211629c23cd876ccb8c9373b082f16cdaca387d723421c86c6fc6671779",
+    "Sources/SwiftAISDK/Models/DeepSeekRequestPreparation.swift": "73e309fdc4ee3e1140df426c5dd9fc12116388673d39aeb4dac325cb34ed97cc",
+    "Sources/SwiftAISDK/Models/DeepSeekToolsAndParsing.swift": "2fc7e30bbab20d4008c6478f56a083fc3f831d5f576edbaaa241719edcc72fa9",
+    "Sources/SwiftAISDK/Models/DeepgramAudioModels.swift": "42f9176aa2a7f1f839b22f64fdd3ef52229af8dc412f95e5221e1d9726ae50d2",
+    "Sources/SwiftAISDK/Models/ElevenLabsAudioModels.swift": "5b8c966ba2add7ffab1aae5d09791547c907a634a57d9ba1adda90105fe7ec2e",
+    "Sources/SwiftAISDK/Models/ElevenLabsExtendedAudioModels.swift": "0891086fb059dd8e877093dfd0d05e9520616c10d2b92fc09b4d7a6b2d5a9109",
+    "Sources/SwiftAISDK/Models/ElevenLabsStreamingSpeechModel.swift": "047f8e8315b18e92794fcb4ca84ea13d2d701ca63f13726e5da66f152ba1784b",
+    "Sources/SwiftAISDK/Models/EvaluationLanguageModel.swift": "23e68542d365a54bb3b16c46bf3ea78627477a1df7619281d91bbd53ee60f803",
+    "Sources/SwiftAISDK/Models/FalAudioModels.swift": "95a6055c2096ce3b5a91b5fd1e61a0243cd028c7517ad9220bcc665d183664d1",
+    "Sources/SwiftAISDK/Models/FalMediaModels.swift": "1aa198c7956f042822842ce4cb22f89ed95c0f4ee681b9cf9afa2856f313e3e2",
+    "Sources/SwiftAISDK/Models/FileClients.swift": "199e66962275ee67e75bd407d10da612a9aca2e4832f0b09a39d05409b82e23b",
+    "Sources/SwiftAISDK/Models/FireworksModels.swift": "0db0cfb778160bc836ff64ce8d712e3e1142f09d4149b1c882e4d094b76fa31e",
+    "Sources/SwiftAISDK/Models/FishAudioModels.swift": "e628c32587d33b612ac78b7639b9d5c1a400c2f2f3cfe6e53fdf18bec50082b4",
+    "Sources/SwiftAISDK/Models/GatewayDecisionModel.swift": "dded8459fc2df8148c830d958264dfbd23ab641b662e23031407bd0fe37a7bad",
+    "Sources/SwiftAISDK/Models/GatewayEvaluationModel.swift": "085ef2ba5c519f1c422abd3232f8ba69cfaaf27ed6e6b33dbc0ad5c7d1999a7d",
+    "Sources/SwiftAISDK/Models/GatewayMediaModels.swift": "141bfbf7e36d6cefaeef24a1c5bc3ecb60c5ab548b985fae64e896c1b06737d6",
+    "Sources/SwiftAISDK/Models/GatewayModels.swift": "f4c5cc52217013299b8ec7546391062102f88de020d0c9de874505de46a0a0ee",
+    "Sources/SwiftAISDK/Models/GatewayParsing.swift": "20a7146d1802f64988d9b3b32984c555ae60863eb1e127835831c6475bb14aeb",
+    "Sources/SwiftAISDK/Models/GatewayStreamingSpeechModel.swift": "4a613b4e65cb895c5a31fda6fc0a813ceb9c484bc4f175a9958b8988ba2dcb2d",
+    "Sources/SwiftAISDK/Models/GatewayStreamingTranscriptionModel.swift": "f634ffca49b41aeed90f682b1c3c285e775fb22a6714e4dad1281319aef5d135",
+    "Sources/SwiftAISDK/Models/GenericMediaModels.swift": "74c7ce38fc58abb825a55f49d908ddc5dd795e9fb44cc4c1ca9911ac27219202",
+    "Sources/SwiftAISDK/Models/GladiaAudioModels.swift": "99fabb4575cf8e59647f5a4b1d3642c18536181186805710b17a0ae01c088dcf",
+    "Sources/SwiftAISDK/Models/GoogleBatchLanguageModel.swift": "1865c3b270eb78d21ae76ccff870f171f36d1ed8ba6ac642998d1ab0e6719877",
+    "Sources/SwiftAISDK/Models/GoogleGenerateContentMetadata.swift": "c86284925a040b2b37c0631380ecc18b7f8a0b3ba1e1a43db27ebcc5b2e933f7",
+    "Sources/SwiftAISDK/Models/GoogleGenerateContentResultParsing.swift": "41df8f5056bb3c0321ce2cbd730f3636369519e7e98c85c17c16080b0854b382",
+    "Sources/SwiftAISDK/Models/GoogleGenerateContentSourceParsing.swift": "327244d5fe7de34f568694f87c0b10180a6dd274059cd0d0ee0febe2e3ff4fbd",
+    "Sources/SwiftAISDK/Models/GoogleGenerateContentStreamParsing.swift": "422a1794784b96838f89ed7f03820968e665fa3a945902b3a61b8eef3cb64fab",
+    "Sources/SwiftAISDK/Models/GoogleGenerationOptions.swift": "ab4f848bfd1620b0f3f0019032f51e1550375def6563f52d5ae67bb4ec2ee2bf",
+    "Sources/SwiftAISDK/Models/GoogleGenerativeAI.swift": "dda9b75f64b106eb544de201f599122d75abc483c5b156bba6c05c0f956dbc3c",
+    "Sources/SwiftAISDK/Models/GoogleGenerativeLanguageModel.swift": "641c66c3114d47127e3b8b9ad227b3f46de93571646f21963fe86c072b8a498c",
+    "Sources/SwiftAISDK/Models/GoogleGenerativeMediaModels.swift": "0a9fafbdade65ea91a0e014d8c623e599b0ef2748b8d89a2245df55833812867",
+    "Sources/SwiftAISDK/Models/GoogleGenerativeMediaOptions.swift": "d8c15cd365d800102fd3568167976850461fa59f546d25ddb068d20180580d47",
+    "Sources/SwiftAISDK/Models/GoogleInteractionsMetadata.swift": "0d19d33cb58cde78c6246238f8e1bb26a8b9384ec3de0eb4c17195c43eab4c88",
+    "Sources/SwiftAISDK/Models/GoogleInteractionsModel.swift": "60813652488eca77fc63770009067365a1ba4d0381cd86991ec152a63a25859a",
+    "Sources/SwiftAISDK/Models/GoogleInteractionsRequest.swift": "8dfe0421d111fb7753526fb5c4af420753d1aec1730cf192edf3c07cfc30d2b3",
+    "Sources/SwiftAISDK/Models/GoogleInteractionsStreaming.swift": "b828f183bbdb706dff63423dca97e42b55f9790109af6fff47f6a333e1194acb",
+    "Sources/SwiftAISDK/Models/GoogleModelCapabilities.swift": "3e4deb89cece3b3f3f2665cf4bfcdda007e710367a44c8de6f8059aaee001e95",
+    "Sources/SwiftAISDK/Models/GoogleSchemaConversion.swift": "2cedc155d062604c12e9940ab49995715f83f69bd32ed26628dc8e25b22c0550",
+    "Sources/SwiftAISDK/Models/GoogleToolPreparation.swift": "dfd510749c376685d4cea089c9ef2b4ed276479e2b2f7e9fa5a66f85c65f2a6a",
+    "Sources/SwiftAISDK/Models/GoogleTools.swift": "1e2ea5993c63024ee7bc4b4498441062482d65b5b79d7db23e535a353fec1b98",
+    "Sources/SwiftAISDK/Models/GoogleVertexCloudTTSSpeechModel.swift": "ef0b55d83e00f964d938f136ec3d20c3679099735f6922b33c609bb2781669ec",
+    "Sources/SwiftAISDK/Models/GoogleVertexModels.swift": "b83d50ff06b9638e5440a9d8336893cd961d97ece38b789d911368aedaf4a06e",
+    "Sources/SwiftAISDK/Models/GroqLanguageHelpers.swift": "e44a6ea10d250c60d8ccd13cef7fcee132e93b818b48a6d091324727423b85ce",
+    "Sources/SwiftAISDK/Models/GroqModels.swift": "92b38e8e22b62e990379a55a317299b1a48fd2d70c8fd684045c0dd73e213536",
+    "Sources/SwiftAISDK/Models/GroqProviderOptions.swift": "ced7aa4f66163b54b853cc79ccd04d2ee0760db172f7adabd3c0266fa55d759b",
+    "Sources/SwiftAISDK/Models/GroqTranscriptionModel.swift": "bb28dd7b41b6853f8aca01ff5334bb0bfedf4d1d6ff4c398b70787c27ac69c80",
+    "Sources/SwiftAISDK/Models/HeyGenVideoInputs.swift": "ac45a0ff47172ea0ce8965db2bba88784f308459becdefaa4e65bb66f049a677",
+    "Sources/SwiftAISDK/Models/HeyGenVideoModel.swift": "448518c5a322ded626a576c8e9b0ef7698858ae4b25b95bef73b2e7a91414a3c",
+    "Sources/SwiftAISDK/Models/HeyGenVideoModelOptions.swift": "4b0cf965f234e6357d429efe01bafdc714d29ee703037924c4c34eb88238acff",
+    "Sources/SwiftAISDK/Models/HuggingFaceModels.swift": "11252f576dc0f21d5b446693b0a7dd3774e8240666dfd3dc100c14af84a28b63",
+    "Sources/SwiftAISDK/Models/HumeAudioModels.swift": "c89cc15e4380ba2e2a749b9f014d504febe29ab634230b386c605769356e06d8",
+    "Sources/SwiftAISDK/Models/KlingAIMediaModels.swift": "c82be7c966e5f6b3a6e7220f37bcf24d98e9aac97507ceb0a892648765056459",
+    "Sources/SwiftAISDK/Models/LMNTAudioModels.swift": "280b90164fc2b7de07fecd55d02da75587e874759d130a8926ed1f720be83484",
+    "Sources/SwiftAISDK/Models/LanguageStreamParsing.swift": "89ebf2b59743cd9eeb923c6a71940472ee3b6f6cf1f2a084354dd8ebb3197f0d",
+    "Sources/SwiftAISDK/Models/LumaMediaModels.swift": "83189bbbb4949aa04a934c112ed4366a28e12a16ebc7df5bd09e7e44ba907ac0",
+    "Sources/SwiftAISDK/Models/MediaProviderModels.swift": "dda9b75f64b106eb544de201f599122d75abc483c5b156bba6c05c0f956dbc3c",
+    "Sources/SwiftAISDK/Models/MediaProviderShared.swift": "99beb2404461826b250fef13ae12b0bde6bbc61badbf1fc0225d509e25b6426a",
+    "Sources/SwiftAISDK/Models/MiniMaxVideoModel.swift": "ac81b907ffde98178a5896881ae1c50a3267e23dbb48226a01e3bbbb6d2d5e19",
+    "Sources/SwiftAISDK/Models/MistralConversationLanguageModel.swift": "a5f486633f24da28717ddfd948d8c437bb70d6384a6237c5b7c7d70df0fbc44c",
+    "Sources/SwiftAISDK/Models/MistralConversationOptions.swift": "cfc7c942bdd6b80ba7e85afdcef68c6620ea6fcdcb6680807f9bb86d6a3941af",
+    "Sources/SwiftAISDK/Models/MistralConversationTools.swift": "2105a42504cc753a9f8988e5f1af0a79e58c9d5860f3281c24d75a3a7b5f3662",
+    "Sources/SwiftAISDK/Models/MistralEmbeddingModel.swift": "665824ce2f0fe6e0280102fc0a8b36863d7ab1792f34ae093c4005256e3a8715",
+    "Sources/SwiftAISDK/Models/MistralLanguageOptions.swift": "667f251aa9c550c38acc8033bd0b4f327186fc7a53729b50e08965a32a47d822",
+    "Sources/SwiftAISDK/Models/MistralMessageParsing.swift": "9af73c2ed116c328f314471817983b2715af5b0a9b923215618af64380316033",
+    "Sources/SwiftAISDK/Models/MistralModels.swift": "d14d57df0cd9703213aa4c58928cf380763dcae7878cf849fdedf4353c438ac7",
+    "Sources/SwiftAISDK/Models/MistralSpeechModel.swift": "4bfe755836369a4152ca8e480d91df2fcd4656b000a8e30eb7964163ff465906",
+    "Sources/SwiftAISDK/Models/MistralTools.swift": "446c17cb73f2fe8dc25032af48b9ba7c4d511e007059ff5f93e2e62c60b0bb52",
+    "Sources/SwiftAISDK/Models/MistralTranscriptionModel.swift": "030f0f433a3d25a8617d9924f0b8a5adc81db09d28d3c907c11337ba21a94bd4",
+    "Sources/SwiftAISDK/Models/OpenAICompatible.swift": "dda9b75f64b106eb544de201f599122d75abc483c5b156bba6c05c0f956dbc3c",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleChatCommon.swift": "524624eb8fe4bfd4d58963241e3912ec4d5e650c8429d0bfef4a25502e9094c9",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleChatFireworks.swift": "35b4251b5b0d9c433086009f053326f94b919a690073d6226b8bca54ae5a1c95",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleChatModel.swift": "0de40988d4c31dc4addaf7662e2861c66ab610b4a5d545b4593508ab9312c0fa",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleChatMoonshot.swift": "ddfdfe77660b869089225a1a983a7475db3bb48d1c0936fb84f052168a9177bb",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleChatUsage.swift": "5b80f764f98cc3f14d2258ec95b9811668822588883852a4b41623d83dba2cd7",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleChatXAI.swift": "b2504f2037f715bd91377ed3fcc2066dbf136d153e4f7ad2fd9208b18c6eeff2",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleCompletionModel.swift": "cc9d6b118e77eeaaee30d123e57632494e16d5779048dca1d7d928f181bf165b",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleConfig.swift": "059d51e43e49419396157a8c571e7cd3c676d6d89329c8d4ab113d00d177402b",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleMediaModels.swift": "cac0a6475cf03fd3e216a2c9ff759335bed2825718055b4887967c5c3158f325",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleMetadata.swift": "836b5b67a1c9af98b07e47751d9191693a9590b65025cb8c774e13e6cb1df208",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleProviderOptions.swift": "3509a31d0ebe391e6ea8050572c9d3b67444105a80f9b5888d8f0df1f61eb11b",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleResponsesModel.swift": "dda9b75f64b106eb544de201f599122d75abc483c5b156bba6c05c0f956dbc3c",
+    "Sources/SwiftAISDK/Models/OpenAICompatibleURL.swift": "bd0346651653969030768efba95b27d9d4ef18c3f115eeeb3a1241568c5b0a2b",
+    "Sources/SwiftAISDK/Models/OpenAIDecisionModel.swift": "b0a857e78bdb7aecbf243e4e9b0dee54b20dd2885fac44443881c5ef1408df5c",
+    "Sources/SwiftAISDK/Models/OpenAILiveModel.swift": "96f55f903ca5601b669a873bb39b801bd61327f6030332cf5d627c0039474522",
+    "Sources/SwiftAISDK/Models/OpenAIResponsesBatchLanguageModel.swift": "32b047d8ad1a002d9a184ce0598a0f2f39619ab44ea8547c09dd377253013fe0",
+    "Sources/SwiftAISDK/Models/OpenAIResponsesInput.swift": "e712d99be848c4af94b7a85cf771086e0f2e9bda2934cd18d1097d447f26ec89",
+    "Sources/SwiftAISDK/Models/OpenAIResponsesModel.swift": "369b53f4f4fca44ff6a791275583a2253dfc2913377e1a09aa11726cabeaa57e",
+    "Sources/SwiftAISDK/Models/OpenAIResponsesOptions.swift": "1f266cfa14a0f42f573b37508e108c7b03cfb95b46c1a71ee7e1b5bc257da18b",
+    "Sources/SwiftAISDK/Models/OpenAIResponsesParallelToolCalls.swift": "677726cfe75ea27a18307a99e2fe9a60eadfc74a944a609937e5f6beda2e21a3",
+    "Sources/SwiftAISDK/Models/OpenAIResponsesParsing.swift": "d9a7e7ada596fac80b2c0de4bc08bc7e75258778cc69425ac0d8875fdebded13",
+    "Sources/SwiftAISDK/Models/OpenAIResponsesStreaming.swift": "29ec3a3829f83e435f5c42c8a60480a87819a5051c2bbcbdde45c15d3e7d2965",
+    "Sources/SwiftAISDK/Models/OpenAIResponsesTools.swift": "0e368b8348b215ef77a20a79662f3f708aecd3a21f299a3cae4e67037ef569e1",
+    "Sources/SwiftAISDK/Models/OpenAISkills.swift": "5cfb7869a50b99ecea3e35a2f74b020429d66be8a90aac1a004b90b72a203bd9",
+    "Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift": "3cf54b3a15dca6a082925b8b4eb2ca3d4d99b457444160b816ce74d960a7de7b",
+    "Sources/SwiftAISDK/Models/PerplexityEmbeddingModel.swift": "913a13cdc847d39a9cc8326dbf27f297c482377c62e599e0d0ec49bf17357a9f",
+    "Sources/SwiftAISDK/Models/PerplexityModels.swift": "d322669bf227a97295b6d67bcf74278d51a0b555ec4efe0796e5c561a22edc5b",
+    "Sources/SwiftAISDK/Models/ProdiaInputs.swift": "9249d3382516c827be9fdd31281b99f9f6dd91cae7d06295a01ffb89cced61c4",
+    "Sources/SwiftAISDK/Models/ProdiaMediaModels.swift": "eaada65ed70144d10c5e30e88cca85dcf8451b37bb1bd8269a70abd7b58106b8",
+    "Sources/SwiftAISDK/Models/ProdiaMultipart.swift": "970e60bd363e74989384f43286b422f99285003dd031026e1ad4d6f4ca6ee704",
+    "Sources/SwiftAISDK/Models/ProdiaProviderOptions.swift": "1f8acdbd07f1016de4793d56ebc16855b33f0bcb4992cfc6b925a4619cb1e946",
+    "Sources/SwiftAISDK/Models/ProdiaShared.swift": "d17c147626a4b1119bcb9cf381e721aebdb06f662f98703174c67c09e9fad73e",
+    "Sources/SwiftAISDK/Models/QuiverAIModels.swift": "d99f32c08c0a1a5abf6c067694f7e54ea13263ca3151e35c717a88e13f18630a",
+    "Sources/SwiftAISDK/Models/ReplicateMediaModels.swift": "b7a69b2e0b961f98c2a7360bc4b30205513332226ccefa1fcaf8f5f3fa0064c7",
+    "Sources/SwiftAISDK/Models/RevAIAudioModels.swift": "7b454afd8c48f7f93c036a9f6af1dbc0ae52c0810465eb2e85483c1f1df10df4",
+    "Sources/SwiftAISDK/Models/TogetherAIModels.swift": "f24dbad7807c4dcbbc09072a6e5864db12567ce21bcdd9cc127465852ae580d3",
+    "Sources/SwiftAISDK/Models/TopazImageModel.swift": "7fcdd08468b11b9868e422a3a234fa92acb33b010b2cf6af382724d4ed9cab44",
+    "Sources/SwiftAISDK/Models/TopazShared.swift": "adb163d3557b5115fb5d75490220dde257b4c6fd907febceefe575390981286a",
+    "Sources/SwiftAISDK/Models/TopazVideoModel.swift": "48db10e236f6b151503bc940d9905c242b48ab70999a6549ecba3a8d2bab1610",
+    "Sources/SwiftAISDK/Models/TypesafeAIDecisionModel.swift": "7959210f79f0fd43894b220e397180796ccccccd4da3d7b70270f4b0de7566c2",
+    "Sources/SwiftAISDK/Models/TypesafeAIDecisionOptions.swift": "7ca29b5536d73a04c94656b87ed64a0f7f594b280b17bb70623ae3399c9117a1",
+    "Sources/SwiftAISDK/Models/TypesafeAIEvaluationModel.swift": "79eeecb769908fc458499821b373fd73cf737f4c53f1199cf7ca70649bd71acb",
+    "Sources/SwiftAISDK/Models/VoyageModels.swift": "f62376afbe1d68ef6a4214604c79fce714050dad30d08771fa738c4a20655a17",
+    "Sources/SwiftAISDK/Models/XAIModels.swift": "c84488495d77d0f5168a4b81ec725cd2e0303447242e965efac4b513823186f4",
+    "Sources/SwiftAISDK/Models/XAIRealtimeModel.swift": "2a594f50e422efbfe461ce8c4242a79a23d363a437095c2a85a85a9ac7fffb11",
+    "Sources/SwiftAISDK/Models/XAIResponses.swift": "7be016e2992e0f3f8feb6fefcaf135aa3a698c9334eefa69eee3dfcedd8c8d36",
+    "Sources/SwiftAISDK/Models/XAIResponsesBatchLanguageModel.swift": "23a6b57f334e901038e4c918c2b5a4dc5865b5c90f59c1787c4561b364270f91",
+    "Sources/SwiftAISDK/Models/ZAILanguageModel.swift": "6519a97700ff625701c1afe950f7a98203904ac3d10ba825742014b24324c410",
+    "Sources/SwiftAISDK/MultipartFormData.swift": "d45f4dcd64c450b40f20ed76d877a685f522a0d72bfc3f2732ef3c8ab1cecdbc",
+    "Sources/SwiftAISDK/Output.swift": "32e38bac2c300b1b47e19fc84d7b1d774da7a24c03fba6b39e81ead09cab4b41",
+    "Sources/SwiftAISDK/PromptConversion.swift": "97e09f107a6041eeeb4765cea9b7d8cf9fc9015940f19a4bed84b9d8ba17d4a7",
+    "Sources/SwiftAISDK/PromptStandardization.swift": "6a7763ae5ddd2b8b3adfa75f93315b136157203d12a20b166fe462bfae4220cc",
+    "Sources/SwiftAISDK/ProviderReference.swift": "bd6b882ec78cb9b8b32480ca44a1d9f2fa45dea7df757f13d4e873d8ae2b4090",
+    "Sources/SwiftAISDK/Providers/AmazonBedrockProvider.swift": "a27219284ecec73291715162bfb1df33aae5f7c409419e8f3baa2159e94a7ab8",
+    "Sources/SwiftAISDK/Providers/AnthropicAWSProvider.swift": "f9863d85bec38216849a511b26dba7b9c627087e3a447722dc1dde4fb14bd8cc",
+    "Sources/SwiftAISDK/Providers/AnthropicProvider.swift": "d343e65fa10ac5bbdd3006e785bf0d506de2f2b65acd5567f8deb5354818f922",
+    "Sources/SwiftAISDK/Providers/AzureOpenAIProvider.swift": "2395fb4ffcb9ab3b3afb80a583456285014985a33f4473da89a5785ee30e44e5",
+    "Sources/SwiftAISDK/Providers/CartesiaProvider.swift": "38512a4e9989dddbd1cf372aa9ede01fed104f4fcbd49e52dbcf25f2a43d9a39",
+    "Sources/SwiftAISDK/Providers/CustomProvider.swift": "f57f242c0d22e7162b84995b77acc2323e22cc659543ccdd7b1173beba938736",
+    "Sources/SwiftAISDK/Providers/FishAudioProvider.swift": "95955353af65944520d0fe0db354379edab6a1808b3b8b2dcd6e320412b86d93",
+    "Sources/SwiftAISDK/Providers/GMICloudProvider.swift": "1f913f963065982eac7798d7e374c3f92d9e1bbe22ea49a20393c7d61ae5dc04",
+    "Sources/SwiftAISDK/Providers/GatewayProvider.swift": "936030ab3f0bcdbfd855946ca3ab04ae4f8dd6d6ca8f1d9e87a8adfae2ee5ff6",
+    "Sources/SwiftAISDK/Providers/GoogleGenerativeAIProvider.swift": "edc6e1c02506bcb0bf4968e24ced6cada95efc4bf7f8311763a799fd0e72ceb8",
+    "Sources/SwiftAISDK/Providers/GoogleVertexProvider.swift": "8bc12ac9f9c816637a8202617f5215e83a8bedcece65d402baeef48a02b35f5b",
+    "Sources/SwiftAISDK/Providers/HuggingFaceProvider.swift": "fbb0b8cb13bc0bda9df1a20673ae00e07e6127c25438c5cd6bb0e56a4b93d203",
+    "Sources/SwiftAISDK/Providers/KlingAIProviderSettings.swift": "5e6ab107fbb2be9cde951d26e14778bef20b64e5100fe525a68b89c3d14ec306",
+    "Sources/SwiftAISDK/Providers/MiniMaxProvider.swift": "c3f3ab03082e3639f0b14d1d8ac8429e08f43d213a28eb345b96e70d1ec83196",
+    "Sources/SwiftAISDK/Providers/OpenAICompatibleProvider.swift": "262ab984212d4bde34e235a4e9979b50a69bc62a08bba2d106f0de27ec09ef2a",
+    "Sources/SwiftAISDK/Providers/OpenAICompatibleProviderHelpers.swift": "243847aa48b07826838bd8b01d2f607239825983d42ac8b6b5ef036886f8678b",
+    "Sources/SwiftAISDK/Providers/ProviderCapabilityMatrix.swift": "312e3a2739572e72097317919edda2048d7d71f28f2761f74b7eb6a5fc07ef2f",
+    "Sources/SwiftAISDK/Providers/ProviderRegistry.swift": "8f0512aa8682df0c4afe97444e31596829b5a6a93ebeffde8753763f8c44418f",
+    "Sources/SwiftAISDK/Providers/TypesafeAIProvider.swift": "042281c5dd3ff7c31bbaa2aef3cc66a6818d026d24046ab81201b38d2231ab92",
+    "Sources/SwiftAISDK/Providers/VercelProvider.swift": "677c35a3688e4cdf0a30e34634673c661dbad8afd5076a48c9d486f39601dc83",
+    "Sources/SwiftAISDK/Providers/ZAIProvider.swift": "832fa6736be9dd11790b55d1d10debb006c4b1674f2be910eab510b8dbeeb124",
+    "Sources/SwiftAISDK/PruneMessages.swift": "a0dd6861ebe37b44563ed499edf2012c70dd1b0514f4f3f3bd9e8e85bbdb0624",
+    "Sources/SwiftAISDK/ResponseMessages.swift": "802b087532732886a63558081b614477f19aa12c216d09b10175ed0e38e96a45",
+    "Sources/SwiftAISDK/ResponseMetadata.swift": "c3540b2211f069e7c67eaebcafcfb5ed5ad27dcac1a456af4f60055d3bd86344",
+    "Sources/SwiftAISDK/ResultContent.swift": "562956db284fa7cc8cb7b3fe68e9de787b44400b387de8c4cbded2d3a90f1b10",
+    "Sources/SwiftAISDK/ServerSentEvents.swift": "d01113b36101ce18275f17910327d9b92a5b27510dd6470f565e17bef129fafa",
+    "Sources/SwiftAISDK/SpeechStreamEnvelope.swift": "b14ecbcdaab261e1c68c56a85d58ff91cc00f3d55c4bb1934d81de999e29aadb",
+    "Sources/SwiftAISDK/StreamProviderError.swift": "ad4519cb093eff09d33b488ee27be9bf09e4ff266bbeda62e477cf1b56a04454",
+    "Sources/SwiftAISDK/StreamingToolCallTracker.swift": "5c062096ff2fb164d868c943f8a7e621ae3751b661ef91dbc7a1bd9b4c05be11",
+    "Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift": "9031fc6d356e1b81f8e59f2f2b8b55c9c83746a963f8a3d1cdec5192bc40b1bd",
+    "Sources/SwiftAISDK/Telemetry.swift": "d3c7ac3bc098de163bac84d27e5ac6dff10d0b3b515d860dafb1184e1d50249f",
+    "Sources/SwiftAISDK/ToolCallConcurrency.swift": "b6f5cb71f5be13f6a8e2e80ffaa13d4df94bcbce44d1d256731a5e0aad7f6b3b",
+    "Sources/SwiftAISDK/ToolChoicePreparation.swift": "8e92e8fa7ea454518eb645a2d7fe95983afad1ed76f15e6ac96e0cebfd8233e3",
+    "Sources/SwiftAISDK/ToolInputExamplesMiddleware.swift": "69618b527bd3fefe2abbd7692a8b844ed6b2bb545a48dce75b6ed130d58bbd6e",
+    "Sources/SwiftAISDK/ToolPreparation.swift": "ae61c4d5eae92ffcd681c4ada86009e96cb8128336111e4bee767a6494e66578",
+    "Sources/SwiftAISDK/TranscriptionParsing.swift": "64b4ae49df2a0b6877049d536395daa05e35eb4b0bcc1bbff71bb1ff91dde83b",
+    "Sources/SwiftAISDK/VideoGenerationOperations.swift": "c9f4c172de9f91786b44423f8209d116d571e02f42f689ae1e9263b1b4c5d153",
+    "Sources/SwiftAISDK/WarningLogging.swift": "add2aab563cb6c9341cabe1d25acfd9a84cc8bd64cfbcc4a70674368af183dc4",
+    "Tests/SwiftAISDKTests/AIAgentTests.swift": "bb4f867d7496941b3f9b009239fedcaadecac3bd49c75d83492ff4b7983f68ca",
+    "Tests/SwiftAISDKTests/AIChatSessionTests.swift": "6158c4c50ab60a82f709c8e346b0ba970d4f5987506080c1469ae4a740cf303f",
+    "Tests/SwiftAISDKTests/AIFacadeGenerateTextValidationTests.swift": "ef508965b9a1af417266bdd7ff46b76430b7f66b013031ddbeb058e000393ca0",
+    "Tests/SwiftAISDKTests/AIFacadeMediaEmbeddingAndUploadTests.swift": "e3e8e61c9106c7570db7a66b035a662d4f31fd4005464fa563bbe741b008c5af",
+    "Tests/SwiftAISDKTests/AIFacadeStreamTextCoreTests.swift": "565cd4aedebcf655af00e08d41904096ec017f69f76df33b673b4bae09aff016",
+    "Tests/SwiftAISDKTests/AIFacadeStreamTextPrepareAndCallbacksTests.swift": "f00b8f0f815632ab6bfa2aac617f83b7c2d27e00333b61727055967286760ea4",
+    "Tests/SwiftAISDKTests/AIFacadeStreamTextTestSupport.swift": "a4e808ad910d430c8948c15abca17985ea2f21e9cac33f07fb587bd5adbd23c7",
+    "Tests/SwiftAISDKTests/AIFacadeStreamTextToolExecutionTests.swift": "85cdc8cee40cb20ad50e67046c0f2c9d7aee66639e3be89e6048f4fb9ded59b4",
+    "Tests/SwiftAISDKTests/AIFacadeStreamTextToolLoopAggregationTests.swift": "42ed50e9145f59687467605a2945c34482e0d3469fb4b300662a6d2068244eb1",
+    "Tests/SwiftAISDKTests/AIFacadeTestSupport.swift": "690d4c23aa784967815a4c0e0ac452f2d15025acde69a84eba7a94969ab31356",
+    "Tests/SwiftAISDKTests/AIFacadeTests.swift": "fdd97d6173be81f4abcbaf4b12d63c4dfd131fb09928c7afb0aa60243ed86b20",
+    "Tests/SwiftAISDKTests/AIFacadeToolLoopTests.swift": "de13ff216953918dcdd044f2f7e60478a826f42cbbc905236a630883fed6ddfc",
+    "Tests/SwiftAISDKTests/AIModelResolutionTests.swift": "5cc51a105d660566a0926844201f4a4f31464cbf97768ab6c72c7b9c4c6c69f8",
+    "Tests/SwiftAISDKTests/AIObjectFacadeGenerationAndStreamingTests.swift": "528e2a13ed866e2ac7b1243275be335310a7efcf24578be06266b53456f500eb",
+    "Tests/SwiftAISDKTests/AIObjectFacadeOutputStrategyTests.swift": "d46708510e8c470c4cb274f21986ee3bc2fb162cdb0f42a3416d77bac70dae40",
+    "Tests/SwiftAISDKTests/AIObjectFacadeTestSupport.swift": "5d228d12f025c77a163b35692796bfa5df11cf6beff01661d551db31bb41ada7",
+    "Tests/SwiftAISDKTests/AIObjectFacadeTests.swift": "451c17c8f68e1d9123a31a23d3f10fdfb3053ea2256e0e4e36327b5f15b03821",
+    "Tests/SwiftAISDKTests/AIObjectGenerationSessionTests.swift": "5c125aca9c479624187e96117b58c7702f9689cd2c36c640979104edbdde0674",
+    "Tests/SwiftAISDKTests/AIStopConditionTests.swift": "092c92e3027672f11a83d423526db9d55e44cfbc3b0bf162fd8f242caf3b135c",
+    "Tests/SwiftAISDKTests/AIStreamTimeoutConfigurationTests.swift": "fac2e70d5ae318f82023457711abeb9cf573731f106c94bb3bedc2ea33fd9d9e",
+    "Tests/SwiftAISDKTests/APICompatibilityTests.swift": "18f68cd38dbb7e87457ddba17ed2316ad4af14d3ef95936829a01d6bdda5632d",
+    "Tests/SwiftAISDKTests/AiAbortTimeoutUpstreamTests.swift": "f5827828a50ae3852f9bcc871ed4144b23c45b5ae744434a4847829311e482e8",
+    "Tests/SwiftAISDKTests/AiAsyncIterableStreamUpstreamTests.swift": "d71ec50abfd11a8e96339311a14d7a3c17d1e4b21e700ea2990b07567da1768f",
+    "Tests/SwiftAISDKTests/AiCallbackUtilityUpstreamTests.swift": "0fc142ff8557d991b9e57e557ab5272c3900f18c4d4716f06ec4447043ffe5e7",
+    "Tests/SwiftAISDKTests/AiCollectToolApprovalsUpstreamTests.swift": "fa5f7a74efc391ed5f73a39503744394f77f9137138c3987a85ac548a850e300",
+    "Tests/SwiftAISDKTests/AiConvertToLanguageModelPromptUpstreamTests.swift": "11e7d79f7ec46f31518d6f7594ad9a90a1da052bf6f78756256dba39062de0cb",
+    "Tests/SwiftAISDKTests/AiConvertToLanguageModelPromptValidationUpstreamTests.swift": "d7df9987f536492ad0b4c1d287d099f1f4973bc6796d0ce858be741aa6ffa9b7",
+    "Tests/SwiftAISDKTests/AiConvertToModelMessagesUpstreamTests.swift": "9abbf116da78da6c0a5414ac92935b02533faf5f8a3b9ed09cbcda341969d9fb",
+    "Tests/SwiftAISDKTests/AiCoreUtilityUpstreamTests.swift": "0085fffd4cf3e255d2113b73f8d4d00a4a690ea84d54d4b9ddb623510669b101",
+    "Tests/SwiftAISDKTests/AiDefaultSettingsMiddlewareUpstreamTests.swift": "e9eb01424c47beb92d542ee23222976f87459a065aa62b8edbdbb23ce5b0278d",
+    "Tests/SwiftAISDKTests/AiDownloadUpstreamTests.swift": "6e3c1c27197e2bef90b8891b06d5435a5e2f0aef044a411ab9ea65a68f3b46ba",
+    "Tests/SwiftAISDKTests/AiEmbedUpstreamTests.swift": "e4065edc3b299e5ace8806ce3ab6908f2460ec01fea8463a28439b919e3635ba",
+    "Tests/SwiftAISDKTests/AiEvaluateTelemetryUpstreamTests.swift": "4085d9d04ff67802f95e18bb4615b4c7a2ab5db7c2cefa1e226ba2adc44b309d",
+    "Tests/SwiftAISDKTests/AiExecuteToolCallUpstreamTests.swift": "0c44c864f8f013bee54346e121378e14651e8bcd3ae3086a9bd44c373b727b9f",
+    "Tests/SwiftAISDKTests/AiExecuteToolsFromStreamUpstreamTests.swift": "1652c52607a6858af1b7bda9cad52f5f5861ee3bc02aa76083c384605859c043",
+    "Tests/SwiftAISDKTests/AiExtractJsonMiddlewareUpstreamTests.swift": "993cd55c2e967d14666f690cbdc9b4540aa0146146e678c8f5c389bfabae4c18",
+    "Tests/SwiftAISDKTests/AiExtractReasoningMiddlewareUpstreamTests.swift": "e785c49d13d0129c901b64e7fe56bab9f08ec63b50ae389218647aa28bc3beac",
+    "Tests/SwiftAISDKTests/AiFilterActiveToolsUpstreamTests.swift": "748c7a19220b8ac37813297688ebdb50045442fd925d27eff8a73354a000e5d4",
+    "Tests/SwiftAISDKTests/AiGenerateImageUpstreamTests.swift": "c4ca5262a1cf7c2eaa0b7e6c904cc8d87ea6cc4b8acc5e8a375c26e58ba026f0",
+    "Tests/SwiftAISDKTests/AiGenerateObjectUpstreamTests.swift": "fdda7e953bd5ef4c7ca3a732f3302bed631dc397ae3464fd2ac44d39a6832568",
+    "Tests/SwiftAISDKTests/AiGenerateSpeechUpstreamTests.swift": "c7545e878a77198a20d0533f42d5e78ef0abaa9f751f14137c98bc532c6168f0",
+    "Tests/SwiftAISDKTests/AiGenerateTextCallOptionsAndCallbacksUpstreamTests.swift": "e1dcdbdf80212d7477e3553240e397efc4665973184246c4474a54c5d3e7b976",
+    "Tests/SwiftAISDKTests/AiGenerateTextMetadataUpstreamTests.swift": "f0adcaa0704ee98eabbf79f9cfeaf981fd695fc00e6ecb62d5c6f9f89a94c504",
+    "Tests/SwiftAISDKTests/AiGenerateTextPrepareStepUpstreamTests.swift": "4ab261cbbc308314b0a0cf5bf965f6a00a0373eae84f71ecc5886fb30ca34509",
+    "Tests/SwiftAISDKTests/AiGenerateTextResultAndUsageUpstreamTests.swift": "2d9f4ef8bd39b49e22ab7cf232aa1ebbd46caebd5dff56c3b06835a112a35974",
+    "Tests/SwiftAISDKTests/AiGenerateTextStopConditionsUpstreamTests.swift": "0f836dd8cb17e5a9b23c13489abddfdec42af1e3401be86d6e130673a09476f9",
+    "Tests/SwiftAISDKTests/AiGenerateTextTelemetryUpstreamTests.swift": "9689a407a05b161c97c53d9e8b02d49e7f5deb09937a91a05bf2993f252f63fd",
+    "Tests/SwiftAISDKTests/AiGenerateTextToolApprovalContinuationUpstreamTests.swift": "24fc3409194e2c0df1403fcb5bc19fdfb9adc23c612e06ee40be28d9fe62734f",
+    "Tests/SwiftAISDKTests/AiGenerateTextToolApprovalMessageResumeUpstreamTests.swift": "dd020ca69ad893df7133c17d72cfe0e88e474bc1853ecccc854eb5b15aef5850",
+    "Tests/SwiftAISDKTests/AiGenerateTextToolApprovalRequestsUpstreamTests.swift": "4f084ceab26c83c21f60aabd862e429f8d0f8cd3223cd6706af4464e4ffa3cfd",
+    "Tests/SwiftAISDKTests/AiGenerateTextToolApprovalValidationUpstreamTests.swift": "efe0b697b8258f8b3bd702a52b4ff82a81fc4818a6778ee1a9f0217fec948de2",
+    "Tests/SwiftAISDKTests/AiGenerateTextToolExecutionUpstreamTests.swift": "46e2ab892dffdba1afea41dc1d877261b533e27cc5e7d1bc6ab942c0bd96392e",
+    "Tests/SwiftAISDKTests/AiGenerateTextUpstreamTestSupport.swift": "106a8d77c4adc01e35045f02c95c3a264fa68f684965e367547a1d0cec48730c",
+    "Tests/SwiftAISDKTests/AiGenerateVideoUpstreamTests.swift": "2663ac57adac503d43a61d4d7aa736788b9884434a399a9ea0643c68daff04d0",
+    "Tests/SwiftAISDKTests/AiHTTPRetryUtilityUpstreamTests.swift": "4045bbd70082d5dda68c973f1ba0ee25504aa484a888713476385cb660f38008",
+    "Tests/SwiftAISDKTests/AiInvokeToolCallbacksFromStreamUpstreamTests.swift": "0b3f758fc643740db3ba375c6b7c44b266e3f78358c60ab721f9a89a3c2a42d9",
+    "Tests/SwiftAISDKTests/AiLanguageModelCallOptionsUpstreamTests.swift": "02ef3a5f84a6166d3565dea3dabffa9d24605b7baf2e2c952261983685656f1d",
+    "Tests/SwiftAISDKTests/AiMergeAbortSignalsUpstreamTests.swift": "2d06bfc9c0652106acdf56cef1d73fe2ceb1eb6952d177c6a90df863283de986",
+    "Tests/SwiftAISDKTests/AiMockModelUpstreamTests.swift": "c16a8f5bc0d79de990a72353f1205daebeee70b980a87cfd025f5ee0c95e2835",
+    "Tests/SwiftAISDKTests/AiParseToolCallUpstreamTests.swift": "455faa61223ed0f9f77e8f47cbd947293313ae7760ec8b4ee3d3b837b609127d",
+    "Tests/SwiftAISDKTests/AiPartialJSONUpstreamTests.swift": "809eef17f82a6c24604200df773f6f93777a54b21615cc14360aaf8bff9dc7bd",
+    "Tests/SwiftAISDKTests/AiPrepareToolChoiceUpstreamTests.swift": "5b5b8ad2bf6abbf9be96476d8821d9dc700d45ce4cbf7bc60811523ad2303e12",
+    "Tests/SwiftAISDKTests/AiPrepareToolsUpstreamTests.swift": "f99879974af441908327e38b1554d79d87566af9cab9e2e25fa40f2977e9f957",
+    "Tests/SwiftAISDKTests/AiPromptToolOutputUpstreamTests.swift": "c43451f40bf1a7e7850860b433f950a0d08c311ed8092c8c20382556a73fbbb3",
+    "Tests/SwiftAISDKTests/AiPruneMessagesUpstreamTests.swift": "ebdb1e44fb185de61244043b5d9791b9a24c66f7dc864dd474e8e8f4b3608add",
+    "Tests/SwiftAISDKTests/AiRerankUpstreamTests.swift": "da779a72fa843ec6baf5fdbd600c1a596b8591be9446eb990896249a13929bf9",
+    "Tests/SwiftAISDKTests/AiResolveToolApprovalUpstreamTests.swift": "cec90465dbae1bd4dcdc65fe488bb9d004baa3b754e861da4d8d83cabb0c035c",
+    "Tests/SwiftAISDKTests/AiRestrictedTelemetryDispatcherUpstreamTests.swift": "b03617f854649b1bbc75de79c172015d8805b79e888027deb0276c0b77c1c555",
+    "Tests/SwiftAISDKTests/AiRetryBackoffUpstreamTests.swift": "8f01fdfe5de2628840a258dd302cbf858af6690cd94f6c5c7df72e4b899002fb",
+    "Tests/SwiftAISDKTests/AiSerialJobExecutorUpstreamTests.swift": "b4730adc231b4e692819c9a25a116e721348f5cb69bd04883865d8a7b9b51c7f",
+    "Tests/SwiftAISDKTests/AiSimulateReadableStreamUpstreamTests.swift": "6425b307aacaabc84214dfef3005b0640bbbcda4143ad51a6dfdf677bec2a9ea",
+    "Tests/SwiftAISDKTests/AiSimulateStreamingMiddlewareUpstreamTests.swift": "d1c2a4403e015aa98b14f8bd1f6b8794d87aec0c18ff76c3513ca4edc518b93a",
+    "Tests/SwiftAISDKTests/AiSmoothStreamUpstreamTests.swift": "84abb6c30694ab911c569dff16ad49864b646597bd5d7d816c17d8e53dc0cf9b",
+    "Tests/SwiftAISDKTests/AiStandardizePromptUpstreamTests.swift": "7f207f1be6363914ff8c300b31e7a1f91eefd5701688d0d642b372539d9b6b85",
+    "Tests/SwiftAISDKTests/AiStitchableStreamUpstreamTests.swift": "6231c550bce73a92f7021b4d208a655794f0cc13506ff235b9c224c0ce6d9931",
+    "Tests/SwiftAISDKTests/AiStopConditionUpstreamTests.swift": "15f8b533f20f0c769d459b47825706978352cece4b947032d8f34aef52b46a7e",
+    "Tests/SwiftAISDKTests/AiStreamLanguageModelCallUpstreamTests.swift": "2ccc097712852724a36c97874704c2fb4fec4c101f550080b150806b3fb92595",
+    "Tests/SwiftAISDKTests/AiStreamObjectCallbacksUpstreamTests.swift": "c76e0bf317345d6212be2debb7775b23e48c32c01886a4f5eb4e66d0d71171fe",
+    "Tests/SwiftAISDKTests/AiStreamObjectCoreUpstreamTests.swift": "154df41d30353963ce080631ecd9ec3a1f60b43fc17dcfb7bbee215685415690",
+    "Tests/SwiftAISDKTests/AiStreamObjectRepairUpstreamTests.swift": "e61ebe6e4b87a90c6a5f4048fc96404407c98d6a790a989d25243a67cde27888",
+    "Tests/SwiftAISDKTests/AiStreamObjectUpstreamTestSupport.swift": "e7466e34af58dbacf35fa6e97e364e0309fb94742879013775a03bf0c44e6173",
+    "Tests/SwiftAISDKTests/AiStreamObjectVariantsUpstreamTests.swift": "d2024415d767b26f5b189872b0295a1415abafed513a3ded5bc00656e23fa305",
+    "Tests/SwiftAISDKTests/AiStreamObjectWarningsUpstreamTests.swift": "f62561c87da964a47150f5a6495f1bcf5204a64984bda34e5bc1df6fdec68390",
+    "Tests/SwiftAISDKTests/AiTelemetryDispatcherUpstreamTests.swift": "0c33a9e8ab3f29b817c3c08b1fd3aca9ff4d015f19aa639972bc8976b2fb7c9c",
+    "Tests/SwiftAISDKTests/AiTelemetryRegistryUpstreamTests.swift": "c79c834be1dd35f6af89782dc483b82e423e7697ced79f414f96e8e59a863e57",
+    "Tests/SwiftAISDKTests/AiTextStreamUpstreamTests.swift": "a84133178532b98d4ed140d045dfc9669ba95c484eaf3aa64aad5ed500601455",
+    "Tests/SwiftAISDKTests/AiToResponseMessagesUpstreamTests.swift": "dc8adf3c622527c61732d8cb5bf3731ecce2500e014779268390e6985db55d6e",
+    "Tests/SwiftAISDKTests/AiToolApprovalSignatureUpstreamTests.swift": "0b5bc5675fe45c55af20f5fa37f7c5cc5aa5bda47b5d847d85f721805030c25a",
+    "Tests/SwiftAISDKTests/AiToolInputExamplesMiddlewareUpstreamTests.swift": "c4eaddf7d83a7d188625591e5c6dd86d4943b4e4a303249d5e1bb876f66a6021",
+    "Tests/SwiftAISDKTests/AiTranscribeUpstreamTests.swift": "136e3c9aa76088b373ca08f588491fbbb38290042a2690cc43e05bc6ba326b2c",
+    "Tests/SwiftAISDKTests/AiUIMessageStreamUpstreamTests.swift": "786741579bb3d7d33a49489d4a7df28d6f2258df369d95d19aa23b23fdace0e1",
+    "Tests/SwiftAISDKTests/AiUtilityDataUpstreamTests.swift": "b6836967f7cf64cf6b5e746d115ea178817879471b9535a10d5f966079cc2f9a",
+    "Tests/SwiftAISDKTests/AiValidateToolApprovalsUpstreamTests.swift": "152776da973864693174c1fe80aeda329465a9b75d81df3f7031ff8b5d437ff1",
+    "Tests/SwiftAISDKTests/AiValidateToolContextUpstreamTests.swift": "788120507a9585f7378743206bd2e219092ccb71c4d9d773860dd64381d91bed",
+    "Tests/SwiftAISDKTests/AiValidateUIMessagesUpstreamTests.swift": "eacee4ee58fac86fed5e44fe5f5ec110168319849324881517f17233a8822a43",
+    "Tests/SwiftAISDKTests/AiWrapModelMiddlewareUpstreamTests.swift": "c90749aae7e86491c15f2ef1b83b938928ddae98dd550ac1b5020e2db106bb5b",
+    "Tests/SwiftAISDKTests/AlibabaProdiaAzureQuiverTests.swift": "f319e3a2deae45148ca60d358b805e2a8ff5abd464f0a0feb540082469b7dd2f",
+    "Tests/SwiftAISDKTests/AlibabaProviderLanguageAndVideoTests.swift": "74baf37ededace515d91f27b1ab20b29e81206465e754403f2c69f15c146eaf6",
+    "Tests/SwiftAISDKTests/AlibabaProviderTests.swift": "de4bafc69c016ed00689ff8783da9f1c207f4368ac7878328c0912cdf2218d15",
+    "Tests/SwiftAISDKTests/AmazonBedrockAnthropicAndConverseStreamingTests.swift": "082ccdefcf2498dd8537531f156b30ef839f59b6499576be05b43201601e82ed",
+    "Tests/SwiftAISDKTests/AmazonBedrockEventStreamParserTests.swift": "682999dad561f9c6e315cd141058c28efc7c1ab4f134137647dc27d43db14669",
+    "Tests/SwiftAISDKTests/AmazonBedrockMediaAndRerankingTests.swift": "29b6ee959583052d55f21e32ec302b0762eb01fb2c4e32aca7aa5b320bdd9dff",
+    "Tests/SwiftAISDKTests/AmazonBedrockTests.swift": "8fde3eb124216e0548d9747ca077337c80da5cda1d52233820cff7d13fcb4e95",
+    "Tests/SwiftAISDKTests/AmazonBedrockUpstream5068Tests.swift": "bee374f923d36eeb191e5c855d12d8e4edc569f3831ae0cc7ba6b6ecba7fc386",
+    "Tests/SwiftAISDKTests/AnthropicBatchV4UpstreamTests.swift": "48d3bd57ec60ff1a430918345a9a80c6544b770ea60a8eb9f304820d25fdd5d0",
+    "Tests/SwiftAISDKTests/AnthropicBedrockUpstream202609Tests.swift": "224dce2a970041b7938bc98b19ab4216dbc511c7d2f905b5883832fdab88e7bb",
+    "Tests/SwiftAISDKTests/AnthropicCacheControlUpstreamParityTests.swift": "01ae5d85d346287d82d6b03f5f1ed30770f418995d523c8daaa275e8e6d373b7",
+    "Tests/SwiftAISDKTests/AnthropicCallerMetadataUpstreamParityTests.swift": "007985234507f84f242710bad8cce23cb8c8b37c89be328bfcd465bba1683a98",
+    "Tests/SwiftAISDKTests/AnthropicDeferredServerResultUpstreamTests.swift": "84a8f4af20aed3c83d8c2c70b2f628795f6aabb2aef661d1498e7232755e2af3",
+    "Tests/SwiftAISDKTests/AnthropicPDFAndCapabilitiesUpstreamParityTests.swift": "2517d29446782bc32e6a1b5fd0f669796ac6df20035c34a0cbb1e060e4085ebc",
+    "Tests/SwiftAISDKTests/AnthropicPromptConversionUpstreamParityTests.swift": "d461477612a072c82f880f9ac43a5454dd6e17677334b907365e01284dd0f8ae",
+    "Tests/SwiftAISDKTests/AnthropicReasoningAndRequestMappingUpstreamParityTests.swift": "d0c2f919d3c1ccb7b68c10b482d4429ecf33775cbfccd0a741433d4cf1797552",
+    "Tests/SwiftAISDKTests/AnthropicRequestMappingAndToolsTests.swift": "077e526ceee1dbdbd8abf65d6fc0c6dbeae44ba71a43ad9512c2fc790bfbe17f",
+    "Tests/SwiftAISDKTests/AnthropicSchemaUpstreamParityTests.swift": "c02a7c3dcf1b34501b45508671438a965f9a57deb6b72afcebc4db1ee506d7b8",
+    "Tests/SwiftAISDKTests/AnthropicStreamingAndClientsTests.swift": "1539dddc31042ab1415e9bbb8fb841e7319a18de5ac7199ba42edfd7dcfa6adf",
+    "Tests/SwiftAISDKTests/AnthropicStreamingUpstreamParityTests.swift": "12a8466b8a9e92d9cbb6d2f517759f227d0e0fbbabee4014505e23676fb2e214",
+    "Tests/SwiftAISDKTests/AnthropicStructuredOutputUpstreamParityTests.swift": "ab725bf83600d5359e4e1e674ad9fe496d87161a44c1111095252e0c5fac35cf",
+    "Tests/SwiftAISDKTests/AnthropicTests.swift": "54a7e4813eae2b8a9629af80827102ea0fd8373d58915078c5375478cce1bcab",
+    "Tests/SwiftAISDKTests/AnthropicToolDefinitionsUpstreamParityTests.swift": "f3a8770dadadb1ea24e3748a921100a7a1469b3344fc1d70f82dd518c595069a",
+    "Tests/SwiftAISDKTests/AnthropicTransformAndMetadataUpstreamParityTests.swift": "ba14df1eb4f86b71dbe1b3904f776000c7a5fb5c133f6a72f4ea5d56b5971755",
+    "Tests/SwiftAISDKTests/AnthropicUpstreamParityTestSupport.swift": "f54333d002d5c712e0cc5db989089e71c936f4dde3c2c5b1fef86bbf5378c548",
+    "Tests/SwiftAISDKTests/AnthropicUsageUpstreamParityTests.swift": "0bae02449ae51b17167841a8b0a55389af683d5461f1576a8e3cec2f81feb057",
+    "Tests/SwiftAISDKTests/AssemblyAIProviderTests.swift": "80ee4929456b06283f3f3be5fd249858d06c2ad231b0dba1a1356cfb55543c74",
+    "Tests/SwiftAISDKTests/BasetenProviderTests.swift": "44b00876af0f5d0da5413abce8372523a064dd07bb24c99ef26b9f917f90c852",
+    "Tests/SwiftAISDKTests/BatchV4FacadeTests.swift": "3ae7e99e937b533caf8d6f7b4e2d294ecf66ed00a8a54f2409482098050839b9",
+    "Tests/SwiftAISDKTests/BedrockStreamErrorParityTests.swift": "e612d60f634442e5b98e3b39377a992043dfbab30ec2fb4f5b3c184e6ad561d5",
+    "Tests/SwiftAISDKTests/BlackForestLabsProviderTests.swift": "ddf323b4c03c0d1ac418eaca625fd96f8339e9de77b94bd0fefa69c03ca440b6",
+    "Tests/SwiftAISDKTests/BlackForestLabsVideoModelTests.swift": "3794e8eca74892bef8245b4a2563ebcf43546a71d7e5ca588e8628a772dd7d46",
+    "Tests/SwiftAISDKTests/BlackForestLabsVideoOperationTests.swift": "75d8271f05bc0a49f6ab0e3d36acb713d72059244a861a22a6355016adabb2b7",
+    "Tests/SwiftAISDKTests/ByteDanceAsyncVideoUpstreamParityTests.swift": "071e97ee2156108cc080c707f757bd6eaf8a03c5d672fc7cd7ea60622058a71d",
+    "Tests/SwiftAISDKTests/ByteDanceProviderTests.swift": "c80ca34ac791876b691549586b598d51147c36577ff3a910185afb13bd2bc82c",
+    "Tests/SwiftAISDKTests/CartesiaProviderTests.swift": "b5a9e136e2ad8c70b11617893266cf949b385395c2e9b4960b37601134b9efde",
+    "Tests/SwiftAISDKTests/CartesiaSpeechModelTests.swift": "eda3cece9f3b2c66831b193e2e92dbbb6d1a9518e8dc7ead2ceabdebefcee57b",
+    "Tests/SwiftAISDKTests/CartesiaStreamingTranscriptionModelTests.swift": "16ba6f6f31d5c37a29a09d4f2f741426999c14caa47ec440aca89ea4019390b9",
+    "Tests/SwiftAISDKTests/CartesiaTranscriptionModelTests.swift": "2303f470305d2dc31fdfac154ed21a8cabcd68579c7733cd763f596e372e31f1",
+    "Tests/SwiftAISDKTests/CerebrasProviderTests.swift": "77847936cc43ceb2a56ea4cee13773b1e64c019f35a4403c0fa52534e7b3c1fb",
+    "Tests/SwiftAISDKTests/CohereMistralVoyageStreamingAndOptionsTests.swift": "87b2170336540dcc4a7eedbec253d6d78bd4f6bb7d2e334f8c9354e50422c769",
+    "Tests/SwiftAISDKTests/CohereMistralVoyageTests.swift": "f39c8713902e13da61b60600092249549a0adab550673878cfa2ca494e692b37",
+    "Tests/SwiftAISDKTests/CohereProviderOptionSchemaTests.swift": "d256e7e72c0f561fe5d0277765b857bf660df3f64e81551890050d0d6c969b81",
+    "Tests/SwiftAISDKTests/CoreContractTests.swift": "c24d5408e20bee48756ae3d89b24e57e8a0e71b851aef698d0cc20b93aa0253e",
+    "Tests/SwiftAISDKTests/CoreEvaluationTests.swift": "be3439e4b5e58fb3b9f269f30288f4faac303c075ca98815f0316cb84608bee7",
+    "Tests/SwiftAISDKTests/CoreOpenAIUpstream202609Tests.swift": "09eb502799fd235670e361628bfdec6d1d9ec033682bdee6c1aa79c74b91e8aa",
+    "Tests/SwiftAISDKTests/CoreRealtimeTests.swift": "17dfdd85598ba8e6b2ad7268f311482ad7e94c7bd25bbcd4e2f8ffeeeb3e4a0d",
+    "Tests/SwiftAISDKTests/CoreStreamingTranscriptionTests.swift": "a20c17839f9807e0d7782e1ad1d75c00e07f5de0666a73dc638c4ef9cca80c92",
+    "Tests/SwiftAISDKTests/CustomProviderTests.swift": "c3fb7709f061cabf165840618d7387f2147b276e255cbc494ea4c590f42386cd",
+    "Tests/SwiftAISDKTests/DecisionCoreTests.swift": "71ec4fd46ebb26fce4db463cfb479e44d996cb8c5ab80f6c989f61d3648825db",
+    "Tests/SwiftAISDKTests/DecisionProviderTests.swift": "67b533416db45e43abe90309ad107146e7c825dbe0cb10f78e2c554ae91205ad",
+    "Tests/SwiftAISDKTests/DecisionTelemetryTests.swift": "d085875c1545354c20453b3fbed5c9a30168483ae3c2669babc7ac2c10c9a5d7",
+    "Tests/SwiftAISDKTests/DecisionValidationTests.swift": "e5b5696523c3e442ed0baf7e9f8729a971e411fd7dbc339b80e4a273e0e8ee01",
+    "Tests/SwiftAISDKTests/DeepInfraProviderTests.swift": "761d818a0d1ab6103af2362990ac7c81f03236b1351b6f009aafbfe76176b84d",
+    "Tests/SwiftAISDKTests/DeepSeekProviderTests.swift": "2ad28da8a47101b96fa8b6abfcfcc1f7c0efced8722c6e7f3ced5d31d8aa21c5",
+    "Tests/SwiftAISDKTests/DeepSeekVisionAndFilesUpstreamParityTests.swift": "bdc49bc14aa96cc9758521006447753aca7052b12cc4cf8670912d3aa423f92f",
+    "Tests/SwiftAISDKTests/DeepgramProviderTests.swift": "6acd7ed3a6f400cdd3221a3faa8a6114756609fd86f707eb7f5d606e06d642c3",
+    "Tests/SwiftAISDKTests/DownloadURLValidationTests.swift": "8df81f250bf815495eebc76741ddf1d9a7420cd63220c8d7f1294e59316656e8",
+    "Tests/SwiftAISDKTests/ElevenLabsProviderTests.swift": "dd06e70502a5ddd8c0577af8b126873f9c3e0ab20ae80822f4c32567f1bf08a6",
+    "Tests/SwiftAISDKTests/EmptyToolCallIDUpstreamParityTests.swift": "f5701f5137de3cd77319b30afe9050b80a41a06578101e5cd392f4c51658e79b",
+    "Tests/SwiftAISDKTests/EvaluationLanguageModelTests.swift": "d322140aa3af2d95b64950833e605a1c604339b5048fe26091702b2936ed4d5c",
+    "Tests/SwiftAISDKTests/FalMediaProviderTests.swift": "7efe72439d86d26c32ad9df4db848ecef7a0a97f518971958414fcecce8000ed",
+    "Tests/SwiftAISDKTests/FalProviderTests.swift": "bb16dd8bd9b1fe2638af88d21030ba4b737dc91530de6e451bd190eea2f53bb7",
+    "Tests/SwiftAISDKTests/FileAndSkillClientTests.swift": "7609326f51da24d77dd5923a37f21b1fd1fe57c0b024f44a0579f2154846e63a",
+    "Tests/SwiftAISDKTests/FireworksProviderTests.swift": "274a2baefe1815996b2501050ef5fea552e86fd7d7ee4461ff6d1513201bbc97",
+    "Tests/SwiftAISDKTests/FishAudioProviderTests.swift": "65983d5eb9edd6c12270dd6f2877197192de8981d5b12afd0e4cad87551e81d8",
+    "Tests/SwiftAISDKTests/FishAudioSpeechModelTests.swift": "769ecb33148fb7172cd2f58f838a951fca269fff2f436de978b455060b0181eb",
+    "Tests/SwiftAISDKTests/FishAudioTranscriptionModelTests.swift": "9929abedf36fd9493903cdadb683ce271b4e2cd6f10df5aeee84e17de2fb8a75",
+    "Tests/SwiftAISDKTests/FixtureDownloadTransport.swift": "6e8aeade13b097c873a78fd03e3ecb456aaf71a4576f3ecf8bf5d32c6f31736c",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-apply-patch-tool-delete.1.chunks.txt": "4140b19cd5a8dad9760b73c80d960f65aedad0ad643e3892f519db72fe34b168",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-apply-patch-tool.1.chunks.txt": "88bfca2f26bcf6c44a0e559e3f89d1357cb33b577a0c7d20b93f5b6bd212814d",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-client-tool-search.1.chunks.txt": "ff9a930622fcf1c5a899f04583a0b5df34a06123f445bd0313ae8fe171649eaa",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-client-tool-search.2.chunks.txt": "9e38a165bd0fae6264a1ceb90172151131f3e1c86302a46ece5f5d0affcabc18",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-code-interpreter-tool.1.chunks.txt": "2907e69401c95a1c32bf495032c0bb4916a41b80d4a8cd49cbf97b2570633d84",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-compaction.1.json": "7d8ad251abc6711912e6cc11539a526fa96bf5718a16ef44d6b38d8bda31e316",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-error.1.chunks.txt": "9046a4b9521a02eec098359b70bf8cc89ef1e5338375f91618c73cb650132b25",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-file-search-tool.1.chunks.txt": "8a315cfa53dbe541e23aa91b35947ff11fa1102674ce71bcde944f3b875f9b20",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-file-search-tool.2.chunks.txt": "0a4000963b51d9ecc95269ad4fb0622c6b4fe936e9a79b095854cfe8a5afeabc",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-image-generation-tool.1.chunks.txt": "7195d0ce37e222acdb7afcfe67252328386128b7ff13555ae80be4282879e500",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-local-shell-tool.1.chunks.txt": "20583eef6409e9a695fbc4fc3cbe8132c4be3b5d69a291393f4d7c83fe351b81",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-mcp-tool-approval.1.chunks.txt": "b525c00301e18bcbdbed49b6d2c9bc8f69cba9a8520b252bb5242c79d62f9fee",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-mcp-tool-approval.2.chunks.txt": "8b71a4124206ee7549cf3334e88501c89c36496b3577b97094cae29d8e84ad40",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-mcp-tool-approval.3.chunks.txt": "76fac37160ac333c77fe73c7f7c7ef4664b73862f88a0b40bce740897f70768d",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-mcp-tool-approval.4.chunks.txt": "e45960ba4f50536eee763c00b396c8d832c3eca3cbd57c8160e29ab75e1228c2",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-mcp-tool.1.chunks.txt": "3f4830c9ba95c2fe804dccb3b85ffdb2db3fa5ca1de480428423e8a044b3cd72",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-phase.1.chunks.txt": "7f5871feba09642b1c1e359878bbe8a75eda607da6dd9d553193e94d816c981c",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-phase.1.json": "9a19b8afe362cbab14b0b4a7dd3d6e4dc504b9ba1d230906bf8584a0d62a0db6",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-reasoning-encrypted-content.1.chunks.txt": "a1e8b0e752046299cafe44af4c5fcdcda5ceb9a9ee5c117304b39ef527a58edc",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-shell-container-multiturn.1.chunks.txt": "eda9b15fc6e8bc7867a78ce7640cf0f8f79606b9b5b3e5108b79a53b5dfc3987",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-shell-container.1.chunks.txt": "ef2797809ad604ce786b827640ca13a5cce1aa7de2c6025503b0581da42f2bb7",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-shell-local-multiturn.1.chunks.txt": "3cff2044e76e46327e6be89b367c474bac746d1ab3cd5b7c7ce97d88a36b5467",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-shell-skills.1.chunks.txt": "8e03d9d8d9255c53f8aa13e8a5c076f2a10d1e446fd25e40b9f958bc6f938d0b",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-shell-tool.1.chunks.txt": "6757a95f6f45cf7e2ca93a7b755a7792af378497944e88a4f518ac881e770d54",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-tool-search.1.chunks.txt": "985e48871f1fe39021d19de2d8de0244a8b2e1745f757920dcaf746bf2fc1725",
+    "Tests/SwiftAISDKTests/Fixtures/OpenAIResponses/openai-web-search-tool.1.chunks.txt": "69b8900d858989347bc26844e79b476ceea46b8ba00fb4175a8991087d438a18",
+    "Tests/SwiftAISDKTests/GMICloudProviderTests.swift": "f7ca26dcadafc15665f54005871e7e4f4c4f3d2a225ea4d24123211be8b1b978",
+    "Tests/SwiftAISDKTests/GatewayBatchVideoAndTakoUpstreamParityTests.swift": "5d2883f3536ab3fb88b15645d360f9ba20cfd448496f60b5d78cdfaa7aeb096b",
+    "Tests/SwiftAISDKTests/GatewayEvaluationTests.swift": "ff4b0ef45ef9d64b6e6581019b34e232102ab02d27c9cf932e1853df6c826629",
+    "Tests/SwiftAISDKTests/GatewayStreamingTranscriptionUpstreamParityTests.swift": "58a1acddb60caa1299b65e2371c64ec0813d18f22a4425b3c7d4ec393cc99016",
+    "Tests/SwiftAISDKTests/GatewayTests.swift": "ffc0d33820de6ee86b8f954f137c7eb096aea0e3182ff25c2fe7202661c456e9",
+    "Tests/SwiftAISDKTests/GatewayUpstreamParityAugust2026Tests.swift": "c2e34b2bd8b9dd3beceda92c4295b5e4ed20570e051df97499cb06c2e3acb4f3",
+    "Tests/SwiftAISDKTests/GladiaProviderTests.swift": "e2cfe42e54ef76d5c5e091e3d43cf53e55fca31a0ab1e3585850c8f6dbe89b71",
+    "Tests/SwiftAISDKTests/GladiaTranscriptionSchemaAndLifecycleTests.swift": "24a0710e8fe52e01854f5f540f4e801bee762447a32a5433cbc4eced7e0eb83e",
+    "Tests/SwiftAISDKTests/GoogleBatchUpstreamTests.swift": "710767a3b78f4fa928ad2e8cc4ffbb40f8b9cd5bf5698125cd54f0c098320f06",
+    "Tests/SwiftAISDKTests/GoogleGenerativeAIFilesAndStreamingTests.swift": "c00841c817ff9bf3d67b4ba6ad1a8405fb19c59d9ac0d3916536c4283573e5c4",
+    "Tests/SwiftAISDKTests/GoogleGenerativeAIMediaAndToolsTests.swift": "8d81c88eed7d29cb7aa04aafd9035b330b910813111d1bcd60cc601d7acab791",
+    "Tests/SwiftAISDKTests/GoogleGenerativeAITests.swift": "5ed37f0a826b7688c5aa48bd90f7c93013e3ebcbc5b570426d399b7c788e006f",
+    "Tests/SwiftAISDKTests/GoogleGenerativeAIVideoAndInteractionsTests.swift": "c2d467fe1db3ac58ce0d1d1280638a263d74ef2f3892fbe8f21037d7e47fe6cb",
+    "Tests/SwiftAISDKTests/GoogleMediaResponseMetadataTests.swift": "1552c233865c5023660348ad167b6b98200aa2e53195844b6e4f2a6067353048",
+    "Tests/SwiftAISDKTests/GoogleUpstreamParityAugust2026Tests.swift": "25811b266e27c8550921b9dda72ff8b6526d90e3ab0ba66cc6a6cf19774d0026",
+    "Tests/SwiftAISDKTests/GoogleVertexChirpUpstreamTests.swift": "dfa7a67cfb2025a8af585016d9426b9a8a095af0455fe5dc8be8e730b5521ce9",
+    "Tests/SwiftAISDKTests/GoogleVertexMediaAndMaaSTests.swift": "ee43f3d0b5c1cad45f7a16329eb6c828d8f558c34edd1dbf9a2de6e47a79e73e",
+    "Tests/SwiftAISDKTests/GoogleVertexTests.swift": "9d5445c2951425481369b3a7f6d161415f026de0d2f676852ab9fc08d80f18a5",
+    "Tests/SwiftAISDKTests/GroqProviderTests.swift": "c45319129a55287912c7bd2d174b0f5323843b8494b1110ddb93975739f552bb",
+    "Tests/SwiftAISDKTests/GroqStreamingAndTranscriptionTests.swift": "a7ac2a8ea50be7378ea95eafa7168baa53fd1d7517e4e2fe2230a10a4b504ac1",
+    "Tests/SwiftAISDKTests/HTTPDNSPinningTests.swift": "4252fd8ec887e93dbf21796f0c5f051f34004a88804049cfecc03658aecbe187",
+    "Tests/SwiftAISDKTests/HTTPRedirectSecurityTests.swift": "4fa8de6fec295285d6b65dafac879bab7059d43175bcfe37cdd38719cd9ccbe2",
+    "Tests/SwiftAISDKTests/HTTPResponseSizeLimitTests.swift": "097ef15c4f9aec8badc8bd66230a3c245598a3545c27ed4109d88cdf2ef7972f",
+    "Tests/SwiftAISDKTests/HTTPStreamingBackpressureTests.swift": "c78948cfea0cc80d4f04c7aaa805680034233eddb7f6d49823163737e570a9ea",
+    "Tests/SwiftAISDKTests/HTTPStreamingTransportTests.swift": "f4a8a5ad4158e37eca0654dc68abcab6a3a89f5a9a7c541f79a39866152b4094",
+    "Tests/SwiftAISDKTests/HeaderUtilsTests.swift": "cb4e0394fd83847f68563b53c10bc1644453a84a1cdaf20d4c1139e9da6bbab7",
+    "Tests/SwiftAISDKTests/HeyGenProviderTests.swift": "18214c55c4a7481b27038f452c25170cd75c0cc6e3c5b4c7f9bca01f2607291e",
+    "Tests/SwiftAISDKTests/HeyGenTestSupport.swift": "2d1d6fc840175ed647afaa89211ef36acbe5d2b78ca3e5027b41eacd9e55ed75",
+    "Tests/SwiftAISDKTests/HeyGenVideoOperationTests.swift": "6b69a7bd0db40bc3b15d87dd4315eb714139d3917f7c5e534a4b812193671202",
+    "Tests/SwiftAISDKTests/HeyGenVideoRequestTests.swift": "4c937c7963eb6e92b9be6e56e642a35994273d183922835c7ab00e36444a50c7",
+    "Tests/SwiftAISDKTests/HeyGenVideoValidationTests.swift": "b4607b498fac3bcba6150153a03ec665f9432bc443461f6fdef44f5aaca2039f",
+    "Tests/SwiftAISDKTests/HuggingFaceProviderTests.swift": "a1b0529438df86f2c3faa88e981d41d62e3ab8352b0bd109f86a963b716b69e2",
+    "Tests/SwiftAISDKTests/HumeProviderTests.swift": "ff7f585577b66d5899f300a81954ff4ebed8c46031f341f925a671416b548c48",
+    "Tests/SwiftAISDKTests/ImageModelFileDataURITests.swift": "2a28a8421f9366637a713145fab0eb417df6f8a1f793d05609f26b6160f273ff",
+    "Tests/SwiftAISDKTests/IncrementalLanguageStreamingTests.swift": "9e0b9c66d8c3c01d998523b00efac19e2a08f90149cdb86dd999f8d7f6927836",
+    "Tests/SwiftAISDKTests/JSONParsingTests.swift": "2a270dfbef6210e6e913004396fc2ab5032edb095ae0e7b4d0bbb9d06e75c838",
+    "Tests/SwiftAISDKTests/JSONSchemaTransformationTests.swift": "521f4e5e8d7fd6daad9d18acfd154a1dd0f6afc68a5809887617b0fb647a1d73",
+    "Tests/SwiftAISDKTests/KlingAIProviderTests.swift": "6664c3e0fadc20c88c6a41bcebfc85ae853e635e594c4713ff22e9ff1c1c461b",
+    "Tests/SwiftAISDKTests/LMNTProviderTests.swift": "002c1744bcfda7895e0b018b39d49ea30fbda6cb8e548d5673144fa4a139601b",
+    "Tests/SwiftAISDKTests/LanguageStreamContractTests.swift": "a2aaae35f7fe3b4b885b88ff6e527966b883bb22ba7abeecbd62eaa545af15b2",
+    "Tests/SwiftAISDKTests/LiveProviderSmokeTests.swift": "2df2d429698bc37fc0e3e1c1330308e51905d0ec8b0ba8066e7efeaf84a030a5",
+    "Tests/SwiftAISDKTests/LumaProviderTests.swift": "51a9dc471d72fae56c908f15c60f24174c05bd6ed149d43ba443b298020cabba",
+    "Tests/SwiftAISDKTests/MCPClientTestSupport.swift": "84df7f10ab4b13c6be1214012e08390f02b8b19cbc2e302d487aa8f5aae69196",
+    "Tests/SwiftAISDKTests/MCPClientTests.swift": "facbbadebd9614fbcc226b505357800238aad252bb6870caaf833ecc154222a3",
+    "Tests/SwiftAISDKTests/MCPHTTPTransportStreamingTests.swift": "5283d9ba4bf9001e6088823ba6664deb8307d55812d17867638ecd2aab4ac22f",
+    "Tests/SwiftAISDKTests/MCPModernProtocolTests.swift": "12d82b3ed15f0797228b05292f98a51fb6a7a08f6947f40aae2cc8bf764903ab",
+    "Tests/SwiftAISDKTests/MCPMultiRoundTripTests.swift": "2b9b7a0dcb31836f380ec05633a2d7c09e25117ad97360e9bbb7bd8d5e22f88b",
+    "Tests/SwiftAISDKTests/MCPOAuth2026Tests.swift": "2b597bd19e0988ba624fb5bd97157bef503617516f12a22cb1062c27024106f1",
+    "Tests/SwiftAISDKTests/MCPOAuthFlowTests.swift": "3e3dcdbb242b7c5f6c4c464eebd7015d70b59d92d666ee04134901b609383630",
+    "Tests/SwiftAISDKTests/MCPOAuthMigrationTests.swift": "0ea315ad7b4921d4435969cac8ddb0470f2a94e8845328eef20da0f51b4f8241",
+    "Tests/SwiftAISDKTests/MCPOAuthTestSupport.swift": "49484da438b68ed2b95196f634993289c87dba366e40e345d84b071ee7ba76f1",
+    "Tests/SwiftAISDKTests/MCPOAuthTests.swift": "9de6dbb1ce5070f5041969cf1d6eb1426b602aff84e8ccb8869bbad1bb7d5441",
+    "Tests/SwiftAISDKTests/MCPStdioTransportTests.swift": "4c5029e84dc0652550162b05bf08aef2f05bbfd041504b711e64e2fa546f2c2a",
+    "Tests/SwiftAISDKTests/MCPUpstream241Tests.swift": "3deb5ac55f05de487d81c0b38756fe0046909235924139600ae278d5caac8463",
+    "Tests/SwiftAISDKTests/MediaStatusRedirectUpstreamTests.swift": "da93c26af452ad3a37d63686e01d541811d938def3c8761c4093ff021d162207",
+    "Tests/SwiftAISDKTests/MediaTypeTests.swift": "7e8740fad7d1a4bf5a2586d2c628dc4ca8819ea736e171d60f0a3ae85759e6d7",
+    "Tests/SwiftAISDKTests/MiddlewareTests.swift": "cac8aab9b035b050918c0ae0f845aef220b4d4e26442f4e976bce4ffa9c16b31",
+    "Tests/SwiftAISDKTests/MiniMaxProviderTests.swift": "bc229c07fcb44083d3011369605ea25331a54142be80f813e4b30ead1d197ff8",
+    "Tests/SwiftAISDKTests/MistralLanguageAndEmbeddingTests.swift": "1c65f6d13ec93b6a3157acebb091ba503a51b7a7ed25b26bc79de10a9f403324",
+    "Tests/SwiftAISDKTests/MoonshotAIProviderTests.swift": "4bacf363026ce06bd3da9d718be49862eee4d8209630905bc755dceac96c9f70",
+    "Tests/SwiftAISDKTests/MultipartFormDataTests.swift": "f5c154c321c6263ba7fa4ebc0a5c0a0b65553ee4ce3cd7a6ccb66ebd037c2956",
+    "Tests/SwiftAISDKTests/NativeAudioRequestMetadataTests.swift": "13057ad01d1ae2e327d1fc77d1193b6101c035bc788b982f8fdc7d30e6a35a71",
+    "Tests/SwiftAISDKTests/NativeAudioResponseMetadataTests.swift": "299c75ffe5f2ef2f2a06ca15d3cb028d3f386986c33d18e2be322eb77dd5c06c",
+    "Tests/SwiftAISDKTests/NativeMediaProviderTests.swift": "ca846630bea29071db8e8da00990693de9945abddc9ac403035125e6ad60472e",
+    "Tests/SwiftAISDKTests/NativeMediaResponseMetadataTests.swift": "65cdd95b5eb8947c8f77aa0b2c2932439f973c9b3387146ee1f434aad1db7bac",
+    "Tests/SwiftAISDKTests/NativeResponseMetadataTests.swift": "c3772a4124a40650b3781a00bf632ec731a4249d23b2b01cfacc181bba4d9fef",
+    "Tests/SwiftAISDKTests/NativeTranscriptionDetailTests.swift": "5e4c04c0090c0a11d96656cbe3cbf2ac3c910a2df4d4dc904fa24d398dba3190",
+    "Tests/SwiftAISDKTests/NativeVectorResponseMetadataTests.swift": "7e294e51806a48058e6a679a27f4e0cc547b02fffbe649ce0890e581d3fc4108",
+    "Tests/SwiftAISDKTests/OpenAIChatTests.swift": "44f4066b33b37348c0588aea669ec8bac07925622ec56e2fb9515e0e06ae5976",
+    "Tests/SwiftAISDKTests/OpenAICompatibleResponseMetadataTests.swift": "680c93ee63972b16bf3a205895091e77451187ac4a2152ce0eef955b0157fb26",
+    "Tests/SwiftAISDKTests/OpenAICompatibleTests.swift": "c4b6c46b08bc57b44a1be7f749f287e151cac4d8d2bd391a3035c7f5d390d324",
+    "Tests/SwiftAISDKTests/OpenAICompatibleWarningTests.swift": "ab3e8cf3ef8c5c0d4c8c3f55addb02a8a3c4401ebd67a41df4815efa4c579103",
+    "Tests/SwiftAISDKTests/OpenAILiveModelTests.swift": "023679ce844da3d4d9175717a02246588713c65c8cbbdad42ff7038e04512bf8",
+    "Tests/SwiftAISDKTests/OpenAIMediaTests.swift": "25fa8ded52e0a6614cce7bbd468e36d0af631b5f3b7e21b2d51738c91180b9c6",
+    "Tests/SwiftAISDKTests/OpenAIProgrammaticAndForwardCompatibilityTests.swift": "388db7e5502a8716b208d7f95e0fb20920480a9c45ce8b4ce7acc97a64308909",
+    "Tests/SwiftAISDKTests/OpenAIResponsesAnnotationsAndCompactionTests.swift": "c23b8420e16ffa6e01ad66d8da81fd46472e21abd3f62cb28246d0dce5498099",
+    "Tests/SwiftAISDKTests/OpenAIResponsesBatchV4UpstreamTests.swift": "396d4e8e59ba849f1edce3e57bfd3b7ab3e9e93fafe5b1a3899bf6f53f60b015",
+    "Tests/SwiftAISDKTests/OpenAIResponsesComputerV4UpstreamTests.swift": "7767dbad779f3dae57adfbc1cb1f023fd14c6b244788792ed57dabe6252aaa26",
+    "Tests/SwiftAISDKTests/OpenAIResponsesConversationCompactionTests.swift": "ce426bb011ce057c9c7043a21d1c68d39c98ac1990fe8fc81bcaa40694be7a4a",
+    "Tests/SwiftAISDKTests/OpenAIResponsesCustomOutputConversionTests.swift": "766b580d1b472971d6e32a5ea6b97622a4943dcbe08e714a0aefe6aadadf3b21",
+    "Tests/SwiftAISDKTests/OpenAIResponsesGenerateTests.swift": "e0cc655deae7e2860aa6f17f7f7d27da88a3e1b1c57bee22c43e1e4d2a6d6cfe",
+    "Tests/SwiftAISDKTests/OpenAIResponsesHostedCodeAndImageToolsTests.swift": "51c99bb35d02dfcd9ceaeff7a46dc02678a69f82fa9709cf66f48cbf849e1fb9",
+    "Tests/SwiftAISDKTests/OpenAIResponsesHostedFilePatchAndCustomToolsTests.swift": "2b817abaa4dc856ad6eddb4d7bf79dd0d7d39ff333f154bb9d084a0c51e72c72",
+    "Tests/SwiftAISDKTests/OpenAIResponsesHostedMCPToolsTests.swift": "cf89673f94a48c35e4db2517da25400b72b9da219f1345265917517ef30b90f0",
+    "Tests/SwiftAISDKTests/OpenAIResponsesHostedSearchAndShellToolsTests.swift": "a0be9e2ec778835f1b8a55689fafab80d908af8a8d9ddc472836477585fe283e",
+    "Tests/SwiftAISDKTests/OpenAIResponsesMessageConversionTests.swift": "b8d31f981f03508141984a0483b5fd5cc5643b06b1ad8462419aaa46085edd89",
+    "Tests/SwiftAISDKTests/OpenAIResponsesParallelToolCallTests.swift": "1dea2c7130f3eaeb7d1dcbd5bee53fd9f5aaf4c5feb1859c01cea8cc167eac49",
+    "Tests/SwiftAISDKTests/OpenAIResponsesProviderIdentityTests.swift": "750285f239b6b2f65de81fcaf54787430a5ef090deb443259145dde3332e82ae",
+    "Tests/SwiftAISDKTests/OpenAIResponsesRequestOptionsAndReasoningTests.swift": "044234e38561076e3e574b9a2bb05a5b976b6553982adf44e254f51a6e2b4e06",
+    "Tests/SwiftAISDKTests/OpenAIResponsesStreamingCitationTests.swift": "94489fd2951df33acf10a68dcd001879837f779e9f68067bc5b3e7eeba9bb7dd",
+    "Tests/SwiftAISDKTests/OpenAIResponsesStreamingCodeAndImageFixturesTests.swift": "5c7d8fa2af0ccf5e31ba52881b95b38bea65e0863548e710f8c7aa37ced06f97",
+    "Tests/SwiftAISDKTests/OpenAIResponsesStreamingFileSearchFixturesTests.swift": "4e2cd7c8537ae610d82efeda129b2f3e1f41e08c72f67bc7536dc358878f3aa7",
+    "Tests/SwiftAISDKTests/OpenAIResponsesStreamingFunctionCallsTests.swift": "89232e3d01ec87d6a9414faf49bfb19d062e8ea7166ef7842f63f3da7312db88",
+    "Tests/SwiftAISDKTests/OpenAIResponsesStreamingMCPFixturesTests.swift": "eedbd59c839d0672e74e0b3d48320bca0ecd428b650125902d201cdfd0bfe1ec",
+    "Tests/SwiftAISDKTests/OpenAIResponsesStreamingMiscAndErrorsTests.swift": "315608aca4a22c0fca814ae41544df6365b672eb7e127279a86d13b72caf5c9b",
+    "Tests/SwiftAISDKTests/OpenAIResponsesStreamingReasoningTests.swift": "26a15048abf148268247ecfd309ba9340ab8ac52e1532f1d935f0c846af13a82",
+    "Tests/SwiftAISDKTests/OpenAIResponsesStreamingSearchTests.swift": "9dfa10e79567660598dba74a363e8e3d6ef49405edd963c0b0bb2337f8a73580",
+    "Tests/SwiftAISDKTests/OpenAIResponsesStreamingShellFixturesTests.swift": "834c187b67451a2e6fb716a44360cdf730566f2c7f726fc9b88b80478f10397f",
+    "Tests/SwiftAISDKTests/OpenAIResponsesStreamingTextMetadataTests.swift": "8ea211ed90f65f7f0090e1acce99bb5503990d66a9f875824ddb22f49547b83b",
+    "Tests/SwiftAISDKTests/OpenAIResponsesStreamingToolLifecycleTests.swift": "8d81ecb53efe1cc21a9459c047ba9ac648cc6621953e1adc6926b915b56efbcb",
+    "Tests/SwiftAISDKTests/OpenAIResponsesTestSupport.swift": "f46d6c90f6fa6debd59382d15923052b1e284f4f3ff534819b36111327713720",
+    "Tests/SwiftAISDKTests/OpenAIResponsesToolPreparationTests.swift": "3c889a4889256268b7e1c20255e65efcd176d48cf6132a9e6dfda5f564103083",
+    "Tests/SwiftAISDKTests/OpenAIStyleStreamingToolCallsTests.swift": "26149d67f98c58f1310ceeb06bb33acc8fd190b4169fc4316e7d1c91314eda8b",
+    "Tests/SwiftAISDKTests/OpenResponsesUpstreamParity20260817Tests.swift": "b73f45344bbcff0e25cb2a49e0ff7d600bcfb76e9b82ada3656472558b10ff4a",
+    "Tests/SwiftAISDKTests/PerplexityMistralUpstreamTests.swift": "ed29880c691157e7b779e04b9719827a232ab86626f76af6591818de76a4e328",
+    "Tests/SwiftAISDKTests/PerplexityStreamingErrorTests.swift": "c7b49549275c31c6e0faa254850ca9f2d504837197e166bcd0dbaff5323d19e2",
+    "Tests/SwiftAISDKTests/ProdiaProviderTests.swift": "51e25911375364f6df006740971830b52dc787f24b70d627b28ab1ff3e893de3",
+    "Tests/SwiftAISDKTests/ProviderAbortPropagationMediaTests.swift": "0628550afbcbe06286edd2022adabb88abc5f32377b8bcb6a1f39defc37a8f93",
+    "Tests/SwiftAISDKTests/ProviderAbortPropagationTests.swift": "ae7ae8b72071554580de83d58681fb73641cd7b567a14298bac7c5cbe8b35bfb",
+    "Tests/SwiftAISDKTests/ProviderCapabilityMatrixTests.swift": "6cb0dbf0944b65102ce355e73a8591e5b92659d5bd5f9ef5972c02688d7b667e",
+    "Tests/SwiftAISDKTests/ProviderErrorMessageTests.swift": "08212aa2605b64b36fa31350c660e75c384c81355ac4ba7808231de4070f8a88",
+    "Tests/SwiftAISDKTests/ProviderEvaluationAdaptersTests.swift": "db96aeabcf57fac3a6254684032fd8837c9ecdd6ac344a6c5c2de0acb9d27f47",
+    "Tests/SwiftAISDKTests/ProviderGroupBUpstreamParity20260831Tests.swift": "c93eae7fb0cec03d445a580c276bfb2be2d37af56c47d6488c1990ba7055488e",
+    "Tests/SwiftAISDKTests/ProviderInitializerCompatibility160Tests.swift": "38cc82090a8d50769260aa47e9131a3ff3f6b6387b77b646ab9d3c249d42e9c1",
+    "Tests/SwiftAISDKTests/ProviderReferenceTests.swift": "5895806b098c0d74b2b87719dde9ab8bf41959c7563d37e044efff6b9c956b91",
+    "Tests/SwiftAISDKTests/ProviderRegistryVercelTests.swift": "73092847a1f132166dff8549c503d7c33d37790ff80c2b20e7b7a50877a348dd",
+    "Tests/SwiftAISDKTests/ProviderStreamErrorParity20260831Tests.swift": "e0d2d90f155bf00140aebc17c787d182f8d31d5092fc83e4355f05b1c8062c4b",
+    "Tests/SwiftAISDKTests/ProviderStreamingRetryTests.swift": "304b65ce4fa7372680c18afa3b6bf9f73e4faf7b67662e1e157d728a8b5be6d6",
+    "Tests/SwiftAISDKTests/ProviderUtilsUpstreamParityTests.swift": "72bd0acd270f21bc3678a8f851264feec8110f3788f101731c1f78ab6f285cbd",
+    "Tests/SwiftAISDKTests/Providers/OpenAI/Responses/OpenAIResponsesFunctionToolRequestMappingTests.swift": "bee36ba6d29f11e5d3573ab0e0065bf8ec72bcaa6576c7155745fa21b0def7c4",
+    "Tests/SwiftAISDKTests/Providers/OpenAI/Responses/OpenAIResponsesProviderExecutedToolFilteringTests.swift": "8c1e67703555345359d85efb2ec0bd4b6237be580e0edde99a5f6ead6f309cb4",
+    "Tests/SwiftAISDKTests/Providers/OpenAI/Responses/OpenAIResponsesShellAndPatchToolResultConversionTests.swift": "d75866fae15314aff5e107300edb052f0f3375f3a76d33fc03dde942cf029b4c",
+    "Tests/SwiftAISDKTests/Providers/OpenAI/Responses/OpenAIResponsesToolOptionsAndApprovalConversionTests.swift": "1c828351f3f9c10b4e9d6ed42b68b4e83a70e744005a24b60b3febb17dab0cd9",
+    "Tests/SwiftAISDKTests/Providers/OpenAI/Responses/OpenAIResponsesToolResultContentConversionTests.swift": "0521c9e7744789c0d609b1322f3484c8e852c2113c71c0d8b29adaf06c46717a",
+    "Tests/SwiftAISDKTests/Providers/OpenAI/Responses/OpenAIResponsesToolSearchConversionTests.swift": "d003339389e56e4e1f8c44be297c8d6e276c216a71017b113882f0e6de0a9c65",
+    "Tests/SwiftAISDKTests/QuiverAIProviderTests.swift": "b085fbb35d99cf9aa956ac102d2e1728a9a394ea687008420999ae2f4a7965a0",
+    "Tests/SwiftAISDKTests/RawChunkStreamTests.swift": "ff96634748d6a86dd347a6b07fe4810419f044854248330c7aec9ad2e2e6eaa2",
+    "Tests/SwiftAISDKTests/ReplicateProviderTests.swift": "67f17e0fea5024d413de9c0757fe6bf08a8231eb81a15cfa3d2da90599af1da1",
+    "Tests/SwiftAISDKTests/ResponsesEndpointOpenResponsesAndPerplexityTests.swift": "1ba5898a572402bca8938630b25f3dccd0e98abfb3d10a61a9bc4b6aa18ccc83",
+    "Tests/SwiftAISDKTests/ResponsesEndpointTests.swift": "fde3ce842f48b46dc20c861be8e7fbfcd61656328f50d284f788ac2b430dc49d",
+    "Tests/SwiftAISDKTests/RevAIProviderTests.swift": "15fe46df168680acdf8809631ffd9d9285068cd4c8450bdcfa11f606a4a2796e",
+    "Tests/SwiftAISDKTests/ServerSentEventParserTests.swift": "d6f09ec50f31c7e3ba2f6bc8d5a8f463ab7c2a742ab9dc876fc543cf75fe02fb",
+    "Tests/SwiftAISDKTests/SpecializedMiddlewareTests.swift": "6329ef7483115d67d6b318802cefc113a1fcaa017f676405e7ee9fbac3d3c77c",
+    "Tests/SwiftAISDKTests/StreamProviderErrorTests.swift": "d315d5a315281e6511c26caa82debd1c05ba225cec517ea491b8368c1672e675",
+    "Tests/SwiftAISDKTests/StreamingToolCallTrackerTests.swift": "f5092be1dd67d320eeffedc8bb4ac2e3a69ec0dbac788fff680e25384d5a9b23",
+    "Tests/SwiftAISDKTests/TestSupport.swift": "466f8764c6e1b212a91620fc14de23426411d2e809768b186eb45e76f1fbd439",
+    "Tests/SwiftAISDKTests/TogetherAIProviderTests.swift": "99a14866d62fff7118d5c4ef83fee54a943aeeb1dc4baf9c67867d70e838adba",
+    "Tests/SwiftAISDKTests/TopazProviderTests.swift": "ce2cdcd45a943fb23378016c5df809cc0510069cbd8140eb88175ee233b9ba14",
+    "Tests/SwiftAISDKTests/TypesafeAIProviderTests.swift": "01e5e507178eca91e1c1a738e47ccae9c7d26c6e2272097ba536f649dd9be3aa",
+    "Tests/SwiftAISDKTests/Upstream/AI/GenerateText/AiOutputArrayUpstreamTests.swift": "1732d1c55fd0c9fdedfed4d6ef575b5e5f8c62ec5102cdead0ba592127f897eb",
+    "Tests/SwiftAISDKTests/Upstream/AI/GenerateText/AiOutputChoiceAndJSONUpstreamTests.swift": "aa191ee59a14a1d042784af71dd7f558d288ad1741c4c8448423ab7556709a61",
+    "Tests/SwiftAISDKTests/Upstream/AI/GenerateText/AiOutputObjectUpstreamTests.swift": "595cb95dc5144a77023e9e6901ab985073facb0bb1b35fe7fcd2bdc4f47c22fd",
+    "Tests/SwiftAISDKTests/Upstream/AI/GenerateText/AiOutputTextUpstreamTests.swift": "7a36a02444162e78a6bf36adf364665cc1063a45dfb0fd23f56f34007cd1e9ec",
+    "Tests/SwiftAISDKTests/Upstream/AI/GenerateText/AiOutputUpstreamTestSupport.swift": "14fe6e38eb1fc863f74df2b6eac774979dba877be865bba5d69084a2533ce587",
+    "Tests/SwiftAISDKTests/Upstream/Providers/Anthropic/AnthropicProviderExecutedAdvisorUpstreamParityTests.swift": "de3ef6a6cfa4215f29ae2214b01e309f7899b91ef2de2d2b7e1378f99a9b1385",
+    "Tests/SwiftAISDKTests/Upstream/Providers/Anthropic/AnthropicProviderExecutedCodeExecutionUpstreamParityTests.swift": "2d3da4637a8648c678e201527f922bb26cf27a23cb953462f3c8026e53ce1487",
+    "Tests/SwiftAISDKTests/Upstream/Providers/Anthropic/AnthropicProviderExecutedConnectorsUpstreamParityTests.swift": "50384a31a25299fb73974211a993f1c68912685f13ede5bf762b61b9ca974e91",
+    "Tests/SwiftAISDKTests/Upstream/Providers/Anthropic/AnthropicProviderExecutedWebFetchUpstreamParityTests.swift": "329129701dfba86a89a51ddedf3c9cdb5a61347966b0bd5565c6fcce388c4304",
+    "Tests/SwiftAISDKTests/Upstream/Providers/Anthropic/AnthropicProviderExecutedWebSearchUpstreamParityTests.swift": "e5744af71fc4eaea2f53792a0bfc88cb8eea51cfcc8ab0214ebe16499710a65e",
+    "Tests/SwiftAISDKTests/Upstream/Providers/MoonshotAI/MoonshotAIProviderUpstreamTests.swift": "b67447f4b42bbdfe115eba995d07b4945578406723bf90e366f2e6055d57152b",
+    "Tests/SwiftAISDKTests/Upstream/Providers/OpenAI/Chat/OpenAIChatLanguageModelUpstreamTests.swift": "55063a26bea981f5b0427f09a56519a5e724241583203db30498fc957976613f",
+    "Tests/SwiftAISDKTests/VideoGenerationOperationTests.swift": "ce5490e2f3b38a4c348725ae5fa03d19692668abbabd03aa1172108b19d4543c",
+    "Tests/SwiftAISDKTests/VoyageProviderOptionMappingTests.swift": "581b0994736cf0a0359a38dcdd7ba927535c42671e9f27b911189d111420bfe4",
+    "Tests/SwiftAISDKTests/VoyageProviderOptionSchemaTests.swift": "97ed3e823ee7724b0e9d9389e39306a7407ff2a8742e13586e9d8af0a508c6cc",
+    "Tests/SwiftAISDKTests/WarningLoggingTests.swift": "583e6d067f6650b026b14373ca2eef18008e535b6d1b61f19f96b3a2a3aca760",
+    "Tests/SwiftAISDKTests/WeeklyAnthropic20261018Tests.swift": "5c4d6ae22cd44be1f413d0732a2d21157fa5b482c682e61ce11f1f845146a536",
+    "Tests/SwiftAISDKTests/WeeklyAnthropic20261023Tests.swift": "53c6deabf783d77a7a25424b2664719edde81cccd81f60e802a6bc9ec7248ebf",
+    "Tests/SwiftAISDKTests/WeeklyApproval20261025Tests.swift": "ea46fd89cc292d58d485a653b0aac372e1e19b4f972eb242fb61fba86b4ecfba",
+    "Tests/SwiftAISDKTests/WeeklyAzure20261011Tests.swift": "d1c0fe61d9b82914d1241c963348c71d1ffe892d451c7d6a3c1f0c5756b89ff0",
+    "Tests/SwiftAISDKTests/WeeklyAzureAudio20261004Tests.swift": "7ded9473fe6a178d2ffc939b87182e8ab11f49adab1655a575fd20b132345ab6",
+    "Tests/SwiftAISDKTests/WeeklyBFLXAI20261011Tests.swift": "ccf591458d06910603e4183965931f204098a6e06b261e6c8e3d1c4299ebc456",
+    "Tests/SwiftAISDKTests/WeeklyCore20261011Tests.swift": "8cab756b6e92081904be139dc123a0847cd9832f3d02e1b9a76fbe018e356022",
+    "Tests/SwiftAISDKTests/WeeklyCore20261018Tests.swift": "7b5a442ca9b4af03ddd9f707e6f2283ae9848e7de062e34a5ce1705b991962e8",
+    "Tests/SwiftAISDKTests/WeeklyCore20261023Tests.swift": "65fcd00e5a910b55f799b559b9e1ffbdf419f3e699ecb34c170d9ca238fd2c5e",
+    "Tests/SwiftAISDKTests/WeeklyCore20261025Tests.swift": "a5b328089b0ab944a077baee68f6c89dfa77d8de17963e7ab4cb36f4611f2ca4",
+    "Tests/SwiftAISDKTests/WeeklyCoreAudioMCP20261004Tests.swift": "9e4fda64b62a3b5181c59baeebc6bad1c56da28fe151ebadc12c9e9e420a98e4",
+    "Tests/SwiftAISDKTests/WeeklyCoreEmbeddingOptions20260927Tests.swift": "78e656b934f2dc13dae26216886259c5f3c9aeb6adaa26f80e3f1c20ca4136d3",
+    "Tests/SwiftAISDKTests/WeeklyCoreGeneratedFiles20260927Tests.swift": "5a83b5ad9b68f0dca73b240640066ff2ac924884aaeabd9e6de4d3d0beb0cfb0",
+    "Tests/SwiftAISDKTests/WeeklyCoreMCP20260920Tests.swift": "1ca229f568dfd0384398f76b1fed1275d72de901af061442db960913099f8704",
+    "Tests/SwiftAISDKTests/WeeklyCoreMCP20260927Tests.swift": "a844053342feff4aa0374d4a5df13f0469eda186c5ae228085e25d46d832b533",
+    "Tests/SwiftAISDKTests/WeeklyCoreOpenAI20260913Tests.swift": "fbfa418fa1b259ccfbf26087c5cea96d1b54e52e6912bd926bccff4f22fb364f",
+    "Tests/SwiftAISDKTests/WeeklyElevenLabs20261025Tests.swift": "3ae53023ade51c6f665684c45d9a89d09ac52b990b5352a12276e5cccef9e847",
+    "Tests/SwiftAISDKTests/WeeklyEvaluation20261011Tests.swift": "14c123413cd97d0f56c26c754291d9fb113d3511d2aa4ea6809d759f1e52cfe6",
+    "Tests/SwiftAISDKTests/WeeklyGatewaySpeech20261025Tests.swift": "e2c25da237d81d5410b3513ed745f04b8bf2e4f5c49fcca636c494ab11dcd77a",
+    "Tests/SwiftAISDKTests/WeeklyGoogle20261011Tests.swift": "b8c26aa3004270f3dc396e81e9a480e36c55441f51262322b9d414378791d1b1",
+    "Tests/SwiftAISDKTests/WeeklyGoogle20261018Tests.swift": "907eb28366284df2295ac1feb233d37951434c5675505471c12e8cdb2693e6af",
+    "Tests/SwiftAISDKTests/WeeklyGoogle20261023Tests.swift": "1312f2364f8b18c388a261834f7e41542ff204c3c33f9e4dcc8bc996cf7fd156",
+    "Tests/SwiftAISDKTests/WeeklyImageAndCore20261004Tests.swift": "036da482a8ecfab72f3ee90a28b381cb98f3016dea9d423c0ad9943594aa1d98",
+    "Tests/SwiftAISDKTests/WeeklyLanguage20261025Tests.swift": "b82df1159bfd930bd7c31fbc9a8bbeae77ae20ef72a4c5d8cdbf4ed6c74cc926",
+    "Tests/SwiftAISDKTests/WeeklyMCP20261023Tests.swift": "1f39f7edbba45338cd565c301df1107af5e49a30be48ee13e969b53b174d2798",
+    "Tests/SwiftAISDKTests/WeeklyMCP20261025Tests.swift": "120dbdc226be765f921958e78af30e7e9d1b1c894e12e578fdd7a453893429e9",
+    "Tests/SwiftAISDKTests/WeeklyMCPCore20261011Tests.swift": "e35b083a090b313c3f8a25d42bf5d1b934ae4a37c1d7aaee818e345330f2d261",
+    "Tests/SwiftAISDKTests/WeeklyMCPEvents20261011Tests.swift": "f44a1c62daeec127c3105bf8937920e37bd63eacb3d419d7e2d42fe17bfc8060",
+    "Tests/SwiftAISDKTests/WeeklyMajorProviders20260913Tests.swift": "d4fe082927d5cffb121fb50dbb5e149ba6fbc60c03e66f13bbc000b133a4f57e",
+    "Tests/SwiftAISDKTests/WeeklyMajorProviders20260920Tests.swift": "baa96be4bc504dd1204f9d652f71580f69ad061cb427d8782ea7003569bab64e",
+    "Tests/SwiftAISDKTests/WeeklyMajorProviders20261011Tests.swift": "55bb6c61f82a3b3008b3a5129b5e886fef4e8b26445fd1bc05d35abec9c3ef97",
+    "Tests/SwiftAISDKTests/WeeklyMediaPaths20261023Tests.swift": "414f2bffc6872499f0b6687a9ebf462ced864d3e6c3b03fb3ad47f986bd19ef3",
+    "Tests/SwiftAISDKTests/WeeklyMiddleware20261025Tests.swift": "951d844af716c1fa246355ff32ff1e2256e01e9bb6d1d5f99ad33db06f26d878",
+    "Tests/SwiftAISDKTests/WeeklyMiniMax20261023Tests.swift": "7529d6b014bb9d8e21f42895c7342b93692624c1e6fc11379788660775484eb4",
+    "Tests/SwiftAISDKTests/WeeklyMistral20261011Tests.swift": "ffa44be666ea54b52059cda031f64e8ea44ecb9a508f8a63185f92a703fa2d4e",
+    "Tests/SwiftAISDKTests/WeeklyMistralGateway20261025Tests.swift": "37cd53fc06e1b540a28d96ce29af8970e3c62d68ffe7fe54fe2ccf1ea2ebd37c",
+    "Tests/SwiftAISDKTests/WeeklyMoonshot20261025Tests.swift": "2cb41540768e51e8480471b3124d28b57a75cb82ddc5aac145acd55c25ad79fd",
+    "Tests/SwiftAISDKTests/WeeklyOpenAI20261011Tests.swift": "eb378bca6a961f7eeab6328a7c0aa01f0b03cdb6d168b70a915aab8df6dc6c88",
+    "Tests/SwiftAISDKTests/WeeklyOpenAI20261018Tests.swift": "35974a2abc35bd6e2fa995e11d61f61cacdfc94d081ca59945344e0d9376bee0",
+    "Tests/SwiftAISDKTests/WeeklyOpenAI20261023Tests.swift": "7881420a632a2a342c36f494db814fe1ffdaac2551bf5ddd794e104fd7fc1513",
+    "Tests/SwiftAISDKTests/WeeklyOpenAIXAI20260920Tests.swift": "162c4d9810f8093c528a5a0f68c2c7affec5f4c02bbf95a584e65edf259ac6e9",
+    "Tests/SwiftAISDKTests/WeeklyPerplexity20261023Tests.swift": "eb14db91cfcf1de72a024bcbb0963512b069ee3c62bb82f253650a5984eaf29a",
+    "Tests/SwiftAISDKTests/WeeklyProviderGroupA20260927Tests.swift": "008e7e734bb2afbdc24675cf63d8fc73e5769c6918705ea12058af50fbfb6993",
+    "Tests/SwiftAISDKTests/WeeklyProviderGroupB20260927Tests.swift": "2fd5fcd939b2f5b9e5145e731b0e82a8c5998db1d7dd97972336ccc2f02b5953",
+    "Tests/SwiftAISDKTests/WeeklyProviderOwnedBatch20260913Tests.swift": "7e183104fe573ecd0a2770fbc1b7bbc4008a40260dfe4215a659496400083b95",
+    "Tests/SwiftAISDKTests/WeeklyProviders20261004Tests.swift": "33bdd07451bc0e515a7b9ba53e8d879f6e482f5a1de067a3400ff9fbb392a2ec",
+    "Tests/SwiftAISDKTests/WeeklyProviders20261011Tests.swift": "e1fa7fe4be4c396b325d9eb2383ab9ab8748cead0bd698a13f974fb10ba7c4a7",
+    "Tests/SwiftAISDKTests/WeeklyRemainingProviders20260913Tests.swift": "e14d9b2eaab1a72fbb39ac8412ef8439646cbc78721c8588acdcd385a738ac1d",
+    "Tests/SwiftAISDKTests/WeeklyRemainingProviders20261011Tests.swift": "693b0982cc00eb97784fbaffe90c4c55464f924a7033a11a6fd82a8701a35be3",
+    "Tests/SwiftAISDKTests/WeeklySpeech20261025Tests.swift": "c82a9f1dd805d22dcae3f5c97f57498d82de509b1aa33ba9c9eae45aca943b4b",
+    "Tests/SwiftAISDKTests/WeeklyStructuredOutput20261025Tests.swift": "40257dc965dbb1f08dadf0389bcb6ace057683bdef6a6bc4b3362536bbf13e17",
+    "Tests/SwiftAISDKTests/WeeklyUI20261011Tests.swift": "1e41ff213436f651144b1fe072e34553e0cb534175f4b5ef42850fc13af241c6",
+    "Tests/SwiftAISDKTests/XAIChatProviderTests.swift": "c50570da8517eabb30f215fbc5e9d5a36d8da8ef615c3aeefefd66d604217d9f",
+    "Tests/SwiftAISDKTests/XAIProviderTests.swift": "1acacfcf93296c62898a63363a9294c6be109ba655f05b5f96c4312412230f4e",
+    "Tests/SwiftAISDKTests/XAIRealtimeModelTests.swift": "566fdf19824267199547ac09882fdf59d634132ec2b2bb98631d234ad8f818a7",
+    "Tests/SwiftAISDKTests/XAIResponsesUpstreamParityTests.swift": "2247823eee5e3be7c3dc2760a4c6a25702082de26e5a2334c8f89ee81dd0c6b8",
+    "Tests/SwiftAISDKTests/ZAIProviderTests.swift": "2fcef04de96f42384c891e2a6cabe33fcddd921b8d291f8489077990cd6ef5db"
+  },
+  "scope": "Frozen pre-import behavior/version baseline; never updated by normal generation."
+}

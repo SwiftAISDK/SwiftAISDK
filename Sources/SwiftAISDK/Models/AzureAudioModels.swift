@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public struct AzureOpenAIAudioSettings: Sendable {
     public var speechBaseURL: String?
@@ -149,7 +154,7 @@ public final class AzureTranscriptionModel: TranscriptionModel, StreamingTranscr
         let url = try requireURL(config.baseURL(api: "speech") + "/speechtotext/transcriptions:transcribe?api-version=2025-10-15")
         let headers = config.requestHeaders(api: "speech").mergingHeaders(["Content-Type": "multipart/form-data; boundary=\(form.boundary)"]).mergingHeaders(request.headers)
         let response = try await config.transport.send(AIHTTPRequest(method: "POST", url: url, headers: headers, body: form.finalize(), abortSignal: request.abortSignal))
-        guard (200..<300).contains(response.statusCode) else { throw apiCallError(provider: providerID, response: response) }
+        guard (200..<300).contains(response.statusCode) else { throw compatibilityAPICallError(provider: providerID, response: response) }
         let raw = try response.jsonValue()
         guard let combined = raw["combinedPhrases"]?.arrayValue, combined.allSatisfy({ $0["text"]?.stringValue != nil }),
               raw["phrases"] == nil || raw["phrases"] == .null || raw["phrases"]?.arrayValue != nil else {

@@ -1,5 +1,10 @@
 import Foundation
 import CryptoKit
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public struct MCPOAuthProtectedResourceMetadata: Equatable, Sendable {
     public var resource: URL

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 extension ElevenLabsSpeechModel {
     public func stream(_ request: StreamingSpeechRequest) async throws -> StreamingSpeechModelResult {
@@ -79,6 +84,7 @@ extension ElevenLabsSpeechModel {
         } catch { request.text.cancelFromConsumer(); throw error }
     }
 }
+
 
 private final class ElevenSpeechState: @unchecked Sendable {
     let dialogue: Bool; let incremental: Bool; let voice: String; let voices: [String]

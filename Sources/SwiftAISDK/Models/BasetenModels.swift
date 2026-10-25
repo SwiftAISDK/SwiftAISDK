@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class BasetenEmbeddingModel: EmbeddingModel, @unchecked Sendable {
     public let providerID = "baseten.embedding"
@@ -145,6 +150,7 @@ private extension Array {
         }
     }
 }
+
 
 extension ModelHTTPConfig {
     var basetenEmbeddingConfig: ModelHTTPConfig? {

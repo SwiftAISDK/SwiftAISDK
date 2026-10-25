@@ -1,0 +1,482 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SwiftAISDK/SwiftAISDK/Porting/schemas/catalog.schema.json",
+  "$defs": {
+    "capability": {
+      "type": "object",
+      "properties": {
+        "order": {
+          "type": "integer"
+        },
+        "providerID": {
+          "type": "string"
+        },
+        "upstreamPackage": {
+          "type": "string"
+        },
+        "factoryNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "files": {
+          "type": "boolean"
+        },
+        "skills": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "order",
+        "providerID",
+        "upstreamPackage",
+        "factoryNames",
+        "capabilities",
+        "files",
+        "skills",
+        "notes"
+      ],
+      "additionalProperties": false
+    },
+    "package": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^swift-ai-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "kind": {
+          "enum": [
+            "core",
+            "provider",
+            "mcp",
+            "ui"
+          ]
+        },
+        "directory": {
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "planned",
+            "scaffold",
+            "extracted"
+          ]
+        },
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Za-z0-9]*$"
+              },
+              "dependencies": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "testDependencies": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "testResources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "name",
+              "dependencies"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "upstream": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "package": {
+                "type": "string",
+                "pattern": "^swift-ai-[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "from": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$"
+              }
+            },
+            "required": [
+              "package",
+              "from"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "capabilityRows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/capability"
+          }
+        },
+        "guides": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "directory",
+        "repository",
+        "state",
+        "modules",
+        "upstream",
+        "dependencies",
+        "capabilityRows",
+        "guides"
+      ],
+      "additionalProperties": false
+    },
+    "packages": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "enum": [
+            1
+          ]
+        },
+        "snapshotDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "organization": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9-]+$"
+        },
+        "swiftToolsVersion": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+$"
+        },
+        "swiftLanguageMode": {
+          "enum": [
+            6
+          ]
+        },
+        "platforms": {
+          "type": "object",
+          "properties": {
+            "macOS": {
+              "type": "string"
+            },
+            "iOS": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "macOS",
+            "iOS"
+          ],
+          "additionalProperties": false
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label",
+              "name"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "packages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/package"
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "snapshotDate",
+        "organization",
+        "swiftToolsVersion",
+        "swiftLanguageMode",
+        "platforms",
+        "capabilities",
+        "packages"
+      ],
+      "additionalProperties": false
+    },
+    "upstreamEntry": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "reviewedVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ledgerKind": {
+          "enum": [
+            "provider",
+            "core"
+          ]
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "reviewStatus": {
+          "enum": [
+            "imported-reviewed-with-gaps",
+            "unreviewed",
+            "reviewed"
+          ]
+        },
+        "archiveIntegrity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sourceRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "testRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "testRefRelationship": {
+          "enum": [
+            "inventory-snapshot-not-release-verified",
+            "unavailable",
+            "matching-release"
+          ]
+        },
+        "contractFamilies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contractReview": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "reviewedVersion",
+        "ledgerKind",
+        "evidence",
+        "reviewStatus",
+        "archiveIntegrity",
+        "sourceRef",
+        "testRef",
+        "testRefRelationship",
+        "contractFamilies",
+        "contractReview"
+      ],
+      "additionalProperties": false
+    },
+    "lock": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "enum": [
+            1
+          ]
+        },
+        "packages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/upstreamEntry"
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "packages"
+      ],
+      "additionalProperties": false
+    },
+    "map": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "enum": [
+            1
+          ]
+        },
+        "package": {
+          "type": "string",
+          "pattern": "^swift-ai-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "status": {
+          "enum": [
+            "coarse-import",
+            "unreviewed",
+            "reviewed"
+          ]
+        },
+        "upstream": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "implementation": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "tests": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "name",
+              "implementation",
+              "tests"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "swift": {
+          "type": "object",
+          "properties": {
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tests": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "sources",
+            "tests",
+            "resources"
+          ],
+          "additionalProperties": false
+        },
+        "differences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "native-adaptation",
+                  "temporary-deviation"
+                ]
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "reviewNote": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "package",
+        "status",
+        "upstream",
+        "swift",
+        "differences",
+        "reviewNote"
+      ],
+      "additionalProperties": false
+    },
+    "workspace": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "enum": [
+            1
+          ]
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "files"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

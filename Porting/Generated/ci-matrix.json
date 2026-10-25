@@ -1,0 +1,528 @@
+{
+  "schemaVersion": 1,
+  "include": [
+    {
+      "package": "swift-ai-alibaba",
+      "directory": "Packages/swift-ai-alibaba",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/alibaba"
+      ]
+    },
+    {
+      "package": "swift-ai-amazon-bedrock",
+      "directory": "Packages/swift-ai-amazon-bedrock",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/amazon-bedrock"
+      ]
+    },
+    {
+      "package": "swift-ai-anthropic",
+      "directory": "Packages/swift-ai-anthropic",
+      "state": "extracted",
+      "independentBuildReady": true,
+      "command": "swift test --package-path Packages/swift-ai-anthropic",
+      "upstream": [
+        "@ai-sdk/anthropic"
+      ]
+    },
+    {
+      "package": "swift-ai-anthropic-aws",
+      "directory": "Packages/swift-ai-anthropic-aws",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/anthropic-aws"
+      ]
+    },
+    {
+      "package": "swift-ai-assemblyai",
+      "directory": "Packages/swift-ai-assemblyai",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/assemblyai"
+      ]
+    },
+    {
+      "package": "swift-ai-azure",
+      "directory": "Packages/swift-ai-azure",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/azure"
+      ]
+    },
+    {
+      "package": "swift-ai-baseten",
+      "directory": "Packages/swift-ai-baseten",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/baseten"
+      ]
+    },
+    {
+      "package": "swift-ai-black-forest-labs",
+      "directory": "Packages/swift-ai-black-forest-labs",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/black-forest-labs"
+      ]
+    },
+    {
+      "package": "swift-ai-bytedance",
+      "directory": "Packages/swift-ai-bytedance",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/bytedance"
+      ]
+    },
+    {
+      "package": "swift-ai-cartesia",
+      "directory": "Packages/swift-ai-cartesia",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/cartesia"
+      ]
+    },
+    {
+      "package": "swift-ai-cerebras",
+      "directory": "Packages/swift-ai-cerebras",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/cerebras"
+      ]
+    },
+    {
+      "package": "swift-ai-cohere",
+      "directory": "Packages/swift-ai-cohere",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/cohere"
+      ]
+    },
+    {
+      "package": "swift-ai-core",
+      "directory": "Packages/swift-ai-core",
+      "state": "extracted",
+      "independentBuildReady": true,
+      "command": "swift test --package-path Packages/swift-ai-core",
+      "upstream": [
+        "@ai-sdk/provider",
+        "@ai-sdk/provider-utils",
+        "ai"
+      ]
+    },
+    {
+      "package": "swift-ai-deepgram",
+      "directory": "Packages/swift-ai-deepgram",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/deepgram"
+      ]
+    },
+    {
+      "package": "swift-ai-deepinfra",
+      "directory": "Packages/swift-ai-deepinfra",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/deepinfra"
+      ]
+    },
+    {
+      "package": "swift-ai-deepseek",
+      "directory": "Packages/swift-ai-deepseek",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/deepseek"
+      ]
+    },
+    {
+      "package": "swift-ai-elevenlabs",
+      "directory": "Packages/swift-ai-elevenlabs",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/elevenlabs"
+      ]
+    },
+    {
+      "package": "swift-ai-fal",
+      "directory": "Packages/swift-ai-fal",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/fal"
+      ]
+    },
+    {
+      "package": "swift-ai-fireworks",
+      "directory": "Packages/swift-ai-fireworks",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/fireworks"
+      ]
+    },
+    {
+      "package": "swift-ai-fish-audio",
+      "directory": "Packages/swift-ai-fish-audio",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/fish-audio"
+      ]
+    },
+    {
+      "package": "swift-ai-gateway",
+      "directory": "Packages/swift-ai-gateway",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/gateway"
+      ]
+    },
+    {
+      "package": "swift-ai-gladia",
+      "directory": "Packages/swift-ai-gladia",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/gladia"
+      ]
+    },
+    {
+      "package": "swift-ai-gmicloud",
+      "directory": "Packages/swift-ai-gmicloud",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/gmicloud"
+      ]
+    },
+    {
+      "package": "swift-ai-google",
+      "directory": "Packages/swift-ai-google",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/google"
+      ]
+    },
+    {
+      "package": "swift-ai-google-vertex",
+      "directory": "Packages/swift-ai-google-vertex",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/google-vertex"
+      ]
+    },
+    {
+      "package": "swift-ai-groq",
+      "directory": "Packages/swift-ai-groq",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/groq"
+      ]
+    },
+    {
+      "package": "swift-ai-heygen",
+      "directory": "Packages/swift-ai-heygen",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/heygen"
+      ]
+    },
+    {
+      "package": "swift-ai-huggingface",
+      "directory": "Packages/swift-ai-huggingface",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/huggingface"
+      ]
+    },
+    {
+      "package": "swift-ai-hume",
+      "directory": "Packages/swift-ai-hume",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/hume"
+      ]
+    },
+    {
+      "package": "swift-ai-klingai",
+      "directory": "Packages/swift-ai-klingai",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/klingai"
+      ]
+    },
+    {
+      "package": "swift-ai-lmnt",
+      "directory": "Packages/swift-ai-lmnt",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/lmnt"
+      ]
+    },
+    {
+      "package": "swift-ai-luma",
+      "directory": "Packages/swift-ai-luma",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/luma"
+      ]
+    },
+    {
+      "package": "swift-ai-mcp",
+      "directory": "Packages/swift-ai-mcp",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/mcp"
+      ]
+    },
+    {
+      "package": "swift-ai-minimax",
+      "directory": "Packages/swift-ai-minimax",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/minimax"
+      ]
+    },
+    {
+      "package": "swift-ai-mistral",
+      "directory": "Packages/swift-ai-mistral",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/mistral"
+      ]
+    },
+    {
+      "package": "swift-ai-moonshotai",
+      "directory": "Packages/swift-ai-moonshotai",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/moonshotai"
+      ]
+    },
+    {
+      "package": "swift-ai-open-responses",
+      "directory": "Packages/swift-ai-open-responses",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/open-responses"
+      ]
+    },
+    {
+      "package": "swift-ai-openai",
+      "directory": "Packages/swift-ai-openai",
+      "state": "extracted",
+      "independentBuildReady": true,
+      "command": "swift test --package-path Packages/swift-ai-openai",
+      "upstream": [
+        "@ai-sdk/openai"
+      ]
+    },
+    {
+      "package": "swift-ai-openai-compatible",
+      "directory": "Packages/swift-ai-openai-compatible",
+      "state": "extracted",
+      "independentBuildReady": true,
+      "command": "swift test --package-path Packages/swift-ai-openai-compatible",
+      "upstream": [
+        "@ai-sdk/openai-compatible"
+      ]
+    },
+    {
+      "package": "swift-ai-perplexity",
+      "directory": "Packages/swift-ai-perplexity",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/perplexity"
+      ]
+    },
+    {
+      "package": "swift-ai-prodia",
+      "directory": "Packages/swift-ai-prodia",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/prodia"
+      ]
+    },
+    {
+      "package": "swift-ai-quiverai",
+      "directory": "Packages/swift-ai-quiverai",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/quiverai"
+      ]
+    },
+    {
+      "package": "swift-ai-replicate",
+      "directory": "Packages/swift-ai-replicate",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/replicate"
+      ]
+    },
+    {
+      "package": "swift-ai-revai",
+      "directory": "Packages/swift-ai-revai",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/revai"
+      ]
+    },
+    {
+      "package": "swift-ai-togetherai",
+      "directory": "Packages/swift-ai-togetherai",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/togetherai"
+      ]
+    },
+    {
+      "package": "swift-ai-topaz",
+      "directory": "Packages/swift-ai-topaz",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/topaz"
+      ]
+    },
+    {
+      "package": "swift-ai-typesafe-ai",
+      "directory": "Packages/swift-ai-typesafe-ai",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/typesafe-ai"
+      ]
+    },
+    {
+      "package": "swift-ai-ui",
+      "directory": "Packages/swift-ai-ui",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/react",
+        "ai"
+      ]
+    },
+    {
+      "package": "swift-ai-vercel",
+      "directory": "Packages/swift-ai-vercel",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/vercel"
+      ]
+    },
+    {
+      "package": "swift-ai-voyage",
+      "directory": "Packages/swift-ai-voyage",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/voyage"
+      ]
+    },
+    {
+      "package": "swift-ai-xai",
+      "directory": "Packages/swift-ai-xai",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/xai"
+      ]
+    },
+    {
+      "package": "swift-ai-zai",
+      "directory": "Packages/swift-ai-zai",
+      "state": "planned",
+      "independentBuildReady": false,
+      "command": null,
+      "upstream": [
+        "@ai-sdk/zai"
+      ]
+    }
+  ]
+}

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// The published `@ai-sdk/zai` package version mirrored by this port.
 public let zaiProviderVersion = "3.0.40"

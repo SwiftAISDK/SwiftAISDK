@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public extension AI {
     static func resolveLanguageModel(_ modelID: String, provider: (any AIProvider)? = nil) throws -> any LanguageModel {
@@ -535,6 +540,7 @@ public extension AI {
         try await rerank(model: resolveRerankingModel(modelID, provider: provider), request: request, retryPolicy: retryPolicy, telemetry: telemetry)
     }
 }
+
 
 private func failingStream(_ error: Error) -> AsyncThrowingStream<LanguageStreamPart, Error> {
     AsyncThrowingStream { continuation in

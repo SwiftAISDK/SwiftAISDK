@@ -1,0 +1,42 @@
+{
+  "originHash": "6820df8684285ec050f02d823bc901208fdff663ec86fe0fc7a8fb20fe603a26",
+  "pins": [
+    {
+      "identity": "swift-ai-anthropic",
+      "kind": "localSourceControl",
+      "location": "/var/folders/w1/1bqflyq15_x_22r6203b61dh0000gn/T/swift-ai-export-rehearsal-krGaQs/initial-attempt/remotes/swift-ai-anthropic.git",
+      "state": {
+        "revision": "ce1abfe47cb607f37e6e9c3f766605b163296aab",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "identity": "swift-ai-core",
+      "kind": "localSourceControl",
+      "location": "/var/folders/w1/1bqflyq15_x_22r6203b61dh0000gn/T/swift-ai-export-rehearsal-krGaQs/initial-attempt/remotes/swift-ai-core.git",
+      "state": {
+        "revision": "6e7529d20f6f229f6fdd7dc71136748a593a618e",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "identity": "swift-ai-openai",
+      "kind": "localSourceControl",
+      "location": "/var/folders/w1/1bqflyq15_x_22r6203b61dh0000gn/T/swift-ai-export-rehearsal-krGaQs/initial-attempt/remotes/swift-ai-openai.git",
+      "state": {
+        "revision": "c06e37f6a5fef1f01d3bda4f0f13c7ddfdf0cdbf",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "identity": "swift-ai-openai-compatible",
+      "kind": "remoteSourceControl",
+      "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+      "state": {
+        "revision": "02b1b1802e7623c9b854d810dbddc86ba142bef7",
+        "version": "1.0.0"
+      }
+    }
+  ],
+  "version": 3
+}

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public enum GoogleTools {
     public static func googleSearch(searchTypes: JSONValue? = nil, timeRangeFilter: JSONValue? = nil) -> JSONValue {
@@ -95,4 +100,3 @@ struct GooglePreparedProviderTool {
     var tool: JSONValue?
     var warnings: [AIWarning] = []
 }
-

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 // Keep the original internal configuration name for existing provider construction.
 typealias TypeSafeAIEvaluationModelConfiguration = TypeSafeAIDecisionModelConfiguration

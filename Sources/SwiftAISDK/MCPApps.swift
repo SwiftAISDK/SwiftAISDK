@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public enum MCPApps {
     public static let extensionName = "io.modelcontextprotocol/ui"

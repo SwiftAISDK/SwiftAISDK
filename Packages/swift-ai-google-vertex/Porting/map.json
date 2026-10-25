@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-google-vertex",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/google-vertex",
+      "implementation": [
+        "packages/google-vertex/src"
+      ],
+      "tests": [
+        "packages/google-vertex/src/anthropic/edge/google-vertex-anthropic-provider-edge.test.ts",
+        "packages/google-vertex/src/anthropic/google-vertex-anthropic-labels.test.ts",
+        "packages/google-vertex/src/anthropic/google-vertex-anthropic-provider-node.test.ts",
+        "packages/google-vertex/src/anthropic/google-vertex-anthropic-provider.test.ts",
+        "packages/google-vertex/src/edge/google-vertex-auth-edge.test.ts",
+        "packages/google-vertex/src/edge/google-vertex-provider-edge.test.ts",
+        "packages/google-vertex/src/gemini-transcription/google-vertex-gemini-transcription-model.test.ts",
+        "packages/google-vertex/src/google-vertex-auth-google-auth-library.test.ts",
+        "packages/google-vertex/src/google-vertex-cloud-tts-speech-model.test.ts",
+        "packages/google-vertex/src/google-vertex-embedding-model.test.ts",
+        "packages/google-vertex/src/google-vertex-image-model.test.ts",
+        "packages/google-vertex/src/google-vertex-language-model.test.ts",
+        "packages/google-vertex/src/google-vertex-location-validation.test.ts",
+        "packages/google-vertex/src/google-vertex-provider-base.test.ts",
+        "packages/google-vertex/src/google-vertex-provider.test.ts",
+        "packages/google-vertex/src/google-vertex-transcription-model.test.ts",
+        "packages/google-vertex/src/google-vertex-video-model.test.ts",
+        "packages/google-vertex/src/lazy-schemas.test.ts",
+        "packages/google-vertex/src/maas/edge/google-vertex-maas-provider-edge.test.ts",
+        "packages/google-vertex/src/maas/google-vertex-maas-provider-node.test.ts",
+        "packages/google-vertex/src/maas/google-vertex-maas-provider.test.ts",
+        "packages/google-vertex/src/xai/edge/google-vertex-xai-provider-edge.test.ts",
+        "packages/google-vertex/src/xai/google-vertex-xai-provider-node.test.ts",
+        "packages/google-vertex/src/xai/google-vertex-xai-provider.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
+      "Sources/SwiftAISDK/Models/GoogleVertexCloudTTSSpeechModel.swift",
+      "Sources/SwiftAISDK/Models/GoogleVertexModels.swift",
+      "Sources/SwiftAISDK/Providers/GoogleVertexProvider.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/GoogleVertexChirpUpstreamTests.swift",
+      "Tests/SwiftAISDKTests/GoogleVertexMediaAndMaaSTests.swift",
+      "Tests/SwiftAISDKTests/ProviderInitializerCompatibility160Tests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

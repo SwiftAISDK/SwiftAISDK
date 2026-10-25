@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "modular-pilot",
+  "status": "reviewed",
+  "summary": "Initial independent core, Anthropic, compatible and OpenAI packages from the verified M2/M3 extraction.",
+  "packages": [
+    {"package": "swift-ai-core", "bump": "initial", "notes": "Provider contracts, transport, utilities and orchestration in four modules; explicit registries and no built-in provider dependency.", "compatibility": "New release unit at 1.0.0. Moved types retain one definition; binary compatibility with the monolithic module is not promised."},
+    {"package": "swift-ai-anthropic", "bump": "initial", "notes": "Standalone Anthropic Messages, tools, batches, upload and skills with typed settings.", "compatibility": "New release unit at 1.0.0; legacy settings overloads remain in the canonical compatibility facade."},
+    {"package": "swift-ai-openai-compatible", "bump": "initial", "notes": "Generic compatible chat, completion, embedding and image wire behavior without concrete provider dispatch.", "compatibility": "New release unit at 1.0.0; the native generic factory is distinct from the legacy dispatch class."},
+    {"package": "swift-ai-openai", "bump": "initial", "notes": "Standalone OpenAI Responses, chat, media, Live, batches, files and skills, sharing compatible wire implementations.", "compatibility": "New release unit at 1.0.0; native OpenAIProvider is explicit, while the old facade retains its previous concrete return type."}
+  ]
+}

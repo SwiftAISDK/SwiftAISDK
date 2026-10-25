@@ -1,3 +1,13 @@
+@testable import SwiftAIAnthropic
+@testable import SwiftAIOpenAICompatible
+@testable import SwiftAIOpenAI
+@testable import SwiftAI
+@testable import SwiftAIProvider
+@testable import SwiftAIProviderUtilities
+@testable import SwiftAITransport
+private typealias AI = SwiftAISDK.AI
+private typealias AIProviders = SwiftAISDK.AIProviders
+private typealias AICustomProvider = SwiftAISDK.AICustomProvider
 import Foundation
 import Testing
 @testable import SwiftAISDK
@@ -9,7 +19,7 @@ struct TopazProviderTests {
     private let video = ImageInputFile(data: Data([1, 2, 3, 4, 5, 6, 7, 8]), mediaType: "video/mp4")
     private let source: JSONValue = ["width": 1920, "height": 1080, "duration": 10, "frameRate": 30, "frameCount": 300]
 
-    private func provider(_ transport: any AITransport, baseURL: String? = nil, headers: [String: String] = [:]) throws -> OpenAICompatibleProvider {
+    private func provider(_ transport: any AITransport, baseURL: String? = nil, headers: [String: String] = [:]) throws -> SwiftAISDK.OpenAICompatibleProvider {
         try AIProviders.topaz(settings: ProviderSettings(apiKey: "test-key", baseURL: baseURL, headers: headers, transport: transport))
     }
 

@@ -1,8 +1,13 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func audioProviderHTTPStatusError(provider: String, response: AIHTTPResponse) -> AIError {
     let body = audioProviderErrorMessage(from: response.body) ?? response.bodyText
-    return apiCallError(
+    return compatibilityAPICallError(
         provider: provider,
         statusCode: response.statusCode,
         body: body,

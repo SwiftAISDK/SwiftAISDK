@@ -1,5 +1,10 @@
 import CryptoKit
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 private let amazonBedrockUserAgent = "ai-sdk-amazon-bedrock/5.0.124"
 
@@ -404,10 +409,10 @@ private final class BedrockSigningTransport: AIStreamingTransport, @unchecked Se
 func bedrockHTTPStatusError(provider: String, response: AIHTTPResponse) -> AIError {
     guard let raw = try? response.jsonValue(),
           let message = raw["message"]?.stringValue else {
-        return apiCallError(provider: provider, response: response)
+        return compatibilityAPICallError(provider: provider, response: response)
     }
     let body = raw["type"]?.stringValue.map { "\($0): \(message)" } ?? message
-    return apiCallError(
+    return compatibilityAPICallError(
         provider: provider,
         statusCode: response.statusCode,
         body: body,

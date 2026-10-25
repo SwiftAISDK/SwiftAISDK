@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class GatewayEmbeddingModel: EmbeddingModel, @unchecked Sendable {
     public let providerID: String
@@ -124,7 +129,7 @@ public final class GatewayVideoModel: AsyncVideoModel, @unchecked Sendable {
         ]), abortSignal: request.abortSignal)
         let response = try await config.transport.send(httpRequest)
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         let raw: JSONValue
         if let event = parseServerSentEvents(response.body).first(where: { $0.data != "[DONE]" }) {
@@ -140,7 +145,7 @@ public final class GatewayVideoModel: AsyncVideoModel, @unchecked Sendable {
                     "param": raw["param"] ?? .null
                 ])
             ])
-            throw apiCallError(
+            throw compatibilityAPICallError(
                 provider: providerID,
                 statusCode: raw["statusCode"]?.intValue ?? response.statusCode,
                 body: String(data: try encodeJSONBody(errorBody), encoding: .utf8) ?? raw["message"]?.stringValue ?? String(describing: raw),

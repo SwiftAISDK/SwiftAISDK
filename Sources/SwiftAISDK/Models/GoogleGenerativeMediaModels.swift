@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class GoogleEmbeddingModel: EmbeddingModel, @unchecked Sendable {
     public let providerID: String
@@ -435,7 +440,7 @@ public final class GoogleVideoGenerationModel: VideoModel, @unchecked Sendable {
                 abortSignal: abortSignal
             ))
             guard (200..<300).contains(response.statusCode) else {
-                throw apiCallError(provider: providerID, response: response)
+                throw compatibilityAPICallError(provider: providerID, response: response)
             }
             let raw = try response.jsonValue()
             latest = raw

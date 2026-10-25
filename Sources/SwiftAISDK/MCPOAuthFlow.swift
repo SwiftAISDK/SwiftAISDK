@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public enum MCPOAuth {
     public static func auth(
@@ -630,6 +635,7 @@ private extension MCPOAuthTokens {
     }
 }
 
+
 private extension MCPOAuthClientInformation {
     var authorizationServerInformation: MCPOAuthAuthorizationServerInformation? {
         guard let authorizationServerURL, let tokenEndpoint else { return nil }
@@ -655,6 +661,7 @@ private extension MCPOAuthClientInformation {
     }
 }
 
+
 private extension MCPOAuthAuthorizationServerInformation {
     var normalized: MCPOAuthAuthorizationServerInformation {
         MCPOAuthAuthorizationServerInformation(
@@ -664,6 +671,7 @@ private extension MCPOAuthAuthorizationServerInformation {
         )
     }
 }
+
 
 private extension URL {
     var originText: String {

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func googleConvertJSONResponseTool(_ raw: JSONValue, name: String?) -> JSONValue {
     guard let name, var object = raw.objectValue,

@@ -16,15 +16,17 @@ let package = Package(
             targets: ["SwiftAISDK"]
         ),
     ],
+    dependencies: [.package(path: "Packages/swift-ai-core"), .package(path: "Packages/swift-ai-anthropic"), .package(path: "Packages/swift-ai-openai-compatible"), .package(path: "Packages/swift-ai-openai")],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "SwiftAISDK"
+            name: "SwiftAISDK",
+            dependencies: [.product(name: "SwiftAIOpenAI", package: "swift-ai-openai"), .product(name: "SwiftAIOpenAICompatible", package: "swift-ai-openai-compatible"), .product(name: "SwiftAIAnthropic", package: "swift-ai-anthropic"), .product(name: "SwiftAI", package: "swift-ai-core"), .product(name: "SwiftAIProvider", package: "swift-ai-core"), .product(name: "SwiftAITransport", package: "swift-ai-core"), .product(name: "SwiftAIProviderUtilities", package: "swift-ai-core")]
         ),
         .testTarget(
             name: "SwiftAISDKTests",
-            dependencies: ["SwiftAISDK"],
+            dependencies: ["SwiftAISDK", .product(name: "SwiftAI", package: "swift-ai-core"), .product(name: "SwiftAIProvider", package: "swift-ai-core"), .product(name: "SwiftAITransport", package: "swift-ai-core"), .product(name: "SwiftAIProviderUtilities", package: "swift-ai-core")],
             resources: [.process("Fixtures")]
         ),
     ],

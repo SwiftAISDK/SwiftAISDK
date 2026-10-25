@@ -2,10 +2,9 @@
 
 Snapshot date: 2026-10-25
 
-This document is generated from `AIProviderCapabilities` in
-`Sources/SwiftAISDK/Providers/ProviderCapabilityMatrix.swift`. Update that
-file first when adding or changing provider coverage; the drift test will
-fail until this document is regenerated from the same source.
+This document and `AIProviderCapabilities` are generated from
+`Porting/packages.json`. Update the catalog, then run
+`node Scripts/sdk.mjs generate`; runtime tests still verify actual coverage.
 
 Legend:
 

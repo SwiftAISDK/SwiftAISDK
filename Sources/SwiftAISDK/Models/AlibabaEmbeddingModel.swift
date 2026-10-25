@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class AlibabaEmbeddingModel: EmbeddingModel, @unchecked Sendable {
     public let providerID = "alibaba.embedding"

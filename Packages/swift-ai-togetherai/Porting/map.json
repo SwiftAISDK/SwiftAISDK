@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-togetherai",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/togetherai",
+      "implementation": [
+        "packages/togetherai/src"
+      ],
+      "tests": [
+        "packages/togetherai/src/reranking/togetherai-reranking-model.test.ts",
+        "packages/togetherai/src/togetherai-image-model.test.ts",
+        "packages/togetherai/src/togetherai-provider.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
+      "Sources/SwiftAISDK/Models/TogetherAIModels.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/TogetherAIProviderTests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

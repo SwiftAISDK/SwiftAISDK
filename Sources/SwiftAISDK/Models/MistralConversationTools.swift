@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public enum MistralTools {
     public static func webSearch(name: String = "web_search") -> JSONValue { providerTool("mistral.web_search", name: name) }

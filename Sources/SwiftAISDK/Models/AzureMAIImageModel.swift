@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// Routes known MAI image families to Azure AI Foundry, with a per-request API override.
 public final class AzureImageModel: ImageModel, @unchecked Sendable {
@@ -75,7 +80,7 @@ public final class AzureMAIImageModel: ImageModel, @unchecked Sendable {
                 files.append((data, file.mediaType ?? "image/png"))
             } else if let url = file.url {
                 let downloaded = try await downloadURL(url, transport: config.downloadTransport, abortSignal: request.abortSignal)
-                guard (200..<300).contains(downloaded.statusCode) else { throw apiCallError(provider: providerID, response: downloaded) }
+                guard (200..<300).contains(downloaded.statusCode) else { throw compatibilityAPICallError(provider: providerID, response: downloaded) }
                 files.append((downloaded.body, downloaded.headers.contentType ?? file.mediaType ?? "image/png"))
             } else {
                 throw AIError.invalidArgument(argument: "files", message: "Image file must contain data or a URL.")
@@ -115,7 +120,7 @@ public final class AzureMAIImageModel: ImageModel, @unchecked Sendable {
         var usage: TokenUsage?
         for response in responses {
             guard (200..<300).contains(response.statusCode) else {
-                var error = apiCallError(provider: providerID, response: response)
+                var error = compatibilityAPICallError(provider: providerID, response: response)
                 if case var .apiCall(call) = error, let message = (try? response.jsonValue())?["error"]?["message"]?.stringValue { call.message = message; error = .apiCall(call) }
                 throw error
             }

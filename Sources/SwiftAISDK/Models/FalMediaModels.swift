@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class FalImageModel: ImageModel, @unchecked Sendable {
     public let providerID = "fal.image"
@@ -47,7 +52,7 @@ public final class FalImageModel: ImageModel, @unchecked Sendable {
         for url in urls {
             let response = try await downloadURL(url, transport: config.transport, abortSignal: abortSignal)
             guard (200..<300).contains(response.statusCode) else {
-                throw apiCallError(provider: providerID, response: response)
+                throw compatibilityAPICallError(provider: providerID, response: response)
             }
             images.append(response.body.base64EncodedString())
         }
@@ -133,7 +138,7 @@ public final class FalVideoModel: AsyncVideoModel, @unchecked Sendable {
                 return .pending(responseMetadata: responseMetadata)
             }
             return .failed(
-                message: apiCallError(provider: providerID, response: response).description,
+                message: compatibilityAPICallError(provider: providerID, response: response).description,
                 responseMetadata: responseMetadata
             )
         }
@@ -232,7 +237,7 @@ public final class FalVideoModel: AsyncVideoModel, @unchecked Sendable {
             abortSignal: abortSignal
         ).withURL(submitURL))
         guard (200..<300).contains(queueResponse.statusCode) else {
-            throw apiCallError(provider: providerID, response: queueResponse)
+            throw compatibilityAPICallError(provider: providerID, response: queueResponse)
         }
         return (try queueResponse.jsonValue(), queueResponse, submitURL.absoluteString)
     }
@@ -252,7 +257,7 @@ public final class FalVideoModel: AsyncVideoModel, @unchecked Sendable {
                 return (try response.jsonValue(), response)
             }
             if !falIsInProgress(response) {
-                throw apiCallError(provider: providerID, response: response)
+                throw compatibilityAPICallError(provider: providerID, response: response)
             }
             if DispatchTime.now().uptimeNanoseconds - started > timeoutNanoseconds {
                 throw AIError.invalidResponse(provider: providerID, message: "Fal video generation timed out.")

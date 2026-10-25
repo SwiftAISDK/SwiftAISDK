@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// Gateway's native Decision Model V4 endpoint.
 public final class GatewayDecisionModel: AIDecisionModelV4, @unchecked Sendable {

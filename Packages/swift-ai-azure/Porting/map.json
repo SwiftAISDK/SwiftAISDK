@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-azure",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/azure",
+      "implementation": [
+        "packages/azure/src"
+      ],
+      "tests": [
+        "packages/azure/src/azure-mai-image-generate-image.test.ts",
+        "packages/azure/src/azure-mai-image-model.test.ts",
+        "packages/azure/src/azure-mai-transcription-model.test.ts",
+        "packages/azure/src/azure-model-id.test.ts",
+        "packages/azure/src/azure-openai-provider.test.ts",
+        "packages/azure/src/azure-speech-model.test.ts",
+        "packages/azure/src/azure-transcription-model.test.ts",
+        "packages/azure/src/lazy-schemas.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Sources/SwiftAISDK/Models/AzureAudioModels.swift",
+      "Sources/SwiftAISDK/Models/AzureMAIImageModel.swift",
+      "Sources/SwiftAISDK/Models/AzureMaiStreamingTranscription.swift",
+      "Sources/SwiftAISDK/Models/OpenAICompatibleConfig.swift",
+      "Sources/SwiftAISDK/Providers/AzureOpenAIProvider.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/AlibabaProdiaAzureQuiverTests.swift",
+      "Tests/SwiftAISDKTests/WeeklyAzure20261011Tests.swift",
+      "Tests/SwiftAISDKTests/WeeklyAzureAudio20261004Tests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

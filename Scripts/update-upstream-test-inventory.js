@@ -5,8 +5,7 @@ const path = require("path");
 const { execFileSync } = require("child_process");
 
 const repoRoot = path.resolve(__dirname, "..");
-const ledgerPath = path.join(repoRoot, "Docs", "ProviderVersionLedger.md");
-const coreParityPath = path.join(repoRoot, "Docs", "CoreV6Parity.md");
+const { upstreamEntries } = require("./lib/catalog.cjs");
 
 const args = parseArgs(process.argv.slice(2));
 
@@ -175,43 +174,11 @@ function packageToGroup(packageName) {
 }
 
 function readProviderLedger() {
-  const contents = fs.readFileSync(ledgerPath, "utf8");
-  const entries = [];
-  const rowPattern = /^\| `(@ai-sdk\/[^`]+)` \| `([^`]+)` \| (.+) \|$/gm;
-  let match;
-  while ((match = rowPattern.exec(contents)) !== null) {
-    entries.push({
-      kind: "provider",
-      name: match[1],
-      version: match[2],
-      evidence: stripMarkdown(match[3]),
-    });
-  }
-  return entries;
+  return upstreamEntries(repoRoot).filter(entry => entry.kind === "provider");
 }
 
 function readCoreSnapshots() {
-  if (!fs.existsSync(coreParityPath)) return [];
-  const contents = fs.readFileSync(coreParityPath, "utf8");
-  const start = contents.indexOf("snapshots, currently ");
-  if (start === -1) return [];
-  const end = contents.indexOf("\nReferences:", start);
-  const snapshotText = contents.slice(start, end === -1 ? undefined : end);
-
-  return [...snapshotText.matchAll(/`([^`]+)`/g)].map((match) => {
-    const packageSpec = match[1];
-    const separator = packageSpec.lastIndexOf("@");
-    return {
-      kind: "core",
-      name: packageSpec.slice(0, separator),
-      version: packageSpec.slice(separator + 1),
-      evidence: "Docs/CoreV6Parity.md",
-    };
-  });
-}
-
-function stripMarkdown(value) {
-  return value.replace(/`/g, "").trim();
+  return upstreamEntries(repoRoot).filter(entry => entry.kind === "core");
 }
 
 function renderMarkdown({ commit, commitLine, testFiles, grouped, tracked }) {

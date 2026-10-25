@@ -1,5 +1,10 @@
 import Foundation
 import Security
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public struct GoogleServiceAccountCredentials: Sendable {
     public var clientEmail: String
@@ -247,7 +252,7 @@ struct GoogleVertexConfig: @unchecked Sendable {
     func sendJSONResponse(path: String, body: JSONValue, headers requestHeaders: [String: String] = [:], abortSignal: AIAbortSignal? = nil) async throws -> (json: JSONValue, response: AIHTTPResponse) {
         let response = try await transport.send(try await request(path: path, body: body, headers: requestHeaders, abortSignal: abortSignal))
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         return (try response.jsonValue(), response)
     }
@@ -255,7 +260,7 @@ struct GoogleVertexConfig: @unchecked Sendable {
     func sendJSONResponse(url: String, body: JSONValue, headers requestHeaders: [String: String] = [:], abortSignal: AIAbortSignal? = nil) async throws -> (json: JSONValue, response: AIHTTPResponse) {
         let response = try await transport.send(try await request(url: url, body: body, headers: requestHeaders, abortSignal: abortSignal))
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         return (try response.jsonValue(), response)
     }
@@ -353,7 +358,7 @@ enum GoogleServiceAccountTokenGenerator {
                 guard let key = element.key as? String else { return }
                 partial[key] = String(describing: element.value)
             } ?? [:]
-            throw apiCallError(
+            throw compatibilityAPICallError(
                 provider: "google.vertex",
                 statusCode: http?.statusCode ?? 0,
                 body: String(data: data, encoding: .utf8) ?? "",

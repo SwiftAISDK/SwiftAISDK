@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// A URL, existing HeyGen workspace asset, or inline reference.
 public enum HeyGenVideoAsset: Sendable, Equatable {

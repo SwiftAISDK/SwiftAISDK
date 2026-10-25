@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-perplexity",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/perplexity",
+      "implementation": [
+        "packages/perplexity/src"
+      ],
+      "tests": [
+        "packages/perplexity/src/convert-perplexity-usage.test.ts",
+        "packages/perplexity/src/convert-to-perplexity-decision-state.test.ts",
+        "packages/perplexity/src/convert-to-perplexity-input.test.ts",
+        "packages/perplexity/src/lazy-schemas.test.ts",
+        "packages/perplexity/src/perplexity-decision-model.test.ts",
+        "packages/perplexity/src/perplexity-embedding-model.test.ts",
+        "packages/perplexity/src/perplexity-language-model.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift",
+      "Sources/SwiftAISDK/Models/PerplexityEmbeddingModel.swift",
+      "Sources/SwiftAISDK/Models/PerplexityModels.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/PerplexityStreamingErrorTests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

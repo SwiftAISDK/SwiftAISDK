@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func amazonBedrockAnthropicBody(_ body: [String: JSONValue], betas: [String]) -> [String: JSONValue] {
     var output = body
@@ -70,7 +75,7 @@ func amazonBedrockAnthropicDownloadContent(
 
     let response = try await downloadURL(url, transport: transport, abortSignal: abortSignal)
     guard (200..<300).contains(response.statusCode) else {
-        throw apiCallError(provider: providerID, response: response)
+        throw compatibilityAPICallError(provider: providerID, response: response)
     }
     let mediaType = amazonBedrockAnthropicMediaType(
         contentType: response.headerValue("content-type"),

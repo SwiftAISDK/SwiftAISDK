@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// The published `@ai-sdk/typesafe-ai` package version mirrored by this port.
 public let typeSafeAIProviderVersion = "3.0.27"

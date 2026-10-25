@@ -23,6 +23,9 @@ contracts. See `UpstreamPackageDiffAudit.md` for each previous/latest version,
 implementation decision and focused/full evidence; archive identities are in
 `UpstreamPackageIntegrity.json`.
 
+The table below is generated from `Porting/upstream-lock.json`. Update reviewed
+metadata and run `node Scripts/sdk.mjs generate`; keep this narrative hand-authored.
+
 | Package | Version baseline | Main Swift evidence |
 | --- | --- | --- |
 | `@ai-sdk/alibaba` | `2.0.76` | `AIProviders.alibaba`, `AlibabaLanguageModel`, `AlibabaEmbeddingModel`, `AlibabaProviderTests.swift` |

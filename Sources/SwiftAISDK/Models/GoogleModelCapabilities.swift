@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 struct GoogleModelCapabilities: Equatable, Sendable {
     var supportsGemini2Tools: Bool

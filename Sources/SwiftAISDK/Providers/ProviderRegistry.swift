@@ -1,6 +1,11 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
 
-public enum AIProviders {
+
+extension AIProviders {
     public static func openAI(settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider {
         var settings = settings
         settings.baseURL = settings.baseURL ?? environmentValue(["OPENAI_BASE_URL"])

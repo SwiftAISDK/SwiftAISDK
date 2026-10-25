@@ -1,5 +1,10 @@
 import CryptoKit
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public struct KlingAIProviderSettings: Sendable {
     public var apiKey: String?

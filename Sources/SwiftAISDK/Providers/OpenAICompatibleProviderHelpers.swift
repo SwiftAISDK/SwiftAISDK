@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func basetenDefaultChatModelID(config: ModelHTTPConfig) -> String {
     config.modelURL?.contains("/sync/v1") == true ? "placeholder" : "chat"

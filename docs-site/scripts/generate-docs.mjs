@@ -1,3 +1,4 @@
+import catalogTools from '../../Scripts/lib/catalog.cjs';
 import { spawnSync } from 'node:child_process';
 import {
   existsSync,
@@ -37,91 +38,8 @@ function publicDocsUrl(slug) {
   return `${docsSite.replace(/\/$/g, '')}${path}`;
 }
 
-function splitMarkdownRow(row) {
-  return row
-    .trim()
-    .replace(/^\|/, '')
-    .replace(/\|$/, '')
-    .split(/(?<!\\)\|/)
-    .map((cell) => cell.trim().replaceAll('\\|', '|'));
-}
-
-function stripCodeTicks(value) {
-  return value.replaceAll('`', '');
-}
-
 function readProviderRows() {
-  const matrix = readFileSync(
-    join(repoRoot, 'Docs/ProviderCapabilityMatrix.md'),
-    'utf8',
-  );
-  const lines = matrix.split('\n');
-  const notes = new Map();
-  const notesHeaderIndex = lines.findIndex((line) =>
-    line.startsWith('| Provider ID | Note |'),
-  );
-  if (notesHeaderIndex !== -1) {
-    for (const line of lines.slice(notesHeaderIndex + 2)) {
-      if (!line.startsWith('| `')) break;
-      const [providerID, note] = splitMarkdownRow(line);
-      notes.set(providerID.replaceAll('`', ''), note);
-    }
-  }
-  const headerIndex = lines.findIndex((line) =>
-    line.startsWith('| Upstream package | Provider ID |'),
-  );
-  if (headerIndex === -1) {
-    throw new Error('Could not find provider capability table.');
-  }
-
-  const rows = [];
-  for (const line of lines.slice(headerIndex + 2)) {
-    if (!line.startsWith('| `')) break;
-    const [
-      upstreamPackageCell,
-      providerIDCell,
-      factories,
-      language,
-      completion,
-      embedding,
-      image,
-      transcription,
-      speech,
-      audioGeneration,
-      audioTransformation,
-      dubbing,
-      video,
-      reranking,
-      evaluation,
-      decision,
-      files,
-      skills,
-    ] = splitMarkdownRow(line);
-    const upstreamPackage = stripCodeTicks(upstreamPackageCell);
-    const providerID = stripCodeTicks(providerIDCell);
-    rows.push({
-      upstreamPackage,
-      providerID,
-      factories,
-      language,
-      completion,
-      embedding,
-      image,
-      transcription,
-      speech,
-      audioGeneration,
-      audioTransformation,
-      dubbing,
-      video,
-      reranking,
-      evaluation,
-      decision,
-      files,
-      skills,
-      notes: notes.get(providerID) ?? '',
-    });
-  }
-  return rows;
+  return catalogTools.docsRows(repoRoot);
 }
 
 function marker(value) {
@@ -239,7 +157,7 @@ function generateProviders() {
 
   writeGenerated(
     join(contentRoot, 'providers/index.mdx'),
-    `---\ntitle: Provider matrix\ndescription: Generated provider capability overview for SwiftAISDK.\n---\n\nThis page is generated from the package capability matrix. Update [ProviderCapabilityMatrix.swift](https://github.com/ozio/SwiftAISDK/blob/main/Sources/SwiftAISDK/Providers/ProviderCapabilityMatrix.swift) first when provider coverage changes.\n\n<div class="capability-grid">\n${capabilityList}\n</div>\n\n| Provider | Upstream package | Swift factories | Language | Completion | Embedding | Image | Transcription | Speech | Audio generation | Audio transformation | Dubbing | Video | Reranking | Evaluation | Decision | Files | Skills |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n${table}\n`,
+    `---\ntitle: Provider matrix\ndescription: Generated provider capability overview for SwiftAISDK.\n---\n\nThis page is generated from the package catalog. Update [Porting/packages.json](https://github.com/ozio/SwiftAISDK/blob/main/Porting/packages.json) and run \`node Scripts/sdk.mjs generate\` when provider coverage changes.\n\n<div class="capability-grid">\n${capabilityList}\n</div>\n\n| Provider | Upstream package | Swift factories | Language | Completion | Embedding | Image | Transcription | Speech | Audio generation | Audio transformation | Dubbing | Video | Reranking | Evaluation | Decision | Files | Skills |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n${table}\n`,
   );
 
   for (const row of rows) {
@@ -272,65 +190,53 @@ function generateProviders() {
   }
 }
 
-function findSwiftAISDKSymbolGraphs() {
-  const root = join(repoRoot, '.build');
-  const candidates = [];
+// Package dumps omit dependency definitions. Read core and compatibility graphs,
+// including extension graphs, so moving a declaration cannot erase its docs.
+const runtimePackages = [
+  { root: repoRoot, modules: ['SwiftAISDK'] },
+  ...catalogTools.readCatalog(repoRoot).catalog.packages
+    .filter(p => p.state === 'extracted')
+    .map(p => ({ root: join(repoRoot, p.directory), modules: p.modules.map(m => m.name) })),
+];
+function symbolGraphFiles(pkg) {
+  const found = [];
   function walk(dir) {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
-      const path = join(dir, entry.name);
+      const file = join(dir, entry.name);
       if (entry.isDirectory()) {
-        walk(path);
-      } else if (entry.name === 'SwiftAISDK.symbols.json') {
-        candidates.push(path);
+        if (!['checkouts', 'repositories', 'catalog-tools'].includes(entry.name) && !entry.name.startsWith('migration-')) walk(file);
+      } else if (dir.endsWith('/symbolgraph') && pkg.modules.some(m => entry.name === `${m}.symbols.json` || entry.name.startsWith(`${m}@`))) {
+        found.push(file);
       }
     }
   }
-  if (existsSync(root)) {
-    walk(root);
-  }
-  return candidates.sort();
+  const build = join(pkg.root, '.build');
+  if (existsSync(build)) walk(build);
+  return found.sort();
 }
-
-function removeExistingSymbolGraphs() {
-  for (const path of findSwiftAISDKSymbolGraphs()) {
-    rmSync(path);
-  }
-}
-
-function dumpSymbolGraph() {
-  removeExistingSymbolGraphs();
-  const result = spawnSync(
-    'swift',
-    [
-      'package',
-      'dump-symbol-graph',
-      '--skip-synthesized-members',
-      '--minimum-access-level',
-      'public',
-      '--pretty-print',
-    ],
-    { cwd: repoRoot, encoding: 'utf8' },
-  );
-  if (result.status !== 0) {
-    const emittedGraphs = findSwiftAISDKSymbolGraphs();
-    if (emittedGraphs.length > 0) {
-      console.warn(
-        'swift package dump-symbol-graph returned non-zero after emitting SwiftAISDK.symbols.json; continuing with the library graph.',
-      );
-      return;
+function dumpSymbolGraphs() {
+  const symbols = new Map();
+  for (const pkg of runtimePackages) {
+    for (const file of symbolGraphFiles(pkg)) rmSync(file);
+    const result = spawnSync('swift', ['package', 'dump-symbol-graph',
+      '--skip-synthesized-members', '--minimum-access-level', 'public', '--pretty-print'],
+      { cwd: pkg.root, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+    const files = symbolGraphFiles(pkg);
+    for (const module of pkg.modules) {
+      if (!files.some(f => f.endsWith(`/${module}.symbols.json`))) {
+        process.stdout.write(result.stdout ?? '');
+        process.stderr.write(result.stderr ?? '');
+        throw new Error(`Missing fresh symbol graph for ${module}`);
+      }
     }
-    process.stdout.write(result.stdout);
-    process.stderr.write(result.stderr);
-    throw new Error('Failed to dump SwiftAISDK symbol graph.');
+    // SwiftPM can fail to extract a test runner after emitting all library graphs.
+    if (result.status !== 0) console.warn('SwiftPM reported a graph extraction error after all runtime graphs were emitted: ' + pkg.root);
+    for (const file of files) {
+      const graph = JSON.parse(readFileSync(file, 'utf8'));
+      for (const symbol of graph.symbols) symbols.set(symbol.identifier.precise, { ...symbol, runtimeModule: graph.module.name });
+    }
   }
-}
-
-function findSymbolGraphFile() {
-  const candidates = findSwiftAISDKSymbolGraphs();
-  if (candidates.length === 0) {
-    throw new Error('SwiftAISDK.symbols.json was not emitted.');
-  }
-  return candidates.sort()[0];
+  return [...symbols.values()];
 }
 
 function declaration(symbol) {
@@ -347,6 +253,7 @@ function sourcePath(symbol) {
 }
 
 function componentForPath(path) {
+  path = path.replace(/^.*\/Sources\/[^/]+\//, '');
   if (path.includes('/Providers/') || path.includes('Provider')) return 'Providers';
   if (path.includes('/Models/')) return 'Provider models';
   if (path.includes('MCP')) return 'MCP';
@@ -420,12 +327,10 @@ function generateComponents(symbols) {
 }
 
 function generateReference() {
-  dumpSymbolGraph();
-  const symbolGraph = JSON.parse(readFileSync(findSymbolGraphFile(), 'utf8'));
-  const symbols = symbolGraph.symbols
+  const symbols = dumpSymbolGraphs()
     .filter((symbol) => !symbol.accessLevel || symbol.accessLevel === 'public')
     .map((symbol) => ({
-      title: symbol.names?.title ?? symbol.identifier?.precise ?? 'Symbol',
+      title: `${symbol.runtimeModule}.${symbol.names?.title ?? symbol.identifier?.precise ?? 'Symbol'}`,
       kind: symbol.kind?.displayName ?? symbol.kind?.identifier ?? 'symbol',
       declaration: declaration(symbol),
       path: sourcePath(symbol),

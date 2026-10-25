@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// Compatibility Evaluation adapter routed through Gateway's Decision Model V4 endpoint.
 public final class GatewayEvaluationModel: AIEvaluationModelV4, @unchecked Sendable {

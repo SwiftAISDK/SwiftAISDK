@@ -1,3 +1,4 @@
+@testable import SwiftAITransport
 import SwiftAISDK
 
 /// Explicit opt-in for transports that only return in-memory test fixtures.

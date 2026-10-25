@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public typealias GatewaySpeechFactoryGetTokenOptions = GatewayTranscriptionFactoryGetTokenOptions
 public typealias GatewaySpeechFactoryGetTokenResult = GatewayTranscriptionFactoryGetTokenResult
@@ -65,6 +70,7 @@ extension GatewaySpeechModel {
         } catch { request.text.cancelFromConsumer(); throw speechGatewayConnectionError(error) }
     }
 }
+
 
 func gatewaySpeechWebSocketURL(baseURL: String, modelID: String) throws -> URL {
     guard var components = URLComponents(string: baseURL) else { throw AIError.invalidURL(baseURL) }

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 final class GoogleVertexCloudTTSSpeechModel: SpeechModel, @unchecked Sendable {
     let providerID: String

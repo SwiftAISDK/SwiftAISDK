@@ -16,6 +16,8 @@ concurrency:
 jobs:
   test:
     runs-on: macos-26
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
     permissions:
       contents: read
     steps:
@@ -23,16 +25,25 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Show Swift version
-        run: swift --version
+        run: |
+          swift --version
+          swift --version | grep -q 'Swift version 6.3.3'
 
-      - name: Run Swift tests serially
-        # Swift Testing otherwise starts the entire suite concurrently, which
-        # can starve short timeout and polling tasks on hosted runners.
-        run: swift test --no-parallel
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+
+      - name: Test extracted packages and compatibility aggregate
+        # SwiftPM does not run dependency-package tests from the root.
+        # Serial suites avoid starving timeout/polling tests on hosted runners.
+        run: node Scripts/test-packages.mjs
 
   build:
     needs: test
     runs-on: macos-26
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
     permissions:
       contents: read
     steps:
@@ -42,9 +53,14 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: 26
+          node-version: '24'
           cache: npm
           cache-dependency-path: docs-site/package-lock.json
+
+      - name: Verify package catalog and tooling
+        run: |
+          node Scripts/sdk.mjs generate --check
+          node --test Scripts/tests/*.test.cjs
 
       - name: Show Swift version
         run: swift --version
@@ -57,6 +73,18 @@ jobs:
 
       - name: Build package
         run: swift build
+
+      - name: Verify isolated core consumer
+        run: node Scripts/verify-core-isolation.mjs
+
+      - name: Verify isolated provider consumers
+        run: node Scripts/verify-provider-isolation.mjs
+
+      - name: Verify independent provider versions
+        run: node Scripts/verify-provider-versions.mjs
+
+      - name: Rehearse standalone package releases
+        run: node Scripts/verify-release-rehearsal.mjs
 
       - name: Build documentation examples
         run: swift build --package-path Examples

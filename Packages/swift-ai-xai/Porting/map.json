@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-xai",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/xai",
+      "implementation": [
+        "packages/xai/src"
+      ],
+      "tests": [
+        "packages/xai/src/files/xai-files.test.ts",
+        "packages/xai/src/lazy-schemas.test.ts",
+        "packages/xai/src/realtime/xai-realtime-model.test.ts",
+        "packages/xai/src/responses/convert-to-xai-responses-input.test.ts",
+        "packages/xai/src/responses/convert-xai-responses-usage.test.ts",
+        "packages/xai/src/responses/xai-responses-language-model.test.ts",
+        "packages/xai/src/responses/xai-responses-prepare-tools.test.ts",
+        "packages/xai/src/responses/xai-responses-raw-usage.test.ts",
+        "packages/xai/src/supports-reasoning-effort.test.ts",
+        "packages/xai/src/tool/x-search.test.ts",
+        "packages/xai/src/xai-batch.test.ts",
+        "packages/xai/src/xai-error.test.ts",
+        "packages/xai/src/xai-image-model.test.ts",
+        "packages/xai/src/xai-provider.test.ts",
+        "packages/xai/src/xai-speech-model.test.ts",
+        "packages/xai/src/xai-transcription-model.test.ts",
+        "packages/xai/src/xai-video-model.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
+      "Sources/SwiftAISDK/Models/FileClients.swift",
+      "Sources/SwiftAISDK/Models/OpenAICompatibleChatXAI.swift",
+      "Sources/SwiftAISDK/Models/XAIModels.swift",
+      "Sources/SwiftAISDK/Models/XAIRealtimeModel.swift",
+      "Sources/SwiftAISDK/Models/XAIResponses.swift",
+      "Sources/SwiftAISDK/Models/XAIResponsesBatchLanguageModel.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/XAIChatProviderTests.swift",
+      "Tests/SwiftAISDKTests/XAIProviderTests.swift",
+      "Tests/SwiftAISDKTests/XAIRealtimeModelTests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

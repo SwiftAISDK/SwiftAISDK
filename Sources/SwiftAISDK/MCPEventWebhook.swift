@@ -1,5 +1,10 @@
 import Foundation
 import CryptoKit
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public func createMCPEventSecret() -> String {
     var random = SystemRandomNumberGenerator()

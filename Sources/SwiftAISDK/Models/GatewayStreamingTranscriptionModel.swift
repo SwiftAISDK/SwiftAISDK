@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 private let gatewayTranscriptionStartFrameType =
     "transcription-stream.start"
@@ -61,6 +66,7 @@ extension GatewayTranscriptionModel {
         )
     }
 }
+
 
 func gatewayTranscriptionWebSocketURL(
     baseURL: String,

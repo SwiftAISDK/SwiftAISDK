@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class PerplexityLanguageModel: LanguageModel, @unchecked Sendable {
     public let providerID = "perplexity"
@@ -82,7 +87,7 @@ public final class PerplexityLanguageModel: LanguageModel, @unchecked Sendable {
                     )
                     let response = try await config.streamRequest(httpRequest)
                     guard (200..<300).contains(response.statusCode) else {
-                        throw apiCallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
+                        throw compatibilityAPICallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
                     }
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
                     continuation.yield(.streamStart(warnings: prepared.warnings))
@@ -335,7 +340,7 @@ public final class PerplexitySonarLanguageModel: LanguageModel, @unchecked Senda
                     let httpRequest = try config.request(path: "/chat/completions", modelID: modelID, body: body, headers: request.headers, abortSignal: request.abortSignal)
                     let response = try await config.streamRequest(httpRequest)
                     guard (200..<300).contains(response.statusCode) else {
-                        throw apiCallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
+                        throw compatibilityAPICallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
                     }
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
 

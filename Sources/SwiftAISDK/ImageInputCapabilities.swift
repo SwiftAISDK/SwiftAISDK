@@ -1,3 +1,8 @@
+import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
 // Model capabilities from the published upstream packages. Unknown IDs follow each provider's routing policy.
 
 public extension AmazonBedrockImageModel {
@@ -10,6 +15,7 @@ public extension AmazonBedrockImageModel {
         supportsFileInputs
     }
 }
+
 
 public extension BlackForestLabsImageModel {
     var supportsFileInputs: Bool? {
@@ -26,6 +32,7 @@ public extension BlackForestLabsImageModel {
     }
 }
 
+
 public extension DeepInfraImageModel {
     var supportsFileInputs: Bool? {
         if ["stabilityai/sd3.5", "black-forest-labs/FLUX-1.1-pro", "black-forest-labs/FLUX-1-schnell", "black-forest-labs/FLUX-1-dev", "black-forest-labs/FLUX-pro", "black-forest-labs/FLUX.1-Kontext-dev", "black-forest-labs/FLUX.1-Kontext-pro", "Qwen/Qwen-Image-Edit", "stabilityai/sd3.5-medium", "stabilityai/sdxl-turbo"].contains(modelID) { return true }
@@ -36,6 +43,7 @@ public extension DeepInfraImageModel {
         supportsFileInputs
     }
 }
+
 
 public extension FalImageModel {
     var supportsFileInputs: Bool? {
@@ -50,6 +58,7 @@ public extension FalImageModel {
     }
 }
 
+
 public extension FireworksImageModel {
     var supportsFileInputs: Bool? {
         if ["accounts/fireworks/models/flux-kontext-pro", "accounts/fireworks/models/flux-kontext-max"].contains(modelID) { return true }
@@ -62,6 +71,7 @@ public extension FireworksImageModel {
     }
 }
 
+
 public extension LumaImageModel {
     var supportsFileInputs: Bool? {
         if ["photon-1", "photon-flash-1"].contains(modelID) { return true }
@@ -73,6 +83,7 @@ public extension LumaImageModel {
     }
 }
 
+
 public extension QuiverAIImageModel {
     var supportsFileInputs: Bool? {
         if ["arrow-1", "arrow-1.1", "arrow-1.1-max", "arrow-2", "arrow-2-telos"].contains(modelID) { return true }
@@ -83,6 +94,7 @@ public extension QuiverAIImageModel {
         return supportsFileInputs == nil ? nil : false
     }
 }
+
 
 public extension ReplicateImageModel {
     var supportsFileInputs: Bool? {
@@ -96,6 +108,7 @@ public extension ReplicateImageModel {
     }
 }
 
+
 public extension TogetherAIImageModel {
     var supportsFileInputs: Bool? {
         if ["black-forest-labs/FLUX.1-kontext-pro", "black-forest-labs/FLUX.1-kontext-max", "black-forest-labs/FLUX.1-kontext-dev", "black-forest-labs/FLUX.1-canny", "black-forest-labs/FLUX.1-depth", "black-forest-labs/FLUX.1-redux", "black-forest-labs/FLUX.2-pro", "black-forest-labs/FLUX.2-flex"].contains(modelID) { return true }
@@ -108,6 +121,7 @@ public extension TogetherAIImageModel {
     }
 }
 
+
 public extension XAIImageModel {
     var supportsFileInputs: Bool? {
         if ["grok-imagine-image", "grok-imagine-image-pro", "grok-imagine-image-2.0"].contains(modelID) { return true }
@@ -118,6 +132,7 @@ public extension XAIImageModel {
         return supportsFileInputs == nil ? nil : false
     }
 }
+
 
 public extension GoogleImageGenerationModel {
     var supportsFileInputs: Bool? {
@@ -130,6 +145,7 @@ public extension GoogleImageGenerationModel {
     }
 }
 
+
 public extension GoogleVertexImageModel {
     var supportsFileInputs: Bool? {
         if ["gemini-2.5-flash-image", "gemini-3-pro-image-preview", "gemini-3.1-flash-image-preview"].contains(modelID) { return true }
@@ -141,18 +157,6 @@ public extension GoogleVertexImageModel {
     }
 }
 
-public extension OpenAICompatibleImageModel {
-    var supportsFileInputs: Bool? {
-        guard hasOpenAIImageCapabilities else { return nil }
-        if ["dall-e-2", "gpt-image-1", "gpt-image-1-mini", "gpt-image-1.5", "gpt-image-2", "gpt-image-2.5-flare", "gpt-image-2.5-flare-2026-09-08", "gpt-image-2.5-sunburst", "gpt-image-2.5-sunburst-2026-09-08", "chatgpt-image-latest"].contains(modelID) { return true }
-        if ["dall-e-3"].contains(modelID) { return false }
-        return nil
-    }
-
-    var supportsMaskInputs: Bool? {
-        supportsFileInputs
-    }
-}
 
 public extension ProdiaImageModel {
     var supportsFileInputs: Bool? { false }

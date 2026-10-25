@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-prodia",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/prodia",
+      "implementation": [
+        "packages/prodia/src"
+      ],
+      "tests": [
+        "packages/prodia/src/lazy-schemas.test.ts",
+        "packages/prodia/src/prodia-image-model.test.ts",
+        "packages/prodia/src/prodia-language-model.test.ts",
+        "packages/prodia/src/prodia-provider.test.ts",
+        "packages/prodia/src/prodia-video-model.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
+      "Sources/SwiftAISDK/Models/ProdiaInputs.swift",
+      "Sources/SwiftAISDK/Models/ProdiaMediaModels.swift",
+      "Sources/SwiftAISDK/Models/ProdiaMultipart.swift",
+      "Sources/SwiftAISDK/Models/ProdiaProviderOptions.swift",
+      "Sources/SwiftAISDK/Models/ProdiaShared.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/ProdiaProviderTests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

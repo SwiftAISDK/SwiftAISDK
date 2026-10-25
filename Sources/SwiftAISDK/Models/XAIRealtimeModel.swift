@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// Experimental xAI realtime V4 adapter.
 public final class XAIRealtimeModel: AIRealtimeModelV4, @unchecked Sendable {

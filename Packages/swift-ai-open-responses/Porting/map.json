@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-open-responses",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/open-responses",
+      "implementation": [
+        "packages/open-responses/src"
+      ],
+      "tests": [
+        "packages/open-responses/src/open-responses-extension.test.ts",
+        "packages/open-responses/src/open-responses-provider.test.ts",
+        "packages/open-responses/src/responses/convert-to-open-responses-input.test.ts",
+        "packages/open-responses/src/responses/map-open-responses-finish-reason.test.ts",
+        "packages/open-responses/src/responses/open-responses-language-model.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Packages/swift-ai-core/Sources/SwiftAIProvider/ProviderRegistry.swift",
+      "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIResponsesModel.swift",
+      "Sources/SwiftAISDK/Models/OpenAICompatibleConfig.swift",
+      "Sources/SwiftAISDK/Providers/ProviderRegistry.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/CoreOpenAIUpstream202609Tests.swift",
+      "Tests/SwiftAISDKTests/OpenResponsesUpstreamParity20260817Tests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction. Generic Responses mode currently shares OpenAI implementation."
+}

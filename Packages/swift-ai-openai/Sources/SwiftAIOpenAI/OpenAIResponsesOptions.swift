@@ -1,0 +1,1690 @@
+import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAIOpenAICompatible
+
+
+func openResponsesProviderOptions(providerOptions: [String: JSONValue], providerOptionsName: String) throws -> [String: JSONValue] {
+    guard let value = providerOptions[providerOptionsName] else { return [:] }
+    guard value != .null else { return [:] }
+    guard let options = value.objectValue else {
+        throw AIError.invalidArgument(argument: "providerOptions.\(providerOptionsName)", message: "Open Responses provider options must be an object.")
+    }
+    let allowedKeys: Set<String> = ["reasoningEffort", "reasoningSummary"]
+    var output: [String: JSONValue] = [:]
+    for (key, value) in options where allowedKeys.contains(key) {
+        guard value != .null else { continue }
+        switch key {
+        case "reasoningEffort":
+            guard let effort = value.stringValue else {
+                throw AIError.invalidArgument(argument: "providerOptions.\(providerOptionsName).reasoningEffort", message: "Open Responses reasoningEffort must be a string.")
+            }
+            if providerOptionsName == "quiverai", !["low", "medium", "high", "xhigh"].contains(effort) {
+                throw AIError.invalidArgument(
+                    argument: "providerOptions.quiverai.reasoningEffort",
+                    message: "Unsupported reasoning effort: \(effort)"
+                )
+            }
+        case "reasoningSummary":
+            guard let summary = value.stringValue, ["concise", "detailed", "auto"].contains(summary) else {
+                throw AIError.invalidArgument(argument: "providerOptions.\(providerOptionsName).reasoningSummary", message: "Open Responses reasoningSummary must be concise, detailed, or auto.")
+            }
+            if providerOptionsName == "quiverai", summary != "auto" {
+                throw AIError.invalidArgument(
+                    argument: "providerOptions.quiverai.reasoningSummary",
+                    message: "Unsupported reasoning summary: \(summary)"
+                )
+            }
+        default:
+            break
+        }
+        output[key] = value
+    }
+    return output
+}
+
+
+func openResponsesFunctionTools(from tools: [String: JSONValue], customToolID: String? = nil) -> [JSONValue] {
+    tools.compactMap { name, schema in
+        var parameters = schema
+        if parameters["type"]?.stringValue == "provider" {
+            guard parameters["id"]?.stringValue == customToolID else { return nil }
+            let args = parameters["args"]?.objectValue ?? [:]
+            var custom: [String: JSONValue] = [
+                "type": .string("custom"),
+                "name": .string(parameters["name"]?.stringValue ?? name)
+            ]
+            if let description = args["description"]?.stringValue {
+                custom["description"] = .string(description)
+            }
+            if let format = args["format"],
+               format["type"]?.stringValue == "grammar",
+               let syntax = format["syntax"]?.stringValue,
+               ["regex", "lark"].contains(syntax),
+               format["definition"]?.stringValue != nil {
+                custom["format"] = format
+            } else if args["format"]?["type"]?.stringValue == "text" {
+                custom["format"] = .object(["type": .string("text")])
+            }
+            return .object(custom)
+        }
+        var tool: [String: JSONValue] = [
+            "type": .string("function"),
+            "name": .string(name),
+            "parameters": parameters
+        ]
+        if var parameterObject = parameters.objectValue {
+            if let description = parameterObject["description"] {
+                tool["description"] = description
+            }
+            if let strict = parameterObject.removeValue(forKey: "strict") {
+                tool["strict"] = strict
+                parameters = .object(parameterObject)
+                tool["parameters"] = parameters
+            }
+        }
+        return .object(tool)
+    }
+}
+
+func openResponsesToolChoice(from value: JSONValue?, customToolNames: Set<String> = []) -> JSONValue? {
+    if let string = value?.stringValue {
+        switch string {
+        case "auto", "none", "required":
+            return .string(string)
+        default:
+            return nil
+        }
+    }
+    guard let object = value?.objectValue else { return nil }
+    switch object["type"]?.stringValue {
+    case "auto", "none", "required":
+        return object["type"]
+    case "tool":
+        guard let name = object["toolName"]?.stringValue ?? object["tool_name"]?.stringValue else { return nil }
+        return customToolNames.contains(name)
+            ? .object(["type": .string("custom"), "name": .string(name)])
+            : .object(["type": .string("function"), "name": .string(name)])
+    default:
+        return nil
+    }
+}
+
+func openResponsesTextFormat(from responseFormat: AIResponseFormat?) -> JSONValue? {
+    guard let responseFormat, case let .json(schema, name, description) = responseFormat else { return nil }
+    guard let schema else {
+        return .object(["type": .string("json_object")])
+    }
+    var format: [String: JSONValue] = ["type": .string("json_schema")]
+    format["name"] = .string(name ?? "response")
+    if let description { format["description"] = .string(description) }
+    format["schema"] = schema
+    format["strict"] = .bool(true)
+    return .object(format)
+}
+
+func openAIResponsesTextFormat(from responseFormat: AIResponseFormat?, strictJsonSchema: JSONValue?) -> JSONValue? {
+    guard let responseFormat, case let .json(schema, name, description) = responseFormat else { return nil }
+    guard let schema else {
+        return .object(["type": .string("json_object")])
+    }
+    var format: [String: JSONValue] = [
+        "type": .string("json_schema"),
+        "name": .string(name ?? "response"),
+        "schema": schema,
+        "strict": strictJsonSchema ?? .bool(true)
+    ]
+    if let description { format["description"] = .string(description) }
+    return .object(format)
+}
+
+func openResponsesWarnings(for request: LanguageModelRequest, includePenaltyWarnings: Bool = true) -> [AIWarning] {
+    var warnings: [AIWarning] = []
+    if request.topK != nil { warnings.append(AIWarning(type: "unsupported", feature: "topK")) }
+    if request.seed != nil { warnings.append(AIWarning(type: "unsupported", feature: "seed")) }
+    if includePenaltyWarnings {
+        if request.presencePenalty != nil { warnings.append(AIWarning(type: "unsupported", feature: "presencePenalty")) }
+        if request.frequencyPenalty != nil { warnings.append(AIWarning(type: "unsupported", feature: "frequencyPenalty")) }
+    }
+    if !request.stopSequences.isEmpty { warnings.append(AIWarning(type: "unsupported", feature: "stopSequences")) }
+    return warnings
+}
+
+func openAIResponsesOutputText(from raw: JSONValue) -> String? {
+    if let text = raw["output_text"]?.stringValue {
+        return text
+    }
+    let parts = raw["output"]?.arrayValue?.flatMap { item -> [String] in
+        guard item["type"]?.stringValue == "message" else { return [] }
+        return item["content"]?.arrayValue?.compactMap { $0["text"]?.stringValue } ?? []
+    } ?? []
+    return parts.isEmpty ? nil : parts.joined()
+}
+
+func openAIResponsesInputMessageJSON(
+    _ message: AIMessage,
+    store: Bool,
+    isReasoningModel: Bool = false,
+    hasConversation: Bool = false,
+    hasPreviousResponseID: Bool = false,
+    processedApprovalIDs: inout Set<String>,
+    toolNamespaces: [String: JSONValue] = [:],
+    customToolNames: Set<String> = [],
+    programmaticToolNames: Set<String> = [],
+    outputSchemaToolNames: Set<String> = [],
+    providerDefinedToolNames: Set<String> = [],
+    shellToolNames: Set<String> = [],
+    computerToolNames: Set<String> = [],
+    toolSearchToolName: String? = "tool_search",
+    webSearchToolNames: Set<String> = ["web_search", "web_search_preview"],
+    providerID: String = "openai",
+    wrapToolErrors: Bool = false,
+    useDeveloperRoleForSystem: Bool = false,
+    explicitMessageItemType: Bool = false,
+    programmaticToolCallIDs: Set<String> = [],
+    configurationUpdateUnsupportedReason: String? = nil,
+    supportedConfigurationUpdateReasoningEfforts: [String]? = nil,
+    warnings: inout [AIWarning]
+) throws -> [JSONValue] {
+    if message.role == .tool {
+        return try message.content.flatMap { part -> [JSONValue] in
+            switch part {
+            case let .toolApprovalResponse(response):
+                guard response.providerExecuted, processedApprovalIDs.insert(response.id).inserted else {
+                    return []
+                }
+                var items: [JSONValue] = []
+                if store && !hasConversation && !hasPreviousResponseID {
+                    items.append(.object([
+                        "type": .string("item_reference"),
+                        "id": .string(response.id)
+                    ]))
+                }
+                items.append(.object([
+                    "type": .string("mcp_approval_response"),
+                    "approval_request_id": .string(response.id),
+                    "approve": .bool(response.approved)
+                ]))
+                return items
+            case let .toolResult(result):
+                guard !openAIResponsesShouldSkipToolResult(result) else { return [] }
+                if openAIResponsesIsExecutionDenied(result),
+                   programmaticToolCallIDs.contains(result.toolCallID)
+                    || openAIResponsesCaller(from: result.providerMetadata)?["type"]?.stringValue == "program" {
+                    throw AIError.invalidArgument(
+                        argument: "tool result",
+                        message: "OpenAI does not support execution-denied results for programmatic tool calls."
+                    )
+                }
+                if result.toolName == toolSearchToolName {
+                    return [.object(openAIResponsesToolSearchOutput(result, store: store, providerID: providerID))]
+                }
+                if result.toolName == "local_shell" {
+                    return [.object(openAIResponsesLocalShellOutput(result))]
+                }
+                if result.toolName == "shell" {
+                    return [.object(openAIResponsesShellOutput(result))]
+                }
+                if result.toolName == "apply_patch" {
+                    return [.object(openAIResponsesApplyPatchOutput(result))]
+                }
+                if computerToolNames.contains(result.toolName) {
+                    return [.object(openAIResponsesComputerOutput(result))]
+                }
+                if programmaticToolNames.contains(result.toolName) {
+                    return [.object(openAIResponsesProgrammaticOutput(result, store: store))]
+                }
+                if customToolNames.contains(result.toolName) {
+                    var warnings: [AIWarning] = []
+                    return [.object([
+                        "type": .string("custom_tool_call_output"),
+                        "call_id": .string(result.toolCallID),
+                        "output": openResponsesToolResultOutput(
+                            result,
+                            providerID: providerID,
+                            wrapToolErrors: wrapToolErrors,
+                            promptCacheBreakpoint: openAIResponsesScalarToolResultPromptCacheBreakpoint(result),
+                            warnings: &warnings
+                        )
+                    ])]
+                }
+                var warnings: [AIWarning] = []
+                var item: [String: JSONValue] = [
+                    "type": .string("function_call_output"),
+                    "call_id": .string(result.toolCallID),
+                    "output": openResponsesToolResultOutput(
+                        result,
+                        providerID: providerID,
+                        jsonEncodeText: outputSchemaToolNames.contains(result.toolName),
+                        wrapToolErrors: wrapToolErrors,
+                        promptCacheBreakpoint: openAIResponsesScalarToolResultPromptCacheBreakpoint(result),
+                        warnings: &warnings
+                    )
+                ]
+                if let caller = openAIResponsesCaller(from: result.providerMetadata) {
+                    item["caller"] = caller
+                }
+                var items: [JSONValue] = [.object(item)]
+                if let additionalTools = try openAIResponsesAdditionalTools(result, providerID: providerID),
+                   !additionalTools.isEmpty {
+                    items.append(.object([
+                        "type": .string("additional_tools"),
+                        "role": .string("developer"),
+                        "tools": .array(additionalTools)
+                    ]))
+                }
+                return items
+            default:
+                return []
+            }
+        }
+    }
+
+    if message.role == .user {
+        var item: [String: JSONValue] = [
+            "role": .string("user"),
+            "content": .array(try message.content.enumerated().compactMap {
+                try openAIResponsesInputContentPart($0, providerID: providerID)
+            })
+        ]
+        if explicitMessageItemType { item["type"] = .string("message") }
+        return [.object(item)]
+    }
+
+    if message.role == .assistant {
+        var output: [JSONValue] = []
+        var reasoningIndexes: [String: Int] = [:]
+        var emittedTextItemIDs: Set<String> = []
+        var hasPrecedingReasoning = false
+        for part in message.content {
+            switch part {
+            case let .text(text, providerMetadata):
+                if hasConversation, openAIResponsesItemID(from: providerMetadata) != nil {
+                    break
+                }
+                let referenceStoredMessage = store && (!isReasoningModel || hasPrecedingReasoning)
+                if referenceStoredMessage, let itemID = openAIResponsesItemID(from: providerMetadata),
+                   !emittedTextItemIDs.insert(itemID).inserted {
+                    break
+                }
+                output.append(openAIResponsesAssistantTextItem(
+                    text: text,
+                    providerMetadata: providerMetadata,
+                    store: referenceStoredMessage,
+                    explicitMessageItemType: explicitMessageItemType
+                ))
+            case let .reasoning(text, providerMetadata):
+                hasPrecedingReasoning = true
+                if (hasConversation || hasPreviousResponseID), openAIResponsesItemID(from: providerMetadata) != nil {
+                    break
+                }
+                openAIResponsesAppendReasoningItem(
+                    text: text,
+                    providerMetadata: providerMetadata,
+                    store: store,
+                    output: &output,
+                    reasoningIndexes: &reasoningIndexes,
+                    warnings: &warnings
+                )
+            case let .toolCall(call):
+                let itemID = openAIResponsesItemID(from: call.providerMetadata) ?? call.rawValue?["id"]?.stringValue
+                if hasConversation, itemID != nil {
+                    break
+                }
+                if call.name == toolSearchToolName {
+                    output.append(openAIResponsesToolSearchCallItem(call, store: store))
+                    break
+                }
+                if programmaticToolNames.contains(call.name) {
+                    output.append(openAIResponsesProgrammaticCallItem(call, store: store))
+                    break
+                }
+                if call.providerExecuted {
+                    if store, let itemID {
+                        output.append(.object(["type": .string("item_reference"), "id": .string(itemID)]))
+                    }
+
+                    // Without response storage, shell calls must be replayed
+                    // together with their matching shell_call_output.
+                    if store || !shellToolNames.contains(call.name) {
+                        break
+                    }
+                }
+
+                let isProviderDefinedToolCall = providerDefinedToolNames.contains(call.name)
+                    || customToolNames.contains(call.name)
+                if hasPreviousResponseID, store, itemID != nil, isProviderDefinedToolCall {
+                    break
+                }
+                if store, let itemID, isProviderDefinedToolCall {
+                    output.append(.object(["type": .string("item_reference"), "id": .string(itemID)]))
+                    break
+                }
+                if shellToolNames.contains(call.name) {
+                    output.append(openAIResponsesShellCallItem(call))
+                    break
+                }
+                if call.name == "local_shell" {
+                    output.append(openAIResponsesLocalShellCallItem(call, store: store))
+                    break
+                }
+                if call.name == "apply_patch" {
+                    output.append(openAIResponsesApplyPatchCallItem(call, store: store))
+                    break
+                }
+                if computerToolNames.contains(call.name) {
+                    output.append(openAIResponsesComputerCallItem(call))
+                    break
+                }
+                if customToolNames.contains(call.name) {
+                    if store, let itemID = openAIResponsesItemID(from: call.providerMetadata) ?? call.rawValue?["id"]?.stringValue {
+                        output.append(.object(["type": .string("item_reference"), "id": .string(itemID)]))
+                        break
+                    }
+                    output.append(openAIResponsesCustomToolCallItem(call))
+                    break
+                }
+                output.append(.object(openAIResponsesFunctionCallItem(call, toolNamespaces: toolNamespaces)))
+            case let .toolResult(result):
+                if openAIResponsesShouldSkipAssistantToolResult(result) {
+                    break
+                }
+                if webSearchToolNames.contains(result.toolName) {
+                    let namespace = openAICompatibleProviderMetadataNamespace(providerID)
+                    let itemID = result.providerMetadata[namespace]?["itemId"]?.stringValue ?? result.toolCallID
+                    if store {
+                        output.append(.object(["type": .string("item_reference"), "id": .string(itemID)]))
+                        break
+                    }
+                    if let item = openAIResponsesWebSearchReplayItem(result, itemID: itemID) {
+                        output.append(item)
+                        break
+                    }
+                }
+                if result.toolName == toolSearchToolName {
+                    output.append(.object(openAIResponsesToolSearchOutput(result, store: store, providerID: providerID)))
+                    break
+                }
+                if result.toolName == "shell" {
+                    output.append(.object(openAIResponsesShellOutput(result)))
+                    break
+                }
+                if programmaticToolNames.contains(result.toolName) {
+                    output.append(.object(openAIResponsesProgrammaticOutput(result, store: store)))
+                    break
+                }
+                if !store {
+                    warnings.append(AIWarning(
+                        type: "other",
+                        message: "Results for OpenAI tool \(result.toolName) are not sent to the API when store is false"
+                    ))
+                }
+            case let .custom(value, providerMetadata):
+                guard value["kind"]?.stringValue == "openai.compaction" else {
+                    break
+                }
+                guard let itemID = openAIResponsesItemID(from: providerMetadata) else {
+                    break
+                }
+                if hasConversation {
+                    break
+                }
+                if store {
+                    output.append(.object(["type": .string("item_reference"), "id": .string(itemID)]))
+                    break
+                }
+                let openAIOptions = openAIResponsesOpenAIOptions(from: providerMetadata)
+                var item: [String: JSONValue] = [
+                    "type": .string("compaction"),
+                    "id": .string(itemID)
+                ]
+                if let encryptedContent = openAIOptions["encryptedContent"] ?? openAIOptions["encrypted_content"] {
+                    item["encrypted_content"] = encryptedContent
+                }
+                output.append(.object(item))
+            default:
+                break
+            }
+        }
+        if !store {
+            var droppedReasoningWithoutEncryptedContent = false
+            output = output.filter { item in
+                guard item["type"]?.stringValue == "reasoning",
+                      item["encrypted_content"] == nil else {
+                    return true
+                }
+                droppedReasoningWithoutEncryptedContent = true
+                return false
+            }
+            if droppedReasoningWithoutEncryptedContent {
+                warnings.append(AIWarning(
+                    type: "other",
+                    message: "Reasoning parts without encrypted content are not supported when store is false. Skipping reasoning parts."
+                ))
+            }
+        }
+        return output
+    }
+
+    if message.role == .system {
+        let namespace = openAICompatibleProviderMetadataNamespace(providerID)
+        let options = message.providerMetadata[namespace]?.objectValue
+            ?? message.providerMetadata["openai"]?.objectValue
+        let effortValue = options?["reasoningEffortUpdate"]
+            ?? options?["reasoning_effort_update"]
+        if let effortValue {
+            guard let effort = effortValue.stringValue,
+                  ["none", "low", "medium", "high", "xhigh", "max"].contains(effort) else {
+                throw AIError.invalidArgument(
+                    argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate",
+                    message: "Message-level reasoningEffortUpdate must be none, low, medium, high, xhigh, or max."
+                )
+            }
+            guard message.combinedText.isEmpty else {
+                throw AIError.invalidArgument(
+                    argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate",
+                    message: "Message-level reasoningEffortUpdate requires empty system message content."
+                )
+            }
+            if let configurationUpdateUnsupportedReason {
+                throw AIError.invalidArgument(
+                    argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate",
+                    message: configurationUpdateUnsupportedReason
+                )
+            }
+            if let supportedConfigurationUpdateReasoningEfforts,
+               !supportedConfigurationUpdateReasoningEfforts.contains(effort) {
+                throw AIError.invalidArgument(
+                    argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate",
+                    message: "The selected model only supports these reasoning efforts: \(supportedConfigurationUpdateReasoningEfforts.joined(separator: ", "))."
+                )
+            }
+            return [.object([
+                "type": .string("configuration_update"),
+                "reasoning": .object(["effort": .string(effort)])
+            ])]
+        }
+    }
+
+    let role = message.role == .system && useDeveloperRoleForSystem ? "developer" : message.role.rawValue
+    var item: [String: JSONValue] = [
+        "role": .string(role),
+        "content": .string(message.combinedText)
+    ]
+    if explicitMessageItemType { item["type"] = .string("message") }
+    return [.object(item)]
+}
+
+func openAIResponsesScalarToolResultPromptCacheBreakpoint(_ result: AIToolResult) -> JSONValue? {
+    let output = result.modelOutput ?? result.result
+    let outputOptions = output["providerOptions"]?["openai"]?.objectValue
+        ?? output["provider_options"]?["openai"]?.objectValue
+    if let breakpoint = outputOptions?["promptCacheBreakpoint"]
+        ?? outputOptions?["prompt_cache_breakpoint"] {
+        return breakpoint
+    }
+
+    let resultOptions = result.providerMetadata["openai"]?.objectValue
+        ?? result.providerMetadata
+    return resultOptions["promptCacheBreakpoint"]
+        ?? resultOptions["prompt_cache_breakpoint"]
+}
+
+/// History-loaded functions follow an ordinary tool result in an additional_tools item.
+func openAIResponsesAdditionalTools(_ result: AIToolResult, providerID: String) throws -> [JSONValue]? {
+    let namespace = openAICompatibleProviderMetadataNamespace(providerID)
+    guard let options = result.providerMetadata[namespace], options != .null else { return nil }
+    guard let object = options.objectValue else {
+        throw AIError.invalidArgument(argument: "toolResult.providerOptions.\(namespace)", message: "Tool result options must be an object.")
+    }
+    guard let value = object["additionalTools"] else { return nil }
+    guard let definitions = value.arrayValue else {
+        throw AIError.invalidArgument(argument: "additionalTools", message: "additionalTools must be an array of function definitions.")
+    }
+    let allowed: Set<String> = ["type", "name", "description", "parameters", "strict"]
+    for definition in definitions {
+        guard let definition = definition.objectValue,
+              Set(definition.keys).isSubset(of: allowed),
+              definition["type"]?.stringValue == "function",
+              let name = definition["name"]?.stringValue, !name.isEmpty,
+              definition["parameters"]?.objectValue != nil,
+              definition["description"] == nil || definition["description"]?.stringValue != nil,
+              definition["strict"] == nil || definition["strict"]?.boolValue != nil else {
+            throw AIError.invalidArgument(argument: "additionalTools", message: "Invalid additionalTools function definition.")
+        }
+    }
+    return definitions
+}
+
+func openAIResponsesWebSearchReplayItem(_ result: AIToolResult, itemID: String) -> JSONValue? {
+    let output = result.modelOutput ?? result.result
+    let value: JSONValue
+    if output["type"]?.stringValue == "json" {
+        value = output["value"] ?? .null
+    } else if output["type"] == nil, output.objectValue != nil {
+        value = output
+    } else {
+        return nil
+    }
+    guard let action = value["action"]?.objectValue,
+          let type = action["type"]?.stringValue else { return nil }
+    var mapped: [String: JSONValue] = [:]
+    switch type {
+    case "search":
+        mapped["type"] = .string("search")
+        if let query = action["query"] {
+            guard query.stringValue != nil else { return nil }
+            mapped["query"] = query
+        }
+        if let queries = action["queries"] {
+            guard let strings = queries.arrayValue, strings.allSatisfy({ $0.stringValue != nil }) else { return nil }
+            mapped["queries"] = queries
+        }
+    case "openPage", "findInPage":
+        mapped["type"] = .string(type == "openPage" ? "open_page" : "find_in_page")
+        for key in type == "openPage" ? ["url"] : ["url", "pattern"] {
+            if let item = action[key] {
+                guard item == .null || item.stringValue != nil else { return nil }
+                mapped[key] = item
+            }
+        }
+    default:
+        return nil
+    }
+    if let sourcesValue = value["sources"] {
+        guard let sources = sourcesValue.arrayValue else { return nil }
+        var mappedSources: [JSONValue] = []
+        for source in sources {
+            guard let sourceType = source["type"]?.stringValue,
+                  ["url", "api"].contains(sourceType) else { return nil }
+            let key = sourceType == "url" ? "url" : "name"
+            guard let text = source[key]?.stringValue else { return nil }
+            mappedSources.append(.object(["type": .string(sourceType), key: .string(text)]))
+        }
+        if type == "search" { mapped["sources"] = .array(mappedSources) }
+    }
+    return .object([
+        "type": .string("web_search_call"), "id": .string(itemID),
+        "status": .string("completed"), "action": .object(mapped)
+    ])
+}
+
+func openAIResponsesSerializedToolCallArguments(_ arguments: String) -> String {
+    arguments.isEmpty ? "{}" : arguments
+}
+
+func openAIResponsesOpenAIOptions(from providerMetadata: [String: JSONValue]) -> [String: JSONValue] {
+    providerMetadata["openai"]?.objectValue ?? providerMetadata
+}
+
+func openAIResponsesItemID(from providerMetadata: [String: JSONValue]) -> String? {
+    let openAIOptions = openAIResponsesOpenAIOptions(from: providerMetadata)
+    return (openAIOptions["itemId"] ?? openAIOptions["item_id"])?.stringValue
+}
+
+func openAIResponsesAssistantTextItem(
+    text: String,
+    providerMetadata: [String: JSONValue],
+    store: Bool,
+    explicitMessageItemType: Bool = false
+) -> JSONValue {
+    let openAIOptions = openAIResponsesOpenAIOptions(from: providerMetadata)
+    let itemID = openAIOptions["itemId"] ?? openAIOptions["item_id"]
+    if store, let itemID {
+        return .object([
+            "type": .string("item_reference"),
+            "id": itemID
+        ])
+    }
+
+    var item: [String: JSONValue] = [
+        "role": .string("assistant"),
+        "content": .string(text)
+    ]
+    if explicitMessageItemType { item["type"] = .string("message") }
+    if let phase = openAIOptions["phase"] {
+        item["phase"] = phase
+    }
+    return .object(item)
+}
+
+func openAIResponsesAppendReasoningItem(
+    text: String,
+    providerMetadata: [String: JSONValue],
+    store: Bool,
+    output: inout [JSONValue],
+    reasoningIndexes: inout [String: Int],
+    warnings: inout [AIWarning]
+) {
+    let openAIOptions = openAIResponsesOpenAIOptions(from: providerMetadata)
+    let reasoningID = (openAIOptions["itemId"] ?? openAIOptions["item_id"])?.stringValue
+    let encryptedContent = (openAIOptions["reasoningEncryptedContent"] ?? openAIOptions["reasoning_encrypted_content"])?.stringValue
+
+    guard let reasoningID else {
+        guard let encryptedContent else {
+            warnings.append(AIWarning(
+                type: "other",
+                message: "Non-OpenAI reasoning parts are not supported. Skipping reasoning part: \(openAIResponsesReasoningPartDescription(text: text, providerMetadata: providerMetadata))."
+            ))
+            return
+        }
+
+        let item: [String: JSONValue] = [
+            "type": .string("reasoning"),
+            "encrypted_content": .string(encryptedContent),
+            "summary": .array(text.isEmpty ? [] : [.object(["type": .string("summary_text"), "text": .string(text)])])
+        ]
+        output.append(.object(item))
+        return
+    }
+
+    if store {
+        if reasoningIndexes[reasoningID] == nil {
+            output.append(.object(["type": .string("item_reference"), "id": .string(reasoningID)]))
+            reasoningIndexes[reasoningID] = output.count - 1
+        }
+        return
+    }
+
+    let existingIndex = reasoningIndexes[reasoningID]
+    let summaryParts: [JSONValue]
+    if text.isEmpty {
+        summaryParts = []
+        if existingIndex != nil {
+            warnings.append(AIWarning(
+                type: "other",
+                message: "Cannot append empty reasoning part to existing reasoning sequence. Skipping reasoning part: \(openAIResponsesReasoningPartDescription(text: text, providerMetadata: providerMetadata))."
+            ))
+        }
+    } else {
+        summaryParts = [.object(["type": .string("summary_text"), "text": .string(text)])]
+    }
+
+    guard let existingIndex else {
+        var item: [String: JSONValue] = [
+            "type": .string("reasoning"),
+            "id": .string(reasoningID),
+            "summary": .array(summaryParts)
+        ]
+        if let encryptedContent {
+            item["encrypted_content"] = .string(encryptedContent)
+        }
+        output.append(.object(item))
+        reasoningIndexes[reasoningID] = output.count - 1
+        return
+    }
+
+    guard var item = output[existingIndex].objectValue else { return }
+    var summary = item["summary"]?.arrayValue ?? []
+    summary.append(contentsOf: summaryParts)
+    item["summary"] = .array(summary)
+    if let encryptedContent {
+        item["encrypted_content"] = .string(encryptedContent)
+    }
+    output[existingIndex] = .object(item)
+}
+
+func openAIResponsesReasoningPartDescription(text: String, providerMetadata: [String: JSONValue]) -> String {
+    var part: [String: JSONValue] = [
+        "type": .string("reasoning"),
+        "text": .string(text)
+    ]
+    if !providerMetadata.isEmpty {
+        part["providerOptions"] = .object(providerMetadata)
+    }
+    return openAIResponsesJSONString(.object(part)) ?? String(describing: part)
+}
+
+func openAIResponsesFunctionCallItem(_ call: AIToolCall, toolNamespaces: [String: JSONValue]) -> [String: JSONValue] {
+    var callObject: [String: JSONValue] = [
+        "type": .string("function_call"),
+        "call_id": .string(call.id),
+        "name": .string(call.name),
+        "arguments": .string(openAIResponsesSerializedToolCallArguments(call.arguments))
+    ]
+    if let namespace = openAIResponsesNamespace(for: call, toolNamespaces: toolNamespaces) {
+        callObject["namespace"] = namespace
+    }
+    if let caller = openAIResponsesCaller(from: call.providerMetadata) {
+        callObject["caller"] = caller
+    }
+    if let async = openAIResponsesOpenAIOptions(from: call.providerMetadata)["async"] {
+        callObject["async"] = async
+    }
+    return callObject
+}
+
+func openAIResponsesProgrammaticCallItem(_ call: AIToolCall, store: Bool) -> JSONValue {
+    let itemID = openAIResponsesItemID(from: call.providerMetadata) ?? call.rawValue?["id"]?.stringValue
+    if store, let itemID {
+        return .object(["type": .string("item_reference"), "id": .string(itemID)])
+    }
+
+    let input = openAIResponsesParsedToolArguments(call.arguments)
+    let item: [String: JSONValue] = [
+        "type": .string("program"),
+        "id": .string(itemID ?? call.id),
+        "call_id": .string(call.id),
+        "code": input["code"] ?? .string(""),
+        "fingerprint": input["fingerprint"] ?? .string("")
+    ]
+    return .object(item)
+}
+
+func openAIResponsesProgrammaticOutput(_ result: AIToolResult, store: Bool) -> [String: JSONValue] {
+    let itemID = openAIResponsesItemID(from: result.providerMetadata)
+    if store, let itemID {
+        return ["type": .string("item_reference"), "id": .string(itemID)]
+    }
+
+    let output = result.modelOutput ?? result.result
+    let value = output["value"] ?? output
+    let item: [String: JSONValue] = [
+        "type": .string("program_output"),
+        "id": .string(itemID ?? result.toolCallID),
+        "call_id": .string(result.toolCallID),
+        "result": value["result"] ?? .string(""),
+        "status": value["status"] ?? .string("completed")
+    ]
+    return item
+}
+
+func openAIResponsesToolSearchCallItem(_ call: AIToolCall, store: Bool) -> JSONValue {
+    let itemID = openAIResponsesItemID(from: call.providerMetadata) ?? call.rawValue?["id"]?.stringValue
+    if store, let itemID {
+        return .object(["type": .string("item_reference"), "id": .string(itemID)])
+    }
+
+    let input = openAIResponsesParsedToolArguments(call.arguments)
+    let callID = input["call_id"]?.stringValue
+    return .object([
+        "type": .string("tool_search_call"),
+        "id": .string(itemID ?? call.id),
+        "execution": .string(callID == nil ? "server" : "client"),
+        "call_id": callID.map(JSONValue.string) ?? .null,
+        "status": .string("completed"),
+        "arguments": input["arguments"] ?? .object([:])
+    ])
+}
+
+func openAIResponsesToolSearchOutput(_ result: AIToolResult, store: Bool, providerID: String) -> [String: JSONValue] {
+    let itemID = openAIResponsesItemID(from: result.providerMetadata)
+    if store, let itemID {
+        return ["type": .string("item_reference"), "id": .string(itemID)]
+    }
+
+    let output = result.modelOutput ?? result.result
+    let tools = output["value"]?["tools"] ?? output["tools"] ?? .array([JSONValue]())
+    let clientCallID = result.toolCallID.hasPrefix("call_") ? result.toolCallID : nil
+    var object: [String: JSONValue] = [
+        "type": .string("tool_search_output"),
+        "execution": .string(clientCallID == nil ? "server" : "client"),
+        "call_id": clientCallID.map(JSONValue.string) ?? .null,
+        "status": .string("completed"),
+        "tools": tools
+    ]
+    if let itemID {
+        object["id"] = .string(itemID)
+    } else if clientCallID == nil {
+        object["id"] = .string(result.toolCallID)
+    }
+    return object
+}
+
+func openAIResponsesLocalShellCallItem(_ call: AIToolCall, store: Bool) -> JSONValue {
+    let itemID = openAIResponsesItemID(from: call.providerMetadata) ?? call.rawValue?["id"]?.stringValue
+    if store, let itemID {
+        return .object(["type": .string("item_reference"), "id": .string(itemID)])
+    }
+
+    let input = openAIResponsesParsedToolArguments(call.arguments)
+    let action = input["action"] ?? .object([:])
+    var mappedAction: [String: JSONValue] = [
+        "type": action["type"] ?? .string("exec"),
+        "command": action["command"] ?? .array([JSONValue]())
+    ]
+    if let timeout = action["timeoutMs"] ?? action["timeout_ms"] { mappedAction["timeout_ms"] = timeout }
+    if let user = action["user"] { mappedAction["user"] = user }
+    if let workingDirectory = action["workingDirectory"] ?? action["working_directory"] { mappedAction["working_directory"] = workingDirectory }
+    if let env = action["env"] { mappedAction["env"] = env }
+
+    var item: [String: JSONValue] = [
+        "type": .string("local_shell_call"),
+        "call_id": .string(call.id),
+        "action": .object(mappedAction)
+    ]
+    if let itemID {
+        item["id"] = .string(itemID)
+    }
+    return .object(item)
+}
+
+func openAIResponsesLocalShellOutput(_ result: AIToolResult) -> [String: JSONValue] {
+    let output = result.modelOutput ?? result.result
+    return [
+        "type": .string("local_shell_call_output"),
+        "call_id": .string(result.toolCallID),
+        "output": output["value"]?["output"] ?? output["output"] ?? .string("")
+    ]
+}
+
+func openAIResponsesShellCallItem(_ call: AIToolCall) -> JSONValue {
+    let itemID = openAIResponsesItemID(from: call.providerMetadata) ?? call.rawValue?["id"]?.stringValue
+    let input = openAIResponsesParsedToolArguments(call.arguments)
+    let action = input["action"] ?? .object([:])
+    var mappedAction: [String: JSONValue] = [
+        "commands": action["commands"] ?? .array([JSONValue]())
+    ]
+    if let timeout = action["timeoutMs"] ?? action["timeout_ms"] {
+        mappedAction["timeout_ms"] = timeout
+    }
+    if let maxOutputLength = action["maxOutputLength"] ?? action["max_output_length"] {
+        mappedAction["max_output_length"] = maxOutputLength
+    }
+    var item: [String: JSONValue] = [
+        "type": .string("shell_call"),
+        "call_id": .string(call.id),
+        "status": .string("completed"),
+        "action": .object(mappedAction)
+    ]
+    if let itemID {
+        item["id"] = .string(itemID)
+    }
+    return .object(item)
+}
+
+func openAIResponsesShellIsProviderExecuted(from tools: [String: JSONValue]) -> Bool {
+    tools.values.contains { tool in
+        guard tool["id"]?.stringValue == "openai.shell",
+              let environment = tool["args"]?["environment"]?["type"]?.stringValue else { return false }
+        return environment == "containerAuto" || environment == "containerReference"
+    }
+}
+
+func openAIResponsesShellOutput(_ result: AIToolResult) -> [String: JSONValue] {
+    let output = result.modelOutput ?? result.result
+    let values = output["value"]?["output"]?.arrayValue ?? output["output"]?.arrayValue ?? []
+    var item: [String: JSONValue] = [
+        "type": .string("shell_call_output"),
+        "call_id": .string(result.toolCallID),
+        "output": .array(values.map(openAIResponsesShellOutputItem))
+    ]
+    if let maxOutputLength = output["value"]?["maxOutputLength"] ?? output["maxOutputLength"], maxOutputLength != .null {
+        item["max_output_length"] = maxOutputLength
+    }
+    return item
+}
+
+func openAIResponsesShellOutputItem(_ value: JSONValue) -> JSONValue {
+    var item: [String: JSONValue] = [
+        "stdout": value["stdout"] ?? .string(""),
+        "stderr": value["stderr"] ?? .string("")
+    ]
+    if value["outcome"]?["type"]?.stringValue == "timeout" {
+        item["outcome"] = .object(["type": .string("timeout")])
+    } else {
+        item["outcome"] = .object([
+            "type": .string("exit"),
+            "exit_code": value["outcome"]?["exitCode"] ?? value["outcome"]?["exit_code"] ?? .number(0)
+        ])
+    }
+    return .object(item)
+}
+
+func openAIResponsesApplyPatchCallItem(_ call: AIToolCall, store: Bool) -> JSONValue {
+    let itemID = openAIResponsesItemID(from: call.providerMetadata) ?? call.rawValue?["id"]?.stringValue
+    if store, let itemID {
+        return .object(["type": .string("item_reference"), "id": .string(itemID)])
+    }
+
+    let input = openAIResponsesParsedToolArguments(call.arguments)
+    let callID = input["callId"]?.stringValue ?? input["call_id"]?.stringValue ?? call.id
+    var item: [String: JSONValue] = [
+        "type": .string("apply_patch_call"),
+        "call_id": .string(callID),
+        "status": .string("completed"),
+        "operation": input["operation"] ?? .object([:])
+    ]
+    if let itemID {
+        item["id"] = .string(itemID)
+    }
+    return .object(item)
+}
+
+func openAIResponsesApplyPatchOutput(_ result: AIToolResult) -> [String: JSONValue] {
+    let output = result.modelOutput ?? result.result
+    return [
+        "type": .string("apply_patch_call_output"),
+        "call_id": .string(result.toolCallID),
+        "status": output["value"]?["status"] ?? output["status"] ?? .string("completed"),
+        "output": output["value"]?["output"] ?? output["output"] ?? .string("")
+    ]
+}
+
+func openAIResponsesComputerCallItem(_ call: AIToolCall) -> JSONValue {
+    let input = openAIResponsesParsedToolArguments(call.arguments)
+    let itemID = openAIResponsesItemID(from: call.providerMetadata)
+        ?? call.rawValue?["id"]?.stringValue
+        ?? call.id
+    return .object([
+        "type": .string("computer_call"),
+        "id": .string(itemID),
+        "call_id": .string(call.id),
+        "status": input["status"] ?? .string("completed"),
+        "actions": .array((input["actions"]?.arrayValue ?? []).map(openAIResponsesComputerActionForRequest)),
+        "pending_safety_checks": .array((input["pendingSafetyChecks"]?.arrayValue
+            ?? input["pending_safety_checks"]?.arrayValue
+            ?? []).map(openAIResponsesComputerSafetyCheckForRequest))
+    ])
+}
+
+func openAIResponsesComputerOutput(_ result: AIToolResult) -> [String: JSONValue] {
+    let rawOutput = result.modelOutput ?? result.result
+    let value = rawOutput["type"]?.stringValue == "json"
+        ? (rawOutput["value"] ?? .object([:]))
+        : (rawOutput["value"] ?? rawOutput)
+    let screenshot = value["output"] ?? .object([:])
+    var mappedScreenshot: [String: JSONValue] = [
+        "type": .string("computer_screenshot")
+    ]
+    if let imageURL = screenshot["imageUrl"] ?? screenshot["image_url"] {
+        mappedScreenshot["image_url"] = imageURL
+    }
+    if let fileID = screenshot["fileId"] ?? screenshot["file_id"] {
+        mappedScreenshot["file_id"] = fileID
+    }
+    if let detail = screenshot["detail"] {
+        mappedScreenshot["detail"] = detail
+    }
+
+    var item: [String: JSONValue] = [
+        "type": .string("computer_call_output"),
+        "call_id": .string(result.toolCallID),
+        "output": .object(mappedScreenshot)
+    ]
+    if let safetyChecks = (value["acknowledgedSafetyChecks"]
+        ?? value["acknowledged_safety_checks"])?.arrayValue {
+        item["acknowledged_safety_checks"] = .array(
+            safetyChecks.map(openAIResponsesComputerSafetyCheckForRequest)
+        )
+    }
+    return item
+}
+
+private func openAIResponsesComputerActionForRequest(_ action: JSONValue) -> JSONValue {
+    guard var object = action.objectValue else { return action }
+    if let scrollX = object.removeValue(forKey: "scrollX") {
+        object["scroll_x"] = scrollX
+    }
+    if let scrollY = object.removeValue(forKey: "scrollY") {
+        object["scroll_y"] = scrollY
+    }
+    if object["keys"] == .null {
+        object.removeValue(forKey: "keys")
+    }
+    return .object(object)
+}
+
+private func openAIResponsesComputerSafetyCheckForRequest(_ safetyCheck: JSONValue) -> JSONValue {
+    guard let object = safetyCheck.objectValue else { return safetyCheck }
+    var mapped: [String: JSONValue] = [:]
+    for key in ["id", "code", "message"] where object[key] != nil && object[key] != .null {
+        mapped[key] = object[key]
+    }
+    return .object(mapped)
+}
+
+func openAIResponsesCustomToolCallItem(_ call: AIToolCall) -> JSONValue {
+    let itemID = openAIResponsesItemID(from: call.providerMetadata) ?? call.rawValue?["id"]?.stringValue
+    var item: [String: JSONValue] = [
+        "type": .string("custom_tool_call"),
+        "call_id": .string(call.id),
+        "name": .string(call.name),
+        "input": openAIResponsesCustomToolInput(call.arguments)
+    ]
+    if let itemID {
+        item["id"] = .string(itemID)
+    }
+    if let async = openAIResponsesOpenAIOptions(from: call.providerMetadata)["async"] {
+        item["async"] = async
+    }
+    return .object(item)
+}
+
+func openAIResponsesCustomToolInput(_ arguments: String) -> JSONValue {
+    let trimmed = arguments.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !trimmed.isEmpty, let parsed = try? decodeJSONBody(Data(trimmed.utf8)) else {
+        return .string(arguments)
+    }
+    if let string = parsed.stringValue {
+        return .string(string)
+    }
+    return .string(openAIResponsesJSONString(parsed) ?? arguments)
+}
+
+func openAIResponsesParsedToolArguments(_ arguments: String) -> JSONValue {
+    let trimmed = arguments.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !trimmed.isEmpty, let parsed = try? decodeJSONBody(Data(trimmed.utf8)) else {
+        return .object([:])
+    }
+    return parsed
+}
+
+func openAIResponsesToolNamespaces(from tools: [String: JSONValue]) -> [String: JSONValue] {
+    tools.reduce(into: [:]) { output, entry in
+        let object = entry.value.objectValue
+        let openAIOptions = object?["providerOptions"]?["openai"]?.objectValue ?? object?["openai"]?.objectValue
+        if let namespaceName = openAIOptions?["namespace"]?["name"]?.stringValue {
+            output[entry.key] = .string(namespaceName)
+        }
+    }
+}
+
+func openAIResponsesNamespace(for call: AIToolCall, toolNamespaces: [String: JSONValue]) -> JSONValue? {
+    call.providerMetadata["openai"]?["namespace"]
+        ?? call.providerMetadata["openai"]?["item"]?["namespace"]
+        ?? call.providerMetadata["namespace"]
+        ?? call.rawValue?["namespace"]
+        ?? toolNamespaces[call.name]
+}
+
+func openAIResponsesCaller(from providerMetadata: [String: JSONValue]) -> JSONValue? {
+    let options = openAIResponsesOpenAIOptions(from: providerMetadata)
+    guard var caller = options["caller"]?.objectValue else { return nil }
+    if let callerID = caller.removeValue(forKey: "callerId") {
+        caller["caller_id"] = callerID
+    }
+    return .object(caller)
+}
+
+func openAIResponsesShouldSkipToolResult(_ result: AIToolResult) -> Bool {
+    guard result.result["type"]?.stringValue == "execution-denied" else { return false }
+    return result.providerMetadata["openai"]?["approvalId"]?.stringValue != nil
+}
+
+func openAIResponsesIsExecutionDenied(_ result: AIToolResult) -> Bool {
+    let output = result.modelOutput ?? result.result
+    if output["type"]?.stringValue == "execution-denied" { return true }
+    return output["type"]?.stringValue == "json"
+        && output["value"]?["type"]?.stringValue == "execution-denied"
+}
+
+func openAIResponsesShouldSkipAssistantToolResult(_ result: AIToolResult) -> Bool {
+    if result.result["type"]?.stringValue == "execution-denied" {
+        return true
+    }
+    if result.result["type"]?.stringValue == "json",
+       result.result["value"]?["type"]?.stringValue == "execution-denied" {
+        return true
+    }
+    return false
+}
+
+func openAIResponsesInputContentPart(
+    _ indexAndPart: EnumeratedSequence<[AIContentPart]>.Element,
+    providerID: String = "openai"
+) throws -> JSONValue? {
+    let (index, part) = indexAndPart
+    switch part {
+    case let .text(text, providerMetadata):
+        var input: [String: JSONValue] = ["type": .string("input_text"), "text": .string(text)]
+        let namespace = openAICompatibleProviderMetadataNamespace(providerID)
+        let options = providerMetadata[namespace]?.objectValue
+            ?? providerMetadata["openai"]?.objectValue
+        if let breakpoint = options?["promptCacheBreakpoint"] ?? options?["prompt_cache_breakpoint"],
+           breakpoint != .null {
+            input["prompt_cache_breakpoint"] = breakpoint
+        }
+        return .object(input)
+    case let .reasoning(text, _):
+        return .object(["type": .string("input_text"), "text": .string(text)])
+    case let .imageURL(url, _):
+        return .object(["type": .string("input_image"), "image_url": .string(url)])
+    case let .data(mimeType, data, _), let .file(mimeType, data, _, _):
+        let resolvedMimeType = try openAIResponsesResolvedMimeType(mimeType, data: data)
+        let dataURL = "data:\(resolvedMimeType);base64,\(data.base64EncodedString())"
+        if resolvedMimeType.lowercased().hasPrefix("image/") {
+            return .object(["type": .string("input_image"), "image_url": .string(dataURL)])
+        }
+        return .object([
+            "type": .string("input_file"),
+            "filename": .string(openAIResponsesFileName(for: resolvedMimeType, index: index)),
+            "file_data": .string(dataURL)
+        ])
+    case let .providerReference(mimeType, reference, _, _):
+        let fileID = try resolveProviderReference(reference, provider: openAICompatibleProviderRoot(providerID))
+        if mimeType.lowercased() == "image" || mimeType.lowercased().hasPrefix("image/") {
+            return .object([
+                "type": .string("input_image"),
+                "file_id": .string(fileID)
+            ])
+        }
+        return .object([
+            "type": .string("input_file"),
+            "file_id": .string(fileID)
+        ])
+    case .reasoningFile, .custom, .toolCall, .toolResult, .toolApprovalRequest, .toolApprovalResponse:
+        return nil
+    }
+}
+
+func openAIResponsesResolvedMimeType(_ mimeType: String, data: Data) throws -> String {
+    guard mimeType.lowercased() == "image/*" else { return mimeType }
+    if let detected = detectMediaType(data: data, topLevelType: "image") {
+        return detected
+    }
+    throw AIError.invalidArgument(
+        argument: "messages",
+        message: #"Could not determine media type for file data with media type "image/*"."#
+    )
+}
+
+func openAIResponsesFileName(for mimeType: String, index: Int) -> String {
+    mimeType.lowercased() == "application/pdf" ? "part-\(index).pdf" : "part-\(index)"
+}
+
+func openAIResponsesOptions(from extraBody: [String: JSONValue]) -> [String: JSONValue] {
+    var output = extraBody
+    openAIResponsesMoveKey("conversation", to: "conversation", in: &output)
+    openAIResponsesMoveKey("previousResponseId", to: "previous_response_id", in: &output)
+    openAIResponsesMoveKey("parallelToolCalls", to: "parallel_tool_calls", in: &output)
+    openAIResponsesMoveKey("serviceTier", to: "service_tier", in: &output)
+    openAIResponsesMoveKey("maxToolCalls", to: "max_tool_calls", in: &output)
+    openAIResponsesMoveKey("maxCompletionTokens", to: "max_output_tokens", in: &output)
+    openAIResponsesMoveKey("promptCacheKey", to: "prompt_cache_key", in: &output)
+    openAIResponsesMoveKey("promptCacheOptions", to: "prompt_cache_options", in: &output)
+    openAIResponsesMoveKey("promptCacheRetention", to: "prompt_cache_retention", in: &output)
+    openAIResponsesMoveKey("safetyIdentifier", to: "safety_identifier", in: &output)
+    openAIResponsesMoveKey("textVerbosity", to: "textVerbosity", in: &output)
+    if let contextManagement = output.removeValue(forKey: "contextManagement") ?? output.removeValue(forKey: "context_management") {
+        output["context_management"] = openAIResponsesContextManagement(contextManagement)
+    }
+    output.removeValue(forKey: "toolChoice")
+
+    var reasoning = output["reasoning"]?.objectValue ?? [:]
+    if let effort = output.removeValue(forKey: "reasoningEffort") {
+        reasoning["effort"] = effort
+    }
+    if let summary = output.removeValue(forKey: "reasoningSummary") {
+        reasoning["summary"] = summary
+    }
+    if let mode = output.removeValue(forKey: "reasoningMode") {
+        reasoning["mode"] = mode
+    }
+    if let context = output.removeValue(forKey: "reasoningContext") {
+        reasoning["context"] = context
+    }
+    if !reasoning.isEmpty {
+        output["reasoning"] = .object(reasoning)
+    }
+
+    return output
+}
+
+func openAIResponsesValidatePromptCacheOptions(_ value: JSONValue?, providerID: String) throws {
+    guard let value else { return }
+    let argument = "providerOptions.\(openAICompatibleProviderRoot(providerID)).promptCacheOptions"
+    guard let options = value.objectValue else {
+        throw AIError.invalidArgument(argument: argument, message: "must be an object")
+    }
+    if let mode = options["mode"], ![JSONValue.string("implicit"), .string("explicit")].contains(mode) {
+        throw AIError.invalidArgument(argument: "\(argument).mode", message: "must be implicit or explicit")
+    }
+    if let ttl = options["ttl"], ![JSONValue.string("30m"), .string("12h")].contains(ttl) {
+        throw AIError.invalidArgument(argument: "\(argument).ttl", message: "must be 30m or 12h")
+    }
+    if let prewarm = options["prewarm"], prewarm.boolValue == nil {
+        throw AIError.invalidArgument(argument: "\(argument).prewarm", message: "must be a boolean")
+    }
+}
+
+func openAIResponsesEffectiveReasoningModel(modelID: String, options: [String: JSONValue]) -> Bool {
+    options["forceReasoning"]?.boolValue ?? openAIIsReasoningModel(modelID)
+}
+
+func openAIResponsesApplyTopLevelReasoning(_ reasoning: String?, isReasoningModel: Bool, to options: inout [String: JSONValue]) {
+    guard let reasoning, reasoning != "provider-default", isReasoningModel else { return }
+    var object = options["reasoning"]?.objectValue ?? [:]
+    if object["effort"] == nil {
+        object["effort"] = .string(reasoning)
+    }
+    if reasoning != "none", object["summary"] == nil {
+        object["summary"] = .string("detailed")
+    }
+    if !object.isEmpty {
+        options["reasoning"] = .object(object)
+    }
+}
+
+func openAIResponsesFinalizeReasoningOptions(isReasoningModel: Bool, options: inout [String: JSONValue], warnings: inout [AIWarning]) {
+    options.removeValue(forKey: "forceReasoning")
+    var reasoning = options["reasoning"]?.objectValue ?? [:]
+    let hasExplicitNullSummary = reasoning["summary"] == .null
+    if hasExplicitNullSummary {
+        reasoning.removeValue(forKey: "summary")
+    }
+    if isReasoningModel {
+        if let effort = reasoning["effort"]?.stringValue, effort != "none", reasoning["summary"] == nil, !hasExplicitNullSummary {
+            reasoning["summary"] = .string("detailed")
+        }
+        if !reasoning.isEmpty {
+            options["reasoning"] = .object(reasoning)
+        }
+        return
+    }
+    if reasoning["effort"] != nil {
+        warnings.append(AIWarning(
+            type: "unsupported",
+            feature: "reasoningEffort",
+            message: "reasoningEffort is not supported for non-reasoning models"
+        ))
+    }
+    if reasoning["summary"] != nil {
+        warnings.append(AIWarning(
+            type: "unsupported",
+            feature: "reasoningSummary",
+            message: "reasoningSummary is not supported for non-reasoning models"
+        ))
+    }
+    if reasoning["mode"] != nil {
+        warnings.append(AIWarning(
+            type: "unsupported",
+            feature: "reasoningMode",
+            message: "reasoningMode is not supported for non-reasoning models"
+        ))
+    }
+    if reasoning["context"] != nil {
+        warnings.append(AIWarning(
+            type: "unsupported",
+            feature: "reasoningContext",
+            message: "reasoningContext is not supported for non-reasoning models"
+        ))
+    }
+    options.removeValue(forKey: "reasoning")
+}
+
+func openAIResponsesStripsSamplingSettings(modelID: String, isReasoningModel: Bool, options: [String: JSONValue]) -> Bool {
+    guard isReasoningModel else { return false }
+    return options["reasoning"]?["effort"]?.stringValue != "none"
+        || !openAILanguageModelCapabilities(modelID).supportsNonReasoningParameters
+}
+
+func openAIResponsesOpenAIBackedWarnings(options: [String: JSONValue]) -> [AIWarning] {
+    var warnings: [AIWarning] = []
+    if options["conversation"] != nil, options["previous_response_id"] != nil {
+        warnings.append(AIWarning(
+            type: "unsupported",
+            feature: "conversation",
+            message: "conversation and previousResponseId cannot be used together"
+        ))
+    }
+    return warnings
+}
+
+func openAIResponsesApplyAutomaticOptions(
+    to options: inout [String: JSONValue],
+    tools: [String: JSONValue],
+    isReasoningModel: Bool,
+    supportsWebSearchSourcesInclude: Bool = true
+) {
+    if let logprobs = options.removeValue(forKey: "logprobs") {
+        if let count = logprobs.intValue, logprobs.doubleValue == Double(count), count > 0 {
+            options["top_logprobs"] = .number(Double(count))
+            openAIResponsesAppendInclude("message.output_text.logprobs", to: &options)
+        } else if logprobs.boolValue == true {
+            options["top_logprobs"] = .number(20)
+            openAIResponsesAppendInclude("message.output_text.logprobs", to: &options)
+        }
+    }
+
+    if supportsWebSearchSourcesInclude, tools.contains(where: { _, schema in
+        let id = schema["id"]?.stringValue
+        return id == "openai.web_search" || id == "openai.web_search_preview"
+    }) {
+        openAIResponsesAppendInclude("web_search_call.action.sources", to: &options)
+    }
+
+    if tools.contains(where: { _, schema in schema["id"]?.stringValue == "openai.code_interpreter" }) {
+        openAIResponsesAppendInclude("code_interpreter_call.outputs", to: &options)
+    }
+
+    if options["store"]?.boolValue == false, isReasoningModel {
+        openAIResponsesAppendInclude("reasoning.encrypted_content", to: &options)
+    }
+}
+
+func openAIResponsesAppendInclude(_ value: String, to options: inout [String: JSONValue]) {
+    var include = options["include"]?.arrayValue ?? []
+    let item = JSONValue.string(value)
+    if !include.contains(item) {
+        include.append(item)
+    }
+    options["include"] = .array(include)
+}
+
+func openAIIsReasoningModel(_ modelID: String) -> Bool {
+    let capabilities = openAILanguageModelCapabilities(modelID)
+    return capabilities.isReasoningModel
+}
+
+public struct OpenAILanguageModelCapabilities {
+    public var isReasoningModel: Bool
+    public var supportsNonReasoningParameters: Bool
+    public var supportsConfigurationUpdate: Bool
+    public var supportsAsyncToolCalling: Bool
+    public var supportedReasoningEfforts: [String]?
+}
+
+public func openAILanguageModelCapabilities(_ modelID: String) -> OpenAILanguageModelCapabilities {
+    let oSeriesVersion = openAIOSeriesVersion(modelID)
+    let gptVersion = openAIGPTVersion(modelID)
+    let isGPTChatModel = gptVersion?.minor == nil && (gptVersion?.variant?.hasPrefix("chat") ?? false)
+    let isGPT6OrLaterModel = gptVersion.map { $0.major >= 6 } ?? false
+    let isGPT6SolOrLuna = modelID == "gpt-6-sol" || modelID == "gpt-6-luna"
+    let isReasoningModel = oSeriesVersion != nil
+        || (gptVersion.map { $0.major >= 5 } == true && !isGPTChatModel)
+    let supportsNonReasoningParameters = isGPT6SolOrLuna || (gptVersion.map {
+        !isGPT6OrLaterModel && $0.major == 5 && ($0.minor ?? 0) >= 1
+    } ?? false)
+    return OpenAILanguageModelCapabilities(
+        isReasoningModel: isReasoningModel,
+        supportsNonReasoningParameters: supportsNonReasoningParameters,
+        supportsConfigurationUpdate: isGPT6OrLaterModel,
+        supportsAsyncToolCalling: isGPT6OrLaterModel,
+        supportedReasoningEfforts: isGPT6SolOrLuna
+            ? ["none", "low", "medium", "high", "xhigh", "max"]
+            : isGPT6OrLaterModel
+                ? ["low", "medium", "high", "xhigh", "max"]
+                : nil
+    )
+}
+
+func openAIResponsesValidateReasoningEffort(
+    modelID: String,
+    options: inout [String: JSONValue],
+    warnings: inout [AIWarning]
+) {
+    let capabilities = openAILanguageModelCapabilities(modelID)
+    guard let supportedEfforts = capabilities.supportedReasoningEfforts,
+          var reasoning = options["reasoning"]?.objectValue,
+          let effort = reasoning["effort"]?.stringValue,
+          !supportedEfforts.contains(effort) else {
+        return
+    }
+
+    reasoning.removeValue(forKey: "effort")
+    if reasoning.isEmpty {
+        options.removeValue(forKey: "reasoning")
+    } else {
+        options["reasoning"] = .object(reasoning)
+    }
+    warnings.append(AIWarning(
+        type: "unsupported",
+        feature: "reasoningEffort",
+        message: "\(modelID) only supports the following reasoning efforts: \(supportedEfforts.joined(separator: ", "))"
+    ))
+}
+
+func openAIResponsesRemoveUnsupportedGPT6Options(
+    modelID: String,
+    stripsReasoningModelSampling: Bool,
+    options: inout [String: JSONValue],
+    warnings: inout [AIWarning]
+) {
+    let capabilities = openAILanguageModelCapabilities(modelID)
+    guard capabilities.supportsConfigurationUpdate else { return }
+
+    if options.removeValue(forKey: "prompt_cache_retention") != nil {
+        warnings.append(AIWarning(
+            type: "unsupported",
+            feature: "promptCacheRetention",
+            message: "promptCacheRetention is not supported by GPT-6 and later models; use promptCacheOptions instead"
+        ))
+    }
+
+    guard stripsReasoningModelSampling else { return }
+    let removedTopLogprobs = options.removeValue(forKey: "top_logprobs") != nil
+    var include = options["include"]?.arrayValue
+    let originalIncludeCount = include?.count ?? 0
+    include?.removeAll { $0.stringValue == "message.output_text.logprobs" }
+    let removedInclude = (include?.count ?? 0) != originalIncludeCount
+    if let include {
+        if include.isEmpty {
+            options.removeValue(forKey: "include")
+        } else {
+            options["include"] = .array(include)
+        }
+    }
+    if removedTopLogprobs || removedInclude {
+        warnings.append(AIWarning(
+            type: "unsupported",
+            feature: "logprobs",
+            message: "logprobs is not supported for reasoning models"
+        ))
+    }
+}
+
+private func openAIOSeriesVersion(_ modelID: String) -> Int? {
+    guard modelID.first == "o" else { return nil }
+    let remainder = modelID.dropFirst()
+    let digits = remainder.prefix(while: \.isNumber)
+    guard !digits.isEmpty,
+          remainder.dropFirst(digits.count).first.map({ $0 == "-" }) ?? true else {
+        return nil
+    }
+    return Int(digits)
+}
+
+private func openAIGPTVersion(_ modelID: String) -> (major: Int, minor: Int?, variant: String?)? {
+    guard modelID.hasPrefix("gpt-") else { return nil }
+    let components = modelID.dropFirst(4).split(separator: "-", maxSplits: 1, omittingEmptySubsequences: false)
+    let versionComponents = components[0].split(separator: ".", maxSplits: 1, omittingEmptySubsequences: false)
+    guard let major = Int(versionComponents[0]),
+          versionComponents.count < 2 || Int(versionComponents[1]) != nil else {
+        return nil
+    }
+    let minor = versionComponents.count == 2 ? Int(versionComponents[1]) : nil
+    let variant = components.count == 2 && !components[1].isEmpty ? String(components[1]) : nil
+    return (major, minor, variant)
+}
+
+private enum OpenAIResponsesAllowedToolResolution: Equatable {
+    case supported(JSONValue)
+    case unsupported(String)
+}
+
+func openAIResponsesAllowedToolsChoice(
+    from value: JSONValue,
+    tools: [String: JSONValue],
+    warnings: inout [AIWarning]
+) throws -> JSONValue {
+    let object = value.objectValue ?? [:]
+    let toolNames = object["toolNames"]?.arrayValue ?? object["tool_names"]?.arrayValue ?? []
+    var directResolutions: [String: OpenAIResponsesAllowedToolResolution] = [:]
+    var aliasResolutions: [String: OpenAIResponsesAllowedToolResolution] = [:]
+    var ambiguousAliases: Set<String> = []
+
+    func record(
+        name: String,
+        aliases: [String] = [],
+        resolution: OpenAIResponsesAllowedToolResolution
+    ) {
+        directResolutions[name] = resolution
+        for alias in Set(aliases) where alias != name {
+            if ambiguousAliases.contains(alias) { continue }
+            if let existing = aliasResolutions[alias], existing != resolution {
+                aliasResolutions.removeValue(forKey: alias)
+                ambiguousAliases.insert(alias)
+            } else {
+                aliasResolutions[alias] = resolution
+            }
+        }
+    }
+
+    for (name, schema) in tools {
+        let tool = schema.objectValue ?? [:]
+        let providerToolID = tool["id"]?.stringValue
+        let isProviderTool = tool["type"]?.stringValue == "provider"
+            || providerToolID?.hasPrefix("openai.") == true
+
+        if !isProviderTool {
+            let openAIOptions = tool["providerOptions"]?["openai"]?.objectValue
+                ?? tool["openai"]?.objectValue
+            let isNamespaced = openAIOptions?["namespace"] != nil
+            let isDeferred = (openAIOptions?["deferLoading"] ?? openAIOptions?["defer_loading"]
+                ?? tool["deferLoading"] ?? tool["defer_loading"])?.boolValue == true
+            let isOmitted = (openAIOptions?["omitFromRequestTools"] ?? openAIOptions?["omit_from_request_tools"])?.boolValue == true
+            let resolution: OpenAIResponsesAllowedToolResolution
+            if isOmitted {
+                resolution = .unsupported("tools omitted from the request tools array cannot be allow-listed")
+            } else if isNamespaced {
+                resolution = .unsupported("tools inside an OpenAI tool namespace are not visible to tool_choice.allowed_tools")
+            } else if isDeferred {
+                resolution = .unsupported("deferred tools are not visible to tool_choice.allowed_tools")
+            } else {
+                resolution = .supported(.object(["type": .string("function"), "name": .string(name)]))
+            }
+            record(name: name, resolution: resolution)
+            continue
+        }
+
+        let declaredName = tool["name"]?.stringValue ?? name
+        let args = tool["args"]?.objectValue ?? [:]
+        let resolution: OpenAIResponsesAllowedToolResolution?
+        let canonicalName: String?
+        switch providerToolID ?? name {
+        case "openai.file_search":
+            canonicalName = "file_search"
+            resolution = .supported(.object(["type": .string("file_search")]))
+        case "openai.local_shell":
+            canonicalName = "local_shell"
+            resolution = .supported(.object(["type": .string("local_shell")]))
+        case "openai.shell":
+            canonicalName = "shell"
+            resolution = .supported(.object(["type": .string("shell")]))
+        case "openai.apply_patch":
+            canonicalName = "apply_patch"
+            resolution = .supported(.object(["type": .string("apply_patch")]))
+        case "openai.computer":
+            canonicalName = "computer"
+            resolution = .supported(.object(["type": .string("computer")]))
+        case "openai.web_search_preview":
+            canonicalName = "web_search_preview"
+            resolution = .supported(.object(["type": .string("web_search_preview")]))
+        case "openai.web_search":
+            canonicalName = "web_search"
+            resolution = .supported(.object(["type": .string("web_search")]))
+        case "openai.code_interpreter":
+            canonicalName = "code_interpreter"
+            resolution = .supported(.object(["type": .string("code_interpreter")]))
+        case "openai.image_generation":
+            canonicalName = "image_generation"
+            resolution = .supported(.object(["type": .string("image_generation")]))
+        case "openai.mcp":
+            canonicalName = "mcp"
+            if let serverLabel = (args["serverLabel"] ?? args["server_label"])?.stringValue {
+                resolution = .supported(.object([
+                    "type": .string("mcp"),
+                    "server_label": .string(serverLabel)
+                ]))
+            } else {
+                resolution = .unsupported("MCP tools without a server label cannot be used in tool_choice.allowed_tools")
+            }
+        case "openai.custom":
+            canonicalName = declaredName
+            resolution = .supported(.object([
+                "type": .string("custom"),
+                "name": .string(declaredName)
+            ]))
+        case "openai.programmatic_tool_calling":
+            canonicalName = "programmatic_tool_calling"
+            resolution = .supported(.object(["type": .string("programmatic_tool_calling")]))
+        case "openai.tool_search":
+            canonicalName = "tool_search"
+            resolution = .unsupported("OpenAI does not support tool_search tools in tool_choice.allowed_tools")
+        case "openai.computer_use":
+            canonicalName = "computer_use"
+            resolution = .unsupported("OpenAI does not support computer_use tools in tool_choice.allowed_tools")
+        default:
+            canonicalName = nil
+            resolution = nil
+        }
+        if let resolution {
+            record(
+                name: name,
+                aliases: [declaredName, canonicalName].compactMap { $0 },
+                resolution: resolution
+            )
+        }
+    }
+
+    var allowedEntries: [JSONValue] = []
+    var droppedNames: [String] = []
+    for rawName in toolNames {
+        guard let name = rawName.stringValue else { continue }
+        let direct = directResolutions[name]
+        if direct != nil && (aliasResolutions[name] != nil || ambiguousAliases.contains(name)) {
+            warnings.append(AIWarning(
+                type: "unsupported",
+                feature: "allowedTools entry \"\(name)\"",
+                message: "this name is both a tool name and the provider tool name of another tool in this request; the tool with this name is allowed"
+            ))
+        }
+
+        let resolution: OpenAIResponsesAllowedToolResolution?
+        if let direct {
+            resolution = direct
+        } else if ambiguousAliases.contains(name) {
+            warnings.append(AIWarning(
+                type: "unsupported",
+                feature: "allowedTools entry \"\(name)\"",
+                message: "several tools in this request share this provider tool name; use the tool name from the tools for this request instead"
+            ))
+            droppedNames.append(name)
+            continue
+        } else {
+            resolution = aliasResolutions[name]
+        }
+
+        switch resolution {
+        case let .supported(entry):
+            allowedEntries.append(entry)
+        case let .unsupported(reason):
+            warnings.append(AIWarning(
+                type: "unsupported",
+                feature: "allowedTools entry \"\(name)\"",
+                message: "\(reason); the tool is removed from the allowed tools"
+            ))
+            droppedNames.append(name)
+        case nil:
+            warnings.append(AIWarning(
+                type: "unsupported",
+                feature: "allowedTools entry \"\(name)\"",
+                message: "the tool is not part of the tools for this request and is sent as a function tool"
+            ))
+            allowedEntries.append(.object(["type": .string("function"), "name": .string(name)]))
+        }
+    }
+
+    guard !allowedEntries.isEmpty else {
+        throw AIError.invalidArgument(
+            argument: "allowedTools",
+            message: "allowedTools with only tools that cannot be allow-listed (\(droppedNames.joined(separator: ", ")))"
+        )
+    }
+    return .object([
+        "type": .string("allowed_tools"),
+        "mode": object["mode"] ?? .string("auto"),
+        "tools": .array(allowedEntries)
+    ])
+}
+
+func openAIResponsesContextManagement(_ value: JSONValue) -> JSONValue {
+    guard let items = value.arrayValue else { return value }
+    return .array(items.map { item in
+        guard var object = item.objectValue else { return item }
+        openAIResponsesMoveKey("compactThreshold", to: "compact_threshold", in: &object)
+        return .object(object)
+    })
+}

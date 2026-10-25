@@ -1,0 +1,296 @@
+import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAIOpenAICompatible
+
+
+public enum ResponsesRequestMode: Equatable, Sendable {
+    case openAICompatible
+    case openResponses(providerOptionsName: String)
+}
+
+func openAIResponsesStreamResponseMetadata(from raw: JSONValue, response: AIHTTPResponse, modelID: String? = nil) -> AIResponseMetadata {
+    let createdAt = raw["created_at"]?.doubleValue ?? raw["created"]?.doubleValue
+    return AIResponseMetadata(
+        id: raw["id"]?.stringValue,
+        timestamp: createdAt.map { Date(timeIntervalSince1970: $0) },
+        modelID: raw["model"]?.stringValue ?? modelID,
+        headers: response.headers,
+        body: raw
+    )
+}
+
+func openAIResponsesProviderMetadata(from raw: JSONValue, providerID: String) -> [String: JSONValue] {
+    var metadata: [String: JSONValue] = [:]
+    if let responseID = raw["id"] {
+        metadata["responseId"] = responseID
+    }
+    if let serviceTier = raw["service_tier"], serviceTier != .null {
+        metadata["serviceTier"] = serviceTier
+    }
+    if openAICompatibleProviderRoot(providerID) == "xai" {
+        if let cost = raw["usage"]?["cost_in_usd_ticks"], cost != .null {
+            metadata["costInUsdTicks"] = cost
+        }
+        if let promptCacheKey = raw["prompt_cache_key"], promptCacheKey != .null {
+            metadata["promptCacheKey"] = promptCacheKey
+        }
+        if let safetyIdentifier = raw["safety_identifier"], safetyIdentifier != .null {
+            metadata["safetyIdentifier"] = safetyIdentifier
+        }
+    }
+    if let reasoningContext = raw["reasoning"]?["context"], reasoningContext != .null {
+        metadata["reasoningContext"] = reasoningContext
+    }
+    let logprobs = openAIResponsesOutputLogprobs(from: raw)
+    if !logprobs.isEmpty {
+        metadata["logprobs"] = .array(logprobs)
+    }
+    return openAICompatibleNamespacedProviderMetadata(metadata, providerID: providerID)
+}
+
+func openAIResponsesProviderMetadataByPreservingResponseID(_ providerMetadata: [String: JSONValue], responseID: JSONValue?, providerID: String) -> [String: JSONValue] {
+    guard let responseID else {
+        return providerMetadata
+    }
+    let namespace = openAICompatibleProviderMetadataNamespace(providerID)
+    var namespaceMetadata = providerMetadata[namespace]?.objectValue ?? [:]
+    namespaceMetadata["responseId"] = responseID
+    var updated = providerMetadata
+    updated[namespace] = .object(namespaceMetadata)
+    return updated
+}
+
+func openAIResponsesProviderMetadataByApplyingStreamLogprobs(
+    _ providerMetadata: [String: JSONValue],
+    streamOutputLogprobs: [JSONValue],
+    providerID: String
+) -> [String: JSONValue] {
+    guard !streamOutputLogprobs.isEmpty else {
+        return providerMetadata
+    }
+    let namespace = openAICompatibleProviderMetadataNamespace(providerID)
+    var namespaceMetadata = providerMetadata[namespace]?.objectValue ?? [:]
+    namespaceMetadata["logprobs"] = .array(streamOutputLogprobs)
+    var updated = providerMetadata
+    updated[namespace] = .object(namespaceMetadata)
+    return updated
+}
+
+func openAIResponsesOutputLogprobs(from raw: JSONValue) -> [JSONValue] {
+    raw["output"]?.arrayValue?.flatMap { item in
+        item["content"]?.arrayValue?.compactMap { content in
+            content["logprobs"]
+        } ?? []
+    } ?? []
+}
+
+func openAIResponsesTextProviderMetadata(itemID: String, phase: JSONValue?, annotations: [JSONValue] = [], providerID: String) -> [String: JSONValue] {
+    var metadata: [String: JSONValue] = ["itemId": .string(itemID)]
+    if let phase {
+        metadata["phase"] = phase
+    }
+    if !annotations.isEmpty {
+        metadata["annotations"] = .array(annotations.map(openAIResponsesTextAnnotationProviderMetadata))
+    }
+    return openAICompatibleNamespacedProviderMetadata(metadata, providerID: providerID)
+}
+
+func openAIResponsesTextAnnotationProviderMetadata(_ annotation: JSONValue) -> JSONValue {
+    guard annotation["type"]?.stringValue == "container_file_citation",
+          var object = annotation.objectValue else {
+        return annotation
+    }
+    object["index"] = nil
+    return .object(object)
+}
+
+func openAIResponsesReasoningProviderMetadata(itemID: String, encryptedContent: JSONValue? = nil, includeEncryptedContent: Bool = false, providerID: String) -> [String: JSONValue] {
+    var metadata: [String: JSONValue] = ["itemId": .string(itemID)]
+    if includeEncryptedContent {
+        metadata["reasoningEncryptedContent"] = encryptedContent ?? .null
+    }
+    return openAICompatibleNamespacedProviderMetadata(metadata, providerID: providerID)
+}
+
+func openAIResponsesCompactionProviderMetadata(itemID: String, encryptedContent: JSONValue?, providerID: String) -> [String: JSONValue] {
+    var metadata: [String: JSONValue] = [
+        "type": .string("compaction"),
+        "itemId": .string(itemID)
+    ]
+    if let encryptedContent {
+        metadata["encryptedContent"] = encryptedContent
+    }
+    return openAICompatibleNamespacedProviderMetadata(metadata, providerID: providerID)
+}
+
+func openAIResponsesItemProviderMetadata(itemID: String?, providerID: String, extra: [String: JSONValue] = [:]) -> [String: JSONValue] {
+    var metadata = extra
+    if let itemID {
+        metadata["itemId"] = .string(itemID)
+    }
+    return openAICompatibleNamespacedProviderMetadata(metadata, providerID: providerID)
+}
+
+func openAIResponsesToolInputEndProviderMetadata(from item: JSONValue, providerID: String) -> [String: JSONValue] {
+    guard item["type"]?.stringValue == "function_call",
+          let namespace = item["namespace"] else {
+        return [:]
+    }
+    return openAICompatibleNamespacedProviderMetadata(["namespace": namespace], providerID: providerID)
+}
+
+enum OpenAIResponsesReasoningSummaryState {
+    case active
+    case canConclude
+    case concluded
+}
+
+struct OpenAIResponsesActiveReasoning {
+    var encryptedContent: JSONValue?
+    var summaryParts: [Int: OpenAIResponsesReasoningSummaryState]
+}
+
+func openAIResponsesSources(from raw: JSONValue, providerID: String) -> [AISource] {
+    var sourceCounter = 0
+    let output = raw["output"]?.arrayValue ?? []
+    let hasWebSearchSources = output.contains { item in
+        item["type"]?.stringValue == "web_search_call" && item["action"]?["type"]?.stringValue == "search"
+            && item["action"]?["sources"]?.arrayValue?.contains(where: { $0["type"]?.stringValue == "url" }) == true
+    }
+    let hasFileSearchResults = output.contains { item in
+        item["type"]?.stringValue == "file_search_call" && !(item["results"]?.arrayValue ?? []).isEmpty
+    }
+    var retrievedFileIDs: Set<String> = []
+    return output.flatMap { item -> [AISource] in
+        if item["type"]?.stringValue == "message" {
+            return item["content"]?.arrayValue?.flatMap { content in
+                let annotations = (content["annotations"]?.arrayValue ?? []).filter {
+                    !($0["type"]?.stringValue == "url_citation" && hasWebSearchSources)
+                        && !($0["type"]?.stringValue == "file_citation" && hasFileSearchResults)
+                }
+                return openAIResponsesSources(fromAnnotations: annotations, providerID: providerID, sourceCounter: &sourceCounter)
+            } ?? []
+        }
+        return openAIResponsesRetrievedSources(from: item, providerID: providerID, sourceCounter: &sourceCounter, retrievedFileIDs: &retrievedFileIDs)
+    }
+}
+
+func openAIResponsesRetrievedSources(
+    from item: JSONValue,
+    providerID: String,
+    sourceCounter: inout Int,
+    retrievedFileIDs: inout Set<String>
+) -> [AISource] {
+    if item["type"]?.stringValue == "web_search_call", item["action"]?["type"]?.stringValue == "search" {
+        return (item["action"]?["sources"]?.arrayValue ?? []).compactMap { source in
+            guard source["type"]?.stringValue == "url", let url = source["url"]?.stringValue else { return nil }
+            defer { sourceCounter += 1 }
+            return AISource(id: "id-\(sourceCounter)", sourceType: "url", url: url, rawValue: source)
+        }
+    }
+    if item["type"]?.stringValue == "file_search_call" {
+        return (item["results"]?.arrayValue ?? []).compactMap { result in
+            guard let fileID = result["file_id"]?.stringValue,
+                  retrievedFileIDs.insert(fileID).inserted else { return nil }
+            defer { sourceCounter += 1 }
+            return AISource(
+                id: "id-\(sourceCounter)", sourceType: "document", title: result["filename"]?.stringValue,
+                mediaType: "text/plain", filename: result["filename"]?.stringValue,
+                providerMetadata: openAICompatibleNamespacedProviderMetadata(["type": .string("file_search"), "fileId": .string(fileID)], providerID: providerID),
+                rawValue: result
+            )
+        }
+    }
+    return []
+}
+
+func openAIResponsesCitations(from annotations: [JSONValue], providerID: String) -> [AICitation] {
+    annotations.compactMap { annotation in
+        guard annotation["type"]?.stringValue != "file_path",
+              let sourceID = annotation["type"]?.stringValue == "url_citation"
+                ? annotation["url"]?.stringValue : annotation["file_id"]?.stringValue,
+              let source = openAIResponsesSource(from: annotation, id: sourceID, providerID: providerID) else { return nil }
+        return AICitation(source: source, startIndex: annotation["start_index"]?.intValue, endIndex: annotation["end_index"]?.intValue)
+    }
+}
+
+func openAIResponsesSources(fromAnnotations annotations: [JSONValue], providerID: String, sourceCounter: inout Int) -> [AISource] {
+    annotations.compactMap { annotation in
+        defer { sourceCounter += 1 }
+        return openAIResponsesSource(from: annotation, id: "id-\(sourceCounter)", providerID: providerID)
+    }
+}
+
+func openAIResponsesSource(from annotation: JSONValue, id: String, providerID: String) -> AISource? {
+    switch annotation["type"]?.stringValue {
+    case "url_citation":
+        guard let url = annotation["url"]?.stringValue, !url.isEmpty else { return nil }
+        return AISource(
+            id: id,
+            sourceType: "url",
+            url: url,
+            title: annotation["title"]?.stringValue,
+            rawValue: annotation
+        )
+    case "file_citation":
+        guard let fileID = annotation["file_id"]?.stringValue else { return nil }
+        let filename = annotation["filename"]?.stringValue
+        var metadata: [String: JSONValue] = [
+            "type": .string("file_citation"),
+            "fileId": .string(fileID)
+        ]
+        if let index = annotation["index"] {
+            metadata["index"] = index
+        }
+        return AISource(
+            id: id,
+            sourceType: "document",
+            title: filename,
+            mediaType: "text/plain",
+            filename: filename,
+            providerMetadata: openAICompatibleNamespacedProviderMetadata(metadata, providerID: providerID),
+            rawValue: annotation
+        )
+    case "container_file_citation":
+        guard let fileID = annotation["file_id"]?.stringValue else { return nil }
+        let filename = annotation["filename"]?.stringValue
+        var metadata: [String: JSONValue] = [
+            "type": .string("container_file_citation"),
+            "fileId": .string(fileID)
+        ]
+        if let containerID = annotation["container_id"] {
+            metadata["containerId"] = containerID
+        }
+        return AISource(
+            id: id,
+            sourceType: "document",
+            title: filename,
+            mediaType: "text/plain",
+            filename: filename,
+            providerMetadata: openAICompatibleNamespacedProviderMetadata(metadata, providerID: providerID),
+            rawValue: annotation
+        )
+    case "file_path":
+        guard let fileID = annotation["file_id"]?.stringValue else { return nil }
+        var metadata: [String: JSONValue] = [
+            "type": .string("file_path"),
+            "fileId": .string(fileID)
+        ]
+        if let index = annotation["index"] {
+            metadata["index"] = index
+        }
+        return AISource(
+            id: id,
+            sourceType: "document",
+            title: fileID,
+            mediaType: "application/octet-stream",
+            filename: fileID,
+            providerMetadata: openAICompatibleNamespacedProviderMetadata(metadata, providerID: providerID),
+            rawValue: annotation
+        )
+    default:
+        return nil
+    }
+}

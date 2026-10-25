@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class MiniMaxVideoModel: AsyncVideoModel, @unchecked Sendable {
     public let providerID = "minimax.video"

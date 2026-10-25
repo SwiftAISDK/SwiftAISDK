@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func googleThoughtSignatureProviderMetadata(from part: JSONValue) -> [String: JSONValue] {
     guard let thoughtSignature = part["thoughtSignature"] ?? part["thought_signature"],

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func xaiChatUsage(from raw: JSONValue) -> TokenUsage? {
     guard let usage = raw["usage"] else { return nil }

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 extension AzureTranscriptionModel {
     public func stream(_ request: StreamingTranscriptionRequest) async throws -> StreamingTranscriptionResult {
@@ -44,6 +49,7 @@ extension AzureTranscriptionModel {
                                             cancel: { Task { await session.cancel() } })
     }
 }
+
 
 private actor AzureMaiTranscriptionSession {
     let connection: any AIDuplexWebSocketConnection

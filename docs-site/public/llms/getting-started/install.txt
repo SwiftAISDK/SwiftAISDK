@@ -7,7 +7,7 @@ Add SwiftAISDK to your package manifest:
 ```swift
 // Package.swift
 dependencies: [
-    .package(url: "https://github.com/ozio/SwiftAISDK.git", from: "1.1.1"),
+    .package(url: "https://github.com/ozio/SwiftAISDK.git", from: "2.8.1"),
 ],
 targets: [
     .target(
@@ -48,3 +48,41 @@ let provider = try AIProviders.openAI(
 ```
 
 Use explicit settings when you need custom headers, a custom base URL, a mock transport, or per-environment credentials.
+
+## Modular development preview
+
+A local checkout now includes independently buildable core, Anthropic,
+OpenAI-compatible and OpenAI packages. They are not published modular releases.
+Continue using the versioned installation above until the distribution release.
+
+For a local OpenAI client, add the `Packages/swift-ai-core` and
+`Packages/swift-ai-openai` paths as package dependencies, then select the `SwiftAI`
+and `SwiftAIOpenAI` products respectively:
+
+```swift
+import SwiftAI
+import SwiftAIOpenAI
+
+let provider = try AIProviders.openAI(
+    configuration: OpenAIProviderSettings(apiKey: "your-api-key")
+)
+let model = try provider.languageModel("gpt-4.1")
+let result = try await AI.generateText(
+    model: model,
+    request: .init(messages: [.user("Hello")])
+)
+```
+
+Anthropic uses `SwiftAIAnthropic` and `AnthropicProviderSettings`. A generic
+compatible endpoint uses `SwiftAIOpenAICompatible` with
+`OpenAICompatibleProviderSettings(name:baseURL:...)`. Native factories accept
+`configuration:`; the released compatibility API continues to accept `settings:`.
+Native clients pass model objects or use explicit registries; core does not
+initialize an implicit Gateway.
+
+The canonical repository contains complete offline `AnthropicOnly`,
+`OpenAICompatibleOnly`, `OpenAIOnly` and `MixedProviders` examples. OpenAI shares
+chat/completion, embedding and image wire code with the compatible package;
+selecting it does not require unrelated providers, MCP or UI. See the
+[migration report](https://github.com/ozio/SwiftAISDK/blob/main/Docs/Migration/M3/README.md)
+for the verification boundary and remaining publication work.

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class LumaImageModel: ImageModel, @unchecked Sendable {
     public let providerID = "luma.image"
@@ -58,7 +63,7 @@ public final class LumaImageModel: ImageModel, @unchecked Sendable {
         }
         let image = try await downloadURL(url, transport: config.transport, abortSignal: request.abortSignal)
         guard (200..<300).contains(image.statusCode) else {
-            throw apiCallError(provider: providerID, response: image)
+            throw compatibilityAPICallError(provider: providerID, response: image)
         }
         return ImageGenerationResult(
             urls: [url],
@@ -321,4 +326,3 @@ private func lumaErrorMessage(from data: Data) -> String? {
     }
     return first["msg"]?.stringValue
 }
-

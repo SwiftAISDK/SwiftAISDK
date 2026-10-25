@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// Enhances one supplied image using Topaz Wonder. Text-to-image and masks are
 /// unsupported. Use `providerOptions["topaz"]` for enhancement and polling options.

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class RevAITranscriptionModel: TranscriptionModel, @unchecked Sendable {
     public let providerID: String
@@ -451,4 +456,3 @@ private func revAITranscriptText(from raw: JSONValue) -> String {
         monologue["elements"]?.arrayValue?.compactMap { $0["value"]?.stringValue }.joined() ?? ""
     }.joined(separator: " ") ?? ""
 }
-

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func mistralTools(from tools: [String: JSONValue], only forcedName: String?) -> MistralPreparedTools {
     var warnings: [AIWarning] = []

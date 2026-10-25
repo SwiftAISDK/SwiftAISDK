@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// The published `@ai-sdk/fish-audio` package version mirrored by this port.
 public let fishAudioProviderVersion = "3.0.46"
@@ -127,7 +132,7 @@ func fishAudioHTTPStatusError(
     } else {
         message = response.bodyText
     }
-    return apiCallError(
+    return compatibilityAPICallError(
         provider: provider,
         statusCode: response.statusCode,
         body: message,

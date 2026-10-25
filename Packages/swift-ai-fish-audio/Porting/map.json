@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-fish-audio",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/fish-audio",
+      "implementation": [
+        "packages/fish-audio/src"
+      ],
+      "tests": [
+        "packages/fish-audio/src/fish-audio-error.test.ts",
+        "packages/fish-audio/src/fish-audio-provider.test.ts",
+        "packages/fish-audio/src/fish-audio-speech-model.test.ts",
+        "packages/fish-audio/src/fish-audio-transcription-model.test.ts",
+        "packages/fish-audio/src/lazy-schemas.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Sources/SwiftAISDK/Models/FishAudioModels.swift",
+      "Sources/SwiftAISDK/Providers/FishAudioProvider.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/FishAudioProviderTests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

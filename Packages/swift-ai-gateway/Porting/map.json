@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-gateway",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/gateway",
+      "implementation": [
+        "packages/gateway/src"
+      ],
+      "tests": [
+        "packages/gateway/scripts/generate-model-settings.test.ts",
+        "packages/gateway/src/errors/as-gateway-error.test.ts",
+        "packages/gateway/src/errors/create-gateway-error.test.ts",
+        "packages/gateway/src/errors/extract-api-call-response.test.ts",
+        "packages/gateway/src/errors/gateway-error-types.test.ts",
+        "packages/gateway/src/errors/parse-auth-method.test.ts",
+        "packages/gateway/src/gateway-batch.test.ts",
+        "packages/gateway/src/gateway-decision-model.test.ts",
+        "packages/gateway/src/gateway-embedding-model.test.ts",
+        "packages/gateway/src/gateway-fetch-metadata.test.ts",
+        "packages/gateway/src/gateway-generation-info.test.ts",
+        "packages/gateway/src/gateway-image-model.test.ts",
+        "packages/gateway/src/gateway-language-model.test.ts",
+        "packages/gateway/src/gateway-provider-options.test.ts",
+        "packages/gateway/src/gateway-provider.test.ts",
+        "packages/gateway/src/gateway-realtime-auth.test.ts",
+        "packages/gateway/src/gateway-realtime-model.test.ts",
+        "packages/gateway/src/gateway-reranking-model.test.ts",
+        "packages/gateway/src/gateway-speech-model-stream.test.ts",
+        "packages/gateway/src/gateway-speech-model.test.ts",
+        "packages/gateway/src/gateway-spend-report.test.ts",
+        "packages/gateway/src/gateway-transcription-model.test.ts",
+        "packages/gateway/src/gateway-video-model.test.ts",
+        "packages/gateway/src/lazy-schemas.test.ts",
+        "packages/gateway/src/tool/browserbase-fetch.test.ts",
+        "packages/gateway/src/tool/browserbase-search.test.ts",
+        "packages/gateway/src/tool/parallel-search.test.ts",
+        "packages/gateway/src/tool/tako-search.test.ts",
+        "packages/gateway/src/vercel-environment.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift",
+      "Sources/SwiftAISDK/GatewayErrors.swift",
+      "Sources/SwiftAISDK/Models/GatewayDecisionModel.swift",
+      "Sources/SwiftAISDK/Models/GatewayEvaluationModel.swift",
+      "Sources/SwiftAISDK/Models/GatewayMediaModels.swift",
+      "Sources/SwiftAISDK/Models/GatewayModels.swift",
+      "Sources/SwiftAISDK/Models/GatewayParsing.swift",
+      "Sources/SwiftAISDK/Models/GatewayStreamingSpeechModel.swift",
+      "Sources/SwiftAISDK/Models/GatewayStreamingTranscriptionModel.swift",
+      "Sources/SwiftAISDK/Providers/GatewayProvider.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/GatewayBatchVideoAndTakoUpstreamParityTests.swift",
+      "Tests/SwiftAISDKTests/GatewayStreamingTranscriptionUpstreamParityTests.swift",
+      "Tests/SwiftAISDKTests/GatewayTests.swift",
+      "Tests/SwiftAISDKTests/GatewayUpstreamParityAugust2026Tests.swift",
+      "Tests/SwiftAISDKTests/WeeklyGatewaySpeech20261025Tests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

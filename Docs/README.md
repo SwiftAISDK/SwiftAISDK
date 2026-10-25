@@ -11,6 +11,9 @@ SwiftAISDK. User-facing guides live in `README.md` and `docs-site`.
 | Understand public docs ownership | `Docs/ProductDocumentation.md` |
 | Check current porting status | `Docs/PortingStatus.md` |
 | Port upstream code or tests | `Docs/AgentPortingGuide.md` |
+| Plan independent Swift packages and upstream synchronization | `Docs/ModularizationPlan.md` |
+| Inspect M0 package ownership, extraction boundaries, and baseline evidence | `Docs/Migration/M0/README.md` |
+| Maintain the package catalog or scaffold a selected provider | `Porting/README.md`, `Docs/Migration/M1/README.md` |
 | Check provider capability coverage | `Docs/ProviderCapabilityMatrix.md` |
 | Check npm package baselines | `Docs/ProviderVersionLedger.md` |
 | Check core AI SDK parity | `Docs/CoreV6Parity.md` |
@@ -29,10 +32,17 @@ SwiftAISDK. User-facing guides live in `README.md` and `docs-site`.
   baselines, provider coverage, live verification, and reopen rules.
 - `AgentPortingGuide.md` is the exact process for future agents. It includes the
   required test-porting and public-documentation steps.
-- `ProviderCapabilityMatrix.md` is generated from
-  `AIProviderCapabilities`. Edit the Swift source first, then regenerate.
-- `ProviderVersionLedger.md` is the package-version ledger. It is not a task
-  queue.
+- `ModularizationPlan.md` tracks the migration to independently versioned
+  packages in the SwiftAISDK GitHub organization, including upstream mappings,
+  generated maintenance metadata, release stages, and acceptance criteria.
+- `Migration/M0/README.md` records the completed inventory stage, frozen source
+  and API destinations, extraction boundaries, and compiler/test evidence.
+- `ProviderCapabilityMatrix.md` and the compiled `AIProviderCapabilities` rows
+  are generated from `Porting/packages.json`; registry tests verify real coverage.
+- `ProviderVersionLedger.md` renders reviewed entries from
+  `Porting/upstream-lock.json`. It is not a task queue.
+- `PackageCatalog.md` indexes the planned modular distributions; their state is
+  explicit and does not imply publication or independent build readiness.
 - `UpstreamPackageDiffAudit.md` records the package-by-package disposition for
   the latest npm drift pass, including portable, already-covered, and explicit
   out-of-scope deltas.
@@ -44,3 +54,10 @@ SwiftAISDK. User-facing guides live in `README.md` and `docs-site`.
 Historical provider-by-provider narratives and one-off checklist files have
 been folded into the status and agent guide. The durable evidence should live in
 tests, generated inventories, and the version/capability ledgers.
+
+- [M2 core extraction](Migration/M2/README.md): standalone runtime modules, compatibility and verification evidence.
+
+- [M3 provider pilot](Migration/M3/README.md): Anthropic, compatible and OpenAI packages, independent version constraints and preserved legacy clients.
+
+- [M4 publication rehearsal](Migration/M4/README.md): deterministic exports, standalone Git consumers, independent patches and recovery after interrupted publication.
+- [Release record workflow](../Releases/README.md): reviewed changes, candidate plans, attempt journals and immutable published-set schema.

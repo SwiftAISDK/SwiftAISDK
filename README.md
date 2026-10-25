@@ -31,6 +31,27 @@ Then depend on the library product:
 .product(name: "SwiftAISDK", package: "SwiftAISDK")
 ```
 
+## Modular development
+
+Four packages are available from a local checkout:
+[core](Packages/swift-ai-core/README.md),
+[Anthropic](Packages/swift-ai-anthropic/README.md),
+[OpenAI-compatible](Packages/swift-ai-openai-compatible/README.md), and
+[OpenAI](Packages/swift-ai-openai/README.md). Native clients import `SwiftAI` plus
+the provider module and use typed `configuration:` settings. Core has no built-in
+providers; provider packages build without the legacy aggregate, MCP or UI.
+The root `SwiftAISDK` product preserves its existing `settings:` factories and
+implicit provider resolution. See [MixedProviders](Examples/MixedProviders) for
+a normal-import client with an explicit registry.
+
+These are local development packages, not published releases. The proposed
+GitHub organization is created; distribution repositories and releases are pending. Use
+the released installation above for a versioned dependency. The
+[migration plan](Docs/ModularizationPlan.md), [provider extraction](Docs/Migration/M3/README.md)
+and [release rehearsal](Docs/Migration/M4/README.md) describe independent version
+resolution and remaining publication gates. Maintainers use the
+[release record workflow](Releases/README.md) to export and verify package releases.
+
 ## Quick Start
 
 ```swift

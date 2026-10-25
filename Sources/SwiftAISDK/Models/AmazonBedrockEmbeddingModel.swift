@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public enum AmazonBedrockEmbeddingModelFamily: String, Sendable {
     case titan

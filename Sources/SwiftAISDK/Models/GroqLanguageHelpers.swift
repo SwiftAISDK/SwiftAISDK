@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func groqStreamProviderError(from raw: JSONValue) -> AIStreamProviderError? {
     guard let error = raw["error"] else { return nil }

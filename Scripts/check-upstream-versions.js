@@ -5,9 +5,9 @@ const path = require("path");
 const { execFileSync, spawnSync } = require("child_process");
 
 const repoRoot = path.resolve(__dirname, "..");
-const ledgerPath = path.join(repoRoot, "Docs", "ProviderVersionLedger.md");
-const coreParityPath = path.join(repoRoot, "Docs", "CoreV6Parity.md");
+const { upstreamEntries, readCatalog } = require("./lib/catalog.cjs");
 const defaultWorkDir = "/tmp/ai-sdk-port-upstream-diffs";
+let registeredPackages;
 
 const args = parseArgs(process.argv.slice(2));
 
@@ -209,48 +209,20 @@ function shouldInclude(packageName) {
 }
 
 function readProviderLedger() {
-  const contents = fs.readFileSync(ledgerPath, "utf8");
-  const entries = [];
-  const rowPattern = /^\| `(@ai-sdk\/[^`]+)` \| `([^`]+)` \| (.+) \|$/gm;
-  let match;
-  while ((match = rowPattern.exec(contents)) !== null) {
-    entries.push({
-      kind: "provider",
-      name: match[1],
-      current: match[2],
-      evidence: stripMarkdown(match[3]),
-    });
-  }
-  return entries;
+  return upstreamEntries(repoRoot).filter(entry => entry.kind === "provider")
+    .map(({ version, ...entry }) => entry);
 }
 
 function readCoreSnapshots() {
-  if (!fs.existsSync(coreParityPath)) return [];
-  const contents = fs.readFileSync(coreParityPath, "utf8");
-  const start = contents.indexOf("snapshots, currently ");
-  if (start === -1) return [];
-  const end = contents.indexOf("\nReferences:", start);
-  const snapshotText = contents.slice(start, end === -1 ? undefined : end);
-
-  const packageSpecs = [...snapshotText.matchAll(/`([^`]+)`/g)].map((match) => match[1]);
-  return packageSpecs.map((packageSpec) => {
-    const separator = packageSpec.lastIndexOf("@");
-    if (separator <= 0) {
-      throw new Error(`Invalid core package snapshot: ${packageSpec}`);
-    }
-    const packageName = packageSpec.slice(0, separator);
-    const version = packageSpec.slice(separator + 1);
-    return {
-      kind: "core",
-      name: packageName,
-      current: version,
-      evidence: "Docs/CoreV6Parity.md",
-    };
-  });
+  return upstreamEntries(repoRoot).filter(entry => entry.kind === "core")
+    .map(({ version, ...entry }) => entry);
 }
 
 function discoverPackages(trackedPackages) {
   const tracked = new Map(trackedPackages.map((entry) => [entry.name, entry]));
+  for (const entry of readCatalog(repoRoot).lock.packages) {
+    if (entry.reviewedVersion === null) tracked.set(entry.name, { kind: "unreviewed" });
+  }
   const packages = npmSearchAISDKPackages();
   return packages.map((pkg) => {
     const trackedEntry = tracked.get(pkg.name);
@@ -333,20 +305,20 @@ function classifyDiscoveredPackage(pkg) {
   const name = pkg.name;
   const shortName = name.replace("@ai-sdk/", "");
   const description = (pkg.description || "").toLowerCase();
+  registeredPackages ??= readCatalog(repoRoot).catalog.packages;
+  const registered = registeredPackages.find(entry => entry.upstream.includes(name));
+  if (registered) return registered.kind === "mcp" ? "provider" : registered.kind;
   const uiPackages = new Set(["angular", "react", "rsc", "solid", "svelte", "vue", "ui-utils"]);
   const toolingPackages = new Set(["code-mode", "codemod", "devtools", "tool-bash", "tool-web-fetch"]);
   const schemaPackages = new Set(["valibot"]);
   const corePackages = new Set(["provider", "provider-utils"]);
   const adapterPackages = new Set(["langchain", "llamaindex", "workflow"]);
-  // These packages publish no description; their media source defines providers.
-  const providerPackages = new Set(["typesafe-ai", "topaz", "heygen"]);
 
   if (corePackages.has(shortName)) return "core";
   if (adapterPackages.has(shortName) || description.includes("adapter")) return "adapter";
   if (uiPackages.has(shortName)) return "ui";
   if (toolingPackages.has(shortName)) return "tooling";
   if (schemaPackages.has(shortName)) return "schema";
-  if (providerPackages.has(shortName)) return "provider";
   if (description.includes("provider")) return "provider";
   return "unknown";
 }

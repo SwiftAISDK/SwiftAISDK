@@ -6,16 +6,16 @@ SwiftAISDK groups public APIs into component areas so you can browse exact types
 
 | Component | Public symbols |
 | --- | --- |
-| [Audio](audio/) | 285 |
+| [Audio](audio/) | 301 |
 | [Chat and UI messages](chat-and-ui-messages/) | 154 |
-| [Core runtime](core-runtime/) | 1571 |
-| [Errors](errors/) | 124 |
+| [Core runtime](core-runtime/) | 2215 |
+| [Errors](errors/) | 125 |
 | [MCP](mcp/) | 597 |
-| [Media](media/) | 117 |
+| [Media](media/) | 132 |
 | [Middleware](middleware/) | 109 |
-| [Provider models](provider-models/) | 972 |
-| [Providers](providers/) | 687 |
-| [Structured output](structured-output/) | 301 |
+| [Provider models](provider-models/) | 782 |
+| [Providers](providers/) | 771 |
+| [Structured output](structured-output/) | 297 |
 | [Telemetry](telemetry/) | 188 |
-| [Tools](tools/) | 278 |
-| [Video and reranking](video-and-reranking/) | 109 |
+| [Tools](tools/) | 325 |
+| [Video and reranking](video-and-reranking/) | 110 |

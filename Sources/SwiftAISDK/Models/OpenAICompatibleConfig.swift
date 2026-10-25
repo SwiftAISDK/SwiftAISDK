@@ -1,278 +1,8 @@
 import Foundation
-
-public enum OpenAITools {
-    public static func applyPatch() -> JSONValue {
-        providerTool(id: "openai.apply_patch", name: "apply_patch")
-    }
-
-    /// Source-compatible custom-tool factory retained from 1.6.0.
-    public static func customTool(
-        name: String,
-        description: String? = nil,
-        format: JSONValue? = nil
-    ) -> JSONValue {
-        customTool(name: name, description: description, format: format, async: nil)
-    }
-
-    public static func customTool(
-        name: String,
-        description: String? = nil,
-        format: JSONValue? = nil,
-        async: Bool?
-    ) -> JSONValue {
-        providerTool(id: "openai.custom", name: name, args: JSONValue.object([
-            "description": description.map(JSONValue.string),
-            "format": format,
-            "async": async.map(JSONValue.bool)
-        ]).objectValue ?? [:])
-    }
-
-    public static func codeInterpreter(container: JSONValue? = nil) -> JSONValue {
-        providerTool(id: "openai.code_interpreter", name: "code_interpreter", args: JSONValue.object([
-            "container": container
-        ]).objectValue ?? [:])
-    }
-
-    public static func computerUse(displayWidth: Int? = nil, displayHeight: Int? = nil, environment: String? = nil, extraArgs: [String: JSONValue] = [:]) -> JSONValue {
-        var args = extraArgs
-        if let displayWidth { args["displayWidth"] = .number(Double(displayWidth)) }
-        if let displayHeight { args["displayHeight"] = .number(Double(displayHeight)) }
-        if let environment { args["environment"] = .string(environment) }
-        return providerTool(id: "openai.computer_use", name: "computer_use", args: args)
-    }
-
-    /// OpenAI Responses computer tool. The model emits ordered UI actions and
-    /// safety checks; callers return a screenshot through the normal tool-result path.
-    public static func computer() -> JSONValue {
-        providerTool(id: "openai.computer", name: "computer")
-    }
-
-    public static func fileSearch(vectorStoreIDs: [String], maxNumResults: Int? = nil, ranking: JSONValue? = nil, filters: JSONValue? = nil) -> JSONValue {
-        providerTool(id: "openai.file_search", name: "file_search", args: JSONValue.object([
-            "vectorStoreIds": .array(vectorStoreIDs),
-            "maxNumResults": maxNumResults.map { .number(Double($0)) },
-            "ranking": ranking,
-            "filters": filters
-        ]).objectValue ?? [:])
-    }
-
-    /// Source-compatible image-generation tool factory retained from 1.5.x.
-    public static func imageGeneration(
-        background: String? = nil,
-        inputFidelity: String? = nil,
-        inputImageMask: JSONValue? = nil,
-        model: String? = nil,
-        moderation: String? = nil,
-        outputCompression: Int? = nil,
-        outputFormat: String? = nil,
-        partialImages: Int? = nil,
-        quality: String? = nil,
-        size: String? = nil
-    ) -> JSONValue {
-        imageGeneration(
-            action: nil,
-            background: background,
-            inputFidelity: inputFidelity,
-            inputImageMask: inputImageMask,
-            model: model,
-            moderation: moderation,
-            outputCompression: outputCompression,
-            outputFormat: outputFormat,
-            partialImages: partialImages,
-            quality: quality,
-            size: size
-        )
-    }
-
-    public static func imageGeneration(
-        action: String? = nil,
-        background: String? = nil,
-        inputFidelity: String? = nil,
-        inputImageMask: JSONValue? = nil,
-        model: String? = nil,
-        moderation: String? = nil,
-        outputCompression: Int? = nil,
-        outputFormat: String? = nil,
-        partialImages: Int? = nil,
-        quality: String? = nil,
-        size: String? = nil
-    ) -> JSONValue {
-        providerTool(id: "openai.image_generation", name: "image_generation", args: JSONValue.object([
-            "action": action.map(JSONValue.string),
-            "background": background.map(JSONValue.string),
-            "inputFidelity": inputFidelity.map(JSONValue.string),
-            "inputImageMask": inputImageMask,
-            "model": model.map(JSONValue.string),
-            "moderation": moderation.map(JSONValue.string),
-            "outputCompression": outputCompression.map { .number(Double($0)) },
-            "outputFormat": outputFormat.map(JSONValue.string),
-            "partialImages": partialImages.map { .number(Double($0)) },
-            "quality": quality.map(JSONValue.string),
-            "size": size.map(JSONValue.string)
-        ]).objectValue ?? [:])
-    }
-
-    public static func localShell() -> JSONValue {
-        providerTool(id: "openai.local_shell", name: "local_shell")
-    }
-
-    public static func shell(environment: JSONValue? = nil) -> JSONValue {
-        providerTool(id: "openai.shell", name: "shell", args: JSONValue.object([
-            "environment": environment
-        ]).objectValue ?? [:])
-    }
-
-    public static func shellContainerAutoEnvironment(
-        fileIDs: [String] = [],
-        memoryLimit: String? = nil,
-        networkPolicy: JSONValue? = nil,
-        skills: [JSONValue] = []
-    ) -> JSONValue {
-        JSONValue.object([
-            "type": .string("containerAuto"),
-            "fileIds": fileIDs.isEmpty ? nil : .array(fileIDs),
-            "memoryLimit": memoryLimit.map(JSONValue.string),
-            "networkPolicy": networkPolicy,
-            "skills": skills.isEmpty ? nil : .array(skills)
-        ])
-    }
-
-    public static func shellContainerReferenceEnvironment(containerID: String) -> JSONValue {
-        JSONValue.object([
-            "type": .string("containerReference"),
-            "containerId": .string(containerID)
-        ])
-    }
-
-    public static func shellLocalEnvironment(skills: [JSONValue] = []) -> JSONValue {
-        JSONValue.object([
-            "type": .string("local"),
-            "skills": skills.isEmpty ? nil : .array(skills)
-        ])
-    }
-
-    public static func shellDisabledNetworkPolicy() -> JSONValue {
-        ["type": "disabled"]
-    }
-
-    public static func shellAllowlistNetworkPolicy(allowedDomains: [String], domainSecrets: [JSONValue] = []) -> JSONValue {
-        JSONValue.object([
-            "type": .string("allowlist"),
-            "allowedDomains": .array(allowedDomains),
-            "domainSecrets": domainSecrets.isEmpty ? nil : .array(domainSecrets)
-        ])
-    }
-
-    public static func shellDomainSecret(domain: String, name: String, value: String) -> JSONValue {
-        [
-            "domain": .string(domain),
-            "name": .string(name),
-            "value": .string(value)
-        ]
-    }
-
-    public static func shellSkillReference(skillID: String, version: String? = nil) -> JSONValue {
-        JSONValue.object([
-            "type": .string("skillReference"),
-            "skillId": .string(skillID),
-            "version": version.map(JSONValue.string)
-        ])
-    }
-
-    public static func shellSkillReference(providerReference: [String: String], version: String? = nil) -> JSONValue {
-        JSONValue.object([
-            "type": .string("skillReference"),
-            "providerReference": .object(providerReference.mapValues(JSONValue.string)),
-            "version": version.map(JSONValue.string)
-        ])
-    }
-
-    public static func shellInlineSkill(name: String, description: String, base64ZipData: String) -> JSONValue {
-        [
-            "type": "inline",
-            "name": .string(name),
-            "description": .string(description),
-            "source": [
-                "type": "base64",
-                "mediaType": "application/zip",
-                "data": .string(base64ZipData)
-            ]
-        ]
-    }
-
-    public static func shellLocalSkill(name: String, description: String, path: String) -> JSONValue {
-        [
-            "name": .string(name),
-            "description": .string(description),
-            "path": .string(path)
-        ]
-    }
-
-    @available(*, deprecated, message: "Use webSearch instead.")
-    public static func webSearchPreview(searchContextSize: String? = nil, userLocation: JSONValue? = nil) -> JSONValue {
-        providerTool(id: "openai.web_search_preview", name: "web_search_preview", args: JSONValue.object([
-            "searchContextSize": searchContextSize.map(JSONValue.string),
-            "userLocation": userLocation
-        ]).objectValue ?? [:])
-    }
-
-    public static func webSearch(
-        filters: JSONValue? = nil,
-        externalWebAccess: Bool? = nil,
-        searchContextSize: String? = nil,
-        userLocation: JSONValue? = nil
-    ) -> JSONValue {
-        providerTool(id: "openai.web_search", name: "web_search", args: JSONValue.object([
-            "filters": filters,
-            "externalWebAccess": externalWebAccess.map(JSONValue.bool),
-            "searchContextSize": searchContextSize.map(JSONValue.string),
-            "userLocation": userLocation
-        ]).objectValue ?? [:])
-    }
-
-    public static func mcp(
-        serverLabel: String,
-        allowedTools: JSONValue? = nil,
-        authorization: String? = nil,
-        connectorID: String? = nil,
-        headers: JSONValue? = nil,
-        requireApproval: JSONValue? = nil,
-        serverDescription: String? = nil,
-        serverURL: String? = nil
-    ) -> JSONValue {
-        providerTool(id: "openai.mcp", name: "mcp", args: JSONValue.object([
-            "serverLabel": .string(serverLabel),
-            "allowedTools": allowedTools,
-            "authorization": authorization.map(JSONValue.string),
-            "connectorId": connectorID.map(JSONValue.string),
-            "headers": headers,
-            "requireApproval": requireApproval,
-            "serverDescription": serverDescription.map(JSONValue.string),
-            "serverUrl": serverURL.map(JSONValue.string)
-        ]).objectValue ?? [:])
-    }
-
-    public static func programmaticToolCalling(name: String = "programmatic_tool_calling") -> JSONValue {
-        providerTool(id: "openai.programmatic_tool_calling", name: name)
-    }
-
-    public static func toolSearch(execution: JSONValue? = nil, description: String? = nil, parameters: JSONValue? = nil) -> JSONValue {
-        providerTool(id: "openai.tool_search", name: "tool_search", args: JSONValue.object([
-            "execution": execution,
-            "description": description.map(JSONValue.string),
-            "parameters": parameters
-        ]).objectValue ?? [:])
-    }
-
-    static func providerTool(id: String, name: String, args: [String: JSONValue] = [:]) -> JSONValue {
-        .object([
-            "type": .string("provider"),
-            "id": .string(id),
-            "name": .string(name),
-            "args": .object(args)
-        ])
-    }
-}
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
 
 public enum AzureOpenAITools {
     public static func codeInterpreter(container: JSONValue? = nil) -> JSONValue {
@@ -349,157 +79,9 @@ public enum AzureOpenAITools {
     }
 }
 
-public enum AuthorizationStyle: Equatable, Hashable, Sendable {
-    case bearer(environmentVariables: [String])
-    case token(environmentVariables: [String])
-    case apiKeyHeader(name: String, prefix: String? = nil, environmentVariables: [String])
-    case none
-}
-
-public struct AIBatchResultDownloadSettings: Equatable, Sendable {
-    /// Maximum UTF-8 bytes in a downloaded JSON Lines row, excluding LF.
-    /// The default limit is 64 MiB.
-    public var maxLineBytes: Int?
-
-    public init(maxLineBytes: Int? = nil) {
-        self.maxLineBytes = maxLineBytes
-    }
-}
-
-public struct ProviderSettings: Sendable {
-    /// Opt in only when the compatible server accepts rich tool-result content.
-    public var supportsMultiPartToolContent: Bool = false
-    public var apiKey: String?
-    public var authToken: String?
-    public var baseURL: String?
-    public var modelURL: String?
-    public var organization: String?
-    public var project: String?
-    public var headers: [String: String]
-    public var queryParams: [String: String]
-    public var environment: [String: String]?
-    public var transport: any AITransport
-    public var includeUsage: Bool
-    public var supportsStructuredOutputs: Bool
-    public var maxEmbeddingsPerCall: Int?
-    /// Sends ID-less Open Responses assistant history as strict easy-input
-    /// messages instead of incomplete output items.
-    public var strictResponseInput: Bool
-    public var transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])?
-    /// An additive warning-aware transform. It runs after the existing transform
-    /// and its warnings are exposed by generated and streamed chat responses.
-    public var transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])? = nil
-    public var batchResultDownloads: AIBatchResultDownloadSettings? = nil
-    public var name: String?
-
-    public init(
-        apiKey: String? = nil,
-        authToken: String? = nil,
-        baseURL: String? = nil,
-        modelURL: String? = nil,
-        organization: String? = nil,
-        project: String? = nil,
-        headers: [String: String] = [:],
-        queryParams: [String: String] = [:],
-        environment: [String: String]? = nil,
-        transport: any AITransport = URLSessionTransport.shared,
-        includeUsage: Bool = false,
-        supportsStructuredOutputs: Bool = false,
-        maxEmbeddingsPerCall: Int? = nil,
-        strictResponseInput: Bool = false,
-        transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil,
-        name: String? = nil
-    ) {
-        self.apiKey = apiKey
-        self.authToken = authToken
-        self.baseURL = baseURL
-        self.modelURL = modelURL
-        self.organization = organization
-        self.project = project
-        self.headers = headers
-        self.queryParams = queryParams
-        self.environment = environment
-        self.transport = transport
-        self.includeUsage = includeUsage
-        self.supportsStructuredOutputs = supportsStructuredOutputs
-        self.maxEmbeddingsPerCall = maxEmbeddingsPerCall
-        self.strictResponseInput = strictResponseInput
-        self.transformRequestBody = transformRequestBody
-        self.name = name
-    }
-
-    /// Source-compatible initializer retained from before strict Open
-    /// Responses assistant-history conversion became configurable.
-    public init(
-        apiKey: String? = nil,
-        authToken: String? = nil,
-        baseURL: String? = nil,
-        modelURL: String? = nil,
-        organization: String? = nil,
-        project: String? = nil,
-        headers: [String: String] = [:],
-        queryParams: [String: String] = [:],
-        environment: [String: String]? = nil,
-        transport: any AITransport = URLSessionTransport.shared,
-        includeUsage: Bool = false,
-        supportsStructuredOutputs: Bool = false,
-        maxEmbeddingsPerCall: Int? = nil,
-        transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil,
-        name: String? = nil
-    ) {
-        self.init(
-            apiKey: apiKey,
-            authToken: authToken,
-            baseURL: baseURL,
-            modelURL: modelURL,
-            organization: organization,
-            project: project,
-            headers: headers,
-            queryParams: queryParams,
-            environment: environment,
-            transport: transport,
-            includeUsage: includeUsage,
-            supportsStructuredOutputs: supportsStructuredOutputs,
-            maxEmbeddingsPerCall: maxEmbeddingsPerCall,
-            strictResponseInput: false,
-            transformRequestBody: transformRequestBody,
-            name: name
-        )
-    }
-
-    func environmentValue(_ names: [String]) -> String? {
-        if let environment {
-            return names.lazy.compactMap { environment[$0] }.first
-        }
-        return SwiftAISDK.environmentValue(names)
-    }
-}
-
 enum ModelHTTPFailedResponseHandling: Sendable {
     case raw
     case openAICompatible
-}
-
-public struct OpenResponsesErrorMetadata: Equatable, Sendable {
-    public var statusCode: Int?
-    public var isRetryable: Bool?
-
-    public init(statusCode: Int? = nil, isRetryable: Bool? = nil) {
-        self.statusCode = statusCode
-        self.isRetryable = isRetryable
-    }
-}
-
-public struct OpenResponsesFailedResponse: Equatable, Sendable {
-    public var statusCode: Int?
-    public var responseBody: String
-    public var isRetryable: Bool?
-
-    public init(statusCode: Int? = nil, responseBody: String, isRetryable: Bool? = nil) {
-        self.statusCode = statusCode
-        self.responseBody = responseBody
-        self.isRetryable = isRetryable
-    }
 }
 
 struct ModelHTTPConfig: @unchecked Sendable {
@@ -598,38 +180,22 @@ struct ModelHTTPConfig: @unchecked Sendable {
         }
     }
 
-    func request(path: String, modelID: String, body: JSONValue, headers requestHeaders: [String: String] = [:], abortSignal: AIAbortSignal? = nil) throws -> AIHTTPRequest {
-        try rawRequest(
-            path: path,
-            modelID: modelID,
-            body: try encodeJSONBody(body),
-            contentType: "application/json",
-            headers: requestHeaders,
-            abortSignal: abortSignal
-        )
+    private var httpClient: AIProviderHTTPClient {
+        AIProviderHTTPClient(providerID: providerID, headers: headers, transport: transport,
+                             dynamicHeaders: dynamicHeaders, userAgentSuffix: userAgentSuffix,
+                             requestModelID: requestModelID, url: url)
     }
 
-    func rawRequest(path: String, modelID: String, body: Data, contentType: String?, headers requestHeaders: [String: String] = [:], abortSignal: AIAbortSignal? = nil) throws -> AIHTTPRequest {
-        var providerHeaders = self.headers
-        if let dynamicHeaders { providerHeaders.merge(dynamicHeaders()) { _, dynamic in dynamic } }
-        if let userAgentSuffix { providerHeaders = withUserAgentSuffix(providerHeaders, userAgentSuffix) }
-        var headers = providerHeaders.mergingHeaders(requestHeaders)
-        if let contentType {
-            headers["content-type"] = headers["content-type"] ?? contentType
-        }
-        headers["user-agent"] = headers["user-agent"] ?? userAgent(providerID)
-        return AIHTTPRequest(
-            method: "POST",
-            url: try url(requestModelID ?? modelID, path),
-            headers: headers,
-            body: body,
-            abortSignal: abortSignal
-        )
+    func request(path: String, modelID: String, body: JSONValue, headers: [String: String] = [:], abortSignal: AIAbortSignal? = nil) throws -> AIHTTPRequest {
+        try httpClient.request(path: path, modelID: modelID, body: body, headers: headers, abortSignal: abortSignal)
+    }
+
+    func rawRequest(path: String, modelID: String, body: Data, contentType: String?, headers: [String: String] = [:], abortSignal: AIAbortSignal? = nil) throws -> AIHTTPRequest {
+        try httpClient.rawRequest(path: path, modelID: modelID, body: body, contentType: contentType, headers: headers, abortSignal: abortSignal)
     }
 
     func streamRequest(_ request: AIHTTPRequest) async throws -> AIHTTPStreamResponse {
-        let streamingTransport = try requireStreamingTransport(transport, providerID: providerID)
-        return try await streamingTransport.stream(request)
+        try await httpClient.streamRequest(request)
     }
 
     func sendJSON(path: String, modelID: String, body: JSONValue, headers: [String: String] = [:], abortSignal: AIAbortSignal? = nil) async throws -> JSONValue {
@@ -658,7 +224,7 @@ struct ModelHTTPConfig: @unchecked Sendable {
         }
         switch failedResponseHandling {
         case .raw:
-            return apiCallError(provider: providerID, response: response)
+            return compatibilityAPICallError(provider: providerID, response: response)
         case .openAICompatible:
             return openAICompatibleHTTPStatusError(provider: providerID, response: response)
         }
@@ -809,5 +375,121 @@ struct ModelHTTPConfig: @unchecked Sendable {
         var copy = self
         copy.supportsWebSearchSourcesInclude = supportsInclude
         return copy
+    }
+}
+
+public enum AuthorizationStyle: Equatable, Hashable, Sendable {
+    case bearer(environmentVariables: [String])
+    case token(environmentVariables: [String])
+    case apiKeyHeader(name: String, prefix: String? = nil, environmentVariables: [String])
+    case none
+}
+
+public struct ProviderSettings: Sendable {
+    /// Opt in only when the compatible server accepts rich tool-result content.
+    public var supportsMultiPartToolContent: Bool = false
+    public var apiKey: String?
+    public var authToken: String?
+    public var baseURL: String?
+    public var modelURL: String?
+    public var organization: String?
+    public var project: String?
+    public var headers: [String: String]
+    public var queryParams: [String: String]
+    public var environment: [String: String]?
+    public var transport: any AITransport
+    public var includeUsage: Bool
+    public var supportsStructuredOutputs: Bool
+    public var maxEmbeddingsPerCall: Int?
+    /// Sends ID-less Open Responses assistant history as strict easy-input
+    /// messages instead of incomplete output items.
+    public var strictResponseInput: Bool
+    public var transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])?
+    /// An additive warning-aware transform. It runs after the existing transform
+    /// and its warnings are exposed by generated and streamed chat responses.
+    public var transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])? = nil
+    public var batchResultDownloads: AIBatchResultDownloadSettings? = nil
+    public var name: String?
+
+    public init(
+        apiKey: String? = nil,
+        authToken: String? = nil,
+        baseURL: String? = nil,
+        modelURL: String? = nil,
+        organization: String? = nil,
+        project: String? = nil,
+        headers: [String: String] = [:],
+        queryParams: [String: String] = [:],
+        environment: [String: String]? = nil,
+        transport: any AITransport = URLSessionTransport.shared,
+        includeUsage: Bool = false,
+        supportsStructuredOutputs: Bool = false,
+        maxEmbeddingsPerCall: Int? = nil,
+        strictResponseInput: Bool = false,
+        transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil,
+        name: String? = nil
+    ) {
+        self.apiKey = apiKey
+        self.authToken = authToken
+        self.baseURL = baseURL
+        self.modelURL = modelURL
+        self.organization = organization
+        self.project = project
+        self.headers = headers
+        self.queryParams = queryParams
+        self.environment = environment
+        self.transport = transport
+        self.includeUsage = includeUsage
+        self.supportsStructuredOutputs = supportsStructuredOutputs
+        self.maxEmbeddingsPerCall = maxEmbeddingsPerCall
+        self.strictResponseInput = strictResponseInput
+        self.transformRequestBody = transformRequestBody
+        self.name = name
+    }
+
+    /// Source-compatible initializer retained from before strict Open
+    /// Responses assistant-history conversion became configurable.
+    public init(
+        apiKey: String? = nil,
+        authToken: String? = nil,
+        baseURL: String? = nil,
+        modelURL: String? = nil,
+        organization: String? = nil,
+        project: String? = nil,
+        headers: [String: String] = [:],
+        queryParams: [String: String] = [:],
+        environment: [String: String]? = nil,
+        transport: any AITransport = URLSessionTransport.shared,
+        includeUsage: Bool = false,
+        supportsStructuredOutputs: Bool = false,
+        maxEmbeddingsPerCall: Int? = nil,
+        transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil,
+        name: String? = nil
+    ) {
+        self.init(
+            apiKey: apiKey,
+            authToken: authToken,
+            baseURL: baseURL,
+            modelURL: modelURL,
+            organization: organization,
+            project: project,
+            headers: headers,
+            queryParams: queryParams,
+            environment: environment,
+            transport: transport,
+            includeUsage: includeUsage,
+            supportsStructuredOutputs: supportsStructuredOutputs,
+            maxEmbeddingsPerCall: maxEmbeddingsPerCall,
+            strictResponseInput: false,
+            transformRequestBody: transformRequestBody,
+            name: name
+        )
+    }
+
+    func environmentValue(_ names: [String]) -> String? {
+        if let environment {
+            return names.lazy.compactMap { environment[$0] }.first
+        }
+        return SwiftAITransport.environmentValue(names)
     }
 }

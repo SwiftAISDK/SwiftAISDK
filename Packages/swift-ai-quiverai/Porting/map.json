@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-quiverai",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/quiverai",
+      "implementation": [
+        "packages/quiverai/src"
+      ],
+      "tests": [
+        "packages/quiverai/src/lazy-schemas.test.ts",
+        "packages/quiverai/src/prepare-quiverai-image-reference.test.ts",
+        "packages/quiverai/src/quiverai-generate-image.test.ts",
+        "packages/quiverai/src/quiverai-image-model.test.ts",
+        "packages/quiverai/src/quiverai-language-model.test.ts",
+        "packages/quiverai/src/quiverai-provider.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Sources/SwiftAISDK/ImageInputCapabilities.swift",
+      "Sources/SwiftAISDK/Models/QuiverAIModels.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/QuiverAIProviderTests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

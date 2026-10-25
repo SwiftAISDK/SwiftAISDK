@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class AmazonBedrockLanguageModel: LanguageModel, @unchecked Sendable {
     public let providerID = "amazon-bedrock"

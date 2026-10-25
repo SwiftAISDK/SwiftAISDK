@@ -1,5 +1,10 @@
 import Foundation
 import Combine
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public enum AIChatSessionStatus: String, Equatable, Hashable, Sendable {
     case ready

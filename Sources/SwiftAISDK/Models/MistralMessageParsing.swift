@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func mistralMessagesJSON(_ messages: [AIMessage]) throws -> [JSONValue] {
     try messages.enumerated().flatMap { index, message in

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public struct MCPClientError: Error, CustomStringConvertible, Sendable {
     public var message: String
@@ -909,6 +914,7 @@ public extension MCPOAuthProvider {
 
     func invalidateCredentials(_ scope: MCPOAuthCredentialScope) async {}
 }
+
 
 public protocol MCPTransport: Sendable {
     var supportsProtocolVersionDiscovery: Bool { get }

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func groqTranscriptionOptions(from request: AudioTranscriptionRequest) throws -> [String: JSONValue] {
     var output = groqProviderOptions(from: request.extraBody)

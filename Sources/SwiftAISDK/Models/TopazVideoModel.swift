@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// Topaz Proteus and Starlight video enhancement through serializable V4
 /// start/status operations. Use `AI.generateVideo` for shared polling.

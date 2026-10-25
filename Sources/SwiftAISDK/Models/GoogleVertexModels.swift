@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class GoogleVertexLanguageModel: LanguageModel, @unchecked Sendable {
     public let providerID: String
@@ -154,7 +159,7 @@ func googleVertexDownloadedToolResultOutput(
             maxBytes: maxBytes
         )
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: "google.vertex", response: response)
+            throw compatibilityAPICallError(provider: "google.vertex", response: response)
         }
         guard response.body.count <= maxBytes else {
             throw AIDownloadError(
@@ -443,7 +448,7 @@ public final class GoogleVertexInteractionsLanguageModel: LanguageModel, @unchec
                     )
                     let response = try await config.streamRequest(httpRequest)
                     guard (200..<300).contains(response.statusCode) else {
-                        throw apiCallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
+                        throw compatibilityAPICallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
                     }
                     if !prepared.warnings.isEmpty {
                         continuation.yield(.streamStart(warnings: prepared.warnings))
@@ -567,7 +572,7 @@ public final class GoogleVertexInteractionsLanguageModel: LanguageModel, @unchec
     private func sendInteractions(body: JSONValue, headers: [String: String], abortSignal: AIAbortSignal?) async throws -> JSONValue {
         let response = try await config.transport.send(try await config.request(path: "/interactions", body: body, headers: googleInteractionsHeaders(headers), abortSignal: abortSignal))
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         return try response.jsonValue()
     }
@@ -591,7 +596,7 @@ public final class GoogleVertexInteractionsLanguageModel: LanguageModel, @unchec
                 abortSignal: abortSignal
             ))
             guard (200..<300).contains(response.statusCode) else {
-                throw apiCallError(provider: providerID, response: response)
+                throw compatibilityAPICallError(provider: providerID, response: response)
             }
             let raw = try response.jsonValue()
             if googleInteractionsIsTerminal(raw["status"]?.stringValue) {

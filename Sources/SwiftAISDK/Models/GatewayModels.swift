@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public struct GatewayTakoDataSourceConfig: Equatable, Sendable {
     public var count: Int?
@@ -327,7 +332,7 @@ public final class GatewayLanguageModel: LanguageModel, @unchecked Sendable {
                     )
                     let response = try await config.streamRequest(httpRequest)
                     guard (200..<300).contains(response.statusCode) else {
-                        throw apiCallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
+                        throw compatibilityAPICallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
                     }
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
                     continuation.yield(.responseMetadata(aiResponseMetadata(response: responseHead, modelID: modelID)))
@@ -634,7 +639,7 @@ extension GatewayLanguageModel: BatchLanguageModel {
         )
         let response = try await config.transport.send(request)
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         let raw = try response.jsonValue()
         guard let batchID = raw["batchId"]?.stringValue else {
@@ -658,7 +663,7 @@ extension GatewayLanguageModel: BatchLanguageModel {
         )
         let response = try await config.transport.send(request)
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         return try gatewayBatchStatus(from: response.jsonValue(), providerID: providerID)
     }
@@ -678,7 +683,7 @@ extension GatewayLanguageModel: BatchLanguageModel {
         let transport = try requireStreamingTransport(config.transport, providerID: providerID)
         let response = try await transport.stream(request)
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(
+            throw compatibilityAPICallError(
                 provider: providerID,
                 response: try await bufferedHTTPResponse(from: response, request: request)
             )
@@ -708,6 +713,7 @@ extension GatewayLanguageModel: BatchLanguageModel {
         }
     }
 }
+
 
 /// Provider-owned, text-only Gateway Batch V4 service.
 public final class GatewayBatchProvider: AIBatchProvider, @unchecked Sendable {
@@ -782,7 +788,7 @@ public final class GatewayBatchProvider: AIBatchProvider, @unchecked Sendable {
         )
         let response = try await config.transport.send(request)
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         let raw = try response.jsonValue()
         guard let batchID = raw["batchId"]?.stringValue else {
@@ -806,7 +812,7 @@ public final class GatewayBatchProvider: AIBatchProvider, @unchecked Sendable {
         )
         let response = try await config.transport.send(request)
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         return try gatewayBatchStatus(from: response.jsonValue(), providerID: providerID)
     }
@@ -826,7 +832,7 @@ public final class GatewayBatchProvider: AIBatchProvider, @unchecked Sendable {
         let transport = try requireStreamingTransport(config.transport, providerID: providerID)
         let response = try await transport.stream(request)
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(
+            throw compatibilityAPICallError(
                 provider: providerID,
                 response: try await bufferedHTTPResponse(from: response, request: request)
             )
@@ -868,7 +874,7 @@ public final class GatewayBatchProvider: AIBatchProvider, @unchecked Sendable {
         )
         let response = try await config.transport.send(request)
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         let raw = try response.jsonValue()
         _ = try gatewayBatchStatus(from: raw, providerID: providerID)

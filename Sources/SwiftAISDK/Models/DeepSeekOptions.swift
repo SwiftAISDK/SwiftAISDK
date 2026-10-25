@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func deepSeekOptions(from request: LanguageModelRequest) throws -> [String: JSONValue] {
     var output = request.extraBody

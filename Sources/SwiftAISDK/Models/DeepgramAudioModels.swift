@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class DeepgramTranscriptionModel: TranscriptionModel, @unchecked Sendable {
     public let providerID: String
@@ -392,7 +397,7 @@ private func deepgramSpeechOptions(from extraBody: [String: JSONValue], current:
 
 private func deepgramHTTPStatusError(provider: String, response: AIHTTPResponse) -> AIError {
     let body = deepgramErrorMessage(from: response.body) ?? response.bodyText
-    return apiCallError(
+    return compatibilityAPICallError(
         provider: provider,
         statusCode: response.statusCode,
         body: body,

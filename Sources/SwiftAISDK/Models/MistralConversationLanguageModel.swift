@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// Mistral's stateless Conversations API, including provider-executed web search.
 public final class MistralConversationLanguageModel: LanguageModel, @unchecked Sendable {
@@ -49,7 +54,7 @@ public final class MistralConversationLanguageModel: LanguageModel, @unchecked S
                     let prepared = try mistralConversationPreparedCall(request, modelID: modelID, stream: true)
                     let http = try config.request(path: "/conversations", modelID: modelID, body: .object(prepared.body), headers: request.headers, abortSignal: request.abortSignal)
                     let response = try await config.streamRequest(http)
-                    guard (200..<300).contains(response.statusCode) else { throw apiCallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: http)) }
+                    guard (200..<300).contains(response.statusCode) else { throw compatibilityAPICallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: http)) }
                     continuation.yield(.streamStart(warnings: prepared.warnings))
                     var converter = MistralConversationContentConverter(tools: request.tools)
                     var state = MistralConversationStreamState()

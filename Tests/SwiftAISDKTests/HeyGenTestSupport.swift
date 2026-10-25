@@ -1,3 +1,13 @@
+@testable import SwiftAIAnthropic
+@testable import SwiftAIOpenAICompatible
+@testable import SwiftAIOpenAI
+@testable import SwiftAI
+@testable import SwiftAIProvider
+@testable import SwiftAIProviderUtilities
+@testable import SwiftAITransport
+private typealias AI = SwiftAISDK.AI
+private typealias AIProviders = SwiftAISDK.AIProviders
+private typealias AICustomProvider = SwiftAISDK.AICustomProvider
 import Foundation
 import Testing
 @testable import SwiftAISDK
@@ -9,7 +19,7 @@ let heyGenImage = ImageInputFile(url: "https://example.com/image.jpg", mediaType
 let heyGenVideo = ImageInputFile(url: "https://example.com/video.mp4", mediaType: "video/mp4")
 let heyGenAudio = ImageInputFile(url: "https://example.com/audio.mp3", mediaType: "audio/mpeg")
 
-func heyGenTestProvider(_ transport: any AITransport, baseURL: String? = nil, headers: [String: String] = [:]) throws -> OpenAICompatibleProvider {
+func heyGenTestProvider(_ transport: any AITransport, baseURL: String? = nil, headers: [String: String] = [:]) throws -> SwiftAISDK.OpenAICompatibleProvider {
     try AIProviders.heyGen(settings: ProviderSettings(apiKey: "test-key", baseURL: baseURL, headers: headers, transport: transport))
 }
 

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// xAI Responses implementation of the durable Batch V4 language-model capability.
 public final class XAIResponsesBatchLanguageModel: BatchLanguageModel, @unchecked Sendable {

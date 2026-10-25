@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public struct TypeSafeAIDecisionModelOptions: Equatable, Sendable {
     /// Experimental 262k-token request/question context; slower and less accurate upstream.

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class GoogleInteractionsLanguageModel: LanguageModel, @unchecked Sendable {
     public let providerID: String
@@ -48,7 +53,7 @@ public final class GoogleInteractionsLanguageModel: LanguageModel, @unchecked Se
                     )
                     let response = try await config.streamRequest(httpRequest)
                     guard (200..<300).contains(response.statusCode) else {
-                        throw apiCallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
+                        throw compatibilityAPICallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
                     }
 
                     if !prepared.warnings.isEmpty {
@@ -186,7 +191,7 @@ public final class GoogleInteractionsLanguageModel: LanguageModel, @unchecked Se
     private func sendInteractions(body: JSONValue, headers: [String: String], abortSignal: AIAbortSignal?) async throws -> JSONValue {
         let response = try await config.transport.send(config.request(path: "/interactions", modelID: modelID, body: body, headers: googleInteractionsHeaders(headers), abortSignal: abortSignal))
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         return try response.jsonValue()
     }
@@ -210,7 +215,7 @@ public final class GoogleInteractionsLanguageModel: LanguageModel, @unchecked Se
                 abortSignal: abortSignal
             ))
             guard (200..<300).contains(response.statusCode) else {
-                throw apiCallError(provider: providerID, response: response)
+                throw compatibilityAPICallError(provider: providerID, response: response)
             }
             let raw = try response.jsonValue()
             if googleInteractionsIsTerminal(raw["status"]?.stringValue) {

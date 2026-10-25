@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-groq",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/groq",
+      "implementation": [
+        "packages/groq/src"
+      ],
+      "tests": [
+        "packages/groq/src/convert-groq-usage.test.ts",
+        "packages/groq/src/convert-to-groq-chat-messages.test.ts",
+        "packages/groq/src/groq-chat-language-model-options.test.ts",
+        "packages/groq/src/groq-chat-language-model.test.ts",
+        "packages/groq/src/groq-lazy-schemas.test.ts",
+        "packages/groq/src/groq-prepare-tools.test.ts",
+        "packages/groq/src/groq-transcription-model.test.ts",
+        "packages/groq/src/structured-output-with-tools.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Sources/SwiftAISDK/Models/GroqLanguageHelpers.swift",
+      "Sources/SwiftAISDK/Models/GroqModels.swift",
+      "Sources/SwiftAISDK/Models/GroqProviderOptions.swift",
+      "Sources/SwiftAISDK/Models/GroqTranscriptionModel.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/GroqProviderTests.swift",
+      "Tests/SwiftAISDKTests/GroqStreamingAndTranscriptionTests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

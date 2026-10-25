@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func googleInteractionsHeaders(_ requestHeaders: [String: String]) -> [String: String] {
     ["Api-Revision": "2026-05-20"].mergingHeaders(requestHeaders)

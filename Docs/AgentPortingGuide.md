@@ -9,13 +9,21 @@ status docs together.
 | Artifact | Role |
 | --- | --- |
 | `Docs/PortingStatus.md` | Current product status, active gaps, release-readiness checklist, and reopen rules. |
-| `Docs/ProviderVersionLedger.md` | npm package baselines and Swift evidence index. |
+| `Porting/packages.json` and `Porting/upstream-lock.json` | Package/capability registration and reviewed npm baselines/provenance. Edit these structured inputs, then generate. |
+| `Porting/README.md` | Catalog validation, package scaffolding, generation, compatibility CLI commands, and current migration limits. |
+| `Docs/ProviderVersionLedger.md` | Generated npm package baseline table and Swift evidence index. |
 | `Docs/CoreV6Parity.md` | Core `ai`, `@ai-sdk/provider`, `@ai-sdk/provider-utils`, and UI parity decisions. |
 | `Docs/ProviderCapabilityMatrix.md` | Generated provider capability table. |
-| `Sources/SwiftAISDK/Providers/ProviderCapabilityMatrix.swift` | Machine-readable provider inventory. |
+| `Sources/SwiftAISDK/Providers/ProviderCapabilityMatrix.swift` | Generated compiled capability inventory; tests check actual registry behavior. |
 | `Docs/UpstreamTestInventory.md` | Generated upstream test/spec inventory. |
 | `README.md` and `docs-site` | Public product documentation. |
 | `AGENTS.md` | Repository-level agent rules. |
+| `Docs/ModularizationPlan.md` | Package migration stages; execute one stage per run and inspect its recorded evidence. |
+| `Docs/Migration/M0/README.md` | Frozen ownership/API inventory, extraction boundary register, and Swift 6.4 / exact-commit Swift 6.3.3 baseline evidence. |
+| `Docs/Migration/M2/README.md` | Frozen core/module extraction evidence. |
+| `Docs/Migration/M3/README.md` | Provider boundaries, standalone consumers and preserved migration evidence. |
+| `Releases/README.md` and `Docs/Migration/M4/README.md` | Change records, deterministic exports, local release rehearsal and current verification evidence. |
+| `Docs/Migration/M1/README.md` | Catalog import, generation/scaffold verification, and handoff to core extraction. |
 
 ## Standard Porting Flow
 
@@ -42,12 +50,20 @@ status docs together.
    intact.
 7. Add or update focused Swift tests.
 8. Update public docs for changed user-facing behavior.
-9. Update ledgers/status docs for changed baselines, capabilities, or known
-   gaps.
+9. Update `Porting/upstream-lock.json` only after the baseline is reviewed; update
+   capability metadata and per-package maps in the same pass. Run
+   `node Scripts/sdk.mjs generate`, then update human-written status/parity docs
+   for changed baselines, capabilities, or known gaps. Do not edit generated rows.
 10. Run focused tests, then full verification.
 
 Do not start a new batch until the current batch is implemented, tested,
 documented, and committed/pushed if the user asked for that.
+
+Before declaring a tooling or metadata change complete, run
+`node Scripts/sdk.mjs generate --check` and
+`node --test Scripts/tests/*.test.cjs`. Adding a selected provider starts
+with `node Scripts/sdk.mjs package add --upstream @ai-sdk/name --module SwiftAIName`;
+the result is explicitly unimplemented until its behavior and tests are ported.
 
 ## Upstream Reading Order
 
@@ -151,14 +167,39 @@ commands.
 Run a focused filter that covers the changed package or core area:
 
 ```sh
-swift test --filter 'OpenAI|OpenAIResponses|ProviderCapabilityMatrix'
+swift test --package-path Packages/swift-ai-openai --filter openAI --no-parallel
 ```
 
-Then run:
+Then run every extracted package and the aggregate. SwiftPM does not run tests
+of dependency packages when testing the root:
 
 ```sh
-swift test
+node Scripts/test-packages.mjs
+node Scripts/verify-core-isolation.mjs
+node Scripts/verify-provider-isolation.mjs
+node Scripts/verify-provider-versions.mjs
 ```
+
+The root package is the temporary legacy aggregate. Core, Anthropic, generic
+OpenAI-compatible and OpenAI changes belong in their catalog-owned `Packages/`
+directories. Remaining providers, MCP and UI still live under `Sources/SwiftAISDK`.
+Pure provider tests move with the provider; mixed integration and compatibility
+tests remain in the root. Declare test-only products/resources in the module's
+`testDependencies`/`testResources`, then regenerate. Register every source, test
+and resource in its porting map; preserve existing upstream evidence dispositions.
+
+Keep imports aligned with the catalog graph. Use package access for helpers
+shared inside core; expose a public adapter API only when an independent provider
+needs it. Neither core nor an extracted provider may import the aggregate. Typed
+native `configuration:` factories and legacy `settings:` overloads are separate
+entry points. Provider defaults remain in the owning module; legacy dispatch and
+host-specific hooks stay in aggregate adapters until those hosts are extracted.
+
+Edit core facade signatures, then regenerate `Compatibility.swift`; do not edit
+its generated methods or duplicate their runtime bodies. Legacy default-provider
+resolution stays in the aggregate. Keep pure model/registry clients independent
+of implicit Gateway initialization. Public symbol comparison checks source
+surface preservation, not ABI compatibility across module moves.
 
 For docs-site changes:
 
@@ -184,3 +225,22 @@ When finishing a porting pass, summarize:
 - public docs updated;
 - status/ledger docs updated;
 - exact test commands and results.
+
+## Modular release rehearsal
+
+Record reviewed Swift changes in `Releases/changes/`; keep npm baselines in the
+upstream lock. Run `release plan`, `release export --dry-run`, and the complete
+`node Scripts/verify-release-rehearsal.mjs` gate described in `Releases/README.md`.
+The plan must be regenerated after input changes. Dirty working-tree exports are
+explicit previews with a null canonical source commit.
+
+Exports use catalog-owned source/test roots and preserve source bytes. Do not add
+manual fixes to exported repositories. Fix the canonical package, metadata or
+renderer and regenerate. Retain imported provenance gaps and canonical-only
+integration mappings; do not promote them to parity proof because packaging passes.
+
+The reusable `.github/workflows/package-check.yml` is the single standalone CI
+recipe; every exported repository receives the same bytes and a minimal caller.
+It uploads no artifacts. Actual remote publication, minimum hosted compiler proof
+and finalized release-set records remain M5 gates. A local rehearsal never creates
+a `published` record in the canonical `Releases/sets/` directory.

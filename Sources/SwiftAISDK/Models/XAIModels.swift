@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public enum XAITools {
     public static func imageGeneration(action: String? = nil) -> JSONValue {
@@ -269,7 +274,7 @@ public final class XAIImageModel: ImageModel, @unchecked Sendable {
         for url in urls {
             let response = try await downloadURL(url, transport: config.transport, abortSignal: abortSignal)
             guard (200..<300).contains(response.statusCode) else {
-                throw apiCallError(provider: providerID, response: response)
+                throw compatibilityAPICallError(provider: providerID, response: response)
             }
             images.append(response.body.base64EncodedString())
         }
@@ -516,7 +521,7 @@ public final class XAIVideoModel: VideoModel, @unchecked Sendable {
                 abortSignal: abortSignal
             ))
             guard (200..<300).contains(response.statusCode) else {
-                throw apiCallError(provider: providerID, response: response)
+                throw compatibilityAPICallError(provider: providerID, response: response)
             }
             let raw: JSONValue
             if response.statusCode == 202 {
@@ -700,7 +705,7 @@ private func xaiHTTPStatusError(provider: String, response: AIHTTPResponse) -> A
     } else {
         body = response.bodyText
     }
-    return apiCallError(
+    return compatibilityAPICallError(
         provider: provider,
         statusCode: response.statusCode,
         body: body,
@@ -1311,6 +1316,7 @@ extension XAITranscriptionModel {
                                             responseMetadata: AIResponseMetadata(timestamp: Date(), modelID: modelID), cancel: { Task { await session.cancel() } })
     }
 }
+
 
 private actor XAIStreamingTranscriptionSession {
     let connection: any AIDuplexWebSocketConnection

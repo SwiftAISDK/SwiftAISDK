@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func mcpToolModelOutput(from result: JSONValue) -> JSONValue {
     if let text = result.stringValue {

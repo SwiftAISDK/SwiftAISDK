@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// Google Generative Language implementation of the durable Batch V4 capability.
 public final class GoogleBatchLanguageModel: BatchLanguageModel, @unchecked Sendable {

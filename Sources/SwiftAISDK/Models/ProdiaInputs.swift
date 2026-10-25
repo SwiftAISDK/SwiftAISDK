@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func prodiaPrompt(from messages: [AIMessage]) -> String {
     let system = messages.first(where: { $0.role == .system })?.combinedText ?? ""
@@ -18,7 +23,7 @@ func prodiaInputImage(from messages: [AIMessage], transport: AITransport, abortS
         case let .imageURL(urlString, _):
             let response = try await downloadURL(urlString, transport: transport, abortSignal: abortSignal)
             guard (200..<300).contains(response.statusCode) else {
-                throw apiCallError(provider: "prodia.language", response: response)
+                throw compatibilityAPICallError(provider: "prodia.language", response: response)
             }
             let mediaType = response.headers.first { $0.key.caseInsensitiveCompare("content-type") == .orderedSame }?.value ?? "image/png"
             return (response.body, prodiaResolvedImageMediaType(mediaType: mediaType, data: response.body))
@@ -39,7 +44,7 @@ func prodiaVideoInputImage(from image: ImageInputFile, transport: AITransport, a
     }
     let response = try await downloadURL(url, transport: transport, abortSignal: abortSignal)
     guard (200..<300).contains(response.statusCode) else {
-        throw apiCallError(provider: "prodia.video", response: response)
+        throw compatibilityAPICallError(provider: "prodia.video", response: response)
     }
     let mediaType = image.mediaType
         ?? response.headers.first { $0.key.caseInsensitiveCompare("content-type") == .orderedSame }?.value

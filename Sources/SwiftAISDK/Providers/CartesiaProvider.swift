@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public struct CartesiaProviderSettings: Sendable {
     public var apiKey: String?
@@ -158,7 +163,7 @@ func cartesiaHTTPStatusError(
     } else {
         body = response.bodyText
     }
-    return apiCallError(
+    return compatibilityAPICallError(
         provider: provider,
         statusCode: response.statusCode,
         body: body,

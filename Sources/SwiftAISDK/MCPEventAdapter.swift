@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public struct MCPManagedSubscription: Codable, Equatable, Sendable {
     public enum Status: String, Codable, Sendable {

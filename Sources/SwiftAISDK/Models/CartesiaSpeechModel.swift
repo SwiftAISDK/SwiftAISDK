@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class CartesiaSpeechModel: SpeechModel, @unchecked Sendable {
     public let providerID = "cartesia.speech"
@@ -269,6 +274,7 @@ private extension CartesiaSpeechOptions {
         )
     }
 }
+
 
 private func cartesiaSpeechOutputFormat(
     _ outputFormat: String,

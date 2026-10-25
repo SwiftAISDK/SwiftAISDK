@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 // Published @ai-sdk/topaz 3.0.0 option schemas. Unknown keys are stripped,
 // while `filter` and `additionalFilters` deliberately remain open records.

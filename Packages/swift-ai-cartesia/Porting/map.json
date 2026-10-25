@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-cartesia",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/cartesia",
+      "implementation": [
+        "packages/cartesia/src"
+      ],
+      "tests": [
+        "packages/cartesia/src/cartesia-error.test.ts",
+        "packages/cartesia/src/cartesia-realtime-model.test.ts",
+        "packages/cartesia/src/cartesia-speech-model.test.ts",
+        "packages/cartesia/src/cartesia-transcription-model.test.ts",
+        "packages/cartesia/src/lazy-schemas.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Sources/SwiftAISDK/Models/CartesiaSpeechModel.swift",
+      "Sources/SwiftAISDK/Models/CartesiaStreamingTranscriptionModel.swift",
+      "Sources/SwiftAISDK/Models/CartesiaTranscriptionModel.swift",
+      "Sources/SwiftAISDK/Providers/CartesiaProvider.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/CartesiaProviderTests.swift",
+      "Tests/SwiftAISDKTests/CartesiaSpeechModelTests.swift",
+      "Tests/SwiftAISDKTests/CartesiaStreamingTranscriptionModelTests.swift",
+      "Tests/SwiftAISDKTests/CartesiaTranscriptionModelTests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

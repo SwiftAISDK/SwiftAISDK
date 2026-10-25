@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// HeyGen video generation with resumable V4 start/status operations.
 /// Status checks return the refreshed signed MP4 URL without downloading it.

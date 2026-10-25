@@ -1,3 +1,13 @@
+@testable import SwiftAIAnthropic
+@testable import SwiftAIOpenAICompatible
+@testable import SwiftAIOpenAI
+@testable import SwiftAI
+@testable import SwiftAIProvider
+@testable import SwiftAIProviderUtilities
+@testable import SwiftAITransport
+private typealias AI = SwiftAISDK.AI
+private typealias AIProviders = SwiftAISDK.AIProviders
+private typealias AICustomProvider = SwiftAISDK.AICustomProvider
 import Foundation
 import Testing
 @testable import SwiftAISDK
@@ -224,7 +234,7 @@ struct WeeklyOpenAI20261023Tests {
         message[providerID == "moonshotai" ? "reasoning_content" : "reasoning"] = "Think first"
         let raw: JSONValue = ["choices": [["message": .object(message), "finish_reason": "tool_calls"]]]
         let transport = RecordingTransport(response: try response(raw))
-        let provider: OpenAICompatibleProvider = switch providerID {
+        let provider: SwiftAISDK.OpenAICompatibleProvider = switch providerID {
         case "groq": try AIProviders.groq(settings: .init(apiKey: "key", transport: transport))
         case "moonshotai": try AIProviders.moonshotAI(settings: .init(apiKey: "key", transport: transport))
         default: try AIProviders.openAICompatible(name: "test", baseURL: "https://example.com", apiKey: "key", transport: transport)

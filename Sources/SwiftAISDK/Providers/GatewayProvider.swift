@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public struct GatewayModelEntry: Equatable, Sendable {
     public var id: String
@@ -359,7 +364,7 @@ public final class GatewayProvider: AIProvider, AIEvaluationProvider, AIDecision
     public func availableModels() async throws -> [GatewayModelEntry] {
         let response = try await config.transport.send(AIHTTPRequest(method: "GET", url: try requireURL("\(config.baseURL)/config"), headers: config.headers))
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         let raw = try response.jsonValue()
         return raw["models"]?.arrayValue?.compactMap { item in
@@ -386,7 +391,7 @@ public final class GatewayProvider: AIProvider, AIEvaluationProvider, AIDecision
         }
         let response = try await config.transport.send(AIHTTPRequest(method: "GET", url: components.url ?? originURL, headers: config.headers))
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         let raw = try response.jsonValue()
         return GatewayCredits(balance: raw["balance"]?.stringValue ?? "", totalUsed: raw["total_used"]?.stringValue ?? raw["totalUsed"]?.stringValue ?? "")
@@ -417,7 +422,7 @@ public final class GatewayProvider: AIProvider, AIEvaluationProvider, AIDecision
             headers: config.headers
         ))
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         let raw = try response.jsonValue()
         return GatewaySpendReportResponse(results: raw["results"]?.arrayValue?.map(gatewaySpendReportRow) ?? [])
@@ -430,7 +435,7 @@ public final class GatewayProvider: AIProvider, AIEvaluationProvider, AIDecision
             headers: config.headers
         ))
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         let data = try response.jsonValue()["data"] ?? .object([:])
         return GatewayGenerationInfo(

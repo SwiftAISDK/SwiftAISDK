@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class FireworksImageModel: ImageModel, @unchecked Sendable {
     public let providerID = "fireworks.image"
@@ -54,7 +59,7 @@ public final class FireworksImageModel: ImageModel, @unchecked Sendable {
                 abortSignal: request.abortSignal
             ))
             guard (200..<300).contains(response.statusCode) else {
-                throw apiCallError(provider: providerID, response: response)
+                throw compatibilityAPICallError(provider: providerID, response: response)
             }
             let raw: JSONValue = .object([
                 "contentType": fireworksContentType(response.headers).map(JSONValue.string)
@@ -81,7 +86,7 @@ public final class FireworksImageModel: ImageModel, @unchecked Sendable {
             abortSignal: request.abortSignal
         ))
         guard (200..<300).contains(submit.statusCode) else {
-            throw apiCallError(provider: providerID, response: submit)
+            throw compatibilityAPICallError(provider: providerID, response: submit)
         }
         let submitRaw = try submit.jsonValue()
         guard let requestID = submitRaw["request_id"]?.stringValue else {
@@ -91,7 +96,7 @@ public final class FireworksImageModel: ImageModel, @unchecked Sendable {
         let imageHeaders = isSameOrigin(imageURL, config.baseURL) ? config.headers.mergingHeaders(request.headers) : [:]
         let imageResponse = try await downloadURL(imageURL, transport: config.transport, headers: imageHeaders, abortSignal: request.abortSignal)
         guard (200..<300).contains(imageResponse.statusCode) else {
-            throw apiCallError(provider: providerID, response: imageResponse)
+            throw compatibilityAPICallError(provider: providerID, response: imageResponse)
         }
         return ImageGenerationResult(
             urls: [imageURL],
@@ -129,7 +134,7 @@ public final class FireworksImageModel: ImageModel, @unchecked Sendable {
                     try await self.config.transport.send(pollRequest)
                 }
                 guard (200..<300).contains(response.statusCode) else {
-                    throw apiCallError(provider: providerID, response: response)
+                    throw compatibilityAPICallError(provider: providerID, response: response)
                 }
                 let raw = try response.jsonValue()
                 switch raw["status"]?.stringValue {

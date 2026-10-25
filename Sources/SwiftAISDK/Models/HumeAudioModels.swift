@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class HumeSpeechModel: SpeechModel, @unchecked Sendable {
     public let providerID: String
@@ -253,4 +258,3 @@ private func humeFormat(_ outputFormat: String?) -> String {
     }
     return outputFormat
 }
-

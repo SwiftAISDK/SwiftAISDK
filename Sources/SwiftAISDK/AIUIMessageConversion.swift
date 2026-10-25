@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public typealias AIUIDataPartConverter = @Sendable (AIUIDataPart) throws -> AIContentPart?
 

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func googleStreamParts(from raw: JSONValue) -> [LanguageStreamPart] {
     var parts: [LanguageStreamPart] = []
@@ -423,7 +428,7 @@ func googleStreamWithContinuation(
         do {
             opened = try await open(nextBody)
             guard (200..<300).contains(opened.response.statusCode) else {
-                throw apiCallError(provider: providerID, response: try await bufferedHTTPResponse(from: opened.response, request: opened.request))
+                throw compatibilityAPICallError(provider: providerID, response: try await bufferedHTTPResponse(from: opened.response, request: opened.request))
             }
         } catch {
             try Task.checkCancellation()

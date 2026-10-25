@@ -1,3 +1,13 @@
+@testable import SwiftAIAnthropic
+@testable import SwiftAIOpenAICompatible
+@testable import SwiftAIOpenAI
+@testable import SwiftAI
+@testable import SwiftAIProvider
+@testable import SwiftAIProviderUtilities
+@testable import SwiftAITransport
+private typealias AI = SwiftAISDK.AI
+private typealias AIProviders = SwiftAISDK.AIProviders
+private typealias AICustomProvider = SwiftAISDK.AICustomProvider
 import Foundation
 import Testing
 @testable import SwiftAISDK
@@ -204,7 +214,7 @@ struct WeeklyCoreOpenAI20260913Tests {
     }
 
     @Test func routesLikeOpenAIIsNotEnoughToExposeProviderOwnedBatch() throws {
-        let provider = try OpenAICompatibleProvider(
+        let provider = try SwiftAISDK.OpenAICompatibleProvider(
             providerID: "routes-like-but-not-openai",
             defaultBaseURL: "https://example.com/v1",
             authorization: .none,

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-alibaba",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/alibaba",
+      "implementation": [
+        "packages/alibaba/src"
+      ],
+      "tests": [
+        "packages/alibaba/src/alibaba-chat-language-model.test.ts",
+        "packages/alibaba/src/alibaba-embedding-model.test.ts",
+        "packages/alibaba/src/alibaba-prepare-tools.test.ts",
+        "packages/alibaba/src/alibaba-provider.test.ts",
+        "packages/alibaba/src/alibaba-video-model.test.ts",
+        "packages/alibaba/src/convert-alibaba-usage.test.ts",
+        "packages/alibaba/src/convert-to-alibaba-chat-messages.test.ts",
+        "packages/alibaba/src/get-cache-control.test.ts",
+        "packages/alibaba/src/lazy-schemas.test.ts",
+        "packages/alibaba/src/supports-json-schema-output.test.ts",
+        "packages/alibaba/src/supports-preserved-thinking.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Sources/SwiftAISDK/Models/AlibabaEmbeddingModel.swift",
+      "Sources/SwiftAISDK/Models/AlibabaModels.swift",
+      "Sources/SwiftAISDK/Models/AlibabaOptions.swift",
+      "Sources/SwiftAISDK/Models/AlibabaParsing.swift",
+      "Sources/SwiftAISDK/Models/AlibabaRequestPreparation.swift",
+      "Sources/SwiftAISDK/Models/AlibabaTools.swift",
+      "Sources/SwiftAISDK/Models/AlibabaVideoModels.swift"
+    ],
+    "tests": [
+      "Tests/SwiftAISDKTests/AlibabaProviderLanguageAndVideoTests.swift",
+      "Tests/SwiftAISDKTests/AlibabaProviderTests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

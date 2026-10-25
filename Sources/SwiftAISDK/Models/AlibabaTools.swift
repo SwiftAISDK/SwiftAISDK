@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func alibabaTools(from tools: [String: JSONValue]) -> AlibabaPreparedTools {
     var warnings: [AIWarning] = []

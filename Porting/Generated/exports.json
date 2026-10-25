@@ -1,0 +1,1103 @@
+{
+  "schemaVersion": 1,
+  "scope": "Export input plan only; no published packages or release readiness implied",
+  "packages": [
+    {
+      "package": "swift-ai-alibaba",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-alibaba.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-alibaba/Package.swift",
+        "Packages/swift-ai-alibaba/Sources/SwiftAIAlibaba",
+        "Packages/swift-ai-alibaba/Tests/SwiftAIAlibabaTests",
+        "Packages/swift-ai-alibaba/README.md",
+        "Packages/swift-ai-alibaba/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-amazon-bedrock",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-amazon-bedrock/Package.swift",
+        "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock",
+        "Packages/swift-ai-amazon-bedrock/Tests/SwiftAIAmazonBedrockTests",
+        "Packages/swift-ai-amazon-bedrock/README.md",
+        "Packages/swift-ai-amazon-bedrock/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-anthropic",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-anthropic/Package.swift",
+        "Packages/swift-ai-anthropic/Sources/SwiftAIAnthropic",
+        "Packages/swift-ai-anthropic/Tests/SwiftAIAnthropicTests",
+        "Packages/swift-ai-anthropic/README.md",
+        "Packages/swift-ai-anthropic/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-anthropic-aws",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-anthropic-aws/Package.swift",
+        "Packages/swift-ai-anthropic-aws/Sources/SwiftAIAnthropicAWS",
+        "Packages/swift-ai-anthropic-aws/Tests/SwiftAIAnthropicAWSTests",
+        "Packages/swift-ai-anthropic-aws/README.md",
+        "Packages/swift-ai-anthropic-aws/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-assemblyai",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-assemblyai.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-assemblyai/Package.swift",
+        "Packages/swift-ai-assemblyai/Sources/SwiftAIAssemblyAI",
+        "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests",
+        "Packages/swift-ai-assemblyai/README.md",
+        "Packages/swift-ai-assemblyai/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-azure",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-azure.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-azure/Package.swift",
+        "Packages/swift-ai-azure/Sources/SwiftAIAzure",
+        "Packages/swift-ai-azure/Tests/SwiftAIAzureTests",
+        "Packages/swift-ai-azure/README.md",
+        "Packages/swift-ai-azure/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-baseten",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-baseten.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-baseten/Package.swift",
+        "Packages/swift-ai-baseten/Sources/SwiftAIBaseten",
+        "Packages/swift-ai-baseten/Tests/SwiftAIBasetenTests",
+        "Packages/swift-ai-baseten/README.md",
+        "Packages/swift-ai-baseten/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-black-forest-labs",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-black-forest-labs/Package.swift",
+        "Packages/swift-ai-black-forest-labs/Sources/SwiftAIBlackForestLabs",
+        "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests",
+        "Packages/swift-ai-black-forest-labs/README.md",
+        "Packages/swift-ai-black-forest-labs/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-bytedance",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-bytedance.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-bytedance/Package.swift",
+        "Packages/swift-ai-bytedance/Sources/SwiftAIByteDance",
+        "Packages/swift-ai-bytedance/Tests/SwiftAIByteDanceTests",
+        "Packages/swift-ai-bytedance/README.md",
+        "Packages/swift-ai-bytedance/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-cartesia",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-cartesia.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-cartesia/Package.swift",
+        "Packages/swift-ai-cartesia/Sources/SwiftAICartesia",
+        "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests",
+        "Packages/swift-ai-cartesia/README.md",
+        "Packages/swift-ai-cartesia/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-cerebras",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-cerebras.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-cerebras/Package.swift",
+        "Packages/swift-ai-cerebras/Sources/SwiftAICerebras",
+        "Packages/swift-ai-cerebras/Tests/SwiftAICerebrasTests",
+        "Packages/swift-ai-cerebras/README.md",
+        "Packages/swift-ai-cerebras/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-cohere",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-cohere.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-cohere/Package.swift",
+        "Packages/swift-ai-cohere/Sources/SwiftAICohere",
+        "Packages/swift-ai-cohere/Tests/SwiftAICohereTests",
+        "Packages/swift-ai-cohere/README.md",
+        "Packages/swift-ai-cohere/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-core",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-core/Package.swift",
+        "Packages/swift-ai-core/Sources/SwiftAI",
+        "Packages/swift-ai-core/Tests/SwiftAITests",
+        "Packages/swift-ai-core/Sources/SwiftAIProvider",
+        "Packages/swift-ai-core/Tests/SwiftAIProviderTests",
+        "Packages/swift-ai-core/Sources/SwiftAIProviderUtilities",
+        "Packages/swift-ai-core/Tests/SwiftAIProviderUtilitiesTests",
+        "Packages/swift-ai-core/Sources/SwiftAITransport",
+        "Packages/swift-ai-core/Tests/SwiftAITransportTests",
+        "Packages/swift-ai-core/README.md",
+        "Packages/swift-ai-core/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": []
+    },
+    {
+      "package": "swift-ai-deepgram",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-deepgram.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-deepgram/Package.swift",
+        "Packages/swift-ai-deepgram/Sources/SwiftAIDeepgram",
+        "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests",
+        "Packages/swift-ai-deepgram/README.md",
+        "Packages/swift-ai-deepgram/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-deepinfra",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-deepinfra.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-deepinfra/Package.swift",
+        "Packages/swift-ai-deepinfra/Sources/SwiftAIDeepInfra",
+        "Packages/swift-ai-deepinfra/Tests/SwiftAIDeepInfraTests",
+        "Packages/swift-ai-deepinfra/README.md",
+        "Packages/swift-ai-deepinfra/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-deepseek",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-deepseek.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-deepseek/Package.swift",
+        "Packages/swift-ai-deepseek/Sources/SwiftAIDeepSeek",
+        "Packages/swift-ai-deepseek/Tests/SwiftAIDeepSeekTests",
+        "Packages/swift-ai-deepseek/README.md",
+        "Packages/swift-ai-deepseek/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-elevenlabs",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-elevenlabs.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-elevenlabs/Package.swift",
+        "Packages/swift-ai-elevenlabs/Sources/SwiftAIElevenLabs",
+        "Packages/swift-ai-elevenlabs/Tests/SwiftAIElevenLabsTests",
+        "Packages/swift-ai-elevenlabs/README.md",
+        "Packages/swift-ai-elevenlabs/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-fal",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-fal.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-fal/Package.swift",
+        "Packages/swift-ai-fal/Sources/SwiftAIFal",
+        "Packages/swift-ai-fal/Tests/SwiftAIFalTests",
+        "Packages/swift-ai-fal/README.md",
+        "Packages/swift-ai-fal/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-fireworks",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-fireworks.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-fireworks/Package.swift",
+        "Packages/swift-ai-fireworks/Sources/SwiftAIFireworks",
+        "Packages/swift-ai-fireworks/Tests/SwiftAIFireworksTests",
+        "Packages/swift-ai-fireworks/README.md",
+        "Packages/swift-ai-fireworks/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-fish-audio",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-fish-audio.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-fish-audio/Package.swift",
+        "Packages/swift-ai-fish-audio/Sources/SwiftAIFishAudio",
+        "Packages/swift-ai-fish-audio/Tests/SwiftAIFishAudioTests",
+        "Packages/swift-ai-fish-audio/README.md",
+        "Packages/swift-ai-fish-audio/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-gateway",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-gateway.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-gateway/Package.swift",
+        "Packages/swift-ai-gateway/Sources/SwiftAIGateway",
+        "Packages/swift-ai-gateway/Tests/SwiftAIGatewayTests",
+        "Packages/swift-ai-gateway/README.md",
+        "Packages/swift-ai-gateway/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-gladia",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-gladia.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-gladia/Package.swift",
+        "Packages/swift-ai-gladia/Sources/SwiftAIGladia",
+        "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests",
+        "Packages/swift-ai-gladia/README.md",
+        "Packages/swift-ai-gladia/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-gmicloud",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-gmicloud.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-gmicloud/Package.swift",
+        "Packages/swift-ai-gmicloud/Sources/SwiftAIGMICloud",
+        "Packages/swift-ai-gmicloud/Tests/SwiftAIGMICloudTests",
+        "Packages/swift-ai-gmicloud/README.md",
+        "Packages/swift-ai-gmicloud/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-google",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-google.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-google/Package.swift",
+        "Packages/swift-ai-google/Sources/SwiftAIGoogle",
+        "Packages/swift-ai-google/Tests/SwiftAIGoogleTests",
+        "Packages/swift-ai-google/README.md",
+        "Packages/swift-ai-google/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-google-vertex",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-google-vertex.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-google-vertex/Package.swift",
+        "Packages/swift-ai-google-vertex/Sources/SwiftAIGoogleVertex",
+        "Packages/swift-ai-google-vertex/Tests/SwiftAIGoogleVertexTests",
+        "Packages/swift-ai-google-vertex/README.md",
+        "Packages/swift-ai-google-vertex/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-groq",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-groq.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-groq/Package.swift",
+        "Packages/swift-ai-groq/Sources/SwiftAIGroq",
+        "Packages/swift-ai-groq/Tests/SwiftAIGroqTests",
+        "Packages/swift-ai-groq/README.md",
+        "Packages/swift-ai-groq/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-heygen",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-heygen.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-heygen/Package.swift",
+        "Packages/swift-ai-heygen/Sources/SwiftAIHeyGen",
+        "Packages/swift-ai-heygen/Tests/SwiftAIHeyGenTests",
+        "Packages/swift-ai-heygen/README.md",
+        "Packages/swift-ai-heygen/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-huggingface",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-huggingface.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-huggingface/Package.swift",
+        "Packages/swift-ai-huggingface/Sources/SwiftAIHuggingFace",
+        "Packages/swift-ai-huggingface/Tests/SwiftAIHuggingFaceTests",
+        "Packages/swift-ai-huggingface/README.md",
+        "Packages/swift-ai-huggingface/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-hume",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-hume.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-hume/Package.swift",
+        "Packages/swift-ai-hume/Sources/SwiftAIHume",
+        "Packages/swift-ai-hume/Tests/SwiftAIHumeTests",
+        "Packages/swift-ai-hume/README.md",
+        "Packages/swift-ai-hume/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-klingai",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-klingai.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-klingai/Package.swift",
+        "Packages/swift-ai-klingai/Sources/SwiftAIKlingAI",
+        "Packages/swift-ai-klingai/Tests/SwiftAIKlingAITests",
+        "Packages/swift-ai-klingai/README.md",
+        "Packages/swift-ai-klingai/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-lmnt",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-lmnt.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-lmnt/Package.swift",
+        "Packages/swift-ai-lmnt/Sources/SwiftAILMNT",
+        "Packages/swift-ai-lmnt/Tests/SwiftAILMNTTests",
+        "Packages/swift-ai-lmnt/README.md",
+        "Packages/swift-ai-lmnt/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-luma",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-luma.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-luma/Package.swift",
+        "Packages/swift-ai-luma/Sources/SwiftAILuma",
+        "Packages/swift-ai-luma/Tests/SwiftAILumaTests",
+        "Packages/swift-ai-luma/README.md",
+        "Packages/swift-ai-luma/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-mcp",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-mcp.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-mcp/Package.swift",
+        "Packages/swift-ai-mcp/Sources/SwiftAIMCP",
+        "Packages/swift-ai-mcp/Tests/SwiftAIMCPTests",
+        "Packages/swift-ai-mcp/README.md",
+        "Packages/swift-ai-mcp/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-minimax",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-minimax.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-minimax/Package.swift",
+        "Packages/swift-ai-minimax/Sources/SwiftAIMiniMax",
+        "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests",
+        "Packages/swift-ai-minimax/README.md",
+        "Packages/swift-ai-minimax/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-mistral",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-mistral.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-mistral/Package.swift",
+        "Packages/swift-ai-mistral/Sources/SwiftAIMistral",
+        "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests",
+        "Packages/swift-ai-mistral/README.md",
+        "Packages/swift-ai-mistral/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-moonshotai",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-moonshotai.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-moonshotai/Package.swift",
+        "Packages/swift-ai-moonshotai/Sources/SwiftAIMoonshotAI",
+        "Packages/swift-ai-moonshotai/Tests/SwiftAIMoonshotAITests",
+        "Packages/swift-ai-moonshotai/README.md",
+        "Packages/swift-ai-moonshotai/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-open-responses",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-open-responses.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-open-responses/Package.swift",
+        "Packages/swift-ai-open-responses/Sources/SwiftAIOpenResponses",
+        "Packages/swift-ai-open-responses/Tests/SwiftAIOpenResponsesTests",
+        "Packages/swift-ai-open-responses/README.md",
+        "Packages/swift-ai-open-responses/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-openai",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-openai/Package.swift",
+        "Packages/swift-ai-openai/Sources/SwiftAIOpenAI",
+        "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests",
+        "Packages/swift-ai-openai/README.md",
+        "Packages/swift-ai-openai/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-openai-compatible",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-openai-compatible/Package.swift",
+        "Packages/swift-ai-openai-compatible/Sources/SwiftAIOpenAICompatible",
+        "Packages/swift-ai-openai-compatible/Tests/SwiftAIOpenAICompatibleTests",
+        "Packages/swift-ai-openai-compatible/README.md",
+        "Packages/swift-ai-openai-compatible/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-perplexity",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-perplexity.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-perplexity/Package.swift",
+        "Packages/swift-ai-perplexity/Sources/SwiftAIPerplexity",
+        "Packages/swift-ai-perplexity/Tests/SwiftAIPerplexityTests",
+        "Packages/swift-ai-perplexity/README.md",
+        "Packages/swift-ai-perplexity/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-prodia",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-prodia.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-prodia/Package.swift",
+        "Packages/swift-ai-prodia/Sources/SwiftAIProdia",
+        "Packages/swift-ai-prodia/Tests/SwiftAIProdiaTests",
+        "Packages/swift-ai-prodia/README.md",
+        "Packages/swift-ai-prodia/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-quiverai",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-quiverai.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-quiverai/Package.swift",
+        "Packages/swift-ai-quiverai/Sources/SwiftAIQuiverAI",
+        "Packages/swift-ai-quiverai/Tests/SwiftAIQuiverAITests",
+        "Packages/swift-ai-quiverai/README.md",
+        "Packages/swift-ai-quiverai/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-replicate",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-replicate.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-replicate/Package.swift",
+        "Packages/swift-ai-replicate/Sources/SwiftAIReplicate",
+        "Packages/swift-ai-replicate/Tests/SwiftAIReplicateTests",
+        "Packages/swift-ai-replicate/README.md",
+        "Packages/swift-ai-replicate/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-revai",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-revai.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-revai/Package.swift",
+        "Packages/swift-ai-revai/Sources/SwiftAIRevAI",
+        "Packages/swift-ai-revai/Tests/SwiftAIRevAITests",
+        "Packages/swift-ai-revai/README.md",
+        "Packages/swift-ai-revai/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-togetherai",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-togetherai.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-togetherai/Package.swift",
+        "Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI",
+        "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests",
+        "Packages/swift-ai-togetherai/README.md",
+        "Packages/swift-ai-togetherai/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-topaz",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-topaz.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-topaz/Package.swift",
+        "Packages/swift-ai-topaz/Sources/SwiftAITopaz",
+        "Packages/swift-ai-topaz/Tests/SwiftAITopazTests",
+        "Packages/swift-ai-topaz/README.md",
+        "Packages/swift-ai-topaz/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-typesafe-ai",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-typesafe-ai.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-typesafe-ai/Package.swift",
+        "Packages/swift-ai-typesafe-ai/Sources/SwiftAITypeSafeAI",
+        "Packages/swift-ai-typesafe-ai/Tests/SwiftAITypeSafeAITests",
+        "Packages/swift-ai-typesafe-ai/README.md",
+        "Packages/swift-ai-typesafe-ai/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-ui",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-ui.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-ui/Package.swift",
+        "Packages/swift-ai-ui/Sources/SwiftAIUI",
+        "Packages/swift-ai-ui/Tests/SwiftAIUITests",
+        "Packages/swift-ai-ui/README.md",
+        "Packages/swift-ai-ui/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-vercel",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-vercel.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-vercel/Package.swift",
+        "Packages/swift-ai-vercel/Sources/SwiftAIVercel",
+        "Packages/swift-ai-vercel/Tests/SwiftAIVercelTests",
+        "Packages/swift-ai-vercel/README.md",
+        "Packages/swift-ai-vercel/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-voyage",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-voyage.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-voyage/Package.swift",
+        "Packages/swift-ai-voyage/Sources/SwiftAIVoyage",
+        "Packages/swift-ai-voyage/Tests/SwiftAIVoyageTests",
+        "Packages/swift-ai-voyage/README.md",
+        "Packages/swift-ai-voyage/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-xai",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-xai.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-xai/Package.swift",
+        "Packages/swift-ai-xai/Sources/SwiftAIXAI",
+        "Packages/swift-ai-xai/Tests/SwiftAIXAITests",
+        "Packages/swift-ai-xai/README.md",
+        "Packages/swift-ai-xai/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-zai",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-zai.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-zai/Package.swift",
+        "Packages/swift-ai-zai/Sources/SwiftAIZAI",
+        "Packages/swift-ai-zai/Tests/SwiftAIZAITests",
+        "Packages/swift-ai-zai/README.md",
+        "Packages/swift-ai-zai/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.0.0"
+        }
+      ]
+    }
+  ]
+}

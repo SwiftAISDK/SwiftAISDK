@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func googleInteractionsHasFunctionCall(_ raw: JSONValue) -> Bool {
     (raw["steps"]?.arrayValue ?? []).contains { step in

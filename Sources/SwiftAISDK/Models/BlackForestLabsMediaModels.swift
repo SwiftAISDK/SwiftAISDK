@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class BlackForestLabsImageModel: ImageModel, @unchecked Sendable {
     public let providerID = "black-forest-labs.image"
@@ -92,7 +97,7 @@ public final class BlackForestLabsImageModel: ImageModel, @unchecked Sendable {
         let image = try await downloadURL(url, transport: config.transport, headers: imageHeaders, abortSignal: request.abortSignal, trustedOrigin: config.baseURL,
                                           credentialedOrigin: blackForestLabsUsesCustomDownloadHeaders(for: url, baseURL: config.baseURL) ? config.baseURL : nil)
         guard (200..<300).contains(image.statusCode) else {
-            throw apiCallError(provider: providerID, response: image)
+            throw compatibilityAPICallError(provider: providerID, response: image)
         }
         return ImageGenerationResult(
             urls: [url],

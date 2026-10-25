@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func googleGenerateContentOptions(from extraBody: [String: JSONValue]) -> [String: JSONValue] {
     var output = extraBody

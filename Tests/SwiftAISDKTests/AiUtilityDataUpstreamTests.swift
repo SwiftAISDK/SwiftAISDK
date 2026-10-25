@@ -1,3 +1,8 @@
+@testable import SwiftAIAnthropic
+@testable import SwiftAIOpenAICompatible
+@testable import SwiftAIOpenAI
+@testable import SwiftAIProviderUtilities
+@testable import SwiftAITransport
 import Foundation
 import Testing
 @testable import SwiftAISDK

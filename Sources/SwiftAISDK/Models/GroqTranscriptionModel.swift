@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class GroqTranscriptionModel: TranscriptionModel, @unchecked Sendable {
     public let providerID = "groq.transcription"
@@ -63,7 +68,7 @@ public final class GroqTranscriptionModel: TranscriptionModel, @unchecked Sendab
             abortSignal: request.abortSignal
         ))
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw compatibilityAPICallError(provider: providerID, response: response)
         }
         if providerOptions["response_format"]?.stringValue == "text" {
             let text = String(decoding: response.body, as: UTF8.self)

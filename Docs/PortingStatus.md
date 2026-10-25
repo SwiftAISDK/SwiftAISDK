@@ -14,6 +14,50 @@ This file is the readable status page. It replaces the older provider-progress
 journals and product-gap checklist. Use the ledgers and generated inventories
 for exact evidence.
 
+## Modular package migration
+
+[ModularizationPlan.md](ModularizationPlan.md) defines independent provider
+packages published under a SwiftAISDK GitHub organization, with one canonical
+development repository and generated distribution repositories. It keeps
+upstream package/test mappings and introduces structured metadata to reduce
+synchronization and new-provider setup work. [M0 inventory and package map](Migration/M0/README.md)
+is complete: all 54 tracked upstream packages, 311 runtime files, 377 test/support
+files, 26 fixtures, and 6762 public symbols have recorded destinations. Baseline
+verification covers fresh local Swift 6.4 and existing Swift 6.3.3 CI at the exact
+unchanged source commit. [M1 catalog/tooling](Migration/M1/README.md) is also
+complete: structured metadata now drives the legacy CLIs, compiled capability
+rows, docs, 52 planned manifests, and generated CI/export/workspace inputs. A
+disposable provider was scaffolded through one registration without advertising
+support. Existing npm versions and capability rows are preserved.
+[M2 core extraction](Migration/M2/README.md) is complete; four core modules and
+the generated legacy facade preserve explicit and default provider resolution.
+[M3 provider extraction](Migration/M3/README.md) adds independently buildable
+Anthropic, generic OpenAI-compatible and OpenAI packages. The aggregate now uses
+these local packages; remaining providers, MCP and UI stay in the aggregate.
+
+The full suite retains 3545 tests: 3007 aggregate, 126 core, 135 Anthropic,
+7 compatible and 270 OpenAI, including 33 explicit live skips. Four external
+provider clients and the existing core consumer run without aggregate sources;
+19 existing examples build. Synthetic Git version fixtures verify mixed provider
+versions, an independent OpenAI upgrade, the minimum core requirement and a
+provider-to-provider core conflict. All 6762 M0 public records still match after
+module normalization. See the M3 report for compiler, documentation and log receipts.
+
+Verification is local Swift 6.4 on macOS, with additional iOS 15 deployment-target
+compilation for the provider closures against the installed simulator SDK. No
+simulator app/device run or fresh hosted Swift 6.3.3 result is claimed. M4 publication rehearsal is complete; M5 is next,
+with one stage per run. The SwiftAISDK organization has now been created for M5; repository transfer and
+public releases remain pending. M3/M4 fixture tags are disposable local test data.
+
+[M4 release rehearsal](Migration/M4/README.md) adds reviewed Swift change records,
+SemVer planning, deterministic allowlisted exports, standalone provenance and CI,
+and resumable dependency-ordered local Git publication. The rehearsal includes
+clean exported package tests and ordinary-import consumers, plus an independent
+OpenAI patch with unchanged dependency tags. Fresh local checks passed: 538 tests from exported Git clones, six clean clients
+and 17 tooling tests; no failures. Deterministic exports, recovery after SIGKILL
+and immutable refs are verified in the M4 receipt.
+These fixtures do not create public releases or advance upstream baselines.
+
 ## Weekly upstream parity (2026-10-25)
 
 The follow-up patch for 2.8.1 explicitly resolves the nonoptional speech

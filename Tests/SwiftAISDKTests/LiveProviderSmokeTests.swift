@@ -1,3 +1,13 @@
+@testable import SwiftAIAnthropic
+@testable import SwiftAIOpenAICompatible
+@testable import SwiftAIOpenAI
+@testable import SwiftAI
+@testable import SwiftAIProvider
+@testable import SwiftAIProviderUtilities
+@testable import SwiftAITransport
+private typealias AI = SwiftAISDK.AI
+private typealias AIProviders = SwiftAISDK.AIProviders
+private typealias AICustomProvider = SwiftAISDK.AICustomProvider
 import Foundation
 import Testing
 @testable import SwiftAISDK
@@ -578,7 +588,7 @@ private enum LiveProviderSmoke {
         ProcessInfo.processInfo.environment["LIVE_AI_TESTS"] == "1"
     }
 
-    static func openAIProvider() throws -> OpenAICompatibleProvider {
+    static func openAIProvider() throws -> SwiftAISDK.OpenAICompatibleProvider {
         let apiKey = try apiKey(environmentVariable: "OPENAI_API_KEY")
         return try AIProviders.openAI(settings: ProviderSettings(apiKey: apiKey))
     }
@@ -593,12 +603,12 @@ private enum LiveProviderSmoke {
         return try AIProviders.google(settings: ProviderSettings(apiKey: apiKey))
     }
 
-    static func deepSeekProvider() throws -> OpenAICompatibleProvider {
+    static func deepSeekProvider() throws -> SwiftAISDK.OpenAICompatibleProvider {
         let apiKey = try apiKey(environmentVariable: "DEEPSEEK_API_KEY")
         return try AIProviders.deepSeek(settings: ProviderSettings(apiKey: apiKey))
     }
 
-    static func assemblyAIProvider() throws -> OpenAICompatibleProvider {
+    static func assemblyAIProvider() throws -> SwiftAISDK.OpenAICompatibleProvider {
         let apiKey = try apiKey(environmentVariable: "ASSEMBLYAI_API_KEY")
         return try AIProviders.assemblyAI(settings: ProviderSettings(apiKey: apiKey))
     }
@@ -608,12 +618,12 @@ private enum LiveProviderSmoke {
         return try AIProviders.cartesia(settings: CartesiaProviderSettings(apiKey: apiKey))
     }
 
-    static func elevenLabsProvider() throws -> OpenAICompatibleProvider {
+    static func elevenLabsProvider() throws -> SwiftAISDK.OpenAICompatibleProvider {
         let apiKey = try apiKey(environmentVariable: "ELEVENLABS_API_KEY")
         return try AIProviders.elevenLabs(settings: ProviderSettings(apiKey: apiKey))
     }
 
-    static func openAICompatibleProvider() throws -> OpenAICompatibleProvider {
+    static func openAICompatibleProvider() throws -> SwiftAISDK.OpenAICompatibleProvider {
         let apiKey = try apiKey(environmentVariable: "OPENAI_COMPATIBLE_API_KEY")
         let baseURL = modelID(environmentVariable: "LIVE_OPENAI_COMPATIBLE_BASE_URL", defaultValue: "https://evo.ozio.io/llama/v1")
         return try AIProviders.openAICompatible(name: "openai-compatible-live", baseURL: baseURL, apiKey: apiKey)

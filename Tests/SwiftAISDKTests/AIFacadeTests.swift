@@ -1,3 +1,13 @@
+@testable import SwiftAIAnthropic
+@testable import SwiftAIOpenAICompatible
+@testable import SwiftAIOpenAI
+@testable import SwiftAI
+@testable import SwiftAIProvider
+@testable import SwiftAIProviderUtilities
+@testable import SwiftAITransport
+private typealias AI = SwiftAISDK.AI
+private typealias AIProviders = SwiftAISDK.AIProviders
+private typealias AICustomProvider = SwiftAISDK.AICustomProvider
 import Foundation
 import Testing
 @testable import SwiftAISDK
@@ -515,13 +525,13 @@ private struct NativeAPISummary: Decodable, Sendable, Equatable {
         body: Data("rate limited".utf8)
     )
 
-    #expect(apiCallError(provider: "mock", response: response) == .apiCall(
+    #expect(SwiftAISDK.compatibilityAPICallError(provider: "mock", response: response) == .apiCall(
         provider: "mock",
         statusCode: 429,
         body: "rate limited",
         headers: ["Retry-After": "0"]
     ))
-    let apiError = try #require(apiCallError(provider: "mock", response: response).apiCallError)
+    let apiError = try #require(SwiftAISDK.compatibilityAPICallError(provider: "mock", response: response).apiCallError)
     #expect(apiError.provider == "mock")
     #expect(apiError.statusCode == 429)
     #expect(apiError.responseHeaders["Retry-After"] == "0")

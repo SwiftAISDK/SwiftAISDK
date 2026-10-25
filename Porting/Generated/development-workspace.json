@@ -1,0 +1,320 @@
+{
+  "schemaVersion": 1,
+  "scope": "Identity-preserving local override inputs; executable development workspace is validated in M2/M3",
+  "dependencies": [
+    {
+      "identity": "swift-ai-alibaba",
+      "path": "Packages/swift-ai-alibaba",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-alibaba.git"
+    },
+    {
+      "identity": "swift-ai-amazon-bedrock",
+      "path": "Packages/swift-ai-amazon-bedrock",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock.git"
+    },
+    {
+      "identity": "swift-ai-anthropic",
+      "path": "Packages/swift-ai-anthropic",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-anthropic.git"
+    },
+    {
+      "identity": "swift-ai-anthropic-aws",
+      "path": "Packages/swift-ai-anthropic-aws",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws.git"
+    },
+    {
+      "identity": "swift-ai-assemblyai",
+      "path": "Packages/swift-ai-assemblyai",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-assemblyai.git"
+    },
+    {
+      "identity": "swift-ai-azure",
+      "path": "Packages/swift-ai-azure",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-azure.git"
+    },
+    {
+      "identity": "swift-ai-baseten",
+      "path": "Packages/swift-ai-baseten",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-baseten.git"
+    },
+    {
+      "identity": "swift-ai-black-forest-labs",
+      "path": "Packages/swift-ai-black-forest-labs",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs.git"
+    },
+    {
+      "identity": "swift-ai-bytedance",
+      "path": "Packages/swift-ai-bytedance",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-bytedance.git"
+    },
+    {
+      "identity": "swift-ai-cartesia",
+      "path": "Packages/swift-ai-cartesia",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-cartesia.git"
+    },
+    {
+      "identity": "swift-ai-cerebras",
+      "path": "Packages/swift-ai-cerebras",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-cerebras.git"
+    },
+    {
+      "identity": "swift-ai-cohere",
+      "path": "Packages/swift-ai-cohere",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-cohere.git"
+    },
+    {
+      "identity": "swift-ai-core",
+      "path": "Packages/swift-ai-core",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-core.git"
+    },
+    {
+      "identity": "swift-ai-deepgram",
+      "path": "Packages/swift-ai-deepgram",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-deepgram.git"
+    },
+    {
+      "identity": "swift-ai-deepinfra",
+      "path": "Packages/swift-ai-deepinfra",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-deepinfra.git"
+    },
+    {
+      "identity": "swift-ai-deepseek",
+      "path": "Packages/swift-ai-deepseek",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-deepseek.git"
+    },
+    {
+      "identity": "swift-ai-elevenlabs",
+      "path": "Packages/swift-ai-elevenlabs",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-elevenlabs.git"
+    },
+    {
+      "identity": "swift-ai-fal",
+      "path": "Packages/swift-ai-fal",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-fal.git"
+    },
+    {
+      "identity": "swift-ai-fireworks",
+      "path": "Packages/swift-ai-fireworks",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-fireworks.git"
+    },
+    {
+      "identity": "swift-ai-fish-audio",
+      "path": "Packages/swift-ai-fish-audio",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-fish-audio.git"
+    },
+    {
+      "identity": "swift-ai-gateway",
+      "path": "Packages/swift-ai-gateway",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-gateway.git"
+    },
+    {
+      "identity": "swift-ai-gladia",
+      "path": "Packages/swift-ai-gladia",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-gladia.git"
+    },
+    {
+      "identity": "swift-ai-gmicloud",
+      "path": "Packages/swift-ai-gmicloud",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-gmicloud.git"
+    },
+    {
+      "identity": "swift-ai-google",
+      "path": "Packages/swift-ai-google",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-google.git"
+    },
+    {
+      "identity": "swift-ai-google-vertex",
+      "path": "Packages/swift-ai-google-vertex",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-google-vertex.git"
+    },
+    {
+      "identity": "swift-ai-groq",
+      "path": "Packages/swift-ai-groq",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-groq.git"
+    },
+    {
+      "identity": "swift-ai-heygen",
+      "path": "Packages/swift-ai-heygen",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-heygen.git"
+    },
+    {
+      "identity": "swift-ai-huggingface",
+      "path": "Packages/swift-ai-huggingface",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-huggingface.git"
+    },
+    {
+      "identity": "swift-ai-hume",
+      "path": "Packages/swift-ai-hume",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-hume.git"
+    },
+    {
+      "identity": "swift-ai-klingai",
+      "path": "Packages/swift-ai-klingai",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-klingai.git"
+    },
+    {
+      "identity": "swift-ai-lmnt",
+      "path": "Packages/swift-ai-lmnt",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-lmnt.git"
+    },
+    {
+      "identity": "swift-ai-luma",
+      "path": "Packages/swift-ai-luma",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-luma.git"
+    },
+    {
+      "identity": "swift-ai-mcp",
+      "path": "Packages/swift-ai-mcp",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-mcp.git"
+    },
+    {
+      "identity": "swift-ai-minimax",
+      "path": "Packages/swift-ai-minimax",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-minimax.git"
+    },
+    {
+      "identity": "swift-ai-mistral",
+      "path": "Packages/swift-ai-mistral",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-mistral.git"
+    },
+    {
+      "identity": "swift-ai-moonshotai",
+      "path": "Packages/swift-ai-moonshotai",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-moonshotai.git"
+    },
+    {
+      "identity": "swift-ai-open-responses",
+      "path": "Packages/swift-ai-open-responses",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-open-responses.git"
+    },
+    {
+      "identity": "swift-ai-openai",
+      "path": "Packages/swift-ai-openai",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-openai.git"
+    },
+    {
+      "identity": "swift-ai-openai-compatible",
+      "path": "Packages/swift-ai-openai-compatible",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git"
+    },
+    {
+      "identity": "swift-ai-perplexity",
+      "path": "Packages/swift-ai-perplexity",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-perplexity.git"
+    },
+    {
+      "identity": "swift-ai-prodia",
+      "path": "Packages/swift-ai-prodia",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-prodia.git"
+    },
+    {
+      "identity": "swift-ai-quiverai",
+      "path": "Packages/swift-ai-quiverai",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-quiverai.git"
+    },
+    {
+      "identity": "swift-ai-replicate",
+      "path": "Packages/swift-ai-replicate",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-replicate.git"
+    },
+    {
+      "identity": "swift-ai-revai",
+      "path": "Packages/swift-ai-revai",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-revai.git"
+    },
+    {
+      "identity": "swift-ai-togetherai",
+      "path": "Packages/swift-ai-togetherai",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-togetherai.git"
+    },
+    {
+      "identity": "swift-ai-topaz",
+      "path": "Packages/swift-ai-topaz",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-topaz.git"
+    },
+    {
+      "identity": "swift-ai-typesafe-ai",
+      "path": "Packages/swift-ai-typesafe-ai",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-typesafe-ai.git"
+    },
+    {
+      "identity": "swift-ai-ui",
+      "path": "Packages/swift-ai-ui",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-ui.git"
+    },
+    {
+      "identity": "swift-ai-vercel",
+      "path": "Packages/swift-ai-vercel",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-vercel.git"
+    },
+    {
+      "identity": "swift-ai-voyage",
+      "path": "Packages/swift-ai-voyage",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-voyage.git"
+    },
+    {
+      "identity": "swift-ai-xai",
+      "path": "Packages/swift-ai-xai",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-xai.git"
+    },
+    {
+      "identity": "swift-ai-zai",
+      "path": "Packages/swift-ai-zai",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-zai.git"
+    }
+  ],
+  "releaseOrder": [
+    "swift-ai-core",
+    "swift-ai-alibaba",
+    "swift-ai-amazon-bedrock",
+    "swift-ai-anthropic",
+    "swift-ai-anthropic-aws",
+    "swift-ai-assemblyai",
+    "swift-ai-azure",
+    "swift-ai-baseten",
+    "swift-ai-black-forest-labs",
+    "swift-ai-bytedance",
+    "swift-ai-cartesia",
+    "swift-ai-cerebras",
+    "swift-ai-cohere",
+    "swift-ai-deepgram",
+    "swift-ai-deepinfra",
+    "swift-ai-deepseek",
+    "swift-ai-elevenlabs",
+    "swift-ai-fal",
+    "swift-ai-fireworks",
+    "swift-ai-fish-audio",
+    "swift-ai-gateway",
+    "swift-ai-gladia",
+    "swift-ai-gmicloud",
+    "swift-ai-google",
+    "swift-ai-google-vertex",
+    "swift-ai-groq",
+    "swift-ai-heygen",
+    "swift-ai-huggingface",
+    "swift-ai-hume",
+    "swift-ai-klingai",
+    "swift-ai-lmnt",
+    "swift-ai-luma",
+    "swift-ai-mcp",
+    "swift-ai-minimax",
+    "swift-ai-mistral",
+    "swift-ai-moonshotai",
+    "swift-ai-open-responses",
+    "swift-ai-openai-compatible",
+    "swift-ai-openai",
+    "swift-ai-perplexity",
+    "swift-ai-prodia",
+    "swift-ai-quiverai",
+    "swift-ai-replicate",
+    "swift-ai-revai",
+    "swift-ai-togetherai",
+    "swift-ai-topaz",
+    "swift-ai-typesafe-ai",
+    "swift-ai-ui",
+    "swift-ai-vercel",
+    "swift-ai-voyage",
+    "swift-ai-xai",
+    "swift-ai-zai"
+  ]
+}

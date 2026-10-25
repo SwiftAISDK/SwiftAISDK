@@ -1,0 +1,1915 @@
+{
+  "schema": 1,
+  "scope": "M0 planning inventory; not the M1 runtime/release catalog",
+  "modules": [
+    "SwiftAISDK/SwiftAISDK",
+    "swift-ai-alibaba/SwiftAIAlibaba",
+    "swift-ai-amazon-bedrock/SwiftAIAmazonBedrock",
+    "swift-ai-anthropic-aws/SwiftAIAnthropicAWS",
+    "swift-ai-anthropic/SwiftAIAnthropic",
+    "swift-ai-assemblyai/SwiftAIAssemblyAI",
+    "swift-ai-azure/SwiftAIAzure",
+    "swift-ai-baseten/SwiftAIBaseten",
+    "swift-ai-black-forest-labs/SwiftAIBlackForestLabs",
+    "swift-ai-bytedance/SwiftAIByteDance",
+    "swift-ai-cartesia/SwiftAICartesia",
+    "swift-ai-cerebras/SwiftAICerebras",
+    "swift-ai-cohere/SwiftAICohere",
+    "swift-ai-core/SwiftAI",
+    "swift-ai-core/SwiftAIProvider",
+    "swift-ai-core/SwiftAIProviderUtilities",
+    "swift-ai-core/SwiftAITransport",
+    "swift-ai-deepgram/SwiftAIDeepgram",
+    "swift-ai-deepinfra/SwiftAIDeepInfra",
+    "swift-ai-deepseek/SwiftAIDeepSeek",
+    "swift-ai-elevenlabs/SwiftAIElevenLabs",
+    "swift-ai-fal/SwiftAIFal",
+    "swift-ai-fireworks/SwiftAIFireworks",
+    "swift-ai-fish-audio/SwiftAIFishAudio",
+    "swift-ai-gateway/SwiftAIGateway",
+    "swift-ai-gladia/SwiftAIGladia",
+    "swift-ai-gmicloud/SwiftAIGMICloud",
+    "swift-ai-google-vertex/SwiftAIGoogleVertex",
+    "swift-ai-google/SwiftAIGoogle",
+    "swift-ai-groq/SwiftAIGroq",
+    "swift-ai-heygen/SwiftAIHeyGen",
+    "swift-ai-huggingface/SwiftAIHuggingFace",
+    "swift-ai-hume/SwiftAIHume",
+    "swift-ai-klingai/SwiftAIKlingAI",
+    "swift-ai-lmnt/SwiftAILMNT",
+    "swift-ai-luma/SwiftAILuma",
+    "swift-ai-mcp/SwiftAIMCP",
+    "swift-ai-minimax/SwiftAIMiniMax",
+    "swift-ai-mistral/SwiftAIMistral",
+    "swift-ai-moonshotai/SwiftAIMoonshotAI",
+    "swift-ai-open-responses/SwiftAIOpenResponses",
+    "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+    "swift-ai-openai/SwiftAIOpenAI",
+    "swift-ai-perplexity/SwiftAIPerplexity",
+    "swift-ai-prodia/SwiftAIProdia",
+    "swift-ai-quiverai/SwiftAIQuiverAI",
+    "swift-ai-replicate/SwiftAIReplicate",
+    "swift-ai-revai/SwiftAIRevAI",
+    "swift-ai-togetherai/SwiftAITogetherAI",
+    "swift-ai-topaz/SwiftAITopaz",
+    "swift-ai-typesafe-ai/SwiftAITypeSafeAI",
+    "swift-ai-ui/SwiftAIUI",
+    "swift-ai-vercel/SwiftAIVercel",
+    "swift-ai-voyage/SwiftAIVoyage",
+    "swift-ai-xai/SwiftAIXAI",
+    "swift-ai-zai/SwiftAIZAI"
+  ],
+  "providerModules": {
+    "alibaba": "swift-ai-alibaba/SwiftAIAlibaba",
+    "amazon-bedrock": "swift-ai-amazon-bedrock/SwiftAIAmazonBedrock",
+    "anthropic": "swift-ai-anthropic/SwiftAIAnthropic",
+    "anthropic-aws": "swift-ai-anthropic-aws/SwiftAIAnthropicAWS",
+    "assemblyai": "swift-ai-assemblyai/SwiftAIAssemblyAI",
+    "azure": "swift-ai-azure/SwiftAIAzure",
+    "baseten": "swift-ai-baseten/SwiftAIBaseten",
+    "black-forest-labs": "swift-ai-black-forest-labs/SwiftAIBlackForestLabs",
+    "bytedance": "swift-ai-bytedance/SwiftAIByteDance",
+    "cartesia": "swift-ai-cartesia/SwiftAICartesia",
+    "cerebras": "swift-ai-cerebras/SwiftAICerebras",
+    "cohere": "swift-ai-cohere/SwiftAICohere",
+    "deepgram": "swift-ai-deepgram/SwiftAIDeepgram",
+    "deepinfra": "swift-ai-deepinfra/SwiftAIDeepInfra",
+    "deepseek": "swift-ai-deepseek/SwiftAIDeepSeek",
+    "elevenlabs": "swift-ai-elevenlabs/SwiftAIElevenLabs",
+    "fal": "swift-ai-fal/SwiftAIFal",
+    "fish-audio": "swift-ai-fish-audio/SwiftAIFishAudio",
+    "fireworks": "swift-ai-fireworks/SwiftAIFireworks",
+    "gateway": "swift-ai-gateway/SwiftAIGateway",
+    "gmicloud": "swift-ai-gmicloud/SwiftAIGMICloud",
+    "gladia": "swift-ai-gladia/SwiftAIGladia",
+    "google": "swift-ai-google/SwiftAIGoogle",
+    "google-vertex": "swift-ai-google-vertex/SwiftAIGoogleVertex",
+    "groq": "swift-ai-groq/SwiftAIGroq",
+    "heygen": "swift-ai-heygen/SwiftAIHeyGen",
+    "huggingface": "swift-ai-huggingface/SwiftAIHuggingFace",
+    "hume": "swift-ai-hume/SwiftAIHume",
+    "klingai": "swift-ai-klingai/SwiftAIKlingAI",
+    "lmnt": "swift-ai-lmnt/SwiftAILMNT",
+    "luma": "swift-ai-luma/SwiftAILuma",
+    "mcp": "swift-ai-mcp/SwiftAIMCP",
+    "minimax": "swift-ai-minimax/SwiftAIMiniMax",
+    "mistral": "swift-ai-mistral/SwiftAIMistral",
+    "moonshotai": "swift-ai-moonshotai/SwiftAIMoonshotAI",
+    "open-responses": "swift-ai-open-responses/SwiftAIOpenResponses",
+    "openai": "swift-ai-openai/SwiftAIOpenAI",
+    "openai-compatible": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+    "perplexity": "swift-ai-perplexity/SwiftAIPerplexity",
+    "prodia": "swift-ai-prodia/SwiftAIProdia",
+    "quiverai": "swift-ai-quiverai/SwiftAIQuiverAI",
+    "replicate": "swift-ai-replicate/SwiftAIReplicate",
+    "revai": "swift-ai-revai/SwiftAIRevAI",
+    "togetherai": "swift-ai-togetherai/SwiftAITogetherAI",
+    "topaz": "swift-ai-topaz/SwiftAITopaz",
+    "typesafe-ai": "swift-ai-typesafe-ai/SwiftAITypeSafeAI",
+    "vercel": "swift-ai-vercel/SwiftAIVercel",
+    "voyage": "swift-ai-voyage/SwiftAIVoyage",
+    "xai": "swift-ai-xai/SwiftAIXAI",
+    "zai": "swift-ai-zai/SwiftAIZAI"
+  },
+  "files": {
+    "Sources/SwiftAISDK/AI.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIAgent.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": [
+        {
+          "start": 256,
+          "end": 10000,
+          "owner": "swift-ai-ui/SwiftAIUI",
+          "reason": "agent UI stream conversion must depend on core, not the reverse"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/AIChatSession.swift": {
+      "default": "swift-ai-ui/SwiftAIUI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIChatTransport.swift": {
+      "default": "swift-ai-ui/SwiftAIUI",
+      "reason": "shared-layer-responsibility",
+      "ranges": [
+        {
+          "start": 79,
+          "end": 167,
+          "owner": "swift-ai-core/SwiftAI",
+          "reason": "agent request options must not require the optional UI package"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/AIDecisionTelemetry.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIEvaluationTelemetry.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeBatch.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeDecision.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeEvaluation.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeGenerateObject.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeGenerateObjectTelemetry.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeGenerateText.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeMedia.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeObjectCallbacks.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeObjectStreamTelemetry.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeStreamEnumJSON.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeStreamObject.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeStreamObjectArray.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeStreamObjectSchema.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeStreamText.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeStreamTextCompatibility.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeStreamTextTelemetry.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeStreamingSpeech.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeStreamingTranscription.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeTelemetryCalls.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIFacadeTelemetryEvent.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIModelResolution.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIObjectDecoding.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIObjectGenerationSession.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIObjectJSONTextExtraction.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIObjectParsing.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIObjectPartialJSON.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIRealtimeSession.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIRetryRuntime.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIStreamTimeouts.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AITelemetryRuntime.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AITelemetrySerialization.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AITokenUsageAndStreamRuntime.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIToolExecution.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIUIMessageConversion.swift": {
+      "default": "swift-ai-ui/SwiftAIUI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIUIMessageStreamReducer.swift": {
+      "default": "swift-ai-ui/SwiftAIUI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/AIUIMessageValidation.swift": {
+      "default": "swift-ai-ui/SwiftAIUI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Core.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreAbort.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreAudioResults.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreBatch.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreCitations.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreDecision.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreDelayedPromise.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreEvaluation.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreFileSkillResults.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreLanguageRequest.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreMediaResults.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreMessages.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreObjectSchema.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreProtocols.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreRealtime.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreSerialJobExecutor.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreStreamingSpeech.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": [
+        {
+          "start": 137,
+          "end": 10000,
+          "owner": "swift-ai-core/SwiftAI",
+          "reason": "high-level speech result and engine ownership are distinct from provider speech protocol"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/CoreStreamingTranscription.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreTextObjectResults.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": [
+        {
+          "start": 180,
+          "end": 10000,
+          "owner": "swift-ai-core/SwiftAI",
+          "reason": "structured-output results and callbacks belong to orchestration"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/CoreTools.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": [
+        {
+          "start": 100,
+          "end": 175,
+          "owner": "swift-ai-core/SwiftAI",
+          "reason": "stop/prepare-step orchestration"
+        },
+        {
+          "start": 417,
+          "end": 915,
+          "owner": "swift-ai-core/SwiftAI",
+          "reason": "executable tools, callback contexts and tool-search orchestration"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/CoreUIMessages.swift": {
+      "default": "swift-ai-ui/SwiftAIUI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreUtilities.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/CoreVideoRerankingResults.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/DecisionBox.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "value type used by provider Decision/Evaluation contracts",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/DecisionValidation.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/DefaultSettingsMiddleware.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/DuplexWebSocketTransport.swift": {
+      "default": "swift-ai-core/SwiftAITransport",
+      "reason": "shared-layer-responsibility",
+      "ranges": [
+        {
+          "start": 11,
+          "end": 22,
+          "owner": "swift-ai-core/SwiftAIProvider",
+          "reason": "close metadata is a value in transcription contracts"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/Errors.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": [
+        {
+          "start": 121,
+          "end": 203,
+          "owner": "swift-ai-core/SwiftAI",
+          "reason": "high-level output error depends on Output API"
+        },
+        {
+          "start": 350,
+          "end": 376,
+          "owner": "swift-ai-ui/SwiftAIUI",
+          "reason": "UI error contains UI validation issues"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/ExtractionMiddleware.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/GatewayErrors.swift": {
+      "default": "swift-ai-gateway/SwiftAIGateway",
+      "reason": "shared-layer-responsibility",
+      "ranges": [
+        {
+          "start": 3,
+          "end": 104,
+          "owner": "swift-ai-core/SwiftAIProvider",
+          "reason": "legacy AIError.gateway associated data must stay provider-independent; parsing remains Gateway-owned"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/HTTP.swift": {
+      "default": "swift-ai-core/SwiftAITransport",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/HTTPDNSPinning.swift": {
+      "default": "swift-ai-core/SwiftAITransport",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/HTTPPinnedConnection.swift": {
+      "default": "swift-ai-core/SwiftAITransport",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/HTTPStreamBody.swift": {
+      "default": "swift-ai-core/SwiftAITransport",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/HostnameValidation.swift": {
+      "default": "swift-ai-core/SwiftAITransport",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/ImageInputCapabilities.swift": {
+      "default": "SwiftAISDK/SwiftAISDK",
+      "reason": "shared-layer-responsibility",
+      "ranges": [
+        {
+          "start": 3,
+          "end": 13,
+          "owner": "swift-ai-amazon-bedrock/SwiftAIAmazonBedrock",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 14,
+          "end": 28,
+          "owner": "swift-ai-black-forest-labs/SwiftAIBlackForestLabs",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 29,
+          "end": 39,
+          "owner": "swift-ai-deepinfra/SwiftAIDeepInfra",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 40,
+          "end": 52,
+          "owner": "swift-ai-fal/SwiftAIFal",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 53,
+          "end": 64,
+          "owner": "swift-ai-fireworks/SwiftAIFireworks",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 65,
+          "end": 75,
+          "owner": "swift-ai-luma/SwiftAILuma",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 76,
+          "end": 86,
+          "owner": "swift-ai-quiverai/SwiftAIQuiverAI",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 87,
+          "end": 98,
+          "owner": "swift-ai-replicate/SwiftAIReplicate",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 99,
+          "end": 110,
+          "owner": "swift-ai-togetherai/SwiftAITogetherAI",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 111,
+          "end": 121,
+          "owner": "swift-ai-xai/SwiftAIXAI",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 122,
+          "end": 132,
+          "owner": "swift-ai-google/SwiftAIGoogle",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 133,
+          "end": 143,
+          "owner": "swift-ai-google-vertex/SwiftAIGoogleVertex",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 144,
+          "end": 156,
+          "owner": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+          "reason": "image capabilities extension moves with its model"
+        },
+        {
+          "start": 157,
+          "end": 160,
+          "owner": "swift-ai-prodia/SwiftAIProdia",
+          "reason": "image capabilities extension moves with its model"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/JSONParsing.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/JSONSchemaValidator.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/JSONValue.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/LanguageModelCallOptions.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/LanguageStreamNormalization.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPApps.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPClient.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPClientActor.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPClientHelpers.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPEventAdapter.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPEventTypes.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPEventWebhook.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPEvents.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPHTTPHeaders.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPHTTPTransport.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPOAuth.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPOAuthDiscovery.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPOAuthFlow.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPOAuthHelpers.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPOAuthToken.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPOAuthTypes.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPStdioTransport.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MCPTypes.swift": {
+      "default": "swift-ai-mcp/SwiftAIMCP",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MediaType.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Middleware.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MiddlewareTypes.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MiddlewareWrapping.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AlibabaEmbeddingModel.swift": {
+      "default": "swift-ai-alibaba/SwiftAIAlibaba",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AlibabaModels.swift": {
+      "default": "swift-ai-alibaba/SwiftAIAlibaba",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AlibabaOptions.swift": {
+      "default": "swift-ai-alibaba/SwiftAIAlibaba",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AlibabaParsing.swift": {
+      "default": "swift-ai-alibaba/SwiftAIAlibaba",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AlibabaRequestPreparation.swift": {
+      "default": "swift-ai-alibaba/SwiftAIAlibaba",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AlibabaTools.swift": {
+      "default": "swift-ai-alibaba/SwiftAIAlibaba",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AlibabaVideoModels.swift": {
+      "default": "swift-ai-alibaba/SwiftAIAlibaba",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AmazonBedrockEmbeddingModel.swift": {
+      "default": "swift-ai-amazon-bedrock/SwiftAIAmazonBedrock",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AmazonBedrockImageModel.swift": {
+      "default": "swift-ai-amazon-bedrock/SwiftAIAmazonBedrock",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AmazonBedrockLanguageModel.swift": {
+      "default": "swift-ai-amazon-bedrock/SwiftAIAmazonBedrock",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AmazonBedrockModels.swift": {
+      "default": "swift-ai-amazon-bedrock/SwiftAIAmazonBedrock",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AmazonBedrockRerankingModel.swift": {
+      "default": "swift-ai-amazon-bedrock/SwiftAIAmazonBedrock",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AmazonBedrockShared.swift": {
+      "default": "swift-ai-amazon-bedrock/SwiftAIAmazonBedrock",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/Anthropic.swift": {
+      "default": "swift-ai-anthropic/SwiftAIAnthropic",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AnthropicBatchLanguageModel.swift": {
+      "default": "swift-ai-anthropic/SwiftAIAnthropic",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AnthropicBedrockAdapter.swift": {
+      "default": "swift-ai-amazon-bedrock/SwiftAIAmazonBedrock",
+      "reason": "Bedrock adaptation uses Anthropic protocol implementation",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AnthropicModels.swift": {
+      "default": "swift-ai-anthropic/SwiftAIAnthropic",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AnthropicOptions.swift": {
+      "default": "swift-ai-anthropic/SwiftAIAnthropic",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AnthropicParsing.swift": {
+      "default": "swift-ai-anthropic/SwiftAIAnthropic",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AnthropicStreaming.swift": {
+      "default": "swift-ai-anthropic/SwiftAIAnthropic",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AnthropicToolPreparation.swift": {
+      "default": "swift-ai-anthropic/SwiftAIAnthropic",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AssemblyAIAudioModels.swift": {
+      "default": "swift-ai-assemblyai/SwiftAIAssemblyAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AudioProviderModels.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-helper-or-mixed-container",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AudioProviderShared.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-helper-or-mixed-container",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AzureAudioModels.swift": {
+      "default": "swift-ai-azure/SwiftAIAzure",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AzureMAIImageModel.swift": {
+      "default": "swift-ai-azure/SwiftAIAzure",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/AzureMaiStreamingTranscription.swift": {
+      "default": "swift-ai-azure/SwiftAIAzure",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/BasetenModels.swift": {
+      "default": "swift-ai-baseten/SwiftAIBaseten",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/BedrockStreamParsing.swift": {
+      "default": "swift-ai-amazon-bedrock/SwiftAIAmazonBedrock",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/BlackForestLabsMediaModels.swift": {
+      "default": "swift-ai-black-forest-labs/SwiftAIBlackForestLabs",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/BlackForestLabsVideoModel.swift": {
+      "default": "swift-ai-black-forest-labs/SwiftAIBlackForestLabs",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/ByteDanceMediaModels.swift": {
+      "default": "swift-ai-bytedance/SwiftAIByteDance",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/CartesiaSpeechModel.swift": {
+      "default": "swift-ai-cartesia/SwiftAICartesia",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/CartesiaStreamingTranscriptionModel.swift": {
+      "default": "swift-ai-cartesia/SwiftAICartesia",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/CartesiaTranscriptionModel.swift": {
+      "default": "swift-ai-cartesia/SwiftAICartesia",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/CerebrasModels.swift": {
+      "default": "swift-ai-cerebras/SwiftAICerebras",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/CerebrasParsing.swift": {
+      "default": "swift-ai-cerebras/SwiftAICerebras",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/CerebrasRequestOptions.swift": {
+      "default": "swift-ai-cerebras/SwiftAICerebras",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/CerebrasToolsAndMessages.swift": {
+      "default": "swift-ai-cerebras/SwiftAICerebras",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/CohereEmbeddingRerankingModels.swift": {
+      "default": "swift-ai-cohere/SwiftAICohere",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/CohereLanguageModel.swift": {
+      "default": "swift-ai-cohere/SwiftAICohere",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/CohereVoyageModels.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-helper-or-mixed-container",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/CohereVoyageShared.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-helper-or-mixed-container",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/DecisionLanguageModel.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-helper-or-mixed-container",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/DeepInfraModels.swift": {
+      "default": "swift-ai-deepinfra/SwiftAIDeepInfra",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/DeepSeekModels.swift": {
+      "default": "swift-ai-deepseek/SwiftAIDeepSeek",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/DeepSeekOptions.swift": {
+      "default": "swift-ai-deepseek/SwiftAIDeepSeek",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/DeepSeekRequestPreparation.swift": {
+      "default": "swift-ai-deepseek/SwiftAIDeepSeek",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/DeepSeekToolsAndParsing.swift": {
+      "default": "swift-ai-deepseek/SwiftAIDeepSeek",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/DeepgramAudioModels.swift": {
+      "default": "swift-ai-deepgram/SwiftAIDeepgram",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/ElevenLabsAudioModels.swift": {
+      "default": "swift-ai-elevenlabs/SwiftAIElevenLabs",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/ElevenLabsExtendedAudioModels.swift": {
+      "default": "swift-ai-elevenlabs/SwiftAIElevenLabs",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/ElevenLabsStreamingSpeechModel.swift": {
+      "default": "swift-ai-elevenlabs/SwiftAIElevenLabs",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/EvaluationLanguageModel.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-helper-or-mixed-container",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/FalAudioModels.swift": {
+      "default": "swift-ai-fal/SwiftAIFal",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/FalMediaModels.swift": {
+      "default": "swift-ai-fal/SwiftAIFal",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/FileClients.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-helper-or-mixed-container",
+      "ranges": [
+        {
+          "start": 171,
+          "end": 395,
+          "owner": "swift-ai-deepseek/SwiftAIDeepSeek",
+          "reason": "DeepSeek files"
+        },
+        {
+          "start": 396,
+          "end": 488,
+          "owner": "swift-ai-google/SwiftAIGoogle",
+          "reason": "Google files"
+        },
+        {
+          "start": 489,
+          "end": 624,
+          "owner": "swift-ai-xai/SwiftAIXAI",
+          "reason": "xAI files"
+        },
+        {
+          "start": 962,
+          "end": 969,
+          "owner": "swift-ai-google/SwiftAIGoogle",
+          "reason": "Google upload metadata"
+        },
+        {
+          "start": 970,
+          "end": 994,
+          "owner": "swift-ai-xai/SwiftAIXAI",
+          "reason": "xAI upload metadata"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/Models/FireworksModels.swift": {
+      "default": "swift-ai-fireworks/SwiftAIFireworks",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/FishAudioModels.swift": {
+      "default": "swift-ai-fish-audio/SwiftAIFishAudio",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GatewayDecisionModel.swift": {
+      "default": "swift-ai-gateway/SwiftAIGateway",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GatewayEvaluationModel.swift": {
+      "default": "swift-ai-gateway/SwiftAIGateway",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GatewayMediaModels.swift": {
+      "default": "swift-ai-gateway/SwiftAIGateway",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GatewayModels.swift": {
+      "default": "swift-ai-gateway/SwiftAIGateway",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GatewayParsing.swift": {
+      "default": "swift-ai-gateway/SwiftAIGateway",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GatewayStreamingSpeechModel.swift": {
+      "default": "swift-ai-gateway/SwiftAIGateway",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GatewayStreamingTranscriptionModel.swift": {
+      "default": "swift-ai-gateway/SwiftAIGateway",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GenericMediaModels.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-helper-or-mixed-container",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GladiaAudioModels.swift": {
+      "default": "swift-ai-gladia/SwiftAIGladia",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleBatchLanguageModel.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleGenerateContentMetadata.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleGenerateContentResultParsing.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleGenerateContentSourceParsing.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleGenerateContentStreamParsing.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleGenerationOptions.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleGenerativeAI.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleGenerativeLanguageModel.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleGenerativeMediaModels.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleGenerativeMediaOptions.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleInteractionsMetadata.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleInteractionsModel.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleInteractionsRequest.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleInteractionsStreaming.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleModelCapabilities.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleSchemaConversion.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleToolPreparation.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleTools.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleVertexCloudTTSSpeechModel.swift": {
+      "default": "swift-ai-google-vertex/SwiftAIGoogleVertex",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GoogleVertexModels.swift": {
+      "default": "swift-ai-google-vertex/SwiftAIGoogleVertex",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GroqLanguageHelpers.swift": {
+      "default": "swift-ai-groq/SwiftAIGroq",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GroqModels.swift": {
+      "default": "swift-ai-groq/SwiftAIGroq",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GroqProviderOptions.swift": {
+      "default": "swift-ai-groq/SwiftAIGroq",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/GroqTranscriptionModel.swift": {
+      "default": "swift-ai-groq/SwiftAIGroq",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/HeyGenVideoInputs.swift": {
+      "default": "swift-ai-heygen/SwiftAIHeyGen",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/HeyGenVideoModel.swift": {
+      "default": "swift-ai-heygen/SwiftAIHeyGen",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/HeyGenVideoModelOptions.swift": {
+      "default": "swift-ai-heygen/SwiftAIHeyGen",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/HuggingFaceModels.swift": {
+      "default": "swift-ai-huggingface/SwiftAIHuggingFace",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/HumeAudioModels.swift": {
+      "default": "swift-ai-hume/SwiftAIHume",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/KlingAIMediaModels.swift": {
+      "default": "swift-ai-klingai/SwiftAIKlingAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/LMNTAudioModels.swift": {
+      "default": "swift-ai-lmnt/SwiftAILMNT",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/LanguageStreamParsing.swift": {
+      "default": "swift-ai-core/SwiftAITransport",
+      "reason": "incremental transport framing separated from OpenAI tool-call buffer",
+      "ranges": [
+        {
+          "start": 72,
+          "end": 10000,
+          "owner": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+          "reason": "OpenAI-style streaming tool-call assembly"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/Models/LumaMediaModels.swift": {
+      "default": "swift-ai-luma/SwiftAILuma",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MediaProviderModels.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-helper-or-mixed-container",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MediaProviderShared.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-helper-or-mixed-container",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MiniMaxVideoModel.swift": {
+      "default": "swift-ai-minimax/SwiftAIMiniMax",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MistralConversationLanguageModel.swift": {
+      "default": "swift-ai-mistral/SwiftAIMistral",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MistralConversationOptions.swift": {
+      "default": "swift-ai-mistral/SwiftAIMistral",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MistralConversationTools.swift": {
+      "default": "swift-ai-mistral/SwiftAIMistral",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MistralEmbeddingModel.swift": {
+      "default": "swift-ai-mistral/SwiftAIMistral",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MistralLanguageOptions.swift": {
+      "default": "swift-ai-mistral/SwiftAIMistral",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MistralMessageParsing.swift": {
+      "default": "swift-ai-mistral/SwiftAIMistral",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MistralModels.swift": {
+      "default": "swift-ai-mistral/SwiftAIMistral",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MistralSpeechModel.swift": {
+      "default": "swift-ai-mistral/SwiftAIMistral",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MistralTools.swift": {
+      "default": "swift-ai-mistral/SwiftAIMistral",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/MistralTranscriptionModel.swift": {
+      "default": "swift-ai-mistral/SwiftAIMistral",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatible.swift": {
+      "default": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleChatCommon.swift": {
+      "default": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleChatFireworks.swift": {
+      "default": "swift-ai-fireworks/SwiftAIFireworks",
+      "reason": "provider-specific options extracted from compatible engine",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleChatModel.swift": {
+      "default": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleChatMoonshot.swift": {
+      "default": "swift-ai-moonshotai/SwiftAIMoonshotAI",
+      "reason": "provider-specific options extracted from compatible engine",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleChatUsage.swift": {
+      "default": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleChatXAI.swift": {
+      "default": "swift-ai-xai/SwiftAIXAI",
+      "reason": "provider-specific options extracted from compatible engine",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleCompletionModel.swift": {
+      "default": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleConfig.swift": {
+      "default": "swift-ai-core/SwiftAITransport",
+      "reason": "split settings, provider tools, and provider-specific HTTP configuration",
+      "ranges": [
+        {
+          "start": 3,
+          "end": 276,
+          "owner": "swift-ai-openai/SwiftAIOpenAI",
+          "reason": "OpenAI hosted tools"
+        },
+        {
+          "start": 277,
+          "end": 351,
+          "owner": "swift-ai-azure/SwiftAIAzure",
+          "reason": "Azure hosted tools"
+        },
+        {
+          "start": 352,
+          "end": 477,
+          "owner": "swift-ai-core/SwiftAITransport",
+          "reason": "neutral connection and transport settings"
+        },
+        {
+          "start": 478,
+          "end": 10000,
+          "owner": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+          "reason": "mixed OpenAI transport configuration; neutral kernel must be extracted before core uses it"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleMediaModels.swift": {
+      "default": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleMetadata.swift": {
+      "default": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleProviderOptions.swift": {
+      "default": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleResponsesModel.swift": {
+      "default": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAICompatibleURL.swift": {
+      "default": "swift-ai-openai-compatible/SwiftAIOpenAICompatible",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAIDecisionModel.swift": {
+      "default": "swift-ai-openai/SwiftAIOpenAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAILiveModel.swift": {
+      "default": "swift-ai-openai/SwiftAIOpenAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAIResponsesBatchLanguageModel.swift": {
+      "default": "swift-ai-openai/SwiftAIOpenAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAIResponsesInput.swift": {
+      "default": "swift-ai-openai/SwiftAIOpenAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAIResponsesModel.swift": {
+      "default": "swift-ai-openai/SwiftAIOpenAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAIResponsesOptions.swift": {
+      "default": "swift-ai-openai/SwiftAIOpenAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAIResponsesParallelToolCalls.swift": {
+      "default": "swift-ai-openai/SwiftAIOpenAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAIResponsesParsing.swift": {
+      "default": "swift-ai-openai/SwiftAIOpenAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAIResponsesStreaming.swift": {
+      "default": "swift-ai-openai/SwiftAIOpenAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAIResponsesTools.swift": {
+      "default": "swift-ai-openai/SwiftAIOpenAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/OpenAISkills.swift": {
+      "default": "swift-ai-openai/SwiftAIOpenAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/PerplexityDecisionModel.swift": {
+      "default": "swift-ai-perplexity/SwiftAIPerplexity",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/PerplexityEmbeddingModel.swift": {
+      "default": "swift-ai-perplexity/SwiftAIPerplexity",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/PerplexityModels.swift": {
+      "default": "swift-ai-perplexity/SwiftAIPerplexity",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/ProdiaInputs.swift": {
+      "default": "swift-ai-prodia/SwiftAIProdia",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/ProdiaMediaModels.swift": {
+      "default": "swift-ai-prodia/SwiftAIProdia",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/ProdiaMultipart.swift": {
+      "default": "swift-ai-prodia/SwiftAIProdia",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/ProdiaProviderOptions.swift": {
+      "default": "swift-ai-prodia/SwiftAIProdia",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/ProdiaShared.swift": {
+      "default": "swift-ai-prodia/SwiftAIProdia",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/QuiverAIModels.swift": {
+      "default": "swift-ai-quiverai/SwiftAIQuiverAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/ReplicateMediaModels.swift": {
+      "default": "swift-ai-replicate/SwiftAIReplicate",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/RevAIAudioModels.swift": {
+      "default": "swift-ai-revai/SwiftAIRevAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/TogetherAIModels.swift": {
+      "default": "swift-ai-togetherai/SwiftAITogetherAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/TopazImageModel.swift": {
+      "default": "swift-ai-topaz/SwiftAITopaz",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/TopazShared.swift": {
+      "default": "swift-ai-topaz/SwiftAITopaz",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/TopazVideoModel.swift": {
+      "default": "swift-ai-topaz/SwiftAITopaz",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/TypesafeAIDecisionModel.swift": {
+      "default": "swift-ai-typesafe-ai/SwiftAITypeSafeAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/TypesafeAIDecisionOptions.swift": {
+      "default": "swift-ai-typesafe-ai/SwiftAITypeSafeAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/TypesafeAIEvaluationModel.swift": {
+      "default": "swift-ai-typesafe-ai/SwiftAITypeSafeAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/VoyageModels.swift": {
+      "default": "swift-ai-voyage/SwiftAIVoyage",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/XAIModels.swift": {
+      "default": "swift-ai-xai/SwiftAIXAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/XAIRealtimeModel.swift": {
+      "default": "swift-ai-xai/SwiftAIXAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/XAIResponses.swift": {
+      "default": "swift-ai-xai/SwiftAIXAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/XAIResponsesBatchLanguageModel.swift": {
+      "default": "swift-ai-xai/SwiftAIXAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Models/ZAILanguageModel.swift": {
+      "default": "swift-ai-zai/SwiftAIZAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/MultipartFormData.swift": {
+      "default": "swift-ai-core/SwiftAITransport",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Output.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/PromptConversion.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/PromptStandardization.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/ProviderReference.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/AmazonBedrockProvider.swift": {
+      "default": "swift-ai-amazon-bedrock/SwiftAIAmazonBedrock",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/AnthropicAWSProvider.swift": {
+      "default": "swift-ai-anthropic-aws/SwiftAIAnthropicAWS",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/AnthropicProvider.swift": {
+      "default": "swift-ai-anthropic/SwiftAIAnthropic",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/AzureOpenAIProvider.swift": {
+      "default": "swift-ai-azure/SwiftAIAzure",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/CartesiaProvider.swift": {
+      "default": "swift-ai-cartesia/SwiftAICartesia",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/CustomProvider.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "generic-registry-with-default-provider-compatibility-split",
+      "ranges": [
+        {
+          "start": 3,
+          "end": 78,
+          "owner": "SwiftAISDK/SwiftAISDK",
+          "reason": "preserve implicit Gateway resolution in compatibility surface"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/Providers/FishAudioProvider.swift": {
+      "default": "swift-ai-fish-audio/SwiftAIFishAudio",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/GMICloudProvider.swift": {
+      "default": "swift-ai-gmicloud/SwiftAIGMICloud",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/GatewayProvider.swift": {
+      "default": "swift-ai-gateway/SwiftAIGateway",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/GoogleGenerativeAIProvider.swift": {
+      "default": "swift-ai-google/SwiftAIGoogle",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/GoogleVertexProvider.swift": {
+      "default": "swift-ai-google-vertex/SwiftAIGoogleVertex",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/HuggingFaceProvider.swift": {
+      "default": "swift-ai-huggingface/SwiftAIHuggingFace",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/KlingAIProviderSettings.swift": {
+      "default": "swift-ai-klingai/SwiftAIKlingAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/MiniMaxProvider.swift": {
+      "default": "swift-ai-minimax/SwiftAIMiniMax",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/OpenAICompatibleProvider.swift": {
+      "default": "SwiftAISDK/SwiftAISDK",
+      "reason": "legacy-omnibus-provider; generic and concrete implementations must split",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/OpenAICompatibleProviderHelpers.swift": {
+      "default": "swift-ai-baseten/SwiftAIBaseten",
+      "reason": "split Baseten/DeepInfra configuration helpers",
+      "ranges": [
+        {
+          "start": 29,
+          "end": 10000,
+          "owner": "swift-ai-deepinfra/SwiftAIDeepInfra",
+          "reason": "DeepInfra URL adaptation"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/Providers/ProviderCapabilityMatrix.swift": {
+      "default": "swift-ai-core/SwiftAIProvider",
+      "reason": "descriptors/catalog data only; no provider imports or installation claims",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/ProviderRegistry.swift": {
+      "default": "SwiftAISDK/SwiftAISDK",
+      "reason": "legacy-factories-with-provider-owned-implementations",
+      "ranges": [
+        {
+          "start": 3,
+          "end": 3,
+          "owner": "swift-ai-core/SwiftAIProvider",
+          "reason": "shared empty provider namespace; concrete legacy factories remain in umbrella"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/Providers/TypesafeAIProvider.swift": {
+      "default": "swift-ai-typesafe-ai/SwiftAITypeSafeAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/VercelProvider.swift": {
+      "default": "swift-ai-vercel/SwiftAIVercel",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Providers/ZAIProvider.swift": {
+      "default": "swift-ai-zai/SwiftAIZAI",
+      "reason": "dedicated-provider-file",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/PruneMessages.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/ResponseMessages.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "tool-aware response conversion is high-level orchestration",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/ResponseMetadata.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/ResultContent.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": [
+        {
+          "start": 197,
+          "end": 10000,
+          "owner": "swift-ai-core/SwiftAI",
+          "reason": "tool-aware response message extension and helper belong to orchestration"
+        }
+      ]
+    },
+    "Sources/SwiftAISDK/ServerSentEvents.swift": {
+      "default": "swift-ai-core/SwiftAITransport",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/SpeechStreamEnvelope.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/StreamProviderError.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/StreamingToolCallTracker.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/SwiftNativeLanguageAPI.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/Telemetry.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/ToolCallConcurrency.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/ToolChoicePreparation.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/ToolInputExamplesMiddleware.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/ToolPreparation.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/TranscriptionParsing.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/VideoGenerationOperations.swift": {
+      "default": "swift-ai-core/SwiftAI",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    },
+    "Sources/SwiftAISDK/WarningLogging.swift": {
+      "default": "swift-ai-core/SwiftAIProviderUtilities",
+      "reason": "shared-layer-responsibility",
+      "ranges": []
+    }
+  }
+}

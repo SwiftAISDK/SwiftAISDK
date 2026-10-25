@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 // @ai-sdk/xai 5 removed the Chat Completions surface in favor of Responses.
 // SwiftAISDK intentionally keeps this implementation as a deprecated,

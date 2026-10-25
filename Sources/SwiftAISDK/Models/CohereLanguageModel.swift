@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 public final class CohereLanguageModel: LanguageModel, @unchecked Sendable {
     public let providerID = "cohere.chat"
@@ -57,7 +62,7 @@ public final class CohereLanguageModel: LanguageModel, @unchecked Sendable {
                     )
                     let response = try await config.streamRequest(httpRequest)
                     guard (200..<300).contains(response.statusCode) else {
-                        throw apiCallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
+                        throw compatibilityAPICallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
                     }
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
                     continuation.yield(.streamStart(warnings: prepared.warnings))

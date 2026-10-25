@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-anthropic-aws",
+  "status": "coarse-import",
+  "upstream": [
+    {
+      "name": "@ai-sdk/anthropic-aws",
+      "implementation": [
+        "packages/anthropic-aws/src"
+      ],
+      "tests": [
+        "packages/anthropic-aws/src/anthropic-aws-fetch.test.ts",
+        "packages/anthropic-aws/src/anthropic-aws-provider.test.ts",
+        "packages/anthropic-aws/src/region-validation.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Sources/SwiftAISDK/Providers/AnthropicAWSProvider.swift"
+    ],
+    "tests": [],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    }
+  ],
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+}

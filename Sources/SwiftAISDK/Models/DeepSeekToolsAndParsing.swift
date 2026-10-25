@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func deepSeekTools(from tools: [String: JSONValue], supportsStrictToolCalls: Bool = true) throws -> DeepSeekPreparedTools {
     var warnings: [AIWarning] = []

@@ -1,0 +1,659 @@
+import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAIOpenAICompatible
+
+
+public enum OpenResponsesTools {
+    public static func customTool(
+        name: String,
+        description: String? = nil,
+        format: JSONValue? = nil,
+        providerID: String = "open-responses.custom"
+    ) -> JSONValue {
+        var args: [String: JSONValue] = [:]
+        if let description { args["description"] = .string(description) }
+        if let format { args["format"] = format }
+        return .object([
+            "type": .string("provider"),
+            "id": .string(providerID),
+            "name": .string(name),
+            "args": .object(args)
+        ])
+    }
+
+    public static func textFormat() -> JSONValue {
+        .object(["type": .string("text")])
+    }
+}
+
+func openAIResponsesTools(
+    from tools: [String: JSONValue],
+    supportsAsyncToolCalling: Bool = true,
+    normalizeSchemas: Bool = true
+) throws -> (
+    tools: [JSONValue],
+    customToolNames: Set<String>,
+    programmaticToolNames: Set<String>,
+    outputSchemaToolNames: Set<String>,
+    warnings: [AIWarning]
+) {
+    var customToolNames: Set<String> = []
+    var programmaticToolNames: Set<String> = []
+    var outputSchemaToolNames: Set<String> = []
+    var namespaceIndexes: [String: Int] = [:]
+    var mapped: [JSONValue] = []
+    var warnings: [AIWarning] = []
+    for (name, schema) in tools {
+        let object = schema.objectValue
+        let providerToolID = object?["id"]?.stringValue
+        if object?["type"]?.stringValue == "provider" || providerToolID?.hasPrefix("openai.") == true {
+            if let tool = try openAIResponsesProviderTool(
+                name: object?["name"]?.stringValue ?? name,
+                id: providerToolID ?? name,
+                args: object?["args"]?.objectValue ?? [:],
+                supportsAsyncToolCalling: supportsAsyncToolCalling,
+                warnings: &warnings,
+                customToolNames: &customToolNames,
+                programmaticToolNames: &programmaticToolNames
+            ) {
+                mapped.append(tool)
+            }
+            continue
+        }
+
+        var parameters = schema
+        let openAIOptions = object?["providerOptions"]?["openai"]?.objectValue ?? object?["openai"]?.objectValue
+        if let outputSchema = openAIOptions?["outputSchema"] ?? openAIOptions?["output_schema"], outputSchema != .null {
+            outputSchemaToolNames.insert(name)
+        }
+        let omitFromRequestTools = openAIOptions?["omitFromRequestTools"] ?? openAIOptions?["omit_from_request_tools"]
+        if let omitFromRequestTools, omitFromRequestTools.boolValue == nil {
+            throw AIError.invalidArgument(argument: "tools.\(name).providerOptions.openai.omitFromRequestTools", message: "omitFromRequestTools must be a boolean.")
+        }
+        if omitFromRequestTools?.boolValue == true {
+            continue
+        }
+        var function: [String: JSONValue] = [
+            "type": .string("function"),
+            "name": .string(name),
+            "parameters": parameters
+        ]
+        if var parameterObject = parameters.objectValue {
+            parameterObject.removeValue(forKey: "providerOptions")
+            parameterObject.removeValue(forKey: "openai")
+            if let description = parameterObject.removeValue(forKey: "description")?.stringValue {
+                function["description"] = .string(description)
+            }
+            if let strict = parameterObject.removeValue(forKey: "strict") {
+                function["strict"] = strict
+            }
+            if let deferLoading = parameterObject.removeValue(forKey: "deferLoading") ?? parameterObject.removeValue(forKey: "defer_loading") {
+                function["defer_loading"] = deferLoading
+            }
+            parameters = .object(parameterObject)
+        }
+        if normalizeSchemas {
+            let normalizedParameters = try normalizeOpenAIJSONSchema(parameters)
+            parameters = normalizedParameters.schema
+            warnings.append(contentsOf: normalizedParameters.warnings)
+        }
+        function["parameters"] = parameters
+        if function["strict"] == nil {
+            function["strict"] = .bool(false)
+        }
+        if let deferLoading = openAIOptions?["deferLoading"] ?? openAIOptions?["defer_loading"] {
+            function["defer_loading"] = deferLoading
+        }
+        if let allowedCallers = openAIOptions?["allowedCallers"] ?? openAIOptions?["allowed_callers"] {
+            function["allowed_callers"] = allowedCallers
+        }
+        if let async = openAIResponsesAsyncToolOption(
+            openAIOptions?["async"],
+            supportsAsyncToolCalling: supportsAsyncToolCalling,
+            toolName: name,
+            warnings: &warnings
+        ) {
+            function["async"] = async
+        }
+        if let outputSchema = openAIOptions?["outputSchema"] ?? openAIOptions?["output_schema"],
+           outputSchema != .null {
+            if normalizeSchemas {
+                let normalizedOutputSchema = try normalizeOpenAIJSONSchema(outputSchema)
+                function["output_schema"] = normalizedOutputSchema.schema
+                warnings.append(contentsOf: normalizedOutputSchema.warnings)
+            } else {
+                function["output_schema"] = outputSchema
+            }
+            outputSchemaToolNames.insert(name)
+        }
+        if let namespace = openAIOptions?["namespace"]?.objectValue,
+           let namespaceName = namespace["name"]?.stringValue,
+           let namespaceDescription = namespace["description"]?.stringValue {
+            if let index = namespaceIndexes[namespaceName],
+               var namespaceTool = mapped[index].objectValue {
+                if namespaceTool["description"]?.stringValue != namespaceDescription {
+                    throw AIError.invalidArgument(
+                        argument: "tools",
+                        message: #"conflicting descriptions for OpenAI tool namespace "\#(namespaceName)""#
+                    )
+                }
+                var nestedTools = namespaceTool["tools"]?.arrayValue ?? []
+                nestedTools.append(.object(function))
+                namespaceTool["tools"] = .array(nestedTools)
+                mapped[index] = .object(namespaceTool)
+            } else {
+                namespaceIndexes[namespaceName] = mapped.count
+                mapped.append(.object([
+                    "type": .string("namespace"),
+                    "name": .string(namespaceName),
+                    "description": .string(namespaceDescription),
+                    "tools": .array([.object(function)])
+                ]))
+            }
+        } else {
+            mapped.append(.object(function))
+        }
+    }
+    return (mapped, customToolNames, programmaticToolNames, outputSchemaToolNames, warnings)
+}
+
+func openAIResponsesProviderToolNameAliases(from tools: [String: JSONValue]) -> [String: String] {
+    var aliases: [String: String] = [:]
+    for (name, schema) in tools {
+        let object = schema.objectValue
+        let providerToolID = object?["id"]?.stringValue
+        guard object?["type"]?.stringValue == "provider" || providerToolID?.hasPrefix("openai.") == true || providerToolID?.hasPrefix("xai.") == true else {
+            continue
+        }
+        let toolName = object?["name"]?.stringValue ?? name
+        switch providerToolID ?? name {
+        case "openai.code_interpreter", "xai.code_execution":
+            aliases["code_interpreter"] = toolName
+        case "openai.file_search", "xai.file_search":
+            aliases["file_search"] = toolName
+        case "openai.image_generation", "xai.image_generation":
+            aliases["image_generation"] = toolName
+        case "openai.web_search", "openai.web_search_preview", "xai.web_search":
+            aliases["web_search"] = toolName
+        case "openai.local_shell":
+            aliases["local_shell"] = toolName
+        case "openai.shell":
+            aliases["shell"] = toolName
+        case "openai.apply_patch":
+            aliases["apply_patch"] = toolName
+        case "openai.computer":
+            aliases["computer"] = toolName
+        case "openai.tool_search":
+            aliases["tool_search"] = toolName
+        case "openai.programmatic_tool_calling":
+            aliases["programmatic_tool_calling"] = toolName
+        default:
+            break
+        }
+    }
+    return aliases
+}
+
+func openAIResponsesProviderTool(
+    name: String,
+    id: String,
+    args: [String: JSONValue],
+    supportsAsyncToolCalling: Bool = true,
+    warnings: inout [AIWarning],
+    customToolNames: inout Set<String>,
+    programmaticToolNames: inout Set<String>
+) throws -> JSONValue? {
+    switch id {
+    case "openai.file_search":
+        var tool: [String: JSONValue] = ["type": .string("file_search")]
+        if let vectorStoreIds = args["vectorStoreIds"] ?? args["vector_store_ids"] { tool["vector_store_ids"] = vectorStoreIds }
+        if let maxNumResults = args["maxNumResults"] ?? args["max_num_results"] { tool["max_num_results"] = maxNumResults }
+        if let ranking = (args["ranking"] ?? args["ranking_options"])?.objectValue {
+            tool["ranking_options"] = .object([
+                "ranker": ranking["ranker"],
+                "score_threshold": ranking["scoreThreshold"] ?? ranking["score_threshold"]
+            ])
+        }
+        if let filters = args["filters"] { tool["filters"] = filters }
+        return .object(tool)
+    case "openai.local_shell":
+        return .object(["type": .string("local_shell")])
+    case "openai.shell":
+        var tool: [String: JSONValue] = ["type": .string("shell")]
+        if let environment = args["environment"]?.objectValue {
+            tool["environment"] = try openAIResponsesShellEnvironment(environment)
+        }
+        return .object(tool)
+    case "openai.apply_patch":
+        return .object(["type": .string("apply_patch")])
+    case "openai.computer":
+        return .object(["type": .string("computer")])
+    case "openai.web_search_preview":
+        var tool: [String: JSONValue] = ["type": .string("web_search_preview")]
+        if let searchContextSize = args["searchContextSize"] ?? args["search_context_size"] { tool["search_context_size"] = searchContextSize }
+        if let userLocation = args["userLocation"] ?? args["user_location"] { tool["user_location"] = userLocation }
+        return .object(tool)
+    case "openai.web_search":
+        var tool: [String: JSONValue] = ["type": .string("web_search")]
+        if let filters = args["filters"]?.objectValue {
+            var mappedFilters = filters
+            if let allowedDomains = mappedFilters.removeValue(forKey: "allowedDomains") {
+                mappedFilters["allowed_domains"] = allowedDomains
+            }
+            if let blockedDomains = mappedFilters.removeValue(forKey: "blockedDomains") {
+                mappedFilters["blocked_domains"] = blockedDomains
+            }
+            tool["filters"] = .object(mappedFilters)
+        }
+        if let externalWebAccess = args["externalWebAccess"] ?? args["external_web_access"] { tool["external_web_access"] = externalWebAccess }
+        if let searchContextSize = args["searchContextSize"] ?? args["search_context_size"] { tool["search_context_size"] = searchContextSize }
+        if let userLocation = args["userLocation"] ?? args["user_location"] { tool["user_location"] = userLocation }
+        return .object(tool)
+    case "openai.code_interpreter":
+        var tool: [String: JSONValue] = ["type": .string("code_interpreter")]
+        if let container = args["container"] {
+            if let containerID = container.stringValue {
+                tool["container"] = .string(containerID)
+            } else if let containerObject = container.objectValue {
+                tool["container"] = .object([
+                    "type": .string("auto"),
+                    "file_ids": containerObject["fileIds"] ?? containerObject["file_ids"]
+                ])
+            }
+        } else {
+            tool["container"] = .object(["type": .string("auto")])
+        }
+        return .object(tool)
+    case "openai.computer_use":
+        var tool = openAIResponsesSnakeCasedObject(args)
+        tool["type"] = .string("computer_use")
+        return .object(tool)
+    case "openai.image_generation":
+        var tool: [String: JSONValue] = ["type": .string("image_generation")]
+        for key in ["action", "background", "model", "moderation", "quality", "size"] {
+            if let value = args[key] { tool[key] = value }
+        }
+        if let value = args["inputFidelity"] ?? args["input_fidelity"] { tool["input_fidelity"] = value }
+        if let value = args["inputImageMask"]?.objectValue ?? args["input_image_mask"]?.objectValue {
+            tool["input_image_mask"] = .object([
+                "file_id": value["fileId"] ?? value["file_id"],
+                "image_url": value["imageUrl"] ?? value["image_url"]
+            ])
+        }
+        if let value = args["partialImages"] ?? args["partial_images"] { tool["partial_images"] = value }
+        if let value = args["outputCompression"] ?? args["output_compression"] { tool["output_compression"] = value }
+        if let value = args["outputFormat"] ?? args["output_format"] { tool["output_format"] = value }
+        return .object(tool)
+    case "openai.mcp":
+        var tool: [String: JSONValue] = ["type": .string("mcp")]
+        if let value = args["serverLabel"] ?? args["server_label"] { tool["server_label"] = value }
+        if let value = args["allowedTools"] ?? args["allowed_tools"] { tool["allowed_tools"] = openAIResponsesMCPAllowedTools(value) }
+        if let value = args["authorization"] { tool["authorization"] = value }
+        if let value = args["connectorId"] ?? args["connector_id"] { tool["connector_id"] = value }
+        if let value = args["headers"] { tool["headers"] = value }
+        tool["require_approval"] = openAIResponsesMCPRequireApproval(args["requireApproval"] ?? args["require_approval"]) ?? .string("never")
+        if let value = args["serverDescription"] ?? args["server_description"] { tool["server_description"] = value }
+        if let value = args["serverUrl"] ?? args["server_url"] { tool["server_url"] = value }
+        return .object(tool)
+    case "openai.custom", "open-responses.custom", "quiverai.custom":
+        customToolNames.insert(name)
+        var tool: [String: JSONValue] = ["type": .string("custom"), "name": .string(name)]
+        if let description = args["description"] { tool["description"] = description }
+        if let format = args["format"] { tool["format"] = format }
+        if let async = openAIResponsesAsyncToolOption(
+            args["async"],
+            supportsAsyncToolCalling: supportsAsyncToolCalling,
+            toolName: name,
+            warnings: &warnings
+        ) {
+            tool["async"] = async
+        }
+        return .object(tool)
+    case "openai.programmatic_tool_calling":
+        programmaticToolNames.insert(name)
+        return .object(["type": .string("programmatic_tool_calling")])
+    case "openai.tool_search":
+        var tool: [String: JSONValue] = ["type": .string("tool_search")]
+        if let execution = args["execution"] { tool["execution"] = execution }
+        if let description = args["description"] { tool["description"] = description }
+        if let parameters = args["parameters"] { tool["parameters"] = parameters }
+        return .object(tool)
+    case "xai.web_search":
+        var tool: [String: JSONValue] = ["type": .string("web_search")]
+        if let value = args["allowedDomains"] ?? args["allowed_domains"] { tool["allowed_domains"] = value }
+        if let value = args["excludedDomains"] ?? args["excluded_domains"] { tool["excluded_domains"] = value }
+        if let value = args["enableImageSearch"] ?? args["enable_image_search"] { tool["enable_image_search"] = value }
+        if let value = args["enableImageUnderstanding"] ?? args["enable_image_understanding"] { tool["enable_image_understanding"] = value }
+        return .object(tool)
+    case "xai.x_search":
+        var tool: [String: JSONValue] = ["type": .string("x_search")]
+        if let value = args["allowedXHandles"] ?? args["allowed_x_handles"] { tool["allowed_x_handles"] = value }
+        if let value = args["excludedXHandles"] ?? args["excluded_x_handles"] { tool["excluded_x_handles"] = value }
+        if let value = args["fromDate"] ?? args["from_date"] { tool["from_date"] = value }
+        if let value = args["toDate"] ?? args["to_date"] { tool["to_date"] = value }
+        if let value = args["enableImageUnderstanding"] ?? args["enable_image_understanding"] { tool["enable_image_understanding"] = value }
+        if let value = args["enableVideoUnderstanding"] ?? args["enable_video_understanding"] { tool["enable_video_understanding"] = value }
+        return .object(tool)
+    case "xai.code_execution":
+        return .object(["type": .string("code_interpreter")])
+    case "xai.view_image":
+        return .object(["type": .string("view_image")])
+    case "xai.view_x_video":
+        return .object(["type": .string("view_x_video")])
+    case "xai.file_search":
+        var tool: [String: JSONValue] = ["type": .string("file_search")]
+        if let value = args["vectorStoreIds"] ?? args["vector_store_ids"] { tool["vector_store_ids"] = value }
+        if let value = args["maxNumResults"] ?? args["max_num_results"] { tool["max_num_results"] = value }
+        return .object(tool)
+    case "xai.mcp":
+        var tool: [String: JSONValue] = ["type": .string("mcp")]
+        if let value = args["serverUrl"] ?? args["server_url"] { tool["server_url"] = value }
+        if let value = args["serverLabel"] ?? args["server_label"] { tool["server_label"] = value }
+        if let value = args["serverDescription"] ?? args["server_description"] { tool["server_description"] = value }
+        if let value = args["allowedTools"] ?? args["allowed_tools"] { tool["allowed_tools"] = value }
+        if let value = args["headers"] { tool["headers"] = value }
+        if let value = args["authorization"] { tool["authorization"] = value }
+        return .object(tool)
+    default:
+        return nil
+    }
+}
+
+func openAIResponsesAsyncToolOption(
+    _ value: JSONValue?,
+    supportsAsyncToolCalling: Bool,
+    toolName: String,
+    warnings: inout [AIWarning]
+) -> JSONValue? {
+    guard let value else { return nil }
+    if value.boolValue == true, !supportsAsyncToolCalling {
+        warnings.append(AIWarning(
+            type: "unsupported",
+            feature: "async tool calling for \"\(toolName)\"",
+            message: "Async tool calling is only supported by GPT-6 and later models."
+        ))
+        return nil
+    }
+    return value
+}
+
+public func normalizeOpenAIJSONSchema(_ schema: JSONValue) throws -> (schema: JSONValue, warnings: [AIWarning]) {
+    var removedPropertyNames = false
+    var removedLookaroundPattern = false
+
+    func normalizeDefinition(_ definition: JSONValue) throws -> JSONValue {
+        if definition.boolValue != nil { return definition }
+        return try normalizeSchema(definition)
+    }
+
+    func normalizeRecord(_ value: JSONValue) throws -> JSONValue {
+        guard let object = value.objectValue else { return value }
+        return .object(try object.mapValues(normalizeDefinition))
+    }
+
+    func normalizeSchema(_ value: JSONValue, isRoot: Bool = false) throws -> JSONValue {
+        guard var object = value.objectValue else { return value }
+        if let propertyNames = object["propertyNames"] {
+            guard propertyNames.boolValue == nil,
+                  propertyNames.objectValue?["type"]?.stringValue == "string" else {
+                throw AIError.invalidArgument(
+                    argument: "JSON Schema propertyNames",
+                    message: "OpenAI does not support JSON Schema propertyNames that does not use a string schema."
+                )
+            }
+            removedPropertyNames = true
+            object.removeValue(forKey: "propertyNames")
+        }
+        if let pattern = object["pattern"]?.stringValue, openAIContainsRegexLookaround(pattern) {
+            object.removeValue(forKey: "pattern")
+            removedLookaroundPattern = true
+        }
+        for key in ["properties", "patternProperties", "definitions", "$defs"] {
+            if let nested = object[key] { object[key] = try normalizeRecord(nested) }
+        }
+        for key in ["additionalProperties", "additionalItems", "contains", "not", "if", "then", "else"] {
+            if let nested = object[key] { object[key] = try normalizeDefinition(nested) }
+        }
+        if let items = object["items"] {
+            if let values = items.arrayValue {
+                object["items"] = .array(try values.map(normalizeDefinition))
+            } else {
+                object["items"] = try normalizeDefinition(items)
+            }
+        }
+        for key in ["allOf", "anyOf", "oneOf"] {
+            if let values = object[key]?.arrayValue {
+                object[key] = .array(try values.map(normalizeDefinition))
+            }
+        }
+        if var dependencies = object["dependencies"]?.objectValue {
+            for (key, dependency) in dependencies where dependency.arrayValue == nil {
+                dependencies[key] = try normalizeDefinition(dependency)
+            }
+            object["dependencies"] = .object(dependencies)
+        }
+        if let allOf = object["allOf"]?.arrayValue, allOf.count == 1,
+           let referenceObject = allOf[0].objectValue, referenceObject.count == 1,
+           let reference = referenceObject["$ref"]?.stringValue {
+            if !isRoot {
+                object.removeValue(forKey: "allOf")
+                object["$ref"] = .string(reference)
+            } else {
+                let parts = reference.split(separator: "/", omittingEmptySubsequences: false)
+                if parts.count == 3, parts[0] == "#", ["definitions", "$defs"].contains(String(parts[1])) {
+                    let name = String(parts[2]).replacingOccurrences(of: "~1", with: "/").replacingOccurrences(of: "~0", with: "~")
+                    if var definition = object[String(parts[1])]?[name]?.objectValue {
+                        object.removeValue(forKey: "allOf")
+                        definition.merge(object) { _, annotation in annotation }
+                        object = definition
+                    }
+                }
+            }
+        }
+        return .object(object)
+    }
+
+    let normalized = try normalizeSchema(schema, isRoot: true)
+    var warnings: [AIWarning] = []
+    if removedPropertyNames {
+        warnings.append(AIWarning(
+            type: "compatibility",
+            feature: "JSON Schema propertyNames",
+            message: "OpenAI does not support JSON Schema propertyNames. It was removed before sending the schema, so OpenAI will not enforce property-name constraints."
+        ))
+    }
+    if removedLookaroundPattern {
+        warnings.append(AIWarning(
+            type: "compatibility",
+            feature: "JSON Schema pattern with regex lookaround",
+            message: "OpenAI does not support regex lookaround in JSON Schema patterns. The pattern was removed before sending the schema, so OpenAI will not enforce that constraint."
+        ))
+    }
+    return (normalized, warnings)
+}
+
+private func openAIContainsRegexLookaround(_ pattern: String) -> Bool {
+    let characters = Array(pattern)
+    var escaped = false
+    var inCharacterClass = false
+    for index in characters.indices {
+        let character = characters[index]
+        if escaped {
+            escaped = false
+            continue
+        }
+        if character == "\\" {
+            escaped = true
+            continue
+        }
+        if character == "[" {
+            inCharacterClass = true
+            continue
+        }
+        if character == "]" {
+            inCharacterClass = false
+            continue
+        }
+        guard !inCharacterClass,
+              character == "(",
+              index + 2 < characters.count,
+              characters[index + 1] == "?" else { continue }
+        let prefix = characters[index + 2]
+        if prefix == "=" || prefix == "!" { return true }
+        if prefix == "<", index + 3 < characters.count {
+            let suffix = characters[index + 3]
+            if suffix == "=" || suffix == "!" { return true }
+        }
+    }
+    return false
+}
+func openAIResponsesToolChoice(
+    from value: JSONValue?,
+    customToolNames: Set<String>,
+    programmaticToolNames: Set<String> = []
+) -> JSONValue? {
+    if let string = value?.stringValue {
+        switch string {
+        case "auto", "none", "required":
+            return .string(string)
+        default:
+            return nil
+        }
+    }
+    guard let object = value?.objectValue else { return nil }
+    switch object["type"]?.stringValue {
+    case "auto", "none", "required":
+        return object["type"]
+    case "tool":
+        guard let name = object["toolName"]?.stringValue ?? object["tool_name"]?.stringValue else { return nil }
+        let providerToolTypes: Set<String> = ["code_interpreter", "file_search", "image_generation", "web_search_preview", "web_search", "mcp", "apply_patch", "computer"]
+        if programmaticToolNames.contains(name) || name == "programmatic_tool_calling" {
+            return .object(["type": .string("programmatic_tool_calling")])
+        }
+        if providerToolTypes.contains(name) {
+            return .object(["type": .string(name)])
+        }
+        if customToolNames.contains(name) {
+            return .object(["type": .string("custom"), "name": .string(name)])
+        }
+        return .object(["type": .string("function"), "name": .string(name)])
+    default:
+        return nil
+    }
+}
+
+func openAIResponsesMCPAllowedTools(_ value: JSONValue) -> JSONValue {
+    guard var object = value.objectValue else { return value }
+    if let readOnly = object.removeValue(forKey: "readOnly") { object["read_only"] = readOnly }
+    if let toolNames = object.removeValue(forKey: "toolNames") { object["tool_names"] = toolNames }
+    return .object(object)
+}
+
+func openAIResponsesMCPRequireApproval(_ value: JSONValue?) -> JSONValue? {
+    guard let value else { return nil }
+    if value.stringValue != nil { return value }
+    guard var object = value.objectValue else { return value }
+    if var never = object["never"]?.objectValue {
+        if let toolNames = never.removeValue(forKey: "toolNames") {
+            never["tool_names"] = toolNames
+        }
+        object["never"] = .object(never)
+    }
+    return .object(object)
+}
+
+func openAIResponsesShellEnvironment(_ environment: [String: JSONValue]) throws -> JSONValue {
+    switch environment["type"]?.stringValue {
+    case "containerReference":
+        return .object([
+            "type": .string("container_reference"),
+            "container_id": environment["containerId"] ?? environment["container_id"]
+        ])
+    case "containerAuto":
+        var mapped: [String: JSONValue] = ["type": .string("container_auto")]
+        if let fileIds = environment["fileIds"] ?? environment["file_ids"] { mapped["file_ids"] = fileIds }
+        if let memoryLimit = environment["memoryLimit"] ?? environment["memory_limit"] { mapped["memory_limit"] = memoryLimit }
+        if let networkPolicy = environment["networkPolicy"]?.objectValue ?? environment["network_policy"]?.objectValue {
+            mapped["network_policy"] = openAIResponsesShellNetworkPolicy(networkPolicy)
+        }
+        if let skills = environment["skills"]?.arrayValue {
+            mapped["skills"] = .array(try skills.map(openAIResponsesShellSkill))
+        }
+        return .object(mapped)
+    default:
+        var mapped: [String: JSONValue] = ["type": .string("local")]
+        if let skills = environment["skills"], skills != .null { mapped["skills"] = skills }
+        return .object(mapped)
+    }
+}
+
+func openAIResponsesShellSkill(_ skill: JSONValue) throws -> JSONValue {
+    guard let object = skill.objectValue else { return skill }
+    if object["type"]?.stringValue == "skillReference" {
+        var mapped: [String: JSONValue] = ["type": .string("skill_reference")]
+        if let skillID = object["skillId"] ?? object["skill_id"] {
+            mapped["skill_id"] = skillID
+        } else if let providerReference = object["providerReference"]?.objectValue ?? object["provider_reference"]?.objectValue {
+            let reference = providerReference.compactMapValues(\.stringValue)
+            mapped["skill_id"] = .string(try resolveProviderReference(reference: reference, provider: "openai"))
+        }
+        if let version = object["version"] {
+            mapped["version"] = version
+        } else {
+            mapped["version"] = .string("latest")
+        }
+        return .object(mapped)
+    }
+    if object["type"]?.stringValue == "inline" {
+        var mapped: [String: JSONValue] = ["type": .string("inline")]
+        if let name = object["name"] {
+            mapped["name"] = name
+        }
+        if let description = object["description"] {
+            mapped["description"] = description
+        }
+        if var source = object["source"]?.objectValue {
+            if let mediaType = source.removeValue(forKey: "mediaType") {
+                source["media_type"] = mediaType
+            }
+            mapped["source"] = .object(source)
+        }
+        return .object(mapped)
+    }
+    return skill
+}
+
+func openAIResponsesShellNetworkPolicy(_ policy: [String: JSONValue]) -> JSONValue {
+    guard policy["type"]?.stringValue == "allowlist" else {
+        return .object(policy)
+    }
+    var mapped = policy
+    if let allowedDomains = mapped.removeValue(forKey: "allowedDomains") {
+        mapped["allowed_domains"] = allowedDomains
+    }
+    if let domainSecrets = mapped.removeValue(forKey: "domainSecrets") {
+        mapped["domain_secrets"] = domainSecrets
+    }
+    return .object(mapped)
+}
+
+func openAIResponsesSnakeCasedObject(_ values: [String: JSONValue]) -> [String: JSONValue] {
+    Dictionary(uniqueKeysWithValues: values.map { key, value in
+        (openAIResponsesSnakeCasedKey(key), value)
+    })
+}
+
+func openAIResponsesSnakeCasedKey(_ key: String) -> String {
+    var output = ""
+    for character in key {
+        if character.isUppercase {
+            output.append("_")
+            output.append(character.lowercased())
+        } else {
+            output.append(character)
+        }
+    }
+    return output
+}

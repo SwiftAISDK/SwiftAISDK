@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func deepSeekStreamProviderError(from raw: JSONValue) -> AIStreamProviderError? {
     guard let error = raw["error"] else { return nil }
@@ -154,7 +159,7 @@ public final class DeepSeekLanguageModel: LanguageModel, @unchecked Sendable {
                     )
                     let response = try await config.streamRequest(httpRequest)
                     guard (200..<300).contains(response.statusCode) else {
-                        throw apiCallError(
+                        throw compatibilityAPICallError(
                             provider: providerID,
                             response: try await bufferedHTTPResponse(from: response, request: httpRequest)
                         )

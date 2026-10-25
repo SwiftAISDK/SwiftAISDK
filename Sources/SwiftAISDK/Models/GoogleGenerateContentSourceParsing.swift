@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func googleGroundingChunkSource(from chunk: JSONValue, index: Int) -> AISource? {
     if let web = chunk["web"], let uri = web["uri"]?.stringValue {

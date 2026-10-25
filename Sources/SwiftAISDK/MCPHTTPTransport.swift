@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 private func mcpSingleChunkStream(_ data: Data) -> AsyncThrowingStream<Data, Error> {
     AsyncThrowingStream { continuation in

@@ -6,9 +6,10 @@ This document tracks SwiftAISDK against the current AI SDK Core and Errors
 reference. It is intentionally high-level: product status belongs in
 `PortingStatus.md`, provider package drift belongs in `ProviderVersionLedger.md`,
 and provider behavior belongs in focused tests.
+The current snapshot versions below are generated from `Porting/upstream-lock.json`;
+parity explanations remain hand-authored.
 Implementation-sensitive UI/chat items are also checked against npm source
-snapshots, currently `ai@7.0.153`, `@ai-sdk/provider@4.0.34`,
-`@ai-sdk/provider-utils@5.0.68`, and `@ai-sdk/react@4.0.157`.
+snapshots, currently `ai@7.0.153`, `@ai-sdk/provider@4.0.34`, `@ai-sdk/provider-utils@5.0.68`, and `@ai-sdk/react@4.0.157`.
 
 References:
 

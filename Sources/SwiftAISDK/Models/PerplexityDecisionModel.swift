@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 /// Perplexity's native Decisions API with shared text, JSON and image evidence.
 public final class PerplexityDecisionModel: AIDecisionModelV4, @unchecked Sendable {

@@ -1,4 +1,9 @@
 import Foundation
+import SwiftAIProvider
+import SwiftAITransport
+import SwiftAIProviderUtilities
+import SwiftAI
+
 
 func bedrockStreamParts(from raw: JSONValue) -> [LanguageStreamPart] {
     var parts: [LanguageStreamPart] = []
