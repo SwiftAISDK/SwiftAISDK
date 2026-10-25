@@ -201,7 +201,10 @@ final class SpeechSocketSession: @unchecked Sendable {
                     }
                 case .message(.binary): break
                 case let .closed(metadata):
-                    let error = lock.withLock { serverError } ?? AIStreamingSpeechError(provider: "speech", message: "Speech stream closed before completion (code \(metadata.code)\(metadata.reason.map { ": " + $0 } ?? "")).")
+                    let error: any Error = lock.withLock {
+                        if let serverError { return serverError }
+                        return AIStreamingSpeechError(provider: "speech", message: "Speech stream closed before completion (code \(metadata.code)\(metadata.reason.map { ": " + $0 } ?? "")).")
+                    }
                     finish(connectionError(error)); return
                 }
             }

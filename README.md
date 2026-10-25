@@ -18,7 +18,7 @@ not affiliation or endorsement.
 Add the package to `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/ozio/SwiftAISDK.git", from: "1.1.1")
+.package(url: "https://github.com/ozio/SwiftAISDK.git", from: "2.8.1")
 ```
 
 Applications that require a reviewed, reproducible SDK build can use SwiftPM's

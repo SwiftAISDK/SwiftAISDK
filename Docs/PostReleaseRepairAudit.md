@@ -1,4 +1,32 @@
-# Post-release repair audit — 2026-10-23
+# Post-release repair audits
+
+## 2026-10-25: minimum Swift compiler compatibility
+
+The published 2.8.0 commit passed the full local suite on Swift 6.4. Hosted
+workflow [40151254092](https://github.com/ozio/SwiftAISDK/actions/runs/40151254092)
+then exposed one library compilation error on **Swift 6.3.3**: the shared speech
+WebSocket close path inferred an optional existential error from a lock-protected
+read and nil coalescing, while the connection-error converter needs a nonoptional
+`any Error`.
+
+The patch explicitly selects either the stored server error or a synthesized
+premature-close error inside the lock, with a nonoptional `any Error` result.
+Error identity, mapping, cancellation and streaming behavior remain unchanged.
+This is a compiler-compatibility fix; npm package baselines and the new 2.8.0
+API surface do not change. The original tag remains immutable.
+
+The install requirement and streaming-speech guide point Swift 6.3 users to
+2.8.1. Local speech regressions, full tests, examples and docs are checked again
+for the patch; hosted minimum-toolchain verification is a separate required
+release gate.
+
+Local patch verification passed on Swift 6.4: 26 speech tests / three suites;
+full 3,543 tests / 66 suites (3,510 passed, 33 explicit live skips); all 19
+examples and both offline OAuth flows. Documentation clean install/audit,
+four-file diagnostics (zero errors/warnings/hints) and the 98-page production
+build passed. No provider credentials or paid calls were used.
+
+## 2026-10-23: repairs after 2.6.0
 
 This pass repairs issues identified after SwiftAISDK 2.6.0. Published npm
 baselines and model-provider coverage remain unchanged. New sandbox/bash tools,

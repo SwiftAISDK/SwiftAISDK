@@ -7,6 +7,11 @@ ElevenLabs or AI Gateway. Text can be a complete string, a sequence of chunks,
 or an `AIStreamingTextInput` backed by your producer. The provider consumes
 text while returning audio.
 
+Use SwiftAISDK **2.8.1 or later** with the minimum Swift 6.3 toolchain. Version
+2.8.0 contains a compiler-inference issue in the shared speech WebSocket close
+path that is fixed in 2.8.1. Swift 6.4 accepted that code, so its passing local
+checks did not establish compatibility with the older compiler.
+
 ```swift title="Examples/Sources/StreamSpeech/StreamSpeechExample.swift"
 import Foundation
 import SwiftAISDK

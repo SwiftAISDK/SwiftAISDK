@@ -28,6 +28,11 @@ Status meanings:
 
 ## 2026-10-25 Weekly Audit
 
+The 2.8.1 compatibility follow-up retains every baseline and behavior decision
+below. It makes the speech WebSocket close-error type explicit for Swift 6.3.3;
+the original 2.8.0 hosted build failed on compiler inference despite passing the
+local Swift 6.4 suite. See `PostReleaseRepairAudit.md` for the exact boundary.
+
 Started on clean, synchronized `main` at `08d1ee4cbded91dfd671e8e53b7f1fe21e24386c`
 / published **2.7.1**, with zero inherited ahead commits or unrelated dirty files.
 Fresh registry reads cover **54 tracked packages: 52 changed and two current**

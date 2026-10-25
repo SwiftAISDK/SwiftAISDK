@@ -16,6 +16,12 @@ for exact evidence.
 
 ## Weekly upstream parity (2026-10-25)
 
+The follow-up patch for 2.8.1 explicitly resolves the nonoptional speech
+WebSocket close error so the library also compiles on the minimum Swift 6.3.3
+toolchain. Local Swift 6.4 checks for 2.8.0 passed before that hosted failure was
+observed; see `PostReleaseRepairAudit.md`. The 2.8.0 tag and npm baselines are
+preserved.
+
 The current pass covers ai 7.0.153, provider 4.0.34, provider-utils 5.0.68 and
 all reviewed provider baselines. It adds streaming speech, incomplete-stream
 semantics, final-answer JSON parsing, safer tool execution and new provider
