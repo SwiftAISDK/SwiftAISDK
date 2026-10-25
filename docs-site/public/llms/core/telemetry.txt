@@ -1,6 +1,6 @@
 # Telemetry
 
-Source URL: https://ozio.github.io/SwiftAISDK/core/telemetry/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/telemetry/
 
 Use telemetry when you want structured events for observability, debugging, billing, or product analytics. Telemetry is opt-in: pass `Telemetry.Options` on a call, or register integrations globally and pass enabled telemetry options. Calls with `telemetry: nil` do not record events.
 

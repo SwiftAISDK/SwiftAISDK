@@ -372,7 +372,8 @@ function validatePlan(root, candidate) {
     "Release plan is stale: source, changes, dependency graph or Git state changed",
   );
 }
-function exportRelease(root, candidate, destination) {
+function exportRelease(root, candidate, destination, { publication = false } = {}) {
+  if (publication) ensure(candidate.source.commit && !candidate.source.workingTree, "Publication requires committed clean source");
   validatePlan(root, candidate);
   ensure(candidate.packages.length > 0, "No reviewed pending release changes");
   ensure(
@@ -487,12 +488,12 @@ function exportRelease(root, candidate, destination) {
       writeFile(
         dir,
         "README.md",
-        `<!-- Generated release candidate; edit the canonical repository. -->\n# ${p.id} ${entry.version}\n\nIndependent Swift-native port of Vercel AI SDK. This is a candidate export; it\nis not evidence that a version is published. Source and upstream dispositions are\nin PROVENANCE.json and Porting/.\n\n## Distribution manifest\n\nAfter this version is published:\n\n\`\`\`swift\n.package(url: "${p.repository}", from: "${entry.version}")\n\`\`\`\n\nProducts: ${p.modules.map((m) => "`" + m.name + "`").join(", ")}.\nContribute and report issues in the canonical SwiftAISDK repository.\n\n## Authored usage guide\n\n${guide}`,
+        `<!-- Generated ${publication ? "distribution" : "release candidate"}; edit the canonical repository. -->\n# ${p.id} ${entry.version}\n\nIndependent Swift-native port of Vercel AI SDK. ${publication ? "Source and upstream dispositions are in PROVENANCE.json and Porting/." : "This is a candidate export; it is not evidence that a version is published. Source and upstream dispositions are in PROVENANCE.json and Porting/."}\n\n## Distribution manifest\n\n${publication ? "Add this package to your SwiftPM dependencies:" : "After this version is published:"}\n\n\`\`\`swift\n.package(url: "${p.repository}", from: "${entry.version}")\n\`\`\`\n\nProducts: ${p.modules.map((m) => "`" + m.name + "`").join(", ")}.\nContribute and report issues in the canonical SwiftAISDK repository.\n\n## Authored usage guide\n\n${guide}`,
       );
       writeFile(
         dir,
         "CHANGELOG.md",
-        `# Changelog\n\n## ${entry.version} (candidate)\n\n${entry.changes.map((c) => `- ${c.notes}\n  Compatibility: ${c.compatibility}`).join("\n")}\n`,
+        `# Changelog\n\n## ${entry.version}${publication ? "" : " (candidate)"}\n\n${entry.changes.map((c) => `- ${c.notes}\n  Compatibility: ${c.compatibility}`).join("\n")}\n`,
       );
       writeFile(
         dir,
@@ -536,6 +537,7 @@ function exportRelease(root, candidate, destination) {
     const bundle = {
       schemaVersion: 1,
       kind: "release-export",
+      ...(publication ? { publication: true } : {}),
       plan: candidate,
       exports,
     };
@@ -961,4 +963,8 @@ module.exports = {
   compare,
   accepts,
   versionAfter,
+  validatePlan,
+  committedFiles,
+  atomicJSON,
+  lock,
 };

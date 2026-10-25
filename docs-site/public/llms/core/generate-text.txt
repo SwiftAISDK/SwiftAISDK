@@ -1,6 +1,6 @@
 # Generate text
 
-Source URL: https://ozio.github.io/SwiftAISDK/core/generate-text/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/
 
 Use `generateText` when you want a complete response before continuing your workflow.
 

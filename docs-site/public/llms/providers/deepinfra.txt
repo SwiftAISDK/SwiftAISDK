@@ -1,6 +1,6 @@
 # "deepinfra"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/deepinfra/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/deepinfra/
 
 ## Package
 

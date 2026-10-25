@@ -1,6 +1,6 @@
 # Generate audio
 
-Source URL: https://ozio.github.io/SwiftAISDK/core/generate-audio/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/generate-audio/
 
 Use `generateAudio` for prompt-to-audio models that are not text-to-speech, such as ElevenLabs music and sound effects.
 

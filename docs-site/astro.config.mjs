@@ -4,7 +4,7 @@ import starlight from '@astrojs/starlight';
 import remarkGfm from 'remark-gfm';
 
 const base = process.env.DOCS_BASE ?? '/';
-const site = process.env.DOCS_SITE ?? 'https://ozio.github.io';
+const site = process.env.DOCS_SITE ?? 'https://swiftaisdk.github.io';
 
 export default defineConfig({
   site,
@@ -21,13 +21,13 @@ export default defineConfig({
       customCss: ['./src/styles/custom.css'],
       editLink: {
         baseUrl:
-          'https://github.com/ozio/SwiftAISDK/edit/main/docs-site/',
+          'https://github.com/SwiftAISDK/SwiftAISDK/edit/main/docs-site/',
       },
       social: [
         {
           icon: 'github',
           label: 'GitHub',
-          href: 'https://github.com/ozio/SwiftAISDK',
+          href: 'https://github.com/SwiftAISDK/SwiftAISDK',
         },
       ],
       sidebar: [

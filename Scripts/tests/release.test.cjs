@@ -332,3 +332,68 @@ test("committed release-set records are append-only and cannot be reused as a ca
   fs.unlinkSync(file);
   assert.throws(() => release.plan(dir, "second"), /modified or deleted/);
 });
+
+
+test("production publication requires exact CI and resumes after a pushed tag without replacing refs", (t) => {
+  const { publish } = require("../lib/publish.cjs");
+  const { dir, parent } = fixture(t);
+  const candidate = release.plan(dir);
+  const output = path.join(parent, "production-export");
+  const bundle = release.exportRelease(dir, candidate, output, { publication: true });
+  assert.equal(bundle.publication, true);
+  assert(!fs.readFileSync(path.join(output, "swift-ai-core", "README.md"), "utf8").includes("This is a candidate export"));
+  const remotes = new Map();
+  for (const p of candidate.packages) {
+    const remote = path.join(parent, p.package + ".git");
+    release.git(["init", "--bare", "-q", "--initial-branch=main", remote], dir);
+    remotes.set(p.package, remote);
+  }
+  const published = new Map();
+  let ciPass = false;
+  const backend = {
+    verifyCI(commit) { assert(ciPass, "exact CI required"); return { sourceCommit: commit, id: 1 }; },
+    remote(p) { return { url: remotes.get(p.package), name: p.package, id: p.package }; },
+    release(destination, receipt, notes) {
+      const prior = published.get(destination.name);
+      if (prior) assert.equal(prior.notes, notes);
+      published.set(destination.name, { receipt, notes });
+      return { id: destination.id, target: receipt.exportCommit };
+    },
+  };
+  const staging = path.join(parent, "production-attempt");
+  assert.throws(() => publish(dir, output, staging, { backend }), /exact CI required/);
+  assert.equal(release.git(["tag", "--list"], remotes.get("swift-ai-core")), "");
+  ciPass = true;
+  assert.throws(() => publish(dir, output, staging, { backend, afterPush: () => { throw Error("crash gap"); } }), /crash gap/);
+  const firstTag = release.git(["rev-parse", "1.0.0"], remotes.get("swift-ai-core"));
+  assert.equal(published.size, 0);
+  const result = publish(dir, output, staging, { backend });
+  assert.equal(result.status, "tags-and-releases-ready");
+  assert.equal(result.packages.length, 4);
+  assert.equal(release.git(["rev-parse", "1.0.0"], remotes.get("swift-ai-core")), firstTag);
+  assert.deepEqual(publish(dir, output, staging, { backend }), result);
+  const source = path.join(output, "swift-ai-core", "README.md");
+  fs.appendFileSync(source, "tamper");
+  assert.throws(() => publish(dir, output, staging, { backend }), /Export bytes changed/);
+});
+
+test("production rejects dirty source and conflicting public tags before dependents", (t) => {
+  const { publish } = require("../lib/publish.cjs");
+  const { dir, parent } = fixture(t);
+  fs.appendFileSync(path.join(dir, "LICENSE"), "\n");
+  assert.throws(() => release.exportRelease(dir, release.plan(dir), path.join(parent, "dirty"), { publication: true }), /committed clean source/);
+  release.git(["checkout", "--", "LICENSE"], dir);
+  const output = path.join(parent, "export");
+  release.exportRelease(dir, release.plan(dir), output, { publication: true });
+  const remote = path.join(parent, "conflict.git");
+  release.git(["clone", "--bare", "-q", dir, remote], parent);
+  release.git(["tag", "-a", "1.0.0", "-m", "conflicting tag"], remote);
+  const tag = release.git(["rev-parse", "1.0.0"], remote);
+  let writes = 0;
+  assert.throws(() => publish(dir, output, path.join(parent, "attempt"), { backend: {
+    verifyCI: () => ({ id: 1 }), remote: (p) => ({ name: p.package, url: remote }),
+    release: () => { writes++; },
+  } }), /Unrecorded existing destination refs/);
+  assert.equal(writes, 0);
+  assert.equal(release.git(["rev-parse", "1.0.0"], remote), tag);
+});

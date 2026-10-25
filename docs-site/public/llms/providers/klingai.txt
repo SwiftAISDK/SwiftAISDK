@@ -1,6 +1,6 @@
 # "klingai"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/klingai/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/klingai/
 
 ## Package
 

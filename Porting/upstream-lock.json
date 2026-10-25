@@ -37,8 +37,11 @@
       "sourceRef": "npm:@ai-sdk/anthropic@4.0.88",
       "testRef": "682e2dd71456f14f9da33a1b983d1998c3a1184c",
       "testRefRelationship": "inventory-snapshot-not-release-verified",
-      "contractFamilies": [],
-      "contractReview": "not-imported; inspect upstream declarations before extraction"
+      "contractFamilies": [
+        "ProviderV4",
+        "LanguageModelV4"
+      ],
+      "contractReview": "M5 pinned published declarations reviewed; native Swift protocols and typed factories are the compatibility contract. Retain existing behavior and documented gaps. npm gitHead absent; test snapshot is not matching-release evidence. See Docs/Migration/M5/upstream-review.json."
     },
     {
       "name": "@ai-sdk/anthropic-aws",
@@ -479,8 +482,13 @@
       "sourceRef": "npm:@ai-sdk/openai@4.0.102",
       "testRef": "682e2dd71456f14f9da33a1b983d1998c3a1184c",
       "testRefRelationship": "inventory-snapshot-not-release-verified",
-      "contractFamilies": [],
-      "contractReview": "not-imported; inspect upstream declarations before extraction"
+      "contractFamilies": [
+        "ProviderV4",
+        "LanguageModelV4",
+        "EmbeddingModelV4",
+        "ImageModelV4"
+      ],
+      "contractReview": "M5 pinned published declarations reviewed; native Swift protocols and typed factories are the compatibility contract. Retain existing behavior and documented gaps. npm gitHead absent; test snapshot is not matching-release evidence. See Docs/Migration/M5/upstream-review.json."
     },
     {
       "name": "@ai-sdk/openai-compatible",
@@ -492,8 +500,13 @@
       "sourceRef": "npm:@ai-sdk/openai-compatible@3.0.78",
       "testRef": "682e2dd71456f14f9da33a1b983d1998c3a1184c",
       "testRefRelationship": "inventory-snapshot-not-release-verified",
-      "contractFamilies": [],
-      "contractReview": "not-imported; inspect upstream declarations before extraction"
+      "contractFamilies": [
+        "ProviderV4",
+        "LanguageModelV4",
+        "EmbeddingModelV4",
+        "ImageModelV4"
+      ],
+      "contractReview": "M5 pinned published declarations reviewed; native Swift protocols and typed factories are the compatibility contract. Retain existing behavior and documented gaps. npm gitHead absent; test snapshot is not matching-release evidence. See Docs/Migration/M5/upstream-review.json."
     },
     {
       "name": "@ai-sdk/perplexity",
@@ -661,8 +674,10 @@
       "sourceRef": "npm:ai@7.0.153",
       "testRef": "682e2dd71456f14f9da33a1b983d1998c3a1184c",
       "testRefRelationship": "inventory-snapshot-not-release-verified",
-      "contractFamilies": [],
-      "contractReview": "not-imported; inspect upstream declarations before extraction"
+      "contractFamilies": [
+        "ProviderV4 orchestration"
+      ],
+      "contractReview": "M5 pinned published declarations reviewed; native Swift protocols and typed factories are the compatibility contract. Retain existing behavior and documented gaps. npm gitHead absent; test snapshot is not matching-release evidence. See Docs/Migration/M5/upstream-review.json."
     },
     {
       "name": "@ai-sdk/provider",
@@ -674,8 +689,15 @@
       "sourceRef": "npm:@ai-sdk/provider@4.0.34",
       "testRef": "682e2dd71456f14f9da33a1b983d1998c3a1184c",
       "testRefRelationship": "inventory-snapshot-not-release-verified",
-      "contractFamilies": [],
-      "contractReview": "not-imported; inspect upstream declarations before extraction"
+      "contractFamilies": [
+        "ProviderV4",
+        "LanguageModelV4",
+        "EmbeddingModelV4",
+        "ImageModelV4",
+        "SpeechModelV4",
+        "TranscriptionModelV4"
+      ],
+      "contractReview": "M5 pinned published declarations reviewed; native Swift protocols and typed factories are the compatibility contract. Retain existing behavior and documented gaps. npm gitHead absent; test snapshot is not matching-release evidence. See Docs/Migration/M5/upstream-review.json."
     },
     {
       "name": "@ai-sdk/provider-utils",
@@ -687,8 +709,10 @@
       "sourceRef": "npm:@ai-sdk/provider-utils@5.0.68",
       "testRef": "682e2dd71456f14f9da33a1b983d1998c3a1184c",
       "testRefRelationship": "inventory-snapshot-not-release-verified",
-      "contractFamilies": [],
-      "contractReview": "not-imported; inspect upstream declarations before extraction"
+      "contractFamilies": [
+        "ProviderV4 utilities"
+      ],
+      "contractReview": "M5 pinned published declarations reviewed; native Swift protocols and typed factories are the compatibility contract. Retain existing behavior and documented gaps. npm gitHead absent; test snapshot is not matching-release evidence. See Docs/Migration/M5/upstream-review.json."
     },
     {
       "name": "@ai-sdk/react",

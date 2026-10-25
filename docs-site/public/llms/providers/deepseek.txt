@@ -1,6 +1,6 @@
 # "deepseek"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/deepseek/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/deepseek/
 
 ## Package
 

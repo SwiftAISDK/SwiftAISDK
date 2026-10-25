@@ -1,6 +1,6 @@
 # "topaz"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/topaz/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/topaz/
 
 ## Package
 

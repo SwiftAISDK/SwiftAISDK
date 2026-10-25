@@ -1,0 +1,123 @@
+{
+  "scope": "Pinned pilot archives and declarations; not a new upstream parity audit",
+  "packages": [
+    {
+      "name": "@ai-sdk/anthropic",
+      "version": "4.0.88",
+      "registryURL": "https://registry.npmjs.org/%40ai-sdk%2Fanthropic/4.0.88",
+      "tarballURL": "https://registry.npmjs.org/@ai-sdk/anthropic/-/anthropic-4.0.88.tgz",
+      "archiveIntegrity": "sha512-7h/rI3jLCfLbQsjVt37Q5PCEGOHrpVgrO2zl+y///UpUcWfiRDcqk8DL7br//OFxiEhyxgeIoU/5ulsN1llOyg==",
+      "integrityVerified": true,
+      "gitHead": null,
+      "testRef": "682e2dd71456f14f9da33a1b983d1998c3a1184c",
+      "testRefRelationship": "inventory-snapshot-not-release-verified",
+      "declarationSHA256": "0ff619a15223f17ee0e17dfe7be74e141e0484af901d41327f0717d92f7066b9",
+      "dependencies": {
+        "@ai-sdk/provider": "4.0.34",
+        "@ai-sdk/provider-utils": "5.0.68"
+      },
+      "peerDependencies": {
+        "zod": "^3.25.76 || ^4.1.8"
+      }
+    },
+    {
+      "name": "@ai-sdk/openai",
+      "version": "4.0.102",
+      "registryURL": "https://registry.npmjs.org/%40ai-sdk%2Fopenai/4.0.102",
+      "tarballURL": "https://registry.npmjs.org/@ai-sdk/openai/-/openai-4.0.102.tgz",
+      "archiveIntegrity": "sha512-8hvs5UO6OgGSR0HASptyopqoJYgdCccVfksUlBLeJ8/h2KoKYU2ZiFjArOkS6ciJbmnDz3G+Zoo4KiI4rlQSoA==",
+      "integrityVerified": true,
+      "gitHead": null,
+      "testRef": "682e2dd71456f14f9da33a1b983d1998c3a1184c",
+      "testRefRelationship": "inventory-snapshot-not-release-verified",
+      "declarationSHA256": "29ea00bbd0258f0fc21a992a628691915ceda7245efdcc3855238e1546c29169",
+      "dependencies": {
+        "@ai-sdk/provider": "4.0.34",
+        "@ai-sdk/provider-utils": "5.0.68"
+      },
+      "peerDependencies": {
+        "zod": "^3.25.76 || ^4.1.8"
+      }
+    },
+    {
+      "name": "@ai-sdk/openai-compatible",
+      "version": "3.0.78",
+      "registryURL": "https://registry.npmjs.org/%40ai-sdk%2Fopenai-compatible/3.0.78",
+      "tarballURL": "https://registry.npmjs.org/@ai-sdk/openai-compatible/-/openai-compatible-3.0.78.tgz",
+      "archiveIntegrity": "sha512-8r+qmbIf2YzPbkzlQibbetOmR4GdA/jAHtSJPhUbp6ZMG3PT6cBKwf/85TDyStyPTKtkFZ1qe1ytml3zu69EZQ==",
+      "integrityVerified": true,
+      "gitHead": null,
+      "testRef": "682e2dd71456f14f9da33a1b983d1998c3a1184c",
+      "testRefRelationship": "inventory-snapshot-not-release-verified",
+      "declarationSHA256": "98d97288f92ae488e4952f91c57ed8ba07fb91420de69795c7ef6e28c90b7415",
+      "dependencies": {
+        "@ai-sdk/provider": "4.0.34",
+        "@ai-sdk/provider-utils": "5.0.68"
+      },
+      "peerDependencies": {
+        "zod": "^3.25.76 || ^4.1.8"
+      }
+    },
+    {
+      "name": "ai",
+      "version": "7.0.153",
+      "registryURL": "https://registry.npmjs.org/ai/7.0.153",
+      "tarballURL": "https://registry.npmjs.org/ai/-/ai-7.0.153.tgz",
+      "archiveIntegrity": "sha512-Ib8v374jWn9FXsjADXodRaP7fsMutlmPsbTLT5gYBDyadFcF9XxfYX1CSSxgSvE1r06MmOeYVwvQjFb3CcBi1Q==",
+      "integrityVerified": true,
+      "gitHead": null,
+      "testRef": "682e2dd71456f14f9da33a1b983d1998c3a1184c",
+      "testRefRelationship": "inventory-snapshot-not-release-verified",
+      "declarationSHA256": "859e1f4b416ad544aa394744dec2dcf1f9f5885b4eb613dd6ed71915130c10ac",
+      "dependencies": {
+        "@ai-sdk/gateway": "4.0.126",
+        "@ai-sdk/provider": "4.0.34",
+        "@ai-sdk/provider-utils": "5.0.68"
+      },
+      "peerDependencies": {
+        "zod": "^3.25.76 || ^4.1.8"
+      }
+    },
+    {
+      "name": "@ai-sdk/provider",
+      "version": "4.0.34",
+      "registryURL": "https://registry.npmjs.org/%40ai-sdk%2Fprovider/4.0.34",
+      "tarballURL": "https://registry.npmjs.org/@ai-sdk/provider/-/provider-4.0.34.tgz",
+      "archiveIntegrity": "sha512-Ip7ZQBq/FiGpM1mmOVseTtX9PBjnzo0bLC41WTgBSBBRUBz6LhNFGbYaNUzI6hPm6ll1oNSPOAZc/q/z+3QZEQ==",
+      "integrityVerified": true,
+      "gitHead": null,
+      "testRef": "682e2dd71456f14f9da33a1b983d1998c3a1184c",
+      "testRefRelationship": "inventory-snapshot-not-release-verified",
+      "declarationSHA256": "38b997cd55b08d7aa245b796fa38c292deb485801eb9f8c0bd1dd6e5005fb86e",
+      "dependencies": {
+        "json-schema": "^0.4.0"
+      },
+      "peerDependencies": {}
+    },
+    {
+      "name": "@ai-sdk/provider-utils",
+      "version": "5.0.68",
+      "registryURL": "https://registry.npmjs.org/%40ai-sdk%2Fprovider-utils/5.0.68",
+      "tarballURL": "https://registry.npmjs.org/@ai-sdk/provider-utils/-/provider-utils-5.0.68.tgz",
+      "archiveIntegrity": "sha512-SASuC1DqSdWoYyYfpxbgPKm9VCnMP1VTahWY7WEYzi2QDmFdbw4runqmH7NKC33iB/INo+XbaN2hH3dXHSNQZw==",
+      "integrityVerified": true,
+      "gitHead": null,
+      "testRef": "682e2dd71456f14f9da33a1b983d1998c3a1184c",
+      "testRefRelationship": "inventory-snapshot-not-release-verified",
+      "declarationSHA256": "d79ed675a8654b1f83e457f4ced943b919dd1f7353dbbafbd38e8f75341ed031",
+      "dependencies": {
+        "undici": "^7.29.0",
+        "@workflow/serde": "4.1.0",
+        "@ai-sdk/provider": "4.0.34",
+        "eventsource-parser": "^3.0.8",
+        "@standard-schema/spec": "^1.1.0"
+      },
+      "peerDependencies": {
+        "zod": "^3.25.76 || ^4.1.8"
+      }
+    }
+  ],
+  "reviewDate": "2026-10-25",
+  "contractDecision": "Retain the native Swift adapter contract and existing protocol definitions; do not mirror npm V4 names or claim cross-major coexistence. This is a packaging release, not an additional behavior port.",
+  "testDisposition": "All six pinned npm records omit gitHead. Keep inventory-snapshot-not-release-verified; archive integrity alone does not establish matching upstream test provenance."
+}

@@ -1,6 +1,6 @@
 # MCP events
 
-Source URL: https://ozio.github.io/SwiftAISDK/cookbook/mcp-events/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/cookbook/mcp-events/
 
 `MCPClient.experimentalEvents` supports catalog discovery, direct webhook
 subscriptions, renewal and unsubscribe, or an application-managed adapter.

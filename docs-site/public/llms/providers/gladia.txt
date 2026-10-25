@@ -1,6 +1,6 @@
 # "gladia"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/gladia/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/gladia/
 
 ## Package
 

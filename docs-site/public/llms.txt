@@ -3,100 +3,100 @@
 SwiftAISDK is a SwiftPM port of the provider-facing Vercel AI SDK.
 
 ## LLM-readable pages
-- [Introduction](https://ozio.github.io/SwiftAISDK/llms/index.txt): Learn what SwiftAISDK is and where to start.
-- [Components](https://ozio.github.io/SwiftAISDK/llms/components.txt): Generated component map for SwiftAISDK public APIs.
-- [Audio](https://ozio.github.io/SwiftAISDK/llms/components/audio.txt): Public SwiftAISDK APIs for audio.
-- [Chat and UI messages](https://ozio.github.io/SwiftAISDK/llms/components/chat-and-ui-messages.txt): Public SwiftAISDK APIs for chat and ui messages.
-- [Core runtime](https://ozio.github.io/SwiftAISDK/llms/components/core-runtime.txt): Public SwiftAISDK APIs for core runtime.
-- [Errors](https://ozio.github.io/SwiftAISDK/llms/components/errors.txt): Public SwiftAISDK APIs for errors.
-- [MCP](https://ozio.github.io/SwiftAISDK/llms/components/mcp.txt): Public SwiftAISDK APIs for mcp.
-- [Media](https://ozio.github.io/SwiftAISDK/llms/components/media.txt): Public SwiftAISDK APIs for media.
-- [Middleware](https://ozio.github.io/SwiftAISDK/llms/components/middleware.txt): Public SwiftAISDK APIs for middleware.
-- [Provider models](https://ozio.github.io/SwiftAISDK/llms/components/provider-models.txt): Public SwiftAISDK APIs for provider models.
-- [Providers](https://ozio.github.io/SwiftAISDK/llms/components/providers.txt): Public SwiftAISDK APIs for providers.
-- [Structured output](https://ozio.github.io/SwiftAISDK/llms/components/structured-output.txt): Public SwiftAISDK APIs for structured output.
-- [Telemetry](https://ozio.github.io/SwiftAISDK/llms/components/telemetry.txt): Public SwiftAISDK APIs for telemetry.
-- [Tools](https://ozio.github.io/SwiftAISDK/llms/components/tools.txt): Public SwiftAISDK APIs for tools.
-- [Video and reranking](https://ozio.github.io/SwiftAISDK/llms/components/video-and-reranking.txt): Public SwiftAISDK APIs for video and reranking.
-- [MCP events](https://ozio.github.io/SwiftAISDK/llms/cookbook/mcp-events.txt): Receive authenticated MCP event webhooks with durable subscription state or delegate subscription management to an adapter.
-- [MCP tools](https://ozio.github.io/SwiftAISDK/llms/cookbook/mcp-tools.txt): Discover MCP tools and pass them to a language model.
-- [Durable batches](https://ozio.github.io/SwiftAISDK/llms/core/batch-text.txt): Run provider-owned text and image batches and resume their lifecycle.
-- [Decision](https://ozio.github.io/SwiftAISDK/llms/core/decide.txt): Ask typed Choice, Score, Boolean, and image Box questions about ordered text, JSON, and file evidence.
-- [Dubbing](https://ozio.github.io/SwiftAISDK/llms/core/dubbing.txt): Create and inspect provider dubbing jobs.
-- [Embeddings](https://ozio.github.io/SwiftAISDK/llms/core/embeddings.txt): Convert text into vectors for search, clustering, and retrieval.
-- [Error handling](https://ozio.github.io/SwiftAISDK/llms/core/error-handling.txt): Handle validation, provider, retry, timeout, abort, and output errors.
-- [Evaluation](https://ozio.github.io/SwiftAISDK/llms/core/evaluate.txt): Evaluate shared JSON state with typed Choice, Score, and Boolean questions.
-- [Files](https://ozio.github.io/SwiftAISDK/llms/core/files.txt): Upload, inspect, stream, and delete provider-managed files.
-- [Generate audio](https://ozio.github.io/SwiftAISDK/llms/core/generate-audio.txt): Generate provider audio that is not speech.
-- [Generate image](https://ozio.github.io/SwiftAISDK/llms/core/generate-image.txt): Create or edit images with an image model.
-- [Generate speech](https://ozio.github.io/SwiftAISDK/llms/core/generate-speech.txt): Convert text into audio with a speech model.
-- [Generate text](https://ozio.github.io/SwiftAISDK/llms/core/generate-text.txt): Use a language model for one-shot text generation.
-- [Generate video](https://ozio.github.io/SwiftAISDK/llms/core/generate-video.txt): Create video clips with a video model.
-- [Realtime sessions](https://ozio.github.io/SwiftAISDK/llms/core/realtime.txt): Run bidirectional text, audio, and tool sessions over a provider Realtime V4 model.
-- [Rerank](https://ozio.github.io/SwiftAISDK/llms/core/rerank.txt): Score and reorder documents for a query.
-- [Stream speech](https://ozio.github.io/SwiftAISDK/llms/core/stream-speech.txt): Synthesize audio incrementally from complete or streaming text.
-- [Stream text](https://ozio.github.io/SwiftAISDK/llms/core/stream-text.txt): Consume language model output as an async sequence.
-- [Structured output](https://ozio.github.io/SwiftAISDK/llms/core/structured-output.txt): Generate Decodable Swift values from JSON output.
-- [Telemetry](https://ozio.github.io/SwiftAISDK/llms/core/telemetry.txt): Record provider calls, retries, streams, tool execution, usage, and metadata.
-- [Tools](https://ozio.github.io/SwiftAISDK/llms/core/tools.txt): Let a language model call typed Swift tools.
-- [Transcribe audio](https://ozio.github.io/SwiftAISDK/llms/core/transcribe.txt): Convert audio bytes into text with a transcription model.
-- [Transform audio](https://ozio.github.io/SwiftAISDK/llms/core/transform-audio.txt): Transform existing audio through provider-native audio tools.
-- [Install](https://ozio.github.io/SwiftAISDK/llms/getting-started/install.txt): Add SwiftAISDK to a SwiftPM package and configure credentials.
-- [Quickstart](https://ozio.github.io/SwiftAISDK/llms/getting-started/quickstart.txt): Generate text with a provider and model.
-- [Provider matrix](https://ozio.github.io/SwiftAISDK/llms/providers.txt): Generated provider capability overview for SwiftAISDK.
-- ["alibaba"](https://ozio.github.io/SwiftAISDK/llms/providers/alibaba.txt): "alibaba provider capabilities and factories."
-- ["amazon-bedrock.anthropic"](https://ozio.github.io/SwiftAISDK/llms/providers/amazon-bedrock-anthropic.txt): "amazon-bedrock.anthropic provider capabilities and factories."
-- ["amazon-bedrock"](https://ozio.github.io/SwiftAISDK/llms/providers/amazon-bedrock.txt): "amazon-bedrock provider capabilities and factories."
-- ["anthropic-aws"](https://ozio.github.io/SwiftAISDK/llms/providers/anthropic-aws.txt): "anthropic-aws provider capabilities and factories."
-- ["anthropic"](https://ozio.github.io/SwiftAISDK/llms/providers/anthropic.txt): "anthropic provider capabilities and factories."
-- ["assemblyai"](https://ozio.github.io/SwiftAISDK/llms/providers/assemblyai.txt): "assemblyai provider capabilities and factories."
-- ["azure"](https://ozio.github.io/SwiftAISDK/llms/providers/azure.txt): "azure provider capabilities and factories."
-- ["baseten"](https://ozio.github.io/SwiftAISDK/llms/providers/baseten.txt): "baseten provider capabilities and factories."
-- ["bedrock-mantle"](https://ozio.github.io/SwiftAISDK/llms/providers/bedrock-mantle.txt): "bedrock-mantle provider capabilities and factories."
-- ["black-forest-labs"](https://ozio.github.io/SwiftAISDK/llms/providers/black-forest-labs.txt): "black-forest-labs provider capabilities and factories."
-- ["bytedance"](https://ozio.github.io/SwiftAISDK/llms/providers/bytedance.txt): "bytedance provider capabilities and factories."
-- ["cartesia"](https://ozio.github.io/SwiftAISDK/llms/providers/cartesia.txt): "cartesia provider capabilities and factories."
-- ["cerebras"](https://ozio.github.io/SwiftAISDK/llms/providers/cerebras.txt): "cerebras provider capabilities and factories."
-- ["cohere"](https://ozio.github.io/SwiftAISDK/llms/providers/cohere.txt): "cohere provider capabilities and factories."
-- ["deepgram"](https://ozio.github.io/SwiftAISDK/llms/providers/deepgram.txt): "deepgram provider capabilities and factories."
-- ["deepinfra"](https://ozio.github.io/SwiftAISDK/llms/providers/deepinfra.txt): "deepinfra provider capabilities and factories."
-- ["deepseek"](https://ozio.github.io/SwiftAISDK/llms/providers/deepseek.txt): "deepseek provider capabilities and factories."
-- ["elevenlabs"](https://ozio.github.io/SwiftAISDK/llms/providers/elevenlabs.txt): "elevenlabs provider capabilities and factories."
-- ["fal"](https://ozio.github.io/SwiftAISDK/llms/providers/fal.txt): "fal provider capabilities and factories."
-- ["fireworks"](https://ozio.github.io/SwiftAISDK/llms/providers/fireworks.txt): "fireworks provider capabilities and factories."
-- ["fish-audio"](https://ozio.github.io/SwiftAISDK/llms/providers/fish-audio.txt): "fish-audio provider capabilities and factories."
-- ["gateway"](https://ozio.github.io/SwiftAISDK/llms/providers/gateway.txt): "gateway provider capabilities and factories."
-- ["gladia"](https://ozio.github.io/SwiftAISDK/llms/providers/gladia.txt): "gladia provider capabilities and factories."
-- ["gmicloud"](https://ozio.github.io/SwiftAISDK/llms/providers/gmicloud.txt): "gmicloud provider capabilities and factories."
-- ["google.generative-ai"](https://ozio.github.io/SwiftAISDK/llms/providers/google-generative-ai.txt): "google.generative-ai provider capabilities and factories."
-- ["google.vertex"](https://ozio.github.io/SwiftAISDK/llms/providers/google-vertex.txt): "google.vertex provider capabilities and factories."
-- ["googleVertex.anthropic"](https://ozio.github.io/SwiftAISDK/llms/providers/googlevertex-anthropic.txt): "googleVertex.anthropic provider capabilities and factories."
-- ["googleVertex.maas"](https://ozio.github.io/SwiftAISDK/llms/providers/googlevertex-maas.txt): "googleVertex.maas provider capabilities and factories."
-- ["googleVertex.xai"](https://ozio.github.io/SwiftAISDK/llms/providers/googlevertex-xai.txt): "googleVertex.xai provider capabilities and factories."
-- ["groq"](https://ozio.github.io/SwiftAISDK/llms/providers/groq.txt): "groq provider capabilities and factories."
-- ["heygen"](https://ozio.github.io/SwiftAISDK/llms/providers/heygen.txt): "heygen provider capabilities and factories."
-- ["huggingface"](https://ozio.github.io/SwiftAISDK/llms/providers/huggingface.txt): "huggingface provider capabilities and factories."
-- ["hume"](https://ozio.github.io/SwiftAISDK/llms/providers/hume.txt): "hume provider capabilities and factories."
-- ["klingai"](https://ozio.github.io/SwiftAISDK/llms/providers/klingai.txt): "klingai provider capabilities and factories."
-- ["lmnt"](https://ozio.github.io/SwiftAISDK/llms/providers/lmnt.txt): "lmnt provider capabilities and factories."
-- ["luma"](https://ozio.github.io/SwiftAISDK/llms/providers/luma.txt): "luma provider capabilities and factories."
-- ["minimax"](https://ozio.github.io/SwiftAISDK/llms/providers/minimax.txt): "minimax provider capabilities and factories."
-- ["mistral"](https://ozio.github.io/SwiftAISDK/llms/providers/mistral.txt): "mistral provider capabilities and factories."
-- ["moonshotai"](https://ozio.github.io/SwiftAISDK/llms/providers/moonshotai.txt): "moonshotai provider capabilities and factories."
-- ["open-responses.responses"](https://ozio.github.io/SwiftAISDK/llms/providers/open-responses-responses.txt): "open-responses.responses provider capabilities and factories."
-- ["openai-compatible"](https://ozio.github.io/SwiftAISDK/llms/providers/openai-compatible.txt): "openai-compatible provider capabilities and factories."
-- ["openai"](https://ozio.github.io/SwiftAISDK/llms/providers/openai.txt): "openai provider capabilities and factories."
-- ["perplexity"](https://ozio.github.io/SwiftAISDK/llms/providers/perplexity.txt): "perplexity provider capabilities and factories."
-- ["prodia"](https://ozio.github.io/SwiftAISDK/llms/providers/prodia.txt): "prodia provider capabilities and factories."
-- ["quiverai"](https://ozio.github.io/SwiftAISDK/llms/providers/quiverai.txt): "quiverai provider capabilities and factories."
-- ["replicate"](https://ozio.github.io/SwiftAISDK/llms/providers/replicate.txt): "replicate provider capabilities and factories."
-- ["revai"](https://ozio.github.io/SwiftAISDK/llms/providers/revai.txt): "revai provider capabilities and factories."
-- ["togetherai"](https://ozio.github.io/SwiftAISDK/llms/providers/togetherai.txt): "togetherai provider capabilities and factories."
-- ["topaz"](https://ozio.github.io/SwiftAISDK/llms/providers/topaz.txt): "topaz provider capabilities and factories."
-- ["typesafe"](https://ozio.github.io/SwiftAISDK/llms/providers/typesafe.txt): "typesafe provider capabilities and factories."
-- ["vercel"](https://ozio.github.io/SwiftAISDK/llms/providers/vercel.txt): "vercel provider capabilities and factories."
-- ["voyage"](https://ozio.github.io/SwiftAISDK/llms/providers/voyage.txt): "voyage provider capabilities and factories."
-- ["xai"](https://ozio.github.io/SwiftAISDK/llms/providers/xai.txt): "xai provider capabilities and factories."
-- ["zai"](https://ozio.github.io/SwiftAISDK/llms/providers/zai.txt): "zai provider capabilities and factories."
-- [Public symbols](https://ozio.github.io/SwiftAISDK/llms/reference/generated/public-symbols.txt): Generated public SwiftAISDK symbol table.
-- [Troubleshooting](https://ozio.github.io/SwiftAISDK/llms/troubleshooting.txt): Diagnose common SwiftAISDK setup and runtime issues.
+- [Introduction](https://swiftaisdk.github.io/SwiftAISDK/llms/index.txt): Learn what SwiftAISDK is and where to start.
+- [Components](https://swiftaisdk.github.io/SwiftAISDK/llms/components.txt): Generated component map for SwiftAISDK public APIs.
+- [Audio](https://swiftaisdk.github.io/SwiftAISDK/llms/components/audio.txt): Public SwiftAISDK APIs for audio.
+- [Chat and UI messages](https://swiftaisdk.github.io/SwiftAISDK/llms/components/chat-and-ui-messages.txt): Public SwiftAISDK APIs for chat and ui messages.
+- [Core runtime](https://swiftaisdk.github.io/SwiftAISDK/llms/components/core-runtime.txt): Public SwiftAISDK APIs for core runtime.
+- [Errors](https://swiftaisdk.github.io/SwiftAISDK/llms/components/errors.txt): Public SwiftAISDK APIs for errors.
+- [MCP](https://swiftaisdk.github.io/SwiftAISDK/llms/components/mcp.txt): Public SwiftAISDK APIs for mcp.
+- [Media](https://swiftaisdk.github.io/SwiftAISDK/llms/components/media.txt): Public SwiftAISDK APIs for media.
+- [Middleware](https://swiftaisdk.github.io/SwiftAISDK/llms/components/middleware.txt): Public SwiftAISDK APIs for middleware.
+- [Provider models](https://swiftaisdk.github.io/SwiftAISDK/llms/components/provider-models.txt): Public SwiftAISDK APIs for provider models.
+- [Providers](https://swiftaisdk.github.io/SwiftAISDK/llms/components/providers.txt): Public SwiftAISDK APIs for providers.
+- [Structured output](https://swiftaisdk.github.io/SwiftAISDK/llms/components/structured-output.txt): Public SwiftAISDK APIs for structured output.
+- [Telemetry](https://swiftaisdk.github.io/SwiftAISDK/llms/components/telemetry.txt): Public SwiftAISDK APIs for telemetry.
+- [Tools](https://swiftaisdk.github.io/SwiftAISDK/llms/components/tools.txt): Public SwiftAISDK APIs for tools.
+- [Video and reranking](https://swiftaisdk.github.io/SwiftAISDK/llms/components/video-and-reranking.txt): Public SwiftAISDK APIs for video and reranking.
+- [MCP events](https://swiftaisdk.github.io/SwiftAISDK/llms/cookbook/mcp-events.txt): Receive authenticated MCP event webhooks with durable subscription state or delegate subscription management to an adapter.
+- [MCP tools](https://swiftaisdk.github.io/SwiftAISDK/llms/cookbook/mcp-tools.txt): Discover MCP tools and pass them to a language model.
+- [Durable batches](https://swiftaisdk.github.io/SwiftAISDK/llms/core/batch-text.txt): Run provider-owned text and image batches and resume their lifecycle.
+- [Decision](https://swiftaisdk.github.io/SwiftAISDK/llms/core/decide.txt): Ask typed Choice, Score, Boolean, and image Box questions about ordered text, JSON, and file evidence.
+- [Dubbing](https://swiftaisdk.github.io/SwiftAISDK/llms/core/dubbing.txt): Create and inspect provider dubbing jobs.
+- [Embeddings](https://swiftaisdk.github.io/SwiftAISDK/llms/core/embeddings.txt): Convert text into vectors for search, clustering, and retrieval.
+- [Error handling](https://swiftaisdk.github.io/SwiftAISDK/llms/core/error-handling.txt): Handle validation, provider, retry, timeout, abort, and output errors.
+- [Evaluation](https://swiftaisdk.github.io/SwiftAISDK/llms/core/evaluate.txt): Evaluate shared JSON state with typed Choice, Score, and Boolean questions.
+- [Files](https://swiftaisdk.github.io/SwiftAISDK/llms/core/files.txt): Upload, inspect, stream, and delete provider-managed files.
+- [Generate audio](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-audio.txt): Generate provider audio that is not speech.
+- [Generate image](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-image.txt): Create or edit images with an image model.
+- [Generate speech](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-speech.txt): Convert text into audio with a speech model.
+- [Generate text](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-text.txt): Use a language model for one-shot text generation.
+- [Generate video](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-video.txt): Create video clips with a video model.
+- [Realtime sessions](https://swiftaisdk.github.io/SwiftAISDK/llms/core/realtime.txt): Run bidirectional text, audio, and tool sessions over a provider Realtime V4 model.
+- [Rerank](https://swiftaisdk.github.io/SwiftAISDK/llms/core/rerank.txt): Score and reorder documents for a query.
+- [Stream speech](https://swiftaisdk.github.io/SwiftAISDK/llms/core/stream-speech.txt): Synthesize audio incrementally from complete or streaming text.
+- [Stream text](https://swiftaisdk.github.io/SwiftAISDK/llms/core/stream-text.txt): Consume language model output as an async sequence.
+- [Structured output](https://swiftaisdk.github.io/SwiftAISDK/llms/core/structured-output.txt): Generate Decodable Swift values from JSON output.
+- [Telemetry](https://swiftaisdk.github.io/SwiftAISDK/llms/core/telemetry.txt): Record provider calls, retries, streams, tool execution, usage, and metadata.
+- [Tools](https://swiftaisdk.github.io/SwiftAISDK/llms/core/tools.txt): Let a language model call typed Swift tools.
+- [Transcribe audio](https://swiftaisdk.github.io/SwiftAISDK/llms/core/transcribe.txt): Convert audio bytes into text with a transcription model.
+- [Transform audio](https://swiftaisdk.github.io/SwiftAISDK/llms/core/transform-audio.txt): Transform existing audio through provider-native audio tools.
+- [Install](https://swiftaisdk.github.io/SwiftAISDK/llms/getting-started/install.txt): Add SwiftAISDK to a SwiftPM package and configure credentials.
+- [Quickstart](https://swiftaisdk.github.io/SwiftAISDK/llms/getting-started/quickstart.txt): Generate text with a provider and model.
+- [Provider matrix](https://swiftaisdk.github.io/SwiftAISDK/llms/providers.txt): Generated provider capability overview for SwiftAISDK.
+- ["alibaba"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/alibaba.txt): "alibaba provider capabilities and factories."
+- ["amazon-bedrock.anthropic"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/amazon-bedrock-anthropic.txt): "amazon-bedrock.anthropic provider capabilities and factories."
+- ["amazon-bedrock"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/amazon-bedrock.txt): "amazon-bedrock provider capabilities and factories."
+- ["anthropic-aws"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/anthropic-aws.txt): "anthropic-aws provider capabilities and factories."
+- ["anthropic"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/anthropic.txt): "anthropic provider capabilities and factories."
+- ["assemblyai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/assemblyai.txt): "assemblyai provider capabilities and factories."
+- ["azure"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/azure.txt): "azure provider capabilities and factories."
+- ["baseten"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/baseten.txt): "baseten provider capabilities and factories."
+- ["bedrock-mantle"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/bedrock-mantle.txt): "bedrock-mantle provider capabilities and factories."
+- ["black-forest-labs"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/black-forest-labs.txt): "black-forest-labs provider capabilities and factories."
+- ["bytedance"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/bytedance.txt): "bytedance provider capabilities and factories."
+- ["cartesia"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/cartesia.txt): "cartesia provider capabilities and factories."
+- ["cerebras"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/cerebras.txt): "cerebras provider capabilities and factories."
+- ["cohere"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/cohere.txt): "cohere provider capabilities and factories."
+- ["deepgram"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/deepgram.txt): "deepgram provider capabilities and factories."
+- ["deepinfra"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/deepinfra.txt): "deepinfra provider capabilities and factories."
+- ["deepseek"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/deepseek.txt): "deepseek provider capabilities and factories."
+- ["elevenlabs"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/elevenlabs.txt): "elevenlabs provider capabilities and factories."
+- ["fal"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/fal.txt): "fal provider capabilities and factories."
+- ["fireworks"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/fireworks.txt): "fireworks provider capabilities and factories."
+- ["fish-audio"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/fish-audio.txt): "fish-audio provider capabilities and factories."
+- ["gateway"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/gateway.txt): "gateway provider capabilities and factories."
+- ["gladia"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/gladia.txt): "gladia provider capabilities and factories."
+- ["gmicloud"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/gmicloud.txt): "gmicloud provider capabilities and factories."
+- ["google.generative-ai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/google-generative-ai.txt): "google.generative-ai provider capabilities and factories."
+- ["google.vertex"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/google-vertex.txt): "google.vertex provider capabilities and factories."
+- ["googleVertex.anthropic"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/googlevertex-anthropic.txt): "googleVertex.anthropic provider capabilities and factories."
+- ["googleVertex.maas"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/googlevertex-maas.txt): "googleVertex.maas provider capabilities and factories."
+- ["googleVertex.xai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/googlevertex-xai.txt): "googleVertex.xai provider capabilities and factories."
+- ["groq"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/groq.txt): "groq provider capabilities and factories."
+- ["heygen"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/heygen.txt): "heygen provider capabilities and factories."
+- ["huggingface"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/huggingface.txt): "huggingface provider capabilities and factories."
+- ["hume"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/hume.txt): "hume provider capabilities and factories."
+- ["klingai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/klingai.txt): "klingai provider capabilities and factories."
+- ["lmnt"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/lmnt.txt): "lmnt provider capabilities and factories."
+- ["luma"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/luma.txt): "luma provider capabilities and factories."
+- ["minimax"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/minimax.txt): "minimax provider capabilities and factories."
+- ["mistral"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/mistral.txt): "mistral provider capabilities and factories."
+- ["moonshotai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/moonshotai.txt): "moonshotai provider capabilities and factories."
+- ["open-responses.responses"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/open-responses-responses.txt): "open-responses.responses provider capabilities and factories."
+- ["openai-compatible"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/openai-compatible.txt): "openai-compatible provider capabilities and factories."
+- ["openai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/openai.txt): "openai provider capabilities and factories."
+- ["perplexity"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/perplexity.txt): "perplexity provider capabilities and factories."
+- ["prodia"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/prodia.txt): "prodia provider capabilities and factories."
+- ["quiverai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/quiverai.txt): "quiverai provider capabilities and factories."
+- ["replicate"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/replicate.txt): "replicate provider capabilities and factories."
+- ["revai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/revai.txt): "revai provider capabilities and factories."
+- ["togetherai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/togetherai.txt): "togetherai provider capabilities and factories."
+- ["topaz"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/topaz.txt): "topaz provider capabilities and factories."
+- ["typesafe"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/typesafe.txt): "typesafe provider capabilities and factories."
+- ["vercel"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/vercel.txt): "vercel provider capabilities and factories."
+- ["voyage"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/voyage.txt): "voyage provider capabilities and factories."
+- ["xai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/xai.txt): "xai provider capabilities and factories."
+- ["zai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/zai.txt): "zai provider capabilities and factories."
+- [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/llms/reference/generated/public-symbols.txt): Generated public SwiftAISDK symbol table.
+- [Troubleshooting](https://swiftaisdk.github.io/SwiftAISDK/llms/troubleshooting.txt): Diagnose common SwiftAISDK setup and runtime issues.

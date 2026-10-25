@@ -1,6 +1,6 @@
 # "fish-audio"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/fish-audio/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/fish-audio/
 
 ## Package
 

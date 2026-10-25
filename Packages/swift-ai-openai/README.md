@@ -3,18 +3,16 @@
 An independent Swift-native port of the provider-facing Vercel AI SDK package
 `@ai-sdk/openai`. Responses and chat, completions, embeddings, images, transcription/speech, decisions/evaluation, batches, files, skills and the existing OpenAI Live WebSocket adapter.
 
-This is an extracted **local development package**, not a published modular
-release. The proposed distribution URL is not an installation instruction yet.
-Swift 6.3 or newer; declared platforms macOS 12 and iOS 15. M3 was verified with
-Swift 6.4, including compilation for iOS Simulator; see the canonical migration report.
+Swift 6.3 or newer; declared platforms macOS 12 and iOS 15. This source is
+maintained in the canonical SwiftAISDK repository and exported as an independently
+versioned Swift package. Swift versions are independent of the npm baselines.
 
-## Local use
+## Usage
 
-Add `.package(path: "path/to/Packages/swift-ai-openai")` and depend on
-`.product(name: "SwiftAIOpenAI", package: "swift-ai-openai")`.
-For generation and explicit registries also add the local `swift-ai-core` package
-and its `SwiftAI` product. The canonical [example](../../Examples/OpenAIOnly)
-contains a complete manifest and runs offline with an injected transport.
+Depend on `.product(name: "SwiftAIOpenAI", package: "swift-ai-openai")`.
+For generation and explicit registries also add `swift-ai-core` and its `SwiftAI`
+product. The canonical [example](../../Examples/OpenAIOnly) contains a complete
+manifest for local development and runs offline with an injected transport.
 
 ```swift
 import SwiftAI
@@ -56,5 +54,4 @@ upstream parity. Cross-package wire APIs support port adapters; prefer the typed
 provider factory for application code.
 
 Licensed under Apache-2.0; see LICENSE. Vercel names identify provenance, not
-affiliation. Contribute through the canonical SwiftAISDK repository. Proposed
-distribution repositories will be generated from it.
+affiliation. Contribute through the canonical SwiftAISDK repository. Distribution repositories are generated from it.

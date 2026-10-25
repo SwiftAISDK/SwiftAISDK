@@ -157,7 +157,7 @@ function generateProviders() {
 
   writeGenerated(
     join(contentRoot, 'providers/index.mdx'),
-    `---\ntitle: Provider matrix\ndescription: Generated provider capability overview for SwiftAISDK.\n---\n\nThis page is generated from the package catalog. Update [Porting/packages.json](https://github.com/ozio/SwiftAISDK/blob/main/Porting/packages.json) and run \`node Scripts/sdk.mjs generate\` when provider coverage changes.\n\n<div class="capability-grid">\n${capabilityList}\n</div>\n\n| Provider | Upstream package | Swift factories | Language | Completion | Embedding | Image | Transcription | Speech | Audio generation | Audio transformation | Dubbing | Video | Reranking | Evaluation | Decision | Files | Skills |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n${table}\n`,
+    `---\ntitle: Provider matrix\ndescription: Generated provider capability overview for SwiftAISDK.\n---\n\nThis page is generated from the package catalog. Update [Porting/packages.json](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Porting/packages.json) and run \`node Scripts/sdk.mjs generate\` when provider coverage changes.\n\n<div class="capability-grid">\n${capabilityList}\n</div>\n\n| Provider | Upstream package | Swift factories | Language | Completion | Embedding | Image | Transcription | Speech | Audio generation | Audio transformation | Dubbing | Video | Reranking | Evaluation | Decision | Files | Skills |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n${table}\n`,
   );
 
   for (const row of rows) {
@@ -312,7 +312,7 @@ function generateComponents(symbols) {
           .replaceAll('|', '\\|')
           .replaceAll('\n', ' ');
         const path = symbol.path
-          ? `[${symbol.path}](https://github.com/ozio/SwiftAISDK/blob/main/${symbol.path})`
+          ? `[${symbol.path}](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/${symbol.path})`
           : '';
         return `| ${symbol.kind} | \`${symbol.title.replaceAll('`', '')}\` | \`${declarationText.replaceAll('`', '')}\` | ${path} |`;
       })
@@ -343,7 +343,7 @@ function generateReference() {
         .replaceAll('|', '\\|')
         .replaceAll('\n', ' ');
       const path = symbol.path
-        ? `[${symbol.path}](https://github.com/ozio/SwiftAISDK/blob/main/${symbol.path})`
+        ? `[${symbol.path}](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/${symbol.path})`
         : '';
       return `| ${symbol.kind} | \`${symbol.title.replaceAll('`', '')}\` | \`${declarationText.replaceAll('`', '')}\` | ${path} |`;
     })

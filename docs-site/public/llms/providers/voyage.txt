@@ -1,6 +1,6 @@
 # "voyage"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/voyage/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/voyage/
 
 ## Package
 

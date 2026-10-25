@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 import catalogTools from "./lib/catalog.cjs";
 import generator from "./lib/generate.cjs";
 import releases from "./lib/release.cjs";
+import publication from "./lib/publish.cjs";
 const { rootDefault, json, readCatalog, ensure, localPath } = catalogTools;
 const args = process.argv.slice(2);
 let root = rootDefault;
@@ -164,7 +165,7 @@ function addPackage() {
 try {
   if (!args.length || args.includes("--help"))
     console.log(
-      `SwiftAISDK package and release tooling\n\n  generate [--check]                     Validate and generate metadata/manifests\n  catalog validate                       Check schema, paths, ownership and dependency cycles\n  package add --upstream @ai-sdk/name [--module SwiftAIName]\n  upstream check [legacy version-check options]\n  upstream prepare [legacy diff options]\n  verify --affected --files path1,path2   Select checks; does not execute Swift tests\n\n--root <checkout> selects an isolated checkout for tooling rehearsals.\nRelease rehearsal commands (local only):\n  release plan [--id release-id] [--output plan.json]\n  release export --dry-run --plan plan.json --output new-directory\n  release rehearse --export export-directory --staging new-or-resumed-directory\n    [--baseline prior-staging] [--stop-after N] [--interrupt-after-push N]\nReal remote publication remains M5.`,
+      `SwiftAISDK package and release tooling\n\n  generate [--check]                     Validate and generate metadata/manifests\n  catalog validate                       Check schema, paths, ownership and dependency cycles\n  package add --upstream @ai-sdk/name [--module SwiftAIName]\n  upstream check [legacy version-check options]\n  upstream prepare [legacy diff options]\n  verify --affected --files path1,path2   Select checks; does not execute Swift tests\n\n--root <checkout> selects an isolated checkout for tooling rehearsals.\nRelease rehearsal commands (local only):\n  release plan [--id release-id] [--output plan.json]\n  release export --dry-run --plan plan.json --output new-directory\n  release rehearse --export export-directory --staging new-or-resumed-directory\n    [--baseline prior-staging] [--stop-after N] [--interrupt-after-push N]\nProduction publication:\n  release export --publication --plan plan.json --output new-directory\n  release publish --export export-directory --staging attempt-directory --ci-run completed-run-id`,
     );
   else if (args[0] === "generate") {
     options(1, { "--check": false });
@@ -202,15 +203,16 @@ try {
     }
     console.log(json(result));
   } else if (args[0] === "release" && args[1] === "export") {
-    options(2, { "--dry-run": false, "--plan": true, "--output": true });
+    options(2, { "--dry-run": false, "--publication": false, "--plan": true, "--output": true });
     ensure(
-      args.includes("--dry-run"),
-      "Only --dry-run export is implemented in M4",
+      args.includes("--dry-run") !== args.includes("--publication"),
+      "Select exactly one of --dry-run or --publication",
     );
     const result = releases.exportRelease(
       root,
       JSON.parse(fs.readFileSync(value("--plan"), "utf8")),
       path.resolve(value("--output")),
+      { publication: args.includes("--publication") },
     );
     console.log(
       json({
@@ -223,6 +225,10 @@ try {
         })),
       }),
     );
+  } else if (args[0] === "release" && args[1] === "publish") {
+    options(2, { "--export": true, "--staging": true, "--ci-run": true });
+    console.log(json(publication.publish(root, path.resolve(value("--export")),
+      path.resolve(value("--staging")), { ciRun: value("--ci-run") })));
   } else if (args[0] === "release" && args[1] === "rehearse") {
     options(2, {
       "--export": true,

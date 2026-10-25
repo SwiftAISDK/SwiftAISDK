@@ -1,6 +1,6 @@
 # "bytedance"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/bytedance/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/bytedance/
 
 ## Package
 

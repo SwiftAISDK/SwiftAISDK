@@ -1,6 +1,6 @@
 # "cerebras"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/cerebras/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/cerebras/
 
 ## Package
 

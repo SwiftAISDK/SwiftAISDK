@@ -1,6 +1,6 @@
 # Tools
 
-Source URL: https://ozio.github.io/SwiftAISDK/core/tools/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/tools/
 
 ## Configurable tool discovery
 

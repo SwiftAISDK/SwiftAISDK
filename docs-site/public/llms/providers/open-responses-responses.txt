@@ -1,6 +1,6 @@
 # "open-responses.responses"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/open-responses-responses/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/open-responses-responses/
 
 ## Package
 

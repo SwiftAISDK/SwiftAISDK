@@ -1,6 +1,6 @@
 # "hume"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/hume/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/hume/
 
 ## Package
 

@@ -1,6 +1,6 @@
 # "fal"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/fal/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/fal/
 
 ## Package
 

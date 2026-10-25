@@ -1,6 +1,6 @@
 # Stream text
 
-Source URL: https://ozio.github.io/SwiftAISDK/core/stream-text/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/stream-text/
 
 Use `streamText` when the UI or caller should receive partial output as it is generated.
 

@@ -1,8 +1,8 @@
 # Swift AI core
 
 Shared runtime of the independent Swift-native port of Vercel AI SDK. This
-package is currently available from a local checkout; organization publication
-and independent releases are later migration stages.
+package is maintained in the canonical SwiftAISDK repository and exported as an
+independently versioned Swift package. Swift versions are independent of npm baselines.
 
 It requires Swift 6.3 or newer and declares macOS 12 / iOS 15. The package has no
 external dependencies and contains four products:
@@ -14,8 +14,7 @@ external dependencies and contains four products:
 | `SwiftAIProviderUtilities` | Shared conversions, schema validation, stream normalization and provider helpers |
 | `SwiftAI` | Generation, tool execution, middleware, telemetry, agents and explicit provider registries |
 
-For development, add `.package(path: "path/to/Packages/swift-ai-core")` and depend
-on `.product(name: "SwiftAI", package: "swift-ai-core")`. Import `SwiftAI` to use
+Depend on `.product(name: "SwiftAI", package: "swift-ai-core")`. Import `SwiftAI` to use
 the facade and shared types. Implement `LanguageModel`, then call:
 
 ```swift
@@ -38,8 +37,8 @@ injected transports, dynamic headers and request URL construction; authenticatio
 policy and provider-specific error parsing belong to the adapter. Download
 security, demand-driven bodies and cancellation remain enforced by the transport.
 Cross-package helpers are public; orchestration-only helpers use package access.
-These extracted interfaces are not an independently released compatibility promise
-until the package release gates pass.
+Public helper signatures are part of the Swift package compatibility contract.
+Application code should normally use the facade and typed provider factories.
 
 Run `swift test --package-path Packages/swift-ai-core --no-parallel` from the
 canonical repository. `node Scripts/verify-core-isolation.mjs` copies this package
@@ -55,4 +54,4 @@ implementation dependencies are absent.
 
 Licensed under Apache-2.0; see LICENSE. Vercel AI SDK names describe provenance,
 not affiliation or endorsement. Contribute through the canonical SwiftAISDK
-repository, rather than editing future generated distribution repositories.
+repository, rather than editing generated distribution repositories.

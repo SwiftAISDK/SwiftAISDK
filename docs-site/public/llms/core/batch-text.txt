@@ -1,6 +1,6 @@
 # Durable batches
 
-Source URL: https://ozio.github.io/SwiftAISDK/core/batch-text/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/batch-text/
 
 Use Batch V4 for durable, asynchronous generation. The batch belongs to the
 provider rather than one model: every request supplies its model ID and its text

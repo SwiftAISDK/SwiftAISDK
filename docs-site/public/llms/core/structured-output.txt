@@ -1,6 +1,6 @@
 # Structured output
 
-Source URL: https://ozio.github.io/SwiftAISDK/core/structured-output/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/structured-output/
 
 Use structured output when your app needs a Swift value rather than free-form prose.
 

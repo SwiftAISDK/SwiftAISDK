@@ -1,6 +1,6 @@
 # "deepgram"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/deepgram/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/deepgram/
 
 ## Package
 

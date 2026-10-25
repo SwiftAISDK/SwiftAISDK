@@ -1,6 +1,6 @@
 # Stream speech
 
-Source URL: https://ozio.github.io/SwiftAISDK/core/stream-speech/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/stream-speech/
 
 `AI.experimentalStreamSpeech` starts native streaming text-to-speech with
 ElevenLabs or AI Gateway. Text can be a complete string, a sequence of chunks,

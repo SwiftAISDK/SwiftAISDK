@@ -1,6 +1,6 @@
 # "anthropic-aws"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/anthropic-aws/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/anthropic-aws/
 
 ## Package
 

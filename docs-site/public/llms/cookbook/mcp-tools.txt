@@ -1,6 +1,6 @@
 # MCP tools
 
-Source URL: https://ozio.github.io/SwiftAISDK/cookbook/mcp-tools/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/cookbook/mcp-tools/
 
 Modern MCP `2026-07-28` tool calls can return `input_required`. Advertise
 `clientCapabilities: ["elicitation": ["form": [:]]]` and register
@@ -177,7 +177,7 @@ From the repository root, run:
 swift run --package-path Examples MCPOAuthMigration
 ```
 
-The [complete example](https://github.com/ozio/SwiftAISDK/tree/main/Examples/Sources/MCPOAuthMigration)
+The [complete example](https://github.com/SwiftAISDK/SwiftAISDK/tree/main/Examples/Sources/MCPOAuthMigration)
 implements an actor provider and a strict mock transport. It executes both an
 issuer-bound secret flow and a custom-authentication flow with a stored binding,
 including the redirect, state/PKCE storage, callback and token exchange. It uses

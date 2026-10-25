@@ -1,6 +1,6 @@
 # Components
 
-Source URL: https://ozio.github.io/SwiftAISDK/components/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/components/
 
 SwiftAISDK groups public APIs into component areas so you can browse exact types without starting from the full symbol table.
 

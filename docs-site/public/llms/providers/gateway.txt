@@ -1,6 +1,6 @@
 # "gateway"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/gateway/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/gateway/
 
 ## Package
 

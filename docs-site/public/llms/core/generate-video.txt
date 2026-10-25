@@ -1,6 +1,6 @@
 # Generate video
 
-Source URL: https://ozio.github.io/SwiftAISDK/core/generate-video/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/generate-video/
 
 Use `generateVideo` when a provider exposes text-to-video or image-to-video.
 

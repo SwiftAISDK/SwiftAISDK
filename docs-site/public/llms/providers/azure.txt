@@ -1,6 +1,6 @@
 # "azure"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/azure/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/azure/
 
 ## Package
 

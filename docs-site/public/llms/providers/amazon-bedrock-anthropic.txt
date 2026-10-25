@@ -1,6 +1,6 @@
 # "amazon-bedrock.anthropic"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/amazon-bedrock-anthropic/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/amazon-bedrock-anthropic/
 
 ## Package
 

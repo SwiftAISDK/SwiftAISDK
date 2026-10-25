@@ -1,6 +1,6 @@
 # "cartesia"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/cartesia/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/cartesia/
 
 ## Package
 

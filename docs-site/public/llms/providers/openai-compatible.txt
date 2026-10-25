@@ -1,6 +1,6 @@
 # "openai-compatible"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/openai-compatible/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/openai-compatible/
 
 ## Package
 

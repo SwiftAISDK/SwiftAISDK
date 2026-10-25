@@ -1,6 +1,6 @@
 # "vercel"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/vercel/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/vercel/
 
 ## Package
 

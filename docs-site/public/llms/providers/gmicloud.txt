@@ -1,6 +1,6 @@
 # "gmicloud"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/gmicloud/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/gmicloud/
 
 ## Package
 

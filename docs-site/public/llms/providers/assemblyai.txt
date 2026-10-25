@@ -1,6 +1,6 @@
 # "assemblyai"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/assemblyai/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/assemblyai/
 
 ## Package
 

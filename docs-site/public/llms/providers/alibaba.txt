@@ -1,6 +1,6 @@
 # "alibaba"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/alibaba/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/alibaba/
 
 ## Package
 

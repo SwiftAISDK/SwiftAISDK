@@ -1,6 +1,6 @@
 # "xai"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/xai/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/xai/
 
 ## Package
 

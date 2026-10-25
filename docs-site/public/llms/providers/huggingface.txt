@@ -1,6 +1,6 @@
 # "huggingface"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/huggingface/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/huggingface/
 
 ## Package
 

@@ -1,6 +1,6 @@
 # "anthropic"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/anthropic/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/anthropic/
 
 ## Package
 

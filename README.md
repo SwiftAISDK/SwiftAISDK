@@ -5,7 +5,7 @@ It provides provider factories plus an `AI` facade for text, durable batches,
 structured output, decisions, evaluation, embeddings, media, streaming and realtime audio, reranking,
 file operations, middleware, MCP tools, and typed tool execution.
 
-Experimental [streaming speech](https://ozio.github.io/SwiftAISDK/core/stream-speech/)
+Experimental [streaming speech](https://swiftaisdk.github.io/SwiftAISDK/core/stream-speech/)
 accepts incremental text and produces ordered audio through ElevenLabs or AI Gateway.
 See the compile-checked `StreamSpeech` example for input, cancellation and usage.
 
@@ -18,7 +18,7 @@ not affiliation or endorsement.
 Add the package to `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/ozio/SwiftAISDK.git", from: "2.8.1")
+.package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "2.8.1")
 ```
 
 Applications that require a reviewed, reproducible SDK build can use SwiftPM's
@@ -388,13 +388,13 @@ and `AI.getVideoStatus` let applications persist and resume an operation.
 `HeyGenVideoModelOptions` and `HeyGenVideoAsset` expose typed resolution,
 prompt enhancement, URLs, workspace assets, and inline references. Completion
 returns a signed MP4 URL without downloading. See the
-[HeyGen guide](https://ozio.github.io/SwiftAISDK/providers/heygen/) for examples,
+[HeyGen guide](https://swiftaisdk.github.io/SwiftAISDK/providers/heygen/) for examples,
 validation limits, metadata, and URL refresh.
 
 `AIProviders.topaz()` reads `TOPAZ_API_KEY` and enhances existing media:
 `image("wonder-3.5")` accepts an image file or URL; `video("proteus")` and
 `video("starlight-precise-2.6")` expose resumable start/status operations and
-work with `AI.generateVideo`. See the [Topaz guide](https://ozio.github.io/SwiftAISDK/providers/topaz/)
+work with `AI.generateVideo`. See the [Topaz guide](https://swiftaisdk.github.io/SwiftAISDK/providers/topaz/)
 for output dimensions, source metadata, filters, polling and credits.
 
 MiniMax uses its Anthropic-compatible Messages endpoint and reads
@@ -580,7 +580,7 @@ Swift lifecycle.
 
 Generated and streamed text retain attached `AICitation` values separately from
 retrieved sources, including through typed text output and native UI. See the
-[citation guide](https://ozio.github.io/SwiftAISDK/core/stream-text/).
+[citation guide](https://swiftaisdk.github.io/SwiftAISDK/core/stream-text/).
 `LanguageModelRequest.toolCallConcurrency` bounds local tool execution; 1 is
 sequential and nil is unlimited, while returned results retain model order.
 
@@ -611,7 +611,7 @@ URL evidence is downloaded and normalized before adapter execution. File
 support depends on the adapter: OpenAI supports image files, generic language
 adapters support images, and TypeSafe supports text/JSON plus PNG/JPEG evidence
 with normalized Box answers and typed reference/long-context options. Refusals throw
-`AIDecisionRefusalError`. See the [Decision guide](https://ozio.github.io/SwiftAISDK/core/decide/).
+`AIDecisionRefusalError`. See the [Decision guide](https://swiftaisdk.github.io/SwiftAISDK/core/decide/).
 
 ## Evaluation V4
 
@@ -806,7 +806,7 @@ let answer = try await model.generateText(
 Experimental MCP Events adds typed catalog/subscriptions, direct durable stores
 or managed adapters, HMAC-verified callback handling, identity-preserving refresh
 and atomic cursor patches. Persist callback work before cursor commit; application
-deduplication is the caller's responsibility. See the [MCP Events guide](https://ozio.github.io/SwiftAISDK/cookbook/mcp-events/).
+deduplication is the caller's responsibility. See the [MCP Events guide](https://swiftaisdk.github.io/SwiftAISDK/cookbook/mcp-events/).
 
 HTTP discovery waits for its response within the caller's initialization deadline.
 Stdio keeps direct execution by default; `MCPStdioShell.system` or

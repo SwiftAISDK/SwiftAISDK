@@ -1,6 +1,6 @@
 # "mistral"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/mistral/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/mistral/
 
 ## Package
 

@@ -1,6 +1,6 @@
 # Introduction
 
-Source URL: https://ozio.github.io/SwiftAISDK/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/
 
 # SwiftAISDK
 

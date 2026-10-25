@@ -1,6 +1,6 @@
 # "cohere"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/cohere/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/cohere/
 
 ## Package
 

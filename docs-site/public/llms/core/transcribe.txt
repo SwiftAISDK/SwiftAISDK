@@ -1,6 +1,6 @@
 # Transcribe audio
 
-Source URL: https://ozio.github.io/SwiftAISDK/core/transcribe/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/
 
 Use `transcribe` when you have audio data and want normalized text back.
 

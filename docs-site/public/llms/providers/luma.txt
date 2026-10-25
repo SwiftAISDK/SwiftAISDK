@@ -1,6 +1,6 @@
 # "luma"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/luma/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/luma/
 
 ## Package
 

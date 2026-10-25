@@ -1,6 +1,6 @@
 # "fireworks"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/fireworks/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/fireworks/
 
 ## Package
 

@@ -1,6 +1,6 @@
 # "togetherai"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/togetherai/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/togetherai/
 
 ## Package
 

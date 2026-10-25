@@ -1,6 +1,6 @@
 # "bedrock-mantle"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/bedrock-mantle/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/bedrock-mantle/
 
 ## Package
 

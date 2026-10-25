@@ -99,3 +99,29 @@ staging; published sets are finalized only after actual remote readback and clea
 consumer checks. M4 provides local mechanics and the record contract. M5 still
 owns destination/auth setup, actual publication, hosted compiler checks, upstream
 provenance disposition review and documentation continuity.
+
+
+## GitHub publication
+
+Create reviewed public destination repositories in the catalog organization once.
+The publisher does not create repositories or transfer ownership. Use the canonical
+`main` workflow with the pinned Swift 6.3.3 check and wait for success at the exact
+source commit. Then, from that clean commit:
+
+```sh
+node Scripts/sdk.mjs release plan --id release-id --output /tmp/plan.json
+node Scripts/sdk.mjs release export --publication --plan /tmp/plan.json --output /tmp/export
+node Scripts/sdk.mjs release publish --export /tmp/export --staging /tmp/attempt --ci-run RUN_ID
+```
+
+Keep the attempt directory to resume. The publisher regenerates exports before
+writing, requires the exact successful canonical push workflow, verifies destination
+ownership/access and dependency tags, commits using the canonical source author
+and timestamp, and pushes annotated tags with `main` atomically. Existing tags and
+Releases must match exactly; conflicts stop publication. Fresh remote clones verify
+payload hashes. Release notes identify the canonical commit and export digest.
+No per-provider publication workflow or hand-edited distribution source is needed.
+
+`tags-and-releases-ready` is an intermediate state. Run standalone hosted CI and
+public consumer checks, retain their evidence, then finalize the published set.
+No new canonical root tag is made while its manifest depends on local packages.

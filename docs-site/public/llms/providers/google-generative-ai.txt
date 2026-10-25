@@ -1,6 +1,6 @@
 # "google.generative-ai"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/google-generative-ai/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/google-generative-ai/
 
 ## Package
 

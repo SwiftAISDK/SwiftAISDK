@@ -1,8 +1,8 @@
 # Provider matrix
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/
 
-This page is generated from the package catalog. Update [Porting/packages.json](https://github.com/ozio/SwiftAISDK/blob/main/Porting/packages.json) and run `node Scripts/sdk.mjs generate` when provider coverage changes.
+This page is generated from the package catalog. Update [Porting/packages.json](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Porting/packages.json) and run `node Scripts/sdk.mjs generate` when provider coverage changes.
 
 Language: 35
 Completion: 7

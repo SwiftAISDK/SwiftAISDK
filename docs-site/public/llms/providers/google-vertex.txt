@@ -1,6 +1,6 @@
 # "google.vertex"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/google-vertex/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/google-vertex/
 
 ## Package
 

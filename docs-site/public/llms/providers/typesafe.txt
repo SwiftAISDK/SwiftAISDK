@@ -1,6 +1,6 @@
 # "typesafe"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/typesafe/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/typesafe/
 
 ## Package
 

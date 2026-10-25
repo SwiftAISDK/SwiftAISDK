@@ -99,7 +99,7 @@ jobs:
         run: npm --prefix docs-site run build
         env:
           DOCS_BASE: /SwiftAISDK
-          DOCS_SITE: https://ozio.github.io
+          DOCS_SITE: https://swiftaisdk.github.io
 
       - name: Upload built documentation
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'

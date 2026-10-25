@@ -1,6 +1,6 @@
 # "baseten"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/baseten/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/baseten/
 
 ## Package
 

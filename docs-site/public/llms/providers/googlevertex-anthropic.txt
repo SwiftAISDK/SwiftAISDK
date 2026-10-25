@@ -1,6 +1,6 @@
 # "googleVertex.anthropic"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/googlevertex-anthropic/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-anthropic/
 
 ## Package
 

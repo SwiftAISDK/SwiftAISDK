@@ -1,6 +1,6 @@
 # "quiverai"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/quiverai/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/quiverai/
 
 ## Package
 

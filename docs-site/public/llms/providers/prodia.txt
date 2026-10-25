@@ -1,6 +1,6 @@
 # "prodia"
 
-Source URL: https://ozio.github.io/SwiftAISDK/providers/prodia/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/prodia/
 
 ## Package
 
