@@ -203,6 +203,9 @@ const runtimePackages = [
     .filter(p => p.state === 'extracted')
     .map(p => ({ root: join(repoRoot, p.directory), modules: p.modules.map(m => m.name) })),
 ];
+// Reuse compiled dependency modules across the sequential package dumps. Each
+// dump still deletes and validates its own fresh runtime graphs before reading.
+const symbolGraphBuild = join(repoRoot, '.build', 'documentation-symbolgraphs');
 function symbolGraphFiles(pkg) {
   const found = [];
   function walk(dir) {
@@ -215,15 +218,14 @@ function symbolGraphFiles(pkg) {
       }
     }
   }
-  const build = join(pkg.root, '.build');
-  if (existsSync(build)) walk(build);
+  if (existsSync(symbolGraphBuild)) walk(symbolGraphBuild);
   return found.sort();
 }
 function dumpSymbolGraphs() {
   const symbols = new Map();
   for (const pkg of runtimePackages) {
     for (const file of symbolGraphFiles(pkg)) rmSync(file);
-    const result = spawnSync('swift', ['package', 'dump-symbol-graph',
+    const result = spawnSync('swift', ['package', '--scratch-path', symbolGraphBuild, 'dump-symbol-graph',
       '--skip-synthesized-members', '--minimum-access-level', 'public', '--pretty-print'],
       { cwd: pkg.root, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
     const files = symbolGraphFiles(pkg);

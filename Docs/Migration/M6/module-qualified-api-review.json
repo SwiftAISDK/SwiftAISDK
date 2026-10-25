@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "scope": "Normal imports with explicit legacy SwiftAISDK and published core SwiftAI qualifiers; moved video contracts remain source-accessible.",
+  "source": "import SwiftAISDK\nimport SwiftAI\nlet _: SwiftAISDK.TextGenerationResult.Type = SwiftAISDK.TextGenerationResult.self\nlet _: SwiftAISDK.GoogleGenerativeAIProvider.Type = SwiftAISDK.GoogleGenerativeAIProvider.self\nlet _: SwiftAISDK.VideoGenerationOperationStartResult.Type = SwiftAISDK.VideoGenerationOperationStartResult.self\nlet _: SwiftAI.VideoGenerationOperationStartResult.Type = SwiftAI.VideoGenerationOperationStartResult.self\nlet _: SwiftAI.VideoGenerationOperationStatusResult.Type = SwiftAI.VideoGenerationOperationStatusResult.self\nlet _: SwiftAI.VideoGenerationOperationStartRequest.Type = SwiftAI.VideoGenerationOperationStartRequest.self\nlet _: SwiftAI.VideoGenerationOperationStatusRequest.Type = SwiftAI.VideoGenerationOperationStatusRequest.self\nlet _: SwiftAI.VideoGenerationPollOptions.Type = SwiftAI.VideoGenerationPollOptions.self\nprint(\"MODULE_QUALIFIED_API_OK\")\n",
+  "logSHA256": "63245db38c37b46fc2660a3c7f6e06ee4f92ba42200e8c5fbc3cc227da5b8383",
+  "abiCompatibilityClaim": false,
+  "harnessCorrection": "The first probe used the nonexistent name GoogleProvider. The corrected probe uses the actual existing GoogleGenerativeAIProvider name; no SDK source change was required."
+}

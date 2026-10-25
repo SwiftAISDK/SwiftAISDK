@@ -106,6 +106,8 @@ The stage is not complete until those receipts are recorded.
   it was never a public nominal type. A normal-import client retains the public
   `SpeechModel.generateSpeech` call, and a negative client confirms that the
   implementation class is inaccessible. Both observations are recorded separately.
+  A further normal-import consumer confirms explicit `SwiftAISDK` and `SwiftAI`
+  qualifiers still resolve moved provider/video types; no ABI guarantee is implied.
 - Core isolation, four provider consumers, independent provider version selection,
   incompatible core rejection and the repaired pilot publication rehearsal passed.
   All examples compiled and both offline MCP OAuth flows passed. Tooling tests
@@ -117,7 +119,8 @@ The stage is not complete until those receipts are recorded.
   supplied the lower bounds where available; other tags are disposable fixtures.
 - A repeat root run during competing compiler workloads exposed the existing
   1 ms agent timeout race. Isolated cold-start checks also sometimes expired
-  before the mock began. The relevant runtime bytes and assertions match M5.
+  before the mock began. A separate build of the unchanged M5 archive reproduces
+  that same count=0 failure. The relevant runtime bytes and assertions match M5.
   The final serial full root suite passed all 1721 tests, including that check.
   The failure logs and investigation remain recorded; passing the full suite
   does not eliminate this known timing sensitivity.
@@ -126,6 +129,12 @@ The stage is not complete until those receipts are recorded.
   [verification.json](verification.json) links the bounded local receipts;
   [distribution-verification.json](distribution-verification.json) records all
   package exports, dependency selections and log hashes.
+
+The serial package runner now reuses one compiler scratch directory across roots.
+A fresh run retained the exact per-package counts (3549 tests across 53 roots).
+Documentation dumps likewise share compilation outputs while deleting and checking
+each module's fresh graphs. Its generated pages are byte-identical, with 98 pages
+built and no diagnostics. See [shared-build-verification.json](shared-build-verification.json).
 
 The M0–M5 evidence and published `modular-pilot` release set remain unchanged.
 New extraction does not itself establish publication or full upstream parity.

@@ -44,5 +44,33 @@
       "result": "passed: 1721 tests in 45 suites with --no-parallel, including the unchanged timeout assertion"
     }
   ],
-  "disposition": "Preserve the original runtime and assertions for this extraction. Serial CI and the complete local suite remain required. A passing full run does not eliminate the observed timer/dispatch race."
+  "disposition": "Preserve the original runtime and assertions for this extraction. Serial CI and the complete local suite remain required. A passing full run does not eliminate the observed timer/dispatch race.",
+  "unchangedBaselineExecution": {
+    "baselineCommit": "20bebd6b0a8aef866b96c6eafc8c2ad406257292",
+    "test": "toolLoopAgentAppliesStreamTimeoutAndTelemetryLikeUpstream",
+    "exitCode": 1,
+    "logSHA256": "ffc63cff6fe36c7d27d7c9e5d1268d346c7ab65f45e636161a15394e7c30628d",
+    "tail": [
+      "221 |         #expect(try await events.getSubscription(id: \"managed_1\").status == .active)",
+      "",
+      "[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>",
+      "[369\u2009/\u2009375] SwiftAISDKTests-product",
+      "[371\u2009/\u2009375] SwiftAISDKTests-product",
+      "[373\u2009/\u2009375] SwiftAISDKTests-product",
+      "Build complete! (61.05 sec)",
+      "\udbc1\udfc8  Test run started.",
+      "\udbc0\udd35  Testing Library Version: 2084",
+      "\udbc0\udd35  Target Platform: arm64e-apple-macos14.0",
+      "\udbc1\udfc8  Test toolLoopAgentAppliesStreamTimeoutAndTelemetryLikeUpstream() started.",
+      "\udbc2\udc84  Test toolLoopAgentAppliesStreamTimeoutAndTelemetryLikeUpstream() recorded an issue at AIAgentTests.swift:199:5: Expectation failed: model.streamRequests.count == 1",
+      "\udbc0\udd35  model.streamRequests.count == 1 \u2192 false",
+      "\udbc0\udd35    model.streamRequests.count \u2192 0",
+      "\udbc2\udc84  Test toolLoopAgentAppliesStreamTimeoutAndTelemetryLikeUpstream() failed after 0.004 seconds with 1 issue.",
+      "\udbc2\udc84  Test run with 1 test in 0 suites failed after 0.004 seconds with 1 issue.",
+      "Note: Some test targets reported failures:",
+      "  - SwiftAISDKTests (Swift Testing)"
+    ],
+    "command": "swift test --package-path <unchanged M5 archive> --scratch-path <isolated scratch> --no-parallel --filter toolLoopAgentAppliesStreamTimeoutAndTelemetryLikeUpstream",
+    "result": "The original M5 commit reproduces the same cold-start count=0 failure. No runtime or assertion edits were applied."
+  }
 }

@@ -188,5 +188,7 @@
       "afterSHA256": "f081776506a0f7dd0c72f4c345ef254a903438fc19063cb6128a986de0c106fc",
       "change": "Remove extra blank line at EOF only; no Swift tokens change."
     }
-  ]
+  ],
+  "moduleQualifiedAPIReview": "module-qualified-api-review.json",
+  "sharedBuildVerification": "shared-build-verification.json"
 }

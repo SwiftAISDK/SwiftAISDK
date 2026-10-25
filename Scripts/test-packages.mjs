@@ -1,12 +1,17 @@
 #!/usr/bin/env node
 // Run every extracted test target, then the integration/compatibility aggregate.
 import {spawnSync} from 'node:child_process';
+import path from 'node:path';
 import catalogTools from './lib/catalog.cjs';
 const {readCatalog} = catalogTools;
 const data = readCatalog();
 const packages = data.order.map(id => data.catalog.packages.find(p => p.id === id)).filter(p => p.state === 'extracted');
-const commands = packages.map(p => ({package: p.id, args: ['test', '--package-path', p.directory, '--no-parallel']}));
-commands.push({package: 'SwiftAISDK', args: ['test', '--no-parallel']});
+// Sequential roots share compiler outputs, but SwiftPM still plans each package
+// and discovers only that root's test targets. Dependencies must not be tested
+// merely by running the aggregate: SwiftPM does not do that automatically.
+const scratch = path.join(data.root, '.build', 'package-test-workspace');
+const commands = packages.map(p => ({package: p.id, args: ['test', '--package-path', p.directory, '--scratch-path', scratch, '--no-parallel']}));
+commands.push({package: 'SwiftAISDK', args: ['test', '--scratch-path', scratch, '--no-parallel']});
 if (process.argv.includes('--list')) {
   process.stdout.write(JSON.stringify(commands, null, 2) + '\n');
 } else {

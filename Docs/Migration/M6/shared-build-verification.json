@@ -1,0 +1,240 @@
+{
+  "status": "passed",
+  "command": "node Scripts/test-packages.mjs",
+  "compiler": "Apple Swift 6.4",
+  "sharedScratchDirectory": ".build/package-test-workspace",
+  "rootCount": 53,
+  "tests": 3549,
+  "matchesPriorPerPackageTestCounts": true,
+  "logSHA256": "f11518b2d2ec1ff97732cfb0a516df16941dacdea8b0c142acc92d23a31677a7",
+  "packages": [
+    {
+      "package": "swift-ai-core",
+      "tests": 128
+    },
+    {
+      "package": "swift-ai-alibaba",
+      "tests": 32
+    },
+    {
+      "package": "swift-ai-anthropic",
+      "tests": 135
+    },
+    {
+      "package": "swift-ai-openai-compatible",
+      "tests": 7
+    },
+    {
+      "package": "swift-ai-openai",
+      "tests": 270
+    },
+    {
+      "package": "swift-ai-amazon-bedrock",
+      "tests": 49
+    },
+    {
+      "package": "swift-ai-anthropic-aws",
+      "tests": 9
+    },
+    {
+      "package": "swift-ai-assemblyai",
+      "tests": 16
+    },
+    {
+      "package": "swift-ai-deepseek",
+      "tests": 41
+    },
+    {
+      "package": "swift-ai-azure",
+      "tests": 29
+    },
+    {
+      "package": "swift-ai-baseten",
+      "tests": 16
+    },
+    {
+      "package": "swift-ai-black-forest-labs",
+      "tests": 32
+    },
+    {
+      "package": "swift-ai-bytedance",
+      "tests": 24
+    },
+    {
+      "package": "swift-ai-cartesia",
+      "tests": 25
+    },
+    {
+      "package": "swift-ai-cerebras",
+      "tests": 25
+    },
+    {
+      "package": "swift-ai-cohere",
+      "tests": 23
+    },
+    {
+      "package": "swift-ai-deepgram",
+      "tests": 20
+    },
+    {
+      "package": "swift-ai-deepinfra",
+      "tests": 13
+    },
+    {
+      "package": "swift-ai-elevenlabs",
+      "tests": 30
+    },
+    {
+      "package": "swift-ai-fal",
+      "tests": 21
+    },
+    {
+      "package": "swift-ai-fireworks",
+      "tests": 14
+    },
+    {
+      "package": "swift-ai-fish-audio",
+      "tests": 16
+    },
+    {
+      "package": "swift-ai-gateway",
+      "tests": 35
+    },
+    {
+      "package": "swift-ai-gladia",
+      "tests": 15
+    },
+    {
+      "package": "swift-ai-gmicloud",
+      "tests": 8
+    },
+    {
+      "package": "swift-ai-google",
+      "tests": 69
+    },
+    {
+      "package": "swift-ai-google-vertex",
+      "tests": 26
+    },
+    {
+      "package": "swift-ai-groq",
+      "tests": 28
+    },
+    {
+      "package": "swift-ai-heygen",
+      "tests": 38
+    },
+    {
+      "package": "swift-ai-huggingface",
+      "tests": 13
+    },
+    {
+      "package": "swift-ai-hume",
+      "tests": 13
+    },
+    {
+      "package": "swift-ai-klingai",
+      "tests": 25
+    },
+    {
+      "package": "swift-ai-lmnt",
+      "tests": 13
+    },
+    {
+      "package": "swift-ai-luma",
+      "tests": 16
+    },
+    {
+      "package": "swift-ai-mcp",
+      "tests": 130
+    },
+    {
+      "package": "swift-ai-minimax",
+      "tests": 40
+    },
+    {
+      "package": "swift-ai-mistral",
+      "tests": 32
+    },
+    {
+      "package": "swift-ai-moonshotai",
+      "tests": 32
+    },
+    {
+      "package": "swift-ai-open-responses",
+      "tests": 11
+    },
+    {
+      "package": "swift-ai-perplexity",
+      "tests": 17
+    },
+    {
+      "package": "swift-ai-prodia",
+      "tests": 15
+    },
+    {
+      "package": "swift-ai-quiverai",
+      "tests": 22
+    },
+    {
+      "package": "swift-ai-replicate",
+      "tests": 23
+    },
+    {
+      "package": "swift-ai-revai",
+      "tests": 13
+    },
+    {
+      "package": "swift-ai-togetherai",
+      "tests": 13
+    },
+    {
+      "package": "swift-ai-topaz",
+      "tests": 34
+    },
+    {
+      "package": "swift-ai-typesafe-ai",
+      "tests": 11
+    },
+    {
+      "package": "swift-ai-ui",
+      "tests": 84
+    },
+    {
+      "package": "swift-ai-vercel",
+      "tests": 5
+    },
+    {
+      "package": "swift-ai-voyage",
+      "tests": 10
+    },
+    {
+      "package": "swift-ai-xai",
+      "tests": 47
+    },
+    {
+      "package": "swift-ai-zai",
+      "tests": 15
+    },
+    {
+      "package": "SwiftAISDK",
+      "tests": 1721
+    }
+  ],
+  "documentation": {
+    "check": "passed: 0 errors, 0 warnings, 0 hints",
+    "build": "passed: 98 pages",
+    "sharedScratchDirectory": ".build/documentation-symbolgraphs",
+    "generatedPageBytesUnchanged": true,
+    "checkLogSHA256": "2524ac58121b9072dadd86d3d3cf43faede812c18b0d707a11aa03b585f5f51e",
+    "buildLogSHA256": "76db0d25f3d1ae345d90ac05f9b18b6bee1f856e085ea9f3807f83acab8b01bd"
+  },
+  "freshInternalAPIComparison": {
+    "matchesPriorReport": true,
+    "publicRecords": 9498,
+    "matchedBaselineRecords": 6761,
+    "unmatchedPublicRecords": 0,
+    "nonPublicSynthesizedRecords": 1,
+    "logSHA256": "9c164d5c0c0b246c1741ab4ff995e30eadd1c76ef4e5f3e0a77232f254f1138e"
+  }
+}

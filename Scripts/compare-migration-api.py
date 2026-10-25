@@ -27,7 +27,8 @@ all_current = {}
 for package, names in packages:
     # SwiftPM Xcode and native build systems use different build directories.
     paths = [p for p in (package / '.build').glob('**/symbolgraph/*.symbols.json')
-             if not any(part.startswith('migration-') for part in p.relative_to(package).parts)]
+             if not any(part.startswith('migration-') or part == 'documentation-symbolgraphs'
+                        for part in p.relative_to(package).parts)]
     found = set()
     for path in paths:
         graph = json.loads(path.read_text())
