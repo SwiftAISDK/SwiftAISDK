@@ -1,6 +1,6 @@
 # SwiftAIXAI
 
-Swift-native port of `@ai-sdk/xai`. Extracted during M6; not yet published.
+Swift-native port of `@ai-sdk/xai`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
 
 ```swift
 import SwiftAIXAI
@@ -27,3 +27,5 @@ swift test --package-path Packages/swift-ai-xai
 
 The canonical repository owns all edits. Distribution manifests and repositories
 are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
+
+See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/xai.md) for authentication, options and supported surfaces.

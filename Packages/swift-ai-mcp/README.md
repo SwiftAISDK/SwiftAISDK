@@ -1,6 +1,6 @@
 # SwiftAIMCP
 
-Swift-native port of `@ai-sdk/mcp`. Extracted during M6; not yet published.
+Swift-native port of `@ai-sdk/mcp`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
 
 Import `SwiftAIMCP` for `MCPClient`, HTTP/stdio transports, OAuth helpers, MCP Apps
 metadata and event delivery adapters. The existing client, transport and tool APIs

@@ -255,7 +255,8 @@
       ],
       "guides": [
         "docs-site/scripts/provider-guides/anthropic.md"
-      ]
+      ],
+      "umbrellaFrom": "1.1.0"
     },
     {
       "id": "swift-ai-anthropic-aws",
@@ -761,7 +762,8 @@
       ],
       "dependencies": [],
       "capabilityRows": [],
-      "guides": []
+      "guides": [],
+      "umbrellaFrom": "1.1.0"
     },
     {
       "id": "swift-ai-deepgram",

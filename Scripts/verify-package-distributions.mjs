@@ -182,6 +182,30 @@ try {
   const mixedPins = new Map(journal.packages.map(p => [p.package, p.version]));
   mixedPins.set(older.id, published.get(older.id).sort((a,b) => release.compare(a.version,b.version)).at(-1).version);
   publicClient('mixed-published-and-candidate', [older.id, newer.id], mixedPins);
+  // Exercise the actual remote-only umbrella manifest through an annotated Git
+  // tag, with the same exported dependencies as ordinary consumers would get.
+  const umbrella = path.join(temp, 'SwiftAISDK'); fs.mkdirSync(umbrella);
+  for (const name of ['Package.swift', 'Sources', 'LICENSE'])
+    fs.cpSync(path.join(snapshot, name), path.join(umbrella, name), {recursive: true});
+  ensure(!fs.readFileSync(path.join(umbrella, 'Package.swift'), 'utf8').includes('.package(path:'), 'Local path in public umbrella');
+  release.git(['init', '-q', '--initial-branch=main'], umbrella);
+  release.git(['add', '.'], umbrella); release.git(['commit', '-q', '-m', 'Disposable 3.0 umbrella'], umbrella);
+  release.git(['tag', '-a', '3.0.0', '-m', 'Local verification fixture only'], umbrella);
+  const complete = path.join(temp, 'complete-consumer');
+  fs.cpSync(path.join(snapshot, 'Examples/Complete'), complete, {recursive: true});
+  installMirrors(complete);
+  command('swift', ['package', 'config', 'set-mirror', '--original', 'https://github.com/SwiftAISDK/SwiftAISDK.git',
+    '--mirror', pathToFileURL(umbrella).href], complete, 'mirror compatibility umbrella');
+  const completed = command('swift', ['run', '--scratch-path', path.join(temp, 'latest-client-build'), '-c', 'release', 'CompleteConsumer'], complete, 'complete compatibility client');
+  ensure(completed.includes('COMPLETE_CONSUMER_OK'), 'Missing compatibility runtime checks');
+  const completeLock = JSON.parse(fs.readFileSync(path.join(complete, 'Package.resolved')));
+  ensure(completeLock.pins.length === units.length + 1, 'Incomplete umbrella dependency graph');
+  for (const pin of completeLock.pins) {
+    if (pin.identity === 'swiftaisdk') {
+      ensure(pin.state.version === '3.0.0' && pin.state.revision === release.git(['rev-parse', 'HEAD'], umbrella), 'Wrong umbrella tag');
+    } else ensure(versions.get(pin.identity)?.some(v => v.version === pin.state.version && v.exportCommit === pin.state.revision), 'Unverified umbrella dependency');
+  }
+  consumers.push({label: 'complete-compatibility', lockfile: completeLock, ordinaryImports: true, offlineRuntimeAssertions: true});
   report = {schemaVersion: 1, status: 'passed', evidenceKind: 'local synthetic exports with real published lower bounds',
     sourceSnapshot: candidate.source, packageCount: units.length, deterministicExports: a.exports,
     checks, consumers, temporaryDirectory: temp};

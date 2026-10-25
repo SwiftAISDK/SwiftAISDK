@@ -1,6 +1,6 @@
 # SwiftAIAzure
 
-Swift-native port of `@ai-sdk/azure`. Extracted during M6; not yet published.
+Swift-native port of `@ai-sdk/azure`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
 
 ```swift
 import SwiftAIAzure
@@ -16,3 +16,5 @@ hosting configurations. Existing capabilities and gaps remain unchanged.
 
 Run `swift test --package-path Packages/swift-ai-azure` in the canonical checkout.
 Distribution manifests and repositories are generated from the package catalog.
+
+See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/azure.md) for authentication, options and supported surfaces.

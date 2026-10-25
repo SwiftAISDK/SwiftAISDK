@@ -63,7 +63,7 @@ function github(root, canonical) {
     },
   };
 }
-function publish(root, directory, staging, { ciRun, canonical = "SwiftAISDK/SwiftAISDK",
+function publish(root, directory, staging, { ciRun, localVerification, canonical = "SwiftAISDK/SwiftAISDK",
   // Internal transport seam for offline failure/recovery tests; not exposed by CLI.
   backend = null, afterPush = null } = {}) {
   root = path.resolve(root); directory = path.resolve(directory); staging = path.resolve(staging);
@@ -84,7 +84,10 @@ function publish(root, directory, staging, { ciRun, canonical = "SwiftAISDK/Swif
   ensure(!fs.lstatSync(staging).isSymbolicLink() && disjoint(fs.realpathSync(staging), fs.realpathSync(directory)),
     "Publication staging overlaps through a symlink");
   const transport = backend || github(root, canonical);
-  const ci = transport.verifyCI(candidate.source.commit, ciRun);
+  ensure(!(ciRun && localVerification), "Choose hosted CI or user-directed local migration verification");
+  const ci = localVerification
+    ? require("./local-verification.cjs").verify(root, path.resolve(localVerification), candidate.source.commit)
+    : transport.verifyCI(candidate.source.commit, ciRun);
   const identity = {
     name: run("git", ["show", "-s", "--format=%an", candidate.source.commit], root),
     email: run("git", ["show", "-s", "--format=%ae", candidate.source.commit], root),

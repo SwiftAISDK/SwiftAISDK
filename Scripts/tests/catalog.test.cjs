@@ -215,7 +215,7 @@ test("one registration scaffolds every derived surface without claiming support"
     p.state = "extracted";
   });
   run(r, ["generate"]);
-  assert(fs.readFileSync(path.join(r, "Package.swift"), "utf8").includes(`.package(path: "Packages/${id}")`));
+  assert(fs.readFileSync(path.join(r, "Package.swift"), "utf8").includes(`.package(url: "https://github.com/SwiftAISDK/${id}.git", from: "1.0.0")`));
   assert(fs.readFileSync(path.join(r, "Sources/SwiftAISDK/ProviderExports.swift"), "utf8").includes("@_exported import SwiftAIMigrationFixture"));
   assert.deepEqual(JSON.parse(run(r, ["generate", "--check"])).changed, []);
 });

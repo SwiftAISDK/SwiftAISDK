@@ -1,6 +1,6 @@
 # SwiftAIGateway
 
-Swift-native port of `@ai-sdk/gateway`. Extracted during M6; not yet published.
+Swift-native port of `@ai-sdk/gateway`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
 
 ```swift
 import SwiftAIGateway
@@ -16,3 +16,5 @@ capabilities and documented gaps remain unchanged.
 
 Run `swift test --package-path Packages/swift-ai-gateway` in the canonical checkout.
 Distribution manifests and repositories are generated from the package catalog.
+
+See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/gateway.md) for authentication, options and supported surfaces.

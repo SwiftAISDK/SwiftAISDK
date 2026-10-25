@@ -336,94 +336,12 @@ function npmViewVersion(packageName) {
 }
 
 function preparePackageDiff(row, workDir) {
-  const packageDir = path.join(workDir, sanitizePackageName(row.name), `${row.current}..${row.latest}`);
-  const packDir = path.join(packageDir, "packs");
-  const oldDir = path.join(packageDir, "old");
-  const newDir = path.join(packageDir, "new");
-  const diffPath = path.join(packageDir, "upstream.diff");
-  const summaryPath = path.join(packageDir, "summary.md");
-
-  fs.rmSync(packageDir, { recursive: true, force: true });
-  fs.mkdirSync(packDir, { recursive: true });
-  fs.mkdirSync(oldDir, { recursive: true });
-  fs.mkdirSync(newDir, { recursive: true });
-
-  console.error(`Preparing diff for ${row.name} ${row.current} -> ${row.latest}`);
-  const oldPack = npmPack(row.name, row.current, packDir);
-  const newPack = npmPack(row.name, row.latest, packDir);
-
-  extractTarball(oldPack, oldDir);
-  extractTarball(newPack, newDir);
-
-  const diff = runDiff(oldDir, newDir);
-  fs.writeFileSync(diffPath, diff, "utf8");
-  fs.writeFileSync(summaryPath, makeSummary(row, packageDir, diffPath), "utf8");
-
-  console.error(`  wrote ${diffPath}`);
-}
-
-function npmPack(packageName, version, destination) {
-  const output = execFileSync("npm", ["pack", `${packageName}@${version}`, "--pack-destination", destination, "--json"], {
-    cwd: repoRoot,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
+  const directory = path.join(workDir, sanitizePackageName(row.name), `${row.current}..${row.latest}`);
+  const result = require("./lib/upstream.cjs").prepare(repoRoot, {
+    name: row.name, from: row.current, to: row.latest, directory,
   });
-  const parsed = JSON.parse(output);
-  const filename = parsed[0] && parsed[0].filename;
-  if (!filename) {
-    throw new Error(`npm pack did not return a filename for ${packageName}@${version}`);
-  }
-  return path.join(destination, filename);
-}
-
-function extractTarball(tarballPath, destination) {
-  execFileSync("tar", ["-xzf", tarballPath, "-C", destination, "--strip-components=1"], {
-    cwd: repoRoot,
-    stdio: "ignore",
-  });
-}
-
-function runDiff(oldDir, newDir) {
-  const result = spawnSync(
-    "diff",
-    [
-      "-ruN",
-      "--exclude=package.tgz",
-      "--exclude=*.map",
-      "--exclude=*.d.ts.map",
-      oldDir,
-      newDir,
-    ],
-    {
-      cwd: repoRoot,
-      encoding: "utf8",
-    }
-  );
-
-  if (result.status !== 0 && result.status !== 1) {
-    throw new Error(result.stderr || `diff failed with status ${result.status}`);
-  }
-
-  return result.stdout;
-}
-
-function makeSummary(row, packageDir, diffPath) {
-  return [
-    `# ${row.name} ${row.current} -> ${row.latest}`,
-    "",
-    `Kind: ${row.kind}`,
-    `Swift evidence: ${row.evidence}`,
-    `Package work dir: ${packageDir}`,
-    `Diff: ${diffPath}`,
-    "",
-    "## Port Notes",
-    "",
-    "- Upstream files changed:",
-    "- Swift surfaces to inspect:",
-    "- Tests to add/update:",
-    "- Docs/version rows to update:",
-    "",
-  ].join("\n");
+  console.error(`Prepared ${row.name}: ${result.changedFiles.length} source/archive changes, ${result.changedTests.length} test changes; ${result.testComparison}`);
+  console.error(`  ${path.join(directory, "work-item.json")}`);
 }
 
 function printTable(rows) {

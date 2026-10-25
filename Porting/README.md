@@ -54,8 +54,11 @@ node Scripts/sdk.mjs upstream check --all
 node Scripts/sdk.mjs upstream prepare --package @ai-sdk/openai
 ```
 
-The SDK upstream commands delegate to the existing version/diff implementation;
-they do not yet add immutable archive preparation or release-matched test fetching.
+The SDK upstream commands retain the legacy CLI flags. Preparation verifies npm
+archive integrity, pins matching release test refs where available, records file
+and declaration changes, maps Swift owners and selects downstream verification.
+`work-item.json` distinguishes matching tests from explicit inventory fallbacks.
+Preparation is immutable and never advances the reviewed baseline.
 A lookup never advances a reviewed baseline. Registered scaffolds are reported as
 `tracked-unreviewed` during discovery and omitted from reviewed-version comparison.
 Network failures remain explicit errors in version rows, including nonzero exit
@@ -101,9 +104,13 @@ ordinary-import release builds at minimum and latest eligible dependency version
 It fetches recorded published tags read-only for lower-bound verification; all
 candidate tags and pushes stay in disposable local repositories.
 
-The development root `Package.swift` and `ProviderExports.swift` are generated
-from extracted catalog entries. Do not maintain a second package/product list in
-those files. The root remains a local workspace until the M7 umbrella release.
+The public root `Package.swift` and `ProviderExports.swift` are generated from
+extracted catalog entries. `umbrellaFrom` records a package minimum required by
+the compatibility facade (default `1.0.0`). Do not maintain a second product list.
+`node Scripts/sdk.mjs dev build` creates an ignored local workspace with symlinks
+to canonical sources/tests and catalog-derived local dependencies. The root
+manifest stays remote-only. `dev examples build` builds the complete examples.
+Plain root SwiftPM commands intentionally resolve published dependencies.
 
 The generated CI matrix is input for later package jobs. Planned/scaffold entries
 have no independent build command. Export metadata is a file plan, not an export

@@ -1,3 +1,5 @@
+import development from "../../Scripts/lib/development.cjs";
+import { realpathSync } from "node:fs";
 import catalogTools from '../../Scripts/lib/catalog.cjs';
 import { spawnSync } from 'node:child_process';
 import {
@@ -198,7 +200,7 @@ function generateProviders() {
 // including extension graphs, so moving a declaration cannot erase its docs.
 const runtimeCatalog = catalogTools.readCatalog(repoRoot).catalog.packages;
 const runtimePackages = [
-  { root: repoRoot, modules: ['SwiftAISDK'] },
+  { root: development.prepare(repoRoot), modules: ['SwiftAISDK'] },
   ...runtimeCatalog
     .filter(p => p.state === 'extracted')
     .map(p => ({ root: join(repoRoot, p.directory), modules: p.modules.map(m => m.name) })),
@@ -256,7 +258,7 @@ function sourcePath(symbol) {
   const uri = symbol.location?.uri;
   if (!uri) return '';
   const filePath = fileURLToPath(uri);
-  return relative(repoRoot, filePath);
+  return relative(repoRoot, realpathSync(filePath));
 }
 
 function componentForPath(path) {
@@ -511,6 +513,12 @@ const providersOnly = process.argv.includes('--providers-only');
 
 generateProviders();
 if (!providersOnly) {
+  const migration = readFileSync(join(repoRoot, 'Docs/Migration/3.0.md'), 'utf8')
+    .replace('# Migrating to SwiftAISDK 3.0\n', '')
+    .replace('(../AgentPortingGuide.md)', '(https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/AgentPortingGuide.md)')
+    .replace('(../../Releases/README.md)', '(https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Releases/README.md)');
+  writeGenerated(join(contentRoot, 'getting-started/migrating-to-3.mdx'),
+    '---\ntitle: Migrate to 3.0\ndescription: Choose independent Swift packages or keep the complete compatibility API.\n---\n' + migration);
   generateReference();
   generateLLMSFiles();
 }

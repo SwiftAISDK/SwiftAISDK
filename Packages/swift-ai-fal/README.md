@@ -1,6 +1,6 @@
 # SwiftAIFal
 
-Swift-native port of `@ai-sdk/fal`. Extracted during M6; not yet published.
+Swift-native port of `@ai-sdk/fal`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
 
 ```swift
 import SwiftAIFal

@@ -1,6 +1,6 @@
 # SwiftAIReplicate
 
-Swift-native port of `@ai-sdk/replicate`. Extracted during M6; not yet published.
+Swift-native port of `@ai-sdk/replicate`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
 
 ```swift
 import SwiftAIReplicate

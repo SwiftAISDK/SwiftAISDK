@@ -6,6 +6,7 @@ import catalogTools from "./lib/catalog.cjs";
 import generator from "./lib/generate.cjs";
 import releases from "./lib/release.cjs";
 import publication from "./lib/publish.cjs";
+import development from "./lib/development.cjs";
 const { rootDefault, json, readCatalog, ensure, localPath } = catalogTools;
 const args = process.argv.slice(2);
 let root = rootDefault;
@@ -165,9 +166,21 @@ function addPackage() {
 try {
   if (!args.length || args.includes("--help"))
     console.log(
-      `SwiftAISDK package and release tooling\n\n  generate [--check]                     Validate and generate metadata/manifests\n  catalog validate                       Check schema, paths, ownership and dependency cycles\n  package add --upstream @ai-sdk/name [--module SwiftAIName]\n  upstream check [legacy version-check options]\n  upstream prepare [legacy diff options]\n  verify --affected --files path1,path2   Select checks; does not execute Swift tests\n\n--root <checkout> selects an isolated checkout for tooling rehearsals.\nRelease rehearsal commands (local only):\n  release plan [--id release-id] [--output plan.json]\n  release export --dry-run --plan plan.json --output new-directory\n  release rehearse --export export-directory --staging new-or-resumed-directory\n    [--baseline prior-staging] [--stop-after N] [--interrupt-after-push N]\nProduction publication:\n  release export --publication --plan plan.json --output new-directory\n  release publish --export export-directory --staging attempt-directory --ci-run completed-run-id`,
+      `SwiftAISDK package and release tooling\n\n  dev <build|test|run|package> [args]    Use canonical sources and local package dependencies\n  dev examples <build|run> [args]      Build canonical examples locally\n  generate [--check]                     Validate and generate metadata/manifests\n  catalog validate                       Check schema, paths, ownership and dependency cycles\n  package add --upstream @ai-sdk/name [--module SwiftAIName]\n  upstream check [legacy version-check options]\n  upstream prepare [legacy diff options]\n  verify --affected --files path1,path2   Select checks; does not execute Swift tests\n\n--root <checkout> selects an isolated checkout for tooling rehearsals.\nRelease rehearsal commands (local only):\n  release plan [--id release-id] [--output plan.json]\n  release export --dry-run --plan plan.json --output new-directory\n  release rehearse --export export-directory --staging new-or-resumed-directory\n    [--baseline prior-staging] [--stop-after N] [--interrupt-after-push N]\nProduction publication:\n  release export --publication --plan plan.json --output new-directory\n  release publish --export export-directory --staging attempt-directory [--ci-run completed-run-id | --local-verification receipt.json]`,
     );
-  else if (args[0] === "generate") {
+  else if (args[0] === "dev") {
+    ensure(args.length >= 2, "Usage: sdk.mjs dev <build|test|run|package> [Swift arguments]");
+    const workspace = development.prepare(root);
+    const examples = args[1] === "examples";
+    const forwarded = args.slice(examples ? 2 : 1);
+    ensure(["build", "test", "run", "package"].includes(forwarded[0]), "Expected a Swift command");
+    ensure(!forwarded.includes("--package-path"), "dev selects its own package path");
+    const result = spawnSync("swift", [forwarded[0], "--package-path",
+      examples ? path.join(workspace, "Examples") : workspace, ...forwarded.slice(1)],
+      { cwd: root, stdio: "inherit" });
+    if (result.error) throw result.error;
+    process.exitCode = result.status ?? 1;
+  } else if (args[0] === "generate") {
     options(1, { "--check": false });
     console.log(json(generator.generate(root, args.includes("--check"))));
   } else if (args[0] === "catalog" && args[1] === "validate") {
@@ -226,9 +239,11 @@ try {
       }),
     );
   } else if (args[0] === "release" && args[1] === "publish") {
-    options(2, { "--export": true, "--staging": true, "--ci-run": true });
+    options(2, { "--export": true, "--staging": true, "--ci-run": true, "--local-verification": true });
+    ensure(args.includes("--ci-run") !== args.includes("--local-verification"), "Select exactly one verification receipt");
     console.log(json(publication.publish(root, path.resolve(value("--export")),
-      path.resolve(value("--staging")), { ciRun: value("--ci-run") })));
+      path.resolve(value("--staging")), { ciRun: args.includes("--ci-run") ? value("--ci-run") : undefined,
+        localVerification: args.includes("--local-verification") ? value("--local-verification") : undefined })));
   } else if (args[0] === "release" && args[1] === "rehearse") {
     options(2, {
       "--export": true,

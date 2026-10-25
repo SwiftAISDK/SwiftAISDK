@@ -7,7 +7,7 @@ Status: Migration in progress. [M0 inventory](Migration/M0/README.md),
 are complete. [M3 provider pilot](Migration/M3/README.md) completed on 2026-10-25:
 core, Anthropic, compatible and OpenAI are extracted local packages, consumed by
 the compatibility aggregate. [M4 publication rehearsal](Migration/M4/README.md) is complete. [M5 organization and first modular releases](Migration/M5/README.md) is complete.
-The canonical repository is transferred; core and the three pilot adapters are published at independent Swift version 1.0.0. [M6 extraction](Migration/M6/README.md) is complete: all 52 package implementations and independent distributions are verified. Final hosted verification follows the temporary CI policy below. M7 has not started.
+The canonical repository is transferred; core and the three pilot adapters are published at independent Swift version 1.0.0. [M6 extraction](Migration/M6/README.md) is complete: all 52 package implementations and independent distributions are verified. Final hosted verification follows the temporary CI policy below. [M7](Migration/M7/README.md) is in progress.
 
 SwiftAISDK will remain a Swift-native port of the provider-facing Vercel AI SDK.
 The migration should let consumers select and update providers independently,
@@ -410,7 +410,7 @@ uploads. Package distribution uses Git commits/tags, not Actions upload artifact
 
 ## Execution stages
 
-M0–M6 are complete; M7 is pending. Execute one stage per run, as requested by the
+M0–M6 are complete; M7 is in progress. Execute one stage per run, as requested by the
 user. Finish and record its exit evidence before starting the next stage.
 
 | Stage | Deliverable | Exit evidence |

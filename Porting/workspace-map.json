@@ -3,6 +3,8 @@
   "files": [
     "Examples/AnthropicOnly/Package.swift",
     "Examples/AnthropicOnly/Sources/ProviderConsumer/Entry.swift",
+    "Examples/Complete/Package.swift",
+    "Examples/Complete/Sources/CompleteConsumer/Entry.swift",
     "Examples/CoreOnly/Package.swift",
     "Examples/CoreOnly/Sources/CoreConsumer/Entry.swift",
     "Examples/MixedProviders/Package.swift",

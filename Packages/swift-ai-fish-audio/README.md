@@ -1,6 +1,6 @@
 # SwiftAIFishAudio
 
-Swift-native port of `@ai-sdk/fish-audio`. Extracted during M6; not yet published.
+Swift-native port of `@ai-sdk/fish-audio`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
 
 ```swift
 import SwiftAIFishAudio

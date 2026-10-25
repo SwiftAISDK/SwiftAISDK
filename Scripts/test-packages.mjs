@@ -3,6 +3,7 @@
 import {spawnSync} from 'node:child_process';
 import path from 'node:path';
 import catalogTools from './lib/catalog.cjs';
+import development from './lib/development.cjs';
 const {readCatalog} = catalogTools;
 const data = readCatalog();
 const packages = data.order.map(id => data.catalog.packages.find(p => p.id === id)).filter(p => p.state === 'extracted');
@@ -11,7 +12,7 @@ const packages = data.order.map(id => data.catalog.packages.find(p => p.id === i
 // merely by running the aggregate: SwiftPM does not do that automatically.
 const scratch = path.join(data.root, '.build', 'package-test-workspace');
 const commands = packages.map(p => ({package: p.id, args: ['test', '--package-path', p.directory, '--scratch-path', scratch, '--no-parallel']}));
-commands.push({package: 'SwiftAISDK', args: ['test', '--scratch-path', scratch, '--no-parallel']});
+commands.push({package: 'SwiftAISDK', args: ['test', '--package-path', development.prepare(data.root), '--scratch-path', scratch, '--no-parallel']});
 if (process.argv.includes('--list')) {
   process.stdout.write(JSON.stringify(commands, null, 2) + '\n');
 } else {

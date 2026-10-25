@@ -62,10 +62,11 @@ version of each package identity. Commit `Package.resolved` in applications for
 reproducible builds. See the verified [public mixed-client lockfile](Docs/Migration/M5/MixedProviders.Package.resolved).
 
 The released 2.x aggregate above remains the option for the complete provider/MCP/UI
-surface and the existing `settings:` factories. The development root uses local
-packages; it is not a new aggregate release. All package sources have moved in
+surface and the existing `settings:` factories. The development root now contains the remote dependency manifest for the planned
+3.0 umbrella; use `node Scripts/sdk.mjs dev build` to work with local source packages
+until its dependencies are published. All package sources have moved in
 [M6](Docs/Migration/M6/README.md), whose extraction and local verification are complete; the 3.0
-umbrella belongs to M7. Tagged 2.x owns its original model/request types; those
+umbrella is being prepared in [M7](Docs/Migration/M7/README.md). Tagged 2.x owns its original model/request types; those
 values are not interchangeable with the new modular types. The development
 compatibility facade that shares core types will be released with the 3.0 migration.
 
@@ -850,7 +851,7 @@ It uses dummy tokens, validates the code callback, and makes no network calls.
 Run the mock-backed suite:
 
 ```sh
-swift test
+node Scripts/test-packages.mjs
 ```
 
 Optional live smoke tests are available with real keys:
@@ -870,7 +871,7 @@ are reported as skipped by Swift Testing, rather than counted as passed.
 The broader suite includes media generation and can incur higher charges:
 
 ```sh
-LIVE_AI_TESTS=1 swift test --filter LiveProviderSmoke
+LIVE_AI_TESTS=1 node Scripts/sdk.mjs dev test --filter LiveProviderSmoke
 ```
 
 Cartesia live checks read `CARTESIA_API_KEY` and optionally

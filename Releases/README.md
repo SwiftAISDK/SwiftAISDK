@@ -125,3 +125,29 @@ No per-provider publication workflow or hand-edited distribution source is neede
 `tags-and-releases-ready` is an intermediate state. Run standalone hosted CI and
 public consumer checks, retain their evidence, then finalize the published set.
 No new canonical root tag is made while its manifest depends on local packages.
+
+## Temporary M7 verification policy
+
+The user requested that CI remain suspended until the migration's final handoff.
+For this migration, commit the complete source and run:
+
+```sh
+node Scripts/verify-local-migration.mjs .build/migration-m7/local-verification.json
+node Scripts/sdk.mjs release plan --id modular-3 --output .build/migration-m7/plan.json
+node Scripts/sdk.mjs release export --publication --plan .build/migration-m7/plan.json --output .build/migration-m7/export
+node Scripts/sdk.mjs release publish --export .build/migration-m7/export --staging .build/migration-m7/publication --local-verification .build/migration-m7/local-verification.json
+```
+
+This explicit alternative validates the exact committed source tree and the
+required local check/log receipts. It does not claim hosted CI passed. The ordinary
+`--ci-run` gate remains available; the two modes are mutually exclusive. Preserve
+logs while resuming a publication. After public dependency/umbrella verification,
+restore all suspended CI and finish the final hosted documentation handoff.
+
+`verify-maintenance-rehearsal.mjs --report <new-path>` replays the already-ported
+OpenAI 4.0.101 → 4.0.102 update using integrity-checked archives and release-matched
+tests. In disposable source it demonstrates a failing translated test, separate
+provider/shared-parser repairs, downstream selection and changed-unit-only local
+releases. It also registers an unimplemented fixture provider and verifies that
+changing its state alone cannot bypass release review. No production baselines,
+capabilities, remote releases or provider calls change during this rehearsal.

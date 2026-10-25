@@ -1,6 +1,6 @@
 # SwiftAIGMICloud
 
-Swift-native port of `@ai-sdk/gmicloud`. Extracted during M6; not yet published.
+Swift-native port of `@ai-sdk/gmicloud`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
 
 ```swift
 import SwiftAIGMICloud

@@ -36,6 +36,7 @@ export default defineConfig({
           items: [
             { label: 'Introduction', slug: '' },
             { label: 'Install', slug: 'getting-started/install' },
+            { label: 'Migrate to 3.0', slug: 'getting-started/migrating-to-3' },
             { label: 'Quickstart', slug: 'getting-started/quickstart' },
           ],
         },

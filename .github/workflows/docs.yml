@@ -72,7 +72,7 @@ jobs:
         run: npm audit --prefix docs-site
 
       - name: Build package
-        run: swift build
+        run: node Scripts/sdk.mjs dev build
 
       - name: Verify isolated core consumer
         run: node Scripts/verify-core-isolation.mjs
@@ -89,14 +89,19 @@ jobs:
       - name: Verify every extracted distribution and dependency bounds
         run: node Scripts/verify-package-distributions.mjs --report .build/distribution-verification.json
 
+      - name: Rehearse upstream maintenance and new-provider registration
+        run: node Scripts/verify-maintenance-rehearsal.mjs --report .build/maintenance-verification.json
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       - name: Compile the complete compatibility facade for iOS
-        run: swift build --triple arm64-apple-ios15.0-simulator --sdk "$(xcrun --sdk iphonesimulator --show-sdk-path)" --scratch-path .build/ios-verification
+        run: node Scripts/sdk.mjs dev build --triple arm64-apple-ios15.0-simulator --sdk "$(xcrun --sdk iphonesimulator --show-sdk-path)" --scratch-path "${{ github.workspace }}/.build/ios-verification"
 
       - name: Build documentation examples
-        run: swift build --package-path Examples
+        run: node Scripts/sdk.mjs dev examples build
 
       - name: Verify offline MCP OAuth migration
-        run: swift run --package-path Examples MCPOAuthMigration
+        run: node Scripts/sdk.mjs dev examples run MCPOAuthMigration
 
       - name: Check documentation
         run: npm --prefix docs-site run check

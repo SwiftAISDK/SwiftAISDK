@@ -44,11 +44,16 @@ status docs together.
 3. For changed packages, prepare upstream tarball diffs:
 
    ```sh
-   Scripts/check-upstream-versions.js --package @ai-sdk/openai --prepare-diffs
+   node Scripts/sdk.mjs upstream prepare --package @ai-sdk/openai
    Scripts/check-upstream-versions.js --prepare-diffs
    ```
 
-4. Read the generated `summary.md` and `upstream.diff` before editing Swift.
+4. Read the generated `work-item.json`, `summary.md` and `upstream.diff` before
+   editing Swift. Archives are verified against registry integrity. Tests are pinned
+   to the package release tag/gitHead and version-checked; missing matching refs
+   remain explicit gaps. The report maps Swift owners and downstream verification.
+   Existing preparation directories are immutable; use a new `--work-dir` after
+   changing ownership or when retrying an incomplete preparation.
 5. Read upstream tests before implementation files. Prefer upstream tests as the
    source of truth for observable behavior.
 6. Patch the closest Swift implementation and keep the local architecture
@@ -70,8 +75,9 @@ Before declaring a tooling or metadata change complete, run
 with `node Scripts/sdk.mjs package add --upstream @ai-sdk/name --module SwiftAIName`;
 the result is explicitly unimplemented until its behavior and tests are ported.
 
-The development root manifest and provider re-exports are also generated from
-extracted catalog entries. Keep package ownership and dependencies in the catalog;
+The public root manifest and provider re-exports are generated from extracted
+catalog entries. Use `node Scripts/sdk.mjs dev <Swift command>` for the generated
+local workspace; plain root SwiftPM commands resolve public releases. Keep package ownership and dependencies in the catalog;
 do not add a separate hand-maintained root list. Catalog-wide distribution checks
 are documented in `Porting/README.md` and `Docs/Migration/M6/README.md`.
 
@@ -190,9 +196,9 @@ node Scripts/verify-provider-isolation.mjs
 node Scripts/verify-provider-versions.mjs
 ```
 
-The root package is the temporary legacy aggregate. Core, Anthropic, generic
-OpenAI-compatible and OpenAI changes belong in their catalog-owned `Packages/`
-directories. Remaining providers, MCP and UI still live under `Sources/SwiftAISDK`.
+The root package is the compatibility facade. Every provider, core module, MCP
+and UI implementation belongs in its catalog-owned `Packages/` directory.
+`Sources/SwiftAISDK` contains compatibility/default resolution and inventory.
 Pure provider tests move with the provider; mixed integration and compatibility
 tests remain in the root. Declare test-only products/resources in the module's
 `testDependencies`/`testResources`, then regenerate. Register every source, test
@@ -203,7 +209,7 @@ shared inside core; expose a public adapter API only when an independent provide
 needs it. Neither core nor an extracted provider may import the aggregate. Typed
 native `configuration:` factories and legacy `settings:` overloads are separate
 entry points. Provider defaults remain in the owning module; legacy dispatch and
-host-specific hooks stay in aggregate adapters until those hosts are extracted.
+host-specific policy stays in its owning adapter package.
 
 Edit core facade signatures, then regenerate `Compatibility.swift`; do not edit
 its generated methods or duplicate their runtime bodies. Legacy default-provider
@@ -222,7 +228,7 @@ npm --prefix docs-site run build
 Optional live smoke:
 
 ```sh
-LIVE_AI_TESTS=1 swift test --filter LiveProviderSmoke
+LIVE_AI_TESTS=1 node Scripts/sdk.mjs dev test --filter LiveProviderSmoke
 ```
 
 ## Completion Summary

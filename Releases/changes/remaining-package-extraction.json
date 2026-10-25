@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "remaining-package-extraction",
-  "status": "draft",
-  "summary": "M6 extraction candidates. Publication waits for the completed stage evidence and the M7 release set.",
+  "status": "reviewed",
+  "summary": "M6 extracted distributions verified locally: 48 initial releases, additive core/Anthropic 1.1 APIs, unchanged OpenAI and compatible releases retained. M7 publishes only these changed units under the user-directed local-verification policy.",
   "packages": [
     {
       "package": "swift-ai-alibaba",

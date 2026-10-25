@@ -1,6 +1,6 @@
 # SwiftAIBaseten
 
-Swift-native port of `@ai-sdk/baseten`. Extracted during M6; not yet published.
+Swift-native port of `@ai-sdk/baseten`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
 
 ```swift
 import SwiftAIBaseten

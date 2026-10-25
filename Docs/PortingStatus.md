@@ -64,7 +64,9 @@ passed; remaining checks completed locally after the user suspended intermediate
 CI to conserve the Actions budget. Full hosted verification and documentation
 deployment move to the end of the overall migration. The receipt retains observed
 local failures of a pre-existing 1 ms timeout test, reproduced on unchanged M5.
-M7 has not started. M3/M4 tags
+[M7](Migration/M7/README.md) is in progress: remote-only umbrella generation,
+a local development workspace, release-matched upstream preparation and the
+maintenance rehearsal are implemented. Publication and final hosted handoff remain pending. M3/M4 tags
 remain explicitly disposable fixture data; no additional package is published by
 the extraction itself.
 

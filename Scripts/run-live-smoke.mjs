@@ -31,8 +31,8 @@ if (!enabled || selected.length === 0) {
     : 'No API calls made: none of the representative provider credentials is configured.');
   process.exit(2);
 }
-const result = spawnSync('swift', [
-  'test', '--no-parallel', '--filter', selected.map(([, , test]) => test).join('|'),
+const result = spawnSync(process.execPath, [
+  fileURLToPath(new URL('sdk.mjs', import.meta.url)), 'dev', 'test', '--no-parallel', '--filter', selected.map(([, , test]) => test).join('|'),
 ], {cwd: fileURLToPath(new URL('..', import.meta.url)), stdio: 'inherit'});
 if (result.error) console.error(`Unable to run Swift tests: ${result.error.message}`);
 process.exit(result.status ?? 1);

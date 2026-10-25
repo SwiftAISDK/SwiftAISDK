@@ -1,6 +1,6 @@
 # SwiftAIUI
 
-Optional Swift-native UI layer for SwiftAISDK. Extracted during M6; not yet published.
+Optional Swift-native UI layer for SwiftAISDK. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
 
 Import `SwiftAIUI` for UI messages, validation and conversion, stream reduction,
 `DirectAIChatTransport`, `AIChatSession`, and `createAgentUIStream`.

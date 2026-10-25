@@ -1,6 +1,6 @@
 # SwiftAIVoyage
 
-Swift-native port of `@ai-sdk/voyage`. Extracted during M6; not yet published.
+Swift-native port of `@ai-sdk/voyage`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
 
 The canonical repository owns all source edits. This package owns its provider
 configuration and wire behavior, using only the declared shared dependencies.

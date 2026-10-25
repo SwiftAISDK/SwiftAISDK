@@ -228,6 +228,9 @@ function plan(root, id = "modular-pilot") {
         p?.state === "extracted",
         `Cannot release unextracted package ${entry.package}`,
       );
+      ensure(data.maps.get(p.id).status !== "unreviewed" &&
+        p.upstream.every(name => data.lock.packages.find(u => u.name === name).reviewStatus !== "unreviewed"),
+        `Cannot release unreviewed implementation ${p.id}`);
       const previous = selected.get(p.id);
       if (previous)
         ensure(
@@ -523,7 +526,7 @@ function exportRelease(root, candidate, destination, { publication = false } = {
       writeFile(
         dir,
         ".github/workflows/ci.yml",
-        "name: Package CI\non: [push, pull_request, workflow_dispatch]\npermissions:\n  contents: read\njobs:\n  package:\n    uses: ./.github/workflows/package-check.yml\n",
+        "name: Package CI\non:\n  push:\n    branches: [main]\n  pull_request:\n  workflow_dispatch:\npermissions:\n  contents: read\njobs:\n  package:\n    uses: ./.github/workflows/package-check.yml\n",
       );
       const files = treeFiles(dir);
       exports.push({

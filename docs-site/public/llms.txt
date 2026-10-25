@@ -42,6 +42,7 @@ SwiftAISDK is a SwiftPM port of the provider-facing Vercel AI SDK.
 - [Transcribe audio](https://swiftaisdk.github.io/SwiftAISDK/llms/core/transcribe.txt): Convert audio bytes into text with a transcription model.
 - [Transform audio](https://swiftaisdk.github.io/SwiftAISDK/llms/core/transform-audio.txt): Transform existing audio through provider-native audio tools.
 - [Install](https://swiftaisdk.github.io/SwiftAISDK/llms/getting-started/install.txt): Add SwiftAISDK to a SwiftPM package and configure credentials.
+- [Migrate to 3.0](https://swiftaisdk.github.io/SwiftAISDK/llms/getting-started/migrating-to-3.txt): Choose independent Swift packages or keep the complete compatibility API.
 - [Quickstart](https://swiftaisdk.github.io/SwiftAISDK/llms/getting-started/quickstart.txt): Generate text with a provider and model.
 - [Provider matrix](https://swiftaisdk.github.io/SwiftAISDK/llms/providers.txt): Generated provider capability overview for SwiftAISDK.
 - ["alibaba"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/alibaba.txt): "alibaba provider capabilities and factories."

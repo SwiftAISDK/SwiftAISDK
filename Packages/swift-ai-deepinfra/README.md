@@ -1,6 +1,6 @@
 # SwiftAIDeepInfra
 
-Swift-native port of `@ai-sdk/deepinfra`. Extracted during M6; not yet published.
+Swift-native port of `@ai-sdk/deepinfra`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
 
 ```swift
 import SwiftAIDeepInfra

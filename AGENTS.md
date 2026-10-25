@@ -20,6 +20,10 @@ in sync in the same change.
 - For release-style pushes, bump the release tag first: inspect the latest
   semantic-version tag, create the next appropriate annotated tag on the commit
   being released, then push the branch and tag together.
+- Modular releases follow `Releases/README.md`: edit canonical source, publish
+  deterministic exports in dependency order, and tag only changed release units.
+  A provider-only release does not require a new umbrella tag. Distribution
+  repositories must never receive hand-edited implementation fixes.
 
 ## Porting Requirements
 
@@ -42,8 +46,13 @@ Every porting pass must update:
 
 ## Verification
 
-- Run the narrowest useful `swift test --filter ...` first.
-- Run full `swift test` before calling a behavior port complete.
+- Run the narrowest useful package test first, for example
+  `swift test --package-path Packages/swift-ai-openai --filter ... --no-parallel`.
+- Use `node Scripts/sdk.mjs dev test --filter ... --no-parallel` for compatibility
+  tests against current local sources. The root manifest resolves public tags.
+- Run `node Scripts/test-packages.mjs` before calling a behavior port complete;
+  it runs every package suite and the complete compatibility suite. A root-only
+  `swift test` does not run dependency-package tests.
 - For docs-site changes, run:
 
   ```sh
