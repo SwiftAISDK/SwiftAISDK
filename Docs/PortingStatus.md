@@ -33,8 +33,8 @@ support. Existing npm versions and capability rows are preserved.
 the generated legacy facade preserve explicit and default provider resolution.
 [M3 provider extraction](Migration/M3/README.md) adds independently buildable
 Anthropic, generic OpenAI-compatible and OpenAI packages. The aggregate now uses
-these local packages. M6 now moves the remaining providers, MCP and UI into their
-own packages; its final verification is in progress.
+these local packages. M6 completes extraction of the remaining providers, MCP
+and UI into their own verified packages.
 
 The M3/M5 full suite retained 3545 tests: 3007 aggregate, 126 core, 135 Anthropic,
 7 compatible and 270 OpenAI, including 33 explicit live skips. Four external
@@ -53,14 +53,18 @@ preserves the old repository history, 67 tag refs and 24 prior Releases. Core,
 Anthropic, compatible and OpenAI are published at `1.0.0`; five clean clients
 resolve and execute against the public tags without mirrors. The old 2.8.1 URL
 still resolves to its original commit. Documentation and old-URL redirects work.
-[M6 extraction](Migration/M6/README.md) is in progress: all 52 packages now own
+[M6 extraction](Migration/M6/README.md) is complete: all 52 packages now own
 their implementations. The syntax inventory retains all 3545 previous tests plus
-four new compatibility/transport tests. All 3549 tests and the 52 exported package
-suites passed; 105 normal-import clients checked minimum/latest compatible
+four new compatibility/transport tests. The 3549-test suite passed with 33 live
+skips, and all 52 exported package suites passed; 105 normal-import clients checked minimum/latest compatible
 dependencies and a mixed published/candidate selection. The API comparison has
 no missing public declaration; one compiler-synthesized record on an internal
-Vertex class is documented separately. Final hosted CI remains required, and the
-receipt retains observed failures of a pre-existing 1 ms timeout test. M7 has not started. M3/M4 tags
+Vertex class is documented separately. The exact-source Swift 6.3.3 test job
+passed; remaining checks completed locally after the user suspended intermediate
+CI to conserve the Actions budget. Full hosted verification and documentation
+deployment move to the end of the overall migration. The receipt retains observed
+local failures of a pre-existing 1 ms timeout test, reproduced on unchanged M5.
+M7 has not started. M3/M4 tags
 remain explicitly disposable fixture data; no additional package is published by
 the extraction itself.
 

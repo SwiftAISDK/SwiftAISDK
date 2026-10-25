@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "stage": "M6",
-  "status": "local gates passed; exact-commit hosted CI pending",
+  "status": "passed under user-directed local-verification policy",
   "baseCommit": "20bebd6b0a8aef866b96c6eafc8c2ad406257292",
   "localToolchain": "Apple Swift 6.4",
   "hostedToolchainRequired": "Apple Swift 6.3.3",
@@ -190,5 +190,182 @@
     }
   ],
   "moduleQualifiedAPIReview": "module-qualified-api-review.json",
-  "sharedBuildVerification": "shared-build-verification.json"
+  "sharedBuildVerification": "shared-build-verification.json",
+  "sourceCommit": "66ca861cb59bd91e8a50578c7a7a38a5978b4131",
+  "ciBudgetPolicy": "ci-budget-policy.json",
+  "canonicalCI": {
+    "id": 40225850968,
+    "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/40225850968",
+    "headSha": "66ca861cb59bd91e8a50578c7a7a38a5978b4131",
+    "conclusion": "cancelled",
+    "cancellationReason": "User requested that intermediate migration checks run locally and automatic CI resume only at the end of the overall goal.",
+    "jobs": [
+      {
+        "id": 121267040485,
+        "name": "test",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "conclusion": "success"
+          },
+          {
+            "name": "Show Swift version",
+            "conclusion": "success"
+          },
+          {
+            "name": "Setup Node",
+            "conclusion": "success"
+          },
+          {
+            "name": "Test extracted packages and compatibility aggregate",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Setup Node",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 121269947395,
+        "name": "build",
+        "conclusion": "cancelled",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout",
+            "conclusion": "success"
+          },
+          {
+            "name": "Setup Node",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify package catalog and tooling",
+            "conclusion": "success"
+          },
+          {
+            "name": "Show Swift version",
+            "conclusion": "success"
+          },
+          {
+            "name": "Install docs dependencies",
+            "conclusion": "success"
+          },
+          {
+            "name": "Audit docs dependencies",
+            "conclusion": "success"
+          },
+          {
+            "name": "Build package",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify isolated core consumer",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify isolated provider consumers",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify independent provider versions",
+            "conclusion": "success"
+          },
+          {
+            "name": "Rehearse standalone package releases",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify every extracted distribution and dependency bounds",
+            "conclusion": "cancelled"
+          },
+          {
+            "name": "Compile the complete compatibility facade for iOS",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Build documentation examples",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Verify offline MCP OAuth migration",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Check documentation",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Build docs",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Upload built documentation",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Post Setup Node",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Post Checkout",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 121274745157,
+        "name": "deploy",
+        "conclusion": "cancelled",
+        "steps": []
+      }
+    ]
+  },
+  "hostedTestSummary": {
+    "status": "passed",
+    "sourceCommit": "66ca861cb59bd91e8a50578c7a7a38a5978b4131",
+    "runID": 40225850968,
+    "jobID": 121267040485,
+    "compiler": "Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)",
+    "packageRoots": 53,
+    "tests": 3549,
+    "skippedLiveTests": 33,
+    "matchesLocalPerPackageTestCounts": true,
+    "logSHA256": "e830692104064978a34ed965bc68efd216dd4eb23b4d4aa441c7a3cc88dc6a55"
+  },
+  "documentationDeployment": "Deferred to the end of the overall migration per user CI-budget instruction; local build is verified.",
+  "completedAtUTC": "2026-10-25T20:26:41.901624+00:00",
+  "finalLocalDistributionVerification": {
+    "packageCount": 52,
+    "standaloneTests": 1828,
+    "consumers": 105,
+    "fullReportSHA256": "5ac4cb9c7b21e51a9b1d28fe106960a771191cb59c7b32d74ab858fb4683a6cb",
+    "verifierSHA256": "8ef1dee3c700562e326ea914cf1f75e33e16487efd3edc4ae3b0a95d9b5189d0"
+  },
+  "completionScope": "M6 extraction only. M7 has not started. No new public package or root release tag.",
+  "deferredByUser": [
+    "Restore automatic workflow entry points only at the end of the overall migration goal.",
+    "Run the final hosted workflow and deploy documentation at that final handoff."
+  ]
 }

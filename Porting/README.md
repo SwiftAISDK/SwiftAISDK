@@ -14,7 +14,7 @@ existing dispositions and known gaps.
 
 The root remains the compatibility facade. All 52 catalog packages are now
 `extracted`, with their own sources, tests and local manifests. M6 verification is
-in progress; see `Docs/Migration/M6/README.md`. Core, Anthropic, OpenAI-compatible
+complete under the user-directed local-check policy; see `Docs/Migration/M6/README.md`. Core, Anthropic, OpenAI-compatible
 and OpenAI are published at Swift version 1.0.0 under the SwiftAISDK organization. Actual
 release availability is recorded in `Releases/sets/`; extraction state alone does
 not imply publication. Planned/scaffold URLs are not installation endpoints.

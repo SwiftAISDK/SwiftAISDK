@@ -1,5 +1,10 @@
 # Agent Porting Guide
 
+During the modular migration, intermediate checks run locally under the user's
+[temporary CI policy](ModularizationPlan.md#temporary-ci-policy-during-migration).
+Restore automatic CI only at the end of the overall migration goal, not after
+each stage.
+
 This is the operational guide for agents porting Vercel AI SDK behavior into
 SwiftAISDK. The rule is simple: update runtime behavior, tests, public docs, and
 status docs together.

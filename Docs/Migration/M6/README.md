@@ -1,6 +1,7 @@
 # M6: remaining package extraction
 
-Status: **in progress**. Started 2026-10-26 (Asia/Tokyo), from canonical
+Status: **complete** under the user-directed local-verification policy.
+Started 2026-10-26 (Asia/Tokyo), from canonical
 `20bebd6b0a8aef866b96c6eafc8c2ad406257292`. M7 has not started.
 
 ## Scope and acceptance
@@ -14,19 +15,23 @@ all packages have moved. No new provider or upstream baseline is selected here.
 Completion requires all extracted package suites and the legacy integration suite,
 public imports and offline consumers, distribution-tree verification, symbol and
 test-preservation comparison, toolchain/platform checks, deterministic catalog and
-export generation, documentation checks, and exact-commit hosted CI evidence.
-The stage is not complete until those receipts are recorded.
+export generation and documentation checks. The user moved intermediate checks
+to local execution to conserve the Actions budget. The exact-source Swift 6.3.3
+test job already passed; the full hosted workflow and Pages deployment are
+deferred until the end of the overall migration goal. See
+[ci-budget-policy.json](ci-budget-policy.json). The final local distribution
+verifier passed all 52 packages and 105 consumers.
 
-## Work in progress
+## Extracted result and verification
 
 - Google runtime, files, image capabilities and four single-provider test files
   now belong to `swift-ai-google`. Its configuration contains Google-specific
-  options and a neutral core HTTP client. The first full standalone run passed
-  69 tests; final verification must use the finished M6 tree.
+  options and a neutral core HTTP client. The full standalone suite passed
+  69 tests, retained in the final source and distribution runs.
 - Vertex runtime and focused suites now belong to `swift-ai-google-vertex`.
   Shared Gemini algorithms remain in Google through an explicit hosting API.
   Native MaaS/xAI/Anthropic factories compose the existing wire adapters. The
-  first standalone full run passed 26 tests; mixed initializer assertions remain
+  full standalone suite passed 26 tests; mixed initializer assertions remain
   in the workspace.
 - Core adds `AIProviderHTTPConfiguration`, a neutral forwarding protocol that
   preserves request construction, routing, streaming and adapter error policies.
@@ -125,7 +130,12 @@ The stage is not complete until those receipts are recorded.
   The failure logs and investigation remain recorded; passing the full suite
   does not eliminate this known timing sensitivity.
 - Final documentation checks passed with no diagnostics; the site builds 98 pages.
-  Exact-commit hosted Swift 6.3.3 CI and Pages deployment remain pending.
+  The hosted Swift 6.3.3 test job completed the 3549-test suite (33 live skips) on
+  `66ca861cb59bd91e8a50578c7a7a38a5978b4131`. The user cancelled the remaining
+  workflow to conserve the CI budget; full hosted verification and Pages
+  deployment are deferred to the end of the overall migration. The final
+  distribution verifier completed locally: 1828 standalone tests and 105
+  ordinary-import consumers passed using the exact final verifier revision.
   [verification.json](verification.json) links the bounded local receipts;
   [distribution-verification.json](distribution-verification.json) records all
   package exports, dependency selections and log hashes.
@@ -141,3 +151,7 @@ New extraction does not itself establish publication or full upstream parity.
 The pinned Google and Vertex upstream factory sources/tests were read at the
 existing inventory snapshot `682e2dd71456f14f9da33a1b983d1998c3a1184c`;
 that snapshot is still not asserted to match each npm release.
+
+The remaining-package change record stays a draft until M7 selects its publication
+set. CI entry points stay disabled until the overall migration is ready; M6
+completion does not trigger their restoration.

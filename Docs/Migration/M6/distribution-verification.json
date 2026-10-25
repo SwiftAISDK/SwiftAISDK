@@ -3,28 +3,28 @@
   "stage": "M6",
   "status": "passed",
   "evidenceKind": "local synthetic exports with real published lower bounds",
+  "canonicalSourceCommit": "66ca861cb59bd91e8a50578c7a7a38a5978b4131",
   "packageCount": 52,
   "standaloneTests": 1828,
   "consumerCount": 105,
-  "canonicalBaseCommit": "20bebd6b0a8aef866b96c6eafc8c2ad406257292",
-  "syntheticSnapshotCommit": "5af73fd418e17874fc536ee2e09429bccc19115a",
-  "sourceInputsSHA256": "042ad6604472e61645c114569bfcbadd9430b6b26439701b329c2c5999a72b18",
-  "fullLocalReportSHA256": "06280a08df2c47291573920db785c374f6e7dcad5db727f1a20c33995fa209c6",
-  "executedVerifierSHA256": "8c6d2fb7fa659c2e0b91b9b811d668ac40fd27c371b0fcdc7ed7bcc2876d083e",
-  "currentVerifierSHA256": "8ef1dee3c700562e326ea914cf1f75e33e16487efd3edc4ae3b0a95d9b5189d0",
+  "syntheticSnapshotCommit": "c50de741bda16426a3b9870cd82f653114b2e852",
+  "sourceInputsSHA256": "b46e21ed600846cd4686fef0f5b8bde44f758ff16e6860c83c64ff7c8e1cb1ac",
+  "fullLocalReportSHA256": "5ac4cb9c7b21e51a9b1d28fe106960a771191cb59c7b32d74ab858fb4683a6cb",
+  "executedVerifierSHA256": "8ef1dee3c700562e326ea914cf1f75e33e16487efd3edc4ae3b0a95d9b5189d0",
+  "publicationClaim": false,
   "verificationNotes": [
-    "Candidate versions and Git remotes are disposable local fixtures, not published releases. Four actual public 1.0.0 tags were fetched and their annotated/peeled object IDs checked against M5.",
-    "Each exported package retained its distribution manifest unchanged. SwiftPM mirrors redirected public URLs only to disposable Git repositories.",
-    "52 standalone suites, 52 exact-minimum clients, 52 latest-candidate clients and one mixed published/candidate client passed. Each client began without a lockfile.",
-    "After this run began, the verifier was improved to constrain latest-client roots only, validate selected-version dependency closures, and remove its successful temporary directory. Hosted exact-commit CI must verify that final revision. Runtime, package manifests and test sources did not change during the run.",
-    "After local verification, eight source files had only extra trailing blank lines removed to pass the staged diff check. verification.json records before/after hashes; final hosted CI checks these exact source bytes."
+    "The final verifier revision ran locally after the user suspended intermediate GitHub CI. Runtime, manifests, tests and verification scripts match the stated canonical commit. Subsequent working-tree edits only record migration status and the CI-budget policy.",
+    "Candidate Git tags and remotes are disposable fixtures. Four actual public 1.0.0 tags supplied real lower bounds and their annotated/peeled IDs were checked against M5.",
+    "52 standalone suites, 52 exact-minimum clients, 52 latest-compatible clients and one mixed published/candidate client passed. Each client began without a lockfile.",
+    "Latest clients constrain roots only and validate the actual selected-version dependency closure. SwiftPM mirrors preserve distribution manifests byte-for-byte.",
+    "Two exports from one snapshot were identical. Successful temporary repositories were removed. Resolved entries below show original public repository identities; candidate revisions are local fixture data, not installation instructions."
   ],
   "exports": [
     {
       "package": "swift-ai-core",
       "version": "1.1.0",
       "dependencies": [],
-      "sha256": "caf2390d4748f26c2c4d45644e8519e21577667b493c388f52f322457341365c",
+      "sha256": "4e1602cb8e004461d627d60a94851aca0132e7b20c43cc8354f21c47bb6af019",
       "fileCount": 164
     },
     {
@@ -36,7 +36,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "c0cf60ba65c4c62114a3d06265de8b74b8a187e39134838e134e31ef634be809",
+      "sha256": "e31dd0ecb95097aacbd298f3dfc4b49c926dd7e53092794dc6dcebde7be5173c",
       "fileCount": 23
     },
     {
@@ -48,7 +48,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "45cefec6ce8045e414a67454afce0168dab685ad451be7435c2c96023d1f6f06",
+      "sha256": "513760881447512f498ae25e39158c8517830127296bba97f2d800ce62d91346",
       "fileCount": 43
     },
     {
@@ -60,7 +60,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "16fd2dd76c78d179ecdfe6dc8526ff5ea62cf33948bc36b987775b39e72604e1",
+      "sha256": "5ff255bb8fa9d07d0a8df800ee308d81d3555dde886353fa6f17c1cef1fc0e69",
       "fileCount": 24
     },
     {
@@ -76,7 +76,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "c963f94e2266c76b5252e6c0afeec8ab23c7b988c350a839b2dd424aa5cafc7c",
+      "sha256": "c76a4f9fb3cf8d73f6c1dd3d79a085dfbd03b393b70002843fba5b2de40b9d64",
       "fileCount": 96
     },
     {
@@ -100,7 +100,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "cefd17687670bafea06ae6358f7f7dfc9bc450f66badc2490146ad147a5b9efb",
+      "sha256": "af04d13c02114ccee39da6e6f93b26e4e03918ac4c9e47730cd74200bb49cc2d",
       "fileCount": 28
     },
     {
@@ -116,7 +116,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "d08c9bf0305c46d428502321e82550623649b5005daba413481924959c9cb8e7",
+      "sha256": "c62935440c2735f84b6a8fb459f68f537ef0eb8ac7eb56e8ad9b79f662a62531",
       "fileCount": 15
     },
     {
@@ -128,7 +128,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "b41ee5ab5dc827f4b1832dd3ef6704acc9da87be178e805d636afbbe3d0cf0f9",
+      "sha256": "ae2c972d1b1b5219d89be70d527d3ae30cf6878bc1a3ff93cd4e8cc57f2f8e5c",
       "fileCount": 17
     },
     {
@@ -140,7 +140,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "a2eb36e522012176f77f2681c04fbdb31f8ef4f2c9e7af7b336120682d48b83c",
+      "sha256": "c2b8a2f3bb04aebab2afeb993533428355ad6853b8d5564ddfa5fc25ae448c75",
       "fileCount": 21
     },
     {
@@ -164,7 +164,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "0474b39b5d54ca514c833bf0e1dd3cd50c47646e179934f7d358f7f6b039ccc2",
+      "sha256": "5f486884a4b55b071ec4ce5e5d9fc54fb87b42b9bcccb2d513ee5291a81f1398",
       "fileCount": 23
     },
     {
@@ -180,7 +180,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "014afdea3c014003e6fd53db36df11ff2d8d9fa13c02d9a5f0e9264e714600b9",
+      "sha256": "4b79c47182c917dabff62f9d5aec072c2685544f8d007882dd4eb58694232ccb",
       "fileCount": 17
     },
     {
@@ -192,7 +192,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "1c52fe5e2b9118500938d058d713bdea39f99a74fa68062410095c2a7e72a3f7",
+      "sha256": "3b48f703a94a00cc8126456515004ff909eea9c86e1ce6eac1c2d166401a6786",
       "fileCount": 20
     },
     {
@@ -204,7 +204,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "778c13bfa0639a5e1214307a147d141ece7f697e1df605f5387a3ee28af8f54f",
+      "sha256": "6a15e7127ad8249727f24ed4f31da75ffcb8c247e35a892b4518842de100154b",
       "fileCount": 17
     },
     {
@@ -216,7 +216,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "a8692e2c1a99c1c377b477f20caa6aae2df478aa13934ace4d6e1454bc2d44b1",
+      "sha256": "c73ff9b59a6af7ff27e88bc163ac998ee6ea060034e55690f1264010c27e0ceb",
       "fileCount": 22
     },
     {
@@ -232,7 +232,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "e41bd02ff9bc528a36aa5369d7fd78c759b7d72a82766b6540e58a6109b2d33c",
+      "sha256": "023e8e34ffe9e07596726c8fb9d65dbc793a0ceae94c770bea061322898e0cbf",
       "fileCount": 19
     },
     {
@@ -244,7 +244,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "07d680e594bc3239e1f1fb9d440abf7580beb719cfc2e9376cb87f2e8bc4d370",
+      "sha256": "3c6e4ede925983b48d5d28dd057b6b89148080ac7df7c10707a2dd17a9ad61d0",
       "fileCount": 19
     },
     {
@@ -256,7 +256,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "0bb046c1b6138eb5ba983a104ccf8299de61b6af3a0ec739c07f823c14ac043a",
+      "sha256": "0b8aac84f9eb02ef724b0e3c8451509b0affe73ce36d0955eb00d29cf82d32d0",
       "fileCount": 17
     },
     {
@@ -272,7 +272,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "2d24450e6301558c94eaf4b9c4f0c4ab826c6580ae6c286766d0556118517bb0",
+      "sha256": "a46fb75da2fa63add1ee741b6ecab06c64834f643aebde252ccb95cc5c7f8885",
       "fileCount": 19
     },
     {
@@ -284,7 +284,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "58fb62fe061904233d195be1101b46bdea042c840f588e44bb05eb85ac35492b",
+      "sha256": "74f21dab9fb50fb0951c8bf184b82fe34aec0c9c4d5658ff030feefd830fc32c",
       "fileCount": 21
     },
     {
@@ -296,7 +296,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "bd8b466e65ad633be96b5baca615f11a92bd8ded902bec0063bc702af44841bf",
+      "sha256": "01bd59fa075c13d21d58b5493a2779a2e5afb8bf6629200d5212ec7e367f9de9",
       "fileCount": 19
     },
     {
@@ -312,7 +312,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "72cf1fbd7d8d6ab54d7f6a976d67e7a4bee0eb8c7e7a346827b136f3f7fa3485",
+      "sha256": "3e24318de5ad580620ae47eeb4f346e267f60d09e75892746849c381e9e43a1e",
       "fileCount": 18
     },
     {
@@ -324,7 +324,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "4cc5e0b9ee744e4e2c22a82756603701b0537fb5cea22c22f48b7ca1fd245722",
+      "sha256": "336f95cf43ddef51388e2a8cda27b1f0075708eb30fbcb06dffdb04b9e18b253",
       "fileCount": 20
     },
     {
@@ -336,7 +336,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "f05d734aa0eb794ea1108dd689a287d110a11f7d281697eee5134e797d8ce9b6",
+      "sha256": "05ee897bee94cd2b301a0862b9a79cd67b1c0c5f896ddc0c9bf4d5088e1068cc",
       "fileCount": 29
     },
     {
@@ -348,7 +348,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "0f42830389dfaa7009eedfe00ce46a99f3abe62ae14e0e31ecb4b399466eb2e6",
+      "sha256": "e491a9f83161b9bd035d0b7410020b4c3525ee512965607a5ffc52f1ad6178c9",
       "fileCount": 18
     },
     {
@@ -364,7 +364,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "95863921576eaa5fe2414644f84b96ef35acf81f977ed091a72e8a424f765f74",
+      "sha256": "9fc187b2413d254c5641f9ec7c3fb7c99170a8cfb3f27f31e04154c5ba8b9819",
       "fileCount": 16
     },
     {
@@ -376,7 +376,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "7015cf13afb2d0988446835ac3d9f9f8b6b7b0f35492cfd2d89e782a4ac227a7",
+      "sha256": "35fa392b72f92d31d91e58793ee45374e15dc55b3938f418197adf6e48088ba0",
       "fileCount": 38
     },
     {
@@ -404,7 +404,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "b625daccee92cf81ac2d8ff3fdaaa658e174180078c31761ded090529f5be4b0",
+      "sha256": "4eae428fded57c897e787f12019724b34901ad066469b0451a586a31b36f645f",
       "fileCount": 22
     },
     {
@@ -416,7 +416,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "c18abf4c68481ce2d0c9d216e691f0bf80923db6161656852655c4f428f98a37",
+      "sha256": "2d6b655d806164e8b6d7ffc58957ea0ef6d088c553efc76217e74ce2581de8f8",
       "fileCount": 20
     },
     {
@@ -428,7 +428,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "b097c05a5c70c4408e80a6b6f9f3fcf5b73d87682e1eece2a61f204e76320f0b",
+      "sha256": "def71f9404570ac25cca80f3e3a9345de15254c050f3ef406ab5d6dcd78e79f1",
       "fileCount": 22
     },
     {
@@ -440,7 +440,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "07db9e57f98b2f6c00152f3a4f31befab2add4e9a53a47bb0b525035dc418bdb",
+      "sha256": "d5a6ebbe685a0df112f0b779d3c4fdb773ec8f44e5df16e2c4d1481d080a91af",
       "fileCount": 17
     },
     {
@@ -452,7 +452,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "529ef88c36b0ed486713c46dee3964a1b12b559a95ecd605f031ca4197bed202",
+      "sha256": "41c3ba250617997d4052d59d9e78b6dbaa8dde6cac26be8303307e10de2085e9",
       "fileCount": 16
     },
     {
@@ -464,7 +464,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "e8828e5ac0617d09c326e46b5b8872b906907059118a27d04d28deaf4661b1db",
+      "sha256": "ef7ae35fd01786bc82d389c4ffdb203363d615e7dc9eaf29bb7fc15a9f9b5a9c",
       "fileCount": 17
     },
     {
@@ -476,7 +476,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "3419b3b48cedc0aa903994fd3d94b389dd913ba40fac932c0f7e53b3d7a80577",
+      "sha256": "d5e74bd06269289a5eac368eef7adc34dfdd1190be572b826483524dfdcdeddc",
       "fileCount": 16
     },
     {
@@ -488,7 +488,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "6b3504e28bc649175a4a606c55573ebdc549048ccf1d96060544b21bf90b2bce",
+      "sha256": "14db6b1102ab6ed9959f8fc1b99bd6a673e10986780dc5fe08f7620400bb7d9c",
       "fileCount": 17
     },
     {
@@ -500,7 +500,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "c54d5466dbeb61df7f66b375d5ea4809aaebce60bd3b1060c5de95fae4d07097",
+      "sha256": "8ab2f5495dd7406dfa3d34cb9ddb79bab2d941f19356c07320b9f0055e005bd8",
       "fileCount": 45
     },
     {
@@ -516,7 +516,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "f4ba3fbde823386d1d8819f77ece1d58cc4b73b0adf0d64a464505412cc3124b",
+      "sha256": "fa71afcc54cc1519aad695f99c4bbaabff30776bd0a84c78ebefc3b7e3044a62",
       "fileCount": 18
     },
     {
@@ -528,7 +528,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "461a8db55c07ff5fddfc7c983ba6a052e21d860a6345653f6d7cf93ea534df49",
+      "sha256": "d2680eb14f1e4acf193666f3fb1ef18d0f0711999e378e513cd05dc76c8e4770",
       "fileCount": 28
     },
     {
@@ -544,7 +544,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "87c3cbe2cb7aed8da7dd0fe33a610b40ae3d421d8165e9d446e8abe7fc8828b6",
+      "sha256": "c9fb54924badba5da8db14ce704c4245f3d07821b59a6dc344a9e4198196fc50",
       "fileCount": 18
     },
     {
@@ -560,7 +560,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "e4d4d113483351d556539f059d82ce65e847124ab2c371f46211e088d235598c",
+      "sha256": "a595cedfd6abf2c2fea1301e494107d708fbec06eadf92ab9615b6223400101d",
       "fileCount": 16
     },
     {
@@ -572,7 +572,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "15f0a208ff1f5a0cb76a02ef923ca3ba8e4c4c28b1f79076569ca658f6312f37",
+      "sha256": "a06a77585553e2a75a562281dbf523cdf1b5c151f2da756841176d147b824a41",
       "fileCount": 21
     },
     {
@@ -584,7 +584,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "8156b95d43d6521e0621f07bb98b73784f6054659213cd658d4e0627013a2807",
+      "sha256": "85e5d7cd4d8012b93642eacee06706e345e7b0d39c8f6cbf7cc91298579a786e",
       "fileCount": 21
     },
     {
@@ -600,7 +600,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "6fbf53ebeabb2e5abe130efa450be218c2f0db8c1fac573c6996091ea87a381c",
+      "sha256": "f51874b4ba91f13dda15265370a113bde8441c66409bb9283ad4aa3cd7eaf282",
       "fileCount": 19
     },
     {
@@ -612,7 +612,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "af58321c89faecf52971c36d1fd3f1a1e3d5349b106edb7fb4e9dcb2327e511e",
+      "sha256": "172029ff7f6f782d702a70eb9498282b7d42796149ca76589018b321b03ced14",
       "fileCount": 17
     },
     {
@@ -624,7 +624,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "8711bbc8ebff85158439c456a56924a06f0e3510d347bdda1fcc775d4c625137",
+      "sha256": "537a9e0c61bb2b9fb07eb13fe1b91b3618f87f4f204495b7b42037e43258c91a",
       "fileCount": 17
     },
     {
@@ -640,7 +640,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "1f4cde22763ec2147c4366821ef4ca7d7c18bcb0da047ca1f546d63324a12912",
+      "sha256": "ca7cf548561445128f4b58c8e1b1b0f25af4175f1bf6daf68487e29acaaf11a1",
       "fileCount": 17
     },
     {
@@ -652,7 +652,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "29ba3eea248493baa866b2ac4b57407d59c4aeb01a0e06a18e5ff817bfaadda1",
+      "sha256": "d6152a7f7f562024eee58b763f3ffbae7eae7130b0dc99d3edd5e57ef6c0f38f",
       "fileCount": 18
     },
     {
@@ -664,7 +664,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "a3d11050e14f51320e910259f9ded8ebbd5f207330953c0e250ba3b680d4f270",
+      "sha256": "30f4c25bf552fa5f703f57921749437e4afc9b6581db67cd761318d3c9a76f0e",
       "fileCount": 20
     },
     {
@@ -676,7 +676,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "dd8a09751b05ee44bb2dab59e29989f8212f0445f37d0f52c967bb982cd3d59d",
+      "sha256": "23726d7d5b9ae3fd065a440cb167cafbade74fbf4fc0c8dfe772101b38ba59e8",
       "fileCount": 28
     },
     {
@@ -692,7 +692,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "e4cd43df454ce7ae7008ae2c140de4d8ad33d43a8707726f4c077bb452b07431",
+      "sha256": "5b24c53d26385f086d6dcc3fee6fd3c06474112b73c1c16ae30b0d0b276f9df1",
       "fileCount": 16
     },
     {
@@ -704,7 +704,7 @@
           "from": "1.1.0"
         }
       ],
-      "sha256": "9f4d1de28d4557637f5ec152cfd6dff60c5aa7c1281474e0939e40da57f60923",
+      "sha256": "2ca6f3cde8090f93aff14b460c6ef7c55429877253ba27fad86473bd846cce34",
       "fileCount": 18
     },
     {
@@ -724,7 +724,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "cb1543f62259ddb1c3154633dfbf6c7864edd804ac33004dfba1ae741ce657d9",
+      "sha256": "26696c1a0de520412736e4842221c31f0cf7684aeb858835ddd05d9dd920529c",
       "fileCount": 28
     },
     {
@@ -740,7 +740,7 @@
           "from": "1.0.0"
         }
       ],
-      "sha256": "f43a34a36d6ce2a98fb7ea990809a20bb157bc881278cc3bd575024b79182bad",
+      "sha256": "e2bd1f6f2cda0a92204ccc7aafc3d109b66c6b0f8c21945021fe0e722d7c38d7",
       "fileCount": 17
     }
   ],
@@ -1084,100 +1084,100 @@
     {
       "label": "exported tests swift-ai-core",
       "exitCode": 0,
-      "logSHA256": "f5f82d3c4de60b0ae46baccb7aaee1b11323d06466ce2b2598bb5d21c1d03e13",
+      "logSHA256": "784e6a8313eca4d4d6d9e13fc9a5d80d1c1d2264af9d3431d00e6dd6ac59b3f7",
       "summaries": [
-        "\udbc4\udc5b  Test run with 77 tests in 2 suites passed after 0.063 seconds.",
-        "\udbc4\udc5b  Test run with 12 tests in 0 suites passed after 0.002 seconds.",
+        "\udbc4\udc5b  Test run with 77 tests in 2 suites passed after 0.058 seconds.",
+        "\udbc4\udc5b  Test run with 12 tests in 0 suites passed after 0.001 seconds.",
         "\udbc4\udc5b  Test run with 37 tests in 0 suites passed after 0.006 seconds.",
         "\udbc4\udc5b  Test run with 2 tests in 0 suites passed after 0.001 seconds.",
-        "Build complete! (15.44 sec)"
+        "Build complete! (15.34 sec)"
       ]
     },
     {
       "label": "swift-ai-core-minimum",
       "exitCode": 0,
-      "logSHA256": "8b3bd614c194b44cfdf1c0c99f666de2e783a1f25bb67427a9049db49085f98b",
+      "logSHA256": "b978a9c6a2e4644379908e98b53caa3a6f28b2856b3c1c0169ad553b24dddd39",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (55.05 sec)"
+        "Build complete! (42.81 sec)"
       ]
     },
     {
       "label": "swift-ai-core-latest",
       "exitCode": 0,
-      "logSHA256": "0d10da1c1f157b428a3617edca77f9bca73266d15a73f7fa08523343a6100882",
+      "logSHA256": "6291e39145c7b90cd0b71f7ca6432035a1d2672d78246e69c8c06e227ccda580",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (47.06 sec)"
+        "Build complete! (42.95 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-alibaba",
       "exitCode": 0,
-      "logSHA256": "cbb3c1036225c0c3e7534ca30b7cdef80e46fe35615c10ffd69fd12bdc5541d3",
+      "logSHA256": "6fb39d21415c90d16318dade97fe9540d08efd31fd43fcb90b339ba99ba12435",
       "summaries": [
         "\udbc4\udc5b  Test run with 32 tests in 0 suites passed after 0.015 seconds.",
-        "Build complete! (10.30 sec)"
+        "Build complete! (12.30 sec)"
       ]
     },
     {
       "label": "swift-ai-alibaba-minimum",
       "exitCode": 0,
-      "logSHA256": "e40d4995f66fbd376a6cb55c6f57659ceef2f661d584fc92550c8e7f7c979812",
+      "logSHA256": "e770971787d28ffef2a387e26c2affcf6174d5e74f571dfab657df90d54c8b80",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (4.36 sec)"
+        "Build complete! (4.02 sec)"
       ]
     },
     {
       "label": "swift-ai-alibaba-latest",
       "exitCode": 0,
-      "logSHA256": "943b2d2082e8cc3794a8cc59b1bb0ac17e714a4a7b6a833b4c07f39b8c64655b",
+      "logSHA256": "61d805ed84d6b3c4ad004a20cb2915ddb3b8c1c8ea2bd95d49d706142e304380",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (4.09 sec)"
+        "Build complete! (3.93 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-anthropic",
       "exitCode": 0,
-      "logSHA256": "50e2d12b18b1dbb55232a7bca4e4f5192017c29a3163ba4c5429889ea0cc222f",
+      "logSHA256": "4d21175a9fea59c477d39d02f139c613fed81eceab5afdd65190ea6192651d74",
       "summaries": [
-        "\udbc4\udc5b  Test run with 135 tests in 1 suite passed after 0.055 seconds.",
-        "Build complete! (5.86 sec)"
+        "\udbc4\udc5b  Test run with 135 tests in 1 suite passed after 0.054 seconds.",
+        "Build complete! (5.52 sec)"
       ]
     },
     {
       "label": "swift-ai-anthropic-minimum",
       "exitCode": 0,
-      "logSHA256": "14f909d3bd33a3fc704d33f1d9615c6ced6ecedaa1b9760ece70f7d4b7b59489",
+      "logSHA256": "8a785f9e672a4242bff2f14e4be88f7afacaa26f31739871c5365c9b72394e72",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (25.88 sec)"
+        "Build complete! (24.17 sec)"
       ]
     },
     {
       "label": "swift-ai-anthropic-latest",
       "exitCode": 0,
-      "logSHA256": "681d0e2eb9cd37b4b8f7a3ccdebc5d5f151d178f6ace35b29d10796bb48921d0",
+      "logSHA256": "da2561b358ee7ed2a4a41f3fb391e778a981d729c3fe7a680ee7058dc7b71ab9",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (12.21 sec)"
+        "Build complete! (11.38 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-openai-compatible",
       "exitCode": 0,
-      "logSHA256": "e1253660bd44330eb7eb7cbed819ca0bc5a3eaa8a5a47cce79659aff5a10f342",
+      "logSHA256": "3ed672f1b9a5be43a01c02141d6e2a79920fbd7531d59c4f0f835293c9d16def",
       "summaries": [
         "\udbc4\udc5b  Test run with 7 tests in 0 suites passed after 0.003 seconds.",
-        "Build complete! (2.41 sec)"
+        "Build complete! (2.24 sec)"
       ]
     },
     {
       "label": "swift-ai-openai-compatible-minimum",
       "exitCode": 0,
-      "logSHA256": "f1876a1b720c6bacc8ff1df24f0ccac51b256e6615cb36860ef4922a13139f42",
+      "logSHA256": "39e388f20ec1aa41c53eef9e6f4b652d0eb322a146dfc8e2182dc2f3be9c9dd1",
       "summaries": [
         "IMPORTS_OK",
         "Build complete! (4.07 sec)"
@@ -1186,772 +1186,772 @@
     {
       "label": "swift-ai-openai-compatible-latest",
       "exitCode": 0,
-      "logSHA256": "6f70362403cc231ef776d63587dafd8bdf99572b3b4196c6e62a423270a1aab8",
+      "logSHA256": "210aebff1e43591ba6cca062b4060f0f1b42ee87e3a7194c657fa3175c14579b",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (4.13 sec)"
+        "Build complete! (4.14 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-openai",
       "exitCode": 0,
-      "logSHA256": "ec37175b6c180dc5617cf8c163249c9426e32dd7bf961f3a65c8d21dd589664c",
+      "logSHA256": "1d2843942ee4f34cdf3cc9542719b87e6606bbb536f4d33973512d22c6f6ce94",
       "summaries": [
-        "\udbc4\udc5b  Test run with 270 tests in 0 suites passed after 0.313 seconds.",
-        "Build complete! (8.38 sec)"
+        "\udbc4\udc5b  Test run with 270 tests in 0 suites passed after 0.315 seconds.",
+        "Build complete! (8.17 sec)"
       ]
     },
     {
       "label": "swift-ai-openai-minimum",
       "exitCode": 0,
-      "logSHA256": "ff41dbbacd52bf6385d918bcf3a83269a5969866ab5b4236cc9b939544674a1d",
+      "logSHA256": "62a143ce6190733654bb7ce83114472667b86a87dee7652518926accf69f0c01",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (18.20 sec)"
+        "Build complete! (16.70 sec)"
       ]
     },
     {
       "label": "swift-ai-openai-latest",
       "exitCode": 0,
-      "logSHA256": "d91d9f4b87d3041af54699e9f1cf2d5ee8bb7efd1a25719a3c77b1029763c7a6",
+      "logSHA256": "02c647d8fc7f5152f1e3c56dc4795b4c42d21e35b4a3f38e49d2d5fb8154ca16",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (19.84 sec)"
+        "Build complete! (14.16 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-amazon-bedrock",
       "exitCode": 0,
-      "logSHA256": "13018d64156c60b037c56dd03024c0ae915db1f2f5d4b56bc56a960ee9781136",
+      "logSHA256": "cf04c9a5daa9667edc82776d876406a1e4729cea46bbc440f626196aaee4e7db",
       "summaries": [
         "\udbc4\udc5b  Test run with 49 tests in 0 suites passed after 0.035 seconds.",
-        "Build complete! (6.00 sec)"
+        "Build complete! (5.31 sec)"
       ]
     },
     {
       "label": "swift-ai-amazon-bedrock-minimum",
       "exitCode": 0,
-      "logSHA256": "8971c651efd0625b848b65c2fd895b09fdfb7620ea0d86a2f1addfe2f354178a",
+      "logSHA256": "bced61bff82415c2383cae9b4076f30a3c8e3ecb31868e986e158d6f95513925",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (44.78 sec)"
+        "Build complete! (41.43 sec)"
       ]
     },
     {
       "label": "swift-ai-amazon-bedrock-latest",
       "exitCode": 0,
-      "logSHA256": "82f7b93c775bd431edcb4e8d941631263b63dc035d9191411d6d6a28e90395af",
+      "logSHA256": "b69a74ffacb70a7d6859a8714549cf3cf1684f62f4eec4750aa0d34b11751852",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (17.82 sec)"
+        "Build complete! (16.33 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-anthropic-aws",
       "exitCode": 0,
-      "logSHA256": "412daabf269f04dce446cbd65ed2caa9be1ddf704fa91dc864afa9a41e9b5a6b",
+      "logSHA256": "3008278f1115d9d8d9e3a950e9ed80803594264a5c5c7c8985bff1cb0d6920bc",
       "summaries": [
         "\udbc4\udc5b  Test run with 9 tests in 0 suites passed after 0.007 seconds.",
-        "Build complete! (2.67 sec)"
+        "Build complete! (2.16 sec)"
       ]
     },
     {
       "label": "swift-ai-anthropic-aws-minimum",
       "exitCode": 0,
-      "logSHA256": "66cbe7daae36ed4fa4f73e8b8a39a1f3554e807c21316f5d0b6c92a4c7ab7134",
+      "logSHA256": "09efc106b3f5a4a6f1e75b7d4953d6ace1e296436ee2b788dc4cadb0ffdbabf1",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (12.88 sec)"
+        "Build complete! (11.18 sec)"
       ]
     },
     {
       "label": "swift-ai-anthropic-aws-latest",
       "exitCode": 0,
-      "logSHA256": "29600ee768c4ebfa7700fb5a711512a864276ae55857d85a323f26724244b0ad",
+      "logSHA256": "1fa730b9776aaad38a83ce7cbfd06ad60b8300c6bd5be49156584f99d88f7f41",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (1.81 sec)"
+        "Build complete! (1.69 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-assemblyai",
       "exitCode": 0,
-      "logSHA256": "4fa36b18651fac75841ad3d896e1908125d8a7da2aa424935506c9f62e36feef",
+      "logSHA256": "2abcbf5d384ee9f1915aa8a8344b9faeb7acb48b92a7db06d1e504f7a73e9ff6",
       "summaries": [
         "\udbc4\udc5b  Test run with 16 tests in 0 suites passed after 0.006 seconds.",
-        "Build complete! (6.13 sec)"
+        "Build complete! (3.03 sec)"
       ]
     },
     {
       "label": "swift-ai-assemblyai-minimum",
       "exitCode": 0,
-      "logSHA256": "70310e6addb9004f837e9487ebbe0813690c335a8fa883a94c0f474002a0be7a",
+      "logSHA256": "48a599b61c3053c678fbf9e0811c21168efaa9d5ccded39d072f6d8590c16c23",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (2.59 sec)"
+        "Build complete! (2.43 sec)"
       ]
     },
     {
       "label": "swift-ai-assemblyai-latest",
       "exitCode": 0,
-      "logSHA256": "4f28ac7f591e001e9e4aaf901e253d9ce7a72bdafb51b0d2d0f434b2fd8f75ae",
+      "logSHA256": "712cec46c0626cb564fd4c0a5f3a16f797805875b91b1ab9a1c413e1b6e7b261",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (2.50 sec)"
+        "Build complete! (2.26 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-deepseek",
       "exitCode": 0,
-      "logSHA256": "55422224e5d3c755c3a7ec29c78c41b4fc5c41802d5a95a85876522d6a8bcd5d",
+      "logSHA256": "b7bfde863193913b01b181a934d045265dd3e134af73f99294a5e71831d4ee5f",
       "summaries": [
-        "\udbc4\udc5b  Test run with 41 tests in 0 suites passed after 0.020 seconds.",
-        "Build complete! (4.01 sec)"
+        "\udbc4\udc5b  Test run with 41 tests in 0 suites passed after 0.016 seconds.",
+        "Build complete! (3.62 sec)"
       ]
     },
     {
       "label": "swift-ai-deepseek-minimum",
       "exitCode": 0,
-      "logSHA256": "20355fb248327048722f97b22fdd04673dfa4b30f42b8a3a4d1c5ae3cfae22d7",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (6.25 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-deepseek-latest",
-      "exitCode": 0,
-      "logSHA256": "6084bb890343d4ec32bf575d243061427f661e0d600f0b63097c35071d073309",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (6.21 sec)"
-      ]
-    },
-    {
-      "label": "exported tests swift-ai-azure",
-      "exitCode": 0,
-      "logSHA256": "14cb7ae7f2a0b3ff691a21dcfcc25e4713a392cb46ff181df5405164329f9763",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 29 tests in 0 suites passed after 0.018 seconds.",
-        "Build complete! (4.18 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-azure-minimum",
-      "exitCode": 0,
-      "logSHA256": "5fd697526c035a317f46d35cc3197b72b86eecbf8cf51fae1270af06b6c28ff7",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (21.05 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-azure-latest",
-      "exitCode": 0,
-      "logSHA256": "78330cd03d7d3ffbf681c163c9f70b95b1169d922ae0883216ca505060f82b4d",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (23.23 sec)"
-      ]
-    },
-    {
-      "label": "exported tests swift-ai-baseten",
-      "exitCode": 0,
-      "logSHA256": "07d7180df7f3dcb4f806b81cfcf80d29f637b2e48e00f212cf061fe5b3cb6286",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 16 tests in 0 suites passed after 0.010 seconds.",
-        "Build complete! (3.09 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-baseten-minimum",
-      "exitCode": 0,
-      "logSHA256": "d62b0dd02dbbda265dbef24a4972cf89af0c15f496b59674464c8105733a5c0c",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (1.98 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-baseten-latest",
-      "exitCode": 0,
-      "logSHA256": "d6f118aeaad8d8dcc00197e14b7892735adb0513578fe968394aed4078417f93",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (3.17 sec)"
-      ]
-    },
-    {
-      "label": "exported tests swift-ai-black-forest-labs",
-      "exitCode": 0,
-      "logSHA256": "2364b706158a01720213a2442ee86f1cbb57bfcaeb26d102b925f0b0f794316b",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 32 tests in 0 suites passed after 0.320 seconds.",
-        "Build complete! (3.39 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-black-forest-labs-minimum",
-      "exitCode": 0,
-      "logSHA256": "9024a866abfed87beebca7760b0cc242ea6657203075506d2a09a39d76547343",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (3.72 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-black-forest-labs-latest",
-      "exitCode": 0,
-      "logSHA256": "3053e73e97e40e1bb306994dc33330e24ea44741d898e26cdb269fa95b3a5957",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (5.34 sec)"
-      ]
-    },
-    {
-      "label": "exported tests swift-ai-bytedance",
-      "exitCode": 0,
-      "logSHA256": "9f6378e0585db9f1ee79c242c4fca1aadf0d6d585d59104f96b7c5c6bb7e8d05",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 24 tests in 0 suites passed after 0.014 seconds.",
-        "Build complete! (3.14 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-bytedance-minimum",
-      "exitCode": 0,
-      "logSHA256": "1aa7e66f5082a214d21da4a0af7223f987a5159fd8d79813a9fd160dd8143211",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (3.11 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-bytedance-latest",
-      "exitCode": 0,
-      "logSHA256": "d2312019004f02782810377bfc423125b460dc8e1d9bffab9593faec2a64a376",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (3.88 sec)"
-      ]
-    },
-    {
-      "label": "exported tests swift-ai-cartesia",
-      "exitCode": 0,
-      "logSHA256": "78789ecc086cc26897515e50a17ad1c6703b15dee6f0122e04a73a9d4b1946b8",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 25 tests in 0 suites passed after 0.013 seconds.",
-        "Build complete! (2.80 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-cartesia-minimum",
-      "exitCode": 0,
-      "logSHA256": "7be86b49622b8422de37ac1d8aff631bfb4c0f2f74118de54e328e8f2100752d",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (2.66 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-cartesia-latest",
-      "exitCode": 0,
-      "logSHA256": "1656a96d915d2528547e01498f1ca68e185c18df9129f0151dbf8eff40d6847c",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (2.72 sec)"
-      ]
-    },
-    {
-      "label": "exported tests swift-ai-cerebras",
-      "exitCode": 0,
-      "logSHA256": "bd54d06192acb34a7aeaf0de9de9205c4c4d0423dc55d677a0dc4acda8b10c6f",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 25 tests in 0 suites passed after 0.011 seconds.",
-        "Build complete! (5.47 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-cerebras-minimum",
-      "exitCode": 0,
-      "logSHA256": "71a0a06dc12b35b12e8e2ed3c3e61f9d717679b303a75502d583b4e8314ed30f",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (22.81 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-cerebras-latest",
-      "exitCode": 0,
-      "logSHA256": "0090d7680ea27a28db153c0010eb6471697ddb1a38b9989bbeb17fb644827a0e",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (6.03 sec)"
-      ]
-    },
-    {
-      "label": "exported tests swift-ai-cohere",
-      "exitCode": 0,
-      "logSHA256": "edfd225624f3975e07a9cd64cb8e0c981d7ca29f4683b43fd7e78fc0810b3b88",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 23 tests in 0 suites passed after 0.008 seconds.",
-        "Build complete! (3.36 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-cohere-minimum",
-      "exitCode": 0,
-      "logSHA256": "f64b6cb9bba110a95925796d92588da9c409ae9cce481bee4ba1035554b98931",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (26.61 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-cohere-latest",
-      "exitCode": 0,
-      "logSHA256": "44cd7f214cbb2060352a995da143daca1776544b8d0336a230890696be1f5f21",
+      "logSHA256": "8116a470444d5f86682ead0950ecbbae617b0c2d687388152034cbceb6730ae3",
       "summaries": [
         "IMPORTS_OK",
         "Build complete! (3.93 sec)"
       ]
     },
     {
-      "label": "exported tests swift-ai-deepgram",
+      "label": "swift-ai-deepseek-latest",
       "exitCode": 0,
-      "logSHA256": "797fac31bd3e5a40d6768321a399060cde06b549c82e9feab70f895645604f67",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 20 tests in 0 suites passed after 0.005 seconds.",
-        "Build complete! (3.10 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-deepgram-minimum",
-      "exitCode": 0,
-      "logSHA256": "2ad220ded35c8c2acf7a470d301d793831cb5ed32fd854c6bd21d0bd8501f410",
+      "logSHA256": "67349bb5491af036c02bf4177b5bc319925de9018474438988efe6d10f28308f",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (3.80 sec)"
+        "Build complete! (3.96 sec)"
       ]
     },
     {
-      "label": "swift-ai-deepgram-latest",
+      "label": "exported tests swift-ai-azure",
       "exitCode": 0,
-      "logSHA256": "5f66267f0033ace0ef6d2f4f91ffd4352b34fe1b8a58c7f8b48f96e0e32555cd",
+      "logSHA256": "80a205adbd64ab8fce26688ac417c9788965d42043d90b38a07db8d1954733e6",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 29 tests in 0 suites passed after 0.017 seconds.",
+        "Build complete! (3.30 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-azure-minimum",
+      "exitCode": 0,
+      "logSHA256": "e8ff52337f258fc7de27b4f8c4d23c737d86f3fab560c69fb41a6da916324e19",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (4.22 sec)"
+        "Build complete! (19.06 sec)"
       ]
     },
     {
-      "label": "exported tests swift-ai-deepinfra",
+      "label": "swift-ai-azure-latest",
       "exitCode": 0,
-      "logSHA256": "de88321b97bb1c4bcf6958f1619061c97bf2c235af6338fdfdd53e4cc02f2ed5",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.006 seconds.",
-        "Build complete! (2.88 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-deepinfra-minimum",
-      "exitCode": 0,
-      "logSHA256": "e4e1106e370f6d8e0e967a9f92c347a26dd68c26fe972321678b3e27ab230dc5",
+      "logSHA256": "4887098f9e73af6d01fb4250b41a2e9de2b377a204efc5fc8cf7c1ea780fc83d",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (6.09 sec)"
+        "Build complete! (19.10 sec)"
       ]
     },
     {
-      "label": "swift-ai-deepinfra-latest",
+      "label": "exported tests swift-ai-baseten",
       "exitCode": 0,
-      "logSHA256": "5a78a28fa411d3ec2d52be6d38fd7bae0690cc22eb84e528de39c51795e60b5f",
+      "logSHA256": "721a4e1b9637d95d06a8454b2f24292236b1729802f27a47f0fe782d48606386",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 16 tests in 0 suites passed after 0.010 seconds.",
+        "Build complete! (2.44 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-baseten-minimum",
+      "exitCode": 0,
+      "logSHA256": "c91dacd2cdef9331aa5a7f669fb5531244cee584712a2d9dd87cdb220bbeb3e9",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (5.62 sec)"
+        "Build complete! (1.77 sec)"
       ]
     },
     {
-      "label": "exported tests swift-ai-elevenlabs",
+      "label": "swift-ai-baseten-latest",
       "exitCode": 0,
-      "logSHA256": "ebf99b32bc285f319392f7e0826265d8a5d8d09ff96ce701d4723213de832d3e",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 30 tests in 1 suite passed after 0.044 seconds.",
-        "Build complete! (4.15 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-elevenlabs-minimum",
-      "exitCode": 0,
-      "logSHA256": "1d4c304bae7743427fb6fe11bb6e4cbc6515f28c4339593ebc3696d41c09c285",
+      "logSHA256": "83d092277570658e79040dc8e8339a770ec6ce138db78892bcfc54b9840654a3",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (6.27 sec)"
+        "Build complete! (1.91 sec)"
       ]
     },
     {
-      "label": "swift-ai-elevenlabs-latest",
+      "label": "exported tests swift-ai-black-forest-labs",
       "exitCode": 0,
-      "logSHA256": "21e4fb86e23ae4201ec8f64274fc9891d0413a3c3d7c8f16daf27e93e10120e1",
+      "logSHA256": "39772dfe4d94a0bce78c79363861d65e0e8c66e0a97df78fb45d9a19b400c6d2",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 32 tests in 0 suites passed after 0.339 seconds.",
+        "Build complete! (3.12 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-black-forest-labs-minimum",
+      "exitCode": 0,
+      "logSHA256": "4131db85ad311baa6ce99aabf85a52329f6d0b5fe96987c50aa236d5371a5409",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (5.97 sec)"
+        "Build complete! (3.48 sec)"
       ]
     },
     {
-      "label": "exported tests swift-ai-fal",
+      "label": "swift-ai-black-forest-labs-latest",
       "exitCode": 0,
-      "logSHA256": "da6666feabf750f819cca3cffca015d5c4f0d8e3281e587e1af8b2fc7c6777e6",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 21 tests in 0 suites passed after 1.074 seconds.",
-        "Build complete! (3.91 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-fal-minimum",
-      "exitCode": 0,
-      "logSHA256": "8103be5a530d6fec20986775cc12c0761dbd723d21a717b29bd614955b23c2c8",
+      "logSHA256": "8de20ebc6531a221509b216209527781358cbedd57b392db77a082da9444bb56",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (6.13 sec)"
+        "Build complete! (3.49 sec)"
       ]
     },
     {
-      "label": "swift-ai-fal-latest",
+      "label": "exported tests swift-ai-bytedance",
       "exitCode": 0,
-      "logSHA256": "63ab5160ea947c4a08907c7595d5345aa6f909c7edce160b4ebf09cf272e7500",
+      "logSHA256": "ed9c815c74d67275d65406b80453122ed7555db72d17e420969e9a26b2644148",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 24 tests in 0 suites passed after 0.014 seconds.",
+        "Build complete! (2.87 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-bytedance-minimum",
+      "exitCode": 0,
+      "logSHA256": "bdf3bbff6449fed130b8df65e709793a867e29eec6d6c6831e59739efcef7c5f",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (4.34 sec)"
+        "Build complete! (2.41 sec)"
       ]
     },
     {
-      "label": "exported tests swift-ai-fireworks",
+      "label": "swift-ai-bytedance-latest",
       "exitCode": 0,
-      "logSHA256": "b65e1976655ec475c0f275aa0e510c4fd6ff313f426de39b96e31d1b22cc985e",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 14 tests in 0 suites passed after 0.036 seconds.",
-        "Build complete! (4.20 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-fireworks-minimum",
-      "exitCode": 0,
-      "logSHA256": "93f178510bf3b8de6f1b63a5b686cf388a2ee2ed54ad93d004e0912d7f20861b",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (5.39 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-fireworks-latest",
-      "exitCode": 0,
-      "logSHA256": "2da8906ac237dc9f8d978817c93b9d5e73acc3e759104aabaca6afe6de2ffd05",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (4.71 sec)"
-      ]
-    },
-    {
-      "label": "exported tests swift-ai-fish-audio",
-      "exitCode": 0,
-      "logSHA256": "3aa26328d6e77eb1322ce607f992bb8425c04902c21d203eb114dfe6f6e03cc0",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 16 tests in 0 suites passed after 0.009 seconds.",
-        "Build complete! (2.17 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-fish-audio-minimum",
-      "exitCode": 0,
-      "logSHA256": "1717249d0a78ba5689996cbb66b7080289a1de77b597c178f8b114f73a4a68d0",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (2.33 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-fish-audio-latest",
-      "exitCode": 0,
-      "logSHA256": "28815c025de472942debf0f8e5d691f31ee066caa2dc1e62acd1fbb8197da4c6",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (2.39 sec)"
-      ]
-    },
-    {
-      "label": "exported tests swift-ai-gateway",
-      "exitCode": 0,
-      "logSHA256": "afa7ab2493a028bfa2877777702510cf3681f9e73d5ff7511de35badc8360978",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 35 tests in 1 suite passed after 0.028 seconds.",
-        "Build complete! (5.11 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-gateway-minimum",
-      "exitCode": 0,
-      "logSHA256": "e985d86576dca372e3dc893b4f07a6353e9da362318803dca362b9c1cc8e2eb6",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (23.51 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-gateway-latest",
-      "exitCode": 0,
-      "logSHA256": "9524b88060a55d174c0a4462a490cc006070020e692ac3d8aa309e1933be2de6",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (6.54 sec)"
-      ]
-    },
-    {
-      "label": "exported tests swift-ai-gladia",
-      "exitCode": 0,
-      "logSHA256": "db1bd3c5c79979e36e303a928357ff2f6df724b194499d22d98f019d3068c3d4",
-      "summaries": [
-        "\udbc4\udc5b  Test run with 15 tests in 0 suites passed after 0.009 seconds.",
-        "Build complete! (3.32 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-gladia-minimum",
-      "exitCode": 0,
-      "logSHA256": "81b2d38526e623196885b74d03a2f7f5d383ad54fa4d58b2c59747495a367cf3",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (4.59 sec)"
-      ]
-    },
-    {
-      "label": "swift-ai-gladia-latest",
-      "exitCode": 0,
-      "logSHA256": "f86f2cab3ccc1296dcd306203e2903aeb360e32925825cdfdb23313876bc186e",
+      "logSHA256": "498e0430c8d9498bc4671342b232ed3cd4bfd6f3226b85e10b8e0dc336be49ea",
       "summaries": [
         "IMPORTS_OK",
         "Build complete! (2.61 sec)"
       ]
     },
     {
+      "label": "exported tests swift-ai-cartesia",
+      "exitCode": 0,
+      "logSHA256": "1e957c36f2684c24190dff89a6dd09d11cf00d533a9fd132c40034e44c20932d",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 25 tests in 0 suites passed after 0.012 seconds.",
+        "Build complete! (2.49 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-cartesia-minimum",
+      "exitCode": 0,
+      "logSHA256": "d23ffac2b5abe7b799c6f5ae869d4708acd51d29d6a9ba665089ae9839a86ac5",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (2.67 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-cartesia-latest",
+      "exitCode": 0,
+      "logSHA256": "a4deb46f04deff4a932647c73b037605833c473d607ea6631aca908f355eb93a",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (2.65 sec)"
+      ]
+    },
+    {
+      "label": "exported tests swift-ai-cerebras",
+      "exitCode": 0,
+      "logSHA256": "7f23170ab3b88f39c8b5036ad7603d6852af7f133cb4cf45e0a17599d4b565bf",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 25 tests in 0 suites passed after 0.012 seconds.",
+        "Build complete! (3.12 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-cerebras-minimum",
+      "exitCode": 0,
+      "logSHA256": "723c5c38b6d60076c0cff6f72093a3bc73df46df78490c95817e04e5fe9e86b1",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (18.33 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-cerebras-latest",
+      "exitCode": 0,
+      "logSHA256": "5cd12e8a80513775824741dda06b72bd2a101bb106fb5c36d2095177b983f425",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (8.40 sec)"
+      ]
+    },
+    {
+      "label": "exported tests swift-ai-cohere",
+      "exitCode": 0,
+      "logSHA256": "d31b2924abe4c6a9ef2b2dd67c9b3c6518022e2a999dd446c404ee0cf851f4ae",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 23 tests in 0 suites passed after 0.008 seconds.",
+        "Build complete! (3.53 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-cohere-minimum",
+      "exitCode": 0,
+      "logSHA256": "1e25f8c702a4a3789f7402be15a887cd1abb20354f8d7de18007642ad53d3640",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (23.35 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-cohere-latest",
+      "exitCode": 0,
+      "logSHA256": "c447edb8852581d7b526e976ad6b9af3f135a263cc9389037083329723c6972a",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (3.63 sec)"
+      ]
+    },
+    {
+      "label": "exported tests swift-ai-deepgram",
+      "exitCode": 0,
+      "logSHA256": "48b0865a652ef522a152c6256b3a760bcc25b29e0067b7f137196680927de20c",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 20 tests in 0 suites passed after 0.006 seconds.",
+        "Build complete! (3.16 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-deepgram-minimum",
+      "exitCode": 0,
+      "logSHA256": "1045dcd6f195cbe334f054d4950929925bc8df95afc40e8531c95f397d34924f",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (3.34 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-deepgram-latest",
+      "exitCode": 0,
+      "logSHA256": "1e0895d1ec6cca6b422ec69b2bb244b6df126f6876fcf025fe24e9772db66812",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (3.00 sec)"
+      ]
+    },
+    {
+      "label": "exported tests swift-ai-deepinfra",
+      "exitCode": 0,
+      "logSHA256": "e90c6f8ef2c7b8280a5b40d2335906bf2aa4d7acf0cf70c487833626789c6956",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.005 seconds.",
+        "Build complete! (2.88 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-deepinfra-minimum",
+      "exitCode": 0,
+      "logSHA256": "07ba00fa1bc54797fb61a7fb710cf022acb5d4be79b3a4552f7a85f2ad953df5",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (5.19 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-deepinfra-latest",
+      "exitCode": 0,
+      "logSHA256": "6e5328931501dd98dc62ad71e9747b0a77e909deb1b29346d0d954bfe66cf7cb",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (4.47 sec)"
+      ]
+    },
+    {
+      "label": "exported tests swift-ai-elevenlabs",
+      "exitCode": 0,
+      "logSHA256": "39e75b24de12757cdae92b8717b29c475d26a642fbf55d338f128aab88f4a75a",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 30 tests in 1 suite passed after 0.028 seconds.",
+        "Build complete! (3.59 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-elevenlabs-minimum",
+      "exitCode": 0,
+      "logSHA256": "f5452f2a8e92286dc6924f442437eff7e03a26a9508129ab1f58002cea365b22",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (5.08 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-elevenlabs-latest",
+      "exitCode": 0,
+      "logSHA256": "2e82cdee20fee3295400cf4c707d8feeb22f4c55bc06149122a2080ba2ff9827",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (4.92 sec)"
+      ]
+    },
+    {
+      "label": "exported tests swift-ai-fal",
+      "exitCode": 0,
+      "logSHA256": "692354ac7aa475ba2b36b37300ef3cd38d970eb5c60c51633334f272e6a58694",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 21 tests in 0 suites passed after 1.033 seconds.",
+        "Build complete! (3.34 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-fal-minimum",
+      "exitCode": 0,
+      "logSHA256": "48ee0d8e6faf4becc272e1b6ca84ab801da079906ba9cc0873eecfd125bc8814",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (3.48 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-fal-latest",
+      "exitCode": 0,
+      "logSHA256": "136242bfa543b766df6ffe8c6c1315b75dcdae638bd469b7f0c7a3fabdcca093",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (3.38 sec)"
+      ]
+    },
+    {
+      "label": "exported tests swift-ai-fireworks",
+      "exitCode": 0,
+      "logSHA256": "f0bc3d2943815cf2864d2bce4ff43fbd0a331b2ba862539f4e82620574e6b598",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 14 tests in 0 suites passed after 0.038 seconds.",
+        "Build complete! (2.78 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-fireworks-minimum",
+      "exitCode": 0,
+      "logSHA256": "eb4b99ba34788bebce4a0dcea66d1b66354e206a81d956d447d13a7983602cf1",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (4.55 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-fireworks-latest",
+      "exitCode": 0,
+      "logSHA256": "26acc1dd693315448f21ba39dd02115e114623298f84856a5779aa1941978bb2",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (4.52 sec)"
+      ]
+    },
+    {
+      "label": "exported tests swift-ai-fish-audio",
+      "exitCode": 0,
+      "logSHA256": "5e0f47935507d8646c9805183a8d6cfd9443164152e2a106781076a3f3088729",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 16 tests in 0 suites passed after 0.010 seconds.",
+        "Build complete! (2.04 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-fish-audio-minimum",
+      "exitCode": 0,
+      "logSHA256": "78159a59bf8b9e189ac9c4f1d88761bcf32dac35afb72c0b9eabf6ab223eaad6",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (2.29 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-fish-audio-latest",
+      "exitCode": 0,
+      "logSHA256": "d0fa8972edfa8c2a3ce62d6ffd4312978f9e51d712811f42ebcfbea90d530580",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (2.32 sec)"
+      ]
+    },
+    {
+      "label": "exported tests swift-ai-gateway",
+      "exitCode": 0,
+      "logSHA256": "270b347b3d3a0a24afdabda4ddc8dbe67713bad238aaaf52e2b76544b4c13abb",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 35 tests in 1 suite passed after 0.028 seconds.",
+        "Build complete! (4.70 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-gateway-minimum",
+      "exitCode": 0,
+      "logSHA256": "4124e30ac755579e290b002ad8c5d2ed2d6dd2e34ad21240aba60785f3dd330d",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (21.89 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-gateway-latest",
+      "exitCode": 0,
+      "logSHA256": "feb0ac6f99aba7de160e7b3f249d72fb42c673f4683c8790cb5b562c710cea12",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (6.01 sec)"
+      ]
+    },
+    {
+      "label": "exported tests swift-ai-gladia",
+      "exitCode": 0,
+      "logSHA256": "ba6023d030be24ef2ff074680654346d1981e06ae8d7ddc452c1c90bd93a5510",
+      "summaries": [
+        "\udbc4\udc5b  Test run with 15 tests in 0 suites passed after 0.008 seconds.",
+        "Build complete! (3.18 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-gladia-minimum",
+      "exitCode": 0,
+      "logSHA256": "f581b25cf58457f75e85d6fb08c4bca8cbc06e9cbbddce4209b4c15796552fe6",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (2.83 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-gladia-latest",
+      "exitCode": 0,
+      "logSHA256": "38b076253cc481ff1fa6aa5ce799173491c7d6ecda074efe4ef57ae892186650",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (2.85 sec)"
+      ]
+    },
+    {
       "label": "exported tests swift-ai-gmicloud",
       "exitCode": 0,
-      "logSHA256": "3a8745a02f1ae2ed8fdca5f382ac15c6cc0979714b962ba7457417733a823cf4",
+      "logSHA256": "30e116bf25ca1a5b23490b4bb177d7f0c75650b0f210a9b845f622023d90f79a",
       "summaries": [
         "\udbc4\udc5b  Test run with 8 tests in 0 suites passed after 0.009 seconds.",
-        "Build complete! (2.25 sec)"
+        "Build complete! (2.09 sec)"
       ]
     },
     {
       "label": "swift-ai-gmicloud-minimum",
       "exitCode": 0,
-      "logSHA256": "fb2b34347bc22961717fa13a3b18d578489c061716fed48af649e3594fe83224",
+      "logSHA256": "271ad275e97fe605981f715a56e6df2ea1904dc99df91912f820c63f38a44dcc",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (21.73 sec)"
+        "Build complete! (17.83 sec)"
       ]
     },
     {
       "label": "swift-ai-gmicloud-latest",
       "exitCode": 0,
-      "logSHA256": "5ead5ca456918de4b9186b6e9101ec694f2fec9ef1c11a56cc73ba9523cdbe09",
+      "logSHA256": "843b076c632095ae109d5023eb3af531bdd0e2c01d97f7d3868d008e4c1cc622",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (5.41 sec)"
+        "Build complete! (4.40 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-google",
       "exitCode": 0,
-      "logSHA256": "2d5f8d11364cfd1afe8e9d4840bad7ba97553a624acf63ba1206f0debcb7bb5c",
+      "logSHA256": "c4fd238eea093de72080a7d82c606d3771c98e0248d08e4f5473c3b6f24e5214",
       "summaries": [
-        "\udbc4\udc5b  Test run with 69 tests in 0 suites passed after 0.260 seconds.",
-        "Build complete! (5.86 sec)"
+        "\udbc4\udc5b  Test run with 69 tests in 0 suites passed after 0.261 seconds.",
+        "Build complete! (5.19 sec)"
       ]
     },
     {
       "label": "swift-ai-google-minimum",
       "exitCode": 0,
-      "logSHA256": "5d17ffd38ae19fb4f6650dd5c63b08db07992295f3d117a1b1d3cdfa13c6a814",
+      "logSHA256": "664c69e876ce578f7770ff8d530f2255526317d9fb9e9edba7f62ccc4363dbdb",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (37.76 sec)"
+        "Build complete! (30.34 sec)"
       ]
     },
     {
       "label": "swift-ai-google-latest",
       "exitCode": 0,
-      "logSHA256": "5f893a97571e253dc07998bc35177da02cfdc7d86ff0c4fcad99eba248c60330",
+      "logSHA256": "487d4392e38db81766f65ba77d9533c720ecea47ee22660ece8a925e44de00cd",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (14.61 sec)"
+        "Build complete! (11.48 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-google-vertex",
       "exitCode": 0,
-      "logSHA256": "c9b619bf8d427250f2f902891b276770860bee04bc6f527ef53eca26a8dc30ff",
+      "logSHA256": "033f2547d0c4aef73e2558dc50f8ee93756f77178c542259ee746e98ea16d602",
       "summaries": [
-        "\udbc4\udc5b  Test run with 26 tests in 0 suites passed after 0.017 seconds.",
-        "Build complete! (7.28 sec)"
+        "\udbc4\udc5b  Test run with 26 tests in 0 suites passed after 0.013 seconds.",
+        "Build complete! (5.62 sec)"
       ]
     },
     {
       "label": "swift-ai-google-vertex-minimum",
       "exitCode": 0,
-      "logSHA256": "38f22dcc40bb2b64e97de7935988581b32bbeca5dc032a654306cda4e67bfb48",
+      "logSHA256": "3b0466d224a0be3f8421d5021768e5b1206dbcb10cebf0d842cb8c5c171d04bb",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (23.36 sec)"
+        "Build complete! (21.13 sec)"
       ]
     },
     {
       "label": "swift-ai-google-vertex-latest",
       "exitCode": 0,
-      "logSHA256": "e8de258e2a5e90881a274e7cca120dd5242df622382d042d46b2dfe64054a04d",
+      "logSHA256": "6e0b6e8fe33bb171ceed622aefdc7ec3aeef4ff99337b2f448e9609edb443ad5",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (23.15 sec)"
+        "Build complete! (20.73 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-groq",
       "exitCode": 0,
-      "logSHA256": "f5d2466b07686ff95a8c51bb307f0bea430d7aaad990f0138769a1e6d21d045b",
+      "logSHA256": "8844123df09f2b3cd31dddd3d6b457c48e38aa9ff4806d69c95c2d21c8daf8be",
       "summaries": [
-        "\udbc4\udc5b  Test run with 28 tests in 0 suites passed after 0.011 seconds.",
-        "Build complete! (4.58 sec)"
+        "\udbc4\udc5b  Test run with 28 tests in 0 suites passed after 0.009 seconds.",
+        "Build complete! (2.91 sec)"
       ]
     },
     {
       "label": "swift-ai-groq-minimum",
       "exitCode": 0,
-      "logSHA256": "f18635912bcffa0af7a70e46c20959cd36f555f9f7c13d827c70a5a2ecc48778",
+      "logSHA256": "bb6cdff51f6106c9a54588bacd1a1cdbaf6bb61ec20f4c6ee416b5ae6e0c1698",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (3.11 sec)"
+        "Build complete! (2.85 sec)"
       ]
     },
     {
       "label": "swift-ai-groq-latest",
       "exitCode": 0,
-      "logSHA256": "97e0afbd4c1e6ca439f75ee7ae58afd0c0b6fb0920dc3f2d057135a993675ec0",
+      "logSHA256": "a9cc4880e54d9d4071bedd62365ff2b1e1f68ad6298dc4335529624b78ff7353",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (3.04 sec)"
+        "Build complete! (2.84 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-heygen",
       "exitCode": 0,
-      "logSHA256": "6c944cd4887f0b1451a1b096477f655a153b7961b957b9552202646da887c53b",
+      "logSHA256": "9f8bbaebec94caa32d5afda4f77fc56fe0fd6a26a07698d07a095e221453016f",
       "summaries": [
-        "\udbc4\udc5b  Test run with 38 tests in 4 suites passed after 0.027 seconds.",
-        "Build complete! (2.35 sec)"
+        "\udbc4\udc5b  Test run with 38 tests in 4 suites passed after 0.023 seconds.",
+        "Build complete! (2.36 sec)"
       ]
     },
     {
       "label": "swift-ai-heygen-minimum",
       "exitCode": 0,
-      "logSHA256": "2bf597bb78e28f0259a958a01928ed54eb67791395853c8332e8cf6e3311dc6b",
+      "logSHA256": "8f68b2c05d9243db998ecdfa7854aa582b58ec140c64c6a6473873a72735f9ee",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (2.59 sec)"
+        "Build complete! (2.64 sec)"
       ]
     },
     {
       "label": "swift-ai-heygen-latest",
       "exitCode": 0,
-      "logSHA256": "fc76e5c1326d779f0703758ee24146a8e30c86080f8928423acde6ca3e2746e1",
+      "logSHA256": "354b0eeafaf95f23c0d26d9877a7445864c63addc4fe6a368e6b974ed3daa70b",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (2.58 sec)"
+        "Build complete! (2.55 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-huggingface",
       "exitCode": 0,
-      "logSHA256": "59f69b7fa58e0ea8171e5c0876fbd3562ca62c408480abdfb5707ad1e6cbbaf4",
+      "logSHA256": "1b8b8c2d3b53744308287bb5ff4faf945d5f4aa3e23f342a9ceed491381389a6",
       "summaries": [
         "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.006 seconds.",
-        "Build complete! (3.12 sec)"
+        "Build complete! (3.03 sec)"
       ]
     },
     {
       "label": "swift-ai-huggingface-minimum",
       "exitCode": 0,
-      "logSHA256": "7792f6a6d184527e1b35c845b8f4b1fb40cb63b613e92d6ef9346a8665babc9d",
+      "logSHA256": "af5e820ba19571d718290b74b58827ff19458a27c868dce432124d08cac8c2c8",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (3.10 sec)"
+        "Build complete! (3.17 sec)"
       ]
     },
     {
       "label": "swift-ai-huggingface-latest",
       "exitCode": 0,
-      "logSHA256": "804fa2144cdad4ba98cbff8da2000ae817c4646b07bb893cb24b0eb9d8877457",
+      "logSHA256": "6eb6c0b0129afc707d08c7cc15d201356ac953319deb862e7b66d266f899044d",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (3.13 sec)"
+        "Build complete! (3.06 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-hume",
       "exitCode": 0,
-      "logSHA256": "dc80d76cc9b114de2f617c2b7e7483f5ede8bb08b3d8dae510806f325819220a",
+      "logSHA256": "5560114fa01be19059d3b36bf6482a2c94b764598555b393fb8e4532b109d404",
       "summaries": [
-        "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.009 seconds.",
-        "Build complete! (2.48 sec)"
+        "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.008 seconds.",
+        "Build complete! (2.26 sec)"
       ]
     },
     {
       "label": "swift-ai-hume-minimum",
       "exitCode": 0,
-      "logSHA256": "8911369c2d391afcb000c1dceffeb0267c684577459e6c7e41c4bc28b9faa735",
+      "logSHA256": "95ec8cb9147964bdf0350b0e4b19df5f9bcc1d01a99e57a5082fca3eafeea01c",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (1.70 sec)"
+        "Build complete! (1.88 sec)"
       ]
     },
     {
       "label": "swift-ai-hume-latest",
       "exitCode": 0,
-      "logSHA256": "538f1f065fa905e102bead8b0c5194331afcb42db9e846631dad64f6d2bceeac",
+      "logSHA256": "87caf576676029582fe22d0364c245fdb0e0434713a04278af713c3967b62e1b",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (1.76 sec)"
+        "Build complete! (1.85 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-klingai",
       "exitCode": 0,
-      "logSHA256": "2987fcdf8b6976135240138c3463e76ab5fe4fe3ae4ffa4a8c497fd500cd87f4",
+      "logSHA256": "a5ac06428134594011ec7e467883f4a1aa3ec85422240f4299805cbaa7945b00",
       "summaries": [
-        "\udbc4\udc5b  Test run with 25 tests in 0 suites passed after 0.165 seconds.",
-        "Build complete! (3.37 sec)"
+        "\udbc4\udc5b  Test run with 25 tests in 0 suites passed after 0.161 seconds.",
+        "Build complete! (3.19 sec)"
       ]
     },
     {
       "label": "swift-ai-klingai-minimum",
       "exitCode": 0,
-      "logSHA256": "9669f03db8988f549675bf4a732f0b67c49b2c65b12c6911869454e77b0f4abb",
+      "logSHA256": "50e9946bafc163c3f1c43f56999ef07f24a491a2a3c0cc676bbfadba0a2f0dd1",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (3.29 sec)"
+        "Build complete! (3.30 sec)"
       ]
     },
     {
       "label": "swift-ai-klingai-latest",
       "exitCode": 0,
-      "logSHA256": "4c0991750fd5ed158c3563e7193b1edb33bf6e7622118c3eb3e0998fa5204c33",
+      "logSHA256": "4e1b383ce1a16d8cedcc431a169228a4f7cb9654085aebd762ce648933780627",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (3.16 sec)"
+        "Build complete! (3.32 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-lmnt",
       "exitCode": 0,
-      "logSHA256": "01271b01528ee34d03dcc8e9bc98a17755c38853857d99bfeae70defbc16517f",
+      "logSHA256": "35d4b29cfdc9afb434326396ea553df56ce65d76d333d33c963e0ad509b0d0e6",
       "summaries": [
         "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.008 seconds.",
         "Build complete! (2.35 sec)"
@@ -1960,475 +1960,475 @@
     {
       "label": "swift-ai-lmnt-minimum",
       "exitCode": 0,
-      "logSHA256": "cb1325eb09f8f11e6cb79fea85c0d2e439dfd29f50a5f03443659dd6afee0b67",
+      "logSHA256": "283db2be9223eef1671c9507eb56e45a24b6eb686a6914d24405cd7aee582d78",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (1.73 sec)"
+        "Build complete! (1.70 sec)"
       ]
     },
     {
       "label": "swift-ai-lmnt-latest",
       "exitCode": 0,
-      "logSHA256": "ed6238f2cfbb014746ef12707dcbf9ca482d0f36ddd9ee2fd627f34e18fc1216",
+      "logSHA256": "84c833c50697d8224bdba5cefef56eff3e0a3262f16e4e41e497591226f8b3e9",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (1.77 sec)"
+        "Build complete! (1.81 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-luma",
       "exitCode": 0,
-      "logSHA256": "f935c8d1648398a11cc228be5ca1ba049cb06949c5113d167179575cf9223503",
+      "logSHA256": "b5ff8e40fe1e4cc31e8ac9cd7cb81ae42446c0b5f26ac8e7f4a78dcfcc6e59c0",
       "summaries": [
         "\udbc4\udc5b  Test run with 16 tests in 0 suites passed after 0.006 seconds.",
-        "Build complete! (2.47 sec)"
+        "Build complete! (2.39 sec)"
       ]
     },
     {
       "label": "swift-ai-luma-minimum",
       "exitCode": 0,
-      "logSHA256": "0e075c4cc108f04bfc61601a8bd7d1598b0c7c87592a0286de1b8207ae675049",
+      "logSHA256": "79cd2b55c58a6c002c061233efe377bbcf5da1348cfa272c5e7ad60533d17b08",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (1.96 sec)"
+        "Build complete! (2.10 sec)"
       ]
     },
     {
       "label": "swift-ai-luma-latest",
       "exitCode": 0,
-      "logSHA256": "d0e6155a08ab9c98311d50d3080423a8198f39cb85c85633ad22bf5cefc627f2",
+      "logSHA256": "d3bc8a126537278271d32f92482817b3c8b6a2cdb893dae1c71efdde406d9cfc",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (2.14 sec)"
+        "Build complete! (2.07 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-mcp",
       "exitCode": 0,
-      "logSHA256": "c1e33f38a495780a807360c7f15e95fe9682d3306a7af546eef601245c3aa330",
+      "logSHA256": "2ee8c9001891789c10d995b6b7645851eb3f2b6e5b37abe7f91db71667e72140",
       "summaries": [
-        "\udbc4\udc5b  Test run with 130 tests in 5 suites passed after 3.494 seconds.",
-        "Build complete! (4.16 sec)"
+        "\udbc4\udc5b  Test run with 130 tests in 5 suites passed after 3.490 seconds.",
+        "Build complete! (4.19 sec)"
       ]
     },
     {
       "label": "swift-ai-mcp-minimum",
       "exitCode": 0,
-      "logSHA256": "b57469439c34d3e29a398c320eeae1fd444c9ec724fdf7755a42db84ea8b3227",
+      "logSHA256": "e598926a50bbdbee8f434976760d8c74949a03ad0ce8391ac046b6f70f103780",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (44.74 sec)"
+        "Build complete! (39.40 sec)"
       ]
     },
     {
       "label": "swift-ai-mcp-latest",
       "exitCode": 0,
-      "logSHA256": "92b0553fa7056ffda3714d4d4e5d0142f22336e592b44ffd4d38d65bb766c36c",
+      "logSHA256": "9170f7068a376b5a554f9f4e93cf52bbf81c27de0a0200dcec880c93f6d56333",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (8.20 sec)"
+        "Build complete! (7.46 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-minimax",
       "exitCode": 0,
-      "logSHA256": "8be35e26f3f33d3c24afe606e0139ddf37f2d5c9c7fa1834e3eeb640f54f0a9f",
+      "logSHA256": "42e07cb7f44559a829e559f23d5800ab8499397a12ccacd6236fb6b87302b59f",
       "summaries": [
-        "\udbc4\udc5b  Test run with 40 tests in 1 suite passed after 0.070 seconds.",
-        "Build complete! (4.07 sec)"
+        "\udbc4\udc5b  Test run with 40 tests in 1 suite passed after 0.077 seconds.",
+        "Build complete! (4.91 sec)"
       ]
     },
     {
       "label": "swift-ai-minimax-minimum",
       "exitCode": 0,
-      "logSHA256": "c1c889da2eb6b72d244acf8dced05dae8a110452031dbb7c365854e7e18cb34b",
+      "logSHA256": "e5c0f08ce82e10d2a037a6a1f08e579d03fc6b79a0acd2226d79bbc83cc58dcd",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (41.14 sec)"
+        "Build complete! (38.57 sec)"
       ]
     },
     {
       "label": "swift-ai-minimax-latest",
       "exitCode": 0,
-      "logSHA256": "6b14d3aaba62c7ac126e3efb538ced52406299ea97f822475debe3b361ce67bf",
+      "logSHA256": "3d268d135ce0ae6833c6a9ea148bcc7d706dd419882a4527135209c1db99937f",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (14.03 sec)"
+        "Build complete! (13.12 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-mistral",
       "exitCode": 0,
-      "logSHA256": "41b851e817c59c623b9055af2fff378d7bb3e3cd1a2d390b9db74be71ea5030c",
+      "logSHA256": "7f9c69495e3bf9e70a1fb63d97d45ee16663c4bdcec60878076fb958ca843ed3",
       "summaries": [
-        "\udbc4\udc5b  Test run with 32 tests in 0 suites passed after 0.015 seconds.",
-        "Build complete! (4.16 sec)"
+        "\udbc4\udc5b  Test run with 32 tests in 0 suites passed after 0.014 seconds.",
+        "Build complete! (3.37 sec)"
       ]
     },
     {
       "label": "swift-ai-mistral-minimum",
       "exitCode": 0,
-      "logSHA256": "7f41a95d6a3ae7f7dff646bf9c9e42b38c73427fbe4f085db59aa408698c070e",
+      "logSHA256": "d4e4395a64074c68d6b2e45a92238c1286694774cbff753510fe5a18227ea6b6",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (5.73 sec)"
+        "Build complete! (5.06 sec)"
       ]
     },
     {
       "label": "swift-ai-mistral-latest",
       "exitCode": 0,
-      "logSHA256": "1df3c8fed61e4eca6a946459f33ae9295f79558b86aacff75e3015115bf46e0e",
+      "logSHA256": "c850e785fa3d74ae27422461edbc2239e10ac1325332b0ce58c8fb7c6368f4d4",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (5.59 sec)"
+        "Build complete! (4.98 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-moonshotai",
       "exitCode": 0,
-      "logSHA256": "4ba3104655107095ef2a6c426d201a97fd63cc408a8b9d9d14b0891e4bed7f6f",
+      "logSHA256": "c086a3754555a65b5f693ace2cf91819376c239532a151e748ac8830b29ee71c",
       "summaries": [
-        "\udbc4\udc5b  Test run with 32 tests in 1 suite passed after 0.019 seconds.",
-        "Build complete! (3.88 sec)"
+        "\udbc4\udc5b  Test run with 32 tests in 1 suite passed after 0.018 seconds.",
+        "Build complete! (3.17 sec)"
       ]
     },
     {
       "label": "swift-ai-moonshotai-minimum",
       "exitCode": 0,
-      "logSHA256": "c1b4501d1c78b292d9b86ff4874836cf902c73f0468e5d5b033602ab5cdb56b0",
+      "logSHA256": "54336c01dfcdfe5f0410dbf92297b7ed6fbeef018937a0a495437a501beccfbd",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (5.95 sec)"
+        "Build complete! (5.32 sec)"
       ]
     },
     {
       "label": "swift-ai-moonshotai-latest",
       "exitCode": 0,
-      "logSHA256": "6dad10d0f51795bce2bb918663e5a8265461ae37afb624097abc16b55b88f45a",
+      "logSHA256": "8cd8e548e274800056e5433dc5b738ccb30de535882cef35438dfd31dafb1600",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (5.79 sec)"
+        "Build complete! (5.33 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-open-responses",
       "exitCode": 0,
-      "logSHA256": "6efe0ef17e33ba04fb8e4f2e4345099654734ebf8760ac0c2a7decb66474c957",
+      "logSHA256": "9dadc9b22ca8787f3e86c3e8fee1b655a7213086830de2946e0cda622c2eb9d1",
       "summaries": [
-        "\udbc4\udc5b  Test run with 11 tests in 0 suites passed after 0.003 seconds.",
-        "Build complete! (2.89 sec)"
+        "\udbc4\udc5b  Test run with 11 tests in 0 suites passed after 0.004 seconds.",
+        "Build complete! (2.26 sec)"
       ]
     },
     {
       "label": "swift-ai-open-responses-minimum",
       "exitCode": 0,
-      "logSHA256": "b2a7018fc613df462de304af9107c967bc925bc723cb9fc4ecaabd4a75cd3e5a",
+      "logSHA256": "5a1237065204e2507fd183b8dc0afb68efc6ab498fd548a3218134819352903f",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (32.84 sec)"
+        "Build complete! (32.54 sec)"
       ]
     },
     {
       "label": "swift-ai-open-responses-latest",
       "exitCode": 0,
-      "logSHA256": "9d1d139eb5bc2a96f8d55adee835908cf39f7c9b2d1e2d9720958dcea01321db",
+      "logSHA256": "b1cd1c6f4aa53e8df17ff97e3ac4a5a1dd7368c185907023aedb0a6d7adaf864",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (15.10 sec)"
+        "Build complete! (15.45 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-perplexity",
       "exitCode": 0,
-      "logSHA256": "f536759236311f2a47cda23fcb91bdf658611a1f7d78a8606f7de42574cc71d7",
+      "logSHA256": "7f6e42eb6cba5b98c53dbcfa52656a93e0d18d38fded64af59b297c4039d6dc0",
       "summaries": [
-        "\udbc4\udc5b  Test run with 17 tests in 1 suite passed after 0.015 seconds.",
-        "Build complete! (3.85 sec)"
+        "\udbc4\udc5b  Test run with 17 tests in 1 suite passed after 0.016 seconds.",
+        "Build complete! (3.65 sec)"
       ]
     },
     {
       "label": "swift-ai-perplexity-minimum",
       "exitCode": 0,
-      "logSHA256": "c98c6854f334059eac47bd739bafaaee5dc7f322ccba3bd02f238bb6104b527b",
+      "logSHA256": "2e820ee49b6693e85fde812d76a9c3b85cc7d2d79a59e70313aab68b666f0a1e",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (25.38 sec)"
+        "Build complete! (25.27 sec)"
       ]
     },
     {
       "label": "swift-ai-perplexity-latest",
       "exitCode": 0,
-      "logSHA256": "48f409906d7b255d576a87f9a35b705a0ad49a0c84b692b53a324112e3887f04",
+      "logSHA256": "ba1effacbe59911540660f4824cf41af8b7b6499848162f15ee826ccd254d457",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (6.16 sec)"
+        "Build complete! (5.77 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-prodia",
       "exitCode": 0,
-      "logSHA256": "439ecb6f8161afaab8573189548f5efe14785c3baa14170211ca51a163ed7956",
+      "logSHA256": "783df5b0899e1044ee2e2fefb12e2a14156f9630a817499cea0e5d3dc6077dac",
       "summaries": [
-        "\udbc4\udc5b  Test run with 15 tests in 0 suites passed after 0.010 seconds.",
-        "Build complete! (3.10 sec)"
+        "\udbc4\udc5b  Test run with 15 tests in 0 suites passed after 0.011 seconds.",
+        "Build complete! (3.22 sec)"
       ]
     },
     {
       "label": "swift-ai-prodia-minimum",
       "exitCode": 0,
-      "logSHA256": "2f955a5792db38618387100ff0baa34ec019b0bb6a88549e65313a0745ab0298",
+      "logSHA256": "b3f4b9ea996a17a6c5fe310f83f42071e02983c63d80622556f19d4dae834c88",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (3.05 sec)"
+        "Build complete! (3.04 sec)"
       ]
     },
     {
       "label": "swift-ai-prodia-latest",
       "exitCode": 0,
-      "logSHA256": "82d8a686f67c91c58ab0b92dbadd2b717ea99f62dc2ac09e9622f3bd2a66654a",
+      "logSHA256": "b1b4486da39bb001e63ff0c33f98fa29141047b833250fbf454f8bc80c82eac6",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (2.92 sec)"
+        "Build complete! (2.99 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-quiverai",
       "exitCode": 0,
-      "logSHA256": "efdae2b5aa7b6945b54309f0d1b129b8a59665fdc1d1547b1d06ba7c8df65f66",
+      "logSHA256": "db90ac3e08d725ce07909ae5e9031799cf961c1ee6edb28950ce8ff95a7d2c74",
       "summaries": [
         "\udbc4\udc5b  Test run with 22 tests in 1 suite passed after 0.008 seconds.",
-        "Build complete! (3.76 sec)"
+        "Build complete! (3.56 sec)"
       ]
     },
     {
       "label": "swift-ai-quiverai-minimum",
       "exitCode": 0,
-      "logSHA256": "1efa3d10e0de927776cab3583f2e7439e27e340bccdce2e4b4b639ce7f811327",
+      "logSHA256": "7498f5747f3b9ecb11cf367bcc0a36d72138ccdbf2f2ea3da3e9f253c1dc84e5",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (20.45 sec)"
+        "Build complete! (19.55 sec)"
       ]
     },
     {
       "label": "swift-ai-quiverai-latest",
       "exitCode": 0,
-      "logSHA256": "1889d8d96f8bb595016b1e55397757c87c8a4fd8d4d7135210b37c8c5d9032bf",
+      "logSHA256": "50a9fd30ba8f12910d289af04e5e7bdc299736a63ca2b253241ccd56919d854b",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (19.13 sec)"
+        "Build complete! (18.56 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-replicate",
       "exitCode": 0,
-      "logSHA256": "8c431b6b6b7014960bd85813f5fc740003f557b1dd09d78aa2fef9b8e33f1a60",
+      "logSHA256": "4a30bbbce87b098e488de36455cfcc1b389b2adf80d0deebd11f8961b74b78aa",
       "summaries": [
-        "\udbc4\udc5b  Test run with 23 tests in 0 suites passed after 0.025 seconds.",
-        "Build complete! (3.87 sec)"
+        "\udbc4\udc5b  Test run with 23 tests in 0 suites passed after 0.027 seconds.",
+        "Build complete! (3.70 sec)"
       ]
     },
     {
       "label": "swift-ai-replicate-minimum",
       "exitCode": 0,
-      "logSHA256": "45108a2621485810622c324689419220fd8a5cf3827123594e62940a12f48b66",
+      "logSHA256": "67e14f979c8a66ec8c7372d1d8da0af75f98c41ae30a6bd8db418c8aee7ea7bb",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (2.49 sec)"
+        "Build complete! (2.44 sec)"
       ]
     },
     {
       "label": "swift-ai-replicate-latest",
       "exitCode": 0,
-      "logSHA256": "9408f012f0aef5f8372f707e09e15f666a27b9418d202b700db18843aa32fbf4",
+      "logSHA256": "118d75df9ac3f92466a30183825013e1f1637931f03694c1c0d908f1dd3f4bbc",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (2.43 sec)"
+        "Build complete! (2.45 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-revai",
       "exitCode": 0,
-      "logSHA256": "23f01743362c9c8e64570853fd0d7fa69f24f22616a696c2b0efacec19e54436",
+      "logSHA256": "a456b2d75d8ac79932acc45eddfa0c3a672ba5de42cf9b032e29113ec4067ebd",
       "summaries": [
         "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.007 seconds.",
-        "Build complete! (2.66 sec)"
+        "Build complete! (2.58 sec)"
       ]
     },
     {
       "label": "swift-ai-revai-minimum",
       "exitCode": 0,
-      "logSHA256": "712a025ede7b808a51c1f0ecd5e6b3041323179ccf679370cc6ae7d6852043da",
+      "logSHA256": "c95b1521a99da4cab25f0e9dd23ba7e33bc97f7a21f6a899fc9cb0e87528c3b5",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (2.39 sec)"
+        "Build complete! (2.44 sec)"
       ]
     },
     {
       "label": "swift-ai-revai-latest",
       "exitCode": 0,
-      "logSHA256": "f8c261956ce6d0287d28b58943c842d96cce350b690b7df4c4a456294d96460c",
+      "logSHA256": "29a72d7c82d670d4db01b3811f63c97ea641fb80f8ece1a95de559016819a9e5",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (2.38 sec)"
+        "Build complete! (2.40 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-togetherai",
       "exitCode": 0,
-      "logSHA256": "75d0bdebc60b04e78a6faf623bdbea52a8094be52e4277f1de7e86d6cbfb9baa",
+      "logSHA256": "919226a7108c189ae1941382cb4858915c10c1f4f1ecf22c0239e8d7f0a75c20",
       "summaries": [
         "\udbc4\udc5b  Test run with 13 tests in 0 suites passed after 0.005 seconds.",
-        "Build complete! (2.51 sec)"
+        "Build complete! (2.44 sec)"
       ]
     },
     {
       "label": "swift-ai-togetherai-minimum",
       "exitCode": 0,
-      "logSHA256": "c9f658bbce30925bd2938d813976310f8ce367c2c9574166195ea17495d382f4",
+      "logSHA256": "212e966ab11a748546a2a2e4230f0af26023e4c8485a6d7879be4f1f8e96920c",
+      "summaries": [
+        "IMPORTS_OK",
+        "Build complete! (4.80 sec)"
+      ]
+    },
+    {
+      "label": "swift-ai-togetherai-latest",
+      "exitCode": 0,
+      "logSHA256": "10c2667c9447aa1516cfa3f1698b169e4408f2128a3cf3be267424bdd6b2ad83",
       "summaries": [
         "IMPORTS_OK",
         "Build complete! (4.94 sec)"
       ]
     },
     {
-      "label": "swift-ai-togetherai-latest",
-      "exitCode": 0,
-      "logSHA256": "67b87979dcb42c5d703a0d267634ca3090dd4315ef91f1f20efb921fe78b8c44",
-      "summaries": [
-        "IMPORTS_OK",
-        "Build complete! (5.03 sec)"
-      ]
-    },
-    {
       "label": "exported tests swift-ai-topaz",
       "exitCode": 0,
-      "logSHA256": "9e383eee6bf8a1d27dfa40dfdde10522acd5445ac567dfa2e19d073e927aae95",
+      "logSHA256": "8e92500ea51c37c41c0dc23930b3bf315e522068d0e6e3a95985d3cde83a943d",
       "summaries": [
-        "\udbc4\udc5b  Test run with 34 tests in 1 suite passed after 1.087 seconds.",
-        "Build complete! (3.63 sec)"
+        "\udbc4\udc5b  Test run with 34 tests in 1 suite passed after 1.090 seconds.",
+        "Build complete! (3.75 sec)"
       ]
     },
     {
       "label": "swift-ai-topaz-minimum",
       "exitCode": 0,
-      "logSHA256": "44166274105c855869ca641303c4be13b66f73a2e1e1d44ee73faa2d3d23f08b",
+      "logSHA256": "4154c7712474b213b12e7d110eddb9086dc6ae855b319b67efb31f5f1bf34403",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (3.73 sec)"
+        "Build complete! (3.39 sec)"
       ]
     },
     {
       "label": "swift-ai-topaz-latest",
       "exitCode": 0,
-      "logSHA256": "eccb22290e80c33eeb5d32e229f48aa73dcb54b6a3e2a1b0f7aa95cbc963cc76",
+      "logSHA256": "aa7db1d3113bb55c1d44399d2077b6abbc4e1b0e2a9b1f305f0f8301f1981b8a",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (3.41 sec)"
+        "Build complete! (3.23 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-typesafe-ai",
       "exitCode": 0,
-      "logSHA256": "4c4a44908268d3ad56d751109b6585c79fe2b9bf1f5fb03ac37128808dba5aef",
+      "logSHA256": "a950c3692e0339442f3d7d20c6f8e71523c6e7891cc2e263695437699669d361",
       "summaries": [
-        "\udbc4\udc5b  Test run with 11 tests in 2 suites passed after 0.009 seconds.",
-        "Build complete! (2.59 sec)"
+        "\udbc4\udc5b  Test run with 11 tests in 2 suites passed after 0.010 seconds.",
+        "Build complete! (2.50 sec)"
       ]
     },
     {
       "label": "swift-ai-typesafe-ai-minimum",
       "exitCode": 0,
-      "logSHA256": "752f27c781daaee44ae4f34895aba5ada55a282be670426f051a95a1a4912d8a",
+      "logSHA256": "cc779dbf855528e7da09d18e8626d61f1ee9324d65a610c5690ffec6c31b77c7",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (16.22 sec)"
+        "Build complete! (15.97 sec)"
       ]
     },
     {
       "label": "swift-ai-typesafe-ai-latest",
       "exitCode": 0,
-      "logSHA256": "d2ddb9fd79cd5406cd26d01e4d19749975e15f6b4512cba1f0c7273998ae7c08",
+      "logSHA256": "b0bbcc2dbf9a7f20c8ac08c8158c08fac1ae819bef10d3be1b0b2a56f49dd1b7",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (2.79 sec)"
+        "Build complete! (2.82 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-ui",
       "exitCode": 0,
-      "logSHA256": "09a2773a030f8dce915c7342d2b2306fe1b3fac06b5e5497450c40c034c69c1f",
+      "logSHA256": "ab5ae953d4a65a46198d1f26f1cd5f3f6e02ebf42def9f51a47f52240f5c7f4a",
       "summaries": [
-        "\udbc4\udc5b  Test run with 84 tests in 1 suite passed after 0.020 seconds.",
-        "Build complete! (3.11 sec)"
+        "\udbc4\udc5b  Test run with 84 tests in 1 suite passed after 0.021 seconds.",
+        "Build complete! (3.08 sec)"
       ]
     },
     {
       "label": "swift-ai-ui-minimum",
       "exitCode": 0,
-      "logSHA256": "51baa22cce117cc2780fed8c02e0775278c28134681fc534313f54130d8ff4c7",
+      "logSHA256": "a2011768d045b848b9355f7089aa8805e641cf7da847bb54e3327dd5d5764234",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (22.06 sec)"
+        "Build complete! (21.08 sec)"
       ]
     },
     {
       "label": "swift-ai-ui-latest",
       "exitCode": 0,
-      "logSHA256": "e01b005d68e25af365d99e661f0eb5c32448214aefe92580c6c32fdb4ce82b35",
+      "logSHA256": "426929d6315139562d061bd99c4382076a44c818899b490eee1c002b80fadb73",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (5.03 sec)"
+        "Build complete! (4.95 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-vercel",
       "exitCode": 0,
-      "logSHA256": "793620fd95c663afa6acef8d38acc4fd9992783624035977ed6ff8284b9e0b3a",
+      "logSHA256": "a0465fa1dc279c173abdd64ef458bae1f7639d12ab04b7e54dac45c553cd52c9",
       "summaries": [
         "\udbc4\udc5b  Test run with 5 tests in 0 suites passed after 0.003 seconds.",
-        "Build complete! (1.86 sec)"
+        "Build complete! (1.91 sec)"
       ]
     },
     {
       "label": "swift-ai-vercel-minimum",
       "exitCode": 0,
-      "logSHA256": "3d6a7a16c74727374f35865f0ddc74c8181e2185b80eb497412c66005d31392e",
+      "logSHA256": "c88248c6279f0f846ebf2dadcc004d43c3d70e2ed0ab6f108bd8ca962df2dbc5",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (4.84 sec)"
+        "Build complete! (4.54 sec)"
       ]
     },
     {
       "label": "swift-ai-vercel-latest",
       "exitCode": 0,
-      "logSHA256": "b1ec6acb0aa81c11f7afb937f95dadc909424087b26d712be7cd1de1d3a68b7a",
+      "logSHA256": "f6898fb55ff98533a39a2ebfcc4096038ad5a4be6201c25d1a8bef96c04a4877",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (4.00 sec)"
+        "Build complete! (4.02 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-voyage",
       "exitCode": 0,
-      "logSHA256": "3f907b31b280b5536cc5424b2877d95fb55942fed161ea708e7de0f67fac87cf",
+      "logSHA256": "bb00c6c3dec3da7dc2e767abee609434c3e3d59536c98446ab8cb7f338605b73",
       "summaries": [
         "\udbc4\udc5b  Test run with 10 tests in 0 suites passed after 0.004 seconds.",
-        "Build complete! (2.11 sec)"
+        "Build complete! (1.78 sec)"
       ]
     },
     {
       "label": "swift-ai-voyage-minimum",
       "exitCode": 0,
-      "logSHA256": "60ccb31af61c1ea5e4cc216f7b6f98421545e22d11b42a1b577be3fcc5fa28e0",
+      "logSHA256": "047baa139f7c570cee6c9ed28ecc1ac7f7cea51e6a63f35297b848a76e78e175",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (21.90 sec)"
+        "Build complete! (21.22 sec)"
       ]
     },
     {
       "label": "swift-ai-voyage-latest",
       "exitCode": 0,
-      "logSHA256": "0f94b5f02847bece0454dc2ce685652b29a53dbc77659bb9d5f58bf19082ba20",
+      "logSHA256": "8eab7def565654fd509f640bb96d36245b65dddbd80683d6f83f7d33c9f05f3b",
       "summaries": [
         "IMPORTS_OK",
         "Build complete! (2.26 sec)"
@@ -2437,64 +2437,64 @@
     {
       "label": "exported tests swift-ai-xai",
       "exitCode": 0,
-      "logSHA256": "0219d6c1b947298d64b44870e98dfc48aae4e07044f29621a7348392d8b65992",
+      "logSHA256": "91ee613824e43b66397edc7b66421238fe2b7e416c6cf7e90b2f155b9c2e674b",
       "summaries": [
-        "\udbc4\udc5b  Test run with 47 tests in 0 suites passed after 0.071 seconds.",
-        "Build complete! (4.90 sec)"
+        "\udbc4\udc5b  Test run with 47 tests in 0 suites passed after 0.075 seconds.",
+        "Build complete! (4.76 sec)"
       ]
     },
     {
       "label": "swift-ai-xai-minimum",
       "exitCode": 0,
-      "logSHA256": "ddb580fe824874baf85a3d254b0d00011dc6bab9c36538d2846c92b9420b2f3b",
+      "logSHA256": "f6d8277f30a13e57470856f7fc5e6de5daf8ddeb0fe57d421b48656e7501e349",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (24.48 sec)"
+        "Build complete! (23.23 sec)"
       ]
     },
     {
       "label": "swift-ai-xai-latest",
       "exitCode": 0,
-      "logSHA256": "6410ed5835dc3859d5ebdab4f7ec31134f83c1ff92d661c55fb6fb400b136e6d",
+      "logSHA256": "87575f9fe4a4fed1f18f49ff2bd993502c990a85c59ccead62970b204428d601",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (23.31 sec)"
+        "Build complete! (24.12 sec)"
       ]
     },
     {
       "label": "exported tests swift-ai-zai",
       "exitCode": 0,
-      "logSHA256": "c6673f69a725430bcd6b86d6bebf7728374f079b25ef1faad6353e7ad2bce2dd",
+      "logSHA256": "b4d2d2fce665626c38b75f68be203f307f4b0a20f8facd97529daf7fc3e9daec",
       "summaries": [
-        "\udbc4\udc5b  Test run with 15 tests in 1 suite passed after 0.011 seconds.",
-        "Build complete! (2.78 sec)"
+        "\udbc4\udc5b  Test run with 15 tests in 1 suite passed after 0.012 seconds.",
+        "Build complete! (2.96 sec)"
       ]
     },
     {
       "label": "swift-ai-zai-minimum",
       "exitCode": 0,
-      "logSHA256": "54d951dfc737b885d2e15e85400bafd1be76c7c74b9ec19a250b9c3947ead3cb",
+      "logSHA256": "72cdbe13c8ec85fa3fbdb077ff01258b6c8804225a8d91637d5ca9e824dcf63d",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (18.65 sec)"
+        "Build complete! (18.49 sec)"
       ]
     },
     {
       "label": "swift-ai-zai-latest",
       "exitCode": 0,
-      "logSHA256": "2f18e2af6e3cc792feee097a03ddc6aca92dd5335084851206a05dda6af6ecb5",
+      "logSHA256": "a66d97577dbb3950e82a13145a7cd47e03af5e65a6e5a2b170789bab111efe21",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (2.53 sec)"
+        "Build complete! (2.58 sec)"
       ]
     },
     {
       "label": "mixed-published-and-candidate",
       "exitCode": 0,
-      "logSHA256": "5bbd21011ec5db605958b4dc05c645fe700265ec1bd6bce16fefd761ece12396",
+      "logSHA256": "9e2d721c4fb58a3495bff0b424f4d728faae6b5b3128e9fb85086854877a05ed",
       "summaries": [
         "IMPORTS_OK",
-        "Build complete! (30.66 sec)"
+        "Build complete! (31.41 sec)"
       ]
     }
   ],
@@ -2510,7 +2510,7 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -2525,7 +2525,7 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -2540,13 +2540,13 @@
           "package": "swift-ai-alibaba",
           "repository": "https://github.com/SwiftAISDK/swift-ai-alibaba.git",
           "version": "1.0.0",
-          "revision": "c3aa472a300ed772e04ad132f1441c766775f1d3"
+          "revision": "f178203c9dcc09f98021649b3c6a708182095970"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -2561,13 +2561,13 @@
           "package": "swift-ai-alibaba",
           "repository": "https://github.com/SwiftAISDK/swift-ai-alibaba.git",
           "version": "1.0.0",
-          "revision": "c3aa472a300ed772e04ad132f1441c766775f1d3"
+          "revision": "f178203c9dcc09f98021649b3c6a708182095970"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -2582,7 +2582,7 @@
           "package": "swift-ai-anthropic",
           "repository": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
           "version": "1.1.0",
-          "revision": "aed00e4791d53cf7a1ff1c2f4ddea01ffb625f1f"
+          "revision": "92fc7074f9b37f446e52533e7116d94efee68810"
         },
         {
           "package": "swift-ai-core",
@@ -2603,13 +2603,13 @@
           "package": "swift-ai-anthropic",
           "repository": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
           "version": "1.1.0",
-          "revision": "aed00e4791d53cf7a1ff1c2f4ddea01ffb625f1f"
+          "revision": "92fc7074f9b37f446e52533e7116d94efee68810"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -2630,7 +2630,7 @@
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -2645,13 +2645,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -2672,7 +2672,7 @@
           "package": "swift-ai-openai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai.git",
           "version": "1.0.1",
-          "revision": "d9f94a31a2fa2846b19ce307cddc94af9532f479"
+          "revision": "ae8d16cfca917c657fa0915818abfdf7af822940"
         },
         {
           "package": "swift-ai-openai-compatible",
@@ -2693,19 +2693,19 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai.git",
           "version": "1.0.1",
-          "revision": "d9f94a31a2fa2846b19ce307cddc94af9532f479"
+          "revision": "ae8d16cfca917c657fa0915818abfdf7af822940"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -2720,7 +2720,7 @@
           "package": "swift-ai-amazon-bedrock",
           "repository": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock.git",
           "version": "1.0.0",
-          "revision": "c0eafbd9c4ee07b7af2f69e87554fc07cde5caa6"
+          "revision": "b6ca4c41c8f85ed16d1e7f7b4e529ad7d5a43de5"
         },
         {
           "package": "swift-ai-anthropic",
@@ -2732,7 +2732,7 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai",
@@ -2759,31 +2759,31 @@
           "package": "swift-ai-amazon-bedrock",
           "repository": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock.git",
           "version": "1.0.0",
-          "revision": "c0eafbd9c4ee07b7af2f69e87554fc07cde5caa6"
+          "revision": "b6ca4c41c8f85ed16d1e7f7b4e529ad7d5a43de5"
         },
         {
           "package": "swift-ai-anthropic",
           "repository": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
           "version": "1.1.0",
-          "revision": "aed00e4791d53cf7a1ff1c2f4ddea01ffb625f1f"
+          "revision": "92fc7074f9b37f446e52533e7116d94efee68810"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai.git",
           "version": "1.0.1",
-          "revision": "d9f94a31a2fa2846b19ce307cddc94af9532f479"
+          "revision": "ae8d16cfca917c657fa0915818abfdf7af822940"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -2798,19 +2798,19 @@
           "package": "swift-ai-anthropic",
           "repository": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
           "version": "1.1.0",
-          "revision": "aed00e4791d53cf7a1ff1c2f4ddea01ffb625f1f"
+          "revision": "92fc7074f9b37f446e52533e7116d94efee68810"
         },
         {
           "package": "swift-ai-anthropic-aws",
           "repository": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws.git",
           "version": "1.0.0",
-          "revision": "d316ac9474e7182e58f8a401bce63cffb9724e3b"
+          "revision": "691f3bb3bddf80fd4c8dabb5a1eceb386be2ea89"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -2825,19 +2825,19 @@
           "package": "swift-ai-anthropic",
           "repository": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
           "version": "1.1.0",
-          "revision": "aed00e4791d53cf7a1ff1c2f4ddea01ffb625f1f"
+          "revision": "92fc7074f9b37f446e52533e7116d94efee68810"
         },
         {
           "package": "swift-ai-anthropic-aws",
           "repository": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws.git",
           "version": "1.0.0",
-          "revision": "d316ac9474e7182e58f8a401bce63cffb9724e3b"
+          "revision": "691f3bb3bddf80fd4c8dabb5a1eceb386be2ea89"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -2852,13 +2852,13 @@
           "package": "swift-ai-assemblyai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-assemblyai.git",
           "version": "1.0.0",
-          "revision": "97e3f5ce5c6923578971ba7fe1075e88ab72f692"
+          "revision": "2064c40be93b37523e9d26eec8faf7cc1f5b5542"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -2873,13 +2873,13 @@
           "package": "swift-ai-assemblyai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-assemblyai.git",
           "version": "1.0.0",
-          "revision": "97e3f5ce5c6923578971ba7fe1075e88ab72f692"
+          "revision": "2064c40be93b37523e9d26eec8faf7cc1f5b5542"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -2894,13 +2894,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-deepseek",
           "repository": "https://github.com/SwiftAISDK/swift-ai-deepseek.git",
           "version": "1.0.0",
-          "revision": "88a536c07047733d4e7597f79b673243b1a2b1a9"
+          "revision": "1f2c0d8b166cbc0203385482b7883f94035e67bb"
         }
       ]
     },
@@ -2915,13 +2915,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-deepseek",
           "repository": "https://github.com/SwiftAISDK/swift-ai-deepseek.git",
           "version": "1.0.0",
-          "revision": "88a536c07047733d4e7597f79b673243b1a2b1a9"
+          "revision": "1f2c0d8b166cbc0203385482b7883f94035e67bb"
         }
       ]
     },
@@ -2936,19 +2936,19 @@
           "package": "swift-ai-azure",
           "repository": "https://github.com/SwiftAISDK/swift-ai-azure.git",
           "version": "1.0.0",
-          "revision": "f4cdbd432097fe571e1787d5ed9df65cfc7ab556"
+          "revision": "b41b38dfe8a6deac4102351caf334b0a09221aa7"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-deepseek",
           "repository": "https://github.com/SwiftAISDK/swift-ai-deepseek.git",
           "version": "1.0.0",
-          "revision": "88a536c07047733d4e7597f79b673243b1a2b1a9"
+          "revision": "1f2c0d8b166cbc0203385482b7883f94035e67bb"
         },
         {
           "package": "swift-ai-openai",
@@ -2975,31 +2975,31 @@
           "package": "swift-ai-azure",
           "repository": "https://github.com/SwiftAISDK/swift-ai-azure.git",
           "version": "1.0.0",
-          "revision": "f4cdbd432097fe571e1787d5ed9df65cfc7ab556"
+          "revision": "b41b38dfe8a6deac4102351caf334b0a09221aa7"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-deepseek",
           "repository": "https://github.com/SwiftAISDK/swift-ai-deepseek.git",
           "version": "1.0.0",
-          "revision": "88a536c07047733d4e7597f79b673243b1a2b1a9"
+          "revision": "1f2c0d8b166cbc0203385482b7883f94035e67bb"
         },
         {
           "package": "swift-ai-openai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai.git",
           "version": "1.0.1",
-          "revision": "d9f94a31a2fa2846b19ce307cddc94af9532f479"
+          "revision": "ae8d16cfca917c657fa0915818abfdf7af822940"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -3014,13 +3014,13 @@
           "package": "swift-ai-baseten",
           "repository": "https://github.com/SwiftAISDK/swift-ai-baseten.git",
           "version": "1.0.0",
-          "revision": "f1046d8f511840ec3e9419e820bf47d6e156fdf9"
+          "revision": "6e26f6f7007611210e6e4f453bbf67bf1994833f"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai-compatible",
@@ -3041,19 +3041,19 @@
           "package": "swift-ai-baseten",
           "repository": "https://github.com/SwiftAISDK/swift-ai-baseten.git",
           "version": "1.0.0",
-          "revision": "f1046d8f511840ec3e9419e820bf47d6e156fdf9"
+          "revision": "6e26f6f7007611210e6e4f453bbf67bf1994833f"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -3068,13 +3068,13 @@
           "package": "swift-ai-black-forest-labs",
           "repository": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs.git",
           "version": "1.0.0",
-          "revision": "97f1b698d7692630b8c54a5e32537514e9eed971"
+          "revision": "8d6afc3b6f68252a65bab9563b14fde26a576cb9"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -3089,13 +3089,13 @@
           "package": "swift-ai-black-forest-labs",
           "repository": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs.git",
           "version": "1.0.0",
-          "revision": "97f1b698d7692630b8c54a5e32537514e9eed971"
+          "revision": "8d6afc3b6f68252a65bab9563b14fde26a576cb9"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -3110,13 +3110,13 @@
           "package": "swift-ai-bytedance",
           "repository": "https://github.com/SwiftAISDK/swift-ai-bytedance.git",
           "version": "1.0.0",
-          "revision": "c47d74562ad214d4c770f074315ad789019d92bf"
+          "revision": "65ca34418160a63005f0b20822edee13eef826cb"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -3131,13 +3131,13 @@
           "package": "swift-ai-bytedance",
           "repository": "https://github.com/SwiftAISDK/swift-ai-bytedance.git",
           "version": "1.0.0",
-          "revision": "c47d74562ad214d4c770f074315ad789019d92bf"
+          "revision": "65ca34418160a63005f0b20822edee13eef826cb"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -3152,13 +3152,13 @@
           "package": "swift-ai-cartesia",
           "repository": "https://github.com/SwiftAISDK/swift-ai-cartesia.git",
           "version": "1.0.0",
-          "revision": "538beadb9d77238346f486964113f34055214f26"
+          "revision": "92ea15d76c48f16a900fbc2d9b86575fa7dd3df8"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -3173,13 +3173,13 @@
           "package": "swift-ai-cartesia",
           "repository": "https://github.com/SwiftAISDK/swift-ai-cartesia.git",
           "version": "1.0.0",
-          "revision": "538beadb9d77238346f486964113f34055214f26"
+          "revision": "92ea15d76c48f16a900fbc2d9b86575fa7dd3df8"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -3194,7 +3194,7 @@
           "package": "swift-ai-cerebras",
           "repository": "https://github.com/SwiftAISDK/swift-ai-cerebras.git",
           "version": "1.0.0",
-          "revision": "11cebbab6aada324a43ab2eec7c9232dfe89cfdd"
+          "revision": "adcabf9dbb9d10fd310d0532f40f9f2cd892081f"
         },
         {
           "package": "swift-ai-core",
@@ -3221,19 +3221,19 @@
           "package": "swift-ai-cerebras",
           "repository": "https://github.com/SwiftAISDK/swift-ai-cerebras.git",
           "version": "1.0.0",
-          "revision": "11cebbab6aada324a43ab2eec7c9232dfe89cfdd"
+          "revision": "adcabf9dbb9d10fd310d0532f40f9f2cd892081f"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -3248,13 +3248,13 @@
           "package": "swift-ai-cohere",
           "repository": "https://github.com/SwiftAISDK/swift-ai-cohere.git",
           "version": "1.0.0",
-          "revision": "dfec4f87bfd184581198e9d688accb34cc324df4"
+          "revision": "b0a56b1490858327b4cd5214f8e89f0cb4f896ab"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -3269,13 +3269,13 @@
           "package": "swift-ai-cohere",
           "repository": "https://github.com/SwiftAISDK/swift-ai-cohere.git",
           "version": "1.0.0",
-          "revision": "dfec4f87bfd184581198e9d688accb34cc324df4"
+          "revision": "b0a56b1490858327b4cd5214f8e89f0cb4f896ab"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         }
       ]
     },
@@ -3290,13 +3290,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-deepgram",
           "repository": "https://github.com/SwiftAISDK/swift-ai-deepgram.git",
           "version": "1.0.0",
-          "revision": "155acd18fd88d35942ed591668aa512e92175c60"
+          "revision": "44663117aefa903421a18eb6a009995e0db3c498"
         }
       ]
     },
@@ -3311,13 +3311,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-deepgram",
           "repository": "https://github.com/SwiftAISDK/swift-ai-deepgram.git",
           "version": "1.0.0",
-          "revision": "155acd18fd88d35942ed591668aa512e92175c60"
+          "revision": "44663117aefa903421a18eb6a009995e0db3c498"
         }
       ]
     },
@@ -3332,13 +3332,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-deepinfra",
           "repository": "https://github.com/SwiftAISDK/swift-ai-deepinfra.git",
           "version": "1.0.0",
-          "revision": "ad5e154c35dcc008636fe6cf2abc6d1649214c43"
+          "revision": "4dd0b4929f8939d6f972ef9a09bf799dea82377e"
         },
         {
           "package": "swift-ai-openai-compatible",
@@ -3359,19 +3359,19 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-deepinfra",
           "repository": "https://github.com/SwiftAISDK/swift-ai-deepinfra.git",
           "version": "1.0.0",
-          "revision": "ad5e154c35dcc008636fe6cf2abc6d1649214c43"
+          "revision": "4dd0b4929f8939d6f972ef9a09bf799dea82377e"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -3386,13 +3386,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-elevenlabs",
           "repository": "https://github.com/SwiftAISDK/swift-ai-elevenlabs.git",
           "version": "1.0.0",
-          "revision": "bcc7332156a977c74c855dc23f5d009e1b08ac33"
+          "revision": "2581a9710670815da0ff3f4fd9c2b584ac7f6364"
         }
       ]
     },
@@ -3407,13 +3407,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-elevenlabs",
           "repository": "https://github.com/SwiftAISDK/swift-ai-elevenlabs.git",
           "version": "1.0.0",
-          "revision": "bcc7332156a977c74c855dc23f5d009e1b08ac33"
+          "revision": "2581a9710670815da0ff3f4fd9c2b584ac7f6364"
         }
       ]
     },
@@ -3428,13 +3428,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-fal",
           "repository": "https://github.com/SwiftAISDK/swift-ai-fal.git",
           "version": "1.0.0",
-          "revision": "60a53c58afd67f6344a1d53e474f8638309fa7bc"
+          "revision": "fb8d98f8e8276c4ffb553478a7417afe346af639"
         }
       ]
     },
@@ -3449,13 +3449,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-fal",
           "repository": "https://github.com/SwiftAISDK/swift-ai-fal.git",
           "version": "1.0.0",
-          "revision": "60a53c58afd67f6344a1d53e474f8638309fa7bc"
+          "revision": "fb8d98f8e8276c4ffb553478a7417afe346af639"
         }
       ]
     },
@@ -3470,13 +3470,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-fireworks",
           "repository": "https://github.com/SwiftAISDK/swift-ai-fireworks.git",
           "version": "1.0.0",
-          "revision": "415a775a2b48a3e5cdfed38dab339d04c150b0b0"
+          "revision": "779005e6ff1c695b11f67e4180adcbb06701b89e"
         },
         {
           "package": "swift-ai-openai-compatible",
@@ -3497,19 +3497,19 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-fireworks",
           "repository": "https://github.com/SwiftAISDK/swift-ai-fireworks.git",
           "version": "1.0.0",
-          "revision": "415a775a2b48a3e5cdfed38dab339d04c150b0b0"
+          "revision": "779005e6ff1c695b11f67e4180adcbb06701b89e"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -3524,13 +3524,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-fish-audio",
           "repository": "https://github.com/SwiftAISDK/swift-ai-fish-audio.git",
           "version": "1.0.0",
-          "revision": "2145c682234a2d4f694676e0f1d94cf6e059b508"
+          "revision": "4946d3ee2d0e467cd7eed219cddf702fca470341"
         }
       ]
     },
@@ -3545,13 +3545,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-fish-audio",
           "repository": "https://github.com/SwiftAISDK/swift-ai-fish-audio.git",
           "version": "1.0.0",
-          "revision": "2145c682234a2d4f694676e0f1d94cf6e059b508"
+          "revision": "4946d3ee2d0e467cd7eed219cddf702fca470341"
         }
       ]
     },
@@ -3566,13 +3566,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-gateway",
           "repository": "https://github.com/SwiftAISDK/swift-ai-gateway.git",
           "version": "1.0.0",
-          "revision": "5ca1a15af8587ccc4b20d61cae65784c106a69c3"
+          "revision": "7bbcf8afbf3af34ff561c1156d4804b3e4190d69"
         }
       ]
     },
@@ -3587,13 +3587,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-gateway",
           "repository": "https://github.com/SwiftAISDK/swift-ai-gateway.git",
           "version": "1.0.0",
-          "revision": "5ca1a15af8587ccc4b20d61cae65784c106a69c3"
+          "revision": "7bbcf8afbf3af34ff561c1156d4804b3e4190d69"
         }
       ]
     },
@@ -3608,13 +3608,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-gladia",
           "repository": "https://github.com/SwiftAISDK/swift-ai-gladia.git",
           "version": "1.0.0",
-          "revision": "b4448d0f3e1e905ec4047319aaad47a02438aa8f"
+          "revision": "e5d0629f41f635116493983ddc83e1fc51ac60ed"
         }
       ]
     },
@@ -3629,13 +3629,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-gladia",
           "repository": "https://github.com/SwiftAISDK/swift-ai-gladia.git",
           "version": "1.0.0",
-          "revision": "b4448d0f3e1e905ec4047319aaad47a02438aa8f"
+          "revision": "e5d0629f41f635116493983ddc83e1fc51ac60ed"
         }
       ]
     },
@@ -3656,7 +3656,7 @@
           "package": "swift-ai-gmicloud",
           "repository": "https://github.com/SwiftAISDK/swift-ai-gmicloud.git",
           "version": "1.0.0",
-          "revision": "0b0957d1acf6634f5b3586578f786feae6f8571c"
+          "revision": "14a180e4cf1b0dcaafd9c0a7becfe7f81102313e"
         },
         {
           "package": "swift-ai-openai-compatible",
@@ -3677,19 +3677,19 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-gmicloud",
           "repository": "https://github.com/SwiftAISDK/swift-ai-gmicloud.git",
           "version": "1.0.0",
-          "revision": "0b0957d1acf6634f5b3586578f786feae6f8571c"
+          "revision": "14a180e4cf1b0dcaafd9c0a7becfe7f81102313e"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -3704,13 +3704,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-google",
           "repository": "https://github.com/SwiftAISDK/swift-ai-google.git",
           "version": "1.0.0",
-          "revision": "1e5509cca6d220942cd1d85040d6587df8ce24f7"
+          "revision": "6d9a83ad32f480b8d956e7210d57c4680914560d"
         }
       ]
     },
@@ -3725,13 +3725,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-google",
           "repository": "https://github.com/SwiftAISDK/swift-ai-google.git",
           "version": "1.0.0",
-          "revision": "1e5509cca6d220942cd1d85040d6587df8ce24f7"
+          "revision": "6d9a83ad32f480b8d956e7210d57c4680914560d"
         }
       ]
     },
@@ -3752,19 +3752,19 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-google",
           "repository": "https://github.com/SwiftAISDK/swift-ai-google.git",
           "version": "1.0.0",
-          "revision": "1e5509cca6d220942cd1d85040d6587df8ce24f7"
+          "revision": "6d9a83ad32f480b8d956e7210d57c4680914560d"
         },
         {
           "package": "swift-ai-google-vertex",
           "repository": "https://github.com/SwiftAISDK/swift-ai-google-vertex.git",
           "version": "1.0.0",
-          "revision": "63a0d0285953f03e222fc5740e7a8ba754e4c266"
+          "revision": "205a98a71125a27835eabde4c3a8fcb7a4052136"
         },
         {
           "package": "swift-ai-openai",
@@ -3791,37 +3791,37 @@
           "package": "swift-ai-anthropic",
           "repository": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
           "version": "1.1.0",
-          "revision": "aed00e4791d53cf7a1ff1c2f4ddea01ffb625f1f"
+          "revision": "92fc7074f9b37f446e52533e7116d94efee68810"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-google",
           "repository": "https://github.com/SwiftAISDK/swift-ai-google.git",
           "version": "1.0.0",
-          "revision": "1e5509cca6d220942cd1d85040d6587df8ce24f7"
+          "revision": "6d9a83ad32f480b8d956e7210d57c4680914560d"
         },
         {
           "package": "swift-ai-google-vertex",
           "repository": "https://github.com/SwiftAISDK/swift-ai-google-vertex.git",
           "version": "1.0.0",
-          "revision": "63a0d0285953f03e222fc5740e7a8ba754e4c266"
+          "revision": "205a98a71125a27835eabde4c3a8fcb7a4052136"
         },
         {
           "package": "swift-ai-openai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai.git",
           "version": "1.0.1",
-          "revision": "d9f94a31a2fa2846b19ce307cddc94af9532f479"
+          "revision": "ae8d16cfca917c657fa0915818abfdf7af822940"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -3836,13 +3836,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-groq",
           "repository": "https://github.com/SwiftAISDK/swift-ai-groq.git",
           "version": "1.0.0",
-          "revision": "45d44b9e1e8b9d71c57c34266936336cedb8e17e"
+          "revision": "8d6cadaa0e38b3ee42196c708f2c10434c9ebdc3"
         }
       ]
     },
@@ -3857,13 +3857,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-groq",
           "repository": "https://github.com/SwiftAISDK/swift-ai-groq.git",
           "version": "1.0.0",
-          "revision": "45d44b9e1e8b9d71c57c34266936336cedb8e17e"
+          "revision": "8d6cadaa0e38b3ee42196c708f2c10434c9ebdc3"
         }
       ]
     },
@@ -3878,13 +3878,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-heygen",
           "repository": "https://github.com/SwiftAISDK/swift-ai-heygen.git",
           "version": "1.0.0",
-          "revision": "d63fda152fb8ca8d34091f43479a69b7b36810d9"
+          "revision": "cd55a0e3ac322093b4485c2ec8998d0dc127939d"
         }
       ]
     },
@@ -3899,13 +3899,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-heygen",
           "repository": "https://github.com/SwiftAISDK/swift-ai-heygen.git",
           "version": "1.0.0",
-          "revision": "d63fda152fb8ca8d34091f43479a69b7b36810d9"
+          "revision": "cd55a0e3ac322093b4485c2ec8998d0dc127939d"
         }
       ]
     },
@@ -3920,13 +3920,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-huggingface",
           "repository": "https://github.com/SwiftAISDK/swift-ai-huggingface.git",
           "version": "1.0.0",
-          "revision": "66bfdd967abaa36cb7fdfb5f8b973de2195a70ef"
+          "revision": "92cfbe21c53dcc4fee983f8e0d4983f879542c95"
         }
       ]
     },
@@ -3941,13 +3941,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-huggingface",
           "repository": "https://github.com/SwiftAISDK/swift-ai-huggingface.git",
           "version": "1.0.0",
-          "revision": "66bfdd967abaa36cb7fdfb5f8b973de2195a70ef"
+          "revision": "92cfbe21c53dcc4fee983f8e0d4983f879542c95"
         }
       ]
     },
@@ -3962,13 +3962,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-hume",
           "repository": "https://github.com/SwiftAISDK/swift-ai-hume.git",
           "version": "1.0.0",
-          "revision": "1a0e47a955cc7232b5841b58f12534f8a5eea4f2"
+          "revision": "05b48479ba057f72296ff0f0280a2e78eac24d52"
         }
       ]
     },
@@ -3983,13 +3983,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-hume",
           "repository": "https://github.com/SwiftAISDK/swift-ai-hume.git",
           "version": "1.0.0",
-          "revision": "1a0e47a955cc7232b5841b58f12534f8a5eea4f2"
+          "revision": "05b48479ba057f72296ff0f0280a2e78eac24d52"
         }
       ]
     },
@@ -4004,13 +4004,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-klingai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-klingai.git",
           "version": "1.0.0",
-          "revision": "035fb4c2e82bb9ab53aaca043c235c11a43d71f9"
+          "revision": "59526965e89da01249f5dbb3892e12b4e1885065"
         }
       ]
     },
@@ -4025,13 +4025,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-klingai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-klingai.git",
           "version": "1.0.0",
-          "revision": "035fb4c2e82bb9ab53aaca043c235c11a43d71f9"
+          "revision": "59526965e89da01249f5dbb3892e12b4e1885065"
         }
       ]
     },
@@ -4046,13 +4046,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-lmnt",
           "repository": "https://github.com/SwiftAISDK/swift-ai-lmnt.git",
           "version": "1.0.0",
-          "revision": "719af2f80c1d9997d7b2d4a5c8a3ff54d86d1fe3"
+          "revision": "73efbd348e8e580aa253c407408509f0e63dd248"
         }
       ]
     },
@@ -4067,13 +4067,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-lmnt",
           "repository": "https://github.com/SwiftAISDK/swift-ai-lmnt.git",
           "version": "1.0.0",
-          "revision": "719af2f80c1d9997d7b2d4a5c8a3ff54d86d1fe3"
+          "revision": "73efbd348e8e580aa253c407408509f0e63dd248"
         }
       ]
     },
@@ -4088,13 +4088,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-luma",
           "repository": "https://github.com/SwiftAISDK/swift-ai-luma.git",
           "version": "1.0.0",
-          "revision": "2022106a7a1888603c762cdd2e3f79e7c741caee"
+          "revision": "9ecc23644eda3189eeee9759325c2398f22c4e56"
         }
       ]
     },
@@ -4109,13 +4109,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-luma",
           "repository": "https://github.com/SwiftAISDK/swift-ai-luma.git",
           "version": "1.0.0",
-          "revision": "2022106a7a1888603c762cdd2e3f79e7c741caee"
+          "revision": "9ecc23644eda3189eeee9759325c2398f22c4e56"
         }
       ]
     },
@@ -4136,7 +4136,7 @@
           "package": "swift-ai-mcp",
           "repository": "https://github.com/SwiftAISDK/swift-ai-mcp.git",
           "version": "1.0.0",
-          "revision": "37aa1ad7ea1335e058cc09387095c97a2bb2cd68"
+          "revision": "4aef36a0035ad4cb2a1bd14132327d946efccd49"
         }
       ]
     },
@@ -4151,13 +4151,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-mcp",
           "repository": "https://github.com/SwiftAISDK/swift-ai-mcp.git",
           "version": "1.0.0",
-          "revision": "37aa1ad7ea1335e058cc09387095c97a2bb2cd68"
+          "revision": "4aef36a0035ad4cb2a1bd14132327d946efccd49"
         }
       ]
     },
@@ -4178,13 +4178,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-minimax",
           "repository": "https://github.com/SwiftAISDK/swift-ai-minimax.git",
           "version": "1.0.0",
-          "revision": "fce5ed437458f8c6b564bda9c8d0f7d16950131a"
+          "revision": "ac4e22a4d09346713f6ca2b802504e0d35cb686f"
         }
       ]
     },
@@ -4199,19 +4199,19 @@
           "package": "swift-ai-anthropic",
           "repository": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
           "version": "1.1.0",
-          "revision": "aed00e4791d53cf7a1ff1c2f4ddea01ffb625f1f"
+          "revision": "92fc7074f9b37f446e52533e7116d94efee68810"
         },
         {
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-minimax",
           "repository": "https://github.com/SwiftAISDK/swift-ai-minimax.git",
           "version": "1.0.0",
-          "revision": "fce5ed437458f8c6b564bda9c8d0f7d16950131a"
+          "revision": "ac4e22a4d09346713f6ca2b802504e0d35cb686f"
         }
       ]
     },
@@ -4226,13 +4226,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-mistral",
           "repository": "https://github.com/SwiftAISDK/swift-ai-mistral.git",
           "version": "1.0.0",
-          "revision": "b0130f4267f5bda42f456d4daaba3862efb13383"
+          "revision": "7b82fca6544c117b6afcdd6b240ac682dd522a8b"
         }
       ]
     },
@@ -4247,13 +4247,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-mistral",
           "repository": "https://github.com/SwiftAISDK/swift-ai-mistral.git",
           "version": "1.0.0",
-          "revision": "b0130f4267f5bda42f456d4daaba3862efb13383"
+          "revision": "7b82fca6544c117b6afcdd6b240ac682dd522a8b"
         }
       ]
     },
@@ -4268,13 +4268,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-moonshotai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-moonshotai.git",
           "version": "1.0.0",
-          "revision": "cd7dce26c538058029d00e2ed124d494c67feec0"
+          "revision": "946147f41178e112242d1233b5cd05c9e7be4942"
         },
         {
           "package": "swift-ai-openai-compatible",
@@ -4295,19 +4295,19 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-moonshotai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-moonshotai.git",
           "version": "1.0.0",
-          "revision": "cd7dce26c538058029d00e2ed124d494c67feec0"
+          "revision": "946147f41178e112242d1233b5cd05c9e7be4942"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -4328,7 +4328,7 @@
           "package": "swift-ai-open-responses",
           "repository": "https://github.com/SwiftAISDK/swift-ai-open-responses.git",
           "version": "1.0.0",
-          "revision": "9e1e8c7083dfff1f8976bf03f2ae4a634ae943cc"
+          "revision": "6ad16e41f356b8cf057eab91aa1d8d08a6ee3452"
         },
         {
           "package": "swift-ai-openai",
@@ -4355,25 +4355,25 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-open-responses",
           "repository": "https://github.com/SwiftAISDK/swift-ai-open-responses.git",
           "version": "1.0.0",
-          "revision": "9e1e8c7083dfff1f8976bf03f2ae4a634ae943cc"
+          "revision": "6ad16e41f356b8cf057eab91aa1d8d08a6ee3452"
         },
         {
           "package": "swift-ai-openai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai.git",
           "version": "1.0.1",
-          "revision": "d9f94a31a2fa2846b19ce307cddc94af9532f479"
+          "revision": "ae8d16cfca917c657fa0915818abfdf7af822940"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     },
@@ -4388,13 +4388,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-perplexity",
           "repository": "https://github.com/SwiftAISDK/swift-ai-perplexity.git",
           "version": "1.0.0",
-          "revision": "db158a7496e7cbbc208f0450bddcb38a4148a297"
+          "revision": "237422fed3fb3d2ce3b8f89515829e1d10f6da5e"
         }
       ]
     },
@@ -4409,13 +4409,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-perplexity",
           "repository": "https://github.com/SwiftAISDK/swift-ai-perplexity.git",
           "version": "1.0.0",
-          "revision": "db158a7496e7cbbc208f0450bddcb38a4148a297"
+          "revision": "237422fed3fb3d2ce3b8f89515829e1d10f6da5e"
         }
       ]
     },
@@ -4430,13 +4430,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-prodia",
           "repository": "https://github.com/SwiftAISDK/swift-ai-prodia.git",
           "version": "1.0.0",
-          "revision": "19a735a45da6126737ed62c2c334858947851999"
+          "revision": "4994b86a84eba081d14c06c5b0289be5eb1eb19d"
         }
       ]
     },
@@ -4451,13 +4451,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-prodia",
           "repository": "https://github.com/SwiftAISDK/swift-ai-prodia.git",
           "version": "1.0.0",
-          "revision": "19a735a45da6126737ed62c2c334858947851999"
+          "revision": "4994b86a84eba081d14c06c5b0289be5eb1eb19d"
         }
       ]
     },
@@ -4472,13 +4472,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-open-responses",
           "repository": "https://github.com/SwiftAISDK/swift-ai-open-responses.git",
           "version": "1.0.0",
-          "revision": "9e1e8c7083dfff1f8976bf03f2ae4a634ae943cc"
+          "revision": "6ad16e41f356b8cf057eab91aa1d8d08a6ee3452"
         },
         {
           "package": "swift-ai-openai",
@@ -4496,7 +4496,7 @@
           "package": "swift-ai-quiverai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-quiverai.git",
           "version": "1.0.0",
-          "revision": "1b3bb282a470acfe8ee8be85998b2b9d29bc04ba"
+          "revision": "c622b3a121245a24a42e5d9b6edaade251fe37a6"
         }
       ]
     },
@@ -4511,31 +4511,31 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-open-responses",
           "repository": "https://github.com/SwiftAISDK/swift-ai-open-responses.git",
           "version": "1.0.0",
-          "revision": "9e1e8c7083dfff1f8976bf03f2ae4a634ae943cc"
+          "revision": "6ad16e41f356b8cf057eab91aa1d8d08a6ee3452"
         },
         {
           "package": "swift-ai-openai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai.git",
           "version": "1.0.1",
-          "revision": "d9f94a31a2fa2846b19ce307cddc94af9532f479"
+          "revision": "ae8d16cfca917c657fa0915818abfdf7af822940"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         },
         {
           "package": "swift-ai-quiverai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-quiverai.git",
           "version": "1.0.0",
-          "revision": "1b3bb282a470acfe8ee8be85998b2b9d29bc04ba"
+          "revision": "c622b3a121245a24a42e5d9b6edaade251fe37a6"
         }
       ]
     },
@@ -4550,13 +4550,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-replicate",
           "repository": "https://github.com/SwiftAISDK/swift-ai-replicate.git",
           "version": "1.0.0",
-          "revision": "7415ec75bbb306bc78656a98a9502c91b03339db"
+          "revision": "0fb91b1a5b51f3bc89e6269067fe15b849075bef"
         }
       ]
     },
@@ -4571,13 +4571,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-replicate",
           "repository": "https://github.com/SwiftAISDK/swift-ai-replicate.git",
           "version": "1.0.0",
-          "revision": "7415ec75bbb306bc78656a98a9502c91b03339db"
+          "revision": "0fb91b1a5b51f3bc89e6269067fe15b849075bef"
         }
       ]
     },
@@ -4592,13 +4592,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-revai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-revai.git",
           "version": "1.0.0",
-          "revision": "9b687912d27ecc95f2228a6d8e6257a0fb01773e"
+          "revision": "3f489c33c1337d10ccab7876b99a73c52525a94b"
         }
       ]
     },
@@ -4613,13 +4613,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-revai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-revai.git",
           "version": "1.0.0",
-          "revision": "9b687912d27ecc95f2228a6d8e6257a0fb01773e"
+          "revision": "3f489c33c1337d10ccab7876b99a73c52525a94b"
         }
       ]
     },
@@ -4634,7 +4634,7 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai-compatible",
@@ -4646,7 +4646,7 @@
           "package": "swift-ai-togetherai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-togetherai.git",
           "version": "1.0.0",
-          "revision": "4dfba5bf8c22e3f34e202fdf62dc4fe078da48fa"
+          "revision": "3837c531dd5a5f740e32be83a540a59d608b1258"
         }
       ]
     },
@@ -4661,19 +4661,19 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         },
         {
           "package": "swift-ai-togetherai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-togetherai.git",
           "version": "1.0.0",
-          "revision": "4dfba5bf8c22e3f34e202fdf62dc4fe078da48fa"
+          "revision": "3837c531dd5a5f740e32be83a540a59d608b1258"
         }
       ]
     },
@@ -4688,13 +4688,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-topaz",
           "repository": "https://github.com/SwiftAISDK/swift-ai-topaz.git",
           "version": "1.0.0",
-          "revision": "e255f297cc18eb1cc48e7427e355757d38d34668"
+          "revision": "7d43e782bf3c9b2a75ecf645ff123317f96e0c03"
         }
       ]
     },
@@ -4709,13 +4709,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-topaz",
           "repository": "https://github.com/SwiftAISDK/swift-ai-topaz.git",
           "version": "1.0.0",
-          "revision": "e255f297cc18eb1cc48e7427e355757d38d34668"
+          "revision": "7d43e782bf3c9b2a75ecf645ff123317f96e0c03"
         }
       ]
     },
@@ -4736,7 +4736,7 @@
           "package": "swift-ai-typesafe-ai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-typesafe-ai.git",
           "version": "1.0.0",
-          "revision": "f529e822de1680d2f225555991db4929b50899c1"
+          "revision": "b53c938405ca63dfb2f7f404093015235dc9538e"
         }
       ]
     },
@@ -4751,13 +4751,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-typesafe-ai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-typesafe-ai.git",
           "version": "1.0.0",
-          "revision": "f529e822de1680d2f225555991db4929b50899c1"
+          "revision": "b53c938405ca63dfb2f7f404093015235dc9538e"
         }
       ]
     },
@@ -4778,7 +4778,7 @@
           "package": "swift-ai-ui",
           "repository": "https://github.com/SwiftAISDK/swift-ai-ui.git",
           "version": "1.0.0",
-          "revision": "dbec192093ff339bb0a9e7f43bad3eba56e39aa4"
+          "revision": "96fb05a481a2aaf01dffc5f5479a47a0566beebe"
         }
       ]
     },
@@ -4793,13 +4793,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-ui",
           "repository": "https://github.com/SwiftAISDK/swift-ai-ui.git",
           "version": "1.0.0",
-          "revision": "dbec192093ff339bb0a9e7f43bad3eba56e39aa4"
+          "revision": "96fb05a481a2aaf01dffc5f5479a47a0566beebe"
         }
       ]
     },
@@ -4826,7 +4826,7 @@
           "package": "swift-ai-vercel",
           "repository": "https://github.com/SwiftAISDK/swift-ai-vercel.git",
           "version": "1.0.0",
-          "revision": "33dbca797c216c578a915b06b8ffed3c1d690b56"
+          "revision": "5a740303a7c5cd009e94a718e4a87cd224dbb34d"
         }
       ]
     },
@@ -4841,19 +4841,19 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         },
         {
           "package": "swift-ai-vercel",
           "repository": "https://github.com/SwiftAISDK/swift-ai-vercel.git",
           "version": "1.0.0",
-          "revision": "33dbca797c216c578a915b06b8ffed3c1d690b56"
+          "revision": "5a740303a7c5cd009e94a718e4a87cd224dbb34d"
         }
       ]
     },
@@ -4868,13 +4868,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-voyage",
           "repository": "https://github.com/SwiftAISDK/swift-ai-voyage.git",
           "version": "1.0.0",
-          "revision": "8328f864b7b4c74e3c78ed73f0afffce726cb568"
+          "revision": "c4f42f42a5b5cf94da9457d35f545ccd985ff1e7"
         }
       ]
     },
@@ -4889,13 +4889,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-voyage",
           "repository": "https://github.com/SwiftAISDK/swift-ai-voyage.git",
           "version": "1.0.0",
-          "revision": "8328f864b7b4c74e3c78ed73f0afffce726cb568"
+          "revision": "c4f42f42a5b5cf94da9457d35f545ccd985ff1e7"
         }
       ]
     },
@@ -4910,7 +4910,7 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai",
@@ -4928,7 +4928,7 @@
           "package": "swift-ai-xai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-xai.git",
           "version": "1.0.0",
-          "revision": "69a9a26a21ba550eefd5de7a7eda00352a34ff42"
+          "revision": "da7508fc6acc2720bcc906104571556ef747ad14"
         }
       ]
     },
@@ -4943,25 +4943,25 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai.git",
           "version": "1.0.1",
-          "revision": "d9f94a31a2fa2846b19ce307cddc94af9532f479"
+          "revision": "ae8d16cfca917c657fa0915818abfdf7af822940"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         },
         {
           "package": "swift-ai-xai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-xai.git",
           "version": "1.0.0",
-          "revision": "69a9a26a21ba550eefd5de7a7eda00352a34ff42"
+          "revision": "da7508fc6acc2720bcc906104571556ef747ad14"
         }
       ]
     },
@@ -4988,7 +4988,7 @@
           "package": "swift-ai-zai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-zai.git",
           "version": "1.0.0",
-          "revision": "9a45d4c160d2b9af2a4249eefc62cd8565ca8d1f"
+          "revision": "ab6a1e04e4f72c77440f643808b687a759ffedba"
         }
       ]
     },
@@ -5003,19 +5003,19 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         },
         {
           "package": "swift-ai-zai",
           "repository": "https://github.com/SwiftAISDK/swift-ai-zai.git",
           "version": "1.0.0",
-          "revision": "9a45d4c160d2b9af2a4249eefc62cd8565ca8d1f"
+          "revision": "ab6a1e04e4f72c77440f643808b687a759ffedba"
         }
       ]
     },
@@ -5037,13 +5037,13 @@
           "package": "swift-ai-core",
           "repository": "https://github.com/SwiftAISDK/swift-ai-core.git",
           "version": "1.1.0",
-          "revision": "81c288c92962e8fae52dc590b8375b0ac41dbd78"
+          "revision": "543e72c34f0aa520695fbb3153e6a5dcef1f12b9"
         },
         {
           "package": "swift-ai-openai-compatible",
           "repository": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
           "version": "1.0.1",
-          "revision": "10ac60ced3015e75d23861f3fe0440f5b59807c1"
+          "revision": "bd1f9f37224f1aca9f9ee266238705d717062605"
         }
       ]
     }

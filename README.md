@@ -64,7 +64,7 @@ reproducible builds. See the verified [public mixed-client lockfile](Docs/Migrat
 The released 2.x aggregate above remains the option for the complete provider/MCP/UI
 surface and the existing `settings:` factories. The development root uses local
 packages; it is not a new aggregate release. All package sources have moved in
-[M6](Docs/Migration/M6/README.md), whose final verification is in progress; the 3.0
+[M6](Docs/Migration/M6/README.md), whose extraction and local verification are complete; the 3.0
 umbrella belongs to M7. Tagged 2.x owns its original model/request types; those
 values are not interchangeable with the new modular types. The development
 compatibility facade that shares core types will be released with the 3.0 migration.

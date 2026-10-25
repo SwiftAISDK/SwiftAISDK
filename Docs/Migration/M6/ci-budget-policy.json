@@ -1,0 +1,56 @@
+{
+  "status": "temporarily disabled for migration",
+  "requestedBy": "User in this migration chat",
+  "resumeCondition": "Re-enable automatically at the end of the overall migration goal, not after each intermediate stage. Continue intermediate verification locally.",
+  "observedAtUTC": "2026-10-25T19:59:45.415383+00:00",
+  "cancelledCanonicalRuns": [
+    40222939608,
+    40225850968
+  ],
+  "workflows": [
+    {
+      "repository": "SwiftAISDK/SwiftAISDK",
+      "workflowID": 289256908,
+      "path": ".github/workflows/docs.yml",
+      "name": "Docs",
+      "state": "disabled_manually",
+      "restoreTo": "active"
+    },
+    {
+      "repository": "SwiftAISDK/swift-ai-core",
+      "workflowID": 396118811,
+      "path": ".github/workflows/ci.yml",
+      "name": "Package CI",
+      "state": "disabled_manually",
+      "restoreTo": "active"
+    },
+    {
+      "repository": "SwiftAISDK/swift-ai-anthropic",
+      "workflowID": 396119062,
+      "path": ".github/workflows/ci.yml",
+      "name": "Package CI",
+      "state": "disabled_manually",
+      "restoreTo": "active"
+    },
+    {
+      "repository": "SwiftAISDK/swift-ai-openai-compatible",
+      "workflowID": 396119299,
+      "path": ".github/workflows/ci.yml",
+      "name": "Package CI",
+      "state": "disabled_manually",
+      "restoreTo": "active"
+    },
+    {
+      "repository": "SwiftAISDK/swift-ai-openai",
+      "workflowID": 396119547,
+      "path": ".github/workflows/ci.yml",
+      "name": "Package CI",
+      "state": "disabled_manually",
+      "restoreTo": "active"
+    }
+  ],
+  "cancellationReasons": {
+    "40222939608": "Superseded earlier by the shared-build verification commit.",
+    "40225850968": "Cancelled at the user request to move intermediate checks to local execution."
+  }
+}

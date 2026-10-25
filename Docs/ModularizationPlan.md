@@ -7,7 +7,7 @@ Status: Migration in progress. [M0 inventory](Migration/M0/README.md),
 are complete. [M3 provider pilot](Migration/M3/README.md) completed on 2026-10-25:
 core, Anthropic, compatible and OpenAI are extracted local packages, consumed by
 the compatibility aggregate. [M4 publication rehearsal](Migration/M4/README.md) is complete. [M5 organization and first modular releases](Migration/M5/README.md) is complete.
-The canonical repository is transferred; core and the three pilot adapters are published at independent Swift version 1.0.0. [M6 extraction](Migration/M6/README.md) has moved all 52 package implementations and is completing final verification. M7 has not started.
+The canonical repository is transferred; core and the three pilot adapters are published at independent Swift version 1.0.0. [M6 extraction](Migration/M6/README.md) is complete: all 52 package implementations and independent distributions are verified. Final hosted verification follows the temporary CI policy below. M7 has not started.
 
 SwiftAISDK will remain a Swift-native port of the provider-facing Vercel AI SDK.
 The migration should let consumers select and update providers independently,
@@ -24,6 +24,25 @@ This plan supplements [AgentPortingGuide.md](AgentPortingGuide.md). Existing
 porting and release procedures remain in effect until their replacement passes
 the corresponding migration gate. Work stays on the current branch by default;
 commits and publication follow the user's requested scope.
+
+## Temporary CI policy during migration
+
+On 2026-10-26 the user requested that intermediate migration verification run
+locally to conserve the organization's GitHub Actions budget. Automatic workflow
+entry points are disabled in the canonical repository and the four published
+pilot distributions; their exact IDs and restoration state are recorded in
+[the M6 CI policy](Migration/M6/ci-budget-policy.json). The reusable workflow files
+remain available, but their automatic callers are disabled.
+
+Finish the remaining implementation and stage checks locally. Re-enable these
+entry points automatically at the **end of the overall migration goal**, after
+M7's main work is ready, and perform the final hosted verification/documentation
+handoff then. Do not re-enable CI after each intermediate stage. The successful
+M6 Swift 6.3.3 test job remains evidence; its cancelled parent workflow is not a
+completed build or deployment.
+
+Apply the same suspension to any new distribution repositories created before
+that final handoff, and include their restoration state in the M7 receipt.
 
 ## Acceptance criteria
 
@@ -391,7 +410,7 @@ uploads. Package distribution uses Git commits/tags, not Actions upload artifact
 
 ## Execution stages
 
-M0–M5 are complete; M6 is in final verification and M7 is pending. Execute one stage per run, as requested by the
+M0–M6 are complete; M7 is pending. Execute one stage per run, as requested by the
 user. Finish and record its exit evidence before starting the next stage.
 
 | Stage | Deliverable | Exit evidence |
@@ -402,7 +421,7 @@ user. Finish and record its exit evidence before starting the next stage.
 | M3 Two provider pilot — complete | Extract Anthropic, the generic OpenAI-compatible layer, and OpenAI in separate batches. Isolate defaults and preserve the legacy facade. | [Verified provider extraction](Migration/M3/README.md): four isolated clients; independent provider version selection and incompatible core rejection with synthetic Git tags; all 3545 tests retained; all M0 symbol records matched; iOS simulator-target compilation. |
 | M4 Publication rehearsal — complete | Generate standalone repositories, changes/release-set records, shared CI, and dependency-ordered release dry runs. | [Verified rehearsal](Migration/M4/README.md): identical exports from one snapshot, 538 standalone tests, six clean clients, provider-only patch, immutable tag readback and recovery after SIGKILL; 17 tooling tests. |
 | M5 Organization and first modular releases — complete | Confirm/create the organization, transfer the canonical repository, configure publication and documentation continuity, release the validated core/pilot packages. | Old/new Git access and preserved tags verified; real released dependencies resolve; chosen docs URL works; release metadata identifies canonical source and exports. |
-| M6 Remaining package extraction — verification in progress | Migrate dependency families, then independent media/audio providers, MCP and UI. Remove the temporary aggregate only after all ownership moves are complete. | Every prior capability/test/gap retained or explicitly migrated; no concrete provider imports in core; each package works from its distribution tree. |
+| M6 Remaining package extraction — complete | Migrate dependency families, then independent media/audio providers, MCP and UI. Remove the temporary aggregate only after all ownership moves are complete. | Every prior capability/test/gap retained or explicitly migrated; no concrete provider imports in core; each package works from its distribution tree. |
 | M7 Modular umbrella and migration | Publish the 3.0 migration guide, compatibility product, tested release set, and installation examples; update porting instructions and automation entry points. | Minimal and complete consumers pass; upgrade of one provider preserves the pinned other provider; existing 2.x tags remain usable; synchronization rehearsal below passes. |
 
 Reserve the organization earlier if desired, but keep repository transfer separate
