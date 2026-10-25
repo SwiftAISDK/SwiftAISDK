@@ -265,7 +265,7 @@ M1 provides catalog validation/generation and package registration. Upstream
 commands delegate to existing scripts, and affected verification currently selects
 checks without executing them. Immutable upstream diff preparation remains later-stage work. Release planning,
 deterministic export and local publication rehearsal now have executable commands;
-actual remote publication remains M5.
+actual remote publication is handled by M5.
 
 | Proposed command | Work it performs |
 | --- | --- |

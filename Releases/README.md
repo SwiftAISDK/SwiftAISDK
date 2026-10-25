@@ -82,7 +82,7 @@ retained beside the report. The temporary repositories are deleted afterward.
 The snapshot commit and local tag versions are rehearsal evidence, not canonical
 commits or public releases. Consumer lockfiles contain local mirror locations and
 fixture revisions; do not copy them into applications. The M5 real-consumer check
-must produce the published installation/lockfile example.
+produces [published installation and lockfile evidence](../Docs/Migration/M5/public-consumers.json).
 
 ## Immutable released sets
 

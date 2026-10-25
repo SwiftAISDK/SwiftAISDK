@@ -1,6 +1,6 @@
 # Package catalog and porting metadata
 
-`packages.json` owns package identities, module/product names, proposed dependency
+`packages.json` owns package identities, module/product names, dependency
 ranges, provider capability rows, and guide ownership. `upstream-lock.json` owns
 reviewed npm versions and provenance. Update these inputs instead of editing
 generated Swift capability rows or version tables.
@@ -14,9 +14,10 @@ existing dispositions and known gaps.
 
 The root remains the compatibility aggregate. Of 52 catalog packages, four are
 `extracted`: core, Anthropic, OpenAI-compatible and OpenAI. They have sources,
-tests and working local manifests; the other 48 are planned. Dependency ranges
-are proposed release constraints. No organization, distribution repository or
-modular release exists yet. Do not switch consumers to those URLs.
+tests and working local manifests; the other 48 are planned. Those four packages
+are published at Swift version 1.0.0 under the SwiftAISDK organization. Actual
+release availability is recorded in `Releases/sets/`; extraction state alone does
+not imply publication. Planned/scaffold URLs are not installation endpoints.
 
 ## Commands
 
@@ -101,7 +102,8 @@ remote identities. Extracted manifests use local path dependencies. The same
 renderer can emit distribution ranges for disposable Git fixtures; independent
 provider upgrades and incompatible core majors are tested outside the monorepo.
 M4 adds deterministic export and local publication rehearsal from these same
-identities; actual remote publication remains M5. See `Releases/README.md`.
+identities; M5 adds verified GitHub publication and public consumers. See
+`Releases/README.md` and `Docs/Migration/M5/README.md`.
 
 ## Imported provenance
 
@@ -111,8 +113,9 @@ inventory supplied integrity strings for 52 of them; `@ai-sdk/lmnt@3.0.36` and
 silently fetched from a newer version.
 
 Imported test refs point to the pinned upstream test-inventory snapshot and are
-marked `inventory-snapshot-not-release-verified`. Contract families remain
-unimported until the relevant declarations are reviewed. Upgrading an entry to
+marked `inventory-snapshot-not-release-verified`. M5 reviewed published contract
+declarations for the six pilot upstream entries; other contract families remain
+unimported until their declarations are reviewed. Upgrading an entry to
 `reviewed` requires archive integrity, a matching release test ref, and recorded
 contract families; metadata validation is still not runtime parity proof.
 
@@ -176,8 +179,24 @@ are copied unchanged; public manifests, provenance, changelogs and standalone CI
 are rendered. Relative canonical map references are preserved separately from
 standalone paths so integration evidence remains traceable without copying siblings.
 
-Use `node Scripts/sdk.mjs release plan`, `release export --dry-run` and
+Use `node Scripts/sdk.mjs release plan --id <new-release-id>`, `release export --dry-run` and
 `release rehearse` as described in `Releases/README.md`. The complete gate is
 `node Scripts/verify-release-rehearsal.mjs`. Local SwiftPM mirrors preserve the
 remote distribution manifests during verification. No generated repository or
 published release is implied by `state: extracted` or a successful dry run.
+
+
+## M5 production publication
+
+The canonical repository is `SwiftAISDK/SwiftAISDK`; the four distributions are
+`swift-ai-core`, `swift-ai-anthropic`, `swift-ai-openai-compatible` and
+`swift-ai-openai`. Each starts at independent Swift version 1.0.0. Their initial
+published set identifies canonical source, exact exports, annotated tags and
+public consumer verification. Original 2.x tags and the old repository URL work.
+
+Use a clean committed source and its successful hosted workflow with
+`release export --publication` and `release publish --ci-run ...`. Reuse the
+attempt directory to resume; conflicting existing tags stop publication. Check
+standalone hosted CI and `verify-public-packages.mjs` before finalizing a published
+set. The local rehearsal seeds its own synthetic history and remains usable after
+production changes are consumed. See `Releases/README.md` for exact commands.

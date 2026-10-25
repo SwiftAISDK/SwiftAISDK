@@ -60,4 +60,5 @@ tests, generated inventories, and the version/capability ledgers.
 - [M3 provider pilot](Migration/M3/README.md): Anthropic, compatible and OpenAI packages, independent version constraints and preserved legacy clients.
 
 - [M4 publication rehearsal](Migration/M4/README.md): deterministic exports, standalone Git consumers, independent patches and recovery after interrupted publication.
+- [M5 organization and releases](Migration/M5/README.md): preserved legacy URLs, four public 1.0.0 packages, hosted compiler checks and clean public consumers.
 - [Release record workflow](../Releases/README.md): reviewed changes, candidate plans, attempt journals and immutable published-set schema.
