@@ -1,6 +1,6 @@
 # Weekly upstream audit - 2026-11-01
 
-Status: all 48 independent modular releases are published and verified. Separate umbrella 3.1 tag/public-consumer readback remains pending.
+Status: all 48 independent modular releases and the separate SwiftAISDK 3.1.0 umbrella are published and verified. All required gates passed.
 
 Fresh npm metadata covers **54 tracked packages**, including **52 version changes**. npm search returned 75 scoped names; exact registry-prefix enumeration returned 92. No new scoped name or new model provider was found relative to the previous namespace audit. All 52 old/new comparisons use integrity-verified archives and exact matching-release test refs, without fallback evidence. The 39 unimplemented scoped packages remain separate products or empty seeds.
 
@@ -122,7 +122,7 @@ All 48 changes are minor releases for additive native APIs and compatible behavi
 | `swift-ai-xai` | `1.0.0` | `1.1.0` | [`964d2c0e1969`](https://github.com/SwiftAISDK/swift-ai-xai/commit/964d2c0e1969c87f45060d41d07b81a9a54e2049) | [Release](https://github.com/SwiftAISDK/swift-ai-xai/releases/tag/1.1.0) | [passed](https://github.com/SwiftAISDK/swift-ai-xai/actions/runs/41268217813) |
 | `swift-ai-zai` | `1.0.0` | `1.1.0` | [`812c97a48a67`](https://github.com/SwiftAISDK/swift-ai-zai/commit/812c97a48a675d1657419febfa89aa7297c1fb95) | [Release](https://github.com/SwiftAISDK/swift-ai-zai/releases/tag/1.1.0) | [passed](https://github.com/SwiftAISDK/swift-ai-zai/actions/runs/41268245729) |
 
-The compatibility facade adds forwarding APIs and raises their installation minimums. A separate umbrella 3.1 release is justified by that contract change; its final immutable tag and consumer evidence will be recorded after publication.
+The compatibility facade adds forwarding APIs and raises their installation minimums. The separate minor [SwiftAISDK 3.1.0 release](https://github.com/SwiftAISDK/SwiftAISDK/releases/tag/3.1.0) targets [`210eba2fc5f3`](https://github.com/SwiftAISDK/SwiftAISDK/commit/210eba2fc5f387d75441f6135e8adaed88738e56). Its annotated tag and exact Release target were read back; all historical tag refs were preserved. Two additional clean public consumers passed: 3.1.0 with steering/failed-step/model-support APIs and the preserved 2.8.1 installation. [Release metadata/docs CI](https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/41269484024) and the actual hosted installation page passed. Runtime tests/manifests/tooling are identical to the exact-source canonical CI commit; the metadata/docs CI correctly skipped the unchanged Swift test job.
 
 ## Retained gaps and native adaptations
 
@@ -182,6 +182,6 @@ No new model-provider implementation is proposed automatically. Sandbox tools re
 
 ## Verification and publication
 
-All required local gates passed: all 52 owning suites plus the local-source facade (3741 reported tests; 33 explicit live skips), separate facade 1721, tooling 27, catalog/generate, dependency selection, deterministic exports, standalone/minimum/latest consumers, isolation and docs check/build 100 pages. See [command results and log hashes](WeeklyUpstreamVerification20261101.json). Prepublication distribution consumers used local candidate mirrors and real historical lower-bound tags. Separate postpublication checks passed for exact-source canonical CI, all 48 standalone hosted jobs and 59 clean consumers of actual public refs. The umbrella tag and its final public-consumer readback remain pending.
+All required local gates passed: all 52 owning suites plus the local-source facade (3741 reported tests; 33 explicit live skips), separate facade 1721, tooling 27, catalog/generate, dependency selection, deterministic exports, standalone/minimum/latest consumers, isolation and docs check/build 100 pages. See [command results and log hashes](WeeklyUpstreamVerification20261101.json). Prepublication distribution consumers used local candidate mirrors and real historical lower-bound tags. Separate postpublication checks passed for exact-source canonical CI, all 48 standalone hosted jobs and 59 clean consumers of actual public refs. The separate umbrella adds two verified public consumers, for 61 total, without mirrors or local overrides.
 
-Canonical and standalone CI, all public ref readbacks and ordinary public consumers have completed successfully. No mirrors or local overrides were used by the real-public consumer checks. The separate umbrella release remains the final publication step.
+Publication is complete. [ReleaseVerification20261101.json](ReleaseVerification20261101.json) records the canonical and standalone CI, immutable refs, Release targets, export hashes, 61 public consumers and actual hosted installation readback. The prepublication verification file remains a historical local-gate snapshot.

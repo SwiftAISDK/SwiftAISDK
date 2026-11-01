@@ -16,8 +16,9 @@ for exact evidence.
 
 ## Modular packages
 
-SwiftAISDK 3.1 uses 52 independent distributions. Core and Anthropic are 1.2.0;
-46 other updated units are 1.1.0. ByteDance, LMNT, Vercel and UI retain 1.0.0.
+SwiftAISDK 3.1.0 is published with 52 independent distributions. Core and Anthropic
+are 1.2.0; 46 other updated units are 1.1.0. ByteDance, LMNT, Vercel and UI retain
+1.0.0.
 The optional compatibility umbrella retains `import SwiftAISDK` and raises minimums
 for its new forwarding APIs. Native package tags, standalone CI and clean public
 consumers are recorded in [ReleaseVerification20261101.json](ReleaseVerification20261101.json).
@@ -42,8 +43,8 @@ All broader product gaps remain explicit. No new model provider was found in the
 exact 92-name registry namespace. See [the complete audit](WeeklyUpstreamAudit20261101.md)
 for every reference/latest version, source/test disposition and publication state.
 The 48 changed Swift units passed local, export, exact-source hosted and public-tag
-gates. The separate umbrella 3.1 installation contract is recorded with its
-dependency selection.
+gates. The separate umbrella 3.1.0 and preserved 2.8.1 public consumers also
+passed. The installation page was verified after successful hosted deployment.
 
 ## Weekly upstream parity (2026-10-25)
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "date": "2026-11-01",
-  "status": "modular-published-umbrella-pending",
+  "status": "published-and-verified",
   "sourceStartCommit": "4b1a52073c23b7e13c869784d605a99a49763f2f",
   "canonicalRepository": "https://github.com/SwiftAISDK/SwiftAISDK",
   "registry": {
@@ -13228,10 +13228,36 @@
       "mirrors": false,
       "localDependencies": false,
       "evidence": "Docs/PublicConsumerVerification20261101.json"
+    },
+    "umbrellaPublicConsumers": {
+      "path": "Docs/UmbrellaConsumerVerification20261101.json",
+      "sha256": "e5d9187671d3a55a03074b2bebdf61e69f4fe8e226d5c3bb9562ab74cd65c739",
+      "count": 2,
+      "mirrors": false,
+      "localDependencies": false
+    },
+    "publicConsumerTotal": 61,
+    "hostedInstallationDocs": {
+      "schemaVersion": 1,
+      "status": "passed",
+      "checkedAt": "2026-11-01T03:34:59.866Z",
+      "method": "Running user Zen browser, fresh inactive verification tab, complete visible page text",
+      "url": "https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/",
+      "title": "Install | SwiftAISDK",
+      "deploymentCommit": "210eba2fc5f387d75441f6135e8adaed88738e56",
+      "deploymentCI": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/41269484024",
+      "verifiedContent": [
+        "Umbrella install from 3.1.0",
+        "Core and Anthropic 1.2.0",
+        "46 updated units 1.1.0",
+        "ByteDance, LMNT, Vercel and UI retain 1.0.0",
+        "Native steering, failed-step callbacks and descriptive model metadata"
+      ],
+      "temporaryVerificationTabClosed": true
     }
   },
   "publication": {
-    "status": "modular-published-umbrella-pending",
+    "status": "published-and-verified",
     "canonicalSourceCommit": "ea057797494ab9bb66df8c6bfd8edc10245b20e7",
     "canonicalCI": {
       "id": 41265901231,
@@ -13967,8 +13993,183 @@
       "swift-ai-ui": "1.0.0"
     },
     "umbrella": {
+      "schemaVersion": 1,
+      "status": "passed",
+      "checkedAt": "2026-11-01T03:36:17.036962+00:00",
       "version": "3.1.0",
-      "status": "pending-separate-tag-and-public-consumer-readback"
+      "sourceCommit": "ea057797494ab9bb66df8c6bfd8edc10245b20e7",
+      "branchSHA": "210eba2fc5f387d75441f6135e8adaed88738e56",
+      "tagObject": "f24bb920e2d6ab924c3d6c2d932ad501ae79b821",
+      "peeledTag": "210eba2fc5f387d75441f6135e8adaed88738e56",
+      "preservedHistoricalTagRefs": 69,
+      "runtimeTestsManifestsAndToolingUnchangedSinceSourceCI": true,
+      "manifestSHA256": "9fb04da30c076ede893434741daf4e516ba55c479013f0370f3b2fae4bb77a95",
+      "release": {
+        "id": 430342143,
+        "url": "https://github.com/SwiftAISDK/SwiftAISDK/releases/tag/3.1.0",
+        "target": "210eba2fc5f387d75441f6135e8adaed88738e56",
+        "tag": "3.1.0",
+        "notesSHA256": "e24e6cd642450775dca0c5101320cc3c3f98f9049ac46163a0a54cda30acaa24"
+      },
+      "CI": {
+        "status": "passed",
+        "id": 41269484024,
+        "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/41269484024",
+        "headSHA": "210eba2fc5f387d75441f6135e8adaed88738e56",
+        "conclusion": "success",
+        "jobs": [
+          {
+            "name": "changes",
+            "conclusion": "success",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/41269484024/job/124739104822",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "conclusion": "success"
+              },
+              {
+                "name": "Select checks",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "name": "docs",
+            "conclusion": "success",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/41269484024/job/124739138488",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run npm ci --prefix docs-site",
+                "conclusion": "success"
+              },
+              {
+                "name": "Generate documentation",
+                "conclusion": "success"
+              },
+              {
+                "name": "Check and build documentation",
+                "conclusion": "success"
+              },
+              {
+                "name": "Upload documentation",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "name": "tooling",
+            "conclusion": "success",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/41269484024/job/124739138500",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "conclusion": "success"
+              },
+              {
+                "name": "Check catalog and tooling",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "name": "test",
+            "conclusion": "skipped",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/41269484024/job/124739140089",
+            "steps": []
+          },
+          {
+            "name": "deploy",
+            "conclusion": "success",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/41269484024/job/124739699597",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Deploy to GitHub Pages",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      "publicConsumers": {
+        "path": "Docs/UmbrellaConsumerVerification20261101.json",
+        "sha256": "e5d9187671d3a55a03074b2bebdf61e69f4fe8e226d5c3bb9562ab74cd65c739",
+        "count": 2,
+        "mirrors": false,
+        "localDependencies": false
+      },
+      "semverRationale": "Separate additive minor release for new compatibility forwarding APIs and higher installation minimums."
     }
   },
   "sourceReview": "Published archives and exact matching-release tests control the reviewed delta; monorepo inventory is a separate discovery checklist.",
