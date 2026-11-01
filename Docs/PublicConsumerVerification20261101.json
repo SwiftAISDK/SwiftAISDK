@@ -1,0 +1,3517 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "sourceCommit": "ea057797494ab9bb66df8c6bfd8edc10245b20e7",
+  "swiftVersion": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx26.0",
+  "mirrors": false,
+  "localDependencies": false,
+  "credentialsRequired": false,
+  "packageCount": 52,
+  "providerCalls": "offline injected transports",
+  "checks": [
+    {
+      "name": "swift-version",
+      "command": [
+        "swift",
+        "--version"
+      ],
+      "exitCode": 0,
+      "logSHA256": "0ec620bf28e5c4190b1a72d64b10c1ec7a2635f6db99c472668b09f6b298ceae",
+      "summaries": []
+    },
+    {
+      "name": "CoreOnly",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "CoreConsumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "093fac81c2410b0d8efdca3f49aea74bd96a14b91bdc7407ac9691c0a9e8178c",
+      "summaries": [
+        "CORE CONSUMER VERIFIED: custom model, registry, generation, canonical stream, tool and abort",
+        "Build complete! (53.88 sec)"
+      ]
+    },
+    {
+      "name": "AnthropicOnly",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "ProviderConsumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "0c917362bd06805737af302093dea1ccc205c8e0ee185bc0142886b56d335044",
+      "summaries": [
+        "ANTHROPICONLY_OK",
+        "Build complete! (13.35 sec)"
+      ]
+    },
+    {
+      "name": "OpenAICompatibleOnly",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "ProviderConsumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "9294b616c3c900fba7cb64a5b0fd0a284557488985978ea7ee3e05bfe9dfaa99",
+      "summaries": [
+        "OPENAICOMPATIBLEONLY_OK",
+        "Build complete! (5.02 sec)"
+      ]
+    },
+    {
+      "name": "OpenAIOnly",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "ProviderConsumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "ae3a9f6f8abebf23488ebd849e811b2591233a161f0dc737a58626b4035f208f",
+      "summaries": [
+        "OPENAIONLY_OK",
+        "Build complete! (15.17 sec)"
+      ]
+    },
+    {
+      "name": "MixedProviders",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "ProviderConsumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "98cc03b871b09f11192c52f7e3bbf153388f453d7855765c2244c4731d4fe197",
+      "summaries": [
+        "MIXEDPROVIDERS_OK",
+        "Build complete! (11.42 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-alibaba",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "4605788ef7db1ac7d8e689a06520f3660ae3379410587ea3fec0d04c15477cc6",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (4.15 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-amazon-bedrock",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "03426059e172b563c22a79e40a2ffd0e0dd98646a92af668d4c9309c5cf6e84c",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (22.93 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-anthropic",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "772cab6faa231e43900cf625e913246566724420869ec9b2dc173335c11fa293",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (0.92 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-anthropic-aws",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "518720277e11cf0a36f7f55c83c75ce3d669e1d4599c882025a5459d6ccee970",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (1.75 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-assemblyai",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "b734f135f03af50f27c82b5fe3e130621807c6581bd56e64b17cd027176ea761",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.40 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-azure",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "06f3802521d7f9bc0cce66a61a8970340004b74d02440e387cdbf6d4026758bc",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (19.72 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-baseten",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "dcb3d1be0e261585bb07f1b15d608ef2344d2122cf621c21b04cf0dbeea835e9",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (1.81 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-black-forest-labs",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "edf3360689aaf773f6a941cbdea471370904228eecfe12652c9da010dcdbadff",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (3.52 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-bytedance",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "695a9396fef731c9ac5db9a67bd776695b2beb71198b17dbed6e8f7ef7f9c19d",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.44 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-cartesia",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "3361b97b3ebb966bbcdeef5c5abeb289ec0be4a522f51078e419ac3db2821766",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.58 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-cerebras",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "772e35fbad3a26dd6ba99c25177c046756a54c43d5f2905e42aa804018d542e3",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (5.22 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-cohere",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "e75830f213c060402c3dd84c0fd242dd9169d2df720d7ee08a41d809d33041cc",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (3.29 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-core",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "4c01537216d1398c5e4154b4b34a57b0d7e4a5775f40ce1abc13e512cc0fc439",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (1.09 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-deepgram",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "841c9d93f89d617c48002a67dedcceca7008240adc9d25ac0bc990d5ad521d91",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.86 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-deepinfra",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "3a0ebfa124242d584aab28bfd27c50ffb28333b3a9bc6edb2038062839a284ac",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (4.69 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-deepseek",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "7b3c2387c2f329506770e452203a94a61eeeb1aab7dda57a66b935ded2f4f367",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (3.44 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-elevenlabs",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "a6aaeb311f99e75d4a26b1cc088b4079b5c374f91122977c5fad7d8d1ff3cab9",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (5.75 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-fal",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "7cc5d70ad49baf27d6be52b125c31e564866e63a1a6673e17891668c29d721e9",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (3.44 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-fireworks",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "c05e7b8399770dcda41f9078a1d68ef6ffd6690f8a4029a3d82f62ac7efa348b",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (4.60 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-fish-audio",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "e7eb9d0f175f86960b73b7194334d0cdc1159f2e686174e8cd2f0f68daa816ef",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.30 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-gateway",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "983e6ce8ef29bc2a355b6fcfa3ee641024250ccbf48324c16e0bf0cfaf58509f",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (5.87 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-gladia",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "bd97c1ba1f0747eab3b2510ca755b5708058f96e57bd01cc7af2c8bde0e707c3",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.61 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-gmicloud",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "1fa303d7d19426b1bae96bfe80953e5708f542aa59712aca1825faeaae14c837",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (4.08 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-google",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "4e852030489ba0baaa7a6d2ac39f4451e215cf3dc063ec8cc94090f4dbc895f2",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (11.37 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-google-vertex",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "c4e349f3bb7df0de81681954efaf7a5152f049da6da6cd5fa59ea8faef63875b",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (21.03 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-groq",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "ae3a5dd08d2b62da6c0f6945d0272bf25f7329eeb2348f1f7589a559046bfe76",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.81 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-heygen",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "88fe2c3c78b47efb313350a6b51f8ab83723e0a4be2d1c16c92a090f64b1e5e7",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.74 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-huggingface",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "b654a9c680151a56746ede758f0b6637740e461a5c8a006c79179641b5ad0dd4",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (3.00 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-hume",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "46ee6a61287bf8c391cfcbf452553fa6511acf9780823246f6b59356034fb2f0",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (1.89 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-klingai",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "39cbbec2ecdb065b575773b2f2b56f11ca802d1a9af4ff4b4457e765ffc381e4",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (3.17 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-lmnt",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "8de16ff227ceed71cf548fe1ef259ea9019cfd79ca98474a69627855f8a464a9",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (1.70 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-luma",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "16ab977b8f287a6a90537e46d1d72fe66a463be36e2009ddabf6207af3642e0f",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.11 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-mcp",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "d976b54c3d4daff01d47166a30d813e93a488a15951657e3e61bcfbac1990248",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (7.48 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-minimax",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "952a45649df937e4c34288d6b7f0b224b94e96cf37ad76085756ef94aa747491",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (12.97 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-mistral",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "c944bf0376188aadd6db77a0ac7acfefb2a3a59bdec9602ed0c906fcd0b88a7f",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (5.02 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-moonshotai",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "7556eebf3c4836f615df473dcc71e0b91d90499b045d60fbd2e1b42c9deef1ac",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (5.39 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-open-responses",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "d08c4b0115127d9b59e42014efed2725e9120f07a68dd12d1e7f863437c1bd2d",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (14.44 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-openai",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "7d1152d269b4b3d07c899bbb6d9e2f83af2441fa389139484c8c58f9110ab71e",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (1.25 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-openai-compatible",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "351d836fad12d1089b5babf63616c2141b64e9e89badd251a93e260d5e8af235",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (0.93 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-perplexity",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "1a70f6e831514885923a3620ee52b9abed3bc9158f68fb1ab214b4b78331c5b3",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (5.47 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-prodia",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "34053c60ed54dc8036aa91f8fad4ed1b74cac79c6b5a6c457cd2e225d6bdc225",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.99 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-quiverai",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "cf6413d958d939753beebd93b5b196e49ebb6c0f4384029a00da0bbb90aa2d74",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (18.71 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-replicate",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "c829e56c4f52f1257b48aaa68a2be24a6ea904d1aa859cc6f7aada6b84c2ed45",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.30 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-revai",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "382420cc33552f2af9c438d9ca8be4f0fc0932dc7b3cab8069bb6e57d56f238d",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.38 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-togetherai",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "0f4b3ee1177277ae3fe33b672ac175b6e2fc9ba5827f7b7d3672a6ef8ba9769e",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (4.80 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-topaz",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "7b8a963837a50b8c44a7478352142a7c503efddbd6a893d32c597cdbfb51f899",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (3.32 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-typesafe-ai",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "a3fa505e2cf54f6629ca0e63e41f604847e7c0c90fe74ece922c1f7f8c734fde",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.75 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-ui",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "adb6690d04b1d3aaba5fd8a890ed01a497d57b48f240f2db385ff751daa0cf60",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (4.78 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-vercel",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "58b9ea05be33ed5333ea6f7489c83a1ad0d8ba50a90ea8a8920fbe55d1e2a9ce",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (4.14 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-voyage",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "1fcd0c353238bf73a546eba14b81b438915e5c3ede6ea898e3f47689a84a5885",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (2.19 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-xai",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "d2eba7fc84eff06c38cd75da619f6528ced9c17fd88ab5ccc71f0791c8f5387c",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (22.91 sec)"
+      ]
+    },
+    {
+      "name": "swift-ai-zai",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "Consumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "8cfc68cd89da0c85bd10aaff88946610ff0121013e9dcaf3fefb074e344d8686",
+      "summaries": [
+        "PUBLIC_IMPORTS_OK",
+        "Build complete! (1.99 sec)"
+      ]
+    },
+    {
+      "name": "independent-upgrade-before",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "ProviderConsumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "8a331e093d18cb2f0cdcbc0cb612874f35a11cd9cbeaa142090abaef5706d273",
+      "summaries": [
+        "MIXEDPROVIDERS_OK",
+        "Build complete! (14.84 sec)"
+      ]
+    },
+    {
+      "name": "independent-upgrade-after",
+      "command": [
+        "swift",
+        "run",
+        "--disable-dependency-cache",
+        "--config-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--cache-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--security-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "--scratch-path",
+        "CLEAN_CONSUMER_WORKSPACE",
+        "-c",
+        "release",
+        "ProviderConsumer"
+      ],
+      "exitCode": 0,
+      "logSHA256": "ed37f96918cc7d85f2eded30412e8890711b37235baa360a1d1fd814ef48c2d9",
+      "summaries": [
+        "MIXEDPROVIDERS_OK",
+        "Build complete! (12.38 sec)"
+      ]
+    }
+  ],
+  "consumers": [
+    {
+      "name": "CoreOnly",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(\n    name: \"CoreConsumer\",\n    platforms: [.macOS(.v12), .iOS(.v15)],\n    dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-core.git\", exact: \"1.2.0\")],\n    targets: [.executableTarget(name: \"CoreConsumer\", dependencies: [\n        .product(name: \"SwiftAI\", package: \"swift-ai-core\")\n    ])],\n    swiftLanguageModes: [.v6]\n)\n",
+      "lockfile": {
+        "originHash": "c73bb08d597d4b7d531b7c08d856cdaa62b661ab7aee3379571f287a55fe0930",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "CORE CONSUMER VERIFIED"
+    },
+    {
+      "name": "AnthropicOnly",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"AnthropicOnly\", platforms: [.macOS(.v12), .iOS(.v15)],\n    dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-core.git\", exact: \"1.2.0\"), .package(url: \"https://github.com/SwiftAISDK/swift-ai-anthropic.git\", exact: \"1.2.0\")],\n    targets: [.executableTarget(name: \"ProviderConsumer\", dependencies: [.product(name: \"SwiftAI\", package: \"swift-ai-core\"), .product(name: \"SwiftAITransport\", package: \"swift-ai-core\"), .product(name: \"SwiftAIAnthropic\", package: \"swift-ai-anthropic\")])],\n    swiftLanguageModes: [.v6]\n)\n",
+      "lockfile": {
+        "originHash": "48c041dadb9a8f7996be02c842f22b797a3e78ab069d7522c800fe7b879f6fba",
+        "pins": [
+          {
+            "identity": "swift-ai-anthropic",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
+            "state": {
+              "revision": "1c9db18cb374e130f436658b92514f891674735a",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "ANTHROPICONLY_OK"
+    },
+    {
+      "name": "OpenAICompatibleOnly",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"OpenAICompatibleOnly\", platforms: [.macOS(.v12), .iOS(.v15)],\n    dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-core.git\", exact: \"1.2.0\"), .package(url: \"https://github.com/SwiftAISDK/swift-ai-openai-compatible.git\", exact: \"1.1.0\")],\n    targets: [.executableTarget(name: \"ProviderConsumer\", dependencies: [.product(name: \"SwiftAI\", package: \"swift-ai-core\"), .product(name: \"SwiftAITransport\", package: \"swift-ai-core\"), .product(name: \"SwiftAIOpenAICompatible\", package: \"swift-ai-openai-compatible\")])],\n    swiftLanguageModes: [.v6]\n)\n",
+      "lockfile": {
+        "originHash": "1b2cd3265f293be8876a7956becc6b20b9da18373349105e93dd9c670c3bb92b",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "OPENAICOMPATIBLEONLY_OK"
+    },
+    {
+      "name": "OpenAIOnly",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"OpenAIOnly\", platforms: [.macOS(.v12), .iOS(.v15)],\n    dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-core.git\", exact: \"1.2.0\"), .package(url: \"https://github.com/SwiftAISDK/swift-ai-openai.git\", exact: \"1.1.0\")],\n    targets: [.executableTarget(name: \"ProviderConsumer\", dependencies: [.product(name: \"SwiftAI\", package: \"swift-ai-core\"), .product(name: \"SwiftAITransport\", package: \"swift-ai-core\"), .product(name: \"SwiftAIOpenAI\", package: \"swift-ai-openai\")])],\n    swiftLanguageModes: [.v6]\n)\n",
+      "lockfile": {
+        "originHash": "b8ca53ccd7819890019cdec116717a4bec22ff1dee681aac26f28b8ae1f9fcd8",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+            "state": {
+              "revision": "0934e2587cdb633a6b8c7cd28b324d124ddba1ad",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "OPENAIONLY_OK"
+    },
+    {
+      "name": "MixedProviders",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"MixedProviders\", platforms: [.macOS(.v12), .iOS(.v15)],\n    dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-core.git\", exact: \"1.2.0\"), .package(url: \"https://github.com/SwiftAISDK/swift-ai-anthropic.git\", exact: \"1.2.0\"), .package(url: \"https://github.com/SwiftAISDK/swift-ai-openai.git\", exact: \"1.1.0\")],\n    targets: [.executableTarget(name: \"ProviderConsumer\", dependencies: [.product(name: \"SwiftAI\", package: \"swift-ai-core\"), .product(name: \"SwiftAITransport\", package: \"swift-ai-core\"), .product(name: \"SwiftAIAnthropic\", package: \"swift-ai-anthropic\"), .product(name: \"SwiftAIOpenAI\", package: \"swift-ai-openai\")])],\n    swiftLanguageModes: [.v6]\n)\n",
+      "lockfile": {
+        "originHash": "483f592d33422099111ff6e93fb7da4b47204b88243d5f784d07497fc13a9694",
+        "pins": [
+          {
+            "identity": "swift-ai-anthropic",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
+            "state": {
+              "revision": "1c9db18cb374e130f436658b92514f891674735a",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+            "state": {
+              "revision": "0934e2587cdb633a6b8c7cd28b324d124ddba1ad",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "MIXEDPROVIDERS_OK"
+    },
+    {
+      "name": "swift-ai-alibaba",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-alibaba.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIAlibaba\", package: \"swift-ai-alibaba\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "b48805c7275dba47a83a5a9f64967d0cc5265846f066228747d97bba22f55952",
+        "pins": [
+          {
+            "identity": "swift-ai-alibaba",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-alibaba.git",
+            "state": {
+              "revision": "db8b4e41e60326f80f0c059ec6b5a6649eb80219",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-amazon-bedrock",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-amazon-bedrock.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIAmazonBedrock\", package: \"swift-ai-amazon-bedrock\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "f61f6828943a712ebb2fa0850c1c068c86620a705aac9d7c7c7c0972cf2c8588",
+        "pins": [
+          {
+            "identity": "swift-ai-amazon-bedrock",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock.git",
+            "state": {
+              "revision": "8ddae269d1239005fe9a753b6dbc8f52d59a065c",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-anthropic",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
+            "state": {
+              "revision": "1c9db18cb374e130f436658b92514f891674735a",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+            "state": {
+              "revision": "0934e2587cdb633a6b8c7cd28b324d124ddba1ad",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-anthropic",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-anthropic.git\", exact: \"1.2.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIAnthropic\", package: \"swift-ai-anthropic\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "64a29ca3df17d79800bbbec0410de9733e6eceee2284b2bdc4ec1690677f8a28",
+        "pins": [
+          {
+            "identity": "swift-ai-anthropic",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
+            "state": {
+              "revision": "1c9db18cb374e130f436658b92514f891674735a",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-anthropic-aws",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-anthropic-aws.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIAnthropicAWS\", package: \"swift-ai-anthropic-aws\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "278709a03bd28c1c341e64930ad57054e0cd549932b6811560861bdc6c8df106",
+        "pins": [
+          {
+            "identity": "swift-ai-anthropic",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
+            "state": {
+              "revision": "1c9db18cb374e130f436658b92514f891674735a",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-anthropic-aws",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws.git",
+            "state": {
+              "revision": "79b4ab551a27c8474e4fb1928090143abd94fe1c",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-assemblyai",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-assemblyai.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIAssemblyAI\", package: \"swift-ai-assemblyai\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "273250e08f40bb1c9bf43e41f40772dfb6ac2350f733520b552f550d85e85949",
+        "pins": [
+          {
+            "identity": "swift-ai-assemblyai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-assemblyai.git",
+            "state": {
+              "revision": "7422bb853f5fc6c86417413ff6d93b2859f5f2cc",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-azure",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-azure.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIAzure\", package: \"swift-ai-azure\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "fd73c58057a29202f79998a79ee247be3a470d3e9393f43fe185b931d98c93c6",
+        "pins": [
+          {
+            "identity": "swift-ai-azure",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-azure.git",
+            "state": {
+              "revision": "a1e3d87babc7ab8411b5686c258f9427fb3596a2",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-deepseek",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-deepseek.git",
+            "state": {
+              "revision": "733faea5fc8a0461ac4c789b4a419cf9fbcf8644",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+            "state": {
+              "revision": "0934e2587cdb633a6b8c7cd28b324d124ddba1ad",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-baseten",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-baseten.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIBaseten\", package: \"swift-ai-baseten\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "48360da09dd3c685ba5277246db2ceb94b8f5d00c15088db0db8746e2f4736b6",
+        "pins": [
+          {
+            "identity": "swift-ai-baseten",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-baseten.git",
+            "state": {
+              "revision": "6f5d7c9b1a46cb5455a5d323447b5f55dd920e19",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-black-forest-labs",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-black-forest-labs.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIBlackForestLabs\", package: \"swift-ai-black-forest-labs\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "4f21dcf7da1a009c655b90499396f7e7a07c1dc45cbfbeefa03ad73fa4bcbae5",
+        "pins": [
+          {
+            "identity": "swift-ai-black-forest-labs",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs.git",
+            "state": {
+              "revision": "2e196b304dfc2f1763e91d5a069b8f54571311a1",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-bytedance",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-bytedance.git\", exact: \"1.0.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIByteDance\", package: \"swift-ai-bytedance\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "256086307eb3e77e0f51240dbbdf657d9032eeaea0f1765e264c123e352514af",
+        "pins": [
+          {
+            "identity": "swift-ai-bytedance",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-bytedance.git",
+            "state": {
+              "revision": "873fc0663154897c2e384370f3bee91f2a8a5f5b",
+              "version": "1.0.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-cartesia",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-cartesia.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAICartesia\", package: \"swift-ai-cartesia\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "bb4808404eef85a475564e0a16078918c4f80a2ce44b9d87c78b5a35ccd161b9",
+        "pins": [
+          {
+            "identity": "swift-ai-cartesia",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-cartesia.git",
+            "state": {
+              "revision": "2226d4f49c99d68973db74bd84878db85ec14302",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-cerebras",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-cerebras.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAICerebras\", package: \"swift-ai-cerebras\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "29b57e63e175738eadeeb8be5f6e72e4bc2345d8ac3bbd7e8f91a24ed06011ca",
+        "pins": [
+          {
+            "identity": "swift-ai-cerebras",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-cerebras.git",
+            "state": {
+              "revision": "f0c847056498119903ba9f7948bdbf36548207f1",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-cohere",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-cohere.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAICohere\", package: \"swift-ai-cohere\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "52fdce097a42732d87fcb7f793b7cf710aa8eff35e0e741c2a509eb08b5d6b88",
+        "pins": [
+          {
+            "identity": "swift-ai-cohere",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-cohere.git",
+            "state": {
+              "revision": "0198d6581c9eb1c5f60097eb8c171a8e2b4b5fba",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-core",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-core.git\", exact: \"1.2.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAI\", package: \"swift-ai-core\"),.product(name: \"SwiftAIProvider\", package: \"swift-ai-core\"),.product(name: \"SwiftAIProviderUtilities\", package: \"swift-ai-core\"),.product(name: \"SwiftAITransport\", package: \"swift-ai-core\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "c9e0193fdd948d61382c38f6a28b977f4e632534d67e99fc68ee74f1a94568b8",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-deepgram",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-deepgram.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIDeepgram\", package: \"swift-ai-deepgram\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "02cb7115838da8abe3374dbf0a09e7f69c5ea76ca510b1f3ab59bac6870c04a9",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-deepgram",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-deepgram.git",
+            "state": {
+              "revision": "4337ed79489634fa9ab6c8f037010e7004bf6606",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-deepinfra",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-deepinfra.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIDeepInfra\", package: \"swift-ai-deepinfra\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "a3f43228e1df010f82fbab47c4664ab9635cb1d4036bfcade0b206b04293357f",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-deepinfra",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-deepinfra.git",
+            "state": {
+              "revision": "12afd32d882e78a84a8742c29c9b8db158ff77cf",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-deepseek",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-deepseek.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIDeepSeek\", package: \"swift-ai-deepseek\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "2037dffe5ba29ca9ff5e03dfc92cc1d134a5ea09f5ad0622f7e2643d5e7af6b1",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-deepseek",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-deepseek.git",
+            "state": {
+              "revision": "733faea5fc8a0461ac4c789b4a419cf9fbcf8644",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-elevenlabs",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-elevenlabs.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIElevenLabs\", package: \"swift-ai-elevenlabs\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "69b2efe62137ba7e4220e28a9b21e3b7e3837ba00f467d990fdec360287e5eed",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-elevenlabs",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-elevenlabs.git",
+            "state": {
+              "revision": "5f93e0f71007a08059d816bba03597fe6be5cb6c",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-fal",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-fal.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIFal\", package: \"swift-ai-fal\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "8078013ae0e312b98cb4eaf99d63f858a94df366d8391b9a7db426b29f809daa",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-fal",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-fal.git",
+            "state": {
+              "revision": "ec6726f31c4e46003061b41455d1f9c48895f982",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-fireworks",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-fireworks.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIFireworks\", package: \"swift-ai-fireworks\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "276e57011fa85ea8005fe9dc12aa5c03efbe1462629e2dcf66ccd07ecc68bc59",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-fireworks",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-fireworks.git",
+            "state": {
+              "revision": "2b44789c9825cf9ecc25c13ad9a211705b0afd99",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-fish-audio",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-fish-audio.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIFishAudio\", package: \"swift-ai-fish-audio\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "7677448373dc85fd59effdc0cb2446e5540551f23692ae9c8c7039a1a7714060",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-fish-audio",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-fish-audio.git",
+            "state": {
+              "revision": "f84c43f09325aab8afd245d9100722de7f4000dc",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-gateway",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-gateway.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIGateway\", package: \"swift-ai-gateway\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "4368e237a58c47cbb5e5a82bd941a50a06895e7eae78e8564f7a6bd1bae9ab1b",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-gateway",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-gateway.git",
+            "state": {
+              "revision": "61397c1a4c8bb5335294bfb17cb805cd99f607db",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-gladia",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-gladia.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIGladia\", package: \"swift-ai-gladia\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "912118721f37c3e54458aaa63e8b71e2e147d561402ff178547c602cbb837dd0",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-gladia",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-gladia.git",
+            "state": {
+              "revision": "af453300d0823fb10fc318420802dd7e9a745486",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-gmicloud",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-gmicloud.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIGMICloud\", package: \"swift-ai-gmicloud\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "2480a9db2cc7ad7333d1d805100b9ae71b5ba8f9a9816deb6a1033b4f1bedeeb",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-gmicloud",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-gmicloud.git",
+            "state": {
+              "revision": "5f942a4dc943556e954e26c4269133f55a930c6d",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-google",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-google.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIGoogle\", package: \"swift-ai-google\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "a090f207c5c99e048aedceeb13db0cad825ea4985eddfe64f14408cddc3d93a6",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-google",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-google.git",
+            "state": {
+              "revision": "27ae09d058befd1ce3ae7dbc41d21eeb8c8084e9",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-google-vertex",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-google-vertex.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIGoogleVertex\", package: \"swift-ai-google-vertex\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "70256673563b9df6bdfdd8beaae74a50f0faa3f9a97baddf74e7be772d87ef9f",
+        "pins": [
+          {
+            "identity": "swift-ai-anthropic",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
+            "state": {
+              "revision": "1c9db18cb374e130f436658b92514f891674735a",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-google",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-google.git",
+            "state": {
+              "revision": "27ae09d058befd1ce3ae7dbc41d21eeb8c8084e9",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-google-vertex",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-google-vertex.git",
+            "state": {
+              "revision": "fd3c45b87e26dfddd84d489f98caa66f8c5145a2",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+            "state": {
+              "revision": "0934e2587cdb633a6b8c7cd28b324d124ddba1ad",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-groq",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-groq.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIGroq\", package: \"swift-ai-groq\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "08c5fdcd44675331694b812313c3066fc1ce43c75617192ea7f2041862fe66b2",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-groq",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-groq.git",
+            "state": {
+              "revision": "4ed4f21d387e9740f2a3c392c485d5f738a7d9da",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-heygen",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-heygen.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIHeyGen\", package: \"swift-ai-heygen\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "06fb8bd022df9901c280250c8643352ac1299c7fa382fb7d325da6caede94772",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-heygen",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-heygen.git",
+            "state": {
+              "revision": "aed73fe9e7b6dd541558e49c46603b7f4f55420c",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-huggingface",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-huggingface.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIHuggingFace\", package: \"swift-ai-huggingface\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "f53b50098d0b4b23720fd9427cde1314b11dfbd48bc81d89ec1185da21d28c21",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-huggingface",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-huggingface.git",
+            "state": {
+              "revision": "6984f4f3efd09036661deb2ba9c91a32d43a57d6",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-hume",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-hume.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIHume\", package: \"swift-ai-hume\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "d2d0f74c4508996e3bf49f249d6d7460b6ad6c0eb11eac90faa7d1554e5ab308",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-hume",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-hume.git",
+            "state": {
+              "revision": "a3a7a5d4b77ff8d1c3c21c6ae5b844c2a603ea4c",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-klingai",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-klingai.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIKlingAI\", package: \"swift-ai-klingai\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "dbee7673f9e3e29b57f48cb78151eee6d2669c313f294d78f0c7c469fc853444",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-klingai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-klingai.git",
+            "state": {
+              "revision": "988d9b110c38553e757c8f9da81b3ac94b066066",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-lmnt",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-lmnt.git\", exact: \"1.0.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAILMNT\", package: \"swift-ai-lmnt\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "9931b9c4f62166f95708527a65246f796b4947ff78aa2aa39597c53637920509",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-lmnt",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-lmnt.git",
+            "state": {
+              "revision": "41f346d0a3085662d592090c535959d1c36d578d",
+              "version": "1.0.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-luma",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-luma.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAILuma\", package: \"swift-ai-luma\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "1c90f792f3d51374a9f66d43ceb90829c381f79181e2eb865f80bf4a0e66506a",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-luma",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-luma.git",
+            "state": {
+              "revision": "e299ee3f1acea24b28fbdb2c48926e2b0ee16e00",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-mcp",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-mcp.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIMCP\", package: \"swift-ai-mcp\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "2d070cc2d1360d90d3f14b329330e1b0ab5079583b6532790307039dd0bbd998",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-mcp",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-mcp.git",
+            "state": {
+              "revision": "68d71a75ce87d46f8472a940f386945de59aa294",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-minimax",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-minimax.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIMiniMax\", package: \"swift-ai-minimax\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "8b954502dd3f5bc357d14629d9496c4d75f7ed54b28eb7ef5a86b36a6f4f1dde",
+        "pins": [
+          {
+            "identity": "swift-ai-anthropic",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
+            "state": {
+              "revision": "1c9db18cb374e130f436658b92514f891674735a",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-minimax",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-minimax.git",
+            "state": {
+              "revision": "58270143459d41a7d31f44e5bdb1f8a89b7d2b4c",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-mistral",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-mistral.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIMistral\", package: \"swift-ai-mistral\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "469926918633edab309e6daceeed522cb32d0eacd8637fee6932e5a7e33160a6",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-mistral",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-mistral.git",
+            "state": {
+              "revision": "30c879e45ccc71e3a2fdea988e318d8557a67657",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-moonshotai",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-moonshotai.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIMoonshotAI\", package: \"swift-ai-moonshotai\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "4a82ae936a02deeb3d18e514c2ca72a582231e1cd5ac4c46f085fa2c21dbf338",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-moonshotai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-moonshotai.git",
+            "state": {
+              "revision": "796c4bef8fe021c4afc22c893fb6d898894000dd",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-open-responses",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-open-responses.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIOpenResponses\", package: \"swift-ai-open-responses\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "40f09f878809f2d2949c4680cb48fcac3e664dde45282253975db5c99bc9112b",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-open-responses",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-open-responses.git",
+            "state": {
+              "revision": "a8ac890d6059feccec6a7c40b757a8e2490be211",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+            "state": {
+              "revision": "0934e2587cdb633a6b8c7cd28b324d124ddba1ad",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-openai",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-openai.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIOpenAI\", package: \"swift-ai-openai\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "39a7e654ef57e2d23dbb8f86c7ef38da1e7c56b8cf39107a1dfead254f6d691a",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+            "state": {
+              "revision": "0934e2587cdb633a6b8c7cd28b324d124ddba1ad",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-openai-compatible",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-openai-compatible.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIOpenAICompatible\", package: \"swift-ai-openai-compatible\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "ece542f3e0247408365b57bc17fed3bf7ed96df75d59f2029e9ddf31a538fa37",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-perplexity",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-perplexity.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIPerplexity\", package: \"swift-ai-perplexity\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "c344e89ad05503a5684a45172352061c8b2e511ac59a5d0649e1bd1b48b31f18",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-perplexity",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-perplexity.git",
+            "state": {
+              "revision": "f790114bd57a3fb2e4d2e935290540b8056db79f",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-prodia",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-prodia.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIProdia\", package: \"swift-ai-prodia\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "0efc86bf7d7892fbc0b5aac5233ee7a96b8ca73e44fb39432e10a606699ea0ab",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-prodia",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-prodia.git",
+            "state": {
+              "revision": "6040823d490cff0096071b1891b727cc1811c496",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-quiverai",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-quiverai.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIQuiverAI\", package: \"swift-ai-quiverai\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "d18a740ce8a26cab751cc8e49fdd379ceaade1c659aabf6b84659e61932b3032",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-open-responses",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-open-responses.git",
+            "state": {
+              "revision": "a8ac890d6059feccec6a7c40b757a8e2490be211",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+            "state": {
+              "revision": "0934e2587cdb633a6b8c7cd28b324d124ddba1ad",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-quiverai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-quiverai.git",
+            "state": {
+              "revision": "5257c5a3665e41c066d6f4577d07035d74d32087",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-replicate",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-replicate.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIReplicate\", package: \"swift-ai-replicate\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "d6294de82205f3e0cf65285789294c30d8a3160b1f3369b33dbd0dba95ed166a",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-replicate",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-replicate.git",
+            "state": {
+              "revision": "a0cc3bb4407fd1a1c0ab36918b715915ca81b45b",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-revai",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-revai.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIRevAI\", package: \"swift-ai-revai\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "3bf718fd63cd48104b76e1b5f0fb0376da59e56b053a7850be8fb1d39a895e13",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-revai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-revai.git",
+            "state": {
+              "revision": "483aaf22fbf36d49efcd4520e7a8dcbcbdd35eb9",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-togetherai",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-togetherai.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAITogetherAI\", package: \"swift-ai-togetherai\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "c144f9d10ddac7f3cfef7fd1cca32d8006ed31d6fa5f898a90504f45f68a58a4",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-togetherai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-togetherai.git",
+            "state": {
+              "revision": "754af424406da2829372ab6d3407ba41d630a37e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-topaz",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-topaz.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAITopaz\", package: \"swift-ai-topaz\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "489e2350313e336f4ec7ab43d0c6617f86868ebbfc35c6c3b54b777ca3f4867c",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-topaz",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-topaz.git",
+            "state": {
+              "revision": "437bc72e5bed495424f2e4271618994a0d660016",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-typesafe-ai",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-typesafe-ai.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAITypeSafeAI\", package: \"swift-ai-typesafe-ai\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "31cba9a18e2046bde4fb45d347be16a1dad92cb894313790b89d9ac879f67dc9",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-typesafe-ai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-typesafe-ai.git",
+            "state": {
+              "revision": "cb7c322180a2be32af986a4e37f247c87d6a3b0a",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-ui",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-ui.git\", exact: \"1.0.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIUI\", package: \"swift-ai-ui\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "b098b173f68e7dce061330d4edfc5f7501c3825a76f2201971e06f30270ee1b0",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-ui",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-ui.git",
+            "state": {
+              "revision": "00ab4f50c024ef2290b9f409a98087c135a4424b",
+              "version": "1.0.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-vercel",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-vercel.git\", exact: \"1.0.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIVercel\", package: \"swift-ai-vercel\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "17394da678a98e307a7f80e1d285435f88468500a9798cef05a6efee977d2183",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-vercel",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-vercel.git",
+            "state": {
+              "revision": "01cb843a414be82c1f1dc35108ac3bc461969c8c",
+              "version": "1.0.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-voyage",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-voyage.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIVoyage\", package: \"swift-ai-voyage\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "8df28643782cfb7a0621536ee7f2ca16e96c7beb3238578f5e6aa06a40fef20c",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-voyage",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-voyage.git",
+            "state": {
+              "revision": "66800265eefb8e4aba35fbcf9291001ac842aab4",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-xai",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-xai.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIXAI\", package: \"swift-ai-xai\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "e3d518a834c5a09ccbb02dc8139f516d3e9810860d7ab80f632fd90b4af5ffaf",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+            "state": {
+              "revision": "0934e2587cdb633a6b8c7cd28b324d124ddba1ad",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-xai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-xai.git",
+            "state": {
+              "revision": "964d2c0e1969c87f45060d41d07b81a9a54e2049",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "swift-ai-zai",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"Consumer\", platforms: [.macOS(\"12.0\"), .iOS(\"15.0\")], dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-zai.git\", exact: \"1.1.0\")], targets: [.executableTarget(name: \"Consumer\", dependencies: [.product(name: \"SwiftAIZAI\", package: \"swift-ai-zai\")])], swiftLanguageModes: [.v6])\n",
+      "lockfile": {
+        "originHash": "60ea8eaaf0b5037eda6e2e0df83ebbbbfb38c057196848a66e784434dc3ba7c6",
+        "pins": [
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-zai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-zai.git",
+            "state": {
+              "revision": "812c97a48a675d1657419febfa89aa7297c1fb95",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "PUBLIC_IMPORTS_OK"
+    },
+    {
+      "name": "independent-upgrade-before",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"MixedProviders\", platforms: [.macOS(.v12), .iOS(.v15)],\n    dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-core.git\", exact: \"1.2.0\"), .package(url: \"https://github.com/SwiftAISDK/swift-ai-anthropic.git\", exact: \"1.0.0\"), .package(url: \"https://github.com/SwiftAISDK/swift-ai-openai.git\", exact: \"1.1.0\")],\n    targets: [.executableTarget(name: \"ProviderConsumer\", dependencies: [.product(name: \"SwiftAI\", package: \"swift-ai-core\"), .product(name: \"SwiftAITransport\", package: \"swift-ai-core\"), .product(name: \"SwiftAIAnthropic\", package: \"swift-ai-anthropic\"), .product(name: \"SwiftAIOpenAI\", package: \"swift-ai-openai\")])],\n    swiftLanguageModes: [.v6]\n)\n",
+      "lockfile": {
+        "originHash": "3e7a7c019c0dc35256c09236eb046cdf8eb2900ac78097d106bcd8c044b7a4a3",
+        "pins": [
+          {
+            "identity": "swift-ai-anthropic",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
+            "state": {
+              "revision": "c7f5099e3949dc24bf814d9e38d88517a56ea8f2",
+              "version": "1.0.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+            "state": {
+              "revision": "0934e2587cdb633a6b8c7cd28b324d124ddba1ad",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "MIXEDPROVIDERS_OK"
+    },
+    {
+      "name": "independent-upgrade-after",
+      "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"MixedProviders\", platforms: [.macOS(.v12), .iOS(.v15)],\n    dependencies: [.package(url: \"https://github.com/SwiftAISDK/swift-ai-core.git\", exact: \"1.2.0\"), .package(url: \"https://github.com/SwiftAISDK/swift-ai-anthropic.git\", exact: \"1.2.0\"), .package(url: \"https://github.com/SwiftAISDK/swift-ai-openai.git\", exact: \"1.1.0\")],\n    targets: [.executableTarget(name: \"ProviderConsumer\", dependencies: [.product(name: \"SwiftAI\", package: \"swift-ai-core\"), .product(name: \"SwiftAITransport\", package: \"swift-ai-core\"), .product(name: \"SwiftAIAnthropic\", package: \"swift-ai-anthropic\"), .product(name: \"SwiftAIOpenAI\", package: \"swift-ai-openai\")])],\n    swiftLanguageModes: [.v6]\n)\n",
+      "lockfile": {
+        "originHash": "483f592d33422099111ff6e93fb7da4b47204b88243d5f784d07497fc13a9694",
+        "pins": [
+          {
+            "identity": "swift-ai-anthropic",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
+            "state": {
+              "revision": "1c9db18cb374e130f436658b92514f891674735a",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-core",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+            "state": {
+              "revision": "39fbad5b604978024bfda4f239a2631fc42bd82b",
+              "version": "1.2.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+            "state": {
+              "revision": "0934e2587cdb633a6b8c7cd28b324d124ddba1ad",
+              "version": "1.1.0"
+            }
+          },
+          {
+            "identity": "swift-ai-openai-compatible",
+            "kind": "remoteSourceControl",
+            "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+            "state": {
+              "revision": "7a48a683e7d04b0a38de1c209a39d91effe4143e",
+              "version": "1.1.0"
+            }
+          }
+        ],
+        "version": 3
+      },
+      "marker": "MIXEDPROVIDERS_OK"
+    }
+  ]
+}

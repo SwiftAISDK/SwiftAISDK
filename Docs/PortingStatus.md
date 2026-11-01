@@ -16,11 +16,13 @@ for exact evidence.
 
 ## Modular packages
 
-SwiftAISDK 3.0 is published under `SwiftAISDK/SwiftAISDK`. The canonical repository
-owns development; 52 generated distribution repositories provide independent
-SwiftPM versions. Core and Anthropic are at 1.1.0; the other distributions are at
-1.0.0. The optional compatibility umbrella retains `import SwiftAISDK`.
-See [Migration.md](Migration.md), [PackageCatalog.md](PackageCatalog.md), and
+SwiftAISDK 3.1 uses 52 independent distributions. Core and Anthropic are 1.2.0;
+46 other updated units are 1.1.0. ByteDance, LMNT, Vercel and UI retain 1.0.0.
+The optional compatibility umbrella retains `import SwiftAISDK` and raises minimums
+for its new forwarding APIs. Native package tags, standalone CI and clean public
+consumers are recorded in [ReleaseVerification20261101.json](ReleaseVerification20261101.json).
+The immutable modular set is in [Releases/sets/weekly-upstream-20261101.json](../Releases/sets/weekly-upstream-20261101.json).
+See [Migration.md](Migration.md), [PackageCatalog.md](PackageCatalog.md) and
 [the release workflow](../Releases/README.md).
 
 The migration retained existing runtime behavior, upstream baselines, capabilities
@@ -39,8 +41,9 @@ callbacks, descriptive model metadata and MCP input-required continuation update
 All broader product gaps remain explicit. No new model provider was found in the
 exact 92-name registry namespace. See [the complete audit](WeeklyUpstreamAudit20261101.md)
 for every reference/latest version, source/test disposition and publication state.
-The 48 changed Swift units and separate compatibility umbrella are pending the
-required integration, export and exact-source hosted CI gates.
+The 48 changed Swift units passed local, export, exact-source hosted and public-tag
+gates. The separate umbrella 3.1 installation contract is recorded with its
+dependency selection.
 
 ## Weekly upstream parity (2026-10-25)
 

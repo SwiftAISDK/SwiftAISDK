@@ -7,7 +7,7 @@ Add SwiftAISDK to your package manifest:
 ```swift
 // Package.swift
 dependencies: [
-    .package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "3.0.0"),
+    .package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "3.1.0"),
 ],
 targets: [
     .target(
@@ -53,9 +53,10 @@ Use explicit settings when you need custom headers, a custom base URL, a mock tr
 ## Independent modular packages
 
 All 52 independent packages are published: core, 49 provider adapters, MCP and UI.
-Core and Anthropic are at `1.1.0`; the other packages are at `1.0.0`.
+Core and Anthropic are at `1.2.0`; 46 other updated units are at `1.1.0`.
+ByteDance, LMNT, Vercel and UI retain `1.0.0`.
 Choose packages from the [catalog](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/PackageCatalog.md),
-or use the complete 3.0 umbrella above. See the [3.0 migration guide](https://swiftaisdk.github.io/SwiftAISDK/getting-started/migrating-to-3/)
+or use the complete 3.1 umbrella above. See the [3.0 migration guide](https://swiftaisdk.github.io/SwiftAISDK/getting-started/migrating-to-3/)
 for native imports, configuration and compatibility details.
 
 For a modular OpenAI client:
@@ -63,8 +64,8 @@ For a modular OpenAI client:
 ```swift
 // Package.swift
  dependencies: [
-    .package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.1.0"),
-    .package(url: "https://github.com/SwiftAISDK/swift-ai-openai.git", from: "1.0.0"),
+    .package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.2.0"),
+    .package(url: "https://github.com/SwiftAISDK/swift-ai-openai.git", from: "1.1.0"),
  ],
  targets: [
     .target(name: "YourApp", dependencies: [
@@ -91,7 +92,7 @@ let result = try await AI.generateText(
 Anthropic uses `SwiftAIAnthropic` and `AnthropicProviderSettings`. A generic
 compatible endpoint uses `SwiftAIOpenAICompatible` with
 `OpenAICompatibleProviderSettings(name:baseURL:...)`. Native factories accept
-`configuration:`; the 3.0 compatibility API continues to accept `settings:`.
+`configuration:`; the 3.x compatibility API continues to accept `settings:`.
 Native clients pass model objects or use explicit registries; core does not
 initialize an implicit Gateway.
 
@@ -106,9 +107,14 @@ requirements intersect. SwiftPM resolves one version per package identity. Swift
 release numbers do not track npm release numbers. Applications should commit their
 `Package.resolved`; reusable libraries should normally express compatible ranges.
 
-The 3.0 umbrella shares model and request types with the modular packages and
+The 3.1 umbrella shares model and request types with the modular packages and
 preserves the ordinary `import SwiftAISDK` API. Existing 2.x tags remain usable,
 but their separately defined types cannot be mixed with modular values. Moving
 modules is not a binary compatibility guarantee; rebuild your application.
-The [tested 3.0 release set](https://github.com/SwiftAISDK/SwiftAISDK/blob/3.0.0/Releases/umbrella/3.0.0.json)
+The [tested 3.1 release set](https://github.com/SwiftAISDK/SwiftAISDK/blob/3.1.0/Releases/umbrella/3.1.0.json)
 records the complete dependency selection.
+
+The 3.1 release adds native steering, failed-step callbacks and descriptive model
+metadata through core 1.2, plus rotating credentials and current provider
+request/stream fixes. See the [weekly audit](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/WeeklyUpstreamAudit20261101.md)
+for package versions, verification and retained gaps.

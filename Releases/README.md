@@ -7,6 +7,10 @@ Release records describe Swift versions. npm baselines remain independent in
 `umbrella/3.0.0.json` records the complete tested selection without imposing an
 exact dependency graph on every consumer.
 
+The 2026-11-01 release set is in `sets/weekly-upstream-20261101.json`: 48 changed
+units, retaining the four unchanged distributions. `umbrella/3.1.0.json` records
+the separate compatibility selection. npm package baselines remain independent.
+
 ## Reviewed changes
 
 Add one `changes/<id>.json` for a meaningful implementation, public metadata or
