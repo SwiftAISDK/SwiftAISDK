@@ -5,7 +5,7 @@ import SwiftAIProviderUtilities
 
 
 /// The published `@ai-sdk/typesafe-ai` package version mirrored by this port.
-public let typeSafeAIProviderVersion = "3.0.27"
+public let typeSafeAIProviderVersion = "3.0.31"
 
 /// Creates a TypeSafe AI provider using the same defaults as
 /// `createTypeSafeAi` from `@ai-sdk/typesafe-ai`.
@@ -40,6 +40,13 @@ public final class TypeSafeAIProvider: AIProvider, AIEvaluationProvider, AIDecis
     private let configuration: TypeSafeAIEvaluationModelConfiguration
 
     public init(configuration settings: TypeSafeAIProviderSettings) {
+        var resolvedSettings = settings
+        if let supplier = resolvedSettings.apiKeyProvider {
+            let credential = AIAsyncCredential(supplier)
+            resolvedSettings.apiKey = credential.placeholder
+            resolvedSettings.transport = credential.resolvingTransport(resolvedSettings.transport)
+        }
+        let settings = resolvedSettings
         configuration = TypeSafeAIEvaluationModelConfiguration(
             providerID: "typesafe.evaluation",
             baseURL: withoutTrailingSlash(settings.baseURL ?? "https://api.typesafe.ai/v1"),

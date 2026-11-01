@@ -23,10 +23,23 @@ Cohere embeddings accept output dimensions 256, 512, 768, 1024, 1536 and 2048. `
 
 Input cache-read usage is recorded separately and subtracted from uncached input tokens, while raw provider usage remains available in generation and streaming.
 
+## Rotating credentials
+
+The native `CohereProviderSettings` accepts an optional
+`apiKeyProvider` asynchronous throwing closure. It is resolved for each
+authenticated request, so short-lived credentials can refresh without recreating
+the provider or model. Static `apiKey` settings remain supported. A supplier
+failure stops the request before it reaches the transport.
+
+
+## Text documents and reasoning
+
+Text documents use native `Data` bytes decoded as UTF-8. Decode base64 transport values into `Data` before constructing a file part; plain text that looks like base64 remains literal text. File titles, Unicode text and document order are retained. If portable reasoning cannot map to a token budget, the request still enables thinking without inventing a budget and returns the unsupported-reasoning warning.
+
 
 ## Notes
 
-Cohere mirrors upstream 4.0.69: `COHERE_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language aliases, embedding/textEmbedding aliases, reranking aliases, chat `/v2/chat`, embedding `/v2/embed`, reranking `/v2/rerank`, prompt conversion for text/images/documents/tool calls, providerOptions.cohere schemas, top-level reasoning to Cohere `thinking` budget mapping, providerOptions thinking precedence, response format and tool choice mapping, streaming lifecycle/tool-call/reasoning parts, response metadata with complete raw usage, embedding/reranking response bodies, object-document reranking warnings, and unsupported non-text document media. ProviderV4 type names, ESM-only packaging, Node 22 engines, TypeScript option export renames, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-11 pass: Embeddings select float, int8, uint8, binary or ubinary responses, support 768/2048 dimensions and common-dimension defaults; chat retains cached token accounting.
+Cohere mirrors upstream 4.0.73: `COHERE_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language aliases, embedding/textEmbedding aliases, reranking aliases, chat `/v2/chat`, embedding `/v2/embed`, reranking `/v2/rerank`, prompt conversion for text/images/documents/tool calls, providerOptions.cohere schemas, top-level reasoning to Cohere `thinking` budget mapping, providerOptions thinking precedence, response format and tool choice mapping, streaming lifecycle/tool-call/reasoning parts, response metadata with complete raw usage, embedding/reranking response bodies, object-document reranking warnings, and unsupported non-text document media. ProviderV4 type names, ESM-only packaging, Node 22 engines, TypeScript option export renames, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-11 pass: Embeddings select float, int8, uint8, binary or ubinary responses, support 768/2048 dimensions and common-dimension defaults; chat retains cached token accounting. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

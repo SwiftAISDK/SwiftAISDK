@@ -32,6 +32,8 @@ public struct GoogleVertexProviderSettings: Sendable {
     public var project: String?
     public var location: String?
     public var apiKey: String?
+    /// Enables Express Mode with a fresh, nonempty key before each request.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var accessToken: String?
     public var serviceAccount: GoogleServiceAccountCredentials?
     public var baseURL: String?
@@ -51,7 +53,8 @@ public struct GoogleVertexProviderSettings: Sendable {
         baseURL: String? = nil,
         headers: [String: String] = [:],
         transport: any AITransport = URLSessionTransport.shared,
-        date: @escaping @Sendable () -> Date = Date.init
+        date: @escaping @Sendable () -> Date = Date.init,
+        apiKeyProvider: (@Sendable () async throws -> String)? = nil
     ) {
         self.init(
             project: project,
@@ -63,7 +66,8 @@ public struct GoogleVertexProviderSettings: Sendable {
             toolResultDownloads: nil,
             headers: headers,
             transport: transport,
-            date: date
+            date: date,
+            apiKeyProvider: apiKeyProvider
         )
     }
 
@@ -77,11 +81,13 @@ public struct GoogleVertexProviderSettings: Sendable {
         toolResultDownloads: GoogleVertexToolResultDownloadSettings?,
         headers: [String: String] = [:],
         transport: any AITransport = URLSessionTransport.shared,
-        date: @escaping @Sendable () -> Date = Date.init
+        date: @escaping @Sendable () -> Date = Date.init,
+        apiKeyProvider: (@Sendable () async throws -> String)? = nil
     ) {
         self.project = project
         self.location = location
         self.apiKey = apiKey
+        self.apiKeyProvider = apiKeyProvider
         self.accessToken = accessToken
         self.serviceAccount = serviceAccount
         self.baseURL = baseURL
@@ -102,7 +108,9 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
         let project = settings.project ?? environmentValue(["GOOGLE_VERTEX_PROJECT"])
         let location = settings.location ?? environmentValue(["GOOGLE_VERTEX_LOCATION"])
         let auth: GoogleVertexAuth
-        if let apiKey, !apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if let resolver = settings.apiKeyProvider {
+            auth = .dynamicAPIKey(resolver)
+        } else if let apiKey, !apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             auth = .apiKey(apiKey)
         } else if let accessToken = settings.accessToken ?? environmentValue(["GOOGLE_VERTEX_ACCESS_TOKEN", "GOOGLE_ACCESS_TOKEN"]) {
             auth = .accessToken(accessToken)
@@ -113,7 +121,7 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
         }
 
         let baseURL: String
-        if apiKey != nil {
+        if settings.apiKeyProvider != nil || apiKey != nil {
             baseURL = withoutTrailingSlash(settings.baseURL ?? "https://aiplatform.googleapis.com/v1/publishers/google")
         } else if let explicit = settings.baseURL {
             baseURL = withoutTrailingSlash(explicit)
@@ -126,7 +134,7 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
             baseURL = "https://\(host)/v1beta1/projects/\(project)/locations/\(location)/publishers/google"
         }
 
-        let headers = withUserAgentSuffix(settings.headers, "ai-sdk-google-vertex/5.0.122")
+        let headers = withUserAgentSuffix(settings.headers, "ai-sdk-google-vertex/5.0.129")
         config = GoogleVertexConfig(
             providerID: providerID,
             baseURL: baseURL,
@@ -223,6 +231,7 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
 
 enum GoogleVertexAuth: Sendable {
     case apiKey(String)
+    case dynamicAPIKey(@Sendable () async throws -> String)
     case accessToken(String)
     case serviceAccount(GoogleServiceAccountCredentials)
 }
@@ -239,10 +248,10 @@ struct GoogleVertexConfig: @unchecked Sendable {
     var toolResultDownloadsMaxBytes: Int
 
     var usesAPIKey: Bool {
-        if case .apiKey = auth {
-            return true
+        switch auth {
+        case .apiKey, .dynamicAPIKey: return true
+        case .accessToken, .serviceAccount: return false
         }
-        return false
     }
 
     func sendJSON(path: String, body: JSONValue, headers requestHeaders: [String: String] = [:], abortSignal: AIAbortSignal? = nil) async throws -> JSONValue {
@@ -275,7 +284,9 @@ struct GoogleVertexConfig: @unchecked Sendable {
     }
 
     func request(url: String, body: JSONValue, headers requestHeaders: [String: String] = [:], abortSignal: AIAbortSignal? = nil) async throws -> AIHTTPRequest {
+        try abortSignal?.throwIfAborted()
         let mergedHeaders = try await authenticatedHeaders(requestHeaders)
+        try abortSignal?.throwIfAborted()
         return AIHTTPRequest(method: "POST", url: try requireURL(url), headers: mergedHeaders, body: try encodeJSONBody(body), abortSignal: abortSignal)
     }
 
@@ -285,6 +296,14 @@ struct GoogleVertexConfig: @unchecked Sendable {
         switch auth {
         case let .apiKey(apiKey):
             mergedHeaders["x-goog-api-key"] = apiKey
+        case let .dynamicAPIKey(resolve):
+            try Task.checkCancellation()
+            let key = try await resolve()
+            try Task.checkCancellation()
+            guard !key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                throw AIError.invalidArgument(argument: "apiKeyProvider", message: "Google Vertex API key must be a non-empty string.")
+            }
+            mergedHeaders["x-goog-api-key"] = key
         case let .accessToken(token):
             mergedHeaders["Authorization"] = mergedHeaders["Authorization"] ?? "Bearer \(token)"
         case let .serviceAccount(credentials):

@@ -24,8 +24,7 @@ text; the `text` and `toolCalls` convenience fields remain available.
 
 ## Kimi K3.1 context caching
 
-`kimi-k3.1-pro` and `kimi-k3.1-pro-highspeed` share Kimi K3's reasoning-history
-support. Use `reasoningHistory: "preserved"` to send `thinking.keep = "all"`.
+`kimi-k3.1-pro` and `kimi-k3.1-pro-highspeed` share Kimi K3's request and history behavior. They always reason and omit the `thinking` request field, including when preserved history is selected. Kimi K2.6 uses `thinking.keep = "all"` for preserved history.
 
 ```swift
 let provider = try AIProviders.moonshotAI()
@@ -55,10 +54,25 @@ MFJS tool and response JSON schemas retain `type: "object"` at the root. A root
 unions fail before sending. Nested unions retain the provider's type-placement
 rules.
 
+## Rotating credentials
+
+The native `MoonshotAIProviderSettings` accepts an optional
+`apiKeyProvider` asynchronous throwing closure. It is resolved for each
+authenticated request, so short-lived credentials can refresh without recreating
+the provider or model. Static `apiKey` settings remain supported. A supplier
+failure stops the request before it reaches the transport.
+
+
+## Portable reasoning effort
+
+Kimi K3 maps portable reasoning to `low`, `high`, or `max`, preferring the closest lower supported effort. `none`, `minimal` and `medium` map to `low`; `xhigh` maps to `high`, with compatibility warnings. Explicit canonical `reasoningEffort` provider options retain precedence. Kimi K2.7 cannot disable thinking: portable `none` keeps the provider default and emits a compatibility warning, while an explicit disabled-thinking option remains unsupported. Unknown model IDs send portable `none` as disabled thinking, allowing the service to decide support.
+
+Typed `thinking.budgetTokens` is deprecated and omitted. The native raw `extraBody` escape hatch remains available for service-specific controls. Model-specific reasoning restrictions apply to the documented IDs; unrecognized names retain the unknown-model policy.
+
 
 ## Notes
 
-MoonshotAI was audited against upstream 3.0.78; its implemented chat-model surface remains at 3.0.37 semantics: `MOONSHOT_API_KEY`, custom base URL and headers, callable provider plus `languageModel`/`chat` aliases, `moonshotai.chat` provider IDs, versioned user-agent suffix, stream usage by default, current model IDs such as `kimi-k2.5`, `kimi-k2.6`, and `kimi-k2.7-code`, `providerOptions.moonshotai` thinking, reasoning effort/history, prompt-cache, and safety mapping, owned image/video/text input conversion with local unsupported-media errors, MFJS tool-schema normalization, structured outputs for `kimi-k*` models with top-level `$schema` stripping, Moonshot error schema, and unsupported embedding/image families. The 3.0.43 V1/Kimi partial and predicted output, message-name, log-probability, media-reference, reasoning/sampling, structured-output, response-metadata, raw-usage, and error-code delta remains deferred to a dedicated provider pass. The 2026-10-11 pass: Common max effort maps to high through the shared chat helper. The 2026-10-18 pass: All current and future model IDs inherit structured-output support; older separately deferred V1/Kimi codec gaps remain explicit. The 2026-10-23 pass: Generated content orders reasoning, function calls, then text; the broader V1/Kimi gaps remain deferred. The 2026-10-25 pass: Kimi K3.1 aliases inherit K3 reasoning history. Cache mode/TTL, cache-write token accounting and per-TTL headers are preserved; MFJS object unions retain their required object root. Missing stream completion signals are interrupted.
+MoonshotAI was audited against upstream 3.0.82; its implemented chat-model surface remains at 3.0.37 semantics: `MOONSHOT_API_KEY`, custom base URL and headers, callable provider plus `languageModel`/`chat` aliases, `moonshotai.chat` provider IDs, versioned user-agent suffix, stream usage by default, current model IDs such as `kimi-k2.5`, `kimi-k2.6`, and `kimi-k2.7-code`, `providerOptions.moonshotai` thinking, reasoning effort/history, prompt-cache, and safety mapping, owned image/video/text input conversion with local unsupported-media errors, MFJS tool-schema normalization, structured outputs for `kimi-k*` models with top-level `$schema` stripping, Moonshot error schema, and unsupported embedding/image families. The 3.0.43 V1/Kimi partial and predicted output, message-name, log-probability, media-reference, reasoning/sampling, structured-output, response-metadata, raw-usage, and error-code delta remains deferred to a dedicated provider pass. The 2026-10-11 pass: Common max effort maps to high through the shared chat helper. The 2026-10-18 pass: All current and future model IDs inherit structured-output support; older separately deferred V1/Kimi codec gaps remain explicit. The 2026-10-23 pass: Generated content orders reasoning, function calls, then text; the broader V1/Kimi gaps remain deferred. The 2026-10-25 pass: Kimi K3.1 aliases inherit K3 reasoning history. Cache mode/TTL, cache-write token accounting and per-TTL headers are preserved; MFJS object unions retain their required object root. Missing stream completion signals are interrupted. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

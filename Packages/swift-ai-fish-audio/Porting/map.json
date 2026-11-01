@@ -29,7 +29,8 @@
       "Packages/swift-ai-fish-audio/Tests/SwiftAIFishAudioTests/FishAudioSpeechModelTests.swift",
       "Packages/swift-ai-fish-audio/Tests/SwiftAIFishAudioTests/FishAudioTranscriptionModelTests.swift",
       "Packages/swift-ai-fish-audio/Tests/SwiftAIFishAudioTests/FixtureDownloadTransport.swift",
-      "Packages/swift-ai-fish-audio/Tests/SwiftAIFishAudioTests/TestSupport.swift"
+      "Packages/swift-ai-fish-audio/Tests/SwiftAIFishAudioTests/TestSupport.swift",
+      "Packages/swift-ai-fish-audio/Tests/SwiftAIFishAudioTests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },

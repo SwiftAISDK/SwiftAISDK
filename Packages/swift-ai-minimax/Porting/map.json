@@ -26,6 +26,7 @@
       "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests/MiniMaxProviderTests.swift",
       "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests/TestSupport.swift",
+      "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests/Weekly20261101MiniMaxTests.swift",
       "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests/WeeklyMiniMax20261023Tests.swift"
     ],
     "resources": []
@@ -34,7 +35,11 @@
     {
       "kind": "native-adaptation",
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "2026-11-01 reviewed 3.0.65 -> 3.0.71; integrity-verified archives and package/version-checked matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 028a025398782f4938303f48fbeee45c79af544b. Ported per-request API-key callbacks for Messages/video and nearest-supported effort warnings through shared reasoning helper; Weekly20261101MiniMax tests and updated prior warning assertion. Published package has no changed executable tests; native tests exercise new published behavior using established provider/resolver fixture patterns. Native invalid reasoning Strings remain unsupported because they are outside upstream typed reasoning union."
     }
   ],
-  "reviewNote": "M6: MiniMax language hosting policy, video runtime, typed settings and focused suites extracted; composes the Anthropic Messages adapter. Baselines and gaps retained."
+  "reviewNote": "M6: MiniMax language hosting policy, video runtime, typed settings and focused suites extracted; composes the Anthropic Messages adapter. Baselines and gaps retained. 2026-11-01 reviewed 3.0.65 -> 3.0.71; integrity-verified archives and package/version-checked matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 028a025398782f4938303f48fbeee45c79af544b. Ported per-request API-key callbacks for Messages/video and nearest-supported effort warnings through shared reasoning helper; Weekly20261101MiniMax tests and updated prior warning assertion. Published package has no changed executable tests; native tests exercise new published behavior using established provider/resolver fixture patterns. Native invalid reasoning Strings remain unsupported because they are outside upstream typed reasoning union."
 }

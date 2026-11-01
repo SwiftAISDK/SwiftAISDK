@@ -15,28 +15,17 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/quiverai/
 - Language
 - Image
 
-## Arrow 2 language models
+## Portable reasoning
 
-Use `languageModel("arrow-2")` for Responses-based language generation.
-Quiver custom tools use the provider-specific helper and text format:
+QuiverAI supports `low`, `medium`, `high`, and `xhigh`. Portable `none` and `minimal` map to `low`; `max` maps to `xhigh`, with compatibility warnings in generation and stream-start metadata. Explicit canonical provider `reasoningEffort` retains precedence and bypasses portable mapping.
 
-```swift
-let quiver = try AIProviders.quiverAI()
-let arrow = try quiver.languageModel("arrow-2")
-let result = try await arrow.generate(LanguageModelRequest(
-    messages: [.user("Render a diagram.")],
-    tools: [
-        "render": QuiverAITools.customTool(
-            name: "render",
-            format: QuiverAITools.textFormat()
-        )
-    ]
-))
-```
+## Rotating credentials
+
+`QuiverAIProviderSettings.apiKeyProvider` accepts an async throwing key supplier resolved before each authenticated language or image request. Static keys remain available; provider/request authorization headers keep their precedence, and supplier failures stop the request before I/O.
 
 ## Notes
 
-Responses language generation, SVG image generation, and vectorization mirror upstream QuiverAI 2.0.69: `QUIVERAI_API_KEY`/`QUIVERAI_BASE_URL`, versioned user-agent suffix, `arrow-1`/`arrow-1.1`/`arrow-1.1-max`, `providerOptions.quiverai` generation and vectorize options, reference limits, warnings for unsupported standard image options, and retryable API error metadata. The 2026-09-20 pass adds Arrow 2 and Telos generation, animation, editing, vectorization, reference preparation, credits, metadata, and revised limits. The 2026-09-27 pass adds the Arrow Responses language surface, custom tools, reasoning options, and explicit structured-output warnings. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown.
+Responses language generation, SVG image generation, and vectorization mirror upstream QuiverAI 2.0.73: `QUIVERAI_API_KEY`/`QUIVERAI_BASE_URL`, versioned user-agent suffix, `arrow-1`/`arrow-1.1`/`arrow-1.1-max`, `providerOptions.quiverai` generation and vectorize options, reference limits, warnings for unsupported standard image options, and retryable API error metadata. The 2026-09-20 pass adds Arrow 2 and Telos generation, animation, editing, vectorization, reference preparation, credits, metadata, and revised limits. The 2026-09-27 pass adds the Arrow Responses language surface, custom tools, reasoning options, and explicit structured-output warnings. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

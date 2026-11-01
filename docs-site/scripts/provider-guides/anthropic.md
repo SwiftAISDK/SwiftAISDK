@@ -24,3 +24,11 @@ logical response and cancels its HTTP body at the first `message_stop`, even
 if the server leaves the body open. Unlike the JavaScript codec, it does not
 consume additional Messages responses from the same body. A multi-message
 session would require a separate explicit lifecycle contract.
+
+## Refreshable authentication and JSON fallback
+
+`AnthropicProviderSettings.authTokenProvider` accepts an asynchronous throwing closure, resolved before each Messages, Batch, Files or Skills HTTP request. Model construction does not call it; supplier errors propagate before network I/O. The supplier takes precedence over `authToken`, and bearer authentication conflicts with an explicitly supplied API key. Authentication does not automatically add an OAuth beta. Existing static API keys and bearer tokens continue to work.
+
+When a hosting adapter disables native structured output but the model rejects forced tool use, Sonnet 5.5, Opus 5.5 and Fable 5.1 use native JSON output only when the schema can be represented without loss. Recursive references, open maps and schemas with more than ten optional properties keep the JSON response tool with automatic tool choice. Definitions next to a top-level `$ref` are preserved. Required properties do not count toward the optional-property limit; referenced definitions count at every use.
+
+If the model answers directly instead of calling the JSON response tool, generation returns its final text. Streaming holds that text until the response ends, preserves its citations, and discards preamble before tool activity. A JSON-tool call replaces held text; a tool or pause handoff does not expose preamble as the JSON answer. The existing one-response native boundary still applies. Portable `xhigh` reasoning rounds down to `high` on models without `xhigh`; Sonnet 5.5 reports a compatibility warning when `none` selects its lowest `between_tools` mode.

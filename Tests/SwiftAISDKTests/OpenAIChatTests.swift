@@ -30,7 +30,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.openai.com/v1/chat/completions")
     #expect(request.headers["authorization"] == "Bearer test-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-openai/4.0.102")
+    #expect(request.headers["user-agent"] == "ai-sdk-openai/4.0.106")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["model"]?.stringValue == "gpt-4.1-mini")
     #expect(body["messages"]?[1]?["content"]?.stringValue == "Hi")
@@ -259,7 +259,7 @@ import Testing
     #expect(body["openai"] == nil)
 }
 
-@Test func openAIChatDropsUnsupportedGPT6ReasoningEffortsLikeUpstream() async throws {
+@Test func openAIChatForwardsExplicitGPT6ReasoningEffortsLikeUpstream() async throws {
     let transport = RecordingTransport(response: jsonResponse(#"{"choices":[{"message":{"content":"hello"},"finish_reason":"stop"}]}"#))
     let provider = try AIProviders.openAI(settings: ProviderSettings(apiKey: "test-key", transport: transport))
     let model = try provider.chatModel("gpt-6-astra")
@@ -272,14 +272,8 @@ import Testing
 
         let request = try #require((await transport.requests()).last)
         let body = try decodeJSONBody(try #require(request.body))
-        #expect(body["reasoning_effort"] == nil)
-        #expect(result.warnings == [
-            AIWarning(
-                type: "unsupported",
-                feature: "reasoningEffort",
-                message: "gpt-6-astra only supports the following reasoning efforts: low, medium, high, xhigh, max"
-            )
-        ])
+        #expect(body["reasoning_effort"] == .string(reasoningEffort))
+        #expect(result.warnings.isEmpty)
     }
 }
 

@@ -26,7 +26,8 @@
     "tests": [
       "Packages/swift-ai-deepinfra/Tests/SwiftAIDeepInfraTests/DeepInfraProviderTests.swift",
       "Packages/swift-ai-deepinfra/Tests/SwiftAIDeepInfraTests/FixtureDownloadTransport.swift",
-      "Packages/swift-ai-deepinfra/Tests/SwiftAIDeepInfraTests/TestSupport.swift"
+      "Packages/swift-ai-deepinfra/Tests/SwiftAIDeepInfraTests/TestSupport.swift",
+      "Packages/swift-ai-deepinfra/Tests/SwiftAIDeepInfraTests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },

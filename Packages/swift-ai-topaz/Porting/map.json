@@ -26,7 +26,8 @@
     "tests": [
       "Packages/swift-ai-topaz/Tests/SwiftAITopazTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-topaz/Tests/SwiftAITopazTests/TestSupport.swift",
-      "Packages/swift-ai-topaz/Tests/SwiftAITopazTests/TopazProviderTests.swift"
+      "Packages/swift-ai-topaz/Tests/SwiftAITopazTests/TopazProviderTests.swift",
+      "Packages/swift-ai-topaz/Tests/SwiftAITopazTests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },

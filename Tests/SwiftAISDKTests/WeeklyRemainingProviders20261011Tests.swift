@@ -52,11 +52,11 @@ struct WeeklyRemainingProviders20261011Tests {
         #expect(try weeklyRequestJSON(try #require(await gateway.requests().first))["dimensions"] == 768)
     }
 
-    @Test(arguments: ["xhigh", "max"]) func deepSeekHighestReasoningEffortUsesPublishedMax(_ reasoning: String) async throws {
+    @Test(arguments: ["xhigh", "max"]) func deepSeekHighestReasoningEffortUsesPublishedMapping(_ reasoning: String) async throws {
         let transport = RecordingTransport(response: jsonResponse(#"{"choices":[{"message":{"content":"done"},"finish_reason":"stop"}]}"#))
         let model = try AIProviders.deepSeek(settings: .init(apiKey: "key", transport: transport)).languageModel("deepseek-reasoner")
         _ = try await model.generate(.init(messages: [.user("test")], reasoning: reasoning))
-        #expect(try weeklyRequestJSON(try #require(await transport.requests().first))["reasoning_effort"] == "max")
+        #expect(try weeklyRequestJSON(try #require(await transport.requests().first))["reasoning_effort"] == .string(reasoning == "xhigh" ? "high" : "max"))
     }
 
     @Test func alibabaMaxReasoningUsesNinetyFivePercentBudget() async throws {

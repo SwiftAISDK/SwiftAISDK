@@ -6,6 +6,8 @@ import SwiftAIOpenAI
 import SwiftAIOpenAICompatible
 public struct XAIProviderSettings: Sendable {
     public var apiKey: String?
+    /// Supplies a fresh API key immediately before each authenticated request.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var baseURL: String?
     public var headers: [String: String]
     public var queryParams: [String: String]
@@ -17,9 +19,9 @@ public struct XAIProviderSettings: Sendable {
     public var transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])?
     public var transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])?
     public var batchResultDownloads: AIBatchResultDownloadSettings?
-    public init(apiKey: String? = nil, baseURL: String? = nil, headers: [String: String] = [:], queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared,
+    public init(apiKey: String? = nil, apiKeyProvider: (@Sendable () async throws -> String)? = nil, baseURL: String? = nil, headers: [String: String] = [:], queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared,
         includeUsage: Bool = false, supportsStructuredOutputs: Bool = false, supportsMultiPartToolContent: Bool = false, strictResponseInput: Bool = false, transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil, transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])? = nil, batchResultDownloads: AIBatchResultDownloadSettings? = nil) {
-        self.apiKey = apiKey; self.baseURL = baseURL; self.headers = headers; self.queryParams = queryParams; self.transport = transport
+        self.apiKey = apiKey; self.apiKeyProvider = apiKeyProvider; self.baseURL = baseURL; self.headers = headers; self.queryParams = queryParams; self.transport = transport
         self.includeUsage = includeUsage
         self.supportsStructuredOutputs = supportsStructuredOutputs
         self.supportsMultiPartToolContent = supportsMultiPartToolContent
@@ -38,17 +40,23 @@ public final class XAIProvider: AIProvider, Sendable {
     private let baseURL: String
 
     public init(configuration: XAIProviderSettings = .init()) throws {
+        var resolvedSettings = configuration
+        let credentialResolver = resolvedSettings.apiKeyProvider.map(AIAsyncCredential.init)
+        if let credential = credentialResolver {
+            resolvedSettings.apiKey = credential.placeholder
+        }
+        let configuration = resolvedSettings
         let names = ["XAI_API_KEY"]
         guard let key = configuration.apiKey ?? environmentValue(names) else {
             throw AIError.missingAPIKey(provider: "xai", environmentVariables: names)
         }
         self.configuration = configuration
-        var headers = configuration.headers
-        headers["Authorization"] = headers["Authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-xai/5.0.30")
+        var headers = normalizeHeaders(configuration.headers)
+        headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
+        headers = withUserAgentSuffix(headers, "ai-sdk-xai/5.0.35")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.x.ai/v1")
         self.baseURL = baseURL
-        self.http = AIProviderHTTPClient(providerID: "xai", headers: headers, transport: configuration.transport,
+        self.http = AIProviderHTTPClient(providerID: "xai", headers: headers, transport: configuration.transport, credentialResolver: credentialResolver,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })
     }
 
@@ -135,6 +143,9 @@ public func configureXAIResponses(_ configuration: inout OpenAIModelConfiguratio
 /// Installs the preserved legacy xAI Chat dialect on the compatible engine.
 public func configureXAIChat(_ configuration: inout OpenAICompatibleModelConfiguration) {
     let providerID = configuration.providerID
+    configuration.mapReasoning = { reasoning, modelID, warnings in
+        xaiReasoningEffort(reasoning, modelID: modelID, warnings: &warnings)
+    }
     configuration.usage = xaiChatUsage
     configuration.responseMetadata = { raw, namespace in
         guard let tier = raw["service_tier"], tier != .null else { return [:] }

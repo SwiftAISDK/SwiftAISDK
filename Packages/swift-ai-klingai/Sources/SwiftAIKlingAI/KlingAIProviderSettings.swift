@@ -7,6 +7,8 @@ import SwiftAIProviderUtilities
 
 public struct KlingAIProviderSettings: Sendable {
     public var apiKey: String?
+    /// Supplies a fresh API key before an authenticated request.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var accessKey: String?
     public var secretKey: String?
     public var baseURL: String?
@@ -16,7 +18,7 @@ public struct KlingAIProviderSettings: Sendable {
     var currentDate: @Sendable () -> Date
 
     public init(
-        apiKey: String? = nil,
+        apiKey: String? = nil, apiKeyProvider: (@Sendable () async throws -> String)? = nil,
         accessKey: String? = nil,
         secretKey: String? = nil,
         baseURL: String? = nil,
@@ -24,7 +26,7 @@ public struct KlingAIProviderSettings: Sendable {
         environment: [String: String]? = nil,
         transport: any AITransport = URLSessionTransport.shared
     ) {
-        self.apiKey = apiKey
+        self.apiKey = apiKey; self.apiKeyProvider = apiKeyProvider
         self.accessKey = accessKey
         self.secretKey = secretKey
         self.baseURL = baseURL

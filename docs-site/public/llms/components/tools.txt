@@ -16,7 +16,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Global Variable | 1 |
 | Initializer | 32 |
 | Instance Method | 7 |
-| Instance Property | 156 |
+| Instance Property | 158 |
 | Structure | 27 |
 | Type Alias | 9 |
 | Type Method | 5 |
@@ -130,6 +130,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Instance Property | `SwiftAI.executableTools` | `var executableTools: [AITool]?` | [Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift) |
 | Instance Property | `SwiftAI.execute` | `var execute: @Sendable (JSONValue) async throws -> JSONValue` | [Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift) |
 | Instance Property | `SwiftAI.executeWithContext` | `var executeWithContext: @Sendable (JSONValue, AIToolExecutionContext) async throws -> JSONValue` | [Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift) |
+| Instance Property | `SwiftAI.experimentalSteeringMessages` | `var experimentalSteeringMessages: [AIMessage]` | [Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift) |
 | Instance Property | `SwiftAI.finishReason` | `var finishReason: String?` | [Packages/swift-ai-core/Sources/SwiftAI/ToolChoicePreparation.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/ToolChoicePreparation.swift) |
 | Instance Property | `SwiftAI.initialRequest` | `var initialRequest: LanguageModelRequest` | [Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift) |
 | Instance Property | `SwiftAI.input` | `var input: JSONValue` | [Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift) |
@@ -195,6 +196,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Instance Property | `SwiftAIProvider.descriptor` | `var descriptor: JSONValue?` | [Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift) |
 | Instance Property | `SwiftAIProvider.dynamic` | `var dynamic: Bool` | [Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift) |
 | Instance Property | `SwiftAIProvider.dynamic` | `var dynamic: Bool` | [Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift) |
+| Instance Property | `SwiftAIProvider.experimentalSteeringMessages` | `var experimentalSteeringMessages: [AIMessage]` | [Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift) |
 | Instance Property | `SwiftAIProvider.filename` | `var filename: String?` | [Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift) |
 | Instance Property | `SwiftAIProvider.filename` | `var filename: String?` | [Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift) |
 | Instance Property | `SwiftAIProvider.files` | `var files: [AIStreamFile]` | [Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/CoreTools.swift) |

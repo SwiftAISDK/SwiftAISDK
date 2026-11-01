@@ -163,6 +163,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                     var activeReasoning: [String: OpenAIResponsesActiveReasoning] = [:]
                     var activeOutputItemIDs: [Int: String] = [:]
                     var activeTextPartIDs: Set<String> = []
+                    var textDeltaItemIDs: Set<String> = []
                     var activeReasoningPartIDs: Set<String> = []
                     func resolvedOutputItemID(_ itemID: String, outputIndex: Int?) -> String {
                         guard let outputIndex else { return itemID }
@@ -292,6 +293,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             activeReasoning = [:]
                             activeOutputItemIDs = [:]
                             activeTextPartIDs = []
+                            textDeltaItemIDs = []
                             activeTextItemID = nil
                             hasWebSearchActionSources = false
                             hasFileSearchResults = false
@@ -381,6 +383,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                                 eventItemID,
                                 outputIndex: raw["output_index"]?.intValue
                             )
+                            textDeltaItemIDs.insert(itemID)
                             if activeTextPartIDs.insert(itemID).inserted {
                                 continuation.yield(.textStart(
                                     id: itemID,
@@ -505,6 +508,24 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             let outputIndex = raw["output_index"]?.intValue
                             let itemID = resolvedOutputItemID(eventItemID, outputIndex: outputIndex)
                             let phase = item["phase"] ?? textItemPhases[itemID]
+                            if providerID == "xai.responses", !textDeltaItemIDs.contains(itemID) {
+                                let parts = item["content"]?.arrayValue ?? []
+                                let annotations = parts.flatMap { $0["annotations"]?.arrayValue ?? [] }
+                                // Items delivered only at completion still carry their
+                                // text and citation sources. Delta-streamed items have
+                                // already emitted these through the incremental path.
+                                fallbackAnnotations += annotations.filter { !fallbackAnnotations.contains($0) }
+                                textItemAnnotations[itemID] = annotations
+                                if activeTextPartIDs.insert(itemID).inserted {
+                                    continuation.yield(.textStart(id: itemID))
+                                }
+                                for part in parts {
+                                    if let text = part["text"]?.stringValue, !text.isEmpty {
+                                        continuation.yield(.textDeltaPart(id: itemID, delta: text))
+                                    }
+                                }
+                                textDeltaItemIDs.insert(itemID)
+                            }
                             let annotations: [JSONValue]
                             if openResponsesProviderOptionsName != nil {
                                 annotations = item["content"]?.arrayValue?.flatMap {
@@ -715,14 +736,17 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         }
         var options = openAIResponsesOptions(from: extraBody)
         let isEffectiveReasoningModel = openAIResponsesEffectiveReasoningModel(modelID: modelID, options: options)
-        openAIResponsesApplyTopLevelReasoning(request.reasoning, isReasoningModel: isEffectiveReasoningModel, to: &options)
         let isOpenAIBacked = isOpenAIBackedProvider(providerID, config: config)
         var warnings = openResponsesWarnings(for: request)
         if isOpenAIBacked {
             try openAIResponsesValidatePromptCacheOptions(options["prompt_cache_options"], providerID: providerID)
             warnings.append(contentsOf: openAIResponsesOpenAIBackedWarnings(options: options))
         }
-        openAIResponsesValidateReasoningEffort(modelID: modelID, options: &options, warnings: &warnings)
+        if options["reasoning"]?["effort"] == nil {
+            let efforts = openAILanguageModelCapabilities(modelID).supportedReasoningEfforts ?? ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+            let mapped = mapReasoningToProviderEffort(reasoning: request.reasoning, effortMap: Dictionary(uniqueKeysWithValues: efforts.map { ($0, $0) }), warnings: &warnings)
+            openAIResponsesApplyTopLevelReasoning(mapped, isReasoningModel: isEffectiveReasoningModel, to: &options)
+        }
         let reasoningEffortUpdateValue = options.removeValue(forKey: "reasoningEffortUpdate")
         let reasoningEffortUpdate: String?
         if let reasoningEffortUpdateValue {
@@ -754,7 +778,8 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         let preparedTools = try openAIResponsesTools(
             from: request.tools,
             supportsAsyncToolCalling: !isOpenAIBacked || openAILanguageModelCapabilities(modelID).supportsAsyncToolCalling,
-            normalizeSchemas: isOpenAIBacked
+            normalizeSchemas: isOpenAIBacked,
+            providerOptionsName: config.openAIBackedProviderRoot ?? "openai"
         )
         warnings.append(contentsOf: preparedTools.warnings)
         let providerDefinedToolNames = Set(request.tools.compactMap { name, schema -> String? in
@@ -1004,13 +1029,11 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         var reasoning: [String: JSONValue] = [:]
         if let providerReasoningEffort = providerOptions["reasoningEffort"] {
             reasoning["effort"] = providerReasoningEffort
-        } else if providerOptionsName == "quiverai", request.reasoning == "none" {
-            warnings.append(AIWarning(type: "unsupported", feature: "reasoning effort none"))
         } else if isCustomReasoning(request.reasoning),
            let requestedReasoning = request.reasoning,
            let effort = mapReasoningToProviderEffort(
                reasoning: requestedReasoning,
-               effortMap: [
+               effortMap: providerOptionsName == "quiverai" ? ["low": "low", "medium": "medium", "high": "high", "xhigh": "xhigh"] : [
                    "none": "none",
                    "minimal": "low",
                    "low": "low",

@@ -45,6 +45,8 @@
     "tests": [
       "Packages/swift-ai-xai/Tests/SwiftAIXAITests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-xai/Tests/SwiftAIXAITests/TestSupport.swift",
+      "Packages/swift-ai-xai/Tests/SwiftAIXAITests/Weekly20261101CredentialsTests.swift",
+      "Packages/swift-ai-xai/Tests/SwiftAIXAITests/Weekly20261101XAITests.swift",
       "Packages/swift-ai-xai/Tests/SwiftAIXAITests/XAIChatProviderTests.swift",
       "Packages/swift-ai-xai/Tests/SwiftAIXAITests/XAIProviderTests.swift",
       "Packages/swift-ai-xai/Tests/SwiftAIXAITests/XAIRealtimeModelTests.swift",
@@ -59,5 +61,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "M6: xAI owns Responses request policy, legacy Chat dialect, native audio/image/video/files/realtime/batch behavior and tests. Reuses the public OpenAI Responses engine and file helpers without OpenAI credentials or routing. Baseline and gaps unchanged."
+  "reviewNote": "M6: xAI owns Responses request policy, legacy Chat dialect, native audio/image/video/files/realtime/batch behavior and tests. Reuses the public OpenAI Responses engine and file helpers without OpenAI credentials or routing. Baseline and gaps unchanged. 2026-11-01: reviewed @ai-sdk/xai 5.0.30 -> 5.0.35 archives and release-matched tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 028a025398782f4938303f48fbeee45c79af544b. Native shared reasoning uses exact catalog configurable/none regexp and exact-ID xhigh gates; provider overrides remain unmodified. Weekly20261101XAITests translate changed reasoning and streamed citation tests, additionally protecting completed-only and announced-without-delta text/citation fallback in the canonical shared OpenAI Responses parser. Native callbacks refresh HTTP keys for files/batch/media/client-secret requests. Internal catalog image/speech/transcription defaults match existing native behavior; JS declaration/runtime mechanics are not claimed as native APIs. Final native integration coverage also verifies rotating HTTP credentials across Responses/Chat/files/batch/media/client-secret operations and case-insensitive header override precedence for streaming transcription WebSockets."
 }

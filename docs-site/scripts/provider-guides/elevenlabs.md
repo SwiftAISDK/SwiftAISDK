@@ -77,3 +77,35 @@ are validated. `eleven_text_to_sound*` uses `/v1/sound-generation`, with
 `providerMetadata.elevenlabs.outputFormat` and the known requested duration.
 Music and sound-effects models reject streaming speech before opening a socket.
 Existing dedicated music/sound-effect methods remain available.
+
+## Rotating credentials
+
+The native `ElevenLabsProviderSettings` accepts an optional
+`apiKeyProvider` asynchronous throwing closure. It is resolved for each
+authenticated request, so short-lived credentials can refresh without recreating
+the provider or model. Static `apiKey` settings remain supported. A supplier
+failure stops the request before it reaches the transport.
+
+## Timestamped HTTP speech and music
+
+Set `providerOptions.elevenlabs.withTimestamps` to `true` for character alignment
+from Text to Speech or Text to Dialogue, or lyric word timings from music.
+Speech results retain decoded audio and expose `alignment`,
+`normalizedAlignment` and `voiceSegments` under `providerMetadata["elevenlabs"]`.
+Music uses `/v1/music/detailed`; `wordTimestamps` contains `word`, `startMs` and
+`endMs`. Binary audio is preserved, including when multipart parts arrive in
+reverse order. Raw JSON metadata stays in `responseMetadata.body`. The native
+`music(...)` factory accepts the same timestamp option.
+
+`eleven_v4` automatically uses Text to Dialogue with the supplied text and voice;
+explicit `inputs` still select multiple voices. HTTP `wav` normalizes to
+`wav_44100`, while explicit native rates are retained. Streaming speech reports
+`withTimestamps` as unsupported; its existing WebSocket alignment remains
+available independently.
+
+`ElevenLabsProviderSettings.apiKeyProvider` resolves an async throwing key
+supplier before each authenticated HTTP request or WebSocket connection. Static
+keys and header overrides remain supported. API errors accept object, validation
+array and string `detail` shapes as well as legacy `error` objects. Typed API
+errors expose the provider message and code while retaining the full wire body,
+status and response headers.

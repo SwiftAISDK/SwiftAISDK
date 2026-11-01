@@ -190,7 +190,7 @@ public func sendMultipartFileUpload(
     let streamingBody = form.streamingBody()
     do {
         try abortSignal?.throwIfAborted()
-        var headers = config.headers.mergingHeaders(requestHeaders)
+        var headers = try await config.http.resolvedHeaders(requestHeaders)
         headers["content-type"] = headers["content-type"] ?? contentType
         headers["user-agent"] = headers["user-agent"] ?? userAgent(config.providerID)
         let request = AIHTTPRequest(
@@ -223,7 +223,7 @@ public func managedFileMetadata(
     )
     try request.abortSignal?.throwIfAborted()
     let url = try config.url("", "/files/\(encodePathSegment(fileID))")
-    let headers = managedFileHeaders(config: config, requestHeaders: request.headers)
+    let headers = try await managedFileHeaders(config: config, requestHeaders: request.headers)
     let (httpRequest, response) = try await getFromAPI(
         url: url,
         transport: config.transport,
@@ -263,7 +263,7 @@ public func managedFileDownload(
     )
     try request.abortSignal?.throwIfAborted()
     let url = try config.url("", "/files/\(encodePathSegment(fileID))/content")
-    let headers = managedFileHeaders(config: config, requestHeaders: request.headers)
+    let headers = try await managedFileHeaders(config: config, requestHeaders: request.headers)
     let (httpRequest, response) = try await getBinaryStreamFromAPI(
         url: url,
         transport: config.transport,
@@ -304,7 +304,7 @@ public func managedFileDelete(
     )
     try request.abortSignal?.throwIfAborted()
     let url = try config.url("", "/files/\(encodePathSegment(fileID))")
-    let headers = managedFileHeaders(config: config, requestHeaders: request.headers)
+    let headers = try await managedFileHeaders(config: config, requestHeaders: request.headers)
     let (httpRequest, response) = try await deleteFromAPI(
         url: url,
         transport: config.transport,
@@ -359,8 +359,8 @@ public func managedFileResponseID(_ raw: JSONValue, providerID: String) throws -
 private func managedFileHeaders(
     config: OpenAIModelConfiguration,
     requestHeaders: [String: String]
-) -> [String: String] {
-    var headers = config.headers.mergingHeaders(requestHeaders)
+) async throws -> [String: String] {
+    var headers = try await config.http.resolvedHeaders(requestHeaders)
     headers["user-agent"] = headers["user-agent"] ?? userAgent(config.providerID)
     return headers
 }

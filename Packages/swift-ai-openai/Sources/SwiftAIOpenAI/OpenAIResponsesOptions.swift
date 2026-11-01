@@ -1374,6 +1374,7 @@ public struct OpenAILanguageModelCapabilities {
     public var supportsConfigurationUpdate: Bool
     public var supportsAsyncToolCalling: Bool
     public var supportedReasoningEfforts: [String]?
+    public var supportsChatFunctionToolsWithReasoning = true
 }
 
 public func openAILanguageModelCapabilities(_ modelID: String) -> OpenAILanguageModelCapabilities {
@@ -1381,9 +1382,11 @@ public func openAILanguageModelCapabilities(_ modelID: String) -> OpenAILanguage
     let gptVersion = openAIGPTVersion(modelID)
     let isGPTChatModel = gptVersion?.minor == nil && (gptVersion?.variant?.hasPrefix("chat") ?? false)
     let isGPT6OrLaterModel = gptVersion.map { $0.major >= 6 } ?? false
-    let isGPT6SolOrLuna = modelID == "gpt-6-sol" || modelID == "gpt-6-luna"
+    let isGPT6SolOrLuna = ["gpt-6-sol", "gpt-6-luna", "gpt-6.1-terra"].contains(modelID)
     let isReasoningModel = oSeriesVersion != nil
         || (gptVersion.map { $0.major >= 5 } == true && !isGPTChatModel)
+    let standardGPT5 = gptVersion?.major == 5 && (gptVersion?.variant == nil || (gptVersion?.variant?.range(of: #"^(?:(?:mini|nano|sol|luna|terra)(?:-\d{4}-\d{2}-\d{2})?|\d{4}-\d{2}-\d{2})$"#, options: .regularExpression) != nil))
+    let gpt5Efforts: [String]? = standardGPT5 ? ((gptVersion?.minor ?? 0) == 0 ? ["minimal", "low", "medium", "high"] : (gptVersion?.minor ?? 0) == 1 ? ["none", "low", "medium", "high"] : (gptVersion?.minor ?? 0) < 6 ? ["none", "low", "medium", "high", "xhigh"] : ["none", "low", "medium", "high", "xhigh", "max"]) : nil
     let supportsNonReasoningParameters = isGPT6SolOrLuna || (gptVersion.map {
         !isGPT6OrLaterModel && $0.major == 5 && ($0.minor ?? 0) >= 1
     } ?? false)
@@ -1396,34 +1399,9 @@ public func openAILanguageModelCapabilities(_ modelID: String) -> OpenAILanguage
             ? ["none", "low", "medium", "high", "xhigh", "max"]
             : isGPT6OrLaterModel
                 ? ["low", "medium", "high", "xhigh", "max"]
-                : nil
+                : gpt5Efforts,
+        supportsChatFunctionToolsWithReasoning: !(gptVersion?.major == 5 && (gptVersion?.minor ?? 0) >= 6)
     )
-}
-
-func openAIResponsesValidateReasoningEffort(
-    modelID: String,
-    options: inout [String: JSONValue],
-    warnings: inout [AIWarning]
-) {
-    let capabilities = openAILanguageModelCapabilities(modelID)
-    guard let supportedEfforts = capabilities.supportedReasoningEfforts,
-          var reasoning = options["reasoning"]?.objectValue,
-          let effort = reasoning["effort"]?.stringValue,
-          !supportedEfforts.contains(effort) else {
-        return
-    }
-
-    reasoning.removeValue(forKey: "effort")
-    if reasoning.isEmpty {
-        options.removeValue(forKey: "reasoning")
-    } else {
-        options["reasoning"] = .object(reasoning)
-    }
-    warnings.append(AIWarning(
-        type: "unsupported",
-        feature: "reasoningEffort",
-        message: "\(modelID) only supports the following reasoning efforts: \(supportedEfforts.joined(separator: ", "))"
-    ))
 }
 
 func openAIResponsesRemoveUnsupportedGPT6Options(

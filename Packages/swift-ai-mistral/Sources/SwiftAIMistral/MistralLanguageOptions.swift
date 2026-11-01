@@ -26,12 +26,12 @@ func mistralResponseFormatJSON(_ responseFormat: AIResponseFormat) -> JSONValue?
     }
 }
 
-func mistralWarnings(for request: LanguageModelRequest, modelID: String) -> [AIWarning] {
+func mistralWarnings(for request: LanguageModelRequest, modelID: String, conversation: Bool = false) -> [AIWarning] {
     var warnings: [AIWarning] = []
     if request.topK != nil {
         warnings.append(AIWarning(type: "unsupported", feature: "topK"))
     }
-    if isCustomReasoning(request.reasoning), !mistralSupportsReasoningEffort(modelID) {
+    if isCustomReasoning(request.reasoning), !mistralSupportsReasoningEffort(modelID, conversation: conversation) {
         warnings.append(AIWarning(
             type: "unsupported",
             feature: "reasoning",
@@ -41,7 +41,14 @@ func mistralWarnings(for request: LanguageModelRequest, modelID: String) -> [AIW
     return warnings
 }
 
-func mistralSupportsReasoningEffort(_ modelID: String) -> Bool {
+func mistralSupportsReasoningEffort(_ modelID: String, conversation: Bool = false) -> Bool {
+    if conversation {
+        return ["glm-5-2", "labs-leanstral-1-5", "labs-leanstral-1-5-1",
+                "magistral-medium-latest", "magistral-small-latest", "mistral-large-4", "mistral-large-4-0",
+                "mistral-medium", "mistral-medium-2604", "mistral-medium-3", "mistral-medium-3-5",
+                "mistral-medium-3.5", "mistral-medium-latest", "mistral-small-2603", "mistral-small-latest",
+                "mistral-vibe-cli-fast", "mistral-vibe-cli-latest", "mistral-vibe-cli-with-tools", "zai-glm-5-2"].contains(modelID)
+    }
     switch modelID {
     case "codestral-2508", "codestral-latest",
          "ministral-14b-2512", "ministral-14b-latest",
@@ -56,21 +63,13 @@ func mistralSupportsReasoningEffort(_ modelID: String) -> Bool {
     }
 }
 
-func mistralReasoningEffort(_ reasoning: String?, warnings: inout [AIWarning]) -> JSONValue? {
+func mistralReasoningEffort(_ reasoning: String?, modelID: String? = nil, warnings: inout [AIWarning]) -> JSONValue? {
     guard isCustomReasoning(reasoning), let reasoning else { return nil }
-    if reasoning == "none" {
-        return .string("none")
-    }
+    let efforts = ["zai-glm-5", "zai-glm-5-3", "zai-glm-5-3-flash", "zai-glm-latest"].contains(modelID ?? "")
+        ? ["low", "high", "max"] : ["none", "high"]
     return mapReasoningToProviderEffort(
         reasoning: reasoning,
-        effortMap: [
-            "minimal": "high",
-            "low": "high",
-            "medium": "high",
-            "high": "high",
-            "xhigh": "high",
-            "max": "high"
-        ],
+        effortMap: Dictionary(uniqueKeysWithValues: efforts.map { ($0, $0) }),
         warnings: &warnings
     ).map(JSONValue.string)
 }
@@ -174,8 +173,8 @@ func mistralValidateLanguageProviderOptions(_ options: [String: JSONValue]) thro
             }
             output[key] = value
         case "reasoningEffort":
-            guard let string = value.stringValue, ["high", "none"].contains(string) else {
-                throw AIError.invalidArgument(argument: "providerOptions.mistral.reasoningEffort", message: "Mistral reasoningEffort must be high or none.")
+            guard let string = value.stringValue, ["high", "none", "low", "max"].contains(string) else {
+                throw AIError.invalidArgument(argument: "providerOptions.mistral.reasoningEffort", message: "Mistral reasoningEffort must be high, none, low or max.")
             }
             output[key] = value
         default:

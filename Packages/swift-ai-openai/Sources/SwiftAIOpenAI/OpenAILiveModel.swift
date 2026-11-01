@@ -23,13 +23,16 @@ public final class OpenAILiveModel:
 
     private let baseURL: String
     private let headers: [String: String]
+    private let credentialResolver: AIAsyncCredential?
 
     public init(
         modelID: String = "gpt-live-1",
         configuration settings: OpenAIProviderSettings
     ) throws {
         let providerName = settings.name ?? "openai"
-        let apiKey = settings.apiKey
+        let credential = settings.apiKeyProvider.map(AIAsyncCredential.init)
+        self.credentialResolver = credential
+        let apiKey = credential?.placeholder ?? settings.apiKey
             ?? settings.environmentValue(["OPENAI_API_KEY"])
         guard let apiKey else {
             throw AIError.missingAPIKey(
@@ -69,6 +72,7 @@ public final class OpenAILiveModel:
         self.modelID = modelID
         self.baseURL = withoutTrailingSlash(config.baseURL)
         self.headers = config.headers
+        self.credentialResolver = config.http.credentialResolver
     }
 
     public func getWebSocketConfig(
@@ -92,6 +96,19 @@ public final class OpenAILiveModel:
 
     public func getServerWebSocketConfig() throws
         -> AIRealtimeWebSocketConfiguration {
+        guard credentialResolver == nil else {
+            throw AIError.invalidArgument(argument: "apiKeyProvider", message: "Use getResolvedServerWebSocketConfig() for asynchronous credentials.")
+        }
+        return try staticWebSocketConfig()
+    }
+
+    public func getResolvedServerWebSocketConfig() async throws -> AIRealtimeWebSocketConfiguration {
+        var result = try staticWebSocketConfig()
+        if let credentialResolver { result.headers = try await credentialResolver.resolveHeaders(result.headers) }
+        return result
+    }
+
+    private func staticWebSocketConfig() throws -> AIRealtimeWebSocketConfiguration {
         let rawURL = baseURL + "/live/sessions"
         guard var components = URLComponents(string: rawURL) else {
             throw AIError.invalidURL(rawURL)

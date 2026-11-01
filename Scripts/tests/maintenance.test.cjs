@@ -32,7 +32,8 @@ test('published root uses ranges while development links the identical source by
   const data = catalog.readCatalog(), manifest = umbrellaManifest(data);
   assert(!manifest.includes('.package(path:'));
   assert.equal((manifest.match(/\.package\(url:/g) || []).length, data.catalog.packages.filter(p => p.state === 'extracted').length);
-  assert(manifest.includes('swift-ai-core.git", from: "1.1.0"'));
+  const core = data.catalog.packages.find(p => p.id === 'swift-ai-core');
+  assert(manifest.includes(`swift-ai-core.git", from: "${core.umbrellaFrom}"`));
   const workspace = development.prepare();
   for (const name of ['Sources', 'Tests', 'Docs', 'Porting'])
     assert.equal(fs.realpathSync(path.join(workspace, name)), fs.realpathSync(path.join(data.root, name)));

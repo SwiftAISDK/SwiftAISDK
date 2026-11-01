@@ -1,6 +1,6 @@
 # Porting Status
 
-Snapshot date: 2026-10-26
+Snapshot date: 2026-11-01
 
 SwiftAISDK currently ports the provider-facing parts of Vercel AI SDK into a
 SwiftPM library. The package has a broad Swift-native facade, provider registry,
@@ -29,6 +29,18 @@ skips), exported-package tests, independent-version consumers and iOS compilatio
 Public 3.0.0 and 2.8.1 consumers compiled and ran. Hosted Swift 6.3.3 source tests
 also passed; the redundant full migration workflow was cancelled to conserve CI.
 Automatic CI now selects relevant checks, without migration rehearsals.
+
+## Weekly upstream review (2026-11-01)
+
+The current source reviews 52 newer npm baselines using verified published archives
+and exact matching-release tests. It adds lazy async credentials, nearest supported
+reasoning efforts, current provider options/parsers, steering and failed-step
+callbacks, descriptive model metadata and MCP input-required continuation updates.
+All broader product gaps remain explicit. No new model provider was found in the
+exact 92-name registry namespace. See [the complete audit](WeeklyUpstreamAudit20261101.md)
+for every reference/latest version, source/test disposition and publication state.
+The 48 changed Swift units and separate compatibility umbrella are pending the
+required integration, export and exact-source hosted CI gates.
 
 ## Weekly upstream parity (2026-10-25)
 

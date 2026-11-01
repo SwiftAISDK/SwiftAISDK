@@ -25,13 +25,11 @@ public func openAIImageMaxImagesPerCall(_ modelID: String) -> Int {
 }
 func openAITranscriptionOptions(from extraBody: [String: JSONValue], providerID: String = "openai", providerRoot: String? = nil, modelID: String) -> [String: JSONValue] {
     var output = openAIProviderOptions(from: extraBody, providerID: providerID, providerRoot: providerRoot)
-    let hadProviderOptions = !output.isEmpty
     openAIResponsesMoveKey("timestampGranularities", to: "timestamp_granularities", in: &output)
     openAIResponsesMoveKey("responseFormat", to: "response_format", in: &output)
-
-    if modelID != "whisper-1", hadProviderOptions, output["response_format"] == nil {
-        output["response_format"] = .string(openAITranscriptionUsesJSONResponseFormat(modelID) ? "json" : "verbose_json")
-    }
+    if output["response_format"] == nil, modelID == "whisper-1" { output["response_format"] = "verbose_json" }
+    if output["response_format"] == nil, modelID == "gpt-4o-transcribe-diarize" { output["response_format"] = "diarized_json" }
+    if output["response_format"]?.stringValue == "verbose_json", output["timestamp_granularities"] == nil { output["timestamp_granularities"] = ["segment"] }
 
     return output
 }
@@ -57,16 +55,14 @@ func openAITranscriptionOptions(providerOptions: [String: JSONValue], extraBody:
 
     if hadProviderOptions {
         output["temperature"] = output["temperature"] ?? .number(0)
-        output["timestamp_granularities"] = output["timestamp_granularities"] ?? .array([.string("segment")])
     }
 
-    if modelID != "whisper-1", hadProviderOptions, output["response_format"] == nil {
-        output["response_format"] = .string(openAITranscriptionDefaultResponseFormat(modelID))
-    }
+    if output["response_format"] == nil, modelID == "whisper-1" { output["response_format"] = "verbose_json" }
     if modelID == "gpt-4o-transcribe-diarize" {
         output["response_format"] = output["response_format"] ?? .string("diarized_json")
         output["chunking_strategy"] = output["chunking_strategy"] ?? .string("auto")
     }
+    if output["response_format"]?.stringValue == "verbose_json", output["timestamp_granularities"] == nil { output["timestamp_granularities"] = ["segment"] }
     if let strategy = output["chunking_strategy"]?.objectValue {
         var mapped: [String: JSONValue] = [:]
         if let value = strategy["type"] { mapped["type"] = value }
@@ -83,14 +79,6 @@ func openAITranscriptionOptions(providerOptions: [String: JSONValue], extraBody:
 
     return output
 }
-func openAITranscriptionUsesJSONResponseFormat(_ modelID: String) -> Bool {
-    modelID == "gpt-4o-transcribe" || modelID == "gpt-4o-mini-transcribe"
-}
-private func openAITranscriptionDefaultResponseFormat(_ modelID: String) -> String {
-    if modelID == "gpt-4o-transcribe-diarize" { return "diarized_json" }
-    return openAITranscriptionUsesJSONResponseFormat(modelID) ? "json" : "verbose_json"
-}
-
 private func openAIValidatedTranscriptionChunkingStrategy(
     _ value: JSONValue,
     optionName: String

@@ -190,7 +190,8 @@ test("allowlisted exports are deterministic, portable and retain source/test/pro
     assert(
       provenance.upstream.every(
         (u) =>
-          u.testRefRelationship === "inventory-snapshot-not-release-verified",
+          u.testRefRelationship === read(path.join(dir, "Porting/upstream-lock.json"))
+            .packages.find((entry) => entry.name === u.name).testRefRelationship,
       ),
     );
   }

@@ -11,3 +11,9 @@ images or Box questions and enables the 262k-token long-context header only when
 `TypeSafeAIDecisionModelOptions(longContext: true)` is supplied. Unknown model
 options still warn; known options are validated before I/O. See the Decision guide
 for a complete typed example and reference insertion rules.
+
+## Rotating API keys
+
+`TypeSafeAIProviderSettings.apiKeyProvider` resolves a fresh key before
+each authenticated request; static `apiKey` settings remain supported. Supplier
+errors stop the request before it reaches the transport.

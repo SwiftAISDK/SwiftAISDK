@@ -7,10 +7,10 @@ import SwiftAIAnthropic
 struct MiniMaxHTTPConfiguration: AIProviderHTTPConfiguration {
     var http: AIProviderHTTPClient
     var baseURL: String
-    init(providerID: String, baseURL: String, headers: [String: String], transport: any AITransport) {
+    init(providerID: String, baseURL: String, headers: [String: String], transport: any AITransport, credentialResolver: AIAsyncCredential? = nil) {
         let baseURL = withoutTrailingSlash(baseURL)
         self.baseURL = baseURL
-        http = AIProviderHTTPClient(providerID: providerID, headers: headers, transport: transport,
+        http = AIProviderHTTPClient(providerID: providerID, headers: headers, transport: transport, credentialResolver: credentialResolver,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: [:]) })
     }
     var anthropicConfiguration: AnthropicModelConfiguration {

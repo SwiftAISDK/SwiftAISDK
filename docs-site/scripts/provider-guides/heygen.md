@@ -82,10 +82,8 @@ image or video; audio-only conditioning is invalid. Limits are 9 images,
 
 ## Output controls
 
-Prompts require 1–32,000 UTF-16 code units. Duration is an integer from
-5–15 seconds and defaults to 5. Seeds range from 0 to 4,294,967,295.
-`promptEnhancement` accepts `.turbo`, `.quality`, or `.disabled`; omission lets
-HeyGen apply its API default.
+Prompts require 1–32,000 UTF-16 code units. Duration is a positive integer number of seconds and defaults to 5. Longer requests, including 30- and 60-second clips, pass through unchanged; the service enforces limits for the selected settings. Seeds range from 0 to 4,294,967,295.
+`promptEnhancement` accepts `.turbo`, `.quality`, `.ultraquality`, or `.disabled`; omission lets HeyGen apply its API default. A provider duration rejection retains the original status and message; the SDK does not clamp or automatically retry a direct start request.
 
 Typed `resolution` selects `.p480`, `.p768`, `.p1080`, or `.twoK` and overrides
 the standard `resolution` frame size. The default is 768p. These standard
@@ -146,3 +144,11 @@ JavaScript workflow/model serialization are outside this video provider.
 The compile-checked example is `Examples/Sources/GenerateWithHeyGen/main.swift`.
 Run `swift run --package-path Examples GenerateWithHeyGen` for usage without API
 calls. The `text`, `image`, `reference`, `start`, and `resume` commands call HeyGen.
+
+## Rotating credentials
+
+The native `HeyGenProviderSettings` accepts an optional
+`apiKeyProvider` asynchronous throwing closure. It is resolved for each
+authenticated request, so short-lived credentials can refresh without recreating
+the provider or model. Static `apiKey` settings remain supported. A supplier
+failure stops the request before it reaches the transport.

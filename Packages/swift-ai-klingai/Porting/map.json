@@ -25,7 +25,8 @@
     "tests": [
       "Packages/swift-ai-klingai/Tests/SwiftAIKlingAITests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-klingai/Tests/SwiftAIKlingAITests/KlingAIProviderTests.swift",
-      "Packages/swift-ai-klingai/Tests/SwiftAIKlingAITests/TestSupport.swift"
+      "Packages/swift-ai-klingai/Tests/SwiftAIKlingAITests/TestSupport.swift",
+      "Packages/swift-ai-klingai/Tests/SwiftAIKlingAITests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },
@@ -35,5 +36,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained. 2026-11-01 published package source/declarations and exact release-matched tests reviewed; native async credential suppliers preserve existing static keys, overrides and cancellation. See Docs/WeeklyUpstreamAudit20261101.json for archive identities and exact test provenance."
 }

@@ -5,14 +5,16 @@ import SwiftAIProviderUtilities
 
 public struct VoyageProviderSettings: Sendable {
     public var apiKey: String?
+    /// Supplies a fresh API key immediately before each authenticated request.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var baseURL: String?
     public var headers: [String: String]
     public var queryParams: [String: String]
     public var transport: any AITransport
 
-    public init(apiKey: String? = nil, baseURL: String? = nil, headers: [String: String] = [:],
+    public init(apiKey: String? = nil, apiKeyProvider: (@Sendable () async throws -> String)? = nil, baseURL: String? = nil, headers: [String: String] = [:],
                 queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared) {
-        self.apiKey = apiKey; self.baseURL = baseURL; self.headers = headers
+        self.apiKey = apiKey; self.apiKeyProvider = apiKeyProvider; self.baseURL = baseURL; self.headers = headers
         self.queryParams = queryParams; self.transport = transport
     }
 }
@@ -23,13 +25,20 @@ public final class VoyageProvider: AIProvider, Sendable {
     private let http: AIProviderHTTPClient
 
     public init(configuration: VoyageProviderSettings = .init()) throws {
+        var resolvedSettings = configuration
+        if let supplier = resolvedSettings.apiKeyProvider {
+            let credential = AIAsyncCredential(supplier)
+            resolvedSettings.apiKey = credential.placeholder
+            resolvedSettings.transport = credential.resolvingTransport(resolvedSettings.transport)
+        }
+        let configuration = resolvedSettings
         let names = ["VOYAGE_API_KEY"]
         guard let key = configuration.apiKey ?? environmentValue(names) else {
             throw AIError.missingAPIKey(provider: "voyage", environmentVariables: names)
         }
-        var headers = configuration.headers
-        headers["Authorization"] = headers["Authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-voyage/2.0.68")
+        var headers = normalizeHeaders(configuration.headers)
+        headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
+        headers = withUserAgentSuffix(headers, "ai-sdk-voyage/2.0.72")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.voyageai.com/v1")
         http = AIProviderHTTPClient(providerID: "voyage", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

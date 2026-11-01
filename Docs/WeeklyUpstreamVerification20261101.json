@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "status": "local-gates-passed-awaiting-hosted-ci",
+  "date": "2026-11-01",
+  "toolchain": "Apple Swift6.4; hosted Swift6.3.3 is a required publication gate",
+  "owningPackages": 52,
+  "compatibilityTests": 1721,
+  "reportedPackageAndFacadeTests": 3741,
+  "explicitLiveSkips": 33,
+  "liveProviderCalls": "not-enabled",
+  "checks": [
+    {
+      "id": "all-packages-green",
+      "command": [
+        "node",
+        "Scripts/test-packages.mjs"
+      ],
+      "code": 0,
+      "startedAt": "2026-11-01T02:01:09.370Z",
+      "finishedAt": "2026-11-01T02:05:14.397Z",
+      "logSHA256": "7713de34808b9abf0c3ea3f4f036a26a92edb3f7975207f0648106324993a236"
+    },
+    {
+      "id": "compatibility-complete",
+      "command": [
+        "node",
+        "Scripts/sdk.mjs",
+        "dev",
+        "test",
+        "--scratch-path",
+        ".build/weekly-root-compat",
+        "--no-parallel",
+        "--jobs",
+        "4"
+      ],
+      "code": 0,
+      "startedAt": "2026-11-01T02:00:05.739Z",
+      "finishedAt": "2026-11-01T02:01:13.641Z",
+      "logSHA256": "727de9c45080a6801b5040ddb8eec9d25c63d0911fc40fcac82a5196f302aa0a"
+    },
+    {
+      "id": "tooling-final-source",
+      "command": [
+        "node",
+        "--test",
+        "Scripts/tests/catalog.test.cjs",
+        "Scripts/tests/ci.test.cjs",
+        "Scripts/tests/maintenance.test.cjs",
+        "Scripts/tests/release.test.cjs"
+      ],
+      "code": 0,
+      "startedAt": "2026-11-01T01:57:03.218Z",
+      "finishedAt": "2026-11-01T01:58:55.807Z",
+      "logSHA256": "45f333d42eaa0c81319d054c3982aba422f58c1ee2a4972f6fe4c27178ed78fe"
+    },
+    {
+      "id": "docs-check",
+      "command": [
+        "npm",
+        "--prefix",
+        "docs-site",
+        "run",
+        "check"
+      ],
+      "code": 0,
+      "startedAt": "2026-11-01T01:46:24.066Z",
+      "finishedAt": "2026-11-01T01:49:07.656Z",
+      "logSHA256": "82083909608826676ccb6a94893e17d7dd1e2112657ec769e9ba07ea6b1d427b"
+    },
+    {
+      "id": "docs-build",
+      "command": [
+        "npm",
+        "--prefix",
+        "docs-site",
+        "run",
+        "build"
+      ],
+      "code": 0,
+      "startedAt": "2026-11-01T01:49:41.627Z",
+      "finishedAt": "2026-11-01T01:52:17.214Z",
+      "logSHA256": "4c44cdebc027428974e05d2cfd6244852c1230348289f96f38dcd4d09d047858"
+    },
+    {
+      "id": "core-isolation",
+      "command": [
+        "node",
+        "Scripts/verify-core-isolation.mjs"
+      ],
+      "code": 0,
+      "startedAt": "2026-11-01T01:44:32.216Z",
+      "finishedAt": "2026-11-01T01:44:48.558Z",
+      "logSHA256": "639aa4a327376ba7ac86d7d638a9cd8e455be83680537e6c22228cef61f82bca"
+    },
+    {
+      "id": "provider-isolation",
+      "command": [
+        "node",
+        "Scripts/verify-provider-isolation.mjs"
+      ],
+      "code": 0,
+      "startedAt": "2026-11-01T01:45:04.117Z",
+      "finishedAt": "2026-11-01T01:46:16.003Z",
+      "logSHA256": "7349f8d7b33c2d6922756206799d4a5181ae660cc23a598b769019edeb154626"
+    },
+    {
+      "id": "provider-versions",
+      "command": [
+        "node",
+        "Scripts/verify-provider-versions.mjs"
+      ],
+      "code": 0,
+      "startedAt": "2026-11-01T01:45:05.373Z",
+      "finishedAt": "2026-11-01T01:45:56.809Z",
+      "logSHA256": "5f46ce5c2cca6b44264d3174d0778094903fe8b33ecb3f7d4fb3f068618ce1bc"
+    },
+    {
+      "id": "generate-verified",
+      "command": [
+        "node",
+        "Scripts/sdk.mjs",
+        "generate",
+        "--check"
+      ],
+      "code": 0,
+      "startedAt": "2026-11-01T01:57:03.218Z",
+      "finishedAt": "2026-11-01T01:57:03.517Z",
+      "logSHA256": "6010cdfadd47ca5b90dceeb2f815ba310884c2e88dedaa182ad0d0b052ae02a5"
+    },
+    {
+      "id": "diff-verified",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "code": 0,
+      "startedAt": "2026-11-01T01:57:03.218Z",
+      "finishedAt": "2026-11-01T01:57:03.322Z",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "distributions-green",
+      "command": [
+        "node",
+        "Scripts/verify-package-distributions.mjs",
+        "--report",
+        "ARTIFACTS/distributions-green.json"
+      ],
+      "code": 0,
+      "startedAt": "2026-11-01T02:05:54.750Z",
+      "finishedAt": "2026-11-01T02:34:47.527Z",
+      "logSHA256": "1cd93243b90a36d413ce6696e8ccfb219efe829d647c2cadf33f41422f814128"
+    }
+  ],
+  "distributionEvidence": {
+    "sha256": "edbd0ccab15d7fe3053e4bbcdc5d77fe5d585447fa9660d9ea98b1cc59fcd0c4",
+    "status": "passed",
+    "scope": "Deterministic snapshot exports of all52 units, standalone suites, minimum/latest consumers and mixed/umbrella clients. Local mirrors and synthetic candidate tags; existing public lower-bound tags fetched read-only. Public release verification remains separate."
+  }
+}

@@ -274,7 +274,7 @@ private let openAIResponsesNonReasoningModelIDsLikeUpstream = [
     #expect(result.warnings.isEmpty)
 }
 
-@Test func openAIResponsesRejectsUnsupportedGPT6ReasoningEffortsAndOptionsLikeUpstream() async throws {
+@Test func openAIResponsesForwardsProviderReasoningWhileRejectingUnsupportedGPT6OptionsLikeUpstream() async throws {
     let transport = RecordingTransport(response: jsonResponse(#"{"id":"resp-gpt6-options","status":"completed","output_text":"done"}"#))
     let provider = try AIProviders.openAI(configuration: OpenAIProviderSettings(apiKey: "test-key", transport: transport))
 
@@ -293,14 +293,14 @@ private let openAIResponsesNonReasoningModelIDsLikeUpstream = [
     ))
 
     let body = try decodeJSONBody(try #require((await transport.requests()).first?.body))
-    #expect(body["reasoning"]?["effort"] == nil)
+    #expect(body["reasoning"]?["effort"] == "none")
     #expect(body["input"]?[0]?["type"]?.stringValue != "configuration_update")
     #expect(body["prompt_cache_retention"] == nil)
     #expect(body["top_logprobs"] == nil)
     #expect(body["include"] == nil)
     #expect(body["temperature"] == nil)
     #expect(body["top_p"] == nil)
-    #expect(result.warnings.map(\.feature).contains("reasoningEffort"))
+    #expect(!result.warnings.map(\.feature).contains("reasoningEffort"))
     #expect(result.warnings.map(\.feature).contains("reasoningEffortUpdate"))
     #expect(result.warnings.map(\.feature).contains("promptCacheRetention"))
     #expect(result.warnings.map(\.feature).contains("logprobs"))

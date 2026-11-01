@@ -102,21 +102,10 @@ func xaiReasoningEffort(
         ))
         return nil
     }
-    if reasoning == "none" {
-        return "none"
-    }
-    return mapReasoningToProviderEffort(
-        reasoning: reasoning,
-        effortMap: [
-            "minimal": "low",
-            "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": modelID == "grok-4.6" ? "xhigh" : "high",
-            "max": modelID == "grok-4.6" ? "xhigh" : "high"
-        ],
-        warnings: &warnings
-    )
+    var map = ["low": "low", "medium": "medium", "high": "high"]
+    if modelID.range(of: #"^grok-(?:4\.[5-9](?!\d)|(?:[5-9]|[1-9]\d+)(?:[.-]|$))"#, options: .regularExpression) == nil { map["none"] = "none" }
+    if modelID == "grok-4.6" { map["xhigh"] = "xhigh" }
+    return mapReasoningToProviderEffort(reasoning: reasoning, effortMap: map, warnings: &warnings)
 }
 
 func xaiChatResponseFormat(from responseFormat: AIResponseFormat?) -> JSONValue? {

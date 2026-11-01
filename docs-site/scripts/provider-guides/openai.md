@@ -34,3 +34,14 @@ text requests retain their existing full-content behavior.
 Chat, Completion and Responses streams that end without a provider completion
 signal finish as `interrupted`. Preserve the partial output and choose whether
 to retry; tool execution and automatic continuation stop for that response.
+
+
+## Current model and credential behavior
+
+`OpenAIProviderSettings.apiKeyProvider` accepts an async throwing closure. It runs before each authenticated HTTP request and server WebSocket connection, including Files, Skills and Batch requests; explicit provider/request authorization headers retain precedence. Static `apiKey` remains supported. `getResolvedServerWebSocketConfig()` resolves rotating credentials for direct Live connections; the existing synchronous configuration method remains available for static credentials.
+
+Portable `reasoning` is mapped to the nearest supported effort, preferring a lower effort and never silently disabling reasoning. Explicit `providerOptions.openai.reasoningEffort` is sent unchanged. GPT-5.6 Chat function tools select effort `none` unless provider options override it; use Responses when combining those tools with reasoning. GPT-6.1 Terra supports effort `none` and sampling in that mode. Chat maps `max` to its highest supported effort; Responses can send `max` to supporting models. GPT-5 retains prompt cache retention and Responses logprobs while reasoning.
+
+Decisions accepts `providerOptions.openai.promptCacheKey`. Object JSON evidence and nonempty arrays of objects use native `input_json` within 32 container levels, 10,000 values and 256 KiB of UTF-8 JSON. Other values and larger evidence retain their JSON text representation. JSON Schema `propertyNames` without an explicit type is removed with a compatibility warning; an explicit non-string type is rejected. A web-search item still marked `searching` at completion is an error result.
+
+`provider.streamingTranscriptionModel("gpt-transcribe")` exposes native incremental transcription. `gpt-live-transcribe` and the existing `gpt-realtime-whisper` alias also support streaming; dated snapshots are accepted. Supply `OpenAIProviderSettings.webSocketTransport` for a custom native connection. The new models send language hints as `languages`; `gpt-transcribe` ignores `streaming.delay` with a warning. The Live and realtime-whisper families require streaming. REST transcription leaves response format unset unless requested, except Whisper (`verbose_json`) and diarization (`diarized_json`); segment timestamps default only with `verbose_json`. Duration falls back to duration-billed usage, while token usage does not invent a duration.

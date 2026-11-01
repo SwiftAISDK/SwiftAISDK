@@ -24,3 +24,10 @@ Image generation and edits accept base64, URL, and mixed image responses. Return
 ## Generated content order
 
 Unary generation places the separate reasoning block before text, followed by function tool calls. Content-array entries preserve their internal order after the separate reasoning block. This keeps `result.content` in the same reasoning-before-answer order as streamed output.
+
+
+## Rotating credentials and reasoning adapters
+
+`OpenAICompatibleProviderSettings.apiKeyProvider` accepts an async throwing key supplier resolved before each authenticated request. Static keys and explicit provider/request authorization headers remain available. Trusted returned image URLs resolve credentials at download time; cross-origin downloads retain the existing credential stripping policy.
+
+Custom wire adapters can set `OpenAICompatibleModelConfiguration.mapReasoning` to map portable `reasoning` and append warnings. Explicit provider `reasoningEffort` bypasses this callback. Completion prompt errors include the content of a misplaced system message.

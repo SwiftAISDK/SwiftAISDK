@@ -32,6 +32,7 @@ extension AzureTranscriptionModel {
         var headers = config.requestHeaders(api: "mai")
         if let tokenProvider = config.tokenProvider { headers = headers.mergingHeaders(["Authorization": "Bearer \(try await tokenProvider())"]) }
         headers = headers.mergingHeaders(request.headers)
+        if let credentialResolver = config.credentialResolver { headers = try await credentialResolver.resolveHeaders(headers) }
         let connection: any AIDuplexWebSocketConnection
         do {
             connection = try await config.settings.webSocketTransport.connect(AIDuplexWebSocketRequest(url: url, headers: headers, abortSignal: request.abortSignal))

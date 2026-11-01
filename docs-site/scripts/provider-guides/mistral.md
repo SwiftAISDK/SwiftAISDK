@@ -47,3 +47,18 @@ the known legacy `voxtral-mini-2507`, `voxtral-mini-2602` and
 `voxtral-mini-latest` IDs. Current, future and custom model IDs forward that
 combination. The API validates model-specific word timestamps and diarization
 requirements.
+
+## Current reasoning efforts and rotating credentials
+
+The `zai-glm-5`, `zai-glm-5-3`, `zai-glm-5-3-flash` and `zai-glm-latest`
+Chat models accept `low`, `high` and `max` reasoning. Shared reasoning selects the
+nearest supported effort, preferring a lower level; `none` maps to `low` with a
+compatibility warning. The explicit `mistral.reasoningEffort` provider option
+accepts `none`, `low`, `high` and `max` and passes through unchanged for
+configurable models. The Conversations API retains its own model support;
+Chat-only GLM 5.3 and unknown model IDs do not gain Conversations reasoning.
+
+`MistralProviderSettings.apiKeyProvider` accepts an async throwing supplier,
+resolved before each authenticated Chat, Conversations, embedding, speech or
+transcription request. Static keys and provider/request header overrides remain
+available. Supplier errors fail the operation before sending a request.

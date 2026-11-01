@@ -18,7 +18,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     let body = try decodeJSONBody(try #require(request.body))
     #expect(request.url.absoluteString == "https://api.quiver.ai/v1/responses")
-    #expect(request.headers["user-agent"] == "ai-sdk-quiverai/2.0.69")
+    #expect(request.headers["user-agent"] == "ai-sdk-quiverai/2.0.73")
     #expect(body["tools"]?[0]?["type"]?.stringValue == "custom")
     #expect(body["reasoning"]?["effort"]?.stringValue == "xhigh")
     #expect(body["reasoning"]?["summary"]?.stringValue == "auto")

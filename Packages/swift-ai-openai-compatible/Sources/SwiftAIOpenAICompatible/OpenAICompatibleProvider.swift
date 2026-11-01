@@ -7,6 +7,7 @@ public struct OpenAICompatibleProviderSettings: Sendable {
     public var name: String
     public var baseURL: String
     public var apiKey: String?
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var headers: [String: String]
     public var queryParams: [String: String]
     public var transport: any AITransport
@@ -22,8 +23,10 @@ public struct OpenAICompatibleProviderSettings: Sendable {
                 includeUsage: Bool = false, supportsStructuredOutputs: Bool = false,
                 supportsMultiPartToolContent: Bool = false, maxEmbeddingsPerCall: Int? = nil,
                 transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil,
-                transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])? = nil) {
+                transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])? = nil,
+                apiKeyProvider: (@Sendable () async throws -> String)? = nil) {
         self.name = name; self.baseURL = baseURL; self.apiKey = apiKey; self.headers = headers
+        self.apiKeyProvider = apiKeyProvider
         self.queryParams = queryParams; self.transport = transport; self.includeUsage = includeUsage
         self.supportsStructuredOutputs = supportsStructuredOutputs; self.supportsMultiPartToolContent = supportsMultiPartToolContent
         self.maxEmbeddingsPerCall = maxEmbeddingsPerCall; self.transformRequestBody = transformRequestBody
@@ -39,11 +42,12 @@ public final class OpenAICompatibleProvider: AIProvider, Sendable {
     public init(configuration settings: OpenAICompatibleProviderSettings) {
         providerID = settings.name
         let baseURL = withoutTrailingSlash(settings.baseURL)
-        var headers = settings.headers
-        if let apiKey = settings.apiKey { headers["Authorization"] = headers["Authorization"] ?? "Bearer \(apiKey)" }
-        headers = withUserAgentSuffix(headers, "ai-sdk-openai-compatible/3.0.78")
+        var headers = normalizeHeaders(settings.headers)
+        let credential = settings.apiKeyProvider.map(AIAsyncCredential.init)
+        if let apiKey = credential?.placeholder ?? settings.apiKey { headers["authorization"] = headers["authorization"] ?? "Bearer \(apiKey)" }
+        headers = withUserAgentSuffix(headers, "ai-sdk-openai-compatible/3.0.82")
         var config = OpenAICompatibleModelConfiguration(http: AIProviderHTTPClient(
-            providerID: settings.name, headers: headers, transport: settings.transport,
+            providerID: settings.name, headers: headers, transport: settings.transport, credentialResolver: credential,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: settings.queryParams) }
         ), baseURL: baseURL)
         config.includeUsage = settings.includeUsage; config.supportsStructuredOutputs = settings.supportsStructuredOutputs

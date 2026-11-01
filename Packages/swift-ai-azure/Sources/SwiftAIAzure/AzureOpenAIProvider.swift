@@ -35,7 +35,7 @@ public final class AzureOpenAIProvider: AIProvider, @unchecked Sendable {
         audioSettings: AzureOpenAIAudioSettings = .init()
     ) throws {
         self.settings = settings
-        if settings.apiKey != nil, tokenProvider != nil {
+        if settings.apiKey != nil || settings.apiKeyProvider != nil, tokenProvider != nil {
             throw AIError.invalidArgument(argument: "apiKey/tokenProvider", message: "Both apiKey and tokenProvider were provided. Please use only one authentication method.")
         }
         let resolvedResourceName = resourceName ?? ProcessInfo.processInfo.environment["AZURE_RESOURCE_NAME"]
@@ -46,19 +46,20 @@ public final class AzureOpenAIProvider: AIProvider, @unchecked Sendable {
         guard let basePrefix else {
             throw AIError.invalidURL("Azure requires ProviderSettings.baseURL or AZURE_RESOURCE_NAME/resourceName.")
         }
-        var headers = settings.headers
+        let credential = tokenProvider == nil ? settings.apiKeyProvider.map(AIAsyncCredential.init) : nil
+        var headers = normalizeHeaders(settings.headers)
         if tokenProvider == nil {
-            let key = settings.apiKey ?? environmentValue(["AZURE_API_KEY"])
+            let key = credential?.placeholder ?? settings.apiKey ?? environmentValue(["AZURE_API_KEY"])
             guard let key else {
                 throw AIError.missingAPIKey(provider: providerID, environmentVariables: ["AZURE_API_KEY"])
             }
             headers["api-key"] = headers["api-key"] ?? key
         }
-        headers = withUserAgentSuffix(headers, "ai-sdk-azure/4.0.110")
+        headers = withUserAgentSuffix(headers, "ai-sdk-azure/4.0.114")
         let baseURL = withoutTrailingSlash(basePrefix)
         let baseURLInfo = try azureOpenAIBaseURLInfo(settings.baseURL)
         let transport = tokenProvider.map { AzureOpenAITokenProviderTransport(base: settings.transport, tokenProvider: $0) } ?? settings.transport
-        let http = AIProviderHTTPClient(providerID: providerID, headers: headers, transport: transport, url: { modelID, path in
+        let http = AIProviderHTTPClient(providerID: providerID, headers: headers, transport: transport, credentialResolver: credential, url: { modelID, path in
             let urlString: String
             if useDeploymentBasedURLs {
                 urlString = "\(baseURL)/deployments/\(modelID)\(path)"
@@ -83,7 +84,7 @@ public final class AzureOpenAIProvider: AIProvider, @unchecked Sendable {
         config.transformRequestBody = settings.transformRequestBody
         config.explicitMessageItemType = baseURLInfo.isFoundryProject
         self.config = config
-        audioConfig = AzureAudioConfig(resourceName: resolvedResourceName, settings: audioSettings, apiKey: settings.apiKey ?? environmentValue(["AZURE_API_KEY"]), headers: settings.headers, transport: transport, downloadTransport: settings.transport, tokenProvider: tokenProvider)
+        audioConfig = AzureAudioConfig(resourceName: resolvedResourceName, settings: audioSettings, apiKey: credential?.placeholder ?? settings.apiKey ?? environmentValue(["AZURE_API_KEY"]), headers: settings.headers, transport: http.transport, downloadTransport: settings.transport, tokenProvider: tokenProvider, credentialResolver: credential)
         provider = AzureHostedModels(config: config, settings: settings)
     }
 

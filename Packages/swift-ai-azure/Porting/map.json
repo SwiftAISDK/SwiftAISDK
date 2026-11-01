@@ -14,6 +14,7 @@
         "packages/azure/src/azure-mai-transcription-model.test.ts",
         "packages/azure/src/azure-model-id.test.ts",
         "packages/azure/src/azure-openai-provider.test.ts",
+        "packages/azure/src/azure-openai-tools.test-d.ts",
         "packages/azure/src/azure-speech-model.test.ts",
         "packages/azure/src/azure-transcription-model.test.ts",
         "packages/azure/src/lazy-schemas.test.ts"
@@ -34,6 +35,7 @@
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/AzureSocketTestSupport.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/TestSupport.swift",
+      "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/Weekly20261101AzureTests.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/WeeklyAzure20261011Tests.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/WeeklyAzureAudio20261004Tests.swift"
     ],
@@ -43,7 +45,11 @@
     {
       "kind": "native-adaptation",
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "2026-11-01: @ai-sdk/azure 4.0.110 -> 4.0.114; integrity-verified published sources/declarations and matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700 reviewed independently. New native behavior is covered by Weekly20261101 suites. Internal TypeScript catalog/documentation/type-inference declarations are represented by native request policies, not an exact JS export contract. Prior imported provenance and known gaps remain unchanged. Async API keys resolve per OpenAI, MAI and Speech request with appropriate header names, request overrides and Entra exclusivity. MAI WebSocket uses resolved current headers. Expose Azure toolSearch and providerOptions.azure deferLoading with openai fallback in shared Responses requests. Keep original 502 status and retryability for Envoy protocol reset errors; invalid 400 requests retain native guidance."
     }
   ],
-  "reviewNote": "M6: Azure routing, token authentication, MAI/Speech adapters, tool factories and focused tests extracted. Native configuration composes OpenAI/compatible and DeepSeek hosting APIs; the aggregate retains old ProviderSettings initializers. Existing URLs, model/deployment identity, auth and capabilities preserved."
+  "reviewNote": "M6: Azure routing, token authentication, MAI/Speech adapters, tool factories and focused tests extracted. Native configuration composes OpenAI/compatible and DeepSeek hosting APIs; the aggregate retains old ProviderSettings initializers. Existing URLs, model/deployment identity, auth and capabilities preserved. 2026-11-01: @ai-sdk/azure 4.0.110 -> 4.0.114; integrity-verified published sources/declarations and matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700 reviewed independently. New native behavior is covered by Weekly20261101 suites. Internal TypeScript catalog/documentation/type-inference declarations are represented by native request policies, not an exact JS export contract. Prior imported provenance and known gaps remain unchanged."
 }

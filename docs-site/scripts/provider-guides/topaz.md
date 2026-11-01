@@ -118,3 +118,11 @@ uploads have the cleanup behavior described above.
 The compile-checked example is `Examples/Sources/EnhanceWithTopaz/main.swift`:
 `swift run --package-path Examples EnhanceWithTopaz image <source-url> 4000x3000`
 or `video <source-url> 3840x2160`. Running it calls the Topaz API.
+
+## Rotating credentials
+
+The native `TopazProviderSettings` accepts an optional
+`apiKeyProvider` asynchronous throwing closure. It is resolved for each
+authenticated request, so short-lived credentials can refresh without recreating
+the provider or model. Static `apiKey` settings remain supported. A supplier
+failure stops the request before it reaches the transport.

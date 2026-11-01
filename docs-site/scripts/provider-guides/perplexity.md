@@ -26,3 +26,18 @@ Answers retain full precision without rounding allowance. Confidence and score
 legends live under `providerMetadata.perplexity`; response metadata keeps
 `x-request-id`, resolved model, headers and raw body. `maxOutputTokens`,
 `reasoning` and Perplexity provider options produce unsupported warnings.
+
+## Rotating credentials
+
+The native `PerplexityProviderSettings` accepts an optional
+`apiKeyProvider` asynchronous throwing closure. It is resolved for each
+authenticated request, so short-lived credentials can refresh without recreating
+the provider or model. Static `apiKey` settings remain supported. A supplier
+failure stops the request before it reaches the transport.
+
+
+## Search query metadata
+
+Agent responses expose `providerMetadata.perplexity.searchQueries` in first-seen order, without duplicates. Generation collects all search-result items; streaming combines reasoning search-query events, completed output items and terminal response output. Fetch URL events do not become search queries. When no query was reported, the value is JSON null. Invalid query arrays fail response validation.
+
+Portable `reasoning: "none"` maps to the lowest supported effort, `minimal`, with a compatibility warning. Explicit native reasoning options keep their precedence.

@@ -99,10 +99,42 @@ are validated. `eleven_text_to_sound*` uses `/v1/sound-generation`, with
 Music and sound-effects models reject streaming speech before opening a socket.
 Existing dedicated music/sound-effect methods remain available.
 
+## Rotating credentials
+
+The native `ElevenLabsProviderSettings` accepts an optional
+`apiKeyProvider` asynchronous throwing closure. It is resolved for each
+authenticated request, so short-lived credentials can refresh without recreating
+the provider or model. Static `apiKey` settings remain supported. A supplier
+failure stops the request before it reaches the transport.
+
+## Timestamped HTTP speech and music
+
+Set `providerOptions.elevenlabs.withTimestamps` to `true` for character alignment
+from Text to Speech or Text to Dialogue, or lyric word timings from music.
+Speech results retain decoded audio and expose `alignment`,
+`normalizedAlignment` and `voiceSegments` under `providerMetadata["elevenlabs"]`.
+Music uses `/v1/music/detailed`; `wordTimestamps` contains `word`, `startMs` and
+`endMs`. Binary audio is preserved, including when multipart parts arrive in
+reverse order. Raw JSON metadata stays in `responseMetadata.body`. The native
+`music(...)` factory accepts the same timestamp option.
+
+`eleven_v4` automatically uses Text to Dialogue with the supplied text and voice;
+explicit `inputs` still select multiple voices. HTTP `wav` normalizes to
+`wav_44100`, while explicit native rates are retained. Streaming speech reports
+`withTimestamps` as unsupported; its existing WebSocket alignment remains
+available independently.
+
+`ElevenLabsProviderSettings.apiKeyProvider` resolves an async throwing key
+supplier before each authenticated HTTP request or WebSocket connection. Static
+keys and header overrides remain supported. API errors accept object, validation
+array and string `detail` shapes as well as legacy `error` objects. Typed API
+errors expose the provider message and code while retaining the full wire body,
+status and response headers.
+
 
 ## Notes
 
-ElevenLabs speech and transcription mirror upstream 3.0.71: `ELEVENLABS_API_KEY`, `xi-api-key` auth, custom headers, versioned user-agent suffix, camel-case Swift `AIProviders.elevenLabs` factory, `speech`/`speechModel` and `transcription`/`transcriptionModel` aliases, speech `/v1/text-to-speech/{voice}` request builder with output format aliases, voice settings, pronunciation dictionaries, normalization options and warnings, transcription `/v1/speech-to-text` multipart builder with `scribe_v2`, providerOptions.elevenlabs defaults and schema validation, response text/language/segments/duration, response metadata, ElevenLabs error schema, and unsupported language/embedding/image families. SwiftAISDK additionally exposes locally ported ElevenLabs music, sound effects, voice changer, voice isolator, and dubbing helpers. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, TypeScript export split, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-11 pass: Scribe response word metadata retains speaker and confidence evidence without altering the default diarize=true behavior. The 2026-10-25 pass: Native streaming speech accepts incremental text and v3/v4 dialogue with per-part voices/options, cancellation and typed failures. Unary speech routes dialogue, music and sound effects with validated native composition plans; reported transcription duration wins.
+ElevenLabs speech and transcription mirror upstream 3.0.76: `ELEVENLABS_API_KEY`, `xi-api-key` auth, custom headers, versioned user-agent suffix, camel-case Swift `AIProviders.elevenLabs` factory, `speech`/`speechModel` and `transcription`/`transcriptionModel` aliases, speech `/v1/text-to-speech/{voice}` request builder with output format aliases, voice settings, pronunciation dictionaries, normalization options and warnings, transcription `/v1/speech-to-text` multipart builder with `scribe_v2`, providerOptions.elevenlabs defaults and schema validation, response text/language/segments/duration, response metadata, ElevenLabs error schema, and unsupported language/embedding/image families. SwiftAISDK additionally exposes locally ported ElevenLabs music, sound effects, voice changer, voice isolator, and dubbing helpers. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, TypeScript export split, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-11 pass: Scribe response word metadata retains speaker and confidence evidence without altering the default diarize=true behavior. The 2026-10-25 pass: Native streaming speech accepts incremental text and v3/v4 dialogue with per-part voices/options, cancellation and typed failures. Unary speech routes dialogue, music and sound effects with validated native composition plans; reported transcription duration wins. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

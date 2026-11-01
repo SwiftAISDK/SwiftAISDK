@@ -6,7 +6,7 @@ import SwiftAIOpenAICompatible
 
 
 /// The published `@ai-sdk/zai` package version mirrored by this port.
-public let zaiProviderVersion = "3.0.40"
+public let zaiProviderVersion = "3.0.44"
 
 /// Z.AI accepts the documented GLM identifiers as well as future model IDs.
 public typealias ZAIChatModelID = String
@@ -37,6 +37,13 @@ public final class ZAIProvider: AIProvider, @unchecked Sendable {
     private let resolveAPIKey: @Sendable () -> String?
 
     public init(configuration settings: ZAIProviderSettings) {
+        var resolvedSettings = settings
+        if let supplier = resolvedSettings.apiKeyProvider {
+            let credential = AIAsyncCredential(supplier)
+            resolvedSettings.apiKey = credential.placeholder
+            resolvedSettings.transport = credential.resolvingTransport(resolvedSettings.transport)
+        }
+        let settings = resolvedSettings
         let headers = withUserAgentSuffix(
             settings.headers,
             "ai-sdk-zai/\(zaiProviderVersion)"

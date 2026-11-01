@@ -13,7 +13,7 @@ func mistralConversationPreparedCall(_ request: LanguageModelRequest, modelID: S
     var options = try mistralProviderOptions(from: request)
     let format = mistralResolvedResponseFormat(request: request, options: &options)
     let messages = mistralMessages(request.messages, responseFormat: format, structuredOutputs: options["structuredOutputs"]?.boolValue ?? true)
-    var warnings = mistralWarnings(for: request, modelID: modelID)
+    var warnings = mistralWarnings(for: request, modelID: modelID, conversation: true)
     let preparedTools = mistralConversationPrepareTools(request.tools, choice: request.toolChoice ?? options["toolChoice"])
     var completion: [String: JSONValue] = [:]
     if let maxTokens = request.maxOutputTokens { completion["max_tokens"] = .number(Double(maxTokens)) }
@@ -24,7 +24,7 @@ func mistralConversationPreparedCall(_ request: LanguageModelRequest, modelID: S
     if !request.stopSequences.isEmpty { completion["stop"] = .array(request.stopSequences) }
     if let seed = request.seed { completion["random_seed"] = .number(Double(seed)) }
     if let format { completion["response_format"] = mistralResponseFormat(from: format, options: options) }
-    if mistralSupportsReasoningEffort(modelID) { completion["reasoning_effort"] = options["reasoningEffort"] ?? mistralReasoningEffort(request.reasoning, warnings: &warnings) }
+    if mistralSupportsReasoningEffort(modelID, conversation: true) { completion["reasoning_effort"] = options["reasoningEffort"] ?? mistralReasoningEffort(request.reasoning, warnings: &warnings) }
     completion["tool_choice"] = preparedTools.choice
     for key in ["safePrompt", "documentImageLimit", "documentPageLimit", "promptCacheKey", "parallelToolCalls"] where options[key] != nil && options[key] != .null {
         warnings.append(AIWarning(type: "unsupported", feature: key, message: "Not supported by the Mistral Conversations API."))

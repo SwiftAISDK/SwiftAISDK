@@ -6,16 +6,18 @@ import SwiftAIOpenResponses
 
 public struct QuiverAIProviderSettings: Sendable {
     public var apiKey: String?
+    /// Supplies a fresh API key immediately before each authenticated request.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var baseURL: String?
     public var headers: [String: String]
     public var queryParams: [String: String]
     public var transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])?
     public var transport: any AITransport
 
-    public init(apiKey: String? = nil, baseURL: String? = nil, headers: [String: String] = [:],
+    public init(apiKey: String? = nil, apiKeyProvider: (@Sendable () async throws -> String)? = nil, baseURL: String? = nil, headers: [String: String] = [:],
                 queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared,
                 transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil) {
-        self.apiKey = apiKey; self.baseURL = baseURL; self.headers = headers
+        self.apiKey = apiKey; self.apiKeyProvider = apiKeyProvider; self.baseURL = baseURL; self.headers = headers
         self.queryParams = queryParams; self.transport = transport
         self.transformRequestBody = transformRequestBody
     }
@@ -27,13 +29,20 @@ public final class QuiverAIProvider: AIProvider, Sendable {
     private let config: QuiverAIModelConfiguration
 
     public init(configuration: QuiverAIProviderSettings = .init()) throws {
+        var resolvedSettings = configuration
+        if let supplier = resolvedSettings.apiKeyProvider {
+            let credential = AIAsyncCredential(supplier)
+            resolvedSettings.apiKey = credential.placeholder
+            resolvedSettings.transport = credential.resolvingTransport(resolvedSettings.transport)
+        }
+        let configuration = resolvedSettings
         let names = ["QUIVERAI_API_KEY"]
         guard let key = configuration.apiKey ?? environmentValue(names) else {
             throw AIError.missingAPIKey(provider: "quiverai", environmentVariables: names)
         }
-        var headers = configuration.headers
-        headers["Authorization"] = headers["Authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-quiverai/2.0.69")
+        var headers = normalizeHeaders(configuration.headers)
+        headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
+        headers = withUserAgentSuffix(headers, "ai-sdk-quiverai/2.0.73")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? environmentValue(["QUIVERAI_BASE_URL"]) ?? "https://api.quiver.ai/v1")
         let http = AIProviderHTTPClient(providerID: "quiverai", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

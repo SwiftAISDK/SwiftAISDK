@@ -98,10 +98,8 @@ image or video; audio-only conditioning is invalid. Limits are 9 images,
 
 ## Output controls
 
-Prompts require 1–32,000 UTF-16 code units. Duration is an integer from
-5–15 seconds and defaults to 5. Seeds range from 0 to 4,294,967,295.
-`promptEnhancement` accepts `.turbo`, `.quality`, or `.disabled`; omission lets
-HeyGen apply its API default.
+Prompts require 1–32,000 UTF-16 code units. Duration is a positive integer number of seconds and defaults to 5. Longer requests, including 30- and 60-second clips, pass through unchanged; the service enforces limits for the selected settings. Seeds range from 0 to 4,294,967,295.
+`promptEnhancement` accepts `.turbo`, `.quality`, `.ultraquality`, or `.disabled`; omission lets HeyGen apply its API default. A provider duration rejection retains the original status and message; the SDK does not clamp or automatically retry a direct start request.
 
 Typed `resolution` selects `.p480`, `.p768`, `.p1080`, or `.twoK` and overrides
 the standard `resolution` frame size. The default is 768p. These standard
@@ -163,9 +161,17 @@ The compile-checked example is `Examples/Sources/GenerateWithHeyGen/main.swift`.
 Run `swift run --package-path Examples GenerateWithHeyGen` for usage without API
 calls. The `text`, `image`, `reference`, `start`, and `resume` commands call HeyGen.
 
+## Rotating credentials
+
+The native `HeyGenProviderSettings` accepts an optional
+`apiKeyProvider` asynchronous throwing closure. It is resolved for each
+authenticated request, so short-lived credentials can refresh without recreating
+the provider or model. Static `apiKey` settings remain supported. A supplier
+failure stops the request before it reaches the transport.
+
 ## Notes
 
-HeyGen mirrors @ai-sdk/heygen 3.0.10: HEYGEN_API_KEY / x-api-key authentication, custom base URL/headers/transport and ai-sdk-heygen/3.0.10 user-agent; video/videoModel aliases and open model IDs; heygen-video-1 text-to-video, first-frame image-to-video and grouped image/video/audio reference conditioning. Typed HeyGenVideoModelOptions and HeyGenVideoAsset validate HTTPS URL/asset/base64 inputs, mode conflicts, 9 image/3 video/3 audio/12 total reference limits, prompt/duration/seed bounds, all documented frame sizes and size-class/aspect-ratio constraints before I/O. AsyncVideoModel start/status operations retain videoId/mode/resolution, support durable JSON persistence and shared polling/idempotent retries, and return refreshed signed MP4 URLs without downloading. Reported output duration/dimensions/seed/inference timing and failure codes are preserved without inventing token or credit usage. Native credentials resolve at factory creation. Unary generation, remote cancellation, webhooks, avatar/voice/translation APIs and JavaScript model/workflow serialization are absent from this provider surface; unsupported fps/audio/count settings warn.
+HeyGen mirrors @ai-sdk/heygen 3.0.14: HEYGEN_API_KEY / x-api-key authentication, custom base URL/headers/transport and ai-sdk-heygen/3.0.10 user-agent; video/videoModel aliases and open model IDs; heygen-video-1 text-to-video, first-frame image-to-video and grouped image/video/audio reference conditioning. Typed HeyGenVideoModelOptions and HeyGenVideoAsset validate HTTPS URL/asset/base64 inputs, mode conflicts, 9 image/3 video/3 audio/12 total reference limits, prompt/duration/seed bounds, all documented frame sizes and size-class/aspect-ratio constraints before I/O. AsyncVideoModel start/status operations retain videoId/mode/resolution, support durable JSON persistence and shared polling/idempotent retries, and return refreshed signed MP4 URLs without downloading. Reported output duration/dimensions/seed/inference timing and failure codes are preserved without inventing token or credit usage. Native credentials resolve at factory creation. Unary generation, remote cancellation, webhooks, avatar/voice/translation APIs and JavaScript model/workflow serialization are absent from this provider surface; unsupported fps/audio/count settings warn. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

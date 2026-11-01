@@ -25,7 +25,8 @@
     "tests": [
       "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests/DeepgramProviderTests.swift",
       "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests/FixtureDownloadTransport.swift",
-      "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests/TestSupport.swift"
+      "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests/TestSupport.swift",
+      "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },

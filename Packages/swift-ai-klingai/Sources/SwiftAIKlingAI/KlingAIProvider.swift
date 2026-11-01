@@ -59,6 +59,18 @@ public struct KlingAIModelConfiguration: AIProviderHTTPConfiguration {
 
 public extension KlingAIModelConfiguration {
     init(settings: KlingAIProviderSettings) throws {
+        var settings = settings
+        if let supplier = settings.apiKeyProvider {
+            let original = settings
+            let credential = AIAsyncCredential {
+                var refreshed = original
+                refreshed.apiKey = try await supplier()
+                refreshed.apiKeyProvider = nil
+                return try resolveKlingAIAuthToken(settings: refreshed, now: original.currentDate())
+            }
+            settings.apiKey = credential.placeholder
+            settings.transport = credential.resolvingTransport(settings.transport)
+        }
         var headers = settings.headers
         var transport = settings.transport
         if !headers.keys.contains(where: { $0.caseInsensitiveCompare("Authorization") == .orderedSame }) {
@@ -70,7 +82,7 @@ public extension KlingAIModelConfiguration {
                                                        secretKey: secretKey, currentDate: settings.currentDate)
             }
         }
-        headers = withUserAgentSuffix(headers, "ai-sdk-klingai/4.0.70")
+        headers = withUserAgentSuffix(headers, "ai-sdk-klingai/4.0.74")
         let baseURL = withoutTrailingSlash(settings.baseURL ?? "https://api-singapore.klingai.com")
         self.init(http: .init(providerID: "klingai", headers: headers, transport: transport,
                              url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: [:]) }), baseURL: baseURL)

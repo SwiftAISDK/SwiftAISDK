@@ -13,6 +13,8 @@ public struct OpenAICompatibleLanguageCapabilities: Sendable {
     public var isReasoningModel = false
     public var supportsNonReasoningParameters = false
     public var supportedReasoningEfforts: [String]?
+    public var supportsChatFunctionToolsWithReasoning = true
+    public var supportsPromptCacheRetention = true
     public init() {}
 }
 
@@ -40,6 +42,8 @@ public struct OpenAICompatibleModelConfiguration: Sendable {
     public var additionalWarnings: (@Sendable (LanguageModelRequest) -> [AIWarning])?
     public var supportsStructuredOutputForModel: (@Sendable (String) -> Bool)?
     public var mapsReasoningEffort = false
+    /// Maps only portable reasoning; explicit provider reasoningEffort is forwarded unchanged.
+    public var mapReasoning: (@Sendable (String, String, inout [AIWarning]) -> String?)?
     public var toolCallsBeforeText = false
     public var usage: (@Sendable (JSONValue) -> TokenUsage?)?
     public var responseHeaderMetadata: (@Sendable ([String: String], String?) -> [String: JSONValue])?

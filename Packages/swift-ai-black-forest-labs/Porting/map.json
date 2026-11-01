@@ -28,7 +28,8 @@
       "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/BlackForestLabsVideoModelTests.swift",
       "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/BlackForestLabsVideoOperationTests.swift",
       "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/FixtureDownloadTransport.swift",
-      "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/TestSupport.swift"
+      "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/TestSupport.swift",
+      "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },

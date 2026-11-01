@@ -43,7 +43,7 @@ struct DecisionCoreTests {
         #expect(model.lastOptions?.state == [.json(["message": "refund"])])
         #expect(model.lastOptions?.abortSignal === controller.signal)
         #expect(model.lastOptions?.headers["x-custom"] == "value")
-        #expect(model.lastOptions?.headers["user-agent"] == "ai/7.0.153")
+        #expect(model.lastOptions?.headers["user-agent"] == "ai/7.0.159")
         #expect(model.lastOptions?.providerOptions == ["test": ["effort": "high"]])
     }
 

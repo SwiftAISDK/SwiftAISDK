@@ -23,7 +23,8 @@
     "tests": [
       "Packages/swift-ai-gmicloud/Tests/SwiftAIGMICloudTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-gmicloud/Tests/SwiftAIGMICloudTests/GMICloudProviderTests.swift",
-      "Packages/swift-ai-gmicloud/Tests/SwiftAIGMICloudTests/TestSupport.swift"
+      "Packages/swift-ai-gmicloud/Tests/SwiftAIGMICloudTests/TestSupport.swift",
+      "Packages/swift-ai-gmicloud/Tests/SwiftAIGMICloudTests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },

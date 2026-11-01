@@ -265,9 +265,9 @@ import Testing
     ])
 
     var unsupportedWarnings: [AIWarning] = []
-    #expect(mapReasoningToProviderEffort(reasoning: "high", effortMap: ["medium": "medium"], warnings: &unsupportedWarnings) == nil)
+    #expect(mapReasoningToProviderEffort(reasoning: "high", effortMap: ["medium": "medium"], warnings: &unsupportedWarnings) == "medium")
     #expect(unsupportedWarnings == [
-        AIWarning(type: "unsupported", feature: "reasoning", message: #"reasoning "high" is not supported by this model."#)
+        AIWarning(type: "compatibility", feature: "reasoning", message: #"reasoning "high" is not directly supported by this model. mapped to effort "medium"."#)
     ])
 }
 
@@ -335,10 +335,8 @@ import Testing
         maxReasoningBudget: 64_000,
         budgetPercentages: ["medium": 0.5],
         warnings: &unsupportedWarnings
-    ) == nil)
-    #expect(unsupportedWarnings == [
-        AIWarning(type: "unsupported", feature: "reasoning", message: #"reasoning "high" is not supported by this model."#)
-    ])
+    ) == 38_400)
+    #expect(unsupportedWarnings.isEmpty)
 }
 
 @Test func providerUtilsInjectJSONInstructionTextMatchesUpstreamPromptAndSchemaCases() {

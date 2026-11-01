@@ -210,3 +210,9 @@ do {
     print("Stream failed: \(error)")
 }
 ```
+
+## Emitting version and failed steps
+
+Events emitted by the telemetry dispatcher now contain `aiVersion`, the reviewed upstream `ai` contract version (`7.0.159`). Both language-model execution contexts and tool execution contexts expose the same optional field. The field is absent on manually constructed contexts unless assigned; dispatch adds it to a copy and preserves the caller's value.
+
+`Telemetry.Event.Kind.stepError` closes a failed text-generation step before the call's terminal error/abort event. Its input contains the step number when input recording is enabled. Streaming provider error chunks still complete their step; streaming aborts and timeouts emit abort events instead of failed-step events. Existing telemetry input/output and runtime-context inclusion settings remain applicable.

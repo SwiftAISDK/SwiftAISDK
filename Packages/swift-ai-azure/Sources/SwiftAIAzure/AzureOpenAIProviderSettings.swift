@@ -4,6 +4,7 @@ import SwiftAITransport
 import SwiftAIProviderUtilities
 public struct AzureOpenAIProviderSettings: Sendable {
     public var apiKey: String?
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var baseURL: String?
     public var headers: [String: String]
     public var queryParams: [String: String]
@@ -14,8 +15,10 @@ public struct AzureOpenAIProviderSettings: Sendable {
     public var transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])?
     public init(apiKey: String? = nil, baseURL: String? = nil, headers: [String: String] = [:],
                 queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared,
-                includeUsage: Bool = false, supportsStructuredOutputs: Bool = false, maxEmbeddingsPerCall: Int? = nil, transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil) {
+                includeUsage: Bool = false, supportsStructuredOutputs: Bool = false, maxEmbeddingsPerCall: Int? = nil, transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil,
+                apiKeyProvider: (@Sendable () async throws -> String)? = nil) {
         self.apiKey = apiKey; self.baseURL = baseURL; self.headers = headers
+        self.apiKeyProvider = apiKeyProvider
         self.queryParams = queryParams; self.transport = transport
         self.includeUsage = includeUsage
         self.supportsStructuredOutputs = supportsStructuredOutputs

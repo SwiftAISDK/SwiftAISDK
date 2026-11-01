@@ -229,8 +229,8 @@ struct WeeklyMajorProviders20261011Tests {
     @Test func portableMaxReasoningMapsAcrossCompatibleHelpers() throws {
         var warnings: [AIWarning] = []
         let fireworks = fireworksChatBody(from: ["reasoning_effort": "max"], warnings: &warnings)
-        #expect(fireworks["reasoning_effort"] == "high")
-        #expect(warnings.contains { $0.type == "compatibility" && $0.feature == "reasoning" })
+        #expect(fireworks["reasoning_effort"] == "max")
+        #expect(warnings.isEmpty)
         let moonshot = try moonshotChatBody(from: [:], request: LanguageModelRequest(messages: [.user("Hello")], reasoning: "max"), modelID: "kimi-k3", warnings: &warnings)
         #expect(moonshot["reasoning_effort"] == "max")
         #expect(xaiReasoningEffort("max", modelID: "grok-4.6", warnings: &warnings) == "xhigh")

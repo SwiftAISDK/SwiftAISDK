@@ -9,6 +9,8 @@ import SwiftAIOpenAI
 /// Settings for the OpenAI-compatible and Anthropic endpoints hosted by Vertex.
 public struct GoogleVertexHostedProviderSettings: Sendable {
     public var apiKey: String?
+    /// Resolves a fresh bearer credential before each hosted provider request.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var baseURL: String?
     public var headers: [String: String]
     public var queryParams: [String: String]
@@ -25,7 +27,8 @@ public struct GoogleVertexHostedProviderSettings: Sendable {
                 includeUsage: Bool = false, supportsStructuredOutputs: Bool = false,
                 supportsMultiPartToolContent: Bool = false, maxEmbeddingsPerCall: Int? = nil,
                 transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil,
-                transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])? = nil) {
+                transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])? = nil,
+                apiKeyProvider: (@Sendable () async throws -> String)? = nil) {
         self.apiKey = apiKey; self.baseURL = baseURL; self.headers = headers; self.queryParams = queryParams
         self.transport = transport; self.includeUsage = includeUsage
         self.supportsStructuredOutputs = supportsStructuredOutputs
@@ -33,6 +36,7 @@ public struct GoogleVertexHostedProviderSettings: Sendable {
         self.maxEmbeddingsPerCall = maxEmbeddingsPerCall
         self.transformRequestBody = transformRequestBody
         self.transformRequestBodyWithWarnings = transformRequestBodyWithWarnings
+        self.apiKeyProvider = apiKeyProvider
     }
 }
 
@@ -55,7 +59,8 @@ public final class GoogleVertexHostedProvider: AIProvider, Sendable {
         case .anthropic: providerID = "googleVertex.anthropic"; supportedCapabilities = [.language]
         }
         let names = ["GOOGLE_VERTEX_ACCESS_TOKEN", "GOOGLE_ACCESS_TOKEN"]
-        guard let key = settings.apiKey ?? environmentValue(names) else {
+        let credential = settings.apiKeyProvider.map(AIAsyncCredential.init)
+        guard let key = credential?.placeholder ?? settings.apiKey ?? environmentValue(names) else {
             throw AIError.missingAPIKey(provider: providerID, environmentVariables: names)
         }
         // Preserve the xAI factory's validation of its default project URL even
@@ -69,7 +74,7 @@ public final class GoogleVertexHostedProvider: AIProvider, Sendable {
         let baseURL = withoutTrailingSlash(settings.baseURL ?? defaultURL)
         var headers = settings.headers
         headers["Authorization"] = headers["Authorization"] ?? "Bearer \(key)"
-        let http = AIProviderHTTPClient(providerID: providerID, headers: headers, transport: settings.transport,
+        let http = AIProviderHTTPClient(providerID: providerID, headers: headers, transport: settings.transport, credentialResolver: credential,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: settings.queryParams) })
         var openAI = OpenAIModelConfiguration(http: http, baseURL: baseURL, openAIBackedProviderRoot: nil)
         openAI.supportsStructuredOutputs = settings.supportsStructuredOutputs
@@ -90,8 +95,11 @@ public final class GoogleVertexHostedProvider: AIProvider, Sendable {
         self.compatible = compatible
         var anthropicHTTP = http
         anthropicHTTP.providerID = "googleVertex.anthropic.messages"
-        self.anthropic = AnthropicModelConfiguration(baseURL: baseURL, http: anthropicHTTP,
+        var anthropic = AnthropicModelConfiguration(baseURL: baseURL, http: anthropicHTTP,
             transformRequestBody: settings.transformRequestBody)
+        anthropic.supportsNativeStructuredOutput = false
+        anthropic.supportsStrictTools = false
+        self.anthropic = anthropic
     }
 
     public func languageModel(_ modelID: String) throws -> any LanguageModel {

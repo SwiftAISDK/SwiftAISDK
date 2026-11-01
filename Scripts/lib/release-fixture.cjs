@@ -9,6 +9,14 @@ function seedPilot(snapshot) {
   const data = readCatalog(snapshot);
   ensure(pilot.every((id) => data.catalog.packages.some((p) => p.id === id && p.state === "extracted")),
     "Pilot fixture packages must be extracted");
+  // This fixture starts a new synthetic 1.0 history. Production minimums
+  // belong to that history and cannot be copied into initial fixture tags.
+  for (const unit of data.catalog.packages) {
+    unit.umbrellaFrom = "1.0.0";
+    for (const dependency of unit.dependencies) dependency.from = "1.0.0";
+  }
+  fs.writeFileSync(path.join(snapshot, "Porting/packages.json"), json(data.catalog));
+  require("./generate.cjs").generate(snapshot);
   for (const sub of ["changes", "sets"]) {
     const directory = path.join(snapshot, "Releases", sub);
     fs.mkdirSync(directory, { recursive: true });

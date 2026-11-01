@@ -5,15 +5,17 @@ import SwiftAIProviderUtilities
 
 public struct TopazProviderSettings: Sendable {
     public var apiKey: String?
+    /// Supplies a fresh API key immediately before each authenticated request.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var baseURL: String?
     public var headers: [String: String]
     public var queryParams: [String: String]
     public var environment: [String: String]?
     public var transport: any AITransport
 
-    public init(apiKey: String? = nil, baseURL: String? = nil, headers: [String: String] = [:],
+    public init(apiKey: String? = nil, apiKeyProvider: (@Sendable () async throws -> String)? = nil, baseURL: String? = nil, headers: [String: String] = [:],
                 queryParams: [String: String] = [:], environment: [String: String]? = nil, transport: any AITransport = URLSessionTransport.shared) {
-        self.apiKey = apiKey; self.baseURL = baseURL; self.headers = headers
+        self.apiKey = apiKey; self.apiKeyProvider = apiKeyProvider; self.baseURL = baseURL; self.headers = headers
         self.queryParams = queryParams; self.environment = environment; self.transport = transport
     }
 }
@@ -24,13 +26,20 @@ public final class TopazProvider: AIProvider, Sendable {
     private let config: TopazModelConfiguration
 
     public init(configuration: TopazProviderSettings = .init()) throws {
+        var resolvedSettings = configuration
+        if let supplier = resolvedSettings.apiKeyProvider {
+            let credential = AIAsyncCredential(supplier)
+            resolvedSettings.apiKey = credential.placeholder
+            resolvedSettings.transport = credential.resolvingTransport(resolvedSettings.transport)
+        }
+        let configuration = resolvedSettings
         let names = ["TOPAZ_API_KEY"]
         guard let key = configuration.apiKey ?? (configuration.environment ?? ProcessInfo.processInfo.environment)["TOPAZ_API_KEY"] else {
             throw AIError.missingAPIKey(provider: "topaz", environmentVariables: names)
         }
         var headers = ["accept": "application/json"].mergingHeaders(normalizeHeaders(configuration.headers))
         headers["x-api-key"] = headers["x-api-key"] ?? "\(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-topaz/3.0.15")
+        headers = withUserAgentSuffix(headers, "ai-sdk-topaz/3.0.19")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.topazlabs.com")
         let http = AIProviderHTTPClient(providerID: "topaz", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

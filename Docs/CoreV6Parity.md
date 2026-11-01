@@ -1,6 +1,6 @@
 # Core V7 Parity
 
-Snapshot date: 2026-10-25
+Snapshot date: 2026-11-01
 
 This document tracks SwiftAISDK against the current AI SDK Core and Errors
 reference. It is intentionally high-level: product status belongs in
@@ -9,7 +9,7 @@ and provider behavior belongs in focused tests.
 The current snapshot versions below are generated from `Porting/upstream-lock.json`;
 parity explanations remain hand-authored.
 Implementation-sensitive UI/chat items are also checked against npm source
-snapshots, currently `ai@7.0.153`, `@ai-sdk/provider@4.0.34`, `@ai-sdk/provider-utils@5.0.68`, and `@ai-sdk/react@4.0.157`.
+snapshots, currently `ai@7.0.159`, `@ai-sdk/provider@4.0.35`, `@ai-sdk/provider-utils@5.0.72`, and `@ai-sdk/react@4.0.163`.
 
 References:
 
@@ -25,6 +25,24 @@ semantics or a whole-facade retention bound. The offline OAuth migration example
 exercises the existing published MCP 2.0.81 binding contract. See
 `PostReleaseRepairAudit.md` and `DownloadSecurity.md` for current evidence and
 compatibility details; older dated audit sections retain their historical state.
+
+## 2026-11-01 Native delta
+
+Experimental steering provides per-run queues, idempotent delivery receipts and
+step-boundary metadata across unary, streaming, typed output and agent APIs.
+Failed-step callbacks and telemetry preserve step indices and original errors;
+normal completion and cancellation settle receipts independently. Events and
+execution contexts carry the reviewed aiVersion. Native maxSteps defaults are
+preserved and documented rather than replaced by JavaScript defaults.
+
+SwiftAIProvider adds descriptive model/option support metadata and Codable native
+catalog entries. Shared transport resolves rotating credentials per authenticated
+send/stream/connect, and reasoning maps to the closest supported level while
+preserving explicit provider overrides. Foundation Data already supplies base64
+encoding; Node Buffer fast paths and new sandbox types are separate JS mechanics
+or products. The React browser-renderer export alias changes no native SwiftUI API.
+See [the per-package audit](WeeklyUpstreamAudit20261101.md) for exact release-test
+provenance, translated tests, native adaptations and retained gaps.
 
 ## 2026-10-25 Native Parity
 

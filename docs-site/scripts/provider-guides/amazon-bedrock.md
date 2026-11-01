@@ -9,3 +9,11 @@ Titan, Cohere and Nova embeddings accept top-level dimensions unless the provide
 Bedrock only sends strict tool definitions and native structured-output fields to recognized supported Claude generations. Unknown future Claude IDs and unrecognized minor versions use JSON instructions in automatic structured-output mode, retaining ordinary application tools without adding an incompatible synthetic response tool. Explicit `jsonTool` selection keeps its existing model-specific behavior.
 
 Claude Sonnet 4.6 and Haiku 4.5 retain strict tools but use the JSON-tool fallback for unreliable native output. Non-Claude models and opaque inference-profile IDs keep their existing capability behavior. The Anthropic Messages adapter also inherits normalized citations, web-search source deduplication, manual-thinking tool-choice safeguards, and replayable file-reference/tool-search-error transcripts.
+
+## Rotating bearer credentials and current thinking policies
+
+`AmazonBedrockProviderSettings.apiKeyProvider` accepts an asynchronous throwing closure for short-lived bearer credentials. It is resolved before each Converse, invoke-model, embedding, image, reranking or Mantle HTTP request. Returned values are trimmed and must be non-empty; an invalid callback result fails before sending and does not fall back to SigV4. Static bearer keys and the existing AWS `credentialProvider` remain available.
+
+Converse omits disabled thinking for Claude 3.5 and earlier, sends it for supported later models, and selects the lowest supported thinking mode with a warning when a model cannot disable thinking. Existing raw and typed effort settings survive that fallback; incompatible effort above `high` is lowered with a warning. Portable reasoning uses the closest supported effort, preferring a lower level. GPT-OSS accepts `low`/`medium`/`high`; other OpenAI-family efforts remain forward compatible.
+
+Document names are unique across user messages and tool results in one request. Duplicate sanitized names receive deterministic ` (2)`, ` (3)` suffixes within Bedrock's 200-character limit, preserving prompt-cache stability. The Anthropic invoke adapter can use native JSON output for models that reject forced tools when the schema is representable; recursive or open schemas retain the JSON-tool fallback.

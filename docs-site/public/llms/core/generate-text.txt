@@ -92,3 +92,31 @@ textual `.reasoning` and `.reasoningFile` parts within the selected scope.
 Ordinary `.file` content is retained.
 
 When you enable tools, `steps` records each model/tool loop step and `responseMessages` contains the assistant/tool messages that can be appended to the next request or stored in conversation history.
+
+## Experimental steering
+
+Create one `AISteering` for each generation. `steer` queues user text or user content for the next model step, after that step's tool work finishes. It returns a receipt whose async `value` never throws. Reusing an ID returns the original receipt; reusing a steering object in another generation throws.
+
+```swift
+let steering = AI.experimentalCreateSteering()
+let receipt = steering.steer("Keep the answer concise", id: "style")
+let result = try await AI.generateText(
+    model: model,
+    prompt: "Explain the tradeoffs",
+    maxSteps: 4,
+    experimentalSteering: steering
+)
+let outcome = await receipt.value
+```
+
+Messages queued before the run start reach step zero. Messages queued during a step can continue a completed answer, subject to `maxSteps` and `stopWhen`. Pending messages do not continue an errored or interrupted step, and unresolved tool results or approvals stop the run. A receipt reports either the receiving step number or `finished`, `removed-by-prepare-step`, `stop-condition`, `waiting-for-tool-results`, `aborted`, or `error`.
+
+`prepareStep` receives the newly queued messages in `experimentalSteeringMessages`. Returning a replacement request can remove them; retaining equivalent user content counts as delivery. Each `AIToolStep.experimentalSteeringMessages` records only messages actually sent in that step. `initialRequest` remains the original request, and `responseMessages` contains generated assistant/tool messages, so steering messages remain separate when rebuilding conversation state. The final `text` is the final step's answer; prior step content and response messages remain available in the result.
+
+Set an explicit step limit for steering. Swift retains its existing prompt/tool-loop default of five steps and agent default of twenty; the single request overload permits one step. `AIOutput` overloads also accept steering.
+
+## Failed-step callbacks
+
+`onStepError` receives `AIGenerateTextStepErrorEvent`, including the step number, provider/model identity, request, previous steps and original error. It fires once after retries fail, including an aborted or timed out `generateText` call. Successful steps do not fire it. Callback failures do not replace the generation error.
+
+`AIToolLoopAgent` accepts constructor `onStepError`, `onError` and `onAbort` callbacks. `generate` invokes `onError` before rethrowing ordinary failures; aborts and timeouts are excluded. Its `onAbort` callback belongs to streaming. Pass steering through `AIAgentCallOptions(experimentalSteering: steering)`.

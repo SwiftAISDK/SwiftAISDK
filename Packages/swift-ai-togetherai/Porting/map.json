@@ -24,7 +24,8 @@
     "tests": [
       "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests/TestSupport.swift",
-      "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests/TogetherAIProviderTests.swift"
+      "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests/TogetherAIProviderTests.swift",
+      "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },

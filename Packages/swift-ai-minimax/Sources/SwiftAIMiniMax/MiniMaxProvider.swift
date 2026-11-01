@@ -7,6 +7,8 @@ import SwiftAIAnthropic
 
 public struct MiniMaxProviderSettings: Sendable {
     public var apiKey: String?
+    /// Called lazily before each Messages or video request.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var baseURL: String?
     public var videoBaseURL: String?
     public var headers: [String: String]
@@ -19,9 +21,11 @@ public struct MiniMaxProviderSettings: Sendable {
         videoBaseURL: String? = nil,
         headers: [String: String] = [:],
         environment: [String: String]? = nil,
-        transport: any AITransport = URLSessionTransport.shared
+        transport: any AITransport = URLSessionTransport.shared,
+        apiKeyProvider: (@Sendable () async throws -> String)? = nil
     ) {
         self.apiKey = apiKey
+        self.apiKeyProvider = apiKeyProvider
         self.baseURL = baseURL
         self.videoBaseURL = videoBaseURL
         self.headers = headers
@@ -43,7 +47,8 @@ public final class MiniMaxProvider: AIProvider, @unchecked Sendable {
     private let videoConfig: MiniMaxHTTPConfiguration
 
     public init(settings: MiniMaxProviderSettings = MiniMaxProviderSettings()) throws {
-        let apiKey = settings.apiKey ?? settings.environmentValue("MINIMAX_API_KEY")
+        let credentialResolver = settings.apiKeyProvider.map(AIAsyncCredential.init)
+        let apiKey = credentialResolver?.placeholder ?? settings.apiKey ?? settings.environmentValue("MINIMAX_API_KEY")
         guard let apiKey else {
             throw AIError.missingAPIKey(
                 provider: providerID,
@@ -54,23 +59,25 @@ public final class MiniMaxProvider: AIProvider, @unchecked Sendable {
         var languageHeaders = normalizeHeaders(settings.headers)
         languageHeaders["anthropic-version"] = languageHeaders["anthropic-version"] ?? "2023-06-01"
         languageHeaders["x-api-key"] = languageHeaders["x-api-key"] ?? apiKey
-        languageHeaders = withUserAgentSuffix(languageHeaders, "ai-sdk-minimax/3.0.65")
+        languageHeaders = withUserAgentSuffix(languageHeaders, "ai-sdk-minimax/3.0.71")
 
         config = MiniMaxHTTPConfiguration(
             providerID: "minimax.messages",
             baseURL: settings.baseURL ?? "https://api.minimax.io/anthropic/v1",
             headers: languageHeaders,
-            transport: settings.transport
+            transport: settings.transport,
+            credentialResolver: credentialResolver
         )
 
         var videoHeaders = normalizeHeaders(settings.headers)
         videoHeaders["authorization"] = videoHeaders["authorization"] ?? "Bearer \(apiKey)"
-        videoHeaders = withUserAgentSuffix(videoHeaders, "ai-sdk-minimax/3.0.65")
+        videoHeaders = withUserAgentSuffix(videoHeaders, "ai-sdk-minimax/3.0.71")
         videoConfig = MiniMaxHTTPConfiguration(
             providerID: "minimax.video",
             baseURL: settings.videoBaseURL ?? "https://api.minimax.io",
             headers: videoHeaders,
-            transport: settings.transport
+            transport: settings.transport,
+            credentialResolver: credentialResolver
         )
     }
 
@@ -189,19 +196,19 @@ func miniMaxReasoningRequest(
           request.providerOptions["anthropic"]?["effort"] == nil || request.providerOptions["anthropic"]?["effort"] == .null else {
         return try miniMaxValidatedEffort(request)
     }
-    let effort: String?
-    if reasoning == "none" {
-        effort = "low"
-        warnings.append(AIWarning(type: "compatibility", feature: "reasoning", message: "reasoning 'none' is not supported by \(modelID); it always reasons. Using effort 'low' to minimize thinking instead."))
-    } else if reasoning == "minimal" {
-        effort = "low"
-        warnings.append(AIWarning(type: "compatibility", feature: "reasoning", message: "reasoning \"minimal\" is not directly supported by this model. mapped to effort \"low\"."))
-    } else if ["low", "medium", "high", "xhigh", "max"].contains(reasoning) {
-        effort = reasoning
-    } else {
-        effort = nil
+    // Swift accepts an open String where upstream has a closed reasoning union.
+    // Keep invalid native values unsupported instead of treating them as none.
+    if !["none", "minimal", "low", "medium", "high", "xhigh", "max"].contains(reasoning) {
+        var prepared = request
+        prepared.reasoning = nil
         warnings.append(AIWarning(type: "unsupported", feature: "reasoning", message: "reasoning \"\(reasoning)\" is not supported by this model."))
+        return try miniMaxValidatedEffort(prepared)
     }
+    let effort = mapReasoningToProviderEffort(
+        reasoning: reasoning,
+        effortMap: ["low": "low", "medium": "medium", "high": "high", "xhigh": "xhigh", "max": "max"],
+        warnings: &warnings
+    )
     var prepared = request
     prepared.reasoning = nil
     var options = prepared.providerOptions["minimax"]?.objectValue ?? [:]

@@ -6,6 +6,8 @@ import SwiftAIOpenAICompatible
 
 public struct OpenAIProviderSettings: Sendable {
     public var apiKey: String?
+    /// Called before each authenticated request; errors propagate without sending.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var baseURL: String?
     public var organization: String?
     public var project: String?
@@ -21,6 +23,7 @@ public struct OpenAIProviderSettings: Sendable {
     public var transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])?
     public var batchResultDownloads: AIBatchResultDownloadSettings?
     public var name: String?
+    public var webSocketTransport: any AIDuplexWebSocketTransport
 
     public init(apiKey: String? = nil, baseURL: String? = nil, organization: String? = nil, project: String? = nil,
                 headers: [String: String] = [:], queryParams: [String: String] = [:], environment: [String: String]? = nil,
@@ -28,13 +31,16 @@ public struct OpenAIProviderSettings: Sendable {
                 supportsStructuredOutputs: Bool = false, maxEmbeddingsPerCall: Int? = nil, strictResponseInput: Bool = false,
                 transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil,
                 transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])? = nil,
-                batchResultDownloads: AIBatchResultDownloadSettings? = nil, name: String? = nil) {
+                batchResultDownloads: AIBatchResultDownloadSettings? = nil, name: String? = nil,
+                apiKeyProvider: (@Sendable () async throws -> String)? = nil,
+                webSocketTransport: any AIDuplexWebSocketTransport = URLSessionDuplexWebSocketTransport.shared) {
         self.apiKey = apiKey; self.baseURL = baseURL; self.organization = organization; self.project = project
         self.headers = headers; self.queryParams = queryParams; self.environment = environment; self.transport = transport
         self.includeUsage = includeUsage; self.supportsStructuredOutputs = supportsStructuredOutputs
         self.maxEmbeddingsPerCall = maxEmbeddingsPerCall; self.strictResponseInput = strictResponseInput
         self.transformRequestBody = transformRequestBody; self.transformRequestBodyWithWarnings = transformRequestBodyWithWarnings
         self.batchResultDownloads = batchResultDownloads; self.name = name
+        self.apiKeyProvider = apiKeyProvider; self.webSocketTransport = webSocketTransport
     }
     func environmentValue(_ names: [String]) -> String? {
         let values = environment ?? ProcessInfo.processInfo.environment
@@ -52,6 +58,7 @@ public struct OpenAIModelConfiguration: Sendable {
     public var batchResultMaxLineBytes: Int?
     public var strictResponseInput = false
     public var responsesRequestMode: ResponsesRequestMode = .openAICompatible
+    public var webSocketTransport: any AIDuplexWebSocketTransport = URLSessionDuplexWebSocketTransport.shared
     public var getResponseErrorMetadata: (@Sendable (JSONValue) -> OpenResponsesErrorMetadata)?
     public var openResponsesCustomToolID: String?
     public var supportsWebSearchSourcesInclude = true
@@ -100,9 +107,17 @@ public struct OpenAIModelConfiguration: Sendable {
             value.isReasoningModel = source.isReasoningModel
             value.supportsNonReasoningParameters = source.supportsNonReasoningParameters
             value.supportedReasoningEfforts = source.supportedReasoningEfforts
+            value.supportsChatFunctionToolsWithReasoning = source.supportsChatFunctionToolsWithReasoning
+            value.supportsPromptCacheRetention = !source.supportsConfigurationUpdate
             return value
         }
         result.mapsReasoningEffort = openAICompatibleProviderRoot(providerID) == "openai"
+        if openAIBackedProviderRoot != nil {
+            result.mapReasoning = { reasoning, modelID, warnings in
+                let efforts = openAILanguageModelCapabilities(modelID).supportedReasoningEfforts?.filter { $0 != "max" } ?? ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+                return mapReasoningToProviderEffort(reasoning: reasoning, effortMap: Dictionary(uniqueKeysWithValues: efforts.map { ($0, $0) }), warnings: &warnings)
+            }
+        }
         result.maximumImages = openAIImageMaxImagesPerCall
         result.imageHasDefaultResponseFormat = openAIImageHasDefaultResponseFormat
         if openAIBackedProviderRoot == "openai" {

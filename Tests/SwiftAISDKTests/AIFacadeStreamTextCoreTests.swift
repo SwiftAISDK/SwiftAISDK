@@ -598,9 +598,9 @@ import Testing
     let events = await recorder.events()
     #expect(streamed.isEmpty)
     #expect(model.streamRequests.count == 1)
-    #expect(events.map(\.kind) == [.start, .error])
-    #expect(events[1].operationID == "ai.streamText")
-    #expect(events[1].errorDescription?.contains("HTTP 500") == true)
+    #expect(events.map(\.kind) == [.start, .stepError, .error])
+    #expect(events[2].operationID == "ai.streamText")
+    #expect(events[2].errorDescription?.contains("HTTP 500") == true)
 }
 
 @Test func aiStreamTextPreservesRequestMessagesWhenRetryingLikeUpstream() async throws {

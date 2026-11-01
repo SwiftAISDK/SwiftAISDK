@@ -137,10 +137,18 @@ The compile-checked example is `Examples/Sources/EnhanceWithTopaz/main.swift`:
 `swift run --package-path Examples EnhanceWithTopaz image <source-url> 4000x3000`
 or `video <source-url> 3840x2160`. Running it calls the Topaz API.
 
+## Rotating credentials
+
+The native `TopazProviderSettings` accepts an optional
+`apiKeyProvider` asynchronous throwing closure. It is resolved for each
+authenticated request, so short-lived credentials can refresh without recreating
+the provider or model. Static `apiKey` settings remain supported. A supplier
+failure stops the request before it reaches the transport.
+
 
 ## Notes
 
-Topaz image and video enhancement mirror @ai-sdk/topaz 3.0.15: TOPAZ_API_KEY / X-API-Key authentication, custom base URL and headers, ai-sdk-topaz/3.0.15 user-agent, Wonder 3.5 image uploads or source URLs, validated enhancement options, cancellable polling and downloaded images; Proteus and Starlight Precise 2.6 video express requests, presigned uploads or remote sources, source/output/filter options, resumable V4 start/status operations, final credit estimates, output containers and structured errors. Image input is supported; masks and text-to-image are unsupported. API keys stay on the configured origin. Video generation uses AI.generateVideo or AI.startVideo/AI.getVideoStatus; unary video, video webhooks and a public video cancellation operation are absent upstream. Swift resolves credentials at factory creation and uses Data plus JSONValue options; JavaScript workflow serialization remains out of scope.
+Topaz image and video enhancement mirror @ai-sdk/topaz 3.0.19: TOPAZ_API_KEY / X-API-Key authentication, custom base URL and headers, ai-sdk-topaz/3.0.15 user-agent, Wonder 3.5 image uploads or source URLs, validated enhancement options, cancellable polling and downloaded images; Proteus and Starlight Precise 2.6 video express requests, presigned uploads or remote sources, source/output/filter options, resumable V4 start/status operations, final credit estimates, output containers and structured errors. Image input is supported; masks and text-to-image are unsupported. API keys stay on the configured origin. Video generation uses AI.generateVideo or AI.startVideo/AI.getVideoStatus; unary video, video webhooks and a public video cancellation operation are absent upstream. Swift resolves credentials at factory creation and uses Data plus JSONValue options; JavaScript workflow serialization remains out of scope. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

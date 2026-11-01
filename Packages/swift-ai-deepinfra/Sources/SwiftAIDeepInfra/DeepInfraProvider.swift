@@ -6,6 +6,8 @@ import SwiftAIProviderUtilities
 
 public struct DeepInfraProviderSettings: Sendable {
     public var apiKey: String?
+    /// Supplies a fresh API key immediately before each authenticated request.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var baseURL: String?
     public var headers: [String: String]
     public var queryParams: [String: String]
@@ -17,10 +19,10 @@ public struct DeepInfraProviderSettings: Sendable {
     public var transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])?
     public var transport: any AITransport
 
-    public init(apiKey: String? = nil, baseURL: String? = nil, headers: [String: String] = [:],
+    public init(apiKey: String? = nil, apiKeyProvider: (@Sendable () async throws -> String)? = nil, baseURL: String? = nil, headers: [String: String] = [:],
                 queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared,
                 includeUsage: Bool = false, supportsStructuredOutputs: Bool = false, supportsMultiPartToolContent: Bool = false, maxEmbeddingsPerCall: Int? = nil, transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil, transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])? = nil) {
-        self.apiKey = apiKey; self.baseURL = baseURL; self.headers = headers
+        self.apiKey = apiKey; self.apiKeyProvider = apiKeyProvider; self.baseURL = baseURL; self.headers = headers
         self.queryParams = queryParams; self.transport = transport
         self.includeUsage = includeUsage; self.supportsStructuredOutputs = supportsStructuredOutputs; self.supportsMultiPartToolContent = supportsMultiPartToolContent; self.maxEmbeddingsPerCall = maxEmbeddingsPerCall; self.transformRequestBody = transformRequestBody; self.transformRequestBodyWithWarnings = transformRequestBodyWithWarnings
     }
@@ -32,13 +34,20 @@ public final class DeepInfraProvider: AIProvider, Sendable {
     private let config: DeepInfraModelConfiguration
 
     public init(configuration: DeepInfraProviderSettings = .init()) throws {
+        var resolvedSettings = configuration
+        if let supplier = resolvedSettings.apiKeyProvider {
+            let credential = AIAsyncCredential(supplier)
+            resolvedSettings.apiKey = credential.placeholder
+            resolvedSettings.transport = credential.resolvingTransport(resolvedSettings.transport)
+        }
+        let configuration = resolvedSettings
         let names = ["DEEPINFRA_API_KEY"]
         guard let key = configuration.apiKey ?? environmentValue(names) else {
             throw AIError.missingAPIKey(provider: "deepinfra", environmentVariables: names)
         }
-        var headers = configuration.headers
-        headers["Authorization"] = headers["Authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-deepinfra/3.0.78")
+        var headers = normalizeHeaders(configuration.headers)
+        headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
+        headers = withUserAgentSuffix(headers, "ai-sdk-deepinfra/3.0.82")
         let baseURL = deepInfraRootBaseURL(configuration.baseURL ?? "https://api.deepinfra.com/v1")
         let http = AIProviderHTTPClient(providerID: "deepinfra", headers: headers, transport: configuration.transport,
             url: { _, path in try deepInfraOpenAIURL(root: baseURL, path: path, queryParams: configuration.queryParams) })

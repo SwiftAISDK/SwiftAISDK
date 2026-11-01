@@ -337,6 +337,7 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
             normalizeSchema: config.normalizeSchema,
             convertMessages: config.convertMessages,
             mapsReasoningEffort: config.mapsReasoningEffort,
+            mapReasoning: config.mapReasoning,
             warnings: &warnings
         )
         if stream, config.includeUsage {
@@ -373,6 +374,7 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         normalizeSchema: (@Sendable (JSONValue) throws -> (schema: JSONValue, warnings: [AIWarning]))?,
         convertMessages: (@Sendable ([AIMessage]) throws -> [JSONValue])?,
         mapsReasoningEffort: Bool,
+        mapReasoning: (@Sendable (String, String, inout [AIWarning]) -> String?)?,
         warnings: inout [AIWarning]
     ) throws -> [String: JSONValue] {
         var extraBody: [String: JSONValue]
@@ -403,22 +405,21 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         let systemMessageMode = options.removeValue(forKey: "systemMessageMode")?.stringValue
             ?? options.removeValue(forKey: "system_message_mode")?.stringValue
             ?? (isReasoningModel ? "developer" : "system")
-        if (mapsReasoningEffort || usesGenericOpenAICompatibleProviderOptions),
-           options["reasoning_effort"] == nil,
-           let reasoning = request.reasoning,
-           reasoning != "provider-default" {
-            options["reasoning_effort"] = .string(reasoning)
-        }
-        if unwrapOpenAIProviderOptions,
-           let supportedEfforts = capabilities.supportedReasoningEfforts,
-           let reasoningEffort = options["reasoning_effort"]?.stringValue,
-           !supportedEfforts.contains(reasoningEffort) {
-            options.removeValue(forKey: "reasoning_effort")
-            warnings.append(AIWarning(
-                type: "unsupported",
-                feature: "reasoningEffort",
-                message: "\(modelID) only supports the following reasoning efforts: \(supportedEfforts.joined(separator: ", "))"
-            ))
+        let requiresNoReasoning = unwrapOpenAIProviderOptions
+            && !capabilities.supportsChatFunctionToolsWithReasoning
+            && options["reasoning_effort"] == nil
+            && request.tools.values.contains { $0["id"] == nil && $0["type"]?.stringValue != "provider" }
+        if requiresNoReasoning {
+            options["reasoning_effort"] = .string("none")
+            if let reasoning = request.reasoning, reasoning != "none", reasoning != "provider-default" {
+                warnings.append(AIWarning(type: "compatibility", feature: "reasoning", message: "\(modelID) does not support function tools with reasoning in the Chat Completions API. reasoning effort set to \"none\". Use the Responses API to combine reasoning with function tools."))
+            }
+        } else if (mapsReasoningEffort || usesGenericOpenAICompatibleProviderOptions || mapReasoning != nil),
+                  options["reasoning_effort"] == nil,
+                  let reasoning = request.reasoning, reasoning != "provider-default" {
+            if let mapped = mapReasoning?(reasoning, modelID, &warnings) ?? (mapReasoning == nil ? reasoning : nil) {
+                options["reasoning_effort"] = .string(mapped)
+            }
         }
 
         let messages: [JSONValue]
@@ -470,7 +471,7 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         }
         body.merge(options) { _, new in new }
         if unwrapOpenAIProviderOptions,
-           capabilities.supportedReasoningEfforts != nil,
+           !capabilities.supportsPromptCacheRetention,
            body.removeValue(forKey: "prompt_cache_retention") != nil {
             warnings.append(AIWarning(
                 type: "unsupported",

@@ -12,7 +12,7 @@ private let gmiCloudMaxTokensErrorBody = #"{"error":{"message":"Backend request 
 @Test func gmiCloudGlobalFactoryAndVersionAliasMatchPublishedPackage() throws {
     let provider = try createGMICloud(configuration: GMICloudProviderSettings(apiKey: "gmi-key", transport: RecordingTransport(responses: [])))
 
-    #expect(gmiCloudProviderVersion == "3.0.49")
+    #expect(gmiCloudProviderVersion == "3.0.53")
     #expect(provider.providerID == "gmicloud")
     #expect(try provider.chat("model").providerID == "gmicloud.chat")
 }
@@ -40,7 +40,7 @@ private let gmiCloudMaxTokensErrorBody = #"{"error":{"message":"Backend request 
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.gmi-serving.com/v1/chat/completions")
     #expect(request.headers["authorization"] == "Bearer gmi-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-gmicloud/3.0.49")
+    #expect(request.headers["user-agent"] == "ai-sdk-gmicloud/3.0.53")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["model"]?.stringValue == "deepseek-ai/DeepSeek-V4-Flash-0731")
     #expect(body["max_tokens"]?.intValue == 32)
@@ -78,7 +78,7 @@ private let gmiCloudMaxTokensErrorBody = #"{"error":{"message":"Backend request 
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://example.com/gmi/chat/completions")
     #expect(request.headers["authorization"] == "Bearer custom-key")
-    #expect(request.headers["user-agent"] == "ExampleApp/1.0 ai-sdk-gmicloud/3.0.49")
+    #expect(request.headers["user-agent"] == "ExampleApp/1.0 ai-sdk-gmicloud/3.0.53")
     #expect(request.headers["x-client"] == "swift")
 }
 

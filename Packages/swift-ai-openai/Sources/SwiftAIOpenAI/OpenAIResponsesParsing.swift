@@ -478,7 +478,7 @@ func openAIResponsesToolResult(from item: JSONValue, providerID: String, toolCal
     guard let type = item["type"]?.stringValue else { return nil }
     switch type {
     case "web_search_call":
-        let isError = item["status"]?.stringValue == "failed" || item["status"]?.stringValue == "incomplete"
+        let isError = ["failed", "incomplete", "searching"].contains(item["status"]?.stringValue ?? "")
         return AIToolResult(
             toolCallID: item["id"]?.stringValue ?? "web-search-call",
             toolName: toolNameAliases["web_search"] ?? "web_search",

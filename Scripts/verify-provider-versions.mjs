@@ -41,7 +41,10 @@ try {
   for(const id of ids) {
     const p=data.catalog.packages.find(p=>p.id===id),cwd=path.join(destination,id);
     copy(path.join(data.root,p.directory),cwd);
-    let manifest=generator.manifest(data,p,{distribution:true});
+    // These tags exercise resolver behavior in a fresh synthetic 1.x history.
+    // Actual catalog lower bounds are checked by verify-package-distributions.
+    const fixturePackage = {...p, dependencies: p.dependencies.map(d => ({...d, from: '1.0.0'}))};
+    let manifest=generator.manifest(data,fixturePackage,{distribution:true});
     for(const dep of ids) manifest=manifest.replaceAll(data.catalog.packages.find(p=>p.id===dep).repository,urls[dep]);
     fs.writeFileSync(path.join(cwd,'Package.swift'),manifest);
     run('git',['init','-q'],cwd);commit(cwd,'Synthetic source snapshot for provider resolution');

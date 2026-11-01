@@ -1,4 +1,5 @@
 import Foundation
+import SwiftAIOpenAICompatible
 import SwiftAIProvider
 import SwiftAITransport
 import SwiftAIProviderUtilities
@@ -16,13 +17,6 @@ public func fireworksChatBody(from input: [String: JSONValue], warnings: inout [
         body["reasoning_effort"] = value
     }
 
-    if let effort = body["reasoning_effort"]?.stringValue {
-        let mapped = fireworksReasoningEffort(effort)
-        body["reasoning_effort"] = .string(mapped)
-        if effort != mapped {
-            warnings.append(AIWarning(type: "compatibility", feature: "reasoning", message: "reasoning \"\(effort)\" is not directly supported by this model. mapped to effort \"\(mapped)\"."))
-        }
-    }
 
     if let thinking = body.removeValue(forKey: "thinking")?.objectValue {
         var converted: [String: JSONValue] = [:]
@@ -42,13 +36,20 @@ public func fireworksChatBody(from input: [String: JSONValue], warnings: inout [
     return body
 }
 
-func fireworksReasoningEffort(_ value: String) -> String {
-    switch value {
-    case "minimal":
-        return "low"
-    case "xhigh", "max":
-        return "high"
-    default:
-        return value
+func fireworksPortableReasoning(_ reasoning: String, modelID: String, warnings: inout [AIWarning]) -> String? {
+    let model = modelID.components(separatedBy: "/").last ?? ""
+    var map = Dictionary(uniqueKeysWithValues: ["none", "minimal", "low", "medium", "high", "xhigh", "max"].map { ($0, $0) })
+    if ["gpt-oss", "glm-5p3", "muse-spark"].contains(where: model.hasPrefix) { map.removeValue(forKey: "none") }
+    if ["nemotron", "inkling"].contains(where: model.hasPrefix) { map.removeValue(forKey: "minimal") }
+    return mapReasoningToProviderEffort(reasoning: reasoning, effortMap: map, warnings: &warnings)
+}
+
+/// Installs Fireworks request transformations and model-specific portable reasoning.
+/// Explicit provider reasoning values bypass portable mapping.
+public func configureFireworksChat(_ configuration: inout OpenAICompatibleModelConfiguration) {
+    configuration.usesGenericOpenAICompatibleProviderOptions = true
+    configuration.mapReasoning = { reasoning, modelID, warnings in
+        fireworksPortableReasoning(reasoning, modelID: modelID, warnings: &warnings)
     }
+    configuration.prepareBody = { body, _, _, warnings in fireworksChatBody(from: body, warnings: &warnings) }
 }

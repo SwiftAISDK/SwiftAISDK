@@ -58,7 +58,7 @@ struct WeeklyMiniMax20261023Tests {
             #expect(body["max_tokens"] == 100)
             let reasoningWarnings = warnings.filter { $0.feature == "reasoning" }
             #expect(reasoningWarnings.count == (["none", "minimal"].contains(reasoning) ? 1 : 0))
-            if reasoning == "none" { #expect(reasoningWarnings.first?.message?.contains("always reasons") == true) }
+            if reasoning == "none" { #expect(reasoningWarnings.first?.message?.contains("mapped to effort") == true) }
             if streaming { #expect(body["stream"] == true) }
         }
     }

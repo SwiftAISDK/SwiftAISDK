@@ -182,7 +182,7 @@ func openAICompatibleCompletionPrompt(from messages: [AIMessage]) throws -> (tex
     for message in remaining {
         switch message.role {
         case .system:
-            throw AIError.invalidArgument(argument: "messages", message: "Completion prompts only support a system message as the first message.")
+            throw AIError.invalidArgument(argument: "messages", message: "Unexpected system message in prompt: \(message.combinedText)")
         case .user:
             text += "user:\n\(message.combinedText)\n\n"
         case .assistant:

@@ -13,17 +13,19 @@ public final class OpenAIProvider: AIProvider, AIEvaluationProvider, AIDecisionP
     public init(configuration settings: OpenAIProviderSettings = .init()) throws {
         self.settings = settings
         providerID = settings.name ?? "openai"
-        guard let key = settings.apiKey ?? settings.environmentValue(["OPENAI_API_KEY"]) else {
+        let credential = settings.apiKeyProvider.map(AIAsyncCredential.init)
+        guard let key = credential?.placeholder ?? settings.apiKey ?? settings.environmentValue(["OPENAI_API_KEY"]) else {
             throw AIError.missingAPIKey(provider: providerID, environmentVariables: ["OPENAI_API_KEY"])
         }
-        var headers = settings.headers
-        headers["Authorization"] = headers["Authorization"] ?? "Bearer \(key)"
-        if let organization = settings.organization { headers["OpenAI-Organization"] = headers["OpenAI-Organization"] ?? organization }
-        if let project = settings.project { headers["OpenAI-Project"] = headers["OpenAI-Project"] ?? project }
-        headers = withUserAgentSuffix(headers, "ai-sdk-openai/4.0.102")
+        var headers = normalizeHeaders(settings.headers)
+        headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
+        if let organization = settings.organization { headers["openai-organization"] = headers["openai-organization"] ?? organization }
+        if let project = settings.project { headers["openai-project"] = headers["openai-project"] ?? project }
+        headers = withUserAgentSuffix(headers, "ai-sdk-openai/4.0.106")
         let baseURL = withoutTrailingSlash(settings.baseURL ?? settings.environmentValue(["OPENAI_BASE_URL"]) ?? "https://api.openai.com/v1")
-        var config = OpenAIModelConfiguration(http: AIProviderHTTPClient(providerID: providerID, headers: headers, transport: settings.transport,
+        var config = OpenAIModelConfiguration(http: AIProviderHTTPClient(providerID: providerID, headers: headers, transport: settings.transport, credentialResolver: credential,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: settings.queryParams) }), baseURL: baseURL, openAIBackedProviderRoot: providerID)
+        config.webSocketTransport = settings.webSocketTransport
         config.transformRequestBody = settings.transformRequestBody; config.batchResultMaxLineBytes = settings.batchResultDownloads?.maxLineBytes
         config.strictResponseInput = settings.strictResponseInput; config.supportsStructuredOutputs = settings.supportsStructuredOutputs
         self.config = config
@@ -43,6 +45,7 @@ public final class OpenAIProvider: AIProvider, AIEvaluationProvider, AIDecisionP
     public func embeddingModel(_ modelID: String) throws -> any EmbeddingModel { OpenAICompatibleEmbeddingModel(modelID: modelID, config: wire("embedding")) }
     public func imageModel(_ modelID: String) throws -> any ImageModel { OpenAICompatibleImageModel(modelID: modelID, config: wire("image")) }
     public func transcriptionModel(_ modelID: String) throws -> any TranscriptionModel { OpenAICompatibleTranscriptionModel(modelID: modelID, config: config.withProviderID("\(providerID).transcription")) }
+    public func streamingTranscriptionModel(_ modelID: String) -> any StreamingTranscriptionModel { OpenAICompatibleTranscriptionModel(modelID: modelID, config: config.withProviderID("\(providerID).transcription")) }
     public func speechModel(_ modelID: String) throws -> any SpeechModel { OpenAICompatibleSpeechModel(modelID: modelID, config: config.withProviderID("\(providerID).speech")) }
     public func decisionModel(_ modelID: String) throws -> any AIDecisionModelV4 { OpenAIDecisionModel(modelID: modelID, config: config.withProviderID("\(providerID).decision")) }
     public func evaluationModel(_ modelID: String) throws -> any AIEvaluationModelV4 { OpenAIDecisionModel(modelID: modelID, config: config.withProviderID("\(providerID).evaluation")) }

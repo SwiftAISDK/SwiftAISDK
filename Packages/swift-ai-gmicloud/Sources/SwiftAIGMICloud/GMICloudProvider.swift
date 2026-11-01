@@ -5,7 +5,7 @@ import SwiftAIProviderUtilities
 import SwiftAIOpenAICompatible
 
 
-public let gmiCloudProviderVersion = "3.0.49"
+public let gmiCloudProviderVersion = "3.0.53"
 
 public func createGMICloud(configuration settings: GMICloudProviderSettings) throws -> GMICloudProvider {
     try GMICloudProvider(configuration: settings)
@@ -19,6 +19,13 @@ public final class GMICloudProvider: AIProvider, @unchecked Sendable {
     private let config: OpenAICompatibleModelConfiguration
 
     public init(configuration settings: GMICloudProviderSettings) throws {
+        var resolvedSettings = settings
+        if let supplier = resolvedSettings.apiKeyProvider {
+            let credential = AIAsyncCredential(supplier)
+            resolvedSettings.apiKey = credential.placeholder
+            resolvedSettings.transport = credential.resolvingTransport(resolvedSettings.transport)
+        }
+        let settings = resolvedSettings
         let headers = try gmiCloudHeaders(settings: settings)
         let baseURL = withoutTrailingSlash(settings.baseURL ?? "https://api.gmi-serving.com/v1")
         var configured = OpenAICompatibleModelConfiguration(http: AIProviderHTTPClient(
@@ -80,7 +87,7 @@ private func gmiCloudHeaders(settings: GMICloudProviderSettings) throws -> [Stri
         throw AIError.missingAPIKey(provider: "gmicloud", environmentVariables: ["GMI_CLOUD_APIKEY"])
     }
 
-    var headers = settings.headers
+    var headers = normalizeHeaders(settings.headers)
     if !headers.keys.contains(where: { $0.caseInsensitiveCompare("authorization") == .orderedSame }) {
         headers["Authorization"] = "Bearer \(apiKey)"
     }

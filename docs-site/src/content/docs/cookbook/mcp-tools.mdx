@@ -191,3 +191,17 @@ For a real app, use its secure credential store and authorization-session callba
 and supply real client authentication from a trusted configuration. The offline
 example proves the SDK flow and migration wiring; it does not verify a live server's
 registration, consent or token policy.
+
+## Input-required MCP requests
+
+For modern MCP servers, `callTool`, `readResource` and `getPrompt` process `input_required` results through the existing `onElicitationRequest` handler. Form elicitation is supported; URL elicitation and sampling requests fail with explicit diagnostics.
+
+Each continuation uses a fresh JSON-RPC ID and rebuilds parameters from the original request, adding only that round's answers and opaque `requestState`. Earlier answers and omitted state do not leak into later rounds. Empty state strings are preserved. State-only responses wait 250 ms before continuing, and the client allows ten continuation retries.
+
+Per-round timeouts include handler work and backoff; `maxTotalTimeoutMilliseconds` bounds the whole operation. Aborting, closing the client or timing out stops the request even while a handler is awaiting work; a late answer cannot resend it. Processing failures retain their underlying error in `MCPClientError.cause`.
+
+## Stable prompts and protocol diagnostics
+
+Use `listPrompts` and `getPrompt`. `experimentalListPrompts` and `experimentalGetPrompt` remain deprecated forwarding aliases. `MCPStdioTransport` remains the stable native transport name.
+
+If discovery rejects the modern version and advertises a recognized legacy version, the client explains the mismatch, lists the server's versions and preserves the original error fields and cause. It does not silently downgrade. For a known legacy server, explicitly set `protocolVersionDiscovery: false`.

@@ -35,9 +35,9 @@ func Weekly20261004AzureSpeechErrorsKeepWireEvidenceAndRetryPolicy(_ status: Int
         Issue.record("Expected Azure error")
     } catch let AIError.apiCall(error) {
         #expect(error.responseBody == body)
-        #expect(error.statusCode == (status == 502 ? 400 : status))
-        #expect(error.isRetryable == (status == 503))
-        #expect(error.description.contains(status == 502 ? "Check that the voice" : "status \(status)"))
+        #expect(error.statusCode == status)
+        #expect(error.isRetryable == (status >= 500))
+        #expect(error.description.contains("status \(status)"))
     }
 }
 

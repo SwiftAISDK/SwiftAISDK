@@ -50,6 +50,7 @@ export default defineConfig({
             { label: 'Decisions', slug: 'core/decide' },
             { label: 'Evaluation compatibility', slug: 'core/evaluate' },
             { label: 'Tools', slug: 'core/tools' },
+            { label: 'Model metadata', slug: 'core/model-metadata' },
             { label: 'Files', slug: 'core/files' },
             { label: 'Embeddings', slug: 'core/embeddings' },
             { label: 'Generate image', slug: 'core/generate-image' },

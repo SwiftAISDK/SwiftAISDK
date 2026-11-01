@@ -8,6 +8,8 @@ import SwiftAIDeepSeek
 
 
 public enum AzureOpenAITools {
+    public static func toolSearch() -> JSONValue { OpenAITools.toolSearch() }
+
     public static func codeInterpreter(container: JSONValue? = nil) -> JSONValue {
         OpenAITools.codeInterpreter(container: container)
     }

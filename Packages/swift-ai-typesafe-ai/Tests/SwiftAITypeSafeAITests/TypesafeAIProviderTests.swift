@@ -17,7 +17,7 @@ struct TypesafeAIProviderTests {
         let upstreamCasedProvider = createTypeSafeAi(configuration: TypeSafeAIProviderSettings(environment: [:]))
         let model = try provider.evaluationModel("jev-latest")
 
-        #expect(typeSafeAIProviderVersion == "3.0.27")
+        #expect(typeSafeAIProviderVersion == "3.0.31")
         #expect(typeSafeAI.providerID == "typesafe")
         #expect(typeSafeAi.providerID == "typesafe")
         #expect(upstreamCasedProvider.providerID == "typesafe")
@@ -85,7 +85,7 @@ struct TypesafeAIProviderTests {
         #expect(request.abortSignal === abortController.signal)
         #expect(request.headers["authorization"] == "Bearer test-api-key")
         #expect(request.headers["content-type"] == "application/json")
-        #expect(request.headers["user-agent"] == "ai-sdk-typesafe-ai/3.0.27")
+        #expect(request.headers["user-agent"] == "ai-sdk-typesafe-ai/3.0.31")
         let requestBody = try decodeJSONBody(try #require(request.body))
         #expect(requestBody["model"] == "jev-latest")
         #expect(requestBody["state"] == typesafeState())
@@ -127,7 +127,7 @@ struct TypesafeAIProviderTests {
         #expect(request.headers["authorization"] == "Bearer header-key")
         #expect(request.headers["custom"] == "provider")
         #expect(request.headers["shared"] == "call")
-        #expect(request.headers["user-agent"] == "Example/1.0 ai-sdk-typesafe-ai/3.0.27")
+        #expect(request.headers["user-agent"] == "Example/1.0 ai-sdk-typesafe-ai/3.0.31")
         #expect(try decodeJSONBody(try #require(request.body))["model"] == "jev-future")
         #expect(result.response?.headers["x-request-id"] == "custom-request")
     }

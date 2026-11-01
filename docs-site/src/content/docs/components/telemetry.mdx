@@ -11,11 +11,11 @@ These declarations follow the canonical repository's main branch. Match your ins
 
 | Symbol kind | Count |
 | --- | --- |
-| Case | 12 |
+| Case | 13 |
 | Enumeration | 2 |
 | Initializer | 14 |
 | Instance Method | 5 |
-| Instance Property | 130 |
+| Instance Property | 133 |
 | Protocol | 1 |
 | Structure | 12 |
 | Type Alias | 8 |
@@ -34,6 +34,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Case | `SwiftAI.Telemetry.Event.Kind.retry` | `case retry` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
 | Case | `SwiftAI.Telemetry.Event.Kind.start` | `case start` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
 | Case | `SwiftAI.Telemetry.Event.Kind.stepEnd` | `case stepEnd` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
+| Case | `SwiftAI.Telemetry.Event.Kind.stepError` | `case stepError` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
 | Case | `SwiftAI.Telemetry.Event.Kind.stepStart` | `case stepStart` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
 | Case | `SwiftAI.Telemetry.Event.Kind.toolEnd` | `case toolEnd` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
 | Case | `SwiftAI.Telemetry.Event.Kind.toolError` | `case toolError` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
@@ -59,6 +60,9 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Instance Method | `SwiftAI.executeTool(_:)` | `func executeTool<Output>(_ context: ToolExecutionContext<Output>) async throws -> Output where Output : Sendable` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
 | Instance Method | `SwiftAI.executeTool(_:)` | `func executeTool<Output>(_ context: Telemetry.ToolExecutionContext<Output>) async throws -> Output where Output : Sendable` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
 | Instance Method | `SwiftAI.record(_:)` | `func record(_ event: Event) async` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
+| Instance Property | `SwiftAI.aiVersion` | `var aiVersion: String?` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
+| Instance Property | `SwiftAI.aiVersion` | `var aiVersion: String?` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
+| Instance Property | `SwiftAI.aiVersion` | `var aiVersion: String?` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
 | Instance Property | `SwiftAI.answers` | `var answers: [String : AIDecisionAnswer]` | [Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift) |
 | Instance Property | `SwiftAI.answers` | `var answers: [String : AIDecisionAnswer]` | [Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift) |
 | Instance Property | `SwiftAI.answers` | `var answers: [String : AIEvaluationAnswer]` | [Packages/swift-ai-core/Sources/SwiftAI/AIEvaluationTelemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/AIEvaluationTelemetry.swift) |

@@ -32,6 +32,7 @@ SwiftAISDK is a SwiftPM port of the provider-facing Vercel AI SDK.
 - [Generate speech](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-speech.txt): Convert text into audio with a speech model.
 - [Generate text](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-text.txt): Use a language model for one-shot text generation.
 - [Generate video](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-video.txt): Create video clips with a video model.
+- [Model metadata](https://swiftaisdk.github.io/SwiftAISDK/llms/core/model-metadata.txt): Describe provider model capabilities and option support.
 - [Realtime sessions](https://swiftaisdk.github.io/SwiftAISDK/llms/core/realtime.txt): Run bidirectional text, audio, and tool sessions over a provider Realtime V4 model.
 - [Rerank](https://swiftaisdk.github.io/SwiftAISDK/llms/core/rerank.txt): Score and reorder documents for a query.
 - [Stream speech](https://swiftaisdk.github.io/SwiftAISDK/llms/core/stream-speech.txt): Synthesize audio incrementally from complete or streaming text.

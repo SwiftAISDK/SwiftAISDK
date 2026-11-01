@@ -5,14 +5,16 @@ import SwiftAIProviderUtilities
 
 public struct BlackForestLabsProviderSettings: Sendable {
     public var apiKey: String?
+    /// Supplies a fresh API key immediately before each authenticated request.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var baseURL: String?
     public var headers: [String: String]
     public var queryParams: [String: String]
     public var transport: any AITransport
 
-    public init(apiKey: String? = nil, baseURL: String? = nil, headers: [String: String] = [:],
+    public init(apiKey: String? = nil, apiKeyProvider: (@Sendable () async throws -> String)? = nil, baseURL: String? = nil, headers: [String: String] = [:],
                 queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared) {
-        self.apiKey = apiKey; self.baseURL = baseURL; self.headers = headers
+        self.apiKey = apiKey; self.apiKeyProvider = apiKeyProvider; self.baseURL = baseURL; self.headers = headers
         self.queryParams = queryParams; self.transport = transport
     }
 }
@@ -23,13 +25,20 @@ public final class BlackForestLabsProvider: AIProvider, Sendable {
     private let config: BlackForestLabsModelConfiguration
 
     public init(configuration: BlackForestLabsProviderSettings = .init()) throws {
+        var resolvedSettings = configuration
+        if let supplier = resolvedSettings.apiKeyProvider {
+            let credential = AIAsyncCredential(supplier)
+            resolvedSettings.apiKey = credential.placeholder
+            resolvedSettings.transport = credential.resolvingTransport(resolvedSettings.transport)
+        }
+        let configuration = resolvedSettings
         let names = ["BFL_API_KEY", "BLACK_FOREST_LABS_API_KEY"]
         guard let key = configuration.apiKey ?? environmentValue(names) else {
             throw AIError.missingAPIKey(provider: "black-forest-labs", environmentVariables: names)
         }
-        var headers = configuration.headers
+        var headers = normalizeHeaders(configuration.headers)
         headers["x-key"] = headers["x-key"] ?? "\(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-black-forest-labs/2.0.70")
+        headers = withUserAgentSuffix(headers, "ai-sdk-black-forest-labs/2.0.74")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.bfl.ai/v1")
         let http = AIProviderHTTPClient(providerID: "black-forest-labs", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

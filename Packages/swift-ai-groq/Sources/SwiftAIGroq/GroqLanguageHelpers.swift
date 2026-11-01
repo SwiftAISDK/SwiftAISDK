@@ -378,35 +378,15 @@ func groqReasoningEffort(_ value: String) -> String {
 }
 
 func groqApplyReasoning(_ reasoning: String?, modelID: String, to body: inout [String: JSONValue], warnings: inout [AIWarning]) {
-    guard let reasoning,
-          isCustomReasoning(reasoning),
-          body["reasoning_effort"] == nil else {
+    guard let reasoning, isCustomReasoning(reasoning), body["reasoning_effort"] == nil else { return }
+    let supportsNone = modelID == "qwen/qwen3.6-27b"
+    if reasoning == "none", !supportsNone, !modelID.hasPrefix("openai/gpt-oss") {
+        warnings.append(AIWarning(type: "unsupported", feature: "reasoning", message: "reasoning \"none\" is not supported by this model."))
         return
     }
-    if reasoning == "none" {
-        if modelID == "qwen/qwen3.6-27b" {
-            body["reasoning_effort"] = .string("none")
-        } else {
-            warnings.append(AIWarning(
-                type: "unsupported",
-                feature: "reasoning",
-                message: #"reasoning "none" is not supported by this model."#
-            ))
-        }
-        return
-    }
-    if let effort = mapReasoningToProviderEffort(
-        reasoning: reasoning,
-        effortMap: [
-            "minimal": "low",
-            "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": "high",
-            "max": "high"
-        ],
-        warnings: &warnings
-    ) {
+    var map = ["low": "low", "medium": "medium", "high": "high"]
+    if supportsNone { map["none"] = "none" }
+    if let effort = mapReasoningToProviderEffort(reasoning: reasoning, effortMap: map, warnings: &warnings) {
         body["reasoning_effort"] = .string(effort)
     }
 }

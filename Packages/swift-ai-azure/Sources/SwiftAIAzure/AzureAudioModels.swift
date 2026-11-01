@@ -25,6 +25,7 @@ struct AzureAudioConfig: Sendable {
     var transport: any AITransport
     var downloadTransport: any AITransport
     var tokenProvider: AzureOpenAITokenProvider?
+    var credentialResolver: AIAsyncCredential? = nil
 
     func baseURL(api: String) throws -> String {
         if let configured = api == "speech" ? settings.speechBaseURL : settings.maiBaseURL {
@@ -39,7 +40,7 @@ struct AzureAudioConfig: Sendable {
 
     func requestHeaders(api: String) -> [String: String] {
         let authentication = tokenProvider == nil ? apiKey.map { [api == "speech" ? "Ocp-Apim-Subscription-Key" : "api-key": $0] } ?? [:] : [:]
-        return withUserAgentSuffix(authentication.mergingHeaders(headers), "ai-sdk-azure/4.0.110")
+        return withUserAgentSuffix(authentication.mergingHeaders(headers), "ai-sdk-azure/4.0.114")
     }
 }
 
@@ -101,13 +102,11 @@ public final class AzureSpeechModel: SpeechModel, @unchecked Sendable {
         let headers = config.requestHeaders(api: "speech").mergingHeaders(["Content-Type": "application/ssml+xml", "X-Microsoft-OutputFormat": outputFormat]).mergingHeaders(request.headers)
         let response = try await config.transport.send(AIHTTPRequest(method: "POST", url: url, headers: headers, body: Data(ssml.utf8), abortSignal: request.abortSignal))
         guard (200..<300).contains(response.statusCode) else {
-            let voiceReset = response.statusCode == 502 && response.bodyText.contains("reset reason: protocol error")
             let message = (try? response.jsonValue())?["error"]?["message"]?.stringValue
-                ?? (voiceReset ? "Azure Speech could not synthesize the request. Check that the voice is available for this model and that the style is supported by the voice."
-                    : response.statusCode == 400 ? "Azure Speech request failed with status 400. Check the voice name, style, and output format."
+                ?? (response.statusCode == 400 ? "Azure Speech request failed with status 400. Check the voice name, style, and output format."
                     : "Azure Speech request failed with status \(response.statusCode).")
-            var error = AIAPICallError(provider: providerID, url: url.absoluteString, requestBody: .string(ssml), statusCode: voiceReset ? 400 : response.statusCode,
-                                      responseHeaders: response.headers, responseBody: response.bodyText, isRetryable: voiceReset ? false : nil)
+            var error = AIAPICallError(provider: providerID, url: url.absoluteString, requestBody: .string(ssml), statusCode: response.statusCode,
+                                      responseHeaders: response.headers, responseBody: response.bodyText, isRetryable: nil)
             error.message = message
             throw AIError.apiCall(error)
         }

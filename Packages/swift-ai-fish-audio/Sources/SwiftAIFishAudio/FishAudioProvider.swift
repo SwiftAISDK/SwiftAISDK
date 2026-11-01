@@ -5,7 +5,7 @@ import SwiftAIProviderUtilities
 
 
 /// The published `@ai-sdk/fish-audio` package version mirrored by this port.
-public let fishAudioProviderVersion = "3.0.46"
+public let fishAudioProviderVersion = "3.0.50"
 
 /// Creates a Fish Audio provider using the same defaults as
 /// `createFishAudio` from `@ai-sdk/fish-audio`.
@@ -25,6 +25,13 @@ public final class FishAudioProvider: AIProvider, @unchecked Sendable {
     private let config: FishAudioHTTPConfiguration
 
     public init(configuration settings: FishAudioProviderSettings) throws {
+        var resolvedSettings = settings
+        if let supplier = resolvedSettings.apiKeyProvider {
+            let credential = AIAsyncCredential(supplier)
+            resolvedSettings.apiKey = credential.placeholder
+            resolvedSettings.transport = credential.resolvingTransport(resolvedSettings.transport)
+        }
+        let settings = resolvedSettings
         let apiKey = settings.apiKey
             ?? settings.environmentValue(["FISH_AUDIO_API_KEY"])
         guard let apiKey else {

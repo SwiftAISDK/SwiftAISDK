@@ -10,13 +10,20 @@ public final class HuggingFaceProvider: AIProvider, @unchecked Sendable {
     private let config: HuggingFaceHTTPConfiguration
 
     public init(configuration settings: HuggingFaceProviderSettings) throws {
+        var resolvedSettings = settings
+        if let supplier = resolvedSettings.apiKeyProvider {
+            let credential = AIAsyncCredential(supplier)
+            resolvedSettings.apiKey = credential.placeholder
+            resolvedSettings.transport = credential.resolvingTransport(resolvedSettings.transport)
+        }
+        let settings = resolvedSettings
         let names = ["HUGGINGFACE_API_KEY"]
         guard let key = settings.apiKey ?? environmentValue(names) else {
             throw AIError.missingAPIKey(provider: providerID, environmentVariables: names)
         }
-        var headers = settings.headers
-        headers["Authorization"] = headers["Authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk/huggingface/2.0.78")
+        var headers = normalizeHeaders(settings.headers)
+        headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
+        headers = withUserAgentSuffix(headers, "ai-sdk/huggingface/2.0.82")
         let baseURL = withoutTrailingSlash(settings.baseURL ?? "https://router.huggingface.co/v1")
         config = HuggingFaceHTTPConfiguration(http: AIProviderHTTPClient(
             providerID: "huggingface.responses", headers: headers, transport: settings.transport,

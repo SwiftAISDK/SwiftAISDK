@@ -29,7 +29,9 @@
       "Packages/swift-ai-quiverai/Tests/SwiftAIQuiverAITests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-quiverai/Tests/SwiftAIQuiverAITests/QuiverAIProviderTests.swift",
       "Packages/swift-ai-quiverai/Tests/SwiftAIQuiverAITests/QuiverResponsesCompatibilityTests.swift",
-      "Packages/swift-ai-quiverai/Tests/SwiftAIQuiverAITests/TestSupport.swift"
+      "Packages/swift-ai-quiverai/Tests/SwiftAIQuiverAITests/TestSupport.swift",
+      "Packages/swift-ai-quiverai/Tests/SwiftAIQuiverAITests/Weekly20261101BehaviorTests.swift",
+      "Packages/swift-ai-quiverai/Tests/SwiftAIQuiverAITests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },
@@ -37,7 +39,11 @@
     {
       "kind": "native-adaptation",
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "2026-11-01: integrity-verified @ai-sdk/quiverai 2.0.69 -> 2.0.73 source/declarations reviewed with exact matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700; focused Weekly20261101 assertions cover the published deltas and native credential settings. Existing coarse/imported mappings and earlier gaps remain unpromoted. Portable none/minimal maps to low and max to xhigh with compatibility warnings in generation/stream-start; explicit canonical provider effort retains priority through the shared Responses adapter. Add lazy apiKeyProvider for language and image requests; existing auth/header and provider-reference policies retained."
     }
   ],
-  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained. 2026-11-01: integrity-verified @ai-sdk/quiverai 2.0.69 -> 2.0.73 source/declarations reviewed with exact matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700; focused Weekly20261101 assertions cover the published deltas and native credential settings. Existing coarse/imported mappings and earlier gaps remain unpromoted."
 }

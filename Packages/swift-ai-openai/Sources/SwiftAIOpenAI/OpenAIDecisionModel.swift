@@ -38,9 +38,13 @@ public final class OpenAIDecisionModel: AIDecisionModelV4, AIEvaluationModelV4, 
         } else {
             safetyIdentifier = nil
         }
+        if let cacheKey = providerOptions["promptCacheKey"], cacheKey.stringValue == nil {
+            throw AIError.invalidArgument(argument: "providerOptions.openai.promptCacheKey", message: "must be a string")
+        }
         let body: JSONValue = .object([
             "model": .string(modelID),
             "safety_identifier": safetyIdentifier.map(JSONValue.string),
+            "prompt_cache_key": providerOptions["promptCacheKey"],
             "input": .array([.object([
                 "role": .string("user"),
                 "content": .array(try options.state.map(openAIDecisionContent))
@@ -161,7 +165,7 @@ public final class OpenAIDecisionModel: AIDecisionModelV4, AIEvaluationModelV4, 
         var warnings: [AIWarning] = []
         if options.maxOutputTokens != nil { warnings.append(AIWarning(type: "unsupported", feature: "maxOutputTokens")) }
         if options.reasoning != nil { warnings.append(AIWarning(type: "unsupported", feature: "reasoning")) }
-        warnings += providerOptions.keys.sorted().filter { $0 != "safetyIdentifier" }.map {
+        warnings += providerOptions.keys.sorted().filter { $0 != "safetyIdentifier" && $0 != "promptCacheKey" }.map {
             AIWarning(type: "unsupported", feature: "providerOptions.openai.\($0)")
         }
         return AIDecisionModelV4Result(
@@ -195,7 +199,11 @@ public final class OpenAIDecisionModel: AIDecisionModelV4, AIEvaluationModelV4, 
 private func openAIDecisionContent(_ part: AIDecisionStatePart) throws -> JSONValue {
     switch part {
     case let .text(text): return .object(["type": .string("input_text"), "text": .string(text)])
-    case let .json(value): return .object(["type": .string("input_text"), "text": .string(try decisionJSONText(value))])
+    case let .json(value):
+        if try openAIDecisionSupportsNativeJSON(value) {
+            return .object(["type": .string("input_json"), "data": value])
+        }
+        return .object(["type": .string("input_text"), "text": .string(try decisionJSONText(value))])
     case let .file(mediaType, data, _, providerOptions):
         let base64: String
         let detected: String?
@@ -272,4 +280,19 @@ public extension OpenAIDecisionModel {
         let result = try await doDecide(options.decisionOptions)
         return try evaluationResult(from: result, providerID: providerID, modelID: modelID)
     }
+}
+
+private func openAIDecisionSupportsNativeJSON(_ value: JSONValue) throws -> Bool {
+    guard value.objectValue != nil || (value.arrayValue?.isEmpty == false && value.arrayValue?.allSatisfy { $0.objectValue != nil } == true) else { return false }
+    var count = 0
+    func bounded(_ value: JSONValue, depth: Int) -> Bool {
+        count += 1
+        guard count <= 10_000 else { return false }
+        let children = value.objectValue.map { Array($0.values) } ?? value.arrayValue
+        guard let children else { return true }
+        guard depth <= 32 else { return false }
+        return children.allSatisfy { bounded($0, depth: depth + 1) }
+    }
+    guard bounded(value, depth: 1) else { return false }
+    return try decisionJSONText(value).utf8.count <= 256 * 1024
 }

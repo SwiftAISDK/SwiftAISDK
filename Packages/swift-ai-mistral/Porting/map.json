@@ -45,6 +45,7 @@
       "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/MistralStreamingAndOptionsTests.swift",
       "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/MistralTests.swift",
       "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/TestSupport.swift",
+      "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/Weekly20261101MistralTests.swift",
       "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/WeeklyMistral20261011Tests.swift"
     ],
     "resources": []
@@ -55,5 +56,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "M6: Mistral runtime and focused upstream-derived tests own their package; HTTP construction is shared, options and wire policy remain local. Prior baselines and known gaps are retained."
+  "reviewNote": "M6: Mistral runtime and focused upstream-derived tests own their package; HTTP construction is shared, options and wire policy remain local. Prior baselines and known gaps are retained. 2026-11-01: reviewed @ai-sdk/mistral 4.0.72 -> 4.0.77 archives and release-matched tests (612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 028a025398782f4938303f48fbeee45c79af544b). Ported changed mistral-chat-language-model test deltas in Weekly20261101MistralTests: GLM 5.3 low/high/max mapping and provider-effort passthrough; retain the distinct Conversations reasoning whitelist. Async key suppliers refresh before each native HTTP request, preserving typed errors and overrides. New internal catalog metadata does not change existing transcription restrictions, speech formats or embedding dimensions; those are already covered by current native behavior."
 }

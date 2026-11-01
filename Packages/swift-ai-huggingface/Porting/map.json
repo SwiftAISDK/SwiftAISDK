@@ -24,7 +24,8 @@
     "tests": [
       "Packages/swift-ai-huggingface/Tests/SwiftAIHuggingFaceTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-huggingface/Tests/SwiftAIHuggingFaceTests/HuggingFaceProviderTests.swift",
-      "Packages/swift-ai-huggingface/Tests/SwiftAIHuggingFaceTests/TestSupport.swift"
+      "Packages/swift-ai-huggingface/Tests/SwiftAIHuggingFaceTests/TestSupport.swift",
+      "Packages/swift-ai-huggingface/Tests/SwiftAIHuggingFaceTests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },

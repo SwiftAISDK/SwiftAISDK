@@ -106,7 +106,7 @@ import Testing
 
     let request = try #require(await transport.requests().first)
     #expect(request.headers["authorization"] == "Bearer groq-key")
-    #expect(request.headers["user-agent"] == "custom-client/1.0 ai-sdk-groq/4.0.70")
+    #expect(request.headers["user-agent"] == "custom-client/1.0 ai-sdk-groq/4.0.74")
 }
 @Test func groqLanguageMapsMissingFinishReasonToOther() async throws {
     let transport = RecordingTransport(response: jsonResponse(#"{"id":"groq-1","model":"gemma2-9b-it","choices":[{"index":0,"message":{"content":"ok"},"finish_reason":null}]}"#))
@@ -185,13 +185,9 @@ import Testing
     ])
 
     let (noneBody, noneWarnings) = try await bodyAndWarnings(reasoning: "none")
-    #expect(noneBody["reasoning_effort"] == nil)
+    #expect(noneBody["reasoning_effort"] == "low")
     #expect(noneWarnings == [
-        AIWarning(
-            type: "unsupported",
-            feature: "reasoning",
-            message: #"reasoning "none" is not supported by this model."#
-        )
+        AIWarning(type: "compatibility", feature: "reasoning", message: #"reasoning "none" is not directly supported by this model. mapped to effort "low"."#)
     ])
 
     let (qwenNoneBody, qwenNoneWarnings) = try await bodyAndWarnings(

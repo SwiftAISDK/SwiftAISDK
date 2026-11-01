@@ -25,3 +25,25 @@ finish reason. A failed continuation retains the preceding response's state.
 Partial function arguments, including response tools, preserve nested empty
 arrays and objects and produce valid concatenated JSON deltas. Legacy tool-call
 snapshot parts remain available alongside the incremental tool-input lifecycle.
+
+## Per-request credentials and video preprocessing
+
+`GoogleProviderSettings.apiKeyProvider` accepts an async throwing key supplier.
+It is called before each authenticated HTTP request, including continued
+GenerateContent calls, batch operations, file-upload initiation and processing
+polls. Static `apiKey` settings remain supported. Custom provider and request
+headers retain precedence; unauthenticated upload URLs receive no API key.
+
+User file parts accept `videoMetadata` under their `google` provider metadata.
+The typed `GoogleVideoMetadata` value exposes `startOffset`, `endOffset` and `fps`
+through `jsonValue`. Offsets are duration strings such as `"3.5s"`; frame rate
+must be greater than zero and at most 24. Set the value on inline files or
+hosted/provider references using
+`providerMetadata: ["google": ["videoMetadata": clip.jsonValue]]`.
+The `googleVertex` and `vertex` namespaces are accepted as fallbacks.
+
+Gemini 3 reasoning that cannot disable thinking maps `none` to its lowest
+supported effort with a compatibility warning. Gemini 2.5 Pro maps it to the
+minimum 128-token budget; models that support disabled thinking still send zero.
+Continued streamed function strings close on their final chunk, including an
+empty chunk or explicit terminator, so accumulated JSON becomes valid promptly.

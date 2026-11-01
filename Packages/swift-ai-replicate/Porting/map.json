@@ -25,7 +25,8 @@
     "tests": [
       "Packages/swift-ai-replicate/Tests/SwiftAIReplicateTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-replicate/Tests/SwiftAIReplicateTests/ReplicateProviderTests.swift",
-      "Packages/swift-ai-replicate/Tests/SwiftAIReplicateTests/TestSupport.swift"
+      "Packages/swift-ai-replicate/Tests/SwiftAIReplicateTests/TestSupport.swift",
+      "Packages/swift-ai-replicate/Tests/SwiftAIReplicateTests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },

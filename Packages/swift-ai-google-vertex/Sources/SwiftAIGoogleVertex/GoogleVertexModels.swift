@@ -822,6 +822,7 @@ private func googleGenerateContentBody(_ request: LanguageModelRequest, modelID:
             modelID: modelID,
             includeFunctionCallIDs: false,
             supportsGoogleCloudStorageToolResults: googleMessageTargetIsGemini3(modelID),
+            providerOptionsNames: ["googleVertex", "vertex"],
             warnings: &warnings
         )
     }

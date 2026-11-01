@@ -1307,7 +1307,11 @@ extension XAITranscriptionModel {
         components.queryItems = items
         guard let url = components.url else { throw AIError.invalidURL(http.url.absoluteString) }
         let connection: any AIDuplexWebSocketConnection
-        do { connection = try await webSocketTransport.connect(AIDuplexWebSocketRequest(url: url, headers: http.headers, abortSignal: request.abortSignal)) }
+        do {
+            let headers = try await config.http.resolvedHeaders(request.headers)
+            try request.abortSignal?.throwIfAborted()
+            connection = try await webSocketTransport.connect(AIDuplexWebSocketRequest(url: url, headers: headers, abortSignal: request.abortSignal))
+        }
         catch { request.audio.cancelFromConsumer(); throw error }
         let session = XAIStreamingTranscriptionSession(connection: connection, request: request, warnings: warnings,
                                                        language: options["language"]?.stringValue,

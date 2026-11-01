@@ -32,6 +32,7 @@
         "packages/openai/src/realtime/openai-realtime-event-mapper.test.ts",
         "packages/openai/src/realtime/openai-realtime-factory.test.ts",
         "packages/openai/src/realtime/openai-realtime-model.test.ts",
+        "packages/openai/src/realtime/realtime-model-v4.test-d.ts",
         "packages/openai/src/responses/convert-to-openai-responses-input-tool-search.test.ts",
         "packages/openai/src/responses/convert-to-openai-responses-input.test.ts",
         "packages/openai/src/responses/expand-parallel-tool-call.test.ts",
@@ -68,6 +69,7 @@
       "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIResponsesTools.swift",
       "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAISkills.swift",
       "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIStreamErrors.swift",
+      "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIStreamingTranscription.swift",
       "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAITools.swift",
       "Sources/SwiftAISDK/Models/OpenAICompatibleConfig.swift"
     ],
@@ -110,7 +112,9 @@
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesToolSearchConversionTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/ProviderStreamingRetryTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/RealtimeTestSupport.swift",
-      "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/TestSupport.swift"
+      "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/TestSupport.swift",
+      "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/Weekly20261101OpenAIBehaviorTests.swift",
+      "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/Weekly20261101OpenAICredentialsTests.swift"
     ],
     "resources": [
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/Fixtures/OpenAIResponses/openai-apply-patch-tool-delete.1.chunks.txt",
@@ -171,7 +175,11 @@
     {
       "kind": "native-adaptation",
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "2026-11-01: @ai-sdk/openai 4.0.102 -> 4.0.106; integrity-verified published sources/declarations and matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700 reviewed independently. New native behavior is covered by Weekly20261101 suites. Internal TypeScript catalog/documentation/type-inference declarations are represented by native request policies, not an exact JS export contract. Prior imported provenance and known gaps remain unchanged. Portable reasoning maps against model-supported effort sets while provider reasoningEffort remains unchanged; GPT-5.6 Chat function tools disable portable reasoning and GPT-6.1 Terra supports non-reasoning sampling. GPT-5 keeps cache retention and Responses logprobs. Untyped propertyNames constraints are removed with one warning; completion errors contain misplaced system content. Searching web-search terminals are errors through the shared generation/stream/batch parser. Decisions sends bounded object/object-array evidence as input_json and promptCacheKey, with UTF-8/depth/value limits and text fallback. REST transcription uses catalog-equivalent defaults only for Whisper/diarization, timestamps only with verbose_json and duration-billed usage fallback. Native streaming transcription adds the published realtime-whisper/Live/turn-based models and dated aliases, languages/delay policy, raw deltas/final events and cancellation. Native async API key suppliers resolve per authenticated HTTP request and server WebSocket connection; explicit provider/request auth headers retain precedence. Files managed operations and streaming multipart resolve before send; Skills and Batch use the shared credential-aware transport."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction."
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction. 2026-11-01: @ai-sdk/openai 4.0.102 -> 4.0.106; integrity-verified published sources/declarations and matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700 reviewed independently. New native behavior is covered by Weekly20261101 suites. Internal TypeScript catalog/documentation/type-inference declarations are represented by native request policies, not an exact JS export contract. Prior imported provenance and known gaps remain unchanged."
 }

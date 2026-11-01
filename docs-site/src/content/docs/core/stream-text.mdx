@@ -157,3 +157,11 @@ DNS address pinning is still a transport-level gap.
 `completed`, `aborted`, `failed`, or `unknown`. Consumer cancellation reports
 `unknown` with `isCancelled == true`; an `AIAbortError` reports `aborted` with
 `isAborted == true`.
+
+## Steering and failed steps
+
+`AI.streamText` accepts `experimentalSteering`, `onStepError`, `onError` and `onAbort`, including the typed `AIOutput` overloads. Pass a fresh object from `AI.experimentalCreateSteering()` and set the desired `maxSteps`. Delivery receipts, `prepareStep.experimentalSteeringMessages` and completed-step steering metadata follow the same rules as `generateText`.
+
+`onStepError` fires once when a started model step fails before producing a result: a thrown provider/stream error or a stream ending without output or its terminal finish. It reports the actual continuation-step index and completed previous steps. A provider error chunk completes an errored step and invokes `onError`, without a failed-step callback. An abort or timeout invokes `onAbort`, without `onStepError` or `onError`.
+
+`AIStreamTextAbortEvent` contains completed steps and the available abort reason. `AIToolLoopAgent` forwards its constructor callbacks. Ordinary completion preserves the receipt's completion reason; cancelling the consumer settles pending steering as aborted.

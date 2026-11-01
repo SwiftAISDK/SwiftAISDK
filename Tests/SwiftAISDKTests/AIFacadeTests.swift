@@ -289,10 +289,10 @@ private struct NativeAPISummary: Decodable, Sendable, Equatable {
         Issue.record("Expected telemetry error path.")
     } catch {
         let events = await recorder.events()
-        #expect(events.map(\.kind) == [.start, .error])
+        #expect(events.map(\.kind) == [.start, .stepError, .error])
         #expect(events[0].input?["messages"]?[0]?["content"]?[0]?["text"]?.stringValue == "Telemetry error")
-        #expect(events[1].output == nil)
-        #expect(events[1].errorDescription?.contains("HTTP 400") == true)
+        #expect(events[2].output == nil)
+        #expect(events[2].errorDescription?.contains("HTTP 400") == true)
     }
 }
 @Test func aiGenerateTextAbortsBeforeModelCallWhenSignalIsAborted() async throws {
@@ -314,9 +314,9 @@ private struct NativeAPISummary: Decodable, Sendable, Equatable {
 
         #expect(error.reason == "user cancelled")
         #expect(model.requests.isEmpty)
-        #expect(events.map(\.kind) == [.start, .abort])
-        #expect(events[1].operationID == "ai.generateText")
-        #expect(events[1].errorDescription?.contains("user cancelled") == true)
+        #expect(events.map(\.kind) == [.start, .stepError, .abort])
+        #expect(events[2].operationID == "ai.generateText")
+        #expect(events[2].errorDescription?.contains("user cancelled") == true)
     }
 }
 @Test func aiTelemetryExecuteLanguageModelCallWrapsModelCallsInIntegrationOrder() async throws {

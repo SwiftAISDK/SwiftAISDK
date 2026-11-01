@@ -89,7 +89,7 @@ func WeeklyAzure20261011SpeechResetBecomesNonRetryableClientError(_ status: Int)
     let body = status == 502 ? "upstream reset reason: protocol error" : "voice unavailable"
     let model = try AIProviders.azure(resourceName: "weekly", configuration: .init(apiKey: "key", transport: RecordingTransport(response: AIHTTPResponse(statusCode: status, body: Data(body.utf8))))).speech("mai-voice-2")
     do { _ = try await model.speak(.init(text: "test")); Issue.record("Expected speech failure") }
-    catch let AIError.apiCall(error) { #expect(error.statusCode == (status == 502 ? 400 : status)); #expect(error.responseBody == body); #expect(error.isRetryable == (status == 503)) }
+    catch let AIError.apiCall(error) { #expect(error.statusCode == status); #expect(error.responseBody == body); #expect(error.isRetryable == (status >= 500)) }
 }
 
 @Test(arguments: [#"{"data":[{}]}"#, #"{"usage":{"num_output_tokens":"bad"},"data":[{"b64_json":"aGk="}]}"#])

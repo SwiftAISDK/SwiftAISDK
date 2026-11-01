@@ -29,13 +29,10 @@ extension ModelHTTPConfig {
         result.chatErrorHandler = { openAICompatibleHTTPStatusError(provider: self.providerID, response: $0) }
         result.streamErrorParser = openAIProviderStreamError
         result.normalizeSchema = normalizeOpenAIJSONSchema
-        result.languageCapabilities = { modelID in
-            let source = openAILanguageModelCapabilities(modelID)
-            var value = OpenAICompatibleLanguageCapabilities()
-            value.isReasoningModel = source.isReasoningModel
-            value.supportsNonReasoningParameters = source.supportsNonReasoningParameters
-            value.supportedReasoningEfforts = source.supportedReasoningEfforts
-            return value
+        let openAIWire = openAIConfiguration.compatibleConfiguration()
+        result.languageCapabilities = openAIWire.languageCapabilities
+        if isOpenAIBackedProvider(providerID, config: self) {
+            result.mapReasoning = openAIWire.mapReasoning
         }
         result.mapsReasoningEffort = openAICompatibleProviderRoot(providerID) == "openai"
         let root = openAICompatibleProviderRoot(providerID)
@@ -43,10 +40,10 @@ extension ModelHTTPConfig {
         if root == "deepinfra" { result.usage = deepInfraChatUsage }
         result.prepareBody = { body, request, modelID, warnings in
             var body = body
-            if root == "fireworks" { body = fireworksChatBody(from: body, warnings: &warnings) }
             if self.providerID == "googleVertex.xai" { body.removeValue(forKey: "reasoning_effort") }
             return body
         }
+        if root == "fireworks" { configureFireworksChat(&result) }
         if root == "moonshotai" { configureMoonshotChat(&result) }
         if root == "xai" { configureXAIChat(&result) }
         if isOpenAIBackedProvider(providerID, config: self) {

@@ -6,6 +6,8 @@ import SwiftAIProviderUtilities
 
 public struct CartesiaProviderSettings: Sendable {
     public var apiKey: String?
+    /// Supplies a fresh API key before an authenticated request.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var version: String
     public var baseURL: String?
     public var headers: [String: String]
@@ -14,7 +16,7 @@ public struct CartesiaProviderSettings: Sendable {
     public var webSocketTransport: any AIDuplexWebSocketTransport
 
     public init(
-        apiKey: String? = nil,
+        apiKey: String? = nil, apiKeyProvider: (@Sendable () async throws -> String)? = nil,
         version: String = CartesiaProvider.defaultAPIVersion,
         baseURL: String? = nil,
         headers: [String: String] = [:],
@@ -22,7 +24,7 @@ public struct CartesiaProviderSettings: Sendable {
         transport: any AITransport = URLSessionTransport.shared,
         webSocketTransport: any AIDuplexWebSocketTransport = URLSessionDuplexWebSocketTransport.shared
     ) {
-        self.apiKey = apiKey
+        self.apiKey = apiKey; self.apiKeyProvider = apiKeyProvider
         self.version = version
         self.baseURL = baseURL
         self.headers = headers
@@ -43,6 +45,12 @@ public final class CartesiaProvider: AIProvider, @unchecked Sendable {
     private let webSocketTransport: any AIDuplexWebSocketTransport
 
     public init(settings: CartesiaProviderSettings = CartesiaProviderSettings()) throws {
+        var settings = settings
+        if let supplier = settings.apiKeyProvider {
+            let credential = AIAsyncCredential(supplier)
+            settings.apiKey = credential.placeholder
+            settings.transport = credential.resolvingTransport(settings.transport)
+        }
         let apiKey: String?
         if let environment = settings.environment {
             apiKey = settings.apiKey ?? environment["CARTESIA_API_KEY"]
@@ -58,7 +66,7 @@ public final class CartesiaProvider: AIProvider, @unchecked Sendable {
 
         var headers = withUserAgentSuffix(
             settings.headers,
-            "ai-sdk-cartesia/3.0.63"
+            "ai-sdk-cartesia/3.0.67"
         )
         headers["authorization"] = headers["authorization"] ?? "Bearer \(apiKey)"
         headers["cartesia-version"] = headers["cartesia-version"] ?? settings.version

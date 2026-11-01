@@ -31,7 +31,8 @@ public enum OpenResponsesTools {
 func openAIResponsesTools(
     from tools: [String: JSONValue],
     supportsAsyncToolCalling: Bool = true,
-    normalizeSchemas: Bool = true
+    normalizeSchemas: Bool = true,
+    providerOptionsName: String = "openai"
 ) throws -> (
     tools: [JSONValue],
     customToolNames: Set<String>,
@@ -64,7 +65,7 @@ func openAIResponsesTools(
         }
 
         var parameters = schema
-        let openAIOptions = object?["providerOptions"]?["openai"]?.objectValue ?? object?["openai"]?.objectValue
+        let openAIOptions = object?["providerOptions"]?[providerOptionsName]?.objectValue ?? object?["providerOptions"]?["openai"]?.objectValue ?? object?["openai"]?.objectValue
         if let outputSchema = openAIOptions?["outputSchema"] ?? openAIOptions?["output_schema"], outputSchema != .null {
             outputSchemaToolNames.insert(name)
         }
@@ -397,7 +398,8 @@ public func normalizeOpenAIJSONSchema(_ schema: JSONValue) throws -> (schema: JS
         guard var object = value.objectValue else { return value }
         if let propertyNames = object["propertyNames"] {
             guard propertyNames.boolValue == nil,
-                  propertyNames.objectValue?["type"]?.stringValue == "string" else {
+                  propertyNames.objectValue != nil,
+                  propertyNames["type"] == nil || propertyNames["type"]?.stringValue == "string" else {
                 throw AIError.invalidArgument(
                     argument: "JSON Schema propertyNames",
                     message: "OpenAI does not support JSON Schema propertyNames that does not use a string schema."

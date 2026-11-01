@@ -30,7 +30,8 @@
       "Packages/swift-ai-fal/Tests/SwiftAIFalTests/FalMediaProviderTests.swift",
       "Packages/swift-ai-fal/Tests/SwiftAIFalTests/FalProviderTests.swift",
       "Packages/swift-ai-fal/Tests/SwiftAIFalTests/FixtureDownloadTransport.swift",
-      "Packages/swift-ai-fal/Tests/SwiftAIFalTests/TestSupport.swift"
+      "Packages/swift-ai-fal/Tests/SwiftAIFalTests/TestSupport.swift",
+      "Packages/swift-ai-fal/Tests/SwiftAIFalTests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },

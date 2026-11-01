@@ -26,7 +26,8 @@
       "Packages/swift-ai-voyage/Tests/SwiftAIVoyageTests/TestSupport.swift",
       "Packages/swift-ai-voyage/Tests/SwiftAIVoyageTests/VoyageProviderOptionMappingTests.swift",
       "Packages/swift-ai-voyage/Tests/SwiftAIVoyageTests/VoyageProviderOptionSchemaTests.swift",
-      "Packages/swift-ai-voyage/Tests/SwiftAIVoyageTests/VoyageStreamingAndOptionsTests.swift"
+      "Packages/swift-ai-voyage/Tests/SwiftAIVoyageTests/VoyageStreamingAndOptionsTests.swift",
+      "Packages/swift-ai-voyage/Tests/SwiftAIVoyageTests/Weekly20261101CredentialsTests.swift"
     ],
     "resources": []
   },

@@ -107,3 +107,5 @@ narrower transcription contract. Browser WebRTC/client-permission flows,
 provider-backed Responses delegation, non-Live OpenAI Realtime models, Google
 realtime, and ElevenLabs realtime transcription remain deferred until their
 provider-specific semantics are translated onto the shared duplex contracts.
+
+Async credential providers resolve at each server connection. `AIRealtimeSession.connectServer` awaits `getResolvedServerWebSocketConfig()`; existing models keep their synchronous configuration hook through the default implementation. OpenAI models with dynamic credentials require the async hook when obtaining configuration directly.

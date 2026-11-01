@@ -12,14 +12,14 @@ SwiftAISDK groups public APIs into component areas so you can browse exact types
 | --- | --- |
 | [Audio](audio/) | 303 |
 | [Chat and UI messages](chat-and-ui-messages/) | 222 |
-| [Core runtime](core-runtime/) | 1781 |
+| [Core runtime](core-runtime/) | 1956 |
 | [Errors](errors/) | 116 |
-| [MCP](mcp/) | 597 |
+| [MCP](mcp/) | 600 |
 | [Media](media/) | 128 |
 | [Middleware](middleware/) | 109 |
-| [Provider models](provider-models/) | 1277 |
-| [Providers](providers/) | 1988 |
+| [Provider models](provider-models/) | 1289 |
+| [Providers](providers/) | 2046 |
 | [Structured output](structured-output/) | 297 |
-| [Telemetry](telemetry/) | 188 |
-| [Tools](tools/) | 284 |
+| [Telemetry](telemetry/) | 192 |
+| [Tools](tools/) | 286 |
 | [Video and reranking](video-and-reranking/) | 111 |

@@ -177,7 +177,7 @@ public final class MistralLanguageModel: LanguageModel, @unchecked Sendable {
             case "randomSeed":
                 body["random_seed"] = value
             case "reasoningEffort":
-                body["reasoning_effort"] = value
+                if mistralSupportsReasoningEffort(modelID) { body["reasoning_effort"] = value }
             case "documentImageLimit":
                 body["document_image_limit"] = value
             case "documentPageLimit":
@@ -198,7 +198,7 @@ public final class MistralLanguageModel: LanguageModel, @unchecked Sendable {
         }
         if body["reasoning_effort"] == nil,
            mistralSupportsReasoningEffort(modelID),
-           let reasoningEffort = mistralReasoningEffort(request.reasoning, warnings: &warnings) {
+           let reasoningEffort = mistralReasoningEffort(request.reasoning, modelID: modelID, warnings: &warnings) {
             body["reasoning_effort"] = reasoningEffort
         }
         return MistralPreparedCall(body: body, warnings: warnings + preparedTools.warnings)

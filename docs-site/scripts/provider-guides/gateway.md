@@ -54,3 +54,20 @@ below 600 seconds to 600. Search results retain their raw GA fields:
 `search_id`, `results[].excerpts`, nullable titles/publication dates, optional
 warnings, usage and `session_id`. Consumers that decoded the old camelCase
 result fields should adopt the GA response names.
+
+## Rotating credentials and cancellation
+
+`GatewayProviderSettings.apiKeyProvider` accepts an async throwing supplier and
+resolves a fresh nonempty key before each authenticated request or streaming
+speech/transcription connection. Metadata failures use the credential already
+resolved for that request; error classification does not invoke the supplier
+again. Static API keys, OIDC fallback and caller header precedence remain
+available.
+
+Caller cancellation and timeout errors retain their native identity through
+HTTP, client-secret requests and duplex speech/transcription. An upstream text
+or audio input failure ends the output stream and closes its socket instead of
+becoming a retryable Gateway 500. Native `AIAbortError`, task cancellation and
+Foundation cancellation/timeout errors remain distinguishable from service
+failures. Model identifiers stay open strings, including newly published
+Gateway speech, transcription, realtime and language aliases.

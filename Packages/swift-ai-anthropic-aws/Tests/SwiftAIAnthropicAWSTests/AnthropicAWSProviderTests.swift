@@ -28,7 +28,7 @@ import SwiftAI
     #expect(request.headers["x-api-key"] == "aws-api-key")
     #expect(request.headers["anthropic-workspace-id"] == "wrkspc_test")
     #expect(request.headers["anthropic-version"] == "2023-06-01")
-    #expect(request.headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.81")
+    #expect(request.headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.87")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["model"]?.stringValue == "claude-sonnet-4-6")
     #expect(body["messages"]?[0]?["content"]?[0]?["text"]?.stringValue == "Hello")
@@ -50,7 +50,7 @@ import SwiftAI
 
     let request = try #require(await transport.requests().first)
     #expect(request.headers["x-api-key"] == "aws-api-key")
-    #expect(request.headers["user-agent"] == "CustomApp/1.0 ai-sdk-anthropic-aws/2.0.81")
+    #expect(request.headers["user-agent"] == "CustomApp/1.0 ai-sdk-anthropic-aws/2.0.87")
 }
 @Test func anthropicAWSAPIKeyOverridesCustomXAPIKeyLikeUpstream() async throws {
     let transport = RecordingTransport(response: jsonResponse("""
@@ -103,7 +103,7 @@ import SwiftAI
     #expect(request.headers["x-amz-content-sha256"] != nil)
     #expect(request.headers["authorization"]?.contains("Credential=AKIDEXAMPLE/20240315/us-west-2/aws-external-anthropic/aws4_request") == true)
     #expect(request.headers["anthropic-workspace-id"] == "wrkspc_test")
-    #expect(request.headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.81")
+    #expect(request.headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.87")
 }
 
 @Test func anthropicAWSSigV4WrapperPreservesStreamingTransportCapability() async throws {
@@ -273,10 +273,10 @@ import SwiftAI
     #expect(requests[0].url.absoluteString == "https://aws-external-anthropic.us-west-2.api.aws/v1/files")
     #expect(requests[0].headers["x-api-key"] == "aws-api-key")
     #expect(requests[0].headers["anthropic-beta"] == "files-api-2025-04-14")
-    #expect(requests[0].headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.81")
+    #expect(requests[0].headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.87")
     #expect(requests[1].url.absoluteString == "https://aws-external-anthropic.us-west-2.api.aws/v1/skills")
     #expect(requests[1].headers["anthropic-beta"] == "skills-2025-10-02")
-    #expect(requests[1].headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.81")
+    #expect(requests[1].headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.87")
     #expect(requests[2].url.absoluteString == "https://aws-external-anthropic.us-west-2.api.aws/v1/skills/skill_aws/versions/v1")
-    #expect(requests[2].headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.81")
+    #expect(requests[2].headers["user-agent"] == "ai-sdk-anthropic-aws/2.0.87")
 }

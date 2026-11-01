@@ -21,6 +21,8 @@ public struct AnthropicAWSProviderSettings: Sendable {
     public var region: String?
     public var workspaceID: String?
     public var apiKey: String?
+    /// Resolved for each request; a callback must return a non-empty key.
+    public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var accessKeyID: String?
     public var secretAccessKey: String?
     public var sessionToken: String?
@@ -41,11 +43,13 @@ public struct AnthropicAWSProviderSettings: Sendable {
         baseURL: String? = nil,
         headers: [String: String] = [:],
         transport: any AITransport = URLSessionTransport.shared,
-        date: @escaping @Sendable () -> Date = Date.init
+        date: @escaping @Sendable () -> Date = Date.init,
+        apiKeyProvider: (@Sendable () async throws -> String)? = nil
     ) {
         self.region = region
         self.workspaceID = workspaceID
         self.apiKey = apiKey
+        self.apiKeyProvider = apiKeyProvider
         self.accessKeyID = accessKeyID
         self.secretAccessKey = secretAccessKey
         self.sessionToken = sessionToken
@@ -83,10 +87,19 @@ public final class AnthropicAWSProvider: AIProvider, @unchecked Sendable {
         var headers = settings.headers
         headers["anthropic-version"] = headers["anthropic-version"] ?? "2023-06-01"
         headers["anthropic-workspace-id"] = headers["anthropic-workspace-id"] ?? workspaceID
-        headers = withUserAgentSuffix(headers, "ai-sdk-anthropic-aws/2.0.81")
+        headers = withUserAgentSuffix(headers, "ai-sdk-anthropic-aws/2.0.87")
 
+        let credentialResolver = settings.apiKeyProvider.map { resolve in
+            AIAsyncCredential {
+                let key = try await resolve()
+                guard !key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                    throw AIError.invalidArgument(argument: "apiKeyProvider", message: "Anthropic AWS API key must be a non-empty string.")
+                }
+                return key
+            }
+        }
         let transport: any AITransport
-        if let apiKey = settings.apiKey ?? environmentValue(["ANTHROPIC_AWS_API_KEY"]) {
+        if let apiKey = credentialResolver?.placeholder ?? settings.apiKey ?? environmentValue(["ANTHROPIC_AWS_API_KEY"]) {
             headers["x-api-key"] = apiKey
             transport = settings.transport
         } else {
@@ -128,7 +141,7 @@ public final class AnthropicAWSProvider: AIProvider, @unchecked Sendable {
 
         let normalizedBaseURL = withoutTrailingSlash(baseURL)
         config = AnthropicModelConfiguration(baseURL: normalizedBaseURL,
-            http: AIProviderHTTPClient(providerID: "anthropic-aws.messages", headers: headers, transport: transport,
+            http: AIProviderHTTPClient(providerID: "anthropic-aws.messages", headers: headers, transport: transport, credentialResolver: credentialResolver,
                 url: { _, path in try providerURL("\(normalizedBaseURL)\(path)", queryParams: [:]) }))
     }
 

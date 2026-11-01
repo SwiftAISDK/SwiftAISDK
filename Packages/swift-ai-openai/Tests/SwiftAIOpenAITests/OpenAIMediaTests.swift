@@ -38,7 +38,7 @@ import Testing
     #expect(bodyText.contains("segment"))
 }
 
-@Test func openAITranscriptionUsesJSONFormatForGPT4oProviderOptions() async throws {
+@Test func openAITranscriptionOmitsDefaultFormatForGPT4oProviderOptions() async throws {
     let transport = RecordingTransport(response: jsonResponse(#"{"text":"transcribed"}"#))
     let provider = try AIProviders.openAI(configuration: OpenAIProviderSettings(apiKey: "test-key", transport: transport))
     let model = try provider.transcriptionModel("gpt-4o-transcribe")
@@ -47,8 +47,7 @@ import Testing
 
     let request = try #require(await transport.requests().first)
     let bodyText = String(data: try #require(request.body), encoding: .utf8) ?? ""
-    #expect(bodyText.contains("name=\"response_format\""))
-    #expect(bodyText.contains("json"))
+    #expect(!bodyText.contains("name=\"response_format\""))
     #expect(bodyText.contains("name=\"temperature\""))
     #expect(bodyText.contains("0.1"))
 }
@@ -72,8 +71,7 @@ import Testing
 
     let request = try #require(await transport.requests().first)
     let bodyText = String(data: try #require(request.body), encoding: .utf8) ?? ""
-    #expect(bodyText.contains("name=\"response_format\""))
-    #expect(bodyText.contains("json"))
+    #expect(!bodyText.contains("name=\"response_format\""))
     #expect(bodyText.contains("name=\"timestamp_granularities[]\""))
     #expect(bodyText.contains("word"))
     #expect(bodyText.contains("name=\"temperature\""))
@@ -105,8 +103,7 @@ import Testing
     #expect(result.durationInSeconds == 1.5)
     let request = try #require(await transport.requests().first)
     let bodyText = String(data: try #require(request.body), encoding: .utf8) ?? ""
-    #expect(bodyText.contains("name=\"response_format\""))
-    #expect(bodyText.contains("json"))
+    #expect(!bodyText.contains("name=\"response_format\""))
     #expect(bodyText.contains("name=\"timestamp_granularities[]\""))
     #expect(bodyText.contains("word"))
     #expect(bodyText.contains("name=\"temperature\""))
@@ -161,7 +158,7 @@ import Testing
     #expect(bodyText.contains(#"{"prefix_padding_ms":400,"silence_duration_ms":300,"threshold":0.7,"type":"server_vad"}"#))
     #expect(bodyText.contains("name=\"response_format\""))
     #expect(bodyText.contains("diarized_json"))
-    #expect(bodyText.contains("name=\"timestamp_granularities[]\""))
+    #expect(!bodyText.contains("name=\"timestamp_granularities[]\""))
 }
 
 @Test func openAITranscriptionRejectsInvalidChunkingStrategiesLikeUpstream() async throws {
@@ -515,7 +512,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.openai.com/v1/images/edits")
     #expect(request.headers["authorization"] == "Bearer test-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-openai/4.0.102")
+    #expect(request.headers["user-agent"] == "ai-sdk-openai/4.0.106")
     #expect(request.headers["content-type"]?.hasPrefix("multipart/form-data; boundary=SwiftAISDK-") == true)
     let body = try #require(request.body)
     #expect(body.range(of: Data(#"name="model""#.utf8)) != nil)

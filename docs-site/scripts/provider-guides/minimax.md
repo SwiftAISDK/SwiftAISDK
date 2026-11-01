@@ -43,3 +43,9 @@ Attach `MiniMaxCacheControlOptions(cacheControl: .ephemeral).providerOptions` as
 ## Video generation
 
 `videoModel(...)` continues to support async video operations and polling independently of chat video input. Persist the returned operation to resume status checks. Polling treats the task ID as one URL path segment, including IDs containing slashes or standalone dots. Chat file references require an existing uploaded MiniMax file; this provider does not add a file-upload client.
+
+## Refreshable credentials and portable reasoning
+
+`MiniMaxProviderSettings.apiKeyProvider` accepts an asynchronous throwing closure and refreshes credentials before each Messages or video HTTP request. Model construction does not call it; supplier errors propagate before sending. Existing static keys and custom-header precedence remain supported.
+
+On M3.1 and later, portable `none` and `minimal` reasoning select `low` effort with the shared compatibility warning. Explicit provider effort still takes precedence. The native open-string API continues to warn and omit invalid reasoning strings, which are outside upstream's typed reasoning union.

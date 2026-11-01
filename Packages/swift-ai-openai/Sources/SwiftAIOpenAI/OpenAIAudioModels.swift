@@ -56,10 +56,10 @@ public final class OpenAICompatibleSpeechModel: SpeechModel, @unchecked Sendable
     }
 }
 
-public final class OpenAICompatibleTranscriptionModel: TranscriptionModel, @unchecked Sendable {
+public final class OpenAICompatibleTranscriptionModel: TranscriptionModel, StreamingTranscriptionModel, @unchecked Sendable {
     public let providerID: String
     public let modelID: String
-    private let config: OpenAIModelConfiguration
+    let config: OpenAIModelConfiguration
 
     public init(modelID: String, config: OpenAIModelConfiguration) {
         self.providerID = config.providerID
@@ -68,6 +68,9 @@ public final class OpenAICompatibleTranscriptionModel: TranscriptionModel, @unch
     }
 
     public func transcribe(_ request: AudioTranscriptionRequest) async throws -> TranscriptionResult {
+        if openAITranscriptionIsStreamingOnly(modelID) {
+            throw AIError.invalidArgument(argument: "modelID", message: "Non-streaming transcription is not supported with \(modelID).")
+        }
         var form = MultipartFormData()
         form.appendField(name: "model", value: modelID)
         form.appendFile(name: "file", fileName: request.fileName, mimeType: request.mimeType, data: request.audio)
@@ -76,10 +79,6 @@ public final class OpenAICompatibleTranscriptionModel: TranscriptionModel, @unch
             "filename": .string(request.fileName),
             "mime_type": .string(request.mimeType)
         ]
-        if modelID == "whisper-1" {
-            form.appendField(name: "response_format", value: "verbose_json")
-            metadataBody["response_format"] = .string("verbose_json")
-        }
         if let language = request.language {
             form.appendField(name: "language", value: language)
             metadataBody["language"] = .string(language)
@@ -142,7 +141,7 @@ public final class OpenAICompatibleTranscriptionModel: TranscriptionModel, @unch
             rawValue: raw,
             segments: segments,
             language: openAITranscriptionLanguageCode(raw["language"]?.stringValue, languages: raw["languages"]),
-            durationInSeconds: raw["duration"]?.doubleValue ?? transcriptionDuration(from: segments),
+            durationInSeconds: raw["duration"]?.doubleValue ?? (raw["usage"]?["type"]?.stringValue == "duration" ? raw["usage"]?["seconds"]?.doubleValue : nil),
             providerMetadata: metadata.isEmpty ? [:] : ["openai": .object(metadata)],
             requestMetadata: AIRequestMetadata(body: .object(metadataBody), headers: request.headers),
             responseMetadata: openAICompatibleResponseMetadata(from: raw, response: response, modelID: modelID),

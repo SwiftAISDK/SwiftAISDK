@@ -1,0 +1,9 @@
+# Model metadata
+
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/model-metadata/
+
+## Descriptive model metadata
+
+`SwiftAIProvider` exposes `AIModelCapabilities`, `AIModelEntry<RequestConfiguration>`, `AIProviderOptionDefinitions` and `AIModelProviderOptions` for provider-owned catalogs. The types describe language, embedding, image, transcription, speech translation, speech and realtime capabilities without changing request validation.
+
+`AIModelFeatureSupport` distinguishes `.supported`, `.unsupported`, `.unknown` and `.conditional("condition")`. Missing sections and provider-option keys remain undeclared, distinct from explicit unsupported values. Conditions are documentation, not executable rules. Codable representations use upstream Boolean/`"unknown"`/condition objects, and provider-option maps encode section names as JSON object keys.

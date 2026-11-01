@@ -601,9 +601,11 @@ extension AI {
         request: LanguageModelRequest,
         retryPolicy: AIRetryPolicy = .default,
         telemetry: Telemetry.Options? = nil,
-        includeResponseBody: Bool = false
+        includeResponseBody: Bool = false,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil
     ) async throws -> TextGenerationResult {
-        return try await SwiftAI.AI.generateText(model: model, request: request, retryPolicy: retryPolicy, telemetry: telemetry, includeResponseBody: includeResponseBody)
+        return try await SwiftAI.AI.generateText(model: model, request: request, retryPolicy: retryPolicy, telemetry: telemetry, includeResponseBody: includeResponseBody, experimentalSteering: experimentalSteering, onStepError: onStepError)
     }
 
 
@@ -620,9 +622,11 @@ extension AI {
         repairToolCall: AIToolCallRepair? = nil,
         retryPolicy: AIRetryPolicy = .default,
         telemetry: Telemetry.Options? = nil,
-        includeResponseBody: Bool = false
+        includeResponseBody: Bool = false,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil
     ) async throws -> TextGenerationResult {
-        return try await SwiftAI.AI.generateText(model: model, request: request, executableTools: executableTools, maxSteps: maxSteps, toolCallers: toolCallers, stopWhen: stopWhen, prepareStep: prepareStep, toolApproval: toolApproval, toolApprovalSecret: toolApprovalSecret, repairToolCall: repairToolCall, retryPolicy: retryPolicy, telemetry: telemetry, includeResponseBody: includeResponseBody)
+        return try await SwiftAI.AI.generateText(model: model, request: request, executableTools: executableTools, maxSteps: maxSteps, toolCallers: toolCallers, stopWhen: stopWhen, prepareStep: prepareStep, toolApproval: toolApproval, toolApprovalSecret: toolApprovalSecret, repairToolCall: repairToolCall, retryPolicy: retryPolicy, telemetry: telemetry, includeResponseBody: includeResponseBody, experimentalSteering: experimentalSteering, onStepError: onStepError)
     }
 
 
@@ -656,9 +660,11 @@ extension AI {
         extraBody: [String: JSONValue] = [:],
         headers: [String: String] = [:],
         abortSignal: AIAbortSignal? = nil,
-        telemetry: Telemetry.Options? = nil
+        telemetry: Telemetry.Options? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil
     ) async throws -> TextGenerationResult {
-        return try await SwiftAI.AI.generateText(model: model, prompt: prompt, temperature: temperature, topP: topP, topK: topK, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, seed: seed, maxOutputTokens: maxOutputTokens, stopSequences: stopSequences, responseFormat: responseFormat, reasoning: reasoning, tools: tools, executableTools: executableTools, maxSteps: maxSteps, toolCallers: toolCallers, stopWhen: stopWhen, prepareStep: prepareStep, toolApproval: toolApproval, toolApprovalSecret: toolApprovalSecret, repairToolCall: repairToolCall, retryPolicy: retryPolicy, toolChoice: toolChoice, includeRawChunks: includeRawChunks, includeResponseBody: includeResponseBody, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, telemetry: telemetry)
+        return try await SwiftAI.AI.generateText(model: model, prompt: prompt, temperature: temperature, topP: topP, topK: topK, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, seed: seed, maxOutputTokens: maxOutputTokens, stopSequences: stopSequences, responseFormat: responseFormat, reasoning: reasoning, tools: tools, executableTools: executableTools, maxSteps: maxSteps, toolCallers: toolCallers, stopWhen: stopWhen, prepareStep: prepareStep, toolApproval: toolApproval, toolApprovalSecret: toolApprovalSecret, repairToolCall: repairToolCall, retryPolicy: retryPolicy, toolChoice: toolChoice, includeRawChunks: includeRawChunks, includeResponseBody: includeResponseBody, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, telemetry: telemetry, experimentalSteering: experimentalSteering, onStepError: onStepError)
     }
 
 
@@ -669,9 +675,11 @@ extension AI {
         retryPolicy: AIRetryPolicy = .default,
         telemetry: Telemetry.Options? = nil,
         jsonInstruction: AIJSONInstruction? = nil,
-        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil
+        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil
     ) async throws -> AIOutputGenerationResult<FinalOutput> {
-        return try await SwiftAI.AI.generateText(model: model, request: request, output: output, retryPolicy: retryPolicy, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText)
+        return try await SwiftAI.AI.generateText(model: model, request: request, output: output, retryPolicy: retryPolicy, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText, experimentalSteering: experimentalSteering, onStepError: onStepError)
     }
 
 
@@ -690,9 +698,11 @@ extension AI {
         retryPolicy: AIRetryPolicy = .default,
         telemetry: Telemetry.Options? = nil,
         jsonInstruction: AIJSONInstruction? = nil,
-        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil
+        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil
     ) async throws -> AIOutputGenerationResult<FinalOutput?> {
-        return try await SwiftAI.AI.generateText(model: model, request: request, output: output, executableTools: executableTools, maxSteps: maxSteps, toolCallers: toolCallers, stopWhen: stopWhen, prepareStep: prepareStep, toolApproval: toolApproval, toolApprovalSecret: toolApprovalSecret, repairToolCall: repairToolCall, retryPolicy: retryPolicy, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText)
+        return try await SwiftAI.AI.generateText(model: model, request: request, output: output, executableTools: executableTools, maxSteps: maxSteps, toolCallers: toolCallers, stopWhen: stopWhen, prepareStep: prepareStep, toolApproval: toolApproval, toolApprovalSecret: toolApprovalSecret, repairToolCall: repairToolCall, retryPolicy: retryPolicy, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText, experimentalSteering: experimentalSteering, onStepError: onStepError)
     }
 
 
@@ -716,9 +726,11 @@ extension AI {
         retryPolicy: AIRetryPolicy = .default,
         telemetry: Telemetry.Options? = nil,
         jsonInstruction: AIJSONInstruction? = nil,
-        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil
+        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil
     ) async throws -> AIOutputGenerationResult<FinalOutput> {
-        return try await SwiftAI.AI.generateText(model: model, prompt: prompt, output: output, temperature: temperature, topP: topP, topK: topK, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, seed: seed, maxOutputTokens: maxOutputTokens, stopSequences: stopSequences, reasoning: reasoning, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, retryPolicy: retryPolicy, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText)
+        return try await SwiftAI.AI.generateText(model: model, prompt: prompt, output: output, temperature: temperature, topP: topP, topK: topK, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, seed: seed, maxOutputTokens: maxOutputTokens, stopSequences: stopSequences, reasoning: reasoning, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, retryPolicy: retryPolicy, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText, experimentalSteering: experimentalSteering, onStepError: onStepError)
     }
 
 
@@ -750,9 +762,11 @@ extension AI {
         retryPolicy: AIRetryPolicy = .default,
         telemetry: Telemetry.Options? = nil,
         jsonInstruction: AIJSONInstruction? = nil,
-        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil
+        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil
     ) async throws -> AIOutputGenerationResult<FinalOutput?> {
-        return try await SwiftAI.AI.generateText(model: model, prompt: prompt, output: output, executableTools: executableTools, maxSteps: maxSteps, toolCallers: toolCallers, stopWhen: stopWhen, prepareStep: prepareStep, toolApproval: toolApproval, toolApprovalSecret: toolApprovalSecret, repairToolCall: repairToolCall, temperature: temperature, topP: topP, topK: topK, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, seed: seed, maxOutputTokens: maxOutputTokens, stopSequences: stopSequences, reasoning: reasoning, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, retryPolicy: retryPolicy, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText)
+        return try await SwiftAI.AI.generateText(model: model, prompt: prompt, output: output, executableTools: executableTools, maxSteps: maxSteps, toolCallers: toolCallers, stopWhen: stopWhen, prepareStep: prepareStep, toolApproval: toolApproval, toolApprovalSecret: toolApprovalSecret, repairToolCall: repairToolCall, temperature: temperature, topP: topP, topK: topK, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, seed: seed, maxOutputTokens: maxOutputTokens, stopSequences: stopSequences, reasoning: reasoning, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, retryPolicy: retryPolicy, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText, experimentalSteering: experimentalSteering, onStepError: onStepError)
     }
 
     public static func generateText(
@@ -1254,9 +1268,13 @@ public static func streamObject<Object: Decodable & Sendable>(
         timeout: AIStreamTimeoutConfiguration? = nil,
         retryPolicy: AIRetryPolicy = .default,
         streamRetries: Int? = nil,
-        telemetry: Telemetry.Options? = nil
+        telemetry: Telemetry.Options? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil,
+        onError: AIGenerationOnError? = nil,
+        onAbort: AIStreamTextOnAbort? = nil
     ) -> AsyncThrowingStream<LanguageStreamPart, Error> {
-        return SwiftAI.AI.streamText(model: model, request: request, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry)
+        return SwiftAI.AI.streamText(model: model, request: request, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, experimentalSteering: experimentalSteering, onStepError: onStepError, onError: onError, onAbort: onAbort)
     }
 
 
@@ -1274,9 +1292,13 @@ public static func streamObject<Object: Decodable & Sendable>(
         timeout: AIStreamTimeoutConfiguration? = nil,
         retryPolicy: AIRetryPolicy = .default,
         streamRetries: Int? = nil,
-        telemetry: Telemetry.Options? = nil
+        telemetry: Telemetry.Options? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil,
+        onError: AIGenerationOnError? = nil,
+        onAbort: AIStreamTextOnAbort? = nil
     ) -> AsyncThrowingStream<LanguageStreamPart, Error> {
-        return SwiftAI.AI.streamText(model: model, request: request, executableTools: executableTools, maxSteps: maxSteps, stopWhen: stopWhen, prepareStep: prepareStep, toolCallers: toolCallers, toolApproval: toolApproval, repairToolCall: repairToolCall, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry)
+        return SwiftAI.AI.streamText(model: model, request: request, executableTools: executableTools, maxSteps: maxSteps, stopWhen: stopWhen, prepareStep: prepareStep, toolCallers: toolCallers, toolApproval: toolApproval, repairToolCall: repairToolCall, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, experimentalSteering: experimentalSteering, onStepError: onStepError, onError: onError, onAbort: onAbort)
     }
 
 
@@ -1311,9 +1333,13 @@ public static func streamObject<Object: Decodable & Sendable>(
         timeout: AIStreamTimeoutConfiguration? = nil,
         retryPolicy: AIRetryPolicy = .default,
         streamRetries: Int? = nil,
-        telemetry: Telemetry.Options? = nil
+        telemetry: Telemetry.Options? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil,
+        onError: AIGenerationOnError? = nil,
+        onAbort: AIStreamTextOnAbort? = nil
     ) -> AsyncThrowingStream<LanguageStreamPart, Error> {
-        return SwiftAI.AI.streamText(model: model, prompt: prompt, temperature: temperature, topP: topP, topK: topK, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, seed: seed, maxOutputTokens: maxOutputTokens, stopSequences: stopSequences, responseFormat: responseFormat, reasoning: reasoning, tools: tools, executableTools: executableTools, maxSteps: maxSteps, stopWhen: stopWhen, prepareStep: prepareStep, toolCallers: toolCallers, toolApproval: toolApproval, repairToolCall: repairToolCall, toolChoice: toolChoice, includeRawChunks: includeRawChunks, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry)
+        return SwiftAI.AI.streamText(model: model, prompt: prompt, temperature: temperature, topP: topP, topK: topK, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, seed: seed, maxOutputTokens: maxOutputTokens, stopSequences: stopSequences, responseFormat: responseFormat, reasoning: reasoning, tools: tools, executableTools: executableTools, maxSteps: maxSteps, stopWhen: stopWhen, prepareStep: prepareStep, toolCallers: toolCallers, toolApproval: toolApproval, repairToolCall: repairToolCall, toolChoice: toolChoice, includeRawChunks: includeRawChunks, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, experimentalSteering: experimentalSteering, onStepError: onStepError, onError: onError, onAbort: onAbort)
     }
 
 
@@ -1327,9 +1353,13 @@ public static func streamObject<Object: Decodable & Sendable>(
         streamRetries: Int? = nil,
         telemetry: Telemetry.Options? = nil,
         jsonInstruction: AIJSONInstruction? = nil,
-        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil
+        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil,
+        onError: AIGenerationOnError? = nil,
+        onAbort: AIStreamTextOnAbort? = nil
     ) -> AsyncThrowingStream<AIOutputStreamPart<FinalOutput, PartialOutput>, Error> {
-        return SwiftAI.AI.streamText(model: model, request: request, output: output, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText)
+        return SwiftAI.AI.streamText(model: model, request: request, output: output, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText, experimentalSteering: experimentalSteering, onStepError: onStepError, onError: onError, onAbort: onAbort)
     }
 
 
@@ -1350,9 +1380,13 @@ public static func streamObject<Object: Decodable & Sendable>(
         streamRetries: Int? = nil,
         telemetry: Telemetry.Options? = nil,
         jsonInstruction: AIJSONInstruction? = nil,
-        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil
+        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil,
+        onError: AIGenerationOnError? = nil,
+        onAbort: AIStreamTextOnAbort? = nil
     ) -> AsyncThrowingStream<AIOutputStreamPart<FinalOutput, PartialOutput>, Error> {
-        return SwiftAI.AI.streamText(model: model, request: request, output: output, executableTools: executableTools, maxSteps: maxSteps, stopWhen: stopWhen, prepareStep: prepareStep, toolCallers: toolCallers, toolApproval: toolApproval, repairToolCall: repairToolCall, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText)
+        return SwiftAI.AI.streamText(model: model, request: request, output: output, executableTools: executableTools, maxSteps: maxSteps, stopWhen: stopWhen, prepareStep: prepareStep, toolCallers: toolCallers, toolApproval: toolApproval, repairToolCall: repairToolCall, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText, experimentalSteering: experimentalSteering, onStepError: onStepError, onError: onError, onAbort: onAbort)
     }
 
 
@@ -1379,9 +1413,13 @@ public static func streamObject<Object: Decodable & Sendable>(
         streamRetries: Int? = nil,
         telemetry: Telemetry.Options? = nil,
         jsonInstruction: AIJSONInstruction? = nil,
-        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil
+        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil,
+        onError: AIGenerationOnError? = nil,
+        onAbort: AIStreamTextOnAbort? = nil
     ) -> AsyncThrowingStream<AIOutputStreamPart<FinalOutput, PartialOutput>, Error> {
-        return SwiftAI.AI.streamText(model: model, prompt: prompt, output: output, temperature: temperature, topP: topP, topK: topK, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, seed: seed, maxOutputTokens: maxOutputTokens, stopSequences: stopSequences, reasoning: reasoning, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText)
+        return SwiftAI.AI.streamText(model: model, prompt: prompt, output: output, temperature: temperature, topP: topP, topK: topK, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, seed: seed, maxOutputTokens: maxOutputTokens, stopSequences: stopSequences, reasoning: reasoning, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText, experimentalSteering: experimentalSteering, onStepError: onStepError, onError: onError, onAbort: onAbort)
     }
 
     public static func streamText(
@@ -1556,6 +1594,10 @@ public static func streamObject<Object: Decodable & Sendable>(
     public static func streamTranscribe(model: any StreamingTranscriptionModel, request: StreamingTranscriptionRequest,
                                         telemetry: Telemetry.Options? = nil) async throws -> StreamingTranscriptionResult {
         return try await SwiftAI.AI.streamTranscribe(model: model, request: request, telemetry: telemetry)
+    }
+
+    public static func experimentalCreateSteering() -> AISteering {
+        return SwiftAI.AI.experimentalCreateSteering()
     }
 public static func generateText(
         _ prompt: String,

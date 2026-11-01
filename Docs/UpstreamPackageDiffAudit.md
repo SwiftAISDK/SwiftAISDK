@@ -26,6 +26,12 @@ Status meanings:
 - `current`: the tracked package has no published version drift.
 
 
+## 2026-11-01 Weekly audit
+
+The current audit is [WeeklyUpstreamAudit20261101.md](WeeklyUpstreamAudit20261101.md),
+with immutable per-package preparation evidence in its structured JSON companion.
+The older dated comparisons below remain historical evidence.
+
 ## 2026-10-25 Weekly Audit
 
 The 2.8.1 compatibility follow-up retains every baseline and behavior decision

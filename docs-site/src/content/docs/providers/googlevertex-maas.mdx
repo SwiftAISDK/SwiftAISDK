@@ -20,7 +20,7 @@ description: "googleVertex.maas provider capabilities and factories."
 
 ## Notes
 
-Vertex MaaS mirrors upstream 5.0.122 with OpenAI-compatible language, completion, embedding, and image factories. Maverick and Scout default `max_tokens` to 8192 while preserving an explicit caller value.
+Vertex MaaS mirrors upstream 5.0.129 with OpenAI-compatible language, completion, embedding, and image factories. Maverick and Scout default `max_tokens` to 8192 while preserving an explicit caller value. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
