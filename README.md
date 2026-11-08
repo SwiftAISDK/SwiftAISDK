@@ -18,7 +18,7 @@ not affiliation or endorsement.
 Add the package to `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "3.1.0")
+.package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "3.2.0")
 ```
 
 Applications can pin the validated umbrella release with SwiftPM's `exact:`
@@ -40,18 +40,21 @@ SwiftPM packages: core, 49 provider adapters, MCP and UI. The complete
 
 | Package | Current Swift version | Products |
 | --- | --- | --- |
-| [swift-ai-core](https://github.com/SwiftAISDK/swift-ai-core) | 1.2.0 | SwiftAI, SwiftAIProvider, SwiftAITransport, SwiftAIProviderUtilities |
-| [swift-ai-anthropic](https://github.com/SwiftAISDK/swift-ai-anthropic) | 1.2.0 | SwiftAIAnthropic |
-| [swift-ai-openai-compatible](https://github.com/SwiftAISDK/swift-ai-openai-compatible) | 1.1.0 | SwiftAIOpenAICompatible |
-| [swift-ai-openai](https://github.com/SwiftAISDK/swift-ai-openai) | 1.1.0 | SwiftAIOpenAI |
-| Other updated providers and MCP | 1.1.0 | See the catalog |
-| ByteDance, LMNT, Vercel and UI | 1.0.0 | Unchanged releases |
+| [swift-ai-core](https://github.com/SwiftAISDK/swift-ai-core) | 1.3.0 | SwiftAI, SwiftAIProvider, SwiftAITransport, SwiftAIProviderUtilities |
+| [swift-ai-anthropic](https://github.com/SwiftAISDK/swift-ai-anthropic) | 1.3.0 | SwiftAIAnthropic |
+| [swift-ai-openai-compatible](https://github.com/SwiftAISDK/swift-ai-openai-compatible) | 1.2.0 | SwiftAIOpenAICompatible |
+| [swift-ai-openai](https://github.com/SwiftAISDK/swift-ai-openai) | 1.2.0 | SwiftAIOpenAI |
+| [swift-ai-ui](https://github.com/SwiftAISDK/swift-ai-ui) | 1.1.0 | SwiftAIUI |
+| 16 other feature adapters | 1.2.0 | See the catalog |
+| 27 patched providers and MCP | 1.1.1 | See the catalog |
+| Hugging Face | 1.1.0 | Unchanged release |
+| ByteDance, LMNT and Vercel | 1.0.0 | Unchanged releases |
 
 For an OpenAI application, add these dependencies:
 
 ```swift
-.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.2.0"),
-.package(url: "https://github.com/SwiftAISDK/swift-ai-openai.git", from: "1.1.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.3.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-openai.git", from: "1.2.0"),
 ```
 
 Select `.product(name: "SwiftAI", package: "swift-ai-core")` and
@@ -65,10 +68,10 @@ MCP or UI. Add those packages only when your application needs them.
 Swift package versions are independent of npm versions. Providers can be updated
 separately when their shared core requirements intersect; SwiftPM selects one
 version of each package identity. Commit `Package.resolved` in applications for
-reproducible builds. The [tested release set](Releases/umbrella/3.1.0.json) records the verified
+reproducible builds. The [tested release set](Releases/umbrella/3.2.0.json) records the verified
 versions and revisions.
 
-The 3.1 umbrella above provides the complete provider/MCP/UI surface, existing
+The 3.2 umbrella above provides the complete provider/MCP/UI surface, existing
 `settings:` factories and `import SwiftAISDK`. It shares the modular core types.
 Existing 2.x tags remain available, but their separately defined model/request
 values cannot be mixed with modular values. See the

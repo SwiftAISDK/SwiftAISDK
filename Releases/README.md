@@ -11,6 +11,11 @@ The 2026-11-01 release set is in `sets/weekly-upstream-20261101.json`: 48 change
 units, retaining the four unchanged distributions. `umbrella/3.1.0.json` records
 the separate compatibility selection. npm package baselines remain independent.
 
+The 2026-11-08 set is in `sets/weekly-upstream-20261108.json`: 48 changed
+units (21 minor, 27 patch). ByteDance, Hugging Face, LMNT and Vercel retain
+their distributions. `umbrella/3.2.0.json` records the separate compatibility
+selection after its dependency tags passed public consumers and hosted CI.
+
 ## Reviewed changes
 
 Add one `changes/<id>.json` for a meaningful implementation, public metadata or
