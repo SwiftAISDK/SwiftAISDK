@@ -59,7 +59,7 @@ public final class MiniMaxProvider: AIProvider, @unchecked Sendable {
         var languageHeaders = normalizeHeaders(settings.headers)
         languageHeaders["anthropic-version"] = languageHeaders["anthropic-version"] ?? "2023-06-01"
         languageHeaders["x-api-key"] = languageHeaders["x-api-key"] ?? apiKey
-        languageHeaders = withUserAgentSuffix(languageHeaders, "ai-sdk-minimax/3.0.71")
+        languageHeaders = withUserAgentSuffix(languageHeaders, "ai-sdk-minimax/3.0.76")
 
         config = MiniMaxHTTPConfiguration(
             providerID: "minimax.messages",
@@ -71,7 +71,7 @@ public final class MiniMaxProvider: AIProvider, @unchecked Sendable {
 
         var videoHeaders = normalizeHeaders(settings.headers)
         videoHeaders["authorization"] = videoHeaders["authorization"] ?? "Bearer \(apiKey)"
-        videoHeaders = withUserAgentSuffix(videoHeaders, "ai-sdk-minimax/3.0.71")
+        videoHeaders = withUserAgentSuffix(videoHeaders, "ai-sdk-minimax/3.0.76")
         videoConfig = MiniMaxHTTPConfiguration(
             providerID: "minimax.video",
             baseURL: settings.videoBaseURL ?? "https://api.minimax.io",
@@ -121,16 +121,25 @@ public final class MiniMaxProvider: AIProvider, @unchecked Sendable {
 public struct MiniMaxLanguageModelOptions: Equatable, Sendable {
     public enum Effort: String, Equatable, Sendable { case low, medium, high, xhigh, max }
     public enum Thinking: String, Equatable, Sendable { case adaptive, disabled }
+    public enum ServiceTier: String, Equatable, Sendable { case standard, priority }
     public var effort: Effort?
     public var thinking: Thinking?
+    public var serviceTier: ServiceTier?
+    /// Preserves the original initializer function-reference signature.
     public init(effort: Effort? = nil, thinking: Thinking? = nil) {
+        self.init(effort: effort, thinking: thinking, serviceTier: nil)
+    }
+
+    public init(effort: Effort? = nil, thinking: Thinking? = nil, serviceTier: ServiceTier? = nil) {
         self.effort = effort
         self.thinking = thinking
+        self.serviceTier = serviceTier
     }
     public var providerOptions: [String: JSONValue] {
         ["minimax": .object([
             "effort": effort.map { .string($0.rawValue) },
-            "thinking": thinking.map { .object(["type": .string($0.rawValue)]) }
+            "thinking": thinking.map { .object(["type": .string($0.rawValue)]) },
+            "serviceTier": serviceTier.map { .string($0.rawValue) }
         ])]
     }
 }

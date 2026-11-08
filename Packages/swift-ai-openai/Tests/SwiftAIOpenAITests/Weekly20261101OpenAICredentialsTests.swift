@@ -50,10 +50,7 @@ private actor WeeklyOpenAIKeys {
         let result = try await provider.streamingTranscriptionModel(modelID).stream(.init(audio: audio.input, inputAudioFormat: .init(mediaType: "audio/pcm", sampleRate: 24000), providerOptions: ["openai": ["language": "en", "streaming": ["delay": "low"]]]))
         let collector = Task { () throws -> [StreamingTranscriptionPart] in var parts: [StreamingTranscriptionPart] = []; for try await part in result.stream { parts.append(part) }; return parts }
         transport.connection.open()
-        for _ in 0..<100 {
-            if !(try transport.connection.sentJSONMessages()).isEmpty { break }
-            await Task.yield()
-        }
+        #expect(await realtimeWait { !transport.connection.sentMessages().isEmpty })
         let update = try #require(transport.connection.sentJSONMessages().first)
         #expect(update["session"]?["audio"]?["input"]?["transcription"]?["languages"] == ["en"])
         #expect(update["session"]?["audio"]?["input"]?["transcription"]?["delay"] == (supportsDelay ? .string("low") : nil))

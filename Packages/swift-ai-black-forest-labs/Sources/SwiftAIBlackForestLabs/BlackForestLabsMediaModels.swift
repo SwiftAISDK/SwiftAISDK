@@ -77,13 +77,17 @@ public final class BlackForestLabsImageModel: ImageModel, @unchecked Sendable {
             throw blackForestLabsHTTPStatusError(provider: providerID, response: submitResponse)
         }
         let submitted = (json: try submitResponse.jsonValue(), response: submitResponse)
-        guard let pollURL = submitted.json["polling_url"]?.stringValue,
-              let requestID = submitted.json["id"]?.stringValue else {
-            throw AIError.invalidResponse(provider: providerID, message: "Black Forest Labs submit response did not contain id and polling_url.")
+        guard let requestID = submitted.json["id"]?.stringValue else {
+            throw AIError.invalidResponse(provider: providerID, message: "Black Forest Labs submit response did not contain id.")
         }
+        if let value = submitted.json["polling_url"], value != .null, value.stringValue == nil {
+            throw AIError.invalidResponse(provider: providerID, message: "Black Forest Labs polling_url must be a string or null.")
+        }
+        let pollURL = submitted.json["polling_url"]?.stringValue
         let raw = try await pollBFL(
-            url: pollURL,
+            url: pollURL ?? "\(withoutTrailingSlash(config.baseURL))/get_result",
             id: requestID,
+            allowTaskNotFound: pollURL == nil,
             headers: request.headers,
             intervalNanoseconds: bflPollInterval(options),
             timeoutNanoseconds: bflPollTimeout(options),
@@ -109,7 +113,7 @@ public final class BlackForestLabsImageModel: ImageModel, @unchecked Sendable {
         )
     }
 
-    private func pollBFL(url: String, id: String, headers: [String: String], intervalNanoseconds: UInt64, timeoutNanoseconds: UInt64, abortSignal: AIAbortSignal?) async throws -> JSONValue {
+    private func pollBFL(url: String, id: String, allowTaskNotFound: Bool = false, headers: [String: String], intervalNanoseconds: UInt64, timeoutNanoseconds: UInt64, abortSignal: AIAbortSignal?) async throws -> JSONValue {
         let pollURL = appendQueryItemIfMissing(url: url, name: "id", value: id)
         let timeoutController = AIAbortController()
         let timeoutMilliseconds = Int(min(timeoutNanoseconds / 1_000_000, UInt64(Int.max)))
@@ -121,6 +125,11 @@ public final class BlackForestLabsImageModel: ImageModel, @unchecked Sendable {
         defer { timeoutTask?.cancel() }
         let pollingAbortSignal = mergeAbortSignals(abortSignal, timeoutController.signal) ?? timeoutController.signal
         let requestAbortSignal = abortSignal ?? timeoutController.signal
+        var taskNotFoundAttempts = 0
+        var lastStatus: String?
+        func taskNotFoundError() -> AIError {
+            .invalidResponse(provider: providerID, message: "Black Forest Labs task \(id) was not found via get_result before timing out")
+        }
 
         do {
             while true {
@@ -132,6 +141,15 @@ public final class BlackForestLabsImageModel: ImageModel, @unchecked Sendable {
                         abortSignal: requestAbortSignal
                     )
                 }
+                if allowTaskNotFound, response.statusCode == 404,
+                   let raw = try? response.jsonValue(),
+                   (raw["status"]?.stringValue ?? raw["state"]?.stringValue) == "Task not found" {
+                    lastStatus = "Task not found"
+                    taskNotFoundAttempts += 1
+                    if taskNotFoundAttempts >= 20 { throw taskNotFoundError() }
+                    try await sleepWithAbortSignal(nanoseconds: intervalNanoseconds, abortSignal: pollingAbortSignal)
+                    continue
+                }
                 guard (200..<300).contains(response.statusCode) else {
                     throw blackForestLabsHTTPStatusError(provider: providerID, response: response)
                 }
@@ -140,7 +158,14 @@ public final class BlackForestLabsImageModel: ImageModel, @unchecked Sendable {
                 guard let status else {
                     throw AIError.invalidResponse(provider: providerID, message: "Missing status in Black Forest Labs poll response")
                 }
+                lastStatus = status
                 if status == "Ready" { return raw }
+                if status == "Task not found", allowTaskNotFound {
+                    taskNotFoundAttempts += 1
+                    if taskNotFoundAttempts >= 20 { throw taskNotFoundError() }
+                    try await sleepWithAbortSignal(nanoseconds: intervalNanoseconds, abortSignal: pollingAbortSignal)
+                    continue
+                }
                 if status == "Error" || status == "Failed" {
                     throw AIError.invalidResponse(provider: providerID, message: "Black Forest Labs generation failed.")
                 }
@@ -154,6 +179,7 @@ public final class BlackForestLabsImageModel: ImageModel, @unchecked Sendable {
             }
         } catch {
             if timeoutController.signal.isAborted {
+                if lastStatus == "Task not found" { throw taskNotFoundError() }
                 throw AIError.invalidResponse(provider: providerID, message: "Black Forest Labs generation timed out.")
             }
             throw error

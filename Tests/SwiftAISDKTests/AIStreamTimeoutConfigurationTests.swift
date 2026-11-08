@@ -429,3 +429,17 @@ private final class TimeoutAbortSignalCapture: @unchecked Sendable {
         }
     }
 }
+
+@Suite("Weekly20261108 ping output timeout")
+struct Weekly20261108PingTimeoutTests {
+    @Test func keepalivesDoNotResetFirstOutputTimeout() async throws {
+        let script = Array(repeating: [TimeoutStreamAction.yield(.ping), .sleep(5_000_000)], count: 20).flatMap { $0 }
+        let model = TimeoutScriptLanguageModel(scripts: [script])
+        do {
+            for try await _ in AI.streamText(model: model, prompt: "test", timeout: .init(firstChunkNanoseconds: 30_000_000), retryPolicy: .none) {}
+            Issue.record("Expected output timeout despite keepalives")
+        } catch let error as AIStreamTimeoutError {
+            #expect(error.phase == .firstChunk)
+        }
+    }
+}

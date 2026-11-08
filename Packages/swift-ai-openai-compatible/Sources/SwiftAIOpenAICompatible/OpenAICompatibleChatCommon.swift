@@ -289,3 +289,8 @@ public func openAICompatibleFinishReason(_ reason: String?) -> String? {
         return "other"
     }
 }
+
+func openAICompatibleChatFinishReason(_ raw: String?, hasRefusal: Bool) -> String? {
+    let mapped = openAICompatibleFinishReason(raw)
+    return hasRefusal && mapped == "stop" ? "content-filter" : mapped
+}

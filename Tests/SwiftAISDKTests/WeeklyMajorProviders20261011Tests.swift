@@ -59,16 +59,18 @@ struct WeeklyMajorProviders20261011Tests {
         #expect(!bedrockResult.warnings.contains { $0.feature?.contains("strict") == true })
     }
 
-    @Test func bedrockHaiku55UsesJSONToolFallback() async throws {
-        let transport = RecordingTransport(response: jsonResponse(#"{"output":{"message":{"content":[{"toolUse":{"toolUseId":"json-tool","name":"json","input":{"name":"Test"}}}]}},"stopReason":"tool_use","usage":{"inputTokens":4,"outputTokens":10,"totalTokens":14}}"#))
+    @Test func bedrockHaiku55UsesNativeStructuredOutput() async throws {
+        let transport = RecordingTransport(response: jsonResponse(#"{"output":{"message":{"content":[{"text":"{\"name\":\"Test\"}"}]}},"stopReason":"end_turn","usage":{"inputTokens":4,"outputTokens":10,"totalTokens":14}}"#))
         let model = try AIProviders.amazonBedrock(settings: AmazonBedrockProviderSettings(region: "us-east-1", apiKey: "key", transport: transport)).languageModel("us.anthropic.claude-haiku-5-5")
-        let schema: JSONValue = ["type": "object", "properties": ["name": ["type": "string"]], "required": ["name"]]
+        let schema: JSONValue = ["type": "object", "properties": ["name": ["type": "string"]], "required": ["name"], "additionalProperties": false]
         let result = try await model.generate(LanguageModelRequest(messages: [.user("Generate a name")], responseFormat: .json(schema: schema)))
         let body = try decodeJSONBody(try #require(await transport.requests().first?.body))
-        #expect(body["toolConfig"]?["tools"]?[0]?["toolSpec"]?["name"] == "json")
-        #expect(body["additionalModelRequestFields"]?["output_config"] == nil)
+        #expect(body["toolConfig"] == nil)
+        #expect(body["additionalModelRequestFields"]?["output_config"]?["format"] == ["type": "json_schema", "schema": schema])
+        #expect(body["system"] == nil)
         #expect(try decodeJSONBody(Data(result.text.utf8)) == ["name": "Test"])
         #expect(result.toolCalls.isEmpty && result.finishReason == "stop")
+        #expect(result.usage?.inputTokens == 4 && result.usage?.outputTokens == 10 && result.usage?.totalTokens == 14)
     }
 
     @Test func anthropicEmitsRawMessageStartUsageAndFallbackReplayBeta() async throws {

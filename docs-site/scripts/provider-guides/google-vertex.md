@@ -29,8 +29,23 @@ zero and at most 24. Gemini 2.5 Pro's shared reasoning minimum is 128 tokens;
 Gemini 3 uses its lowest supported level and reports a compatibility warning
 when `none` cannot disable thinking.
 
-For Anthropic-hosted JSON output, schemas supported by native structured output
-use `output_config.format` on Claude Sonnet 5.5, Opus 5.5 and Fable 5.1, which
-reject forced tool selection. Other hosted Claude families retain the JSON
-response-tool fallback. Recursive or otherwise unsupported schemas retain that
-fallback too; automatic tool selection is used when the model rejects forcing.
+For Anthropic-hosted JSON output, see the hosted Anthropic guide for automatic
+opt-in, explicit output-format selection and forced-tool fallback rules. Native
+service support also depends on the Google Cloud organization policy.
+
+## Gemini unary and Live transcription
+
+`transcriptionModel("gemini-3.5-transcribe")` uses generateContent inline audio.
+Other families retain Cloud Speech routing. Options select the first present
+`googleVertex`, `vertex`, then `google` namespace. Shared word-timing requests
+set `wordTimestamp` unless explicitly disabled; valid timings populate `words`
+and existing segments. Unsupported segment requests and missing requested word
+timings warn, while usage and raw transcription metadata remain available.
+
+`streamingTranscriptionModel("gemini-3.5-transcribe-live")` uses regional OAuth
+WebSockets with project/location and 16 kHz PCM. Express Mode keys do not
+support this route. Audio waits for setupComplete; interim text may be revised
+before final segments. Cancellation closes input and socket; a resettable
+three-second quiet grace handles servers omitting a terminal signal.
+`GoogleVertexProvider` accepts injected `webSocketTransport` through an additive
+overload; its original initializer/function reference is retained.

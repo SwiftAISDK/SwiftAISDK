@@ -37,6 +37,10 @@ func openAITranscriptionOptions(providerOptions: [String: JSONValue], extraBody:
     var validatedProviderOptions = providerOptions
     for key in openAIProviderOptionNamespaceKeys(providerID: providerID, providerRoot: providerRoot) {
         guard var options = validatedProviderOptions[key]?.objectValue else { continue }
+        for name in ["languages", "keywords"] {
+            if let value = options[name], value.arrayValue?.allSatisfy({ $0.stringValue != nil }) != true { throw AIError.invalidArgument(argument: "providerOptions.\(key).\(name)", message: "OpenAI transcription \(name) must be an array of strings.") }
+        }
+        if let value = options["timestampGranularities"], value.arrayValue?.allSatisfy({ ["word", "segment"].contains($0.stringValue ?? "") }) != true { throw AIError.invalidArgument(argument: "providerOptions.\(key).timestampGranularities", message: "Timestamp granularities must contain word or segment.") }
         for optionName in ["chunking_strategy", "chunkingStrategy"] {
             guard let chunkingStrategy = options[optionName] else { continue }
             options[optionName] = try openAIValidatedTranscriptionChunkingStrategy(

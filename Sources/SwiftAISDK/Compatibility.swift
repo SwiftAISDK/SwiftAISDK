@@ -986,6 +986,17 @@ extension AI {
         return try await SwiftAI.AI.uploadSkill(client: client, request: request, retryPolicy: retryPolicy, telemetry: telemetry)
     }
 
+    public static func transcribe(
+        model: any TranscriptionModel,
+        request: AudioURLTranscriptionRequest,
+        download: AITranscriptionDownload? = nil,
+        downloadTransport: any AITransport = URLSessionTransport.shared,
+        retryPolicy: AIRetryPolicy = .default,
+        telemetry: Telemetry.Options? = nil
+    ) async throws -> TranscriptionResult {
+        return try await SwiftAI.AI.transcribe(model: model, request: request, download: download, downloadTransport: downloadTransport, retryPolicy: retryPolicy, telemetry: telemetry)
+    }
+
 public static func streamEnum(
         model: any LanguageModel,
         request: LanguageModelRequest,

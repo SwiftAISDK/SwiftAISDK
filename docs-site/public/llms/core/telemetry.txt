@@ -1,6 +1,6 @@
 # Telemetry
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/telemetry/
+Source URL: /core/telemetry/
 
 Use telemetry when you want structured events for observability, debugging, billing, or product analytics. Telemetry is opt-in: pass `Telemetry.Options` on a call, or register integrations globally and pass enabled telemetry options. Calls with `telemetry: nil` do not record events.
 
@@ -213,6 +213,18 @@ do {
 
 ## Emitting version and failed steps
 
-Events emitted by the telemetry dispatcher now contain `aiVersion`, the reviewed upstream `ai` contract version (`7.0.159`). Both language-model execution contexts and tool execution contexts expose the same optional field. The field is absent on manually constructed contexts unless assigned; dispatch adds it to a copy and preserves the caller's value.
+Events emitted by the telemetry dispatcher now contain `aiVersion`, the reviewed upstream `ai` contract version (`7.0.165`). Both language-model execution contexts and tool execution contexts expose the same optional field. The field is absent on manually constructed contexts unless assigned; dispatch adds it to a copy and preserves the caller's value.
 
 `Telemetry.Event.Kind.stepError` closes a failed text-generation step before the call's terminal error/abort event. Its input contains the step number when input recording is enabled. Streaming provider error chunks still complete their step; streaming aborts and timeouts emit abort events instead of failed-step events. Existing telemetry input/output and runtime-context inclusion settings remain applicable.
+
+## Request origins and content capture
+
+Providers may expose the actual endpoint in low-level `AIRequestMetadata.url`.
+High-level text/object results and streams sanitize it to an HTTP(S) origin,
+removing credentials, paths, queries and fragments. `Telemetry.Event.requestURL`
+uses the same origin policy and remains available when content capture is off.
+
+Disabling `includesInput` or `includesOutput` filters the corresponding SDK-owned
+provider payloads, nested raw request/response bodies and error descriptions.
+Returned generation results remain available to the caller. Application-supplied
+telemetry metadata and integration context remain the application's responsibility.

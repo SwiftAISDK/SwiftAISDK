@@ -18,7 +18,10 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
 
     public func generate(_ request: LanguageModelRequest) async throws -> TextGenerationResult {
         let prepared = try preparedRequest(for: request, stream: false)
-        let response = try await config.sendJSONResponse(path: "/responses", modelID: modelID, body: .object(prepared.body), headers: request.headers, abortSignal: request.abortSignal)
+        let httpRequest = try config.request(path: "/responses", modelID: modelID, body: .object(prepared.body), headers: request.headers, abortSignal: request.abortSignal)
+        let httpResponse = try await config.transport.send(httpRequest)
+        guard (200..<300).contains(httpResponse.statusCode) else { throw config.httpStatusError(httpResponse) }
+        let response = (json: try httpResponse.jsonValue(), response: httpResponse)
         let raw = response.json
         if case .openResponses = config.responsesRequestMode {
             if let error = raw["error"], let errorMessage = error["message"]?.stringValue {
@@ -102,7 +105,8 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             finishReason = openAIResponsesFinishReason(
                 status: raw["status"]?.stringValue,
                 incompleteReason: raw["incomplete_details"]?["reason"]?.stringValue,
-                hasToolCalls: hasClientToolCalls
+                hasToolCalls: hasClientToolCalls,
+                hasRefusal: openAIResponsesHasRefusal(raw)
             )
         }
         let structuredOutputText: String?
@@ -110,7 +114,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             structuredOutputText = (raw["output"]?.arrayValue ?? []).last {
                 $0["type"] == "message" && $0["phase"] == "final_answer"
             }.map { item in
-                (item["content"]?.arrayValue ?? []).compactMap { $0["text"]?.stringValue }.joined()
+                (item["content"]?.arrayValue ?? []).compactMap { $0["text"]?.stringValue ?? $0["refusal"]?.stringValue }.joined()
             }
         } else {
             structuredOutputText = nil
@@ -119,7 +123,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             text: text,
             structuredOutputText: structuredOutputText,
             content: content,
-            finishReason: finishReason,
+            finishReason: config.responseFinishReason?(raw, hasClientToolCalls) ?? finishReason,
             usage: tokenUsage(from: raw),
             toolCalls: toolCalls,
             toolResults: toolResults,
@@ -128,6 +132,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             providerMetadata: openAIResponsesProviderMetadata(from: raw, providerID: providerID),
             rawValue: raw,
             warnings: prepared.warnings,
+            requestMetadata: AIRequestMetadata(body: .object(prepared.body), headers: request.headers, url: httpRequest.url.absoluteString),
             responseMetadata: openAICompatibleResponseMetadata(from: raw, response: response.response, modelID: modelID)
         )
     }
@@ -146,6 +151,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                     }
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
                     continuation.yield(.streamStart(warnings: prepared.warnings))
+                    continuation.yield(.requestMetadata(AIRequestMetadata(body: .object(body), headers: request.headers, url: httpRequest.url.absoluteString)))
                     let toolNameAliases = openAIResponsesProviderToolNameAliases(from: request.tools)
                     let functionToolNames = openAIResponsesFunctionToolNames(from: request.tools)
                     let shellProviderExecuted = openAIResponsesShellIsProviderExecuted(from: request.tools)
@@ -169,6 +175,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                         guard let outputIndex else { return itemID }
                         return activeOutputItemIDs[outputIndex] ?? itemID
                     }
+                    var hasRefusal = false
                     var openResponsesHasToolCalls = false
                     var hasOutputStarted = false
                     var encounteredStreamError = false
@@ -261,14 +268,14 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                                         : openResponsesStreamFinishReason(
                                             response: completedResponse,
                                             hasToolCalls: openResponsesHasToolCalls,
-                                            mode: config.responsesRequestMode
+                                            mode: config.responsesRequestMode, hasRefusal: hasRefusal
                                         )
                                     : encounteredStreamError
                                         ? "error"
                                         : openResponsesStreamFinishReason(
                                             response: completedResponse,
                                             hasToolCalls: openResponsesHasToolCalls,
-                                            mode: config.responsesRequestMode
+                                            mode: config.responsesRequestMode, hasRefusal: hasRefusal
                                         )
                                 continuation.yield(.finishMetadata(
                                     reason: completedFinishReason,
@@ -307,6 +314,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             )
                             streamResponseID = responsePayload["id"]
                             openResponsesHasToolCalls = false
+                            hasRefusal = false
                             hasOutputStarted = false
                             fallbackFinishReason = "other"
                             continuation.yield(.responseMetadata(
@@ -376,6 +384,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             }
                             continuation.yield(.reasoningDeltaPart(id: itemID, delta: delta))
                         }
+                        if ["response.refusal.delta", "response.refusal.done"].contains(raw["type"]?.stringValue ?? "") { hasRefusal = true }
                         if let delta = raw["delta"]?.stringValue ?? raw["output_text_delta"]?.stringValue,
                            openAIResponsesIsTextDelta(raw) {
                             let eventItemID = raw["item_id"]?.stringValue ?? "text-0"
@@ -490,6 +499,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             continuation.yield(eventPart)
                         }
                         if raw["type"]?.stringValue == "response.output_item.done", let item = raw["item"] {
+                            if item["type"] == "message", (item["content"]?.arrayValue ?? []).contains(where: { $0["type"] == "refusal" }) { hasRefusal = true }
                             if item["type"]?.stringValue == "web_search_call", item["action"]?["type"]?.stringValue == "search",
                                item["action"]?["sources"]?.arrayValue?.contains(where: { $0["type"]?.stringValue == "url" }) == true {
                                 hasWebSearchActionSources = true
@@ -659,14 +669,14 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                                 : openResponsesStreamFinishReason(
                                     response: response,
                                     hasToolCalls: openResponsesHasToolCalls,
-                                    mode: config.responsesRequestMode
+                                    mode: config.responsesRequestMode, hasRefusal: hasRefusal
                                 )
                             : encounteredStreamError
                                 ? "error"
                                 : openResponsesStreamFinishReason(
                                     response: response,
                                     hasToolCalls: openResponsesHasToolCalls,
-                                    mode: config.responsesRequestMode
+                                    mode: config.responsesRequestMode, hasRefusal: hasRefusal
                                 )
                         let finishUsage = tokenUsage(from: response)
                         continuation.yield(.finishMetadata(
@@ -1101,6 +1111,8 @@ func openAIResponsesKnownStreamEventValidationMessage(_ raw: JSONValue) -> Strin
 
     let isMissingOutputIndex = raw["output_index"]?.intValue == nil
     switch type {
+    case "response.refusal.delta", "response.refusal.done":
+        guard raw["item_id"]?.stringValue != nil, (type == "response.refusal.delta" ? raw["delta"] : raw["refusal"])?.stringValue != nil else { return "Known response chunk failed schema validation" }
     case "response.function_call_arguments.delta", "response.custom_tool_call_input.delta":
         guard raw["item_id"]?.stringValue != nil,
               !isMissingOutputIndex,

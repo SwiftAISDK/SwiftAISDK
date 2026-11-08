@@ -41,3 +41,11 @@ failure stops the request before it reaches the transport.
 Agent responses expose `providerMetadata.perplexity.searchQueries` in first-seen order, without duplicates. Generation collects all search-result items; streaming combines reasoning search-query events, completed output items and terminal response output. Fetch URL events do not become search queries. When no query was reported, the value is JSON null. Invalid query arrays fail response validation.
 
 Portable `reasoning: "none"` maps to the lowest supported effort, `minimal`, with a compatibility warning. Explicit native reasoning options keep their precedence.
+
+## Current request and response behavior
+
+Use tool choice `none` to disable both explicit tools and tools enabled by
+an Agent preset. The adapter omits all tool definitions and forces
+`max_tool_calls: 0`, even when provider options supplied another limit. Historical
+tool calls/results stay in the prompt. Disabled provider tools do not produce
+unsupported-tool warnings or leak tool credentials into the request.

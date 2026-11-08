@@ -53,7 +53,7 @@ public final class XAIProvider: AIProvider, Sendable {
         self.configuration = configuration
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-xai/5.0.35")
+        headers = withUserAgentSuffix(headers, "ai-sdk-xai/5.0.40")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.x.ai/v1")
         self.baseURL = baseURL
         self.http = AIProviderHTTPClient(providerID: "xai", headers: headers, transport: configuration.transport, credentialResolver: credentialResolver,
@@ -134,6 +134,16 @@ public struct XAIModelConfiguration: AIProviderHTTPConfiguration {
 public func configureXAIResponses(_ configuration: inout OpenAIModelConfiguration) {
     let providerID = configuration.providerID
     let transform = configuration.transformRequestBody
+    configuration.responseFinishReason = { raw, hasTools in
+        if hasTools { return "tool-calls" }
+        switch raw["incomplete_details"]?["reason"]?.stringValue ?? raw["status"]?.stringValue {
+        case "stop", "completed": return "stop"
+        case "length", "max_output_tokens": return "length"
+        case "tool_calls", "function_call": return "tool-calls"
+        case "content_filter": return "content-filter"
+        default: return "other"
+        }
+    }
     configuration.prepareResponses = { modelID, request, stream in
         try xaiResponsesPreparedRequest(modelID: modelID, providerID: providerID, request: request, stream: stream, transformRequestBody: transform)
     }

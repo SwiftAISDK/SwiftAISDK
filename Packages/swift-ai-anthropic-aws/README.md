@@ -8,3 +8,9 @@ Existing baselines and documented port gaps remain unchanged. See the canonical
 provider guide and `Porting/map.json`.
 
 See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/anthropic-aws.md) for authentication, options and supported surfaces.
+
+Claude Platform on AWS supports Anthropic message threads through the canonical
+`providerOptions.anthropic.thread` create/continue objects. AWS authentication and
+workspace headers remain provider settings; keep full conversation history locally
+for thread-expiry recovery. Bedrock InvokeModel is a separate hosting surface and
+does not enable message threads.

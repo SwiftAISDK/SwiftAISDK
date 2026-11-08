@@ -111,7 +111,7 @@ func cerebrasMessageTransform(_ message: JSONValue) -> JSONValue {
     return .object(object)
 }
 
-func cerebrasFinishReason(_ raw: String?, hasText: Bool, normalizeStructuredToolCalls: Bool) -> String? {
+func cerebrasFinishReason(_ raw: String?, hasText: Bool, normalizeStructuredToolCalls: Bool, hasRefusal: Bool = false) -> String? {
     if raw == "tool_calls",
        cerebrasShouldDropStructuredToolCalls(
            hasText: hasText,
@@ -121,7 +121,7 @@ func cerebrasFinishReason(_ raw: String?, hasText: Bool, normalizeStructuredTool
     }
     switch raw {
     case "stop":
-        return "stop"
+        return hasRefusal ? "content-filter" : "stop"
     case "length":
         return "length"
     case "content_filter":

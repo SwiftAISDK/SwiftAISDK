@@ -197,6 +197,9 @@ public final class XAITranscriptionModel: TranscriptionModel, StreamingTranscrip
             throw AIError.invalidResponse(provider: providerID, message: "Invalid xAI transcription response.")
         }
         let segments = xaiTranscriptionSegments(from: raw)
+        var warnings: [AIWarning] = []
+        if request.timestampGranularities?.contains(.segment) == true { warnings.append(AIWarning(type: "unsupported", feature: "timestampGranularities", message: "xAI transcription returns word timings and does not provide separate caption segments.")) }
+        if request.timestampGranularities?.contains(.word) == true, segments.isEmpty, raw["text"]?.stringValue?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false { warnings.append(AIWarning(type: "other", message: "The xAI transcription response omitted the requested word timings.")) }
         let words = raw["words"]?.arrayValue ?? []
         let metadata: [String: JSONValue] = words.contains { $0["speaker"] != nil && $0["speaker"] != .null }
             ? ["xai": .object(["words": .array(words.map { .object(($0.objectValue ?? [:]).filter { ["text", "start", "end", "speaker"].contains($0.key) }) })])]
@@ -207,9 +210,11 @@ public final class XAITranscriptionModel: TranscriptionModel, StreamingTranscrip
             segments: segments,
             language: raw["language"]?.stringValue,
             durationInSeconds: raw["duration"]?.doubleValue ?? transcriptionDuration(from: segments),
+            warnings: warnings,
             providerMetadata: metadata,
             requestMetadata: AIRequestMetadata(body: .object(metadataBody), headers: request.headers),
-            responseMetadata: aiResponseMetadata(from: raw, response: response, modelID: modelID)
+            responseMetadata: aiResponseMetadata(from: raw, response: response, modelID: modelID),
+            words: segments.isEmpty ? nil : segments
         )
     }
 }
@@ -294,7 +299,13 @@ public final class XAIVideoModel: VideoModel, @unchecked Sendable {
     }
 
     public func generateVideo(_ request: VideoGenerationRequest) async throws -> VideoGenerationResult {
-        let options = try xaiProviderOptions(from: request)
+        let options: [String: JSONValue]
+        do { options = try xaiProviderOptions(from: request) }
+        catch { if request.providerOptions["xai"]?["output"] != nil || request.extraBody["output"] != nil { throw AIError.invalidArgument(argument: "providerOptions.xai", message: "Invalid xAI video provider options for upload delivery.") }; throw error }
+        let uploadURL = options["output"]?["uploadUrl"]?.stringValue
+        if let output = options["output"] {
+            guard let value = output["uploadUrl"]?.stringValue, let url = URLComponents(string: value), url.scheme == "https", url.host?.isEmpty == false, url.user == nil, url.password == nil, url.fragment == nil else { throw AIError.invalidArgument(argument: "providerOptions.xai", message: "Invalid xAI video provider options for upload delivery.") }
+        }
         let mode = xaiVideoMode(from: options, request: request)
         let endpoint: String
         if mode == "edit-video" {
@@ -309,6 +320,7 @@ public final class XAIVideoModel: VideoModel, @unchecked Sendable {
             "model": .string(modelID),
             "prompt": .string(request.prompt)
         ]
+        if let uploadURL { body["output"] = .object(["upload_url": .string(uploadURL)]) }
         var warnings = xaiVideoWarnings(for: request, options: options, mode: mode)
         if let duration = request.durationSeconds, mode != "edit-video" {
             body["duration"] = .number(duration)
@@ -380,7 +392,7 @@ public final class XAIVideoModel: VideoModel, @unchecked Sendable {
         }
         for (key, value) in options {
             switch key {
-            case "mode", "pollIntervalMs", "pollTimeoutMs", "resolution", "referenceImageUrls", "reference_image_urls", "referenceVoiceIds", "reference_voice_ids", "keyframes", "storageOptions":
+            case "mode", "pollIntervalMs", "pollTimeoutMs", "resolution", "referenceImageUrls", "reference_image_urls", "referenceVoiceIds", "reference_voice_ids", "keyframes", "storageOptions", "output":
                 continue
             case "videoUrl", "video_url":
                 if mode == "edit-video" || mode == "extend-video" {
@@ -481,37 +493,50 @@ public final class XAIVideoModel: VideoModel, @unchecked Sendable {
             ))
         }
 
-        let created = try await config.sendJSON(path: endpoint, modelID: modelID, body: .object(body), headers: request.headers, abortSignal: request.abortSignal)
+        let created: JSONValue
+        do { created = try await config.sendJSON(path: endpoint, modelID: modelID, body: .object(body), headers: request.headers, abortSignal: request.abortSignal) }
+        catch { throw xaiVideoUploadError(error, upload: uploadURL != nil, message: "xAI video upload request failed.") }
         guard let requestID = created["request_id"]?.stringValue else {
             throw AIError.invalidResponse(provider: providerID, message: "xAI video create response did not contain request_id.")
         }
-        let finalResponse = try await pollXAIResponse(
+        let finalResponse: (json: JSONValue, response: AIHTTPResponse)
+        do { finalResponse = try await pollXAIResponse(
             requestID: requestID,
             headers: request.headers,
             intervalNanoseconds: xaiPollInterval(options),
             timeoutNanoseconds: xaiPollTimeout(options),
-            abortSignal: request.abortSignal
-        )
+            abortSignal: request.abortSignal,
+            hasUploadURL: uploadURL != nil
+        ) } catch { throw xaiVideoUploadError(error, upload: uploadURL != nil, message: "xAI video upload status request failed.") }
         let raw = finalResponse.json
         guard raw["video"]?["respect_moderation"]?.boolValue != false else {
             throw AIError.invalidResponse(provider: providerID, message: "Video generation was blocked due to a content policy violation.")
         }
-        guard let url = raw["video"]?["url"]?.stringValue
-            ?? raw["video"]?["file_output"]?["public_url"]?.stringValue else {
+        let url = raw["video"]?["url"]?.stringValue ?? raw["video"]?["file_output"]?["public_url"]?.stringValue
+        guard uploadURL != nil || url != nil else {
             throw AIError.invalidResponse(provider: providerID, message: "Video generation completed but no video URL was returned.")
         }
+        var metadata = xaiVideoProviderMetadata(from: raw, requestID: requestID, url: url ?? "")
+        var metadataBody = body
+        var resultRaw = raw
+        if uploadURL != nil {
+            metadataBody["output"] = .object(["upload_url": .string("[REDACTED]")])
+            metadata = ["xai": .object(["requestId": .string(requestID), "duration": raw["video"]?["duration"], "costInUsdTicks": raw["usage"]?["cost_in_usd_ticks"]])]
+            resultRaw = .object(["status": raw["status"], "video": .object(["duration": raw["video"]?["duration"]]), "usage": .object(["cost_in_usd_ticks": raw["usage"]?["cost_in_usd_ticks"]])])
+        }
         return VideoGenerationResult(
-            urls: [url],
+            urls: uploadURL == nil ? url.map { [$0] } ?? [] : [],
             operationID: requestID,
-            rawValue: raw,
+            rawValue: resultRaw,
             warnings: warnings,
-            providerMetadata: xaiVideoProviderMetadata(from: raw, requestID: requestID, url: url),
-            requestMetadata: videoGenerationRequestMetadata(request, body: .object(body)),
-            responseMetadata: aiResponseMetadata(from: raw, response: finalResponse.response, modelID: modelID)
+            providerMetadata: metadata,
+            requestMetadata: videoGenerationRequestMetadata(request, body: .object(metadataBody)),
+            responseMetadata: AIResponseMetadata(timestamp: Date(), modelID: modelID, headers: finalResponse.response.headers, body: resultRaw),
+            uploadedVideos: uploadURL == nil ? [] : [.init(mediaType: "video/mp4")]
         )
     }
 
-    private func pollXAIResponse(requestID: String, headers: [String: String], intervalNanoseconds: UInt64, timeoutNanoseconds: UInt64, abortSignal: AIAbortSignal?) async throws -> (json: JSONValue, response: AIHTTPResponse) {
+    private func pollXAIResponse(requestID: String, headers: [String: String], intervalNanoseconds: UInt64, timeoutNanoseconds: UInt64, abortSignal: AIAbortSignal?, hasUploadURL: Bool) async throws -> (json: JSONValue, response: AIHTTPResponse) {
         let started = DispatchTime.now().uptimeNanoseconds
         while true {
             try await sleepWithAbortSignal(nanoseconds: intervalNanoseconds, abortSignal: abortSignal)
@@ -522,7 +547,7 @@ public final class XAIVideoModel: VideoModel, @unchecked Sendable {
                 abortSignal: abortSignal
             ))
             guard (200..<300).contains(response.statusCode) else {
-                throw apiCallError(provider: providerID, response: response)
+                throw xaiVideoUploadError(apiCallError(provider: providerID, response: response), upload: hasUploadURL, message: "xAI video upload status request failed.")
             }
             let raw: JSONValue
             if response.statusCode == 202 {
@@ -544,7 +569,7 @@ public final class XAIVideoModel: VideoModel, @unchecked Sendable {
             if status == "failed" {
                 let errorDetails = raw["error"]?["message"]?.stringValue
                     ?? raw["error"]?["code"]?.stringValue
-                let message = errorDetails.map { "Video generation failed: \($0)" }
+                let message = (hasUploadURL ? nil : errorDetails).map { "Video generation failed: \($0)" }
                     ?? "Video generation failed."
                 throw AIError.invalidResponse(provider: providerID, message: message)
             }
@@ -1435,3 +1460,8 @@ private actor XAIStreamingTranscriptionSession {
 
 private func xaiTranscriptionNullableString(_ value: JSONValue?) -> Bool { value == nil || value == .null || value?.stringValue != nil }
 private func xaiTranscriptionNullableNumber(_ value: JSONValue?) -> Bool { value == nil || value == .null || value?.doubleValue?.isFinite == true }
+
+private func xaiVideoUploadError(_ error: Error, upload: Bool, message: String) -> Error {
+    guard upload, case let AIError.apiCall(details) = error else { return error }
+    return AIError.apiCall(.init(provider: details.provider, statusCode: details.statusCode, responseBody: message, isRetryable: details.isRetryable))
+}

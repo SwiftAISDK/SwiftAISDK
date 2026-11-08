@@ -79,12 +79,13 @@ import SwiftAI
     #expect(body["presence_penalty"]?.doubleValue == 0.1)
     #expect(body["frequency_penalty"]?.doubleValue == 0.2)
     #expect(body["reasoning_effort"] == nil)
-    #expect(body["tools"]?.arrayValue?.count == 1)
-    #expect(body["tools"]?[0]?["type"]?.stringValue == "function")
-    #expect(body["tools"]?[0]?["function"]?["name"]?.stringValue == "lookup")
-    #expect(body["tools"]?[0]?["function"]?["description"]?.stringValue == "Look up a value.")
-    #expect(body["tools"]?[0]?["function"]?["parameters"]?["properties"]?["value"]?["type"]?.stringValue == "string")
-    #expect(body["tool_choice"]?.stringValue == "any")
+    #expect(body["tools"]?.arrayValue?.count == 2)
+    let lookupTool = try #require(body["tools"]?.arrayValue?.first { $0["function"]?["name"] == "lookup" })
+    #expect(lookupTool["type"]?.stringValue == "function")
+    #expect(lookupTool["function"]?["name"]?.stringValue == "lookup")
+    #expect(lookupTool["function"]?["description"]?.stringValue == "Look up a value.")
+    #expect(lookupTool["function"]?["parameters"]?["properties"]?["value"]?["type"]?.stringValue == "string")
+    #expect(body["tool_choice"] == .object(["type": "function", "function": .object(["name": "lookup"])]))
     #expect(body["parallel_tool_calls"]?.boolValue == false)
 }
 @Test func mistralLanguageMapsStandardJsonResponseFormat() async throws {
@@ -121,7 +122,7 @@ import SwiftAI
 
     let request = try #require(await transport.requests().first)
     #expect(request.headers["authorization"] == "Bearer mistral-key")
-    #expect(request.headers["user-agent"] == "custom-client/1.0 ai-sdk-mistral/4.0.77")
+    #expect(request.headers["user-agent"] == "custom-client/1.0 ai-sdk-mistral/4.0.81")
 }
 @Test func mistralMissingFinishReasonMapsToOtherAndUsageCountsCache() async throws {
     let transport = RecordingTransport(response: jsonResponse("""

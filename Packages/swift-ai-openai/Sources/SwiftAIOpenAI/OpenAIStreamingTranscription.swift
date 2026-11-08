@@ -18,7 +18,7 @@ extension OpenAICompatibleTranscriptionModel {
         if let value = request.providerOptions["openai"], value.objectValue == nil { throw invalidStreamingOption("openai") }
         let options = request.providerOptions["openai"]?.objectValue ?? [:]
         var warnings: [AIWarning] = []
-        for option in ["include", "prompt", "temperature", "timestampGranularities"] where options[option] != nil {
+        for option in ["include", "languages", "keywords", "prompt", "temperature", "timestampGranularities"] where options[option] != nil {
             warnings.append(AIWarning(type: "unsupported", feature: "providerOptions.openai.\(option)", message: "OpenAI streaming transcription does not support \(option)."))
         }
         let language = options["language"]?.stringValue

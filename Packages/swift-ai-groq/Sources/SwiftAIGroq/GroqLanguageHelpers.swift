@@ -209,7 +209,7 @@ func groqMessageJSON(_ message: AIMessage) throws -> [JSONValue] {
                     "type": .string("function"),
                     "function": .object([
                         "name": .string(call.name),
-                        "arguments": .string(call.arguments)
+                        "arguments": .string(groqSerializeToolCallArguments(call.arguments))
                     ])
                 ])
             })
@@ -389,4 +389,9 @@ func groqApplyReasoning(_ reasoning: String?, modelID: String, to body: inout [S
     if let effort = mapReasoningToProviderEffort(reasoning: reasoning, effortMap: map, warnings: &warnings) {
         body["reasoning_effort"] = .string(effort)
     }
+}
+
+private func groqSerializeToolCallArguments(_ input: String) -> String {
+    if (try? decodeJSONBody(Data(input.utf8))) != nil { return input }
+    return canonicalJSONText(.string(input)) ?? input
 }

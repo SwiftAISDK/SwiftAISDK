@@ -55,5 +55,6 @@ func mistralConversationPrepareTools(_ tools: [String: JSONValue], choice: JSONV
         }
         return .object(["type": "function", "function": .object(function)])
     }
-    return (converted, mistralToolChoice(from: choice), warnings)
+    // Conversations retains its distinct forced-tool contract; native function choice is Chat-only.
+    return (converted, mistralForcedToolName(from: choice) == nil ? mistralToolChoice(from: choice) : .string("any"), warnings)
 }

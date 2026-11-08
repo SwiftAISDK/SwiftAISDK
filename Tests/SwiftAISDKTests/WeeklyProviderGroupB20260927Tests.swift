@@ -163,7 +163,7 @@ private final class WeeklyProviderGroupBReasoningModel: LanguageModel, @unchecke
     let body = try decodeJSONBody(try #require(request.body))
     #expect(request.method == "POST")
     #expect(request.url.absoluteString.hasSuffix("/batch/cancel"))
-    #expect(request.headers["user-agent"] == "ai-sdk-gateway/4.0.132")
+    #expect(request.headers["user-agent"] == "ai-sdk-gateway/4.0.138")
     #expect(body["batchId"]?.stringValue == "batch-42")
 
     let invalidTransport = RecordingTransport(response: jsonResponse(#"{"providerMetadata":{"trace":"missing-status"}}"#))
@@ -329,7 +329,7 @@ private final class WeeklyProviderGroupBReasoningModel: LanguageModel, @unchecke
     #expect(written.text == "written answer")
     #expect(written.content == [.text("written answer")])
     let request = try #require(await transport.requests().first)
-    #expect(request.headers["user-agent"] == "ai-sdk-openai/4.0.106")
+    #expect(request.headers["user-agent"] == "ai-sdk-openai/4.0.111")
 
     let responsesTransport = RecordingTransport(response: jsonResponse(#"{"id":"resp-sol","status":"completed","output_text":"done"}"#))
     let responsesProvider = try AIProviders.openAI(settings: ProviderSettings(apiKey: "openai-key", transport: responsesTransport))
@@ -504,7 +504,7 @@ private final class WeeklyProviderGroupBReasoningModel: LanguageModel, @unchecke
     ))
     let requests = await transport.requests()
     let body = try decodeJSONBody(try #require(requests.first?.body))
-    #expect(requests.first?.headers["user-agent"] == "ai-sdk-xai/5.0.35")
+    #expect(requests.first?.headers["user-agent"] == "ai-sdk-xai/5.0.40")
     #expect(body["generate_audio"]?.boolValue == true)
     #expect(body["keyframes"]?[0]?["image"]?["url"]?.stringValue == "https://example.com/key.png")
     #expect(body["keyframes"]?[0]?["timestamp_s"]?.intValue == 2)

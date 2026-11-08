@@ -64,7 +64,7 @@ import Testing
     #expect(requests[0].method == "POST")
     #expect(requests[0].url.absoluteString == "https://api.bfl.ai/v1/flux-pro-1.1")
     #expect(requests[0].headers["x-key"] == "bfl-key")
-    #expect(requests[0].headers["user-agent"] == "ai-sdk-black-forest-labs/2.0.74")
+    #expect(requests[0].headers["user-agent"] == "ai-sdk-black-forest-labs/2.0.79")
     #expect(requests[0].headers["x-request-id"] == "req-1")
     let body = try decodeJSONBody(try #require(requests[0].body))
     #expect(body["prompt"]?.stringValue == "cat")
@@ -85,12 +85,12 @@ import Testing
     #expect(requests[1].method == "GET")
     #expect(requests[1].url.absoluteString == "https://api.bfl.ai/v1/get_result?id=bfl-1")
     #expect(requests[1].headers["x-key"] == "bfl-key")
-    #expect(requests[1].headers["user-agent"] == "ai-sdk-black-forest-labs/2.0.74")
+    #expect(requests[1].headers["user-agent"] == "ai-sdk-black-forest-labs/2.0.79")
     #expect(requests[1].headers["x-request-id"] == "req-1")
     #expect(requests[2].method == "GET")
     #expect(requests[2].url.absoluteString == "https://bfl.example.com/image.png")
     #expect(requests[2].headers["x-key"] == nil)
-    #expect(requests[2].headers["user-agent"] == "ai-sdk-black-forest-labs/2.0.74")
+    #expect(requests[2].headers["user-agent"] == "ai-sdk-black-forest-labs/2.0.79")
     #expect(requests[2].headers["x-request-id"] == nil)
 }
 
@@ -114,11 +114,11 @@ import Testing
 
     let requests = await transport.requests()
     #expect(requests[0].headers["x-key"] == "bfl-key")
-    #expect(requests[0].headers["user-agent"] == "CustomApp/1.0 ai-sdk-black-forest-labs/2.0.74")
+    #expect(requests[0].headers["user-agent"] == "CustomApp/1.0 ai-sdk-black-forest-labs/2.0.79")
     #expect(requests[1].headers["x-key"] == "bfl-key")
-    #expect(requests[1].headers["user-agent"] == "CustomApp/1.0 ai-sdk-black-forest-labs/2.0.74")
+    #expect(requests[1].headers["user-agent"] == "CustomApp/1.0 ai-sdk-black-forest-labs/2.0.79")
     #expect(requests[2].headers["x-key"] == nil)
-    #expect(requests[2].headers["user-agent"] == "CustomApp/1.0 ai-sdk-black-forest-labs/2.0.74")
+    #expect(requests[2].headers["user-agent"] == "CustomApp/1.0 ai-sdk-black-forest-labs/2.0.79")
 }
 
 @Test func blackForestLabsProviderExposesV4ImageAliasAndRejectsUnsupportedFamilies() throws {
@@ -364,10 +364,10 @@ import Testing
     let requests = await transport.requests()
     #expect(requests[1].url.absoluteString == "https://api.us1.bfl.ai/v1/get_result?id=bfl-cluster")
     #expect(requests[1].headers["x-key"] == "bfl-key")
-    #expect(requests[1].headers["user-agent"] == "ai-sdk-black-forest-labs/2.0.74")
+    #expect(requests[1].headers["user-agent"] == "ai-sdk-black-forest-labs/2.0.79")
     #expect(requests[2].url.absoluteString == "https://delivery-us1.bfl.ai/image.png")
     #expect(requests[2].headers["x-key"] == nil)
-    #expect(requests[2].headers["user-agent"] == "ai-sdk-black-forest-labs/2.0.74")
+    #expect(requests[2].headers["user-agent"] == "ai-sdk-black-forest-labs/2.0.79")
 }
 
 @Test func blackForestLabsImageMapsFilesMaskAndLegacyNestedOptions() async throws {
@@ -459,14 +459,15 @@ import Testing
     }
 }
 
-@Test func blackForestLabsImageThrowsForMissingSubmitFields() async throws {
-    let transport = RecordingTransport(response: jsonResponse(#"{"id":"bfl-missing"}"#))
+@Test func blackForestLabsImageThrowsForMissingSubmitID() async throws {
+    let transport = RecordingTransport(response: jsonResponse(#"{"polling_url":"https://api.bfl.ai/v1/get_result"}"#))
     let provider = try AIProviders.blackForestLabs(configuration: BlackForestLabsProviderSettings(apiKey: "bfl-key", transport: transport))
     let model = try provider.imageModel("flux-pro-1.1")
 
-    await #expect(throws: AIError.invalidResponse(provider: "black-forest-labs.image", message: "Black Forest Labs submit response did not contain id and polling_url.")) {
+    await #expect(throws: AIError.invalidResponse(provider: "black-forest-labs.image", message: "Black Forest Labs submit response did not contain id.")) {
         _ = try await model.generateImage(ImageGenerationRequest(prompt: "cat"))
     }
+    #expect(await transport.requests().count == 1)
 }
 
 @Test func blackForestLabsImageThrowsWhenReadyPollHasNoSample() async throws {

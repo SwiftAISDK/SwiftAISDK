@@ -9,8 +9,7 @@ let provider = try DeepSeekProvider(configuration: .init(apiKey: "..."))
 ```
 
 Settings accept a custom base URL, headers, query parameters and an injected
-`AITransport`. Models use the common SwiftAIProvider protocols. Existing upstream
-baselines, capabilities and documented gaps remain unchanged.
+`AITransport`. Models use the common SwiftAIProvider protocols.
 
 Run the standalone suite from the canonical checkout:
 
@@ -22,3 +21,6 @@ The canonical repository owns all edits. Distribution manifests and repositories
 are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
 
 See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/deepseek.md) for authentication, options and supported surfaces.
+## Behavior notes
+
+Tool replay preserves valid JSON argument text and quotes malformed text as a JSON string. Native DeepSeek strict tools still require the beta endpoint and consistent strict mode. Azure-hosted adapter configurations have unknown strict-tool capability and forward each tool's explicit true/false/omitted choice without imposing the native beta policy.

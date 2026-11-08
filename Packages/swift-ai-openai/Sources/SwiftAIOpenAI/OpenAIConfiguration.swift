@@ -66,6 +66,7 @@ public struct OpenAIModelConfiguration: Sendable {
     public var supportsStructuredOutputs = false
     public var errorHandler: (@Sendable (AIHTTPResponse) -> AIError)?
     public var prepareResponses: (@Sendable (String, LanguageModelRequest, Bool) throws -> OpenAICompatibleResponsesPreparedRequest)?
+    public var responseFinishReason: (@Sendable (JSONValue, Bool) -> String?)?
     public var streamErrorParser: (@Sendable (JSONValue) -> AIStreamProviderError?)?
 
     public init(http: AIProviderHTTPClient, baseURL: String, openAIBackedProviderRoot: String? = "openai") {

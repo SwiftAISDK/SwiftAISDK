@@ -29,7 +29,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.x.ai/v1/responses")
     #expect(request.headers["authorization"] == "Bearer xai-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-xai/5.0.35")
+    #expect(request.headers["user-agent"] == "ai-sdk-xai/5.0.40")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["model"]?.stringValue == "grok-4")
     #expect(body["input"]?[0]?["content"]?[0]?["type"]?.stringValue == "input_text")
@@ -49,7 +49,7 @@ import Testing
 
     let request = try #require(await transport.requests().first)
     #expect(request.headers["authorization"] == "Bearer xai-key")
-    #expect(request.headers["user-agent"] == "CustomApp/1.0 ai-sdk-xai/5.0.35")
+    #expect(request.headers["user-agent"] == "CustomApp/1.0 ai-sdk-xai/5.0.40")
 }
 
 @Test func xAIResponsesWarnsForUnsupportedSamplingSettingsInGenerateAndStream() async throws {

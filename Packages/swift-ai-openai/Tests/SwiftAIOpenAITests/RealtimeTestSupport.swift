@@ -119,9 +119,10 @@ final class RealtimeTestWebSocketConnection:
 func realtimeWait(
     _ condition: @escaping @Sendable () -> Bool
 ) async -> Bool {
-    for _ in 0..<10_000 {
+    let deadline = ProcessInfo.processInfo.systemUptime + 5
+    while ProcessInfo.processInfo.systemUptime < deadline {
         if condition() { return true }
-        await Task.yield()
+        try? await Task.sleep(nanoseconds: 1_000_000)
     }
     return condition()
 }

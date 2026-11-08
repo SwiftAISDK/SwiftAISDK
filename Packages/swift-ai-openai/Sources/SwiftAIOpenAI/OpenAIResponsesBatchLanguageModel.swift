@@ -733,7 +733,7 @@ private func convertOpenAIResponsesBatchBody(
             ))
         case "message":
             for part in item["content"]?.arrayValue ?? [] {
-                content.append(.text(part["text"]?.stringValue ?? ""))
+                content.append(.text(part["text"]?.stringValue ?? part["refusal"]?.stringValue ?? ""))
             }
         case "function_call", "custom_tool_call":
             guard let call = openAIResponsesToolCall(from: item, providerID: providerID) else {
@@ -774,9 +774,9 @@ private func convertOpenAIResponsesBatchBody(
     return .success(TextGenerationResult(
         text: text,
         content: content,
-        finishReason: openResponsesFinishReason(
-            incompleteReason: incompleteReason,
-            hasToolCalls: hasClientToolCall
+        finishReason: openAIResponsesFinishReason(
+            status: "completed", incompleteReason: incompleteReason,
+            hasToolCalls: hasClientToolCall, hasRefusal: openAIResponsesHasRefusal(raw)
         ),
         usage: tokenUsage(from: raw),
         providerMetadata: openAIBatchProviderMetadata(from: raw, providerID: providerID),
@@ -904,6 +904,10 @@ private func validateOpenAIResponsesBatchBody(
                 throw AIError.invalidResponse(provider: providerID, message: "Invalid OpenAI Responses message output.")
             }
             for part in parts {
+                if part["type"]?.stringValue == "refusal" {
+                    guard part["refusal"]?.stringValue != nil else { throw AIError.invalidResponse(provider: providerID, message: "Invalid OpenAI Responses refusal part.") }
+                    continue
+                }
                 guard part["type"]?.stringValue == "output_text",
                       part["text"]?.stringValue != nil,
                       part["annotations"]?.arrayValue != nil else {

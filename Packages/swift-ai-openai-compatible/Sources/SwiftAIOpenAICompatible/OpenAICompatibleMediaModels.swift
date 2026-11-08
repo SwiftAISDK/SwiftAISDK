@@ -108,7 +108,7 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
         if let count = request.count { body["n"] = .number(Double(count)) }
         let imageOptions: [String: JSONValue]
         if isOpenAIBackedProvider(providerID, config: config) {
-            imageOptions = openAIImageOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, providerRoot: config.openAIBackedProviderRoot)
+            imageOptions = try validatedOpenAIImageOptions(request, editing: false)
         } else if config.usesGenericOpenAICompatibleProviderOptions {
             imageOptions = openAICompatibleProviderOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, includeCompatibilityNamespace: false)
         } else {
@@ -139,6 +139,8 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
     }
 
     private func editImage(_ request: ImageGenerationRequest, warnings: [AIWarning]) async throws -> ImageGenerationResult {
+        let openAIOptions = isOpenAIBackedProvider(providerID, config: config) ? try validatedOpenAIImageOptions(request, editing: true) : nil
+        if request.mask != nil, openAIOptions?["markup"] != nil { throw AIError.invalidArgument(argument: "providerOptions.openai.markup", message: "`markup` cannot be combined with `mask`.") }
         var form = MultipartFormData()
         form.appendField(name: "model", value: modelID)
         form.appendField(name: "prompt", value: request.prompt)
@@ -169,13 +171,28 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
 
         let extraBody: [String: JSONValue]
         if isOpenAIBackedProvider(providerID, config: config) {
-            extraBody = openAIImageOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, providerRoot: config.openAIBackedProviderRoot)
+            extraBody = openAIOptions ?? [:]
         } else if config.usesGenericOpenAICompatibleProviderOptions {
             extraBody = openAICompatibleProviderOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, includeCompatibilityNamespace: false)
         } else {
             extraBody = openAICompatibleProviderOptions(from: request.extraBody, providerID: providerID, includeCompatibilityNamespace: false)
         }
-        for (key, value) in extraBody {
+        if let markup = extraBody["markup"]?.stringValue {
+            let bytes: Data
+            let mediaType: String
+            if markup.hasPrefix("data:") {
+                guard let comma = markup.firstIndex(of: ",") else { throw AIError.invalidArgument(argument: "providerOptions.openai.markup", message: "Invalid markup data URL.") }
+                let header = String(markup[markup.index(markup.startIndex, offsetBy: 5)..<comma])
+                guard header.hasSuffix(";base64"), let data = Data(base64Encoded: String(markup[markup.index(after: comma)...])) else { throw AIError.invalidArgument(argument: "providerOptions.openai.markup", message: "`markup` data URLs must be base64 encoded.") }
+                bytes = data; mediaType = String(header.dropLast(7)).isEmpty ? "image/png" : String(header.dropLast(7))
+            } else {
+                let response = try await downloadURL(markup, transport: config.transport, abortSignal: request.abortSignal)
+                guard (200..<300).contains(response.statusCode) else { throw apiCallError(provider: providerID, response: response) }
+                bytes = response.body; mediaType = response.headers.contentType ?? "image/png"
+            }
+            form.appendFile(name: "markup", fileName: "markup.png", mimeType: mediaType, data: bytes)
+        }
+        for (key, value) in extraBody where key != "markup" {
             if case let .array(items) = value {
                 for item in items {
                     if let scalar = jsonScalarString(item) {
@@ -213,6 +230,21 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
             requestMetadata: imageGenerationRequestMetadata(request),
             responseMetadata: openAICompatibleResponseMetadata(from: raw, response: response, modelID: modelID)
         )
+    }
+
+    private func validatedOpenAIImageOptions(_ request: ImageGenerationRequest, editing: Bool) throws -> [String: JSONValue] {
+        var options = openAIImageOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, providerRoot: config.openAIBackedProviderRoot)
+        func reject(_ key: String) throws { throw AIError.invalidArgument(argument: "providerOptions.openai.\(key)", message: "Invalid OpenAI image option \(key).") }
+        if let complexity = options["complexity"], !["low", "medium", "high"].contains(complexity.stringValue ?? "") { try reject("complexity") }
+        if let safety = options["safety_identifier"], safety.stringValue == nil || (safety.stringValue?.count ?? 0) > 128 { try reject("safetyIdentifier") }
+        if let format = options["output_format"], !(editing ? ["png", "jpeg", "webp"] : ["png", "jpeg", "webp", "gif"]).contains(format.stringValue ?? "") { try reject("outputFormat") }
+        for (key, range) in [("frame_count", 2...64), ("frame_duration_ms", 20...2000)] {
+            if let value = options[key], value.intValue.map({ !range.contains($0) || value.doubleValue != Double($0) }) ?? true { try reject(key) }
+            if editing { options[key] = nil }
+        }
+        if let markup = options["markup"], markup.stringValue == nil { try reject("markup") }
+        if !editing { options["markup"] = nil; options["input_fidelity"] = nil }
+        return options
     }
 
     private func resolvedImages(_ data: [JSONValue], request: AIHTTPRequest) async throws -> [String] {

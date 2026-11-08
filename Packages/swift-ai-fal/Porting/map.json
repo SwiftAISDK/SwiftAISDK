@@ -41,5 +41,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
+  "reviewNote": "2026-11-08: published @ai-sdk/fal 3.0.73..3.0.78 source, declarations and matching-release tests reviewed independently. Video seed zero fix is already native; only reviewed user-agent runtime literal changes. Delta review is not a claim of whole-provider parity; existing documented gaps remain."
 }

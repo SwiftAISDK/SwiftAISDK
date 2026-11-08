@@ -14,3 +14,10 @@ failure stops the request before it reaches the transport.
 ## Portable reasoning
 
 Portable effort maps to DeepSeek's `low`, `high`, or `max` settings. `medium` now maps to `low` and `xhigh` to `high`, with compatibility warnings in generation and stream-start metadata. Explicit provider effort retains its existing native option validation and precedence; portable `none` still disables thinking.
+## Tool replay and Azure strict options
+
+Tool arguments retain valid serialized JSON and JSON-quote malformed raw text.
+Native DeepSeek strict tools still require the beta endpoint and consistent
+strict mode. Azure-hosted configurations have unknown strict-tool capability;
+they forward each tool's explicit true/false/omitted choice without applying the
+native beta-only policy.

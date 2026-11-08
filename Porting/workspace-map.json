@@ -282,6 +282,7 @@
     "Tests/SwiftAISDKTests/ProviderErrorMessageTests.swift",
     "Tests/SwiftAISDKTests/ProviderEvaluationAdaptersTests.swift",
     "Tests/SwiftAISDKTests/ProviderGroupBUpstreamParity20260831Tests.swift",
+    "Tests/SwiftAISDKTests/ProviderInitializerCompatibility160Tests.swift",
     "Tests/SwiftAISDKTests/ProviderReferenceTests.swift",
     "Tests/SwiftAISDKTests/ProviderRegistryVercelTests.swift",
     "Tests/SwiftAISDKTests/ProviderStreamErrorParity20260831Tests.swift",

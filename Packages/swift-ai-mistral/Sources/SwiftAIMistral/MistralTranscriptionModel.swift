@@ -93,6 +93,7 @@ public final class MistralTranscriptionModel: TranscriptionModel, @unchecked Sen
             segments: segments,
             language: raw["language"]?.stringValue,
             durationInSeconds: raw["usage"]?["prompt_audio_seconds"]?.doubleValue ?? transcriptionDuration(from: segments),
+            warnings: ["targetStreamingDelayMs", "speakerReferences", "turnDetection"].filter { options.realtime[$0] != nil }.map { .init(type: "unsupported", feature: "providerOptions.mistral.\($0)", message: "This option is only supported for realtime transcription.") },
             providerMetadata: metadata.isEmpty ? [:] : ["mistral": .object(metadata)],
             requestMetadata: AIRequestMetadata(body: .object(metadataBody), headers: request.headers),
             responseMetadata: aiResponseMetadata(
@@ -105,23 +106,24 @@ public final class MistralTranscriptionModel: TranscriptionModel, @unchecked Sen
     }
 }
 
-private struct MistralTranscriptionOptions {
+struct MistralTranscriptionOptions {
     var language: String?
     var returnLanguage: Bool?
     var temperature: Double?
     var timestampGranularities: [String]?
     var diarize: Bool?
     var contextBias: [String]?
+    var realtime: [String: JSONValue] = [:]
 }
 
-private func mistralTranscriptionOptions(from request: AudioTranscriptionRequest) throws -> MistralTranscriptionOptions {
+func mistralTranscriptionOptions(from request: AudioTranscriptionRequest) throws -> MistralTranscriptionOptions {
     var values: [String: JSONValue] = [:]
     if let nested = request.extraBody["mistral"]?.objectValue {
         values.merge(nested) { _, new in new }
     }
     if let nested = request.providerOptions["mistral"] {
         guard nested != .null else {
-            return MistralTranscriptionOptions(language: request.language)
+            return MistralTranscriptionOptions(language: request.language, timestampGranularities: request.timestampGranularities?.map(\.rawValue))
         }
         guard let object = nested.objectValue else {
             throw AIError.invalidArgument(argument: "providerOptions.mistral", message: "Mistral provider options must be an object.")
@@ -167,7 +169,7 @@ private func mistralTranscriptionOptions(from request: AudioTranscriptionRequest
         }
         granularities = parsed
     } else {
-        granularities = nil
+        granularities = request.timestampGranularities?.map(\.rawValue)
     }
     let diarize: Bool?
     if let value = values["diarize"], value != .null {
@@ -193,13 +195,25 @@ private func mistralTranscriptionOptions(from request: AudioTranscriptionRequest
     } else {
         contextBias = nil
     }
+    var realtime: [String: JSONValue] = [:]
+    for key in ["targetStreamingDelayMs", "speakerReferences", "turnDetection"] {
+        guard let value = values[key] else { continue }
+        switch key {
+        case "targetStreamingDelayMs":
+            guard let number = value.doubleValue, number.isFinite, number.rounded() == number, (80...1200).contains(number) || number == 2400 else { throw AIError.invalidArgument(argument: "providerOptions.mistral.\(key)", message: "Mistral delay must be an integer from 80 to 1200, or 2400.") }
+        case "speakerReferences":
+            guard let object = value.objectValue, object.values.allSatisfy({ $0.stringValue?.isEmpty == false }) else { throw AIError.invalidArgument(argument: "providerOptions.mistral.\(key)", message: "Mistral speakerReferences must map names to non-empty base64 strings.") }
+        default: realtime[key] = try mistralTurnDetection(value, argument: "providerOptions.mistral.turnDetection"); continue
+        }
+        realtime[key] = value
+    }
     return MistralTranscriptionOptions(
         language: language,
         returnLanguage: returnLanguage,
         temperature: temperature,
         timestampGranularities: granularities,
         diarize: diarize,
-        contextBias: contextBias
+        contextBias: contextBias, realtime: realtime
     )
 }
 
@@ -281,4 +295,14 @@ private func mistralTranscriptionMetadata(from raw: JSONValue) -> [String: JSONV
         metadata["segments"] = .array(richSegments)
     }
     return metadata
+}
+func mistralTurnDetection(_ value: JSONValue, argument: String) throws -> JSONValue {
+    guard let object = value.objectValue else { throw AIError.invalidArgument(argument: argument, message: "Mistral turnDetection must be an object.") }
+    var output: [String: JSONValue] = [:]
+    let mapping = ["startThreshold": "start_threshold", "eagerEndThreshold": "eager_end_threshold", "endThreshold": "end_threshold", "minSilenceMs": "min_silence_ms", "endTimeoutMs": "end_timeout_ms"]
+    for (key, item) in object where mapping[key] != nil {
+        guard let number = item.doubleValue, number.isFinite, key.hasSuffix("Ms") ? (number >= 0 && number.rounded() == number) : (0...1).contains(number) else { throw AIError.invalidArgument(argument: "\(argument).\(key)", message: "Invalid Mistral turn detection setting.") }
+        output[mapping[key]!] = item
+    }
+    return .object(output)
 }

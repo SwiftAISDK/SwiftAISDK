@@ -1,6 +1,6 @@
 # Tools
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/tools/
+Source URL: /core/tools/
 
 ## Configurable tool discovery
 
@@ -72,6 +72,13 @@ An `AITool` has:
 - an async `execute` function
 - optional `strict` mode, provider metadata, provider options, and input examples
 - optional argument refinement, approval policy, context schema, streamed-input callbacks, and model-facing output mapping
+
+`AITool.metadata` and `title` describe a trusted local tool definition.
+`AIToolCall.toolMetadata` carries that definition's metadata to execution and
+approval callbacks. Restored approvals rebuild these values from the current
+tool registry before refinement and policy checks; persisted chat data cannot
+replace the current tool definition. Missing native tools still fail with
+`AINoSuchToolError`.
 
 Use `maxSteps` to let the model call tools, receive results, and make a follow-up model call until it returns a final answer or the step limit is reached.
 
@@ -274,3 +281,16 @@ emits the `.toolInputStartText` companion case. The default remains JSON. Native
 UI reducers concatenate raw text while keeping final `AIToolCall.arguments`
 JSON-encoded, including string inputs. `AIToolCall.inputEncoding` and
 `rawInputText` preserve unfinished text input across UI snapshot restoration.
+
+## Provider option and alias resolution
+
+Custom adapters can use `resolveProviderOptions` from SwiftAIProviderUtilities.
+`.first` validates and selects the first non-null namespace as a whole, including
+an empty object. `.merge` validates each contributing namespace and lets later
+keys win. Duplicate namespace names are visited once, and the result reports
+which namespaces contributed. Unselected alternatives are not validated by
+`.first`.
+
+`AIToolNameMapping` preserves every forward alias and resolves duplicate reverse
+aliases deterministically. Pass `preferredCustomToolNames` when a declared tool
+name should win over an inline alias.

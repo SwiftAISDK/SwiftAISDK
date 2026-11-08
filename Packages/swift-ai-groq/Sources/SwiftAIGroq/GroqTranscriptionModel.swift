@@ -15,15 +15,36 @@ public final class GroqTranscriptionModel: TranscriptionModel, @unchecked Sendab
     }
 
     public func transcribe(_ request: AudioTranscriptionRequest) async throws -> TranscriptionResult {
+        try await generate(request)
+    }
+
+    public func transcribeFromURL(_ request: AudioURLTranscriptionRequest) async throws -> TranscriptionResult? {
+        guard ["https", "http"].contains(request.audio.scheme?.lowercased() ?? ""), request.audio.user == nil, request.audio.password == nil else {
+            throw AIError.invalidArgument(argument: "audio", message: "Groq URL transcription requires an HTTP(S) URL without userinfo.")
+        }
+        var components = URLComponents(url: request.audio, resolvingAgainstBaseURL: false)
+        components?.fragment = nil
+        let local = AudioTranscriptionRequest(audio: Data(), language: request.language, prompt: request.prompt, providerOptions: request.providerOptions, extraBody: request.extraBody, headers: request.headers, abortSignal: request.abortSignal, timestampGranularities: request.timestampGranularities)
+        do { return try await generate(local, audioURL: components?.url ?? request.audio) }
+        catch AIError.apiCall(let error) {
+            let message = error.message ?? error.responseBody
+            if error.statusCode == 400, message.range(of: #"^failed to retrieve media: received status code: (301|302|303|307|308)\b"#, options: .regularExpression) != nil { return nil }
+            throw AIError.apiCall(error)
+        }
+    }
+
+    private func generate(_ request: AudioTranscriptionRequest, audioURL: URL? = nil) async throws -> TranscriptionResult {
         var form = MultipartFormData()
         form.appendField(name: "model", value: modelID)
         let uploadFileName = "audio.\(mediaTypeToExtension(request.mimeType))"
-        form.appendFile(name: "file", fileName: uploadFileName, mimeType: request.mimeType, data: request.audio)
+        if let audioURL { form.appendField(name: "url", value: audioURL.absoluteString) }
+        else { form.appendFile(name: "file", fileName: uploadFileName, mimeType: request.mimeType, data: request.audio) }
         var metadataBody: [String: JSONValue] = [
             "model": .string(modelID),
             "filename": .string(uploadFileName),
             "mime_type": .string(request.mimeType)
         ]
+        if let audioURL { metadataBody = ["model": .string(modelID), "url": .string(audioURL.absoluteString)] }
         if let language = request.language {
             form.appendField(name: "language", value: language)
             metadataBody["language"] = .string(language)
@@ -67,7 +88,10 @@ public final class GroqTranscriptionModel: TranscriptionModel, @unchecked Sendab
             abortSignal: request.abortSignal
         ))
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            let raw = try? response.jsonValue()
+            var detail = AIAPICallError(provider: providerID, statusCode: response.statusCode, responseHeaders: response.headers, responseBody: response.bodyText)
+            detail.message = raw?["error"]?["message"]?.stringValue
+            throw AIError.apiCall(detail)
         }
         if providerOptions["response_format"]?.stringValue == "text" {
             let text = String(decoding: response.body, as: UTF8.self)

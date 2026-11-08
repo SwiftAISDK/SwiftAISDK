@@ -4,7 +4,7 @@ description: Public SwiftAISDK APIs for telemetry.
 ---
 
 :::note[Development API reference]
-These declarations follow the canonical repository's main branch. Match your installed versions to the published release documentation. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for published packages and version-compatible examples.
+These declarations follow the canonical repository's main branch. Match your installed versions to the published release documentation. See [Install](/getting-started/install/) for published packages and version-compatible examples.
 :::
 
 ## Symbol counts
@@ -13,9 +13,10 @@ These declarations follow the canonical repository's main branch. Match your ins
 | --- | --- |
 | Case | 13 |
 | Enumeration | 2 |
+| Function | 1 |
 | Initializer | 14 |
 | Instance Method | 5 |
-| Instance Property | 133 |
+| Instance Property | 134 |
 | Protocol | 1 |
 | Structure | 12 |
 | Type Alias | 8 |
@@ -41,6 +42,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Case | `SwiftAI.Telemetry.Event.Kind.toolStart` | `case toolStart` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
 | Enumeration | `SwiftAI.Telemetry` | `enum Telemetry` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
 | Enumeration | `SwiftAI.Telemetry.Event.Kind` | `enum Kind` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
+| Function | `SwiftAI.requestOrigin(_:)` | `func requestOrigin(_ endpoint: String?) -> String?` | [Packages/swift-ai-core/Sources/SwiftAI/TelemetryPrivacy.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/TelemetryPrivacy.swift) |
 | Initializer | `SwiftAI.init(callID:operationID:providerID:modelID:execute:)` | `init(callID: String, operationID: String, providerID: String, modelID: String? = nil, execute: @escaping @Sendable () async throws -> Output)` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
 | Initializer | `SwiftAI.init(callID:operationID:providerID:modelID:state:questions:)` | `init(callID: String, operationID: String = "ai.decide.doDecide", providerID: String, modelID: String, state: [AIDecisionStatePart], questions: [String : AIDecisionQuestion])` | [Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift) |
 | Initializer | `SwiftAI.init(callID:operationID:providerID:modelID:state:questions:)` | `init(callID: String, operationID: String = "ai.evaluate.doEvaluate", providerID: String, modelID: String, state: JSONValue, questions: [String : AIEvaluationQuestion])` | [Packages/swift-ai-core/Sources/SwiftAI/AIEvaluationTelemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/AIEvaluationTelemetry.swift) |
@@ -159,6 +161,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Instance Property | `SwiftAI.questions` | `var questions: [String : AIEvaluationQuestion]` | [Packages/swift-ai-core/Sources/SwiftAI/AIEvaluationTelemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/AIEvaluationTelemetry.swift) |
 | Instance Property | `SwiftAI.reasoning` | `var reasoning: String?` | [Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift) |
 | Instance Property | `SwiftAI.reasoning` | `var reasoning: String?` | [Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift) |
+| Instance Property | `SwiftAI.requestURL` | `var requestURL: String?` | [Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/Telemetry.swift) |
 | Instance Property | `SwiftAI.response` | `var response: AIDecisionResponseMetadata` | [Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift) |
 | Instance Property | `SwiftAI.response` | `var response: AIResponseMetadata?` | [Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/AIDecisionTelemetry.swift) |
 | Instance Property | `SwiftAI.response` | `var response: AIEvaluationResponseMetadata` | [Packages/swift-ai-core/Sources/SwiftAI/AIEvaluationTelemetry.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/AIEvaluationTelemetry.swift) |

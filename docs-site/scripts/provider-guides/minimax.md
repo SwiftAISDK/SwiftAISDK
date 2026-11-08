@@ -49,3 +49,10 @@ Attach `MiniMaxCacheControlOptions(cacheControl: .ephemeral).providerOptions` as
 `MiniMaxProviderSettings.apiKeyProvider` accepts an asynchronous throwing closure and refreshes credentials before each Messages or video HTTP request. Model construction does not call it; supplier errors propagate before sending. Existing static keys and custom-header precedence remain supported.
 
 On M3.1 and later, portable `none` and `minimal` reasoning select `low` effort with the shared compatibility warning. Explicit provider effort still takes precedence. The native open-string API continues to warn and omit invalid reasoning strings, which are outside upstream's typed reasoning union.
+## Admission tiers
+
+`MiniMaxLanguageModelOptions(serviceTier: .priority)` requests priority admission;
+`.standard` requests standard admission. Both map to `service_tier` for unary and
+streaming Messages. Omit the field for the provider default. The `minimax`
+namespace overrides `anthropic`; known foreign tiers warn and are omitted, while
+invalid or null tier values fail before I/O.

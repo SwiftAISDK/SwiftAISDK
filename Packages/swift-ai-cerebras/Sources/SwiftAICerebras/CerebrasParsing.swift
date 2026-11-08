@@ -7,6 +7,7 @@ import SwiftAIOpenAICompatible
 
 func cerebrasProviderMetadata(from raw: JSONValue, choice: JSONValue?) -> [String: JSONValue] {
     var metadata: [String: JSONValue] = [:]
+    if let tier = raw["service_tier"]?.stringValue { metadata["serviceTier"] = .string(tier) }
     if let accepted = raw["usage"]?["completion_tokens_details"]?["accepted_prediction_tokens"] {
         metadata["acceptedPredictionTokens"] = accepted
     }

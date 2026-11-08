@@ -33,3 +33,23 @@ supported effort with a compatibility warning. Gemini 2.5 Pro maps it to the
 minimum 128-token budget; models that support disabled thinking still send zero.
 Continued streamed function strings close on their final chunk, including an
 empty chunk or explicit terminator, so accumulated JSON becomes valid promptly.
+
+## Native realtime and current request behavior
+
+`GoogleGenerativeAIProvider.realtimeModel("gemini-3.8-live")` implements native
+Gemini Live WebSockets with ephemeral client secrets or trusted server API-key
+headers. Use `AIRealtimeSession.connectServer` for lifecycle ownership and an
+injected duplex transport. Async credentials resolve before connecting;
+conversation intent is supported and transcription intent rejects before I/O.
+Each session has its own parser. `generationComplete` does not end a turn; late
+output transcripts retain its ID. `event.usage` preserves same-frame totals and
+known modality counts; unrelated snapshots are not summed or attached to later
+completions. Browser capture/playback and standalone Google transcription/speech
+translation remain separate native gaps.
+
+GenerateContent retains ordered text/function calls, signed empty thought blocks
+and parsed tool input strings. Sparse/overflowing streamed array indexes are
+rejected without allocating holes. RPC status strings preserve raw errors and
+supply retryability. Provider tool NONE filtering precedes JSON fallback;
+Interactions maps string labels and current function/provider tools. Speech
+forwards explicit languageCode for single/multiple voices, omitting auto.

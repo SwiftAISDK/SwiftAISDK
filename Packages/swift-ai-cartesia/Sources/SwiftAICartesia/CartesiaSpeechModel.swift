@@ -41,11 +41,22 @@ public final class CartesiaSpeechModel: SpeechModel, @unchecked Sendable {
             "output_format": .object(outputFormat)
         ]
 
-        if let language = parsed.options.language {
+        if parsed.options.additional["locale"] != nil, parsed.options.language != nil {
+            throw AIError.invalidArgument(argument: "providerOptions", message: "providerOptions.cartesia.locale cannot be combined with providerOptions.cartesia.language")
+        }
+        if let locale = parsed.options.additional["locale"] {
+            body["locale"] = locale
+            if request.language?.isEmpty == false {
+                warnings.append(.init(type: "unsupported", feature: "language", message: "Cartesia does not support both locale and language. The language option was ignored in favor of providerOptions.cartesia.locale."))
+            }
+        } else if let language = parsed.options.language {
             body["language"] = .string(language)
         } else if let language = request.language, !language.isEmpty {
             body["language"] = .string(language)
         }
+
+        body["normalization"] = parsed.options.additional["normalization"]
+        body["pronunciation_dict_id"] = parsed.options.additional["pronunciationDictionaryId"]
 
         if let speed = parsed.options.speed ?? request.speed {
             if (0.6...1.5).contains(speed) {
@@ -60,6 +71,10 @@ public final class CartesiaSpeechModel: SpeechModel, @unchecked Sendable {
                 ))
             }
         }
+
+        var generation = body["generation_config"]?.objectValue ?? [:]
+        for key in ["volume", "emotion"] { generation[key] = parsed.options.additional[key] }
+        if !generation.isEmpty { body["generation_config"] = .object(generation) }
 
         if let instructions = request.instructions, !instructions.isEmpty {
             warnings.append(AIWarning(
@@ -105,6 +120,7 @@ private struct CartesiaSpeechOptions {
     var bitRate: Int?
     var speed: Double?
     var language: String?
+    var additional: [String: JSONValue] = [:]
 }
 
 private struct ParsedCartesiaSpeechOptions {
@@ -113,6 +129,7 @@ private struct ParsedCartesiaSpeechOptions {
 }
 
 private let cartesiaSpeechOptionKeys: Set<String> = [
+    "volume", "emotion", "locale", "normalization", "pronunciationDictionaryId",
     "container",
     "encoding",
     "sampleRate",
@@ -193,6 +210,20 @@ private func validateCartesiaSpeechOptions(
     _ values: [String: JSONValue]
 ) throws -> CartesiaSpeechOptions {
     var options = CartesiaSpeechOptions()
+    for key in ["locale", "normalization", "pronunciationDictionaryId", "emotion"] {
+        if let value = values[key] {
+            guard let text = value.stringValue, key != "emotion" || cartesiaSpeechEmotions.contains(text) else {
+                throw AIError.invalidArgument(argument: "providerOptions.cartesia.\(key)", message: "Cartesia \(key) must be a supported string.")
+            }
+            options.additional[key] = value
+        }
+    }
+    if let value = values["volume"] {
+        guard let volume = value.doubleValue, (0.5...2).contains(volume) else {
+            throw AIError.invalidArgument(argument: "providerOptions.cartesia.volume", message: "Cartesia volume must be between 0.5 and 2.")
+        }
+        options.additional["volume"] = value
+    }
 
     if let value = values["container"], value != .null {
         guard let container = value.stringValue,
@@ -269,7 +300,8 @@ private extension CartesiaSpeechOptions {
             sampleRate: override.sampleRate ?? sampleRate,
             bitRate: override.bitRate ?? bitRate,
             speed: override.speed ?? speed,
-            language: override.language ?? language
+            language: override.language ?? language,
+            additional: additional.merging(override.additional) { _, new in new }
         )
     }
 }
@@ -405,3 +437,64 @@ private func cartesiaInteger(_ value: JSONValue) -> Int? {
     }
     return integer
 }
+
+private let cartesiaSpeechEmotions: Set<String> = [
+    "neutral",
+    "happy",
+    "excited",
+    "enthusiastic",
+    "elated",
+    "euphoric",
+    "triumphant",
+    "amazed",
+    "surprised",
+    "flirtatious",
+    "curious",
+    "content",
+    "peaceful",
+    "serene",
+    "calm",
+    "grateful",
+    "affectionate",
+    "trust",
+    "sympathetic",
+    "anticipation",
+    "mysterious",
+    "angry",
+    "mad",
+    "outraged",
+    "frustrated",
+    "agitated",
+    "threatened",
+    "disgusted",
+    "contempt",
+    "envious",
+    "sarcastic",
+    "ironic",
+    "sad",
+    "dejected",
+    "melancholic",
+    "disappointed",
+    "hurt",
+    "guilty",
+    "bored",
+    "tired",
+    "rejected",
+    "nostalgic",
+    "wistful",
+    "apologetic",
+    "hesitant",
+    "insecure",
+    "confused",
+    "resigned",
+    "anxious",
+    "panicked",
+    "alarmed",
+    "scared",
+    "proud",
+    "confident",
+    "distant",
+    "skeptical",
+    "contemplative",
+    "determined"
+]

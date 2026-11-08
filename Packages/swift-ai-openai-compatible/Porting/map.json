@@ -49,7 +49,8 @@
       "Packages/swift-ai-openai-compatible/Tests/SwiftAIOpenAICompatibleTests/OpenAICompatibleWarningTests.swift",
       "Packages/swift-ai-openai-compatible/Tests/SwiftAIOpenAICompatibleTests/OpenAIStyleStreamingToolCallsTests.swift",
       "Packages/swift-ai-openai-compatible/Tests/SwiftAIOpenAICompatibleTests/TestSupport.swift",
-      "Packages/swift-ai-openai-compatible/Tests/SwiftAIOpenAICompatibleTests/Weekly20261101CompatibleTests.swift"
+      "Packages/swift-ai-openai-compatible/Tests/SwiftAIOpenAICompatibleTests/Weekly20261101CompatibleTests.swift",
+      "Packages/swift-ai-openai-compatible/Tests/SwiftAIOpenAICompatibleTests/Weekly20261108CompatibleTests.swift"
     ],
     "resources": []
   },
@@ -63,5 +64,5 @@
       "reason": "2026-11-01: @ai-sdk/openai-compatible 3.0.78 -> 3.0.82; integrity-verified published sources/declarations and matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700 reviewed independently. New native behavior is covered by Weekly20261101 suites. Internal TypeScript catalog/documentation/type-inference declarations are represented by native request policies, not an exact JS export contract. Prior imported provenance and known gaps remain unchanged. Async API key suppliers resolve before each authenticated Chat/Completion/Embedding/Image request and trusted image download, retaining explicit auth overrides and foreign-origin stripping. Add native mapReasoning callback for portable reasoning only; explicit provider reasoningEffort bypasses the callback. Misplaced completion system errors include their content."
     }
   ],
-  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction. 2026-11-01: @ai-sdk/openai-compatible 3.0.78 -> 3.0.82; integrity-verified published sources/declarations and matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700 reviewed independently. New native behavior is covered by Weekly20261101 suites. Internal TypeScript catalog/documentation/type-inference declarations are represented by native request policies, not an exact JS export contract. Prior imported provenance and known gaps remain unchanged."
+  "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction. 2026-11-01: @ai-sdk/openai-compatible 3.0.78 -> 3.0.82; integrity-verified published sources/declarations and matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700 reviewed independently. New native behavior is covered by Weekly20261101 suites. Internal TypeScript catalog/documentation/type-inference declarations are represented by native request policies, not an exact JS export contract. Prior imported provenance and known gaps remain unchanged. 2026-11-08 published delta review and focused translations: Docs/WeeklyUpstreamAudit20261108.json; release-matched provenance and native adaptations retained separately from full-package parity."
 }

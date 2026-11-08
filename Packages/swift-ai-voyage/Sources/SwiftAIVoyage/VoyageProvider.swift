@@ -38,7 +38,7 @@ public final class VoyageProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-voyage/2.0.72")
+        headers = withUserAgentSuffix(headers, "ai-sdk-voyage/2.0.77")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.voyageai.com/v1")
         http = AIProviderHTTPClient(providerID: "voyage", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

@@ -138,7 +138,8 @@ struct AiEvaluateTelemetryUpstreamTests {
         #expect(events.filter { $0.kind == .modelCallEnd }.count == 1)
     }
 
-    @Test func emitsOneTerminalErrorWithoutSuccessEvents() async {
+    @Test(arguments: [false, true])
+    func emitsOneTerminalErrorWithoutSuccessEvents(_ includesOutput: Bool) async {
         let telemetry = TelemetryRecorder()
         let callbacks = EvaluationCallbackRecorder()
         let model = EvaluationTelemetryModel(
@@ -157,7 +158,7 @@ struct AiEvaluateTelemetryUpstreamTests {
                 questions: evaluationTelemetryQuestions(),
                 maxRetries: 0,
                 telemetry: Telemetry.Options(
-                    includesOutput: false,
+                    includesOutput: includesOutput,
                     integrations: [telemetry]
                 ),
                 runtimeContext: ["requestId": "request-1"],
@@ -169,8 +170,12 @@ struct AiEvaluateTelemetryUpstreamTests {
         let events = await telemetry.events()
         #expect(events.map(\.kind) == [.start, .modelCallStart, .error])
         #expect(Set(events.map(\.callID)).count == 1)
-        #expect(events.allSatisfy { !$0.includesOutput && $0.output == nil })
-        #expect(events.last?.errorDescription?.contains("evaluation failed") == true)
+        #expect(events.allSatisfy { $0.includesOutput == includesOutput && $0.output == nil })
+        if includesOutput {
+            #expect(events.last?.errorDescription?.contains("evaluation failed") == true)
+        } else {
+            #expect(events.last?.errorDescription == "AI SDK operation failed")
+        }
         #expect(await callbacks.startEvents().count == 1)
         #expect(await callbacks.endEvents().isEmpty)
     }

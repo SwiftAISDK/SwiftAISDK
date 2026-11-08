@@ -3,3 +3,9 @@ The current shared Messages behavior exposes normalized citations while retainin
 ## Refreshable API keys
 
 `AnthropicAWSProviderSettings.apiKeyProvider` accepts an asynchronous throwing closure and resolves it before each HTTP request. A callback must return a non-empty key; failures and blank values stop the request before network I/O. Nonblank values retain their original whitespace, matching upstream authentication. Callback authentication selects `x-api-key` instead of SigV4; static keys and the existing AWS `credentialProvider` continue to work. The shared Messages adapter also retains top-level schema definitions and final text when a JSON response tool is not called.
+## Message threads
+
+Claude Platform on AWS enables the same `providerOptions.anthropic.thread`
+create/continue objects as Anthropic. Keep full conversation history for expiry
+recovery. AWS authentication and workspace headers remain in the hosting settings.
+Bedrock InvokeModel is a separate surface and does not enable message threads.

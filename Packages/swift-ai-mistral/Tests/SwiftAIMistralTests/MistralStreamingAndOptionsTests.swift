@@ -101,10 +101,10 @@ import SwiftAI
         ))
     }
 
-    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.mistral.reasoningEffort", message: "Mistral reasoningEffort must be high, none, low or max.")) {
+    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.mistral.reasoningEffort", message: "Mistral reasoningEffort must be high, none, low, medium or max.")) {
         _ = try await model.generate(LanguageModelRequest(
             messages: [.user("Hi")],
-            providerOptions: ["mistral": .object(["reasoningEffort": "medium"])]
+            providerOptions: ["mistral": .object(["reasoningEffort": "invalid"])]
         ))
     }
 }

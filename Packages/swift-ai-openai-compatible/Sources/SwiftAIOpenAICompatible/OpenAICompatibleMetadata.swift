@@ -48,7 +48,7 @@ public func openAICompatibleMergeProviderMetadata(_ source: [String: JSONValue],
         }
     }
 }
-func openAICompatibleChatProviderMetadata(from raw: JSONValue, choice: JSONValue?, providerID: String, namespace: String? = nil) -> [String: JSONValue] {
+func openAICompatibleChatProviderMetadata(from raw: JSONValue, choice: JSONValue?, providerID: String, namespace: String? = nil, includesRefusalLogprobs: Bool = false) -> [String: JSONValue] {
     var metadata: [String: JSONValue] = [:]
     if let accepted = raw["usage"]?["completion_tokens_details"]?["accepted_prediction_tokens"] {
         metadata["acceptedPredictionTokens"] = accepted
@@ -56,8 +56,10 @@ func openAICompatibleChatProviderMetadata(from raw: JSONValue, choice: JSONValue
     if let rejected = raw["usage"]?["completion_tokens_details"]?["rejected_prediction_tokens"] {
         metadata["rejectedPredictionTokens"] = rejected
     }
-    if let logprobs = choice?["logprobs"]?["content"] {
-        metadata["logprobs"] = logprobs
+    let contentLogprobs = choice?["logprobs"]?["content"]?.arrayValue
+    let refusalLogprobs = includesRefusalLogprobs || isOpenAIBackedProvider(providerID) ? choice?["logprobs"]?["refusal"]?.arrayValue : nil
+    if contentLogprobs != nil || refusalLogprobs != nil {
+        metadata["logprobs"] = .array((contentLogprobs ?? []) + (refusalLogprobs ?? []))
     }
     return openAICompatibleNamespacedProviderMetadata(metadata, providerID: providerID, namespace: namespace)
 }

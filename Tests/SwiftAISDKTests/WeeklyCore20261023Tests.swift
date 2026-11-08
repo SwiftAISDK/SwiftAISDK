@@ -57,7 +57,10 @@ struct WeeklyCore20261023Tests {
         #expect(throws: AIError.self) { try validateEvaluationInput(state: "", questions: questions) }
         #expect(throws: AIError.self) { try validateDecisionInput(state: "", questions: ["b": .boolean()]) }
         #expect(throws: AIError.self) { try validateDecisionInput(state: "", questions: ["b": .boolean(criteria: ["true": .null])]) }
-        #expect(throws: AIError.self) { try validateDecisionInput(state: "", questions: ["box": .box(instructions: .null)]) }
+        try validateDecisionInput(state: "", questions: ["box": .box(instructions: .null)])
+        try validateDecisionInput(state: "", questions: ["box": .box()])
+        #expect(throws: AIError.self) { try validateEvaluationInput(state: "", questions: ["box": .box()]) }
+        #expect(throws: AIError.self) { try validateDecisionInput(state: "", questions: ["box": .box(instructions: .number(.infinity))]) }
     }
 
     @Test func pruningDropsOnlyReasoningGroupsWhoseFollowingContentWasRemoved() {

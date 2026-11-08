@@ -11,6 +11,7 @@
       "tests": [
         "packages/deepgram/src/deepgram-error.test.ts",
         "packages/deepgram/src/deepgram-speech-model.test.ts",
+        "packages/deepgram/src/deepgram-streaming-transcription.test.ts",
         "packages/deepgram/src/deepgram-transcription-model.test.ts",
         "packages/deepgram/src/lazy-schemas.test.ts"
       ]
@@ -20,13 +21,16 @@
     "sources": [
       "Packages/swift-ai-deepgram/Sources/SwiftAIDeepgram/DeepgramAudioModels.swift",
       "Packages/swift-ai-deepgram/Sources/SwiftAIDeepgram/DeepgramProvider.swift",
+      "Packages/swift-ai-deepgram/Sources/SwiftAIDeepgram/DeepgramStreamingTranscriptionModel.swift",
       "Packages/swift-ai-deepgram/Sources/SwiftAIDeepgram/DeepgramTranscriptionParsing.swift"
     ],
     "tests": [
       "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests/DeepgramProviderTests.swift",
       "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests/TestSupport.swift",
-      "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests/Weekly20261101CredentialsTests.swift"
+      "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests/Weekly20261101CredentialsTests.swift",
+      "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests/Weekly20261108DeepgramTests.swift",
+      "Packages/swift-ai-deepgram/Tests/SwiftAIDeepgramTests/Weekly20261108ProviderSelectorCompatibilityTests.swift"
     ],
     "resources": []
   },
@@ -34,7 +38,11 @@
     {
       "kind": "native-adaptation",
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "Swift uses a separate streamingTranscriptionModel factory, raw Data input and awaited duplex sends rather than a JavaScript constructor/base64 input/bufferedAmount loop. Wire protocol, warnings, lifecycle, metadata and usage are translated. Flux v2 remains explicitly unsupported, as in the reviewed v1 adapter."
     }
   ],
-  "reviewNote": "M6: Deepgram runtime and focused upstream-derived tests own their package; HTTP construction is shared, options and wire policy remain local. Prior baselines and known gaps are retained."
+  "reviewNote": "M6: Deepgram runtime and focused upstream-derived tests own their package; HTTP construction is shared, options and wire policy remain local. Prior baselines and known gaps are retained. 2026-11-08: reviewed @ai-sdk/deepgram 3.1.43 -> 3.1.48 verified npm archives, declarations and release-matched tests (9b603d36186b75e58d5479445a96c76f6e2d2700 -> 0f3a85f92d1ce06ccde01d662407ef83e097a712). Added native /v1/listen StreamingTranscriptionModel with injected duplex transport, per-connection credentials, raw audio validation, repeated query options, handshake/keepalive/backpressure, final-only ordered aggregate, metadata usage and idempotent cancellation. Speech callback rejects before network, callbackMethod warns/ignores; batch streaming options warn. Weekly20261108DeepgramTests translates changed speech and new streaming behaviors. Prior gaps are retained; this is delta coverage, not a claim of total package parity. 2026-11-08 compatibility supplement: preserved exact public function-reference selectors from canonical pre-run b34e233f033adde06bff302f5d3d11c12f73733e: DeepgramProviderSettings.init(apiKey:apiKeyProvider:baseURL:headers:queryParams:transport:). Forwarding overloads retain original defaults and explicit new-option defaults; Weekly20261108ProviderSelectorCompatibilityTests also verifies extended references, defaulted calls and runtime forwarding. No upstream baseline or behavioral disposition is changed by this supplement."
 }

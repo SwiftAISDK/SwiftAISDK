@@ -157,7 +157,7 @@ func openAIResponsesOutputText(from raw: JSONValue) -> String? {
     }
     let parts = raw["output"]?.arrayValue?.flatMap { item -> [String] in
         guard item["type"]?.stringValue == "message" else { return [] }
-        return item["content"]?.arrayValue?.compactMap { $0["text"]?.stringValue } ?? []
+        return item["content"]?.arrayValue?.compactMap { $0["text"]?.stringValue ?? $0["refusal"]?.stringValue } ?? []
     } ?? []
     return parts.isEmpty ? nil : parts.joined()
 }
@@ -611,7 +611,9 @@ func openAIResponsesWebSearchReplayItem(_ result: AIToolResult, itemID: String) 
 }
 
 func openAIResponsesSerializedToolCallArguments(_ arguments: String) -> String {
-    arguments.isEmpty ? "{}" : arguments
+    if arguments.isEmpty { return "{}" }
+    if (try? decodeJSONBody(Data(arguments.utf8))) != nil { return arguments }
+    return openAIResponsesJSONString(.string(arguments)) ?? "\"\""
 }
 
 func openAIResponsesOpenAIOptions(from providerMetadata: [String: JSONValue]) -> [String: JSONValue] {

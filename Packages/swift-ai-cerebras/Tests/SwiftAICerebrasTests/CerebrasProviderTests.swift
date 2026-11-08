@@ -41,7 +41,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.cerebras.ai/v1/chat/completions")
     #expect(request.headers["authorization"] == "Bearer cerebras-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-cerebras/3.0.82")
+    #expect(request.headers["user-agent"] == "ai-sdk-cerebras/3.0.87")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["messages"]?[1]?["reasoning"]?.stringValue == "I should call a tool.")
     #expect(body["messages"]?[1]?["reasoning_content"] == nil)
@@ -114,7 +114,7 @@ import Testing
     _ = try await model.generate(LanguageModelRequest(messages: [.user("Hi")]))
 
     let request = try #require(await transport.requests().first)
-    #expect(request.headers["user-agent"] == "TestApp/1.0 ai-sdk-cerebras/3.0.82")
+    #expect(request.headers["user-agent"] == "TestApp/1.0 ai-sdk-cerebras/3.0.87")
     #expect(request.headers["authorization"] == "Bearer cerebras-key")
 }
 
@@ -250,7 +250,7 @@ import Testing
     #expect(body["promptCacheKey"] == nil)
 }
 
-@Test func cerebrasProviderOptionsValidateKnownOpenAICompatibleSchema() async throws {
+@Test func cerebrasCompatibilityNamespaceValidatesKnownSchema() async throws {
     let provider = try AIProviders.cerebras(configuration: CerebrasProviderSettings(apiKey: "cerebras-key", transport: RecordingTransport(responses: [])))
     let model = try provider.languageModel("zai-glm-4.7")
 
@@ -261,10 +261,10 @@ import Testing
         ))
     }
 
-    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.cerebras.user", message: "Cerebras user cannot be null.")) {
+    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.openaiCompatible.user", message: "Cerebras user cannot be null.")) {
         _ = try await model.generate(LanguageModelRequest(
             messages: [.user("Hi")],
-            providerOptions: ["cerebras": ["user": .null]]
+            providerOptions: ["openaiCompatible": ["user": .null]]
         ))
     }
 
@@ -275,38 +275,38 @@ import Testing
         ))
     }
 
-    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.cerebras.strictJsonSchema", message: "Cerebras strictJsonSchema must be a boolean.")) {
+    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.openaiCompatible.strictJsonSchema", message: "Cerebras strictJsonSchema must be a boolean.")) {
         _ = try await model.generate(LanguageModelRequest(
             messages: [.user("Hi")],
-            providerOptions: ["cerebras": ["strictJsonSchema": "yes"]]
+            providerOptions: ["openaiCompatible": ["strictJsonSchema": "yes"]]
         ))
     }
 
-    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.cerebras.topLogprobs", message: "Cerebras topLogprobs must be an integer from 0 to 20.")) {
+    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.openaiCompatible.topLogprobs", message: "Cerebras topLogprobs must be an integer from 0 to 20.")) {
         _ = try await model.generate(LanguageModelRequest(
             messages: [.user("Hi")],
-            providerOptions: ["cerebras": ["topLogprobs": 21]]
+            providerOptions: ["openaiCompatible": ["topLogprobs": 21]]
         ))
     }
 
-    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.cerebras.logitBias", message: "Cerebras logitBias must be an object whose values are numbers from -100 to 100.")) {
+    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.openaiCompatible.logitBias", message: "Cerebras logitBias must be an object whose values are numbers from -100 to 100.")) {
         _ = try await model.generate(LanguageModelRequest(
             messages: [.user("Hi")],
-            providerOptions: ["cerebras": ["logitBias": ["42": 101]]]
+            providerOptions: ["openaiCompatible": ["logitBias": ["42": 101]]]
         ))
     }
 
-    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.cerebras.prediction", message: "Cerebras prediction must contain type content and string or text-part content.")) {
+    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.openaiCompatible.prediction", message: "Cerebras prediction must contain type content and string or text-part content.")) {
         _ = try await model.generate(LanguageModelRequest(
             messages: [.user("Hi")],
-            providerOptions: ["cerebras": ["prediction": ["type": "content", "content": [["type": "image", "text": "invalid"]]]]]
+            providerOptions: ["openaiCompatible": ["prediction": ["type": "content", "content": [["type": "image", "text": "invalid"]]]]]
         ))
     }
 
-    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.cerebras.promptCacheKey", message: "Cerebras promptCacheKey must be a string with at most 1024 characters.")) {
+    await #expect(throws: AIError.invalidArgument(argument: "providerOptions.openaiCompatible.promptCacheKey", message: "Cerebras promptCacheKey must be a string with at most 1024 characters.")) {
         _ = try await model.generate(LanguageModelRequest(
             messages: [.user("Hi")],
-            providerOptions: ["cerebras": ["promptCacheKey": .string(String(repeating: "x", count: 1_025))]]
+            providerOptions: ["openaiCompatible": ["promptCacheKey": .string(String(repeating: "x", count: 1_025))]]
         ))
     }
 }

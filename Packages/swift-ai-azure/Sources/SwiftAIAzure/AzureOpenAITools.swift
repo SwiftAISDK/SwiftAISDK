@@ -8,6 +8,10 @@ import SwiftAIDeepSeek
 
 
 public enum AzureOpenAITools {
+    public static func customTool(name: String = "custom", description: String? = nil, format: JSONValue? = nil) -> JSONValue { OpenAITools.customTool(name: name, description: description, format: format) }
+    public static func applyPatch() -> JSONValue { OpenAITools.applyPatch() }
+    public static func shell(environment: JSONValue? = nil) -> JSONValue { OpenAITools.shell(environment: environment) }
+
     public static func toolSearch() -> JSONValue { OpenAITools.toolSearch() }
 
     public static func codeInterpreter(container: JSONValue? = nil) -> JSONValue {

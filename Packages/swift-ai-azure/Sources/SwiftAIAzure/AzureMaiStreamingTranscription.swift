@@ -7,9 +7,16 @@ import SwiftAIProviderUtilities
 extension AzureTranscriptionModel {
     public func stream(_ request: StreamingTranscriptionRequest) async throws -> StreamingTranscriptionResult {
         let options = try azureAudioOptions(request.providerOptions, transcription: true)
-        guard api(for: options) == "mai" else {
-            throw AIError.invalidArgument(argument: "model", message: "Azure streaming transcription requires the MAI realtime API (providerOptions.azure.api = mai).")
+        let selectedAPI = api(for: options)
+        if selectedAPI == "openai" {
+            guard let model = openAI as? any StreamingTranscriptionModel else { throw AIError.invalidArgument(argument: "model", message: "The OpenAI transcription adapter does not support streaming.") }
+            var delegated = request
+            var merged = request.providerOptions["openai"]?.objectValue ?? [:]
+            merged.merge(options.filter { !["api", "timestamps", "transcribeStyle", "locales", "diarization", "phraseList"].contains($0.key) }) { _, new in new }
+            delegated.providerOptions["openai"] = .object(merged)
+            return try await model.stream(delegated)
         }
+        guard selectedAPI == "mai" else { throw AIError.invalidArgument(argument: "model", message: "Streaming transcription with the Azure Speech API is not supported.") }
         let rate = request.inputAudioFormat.sampleRate ?? 24_000
         guard request.inputAudioFormat.mediaType == "audio/pcm", [16_000, 24_000].contains(rate) else {
             throw AIError.invalidArgument(argument: "inputAudioFormat", message: "MAI streaming transcription requires 16-bit mono PCM (audio/pcm) at 16000 or 24000 Hz.")
@@ -40,7 +47,8 @@ extension AzureTranscriptionModel {
             request.audio.cancelFromConsumer()
             throw error
         }
-        let warnings = azureAudioUnusedOptions(options.filter { !["api", "language"].contains($0.key) }, api: "Speech")
+        var warnings = azureAudioUnusedOptions(options.filter { ["timestamps", "transcribeStyle", "locales", "diarization", "phraseList"].contains($0.key) }, api: "Speech")
+        warnings += options.keys.sorted().filter { !["api", "language", "timestamps", "transcribeStyle", "locales", "diarization", "phraseList"].contains($0) }.map { AIWarning(type: "unsupported", feature: "providerOptions.azure.\($0)", message: "This option requires the OpenAI transcription API.") }
         let session = AzureMaiTranscriptionSession(connection: connection, request: request, update: update, rate: rate,
                                                    language: options["language"]?.stringValue, warnings: warnings)
         let stream = await session.start()

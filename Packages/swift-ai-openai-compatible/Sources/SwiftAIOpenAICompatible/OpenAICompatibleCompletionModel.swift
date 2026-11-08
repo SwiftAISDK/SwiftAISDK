@@ -19,7 +19,10 @@ public final class OpenAICompatibleCompletionModel: LanguageModel, @unchecked Se
         let prepared = try body(for: request, stream: false)
         let body = prepared.body
         let metadataNamespace = metadataNamespace(for: request)
-        let response = try await config.sendJSONResponse(path: "/completions", modelID: modelID, body: .object(body), headers: request.headers, abortSignal: request.abortSignal)
+        let httpRequest = try config.request(path: "/completions", modelID: modelID, body: .object(body), headers: request.headers, abortSignal: request.abortSignal)
+        let httpResponse = try await config.transport.send(httpRequest)
+        guard (200..<300).contains(httpResponse.statusCode) else { throw config.httpStatusError(httpResponse) }
+        let response = (json: try httpResponse.jsonValue(), response: httpResponse)
         let raw = response.json
         guard let text = raw["choices"]?[0]?["text"]?.stringValue else {
             throw AIError.invalidResponse(provider: providerID, message: "No text found in completion response.")
@@ -31,7 +34,7 @@ public final class OpenAICompatibleCompletionModel: LanguageModel, @unchecked Se
             providerMetadata: openAICompatibleCompletionProviderMetadata(from: raw["choices"]?[0], providerID: providerID, namespace: metadataNamespace),
             rawValue: raw,
             warnings: prepared.warnings,
-            requestMetadata: AIRequestMetadata(body: .object(body), headers: request.headers),
+            requestMetadata: AIRequestMetadata(body: .object(body), headers: request.headers, url: httpRequest.url.absoluteString),
             responseMetadata: openAICompatibleResponseMetadata(from: raw, response: response.response, modelID: modelID)
         )
     }
@@ -50,6 +53,7 @@ public final class OpenAICompatibleCompletionModel: LanguageModel, @unchecked Se
                     }
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
                     continuation.yield(.streamStart(warnings: prepared.warnings))
+                    continuation.yield(.requestMetadata(AIRequestMetadata(body: body, headers: request.headers, url: httpRequest.url.absoluteString)))
                     continuation.yield(.responseMetadata(openAICompatibleResponseMetadata(response: responseHead, modelID: modelID)))
                     var providerMetadata: [String: JSONValue] = [:]
                     var activeTextID: String?

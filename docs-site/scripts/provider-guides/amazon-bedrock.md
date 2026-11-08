@@ -17,3 +17,14 @@ Claude Sonnet 4.6 and Haiku 4.5 retain strict tools but use the JSON-tool fallba
 Converse omits disabled thinking for Claude 3.5 and earlier, sends it for supported later models, and selects the lowest supported thinking mode with a warning when a model cannot disable thinking. Existing raw and typed effort settings survive that fallback; incompatible effort above `high` is lowered with a warning. Portable reasoning uses the closest supported effort, preferring a lower level. GPT-OSS accepts `low`/`medium`/`high`; other OpenAI-family efforts remain forward compatible.
 
 Document names are unique across user messages and tool results in one request. Duplicate sanitized names receive deterministic ` (2)`, ` (3)` suffixes within Bedrock's 200-character limit, preserving prompt-cache stability. The Anthropic invoke adapter can use native JSON output for models that reject forced tools when the schema is representable; recursive or open schemas retain the JSON-tool fallback.
+## Current Claude schemas and tools
+
+Reviewed Claude 5/5.5 families support native schemas and strict tools where the
+catalog declares support. Automatic selection requires schema preservation;
+unknown future Claude aliases retain conservative handling. Explicit
+`structuredOutputMode` continues to choose output-format or JSON-tool behavior.
+
+Named choices on supported Anthropic models retain all function tools and disable
+parallel use by default; `disableParallelToolUse: false` opts out. Other model
+families receive only the selected tool. Image `seed: 0` is preserved, and empty
+foreign assistant signature text is filtered before final prefill trimming.

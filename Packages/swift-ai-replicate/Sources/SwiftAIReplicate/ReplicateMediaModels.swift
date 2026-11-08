@@ -81,38 +81,57 @@ public final class ReplicateImageModel: ImageModel, @unchecked Sendable {
         var pollResponse: AIHTTPResponse?
         let safeIntervalMilliseconds = max(intervalMilliseconds, 1)
 
-        for attempt in 0..<maxAttempts {
+        do {
+            for attempt in 0..<maxAttempts {
+                if try replicateCompletedImagePrediction(prediction, providerID: providerID) {
+                    return (prediction, pollResponse)
+                }
+                guard let pollURL = prediction["urls"]?["get"]?.stringValue, !pollURL.isEmpty else {
+                    throw AIError.invalidResponse(provider: providerID, message: "Replicate image prediction is pending but missing urls.get.")
+                }
+                let response = try await downloadURL(
+                    pollURL,
+                    transport: config.transport,
+                    headers: config.headers.mergingHeaders(requestHeaders),
+                    abortSignal: abortSignal,
+                    trustedOrigin: config.baseURL,
+                    credentialedOrigin: config.baseURL
+                )
+                guard (200..<300).contains(response.statusCode) else {
+                    throw replicateHTTPStatusError(provider: providerID, response: response)
+                }
+                prediction = try replicateValidatedImagePrediction(response.jsonValue(), providerID: providerID)
+                pollResponse = response
+                if attempt < maxAttempts - 1 {
+                    try await delay(safeIntervalMilliseconds, abortSignal: abortSignal)
+                }
+            }
+
             if try replicateCompletedImagePrediction(prediction, providerID: providerID) {
                 return (prediction, pollResponse)
             }
-            guard let pollURL = prediction["urls"]?["get"]?.stringValue, !pollURL.isEmpty else {
-                throw AIError.invalidResponse(provider: providerID, message: "Replicate image prediction is pending but missing urls.get.")
+        } catch {
+            if abortSignal?.isAborted == true || error is CancellationError || Task.isCancelled {
+                cancelReplicatePrediction(prediction)
             }
-            let response = try await downloadURL(
-                pollURL,
-                transport: config.transport,
-                headers: config.headers.mergingHeaders(requestHeaders),
-                abortSignal: abortSignal,
-                trustedOrigin: config.baseURL,
-                credentialedOrigin: config.baseURL
-            )
-            guard (200..<300).contains(response.statusCode) else {
-                throw replicateHTTPStatusError(provider: providerID, response: response)
-            }
-            prediction = try replicateValidatedImagePrediction(response.jsonValue(), providerID: providerID)
-            pollResponse = response
-            if attempt < maxAttempts - 1 {
-                try await delay(safeIntervalMilliseconds, abortSignal: abortSignal)
-            }
+            throw error
         }
-
-        if try replicateCompletedImagePrediction(prediction, providerID: providerID) {
-            return (prediction, pollResponse)
-        }
+        cancelReplicatePrediction(prediction)
         throw AIError.invalidResponse(
             provider: providerID,
             message: "Replicate image generation did not complete after \(maxAttempts) polling attempts."
         )
+    }
+
+    private func cancelReplicatePrediction(_ prediction: JSONValue) {
+        guard let id = prediction["id"]?.stringValue else { return }
+        let config = self.config
+        Task.detached {
+            // Independent cleanup must not inherit the generation's cancellation,
+            // per-call headers or untrusted response-supplied URLs.
+            guard let url = try? requireURL("\(withoutTrailingSlash(config.baseURL))/predictions/\(encodePathSegment(id))/cancel") else { return }
+            _ = try? await config.transport.send(AIHTTPRequest(method: "POST", url: url, headers: config.headers, body: Data(), followRedirects: false))
+        }
     }
 
     private func downloadReplicateImages(urls: [String], abortSignal: AIAbortSignal?) async throws -> [String] {
@@ -335,6 +354,7 @@ private func replicateCompletedImagePrediction(_ prediction: JSONValue, provider
 
 private func replicateValidatedImagePrediction(_ prediction: JSONValue, providerID: String) throws -> JSONValue {
     guard prediction.objectValue != nil,
+          prediction["id"]?.stringValue != nil,
           let status = prediction["status"]?.stringValue,
           ["starting", "processing", "succeeded", "failed", "canceled"].contains(status),
           let pollURL = prediction["urls"]?["get"]?.stringValue,

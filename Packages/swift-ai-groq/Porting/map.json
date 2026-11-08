@@ -34,7 +34,9 @@
       "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/GroqStreamingAndTranscriptionTests.swift",
       "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/TestSupport.swift",
       "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/Weekly20261101BehaviorTests.swift",
-      "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/Weekly20261101CredentialsTests.swift"
+      "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/Weekly20261101CredentialsTests.swift",
+      "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/Weekly20261108ToolTests.swift",
+      "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/Weekly20261108URLTests.swift"
     ],
     "resources": []
   },
@@ -48,5 +50,5 @@
       "reason": "2026-11-01: integrity-verified @ai-sdk/groq 4.0.70 -> 4.0.74 source/declarations reviewed with exact matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700; focused Weekly20261101 assertions cover the published deltas and native credential settings. Existing coarse/imported mappings and earlier gaps remain unpromoted. GPT-OSS portable none maps to low with compatibility warning; exact Qwen qwen/qwen3.6-27b accepts none directly; nonreasoning families omit none with unsupported warning. Other portable effort levels use the shared nearest-supported mapping; explicit native effort remains independent. Add lazy apiKeyProvider across chat and transcription."
     }
   ],
-  "reviewNote": "M6: Groq runtime and focused upstream-derived tests own their package; HTTP construction is shared, options and wire policy remain local. Prior baselines and known gaps are retained. 2026-11-01: integrity-verified @ai-sdk/groq 4.0.70 -> 4.0.74 source/declarations reviewed with exact matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700; focused Weekly20261101 assertions cover the published deltas and native credential settings. Existing coarse/imported mappings and earlier gaps remain unpromoted."
+  "reviewNote": "2026-11-08: published @ai-sdk/groq 4.0.74..4.0.78 source, declarations and matching-release tests reviewed independently. Native URL transcription, redirect-limitation fallback and safe raw tool replay. Delta review is not a claim of whole-provider parity; existing documented gaps remain."
 }

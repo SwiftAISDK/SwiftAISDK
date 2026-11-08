@@ -33,7 +33,7 @@ import Testing
     let request = try #require(requests.first)
     #expect(request.url.absoluteString == "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions")
     #expect(request.headers["authorization"] == "Bearer replicate-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-replicate/3.0.73")
+    #expect(request.headers["user-agent"] == "ai-sdk-replicate/3.0.78")
     #expect(request.headers["prefer"] == "wait=30")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["input"]?["prompt"]?.stringValue == "cat")
@@ -140,7 +140,11 @@ import Testing
             providerOptions: ["replicate": ["pollIntervalMillis": 1, "maxPollAttempts": 2]]
         ))
     }
-    #expect(await transport.requests().count == 3)
+    // Best-effort cancellation runs independently after the polling limit.
+    // Count the create/poll sequence without depending on its scheduling.
+    let generationRequests = await transport.requests().filter { !$0.url.path.hasSuffix("/cancel") }
+    #expect(generationRequests.count == 3)
+    #expect(generationRequests.map(\.method) == ["POST", "GET", "GET"])
 }
 
 @Test func replicateAppendsVersionedUserAgentToCustomHeader() async throws {
@@ -161,7 +165,7 @@ import Testing
 
     let requests = await transport.requests()
     #expect(requests[0].headers["authorization"] == "Bearer replicate-key")
-    #expect(requests[0].headers["user-agent"] == "CustomApp/1.0 ai-sdk-replicate/3.0.73")
+    #expect(requests[0].headers["user-agent"] == "CustomApp/1.0 ai-sdk-replicate/3.0.78")
     #expect(requests[1].headers["authorization"] == nil)
     #expect(requests[1].headers["user-agent"] == nil)
 }
@@ -385,7 +389,7 @@ import Testing
     let request = try #require(requests.first)
     #expect(request.url.absoluteString == "https://api.replicate.com/v1/models/owner/video-model/predictions")
     #expect(request.headers["authorization"] == "Bearer replicate-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-replicate/3.0.73")
+    #expect(request.headers["user-agent"] == "ai-sdk-replicate/3.0.78")
     #expect(request.headers["prefer"] == "wait=30")
     #expect(request.headers["X-Request-Header"] == "submit-only")
     let body = try decodeJSONBody(try #require(request.body))
@@ -399,7 +403,7 @@ import Testing
     #expect(requests[1].method == "GET")
     #expect(requests[1].url.absoluteString == "https://api.replicate.com/v1/predictions/pred-video")
     #expect(requests[1].headers["authorization"] == "Bearer replicate-key")
-    #expect(requests[1].headers["user-agent"] == "ai-sdk-replicate/3.0.73")
+    #expect(requests[1].headers["user-agent"] == "ai-sdk-replicate/3.0.78")
     #expect(requests[1].headers["prefer"] == nil)
     #expect(requests[1].headers["X-Request-Header"] == nil)
 }

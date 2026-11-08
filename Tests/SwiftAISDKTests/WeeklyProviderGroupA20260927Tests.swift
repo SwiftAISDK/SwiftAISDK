@@ -217,11 +217,12 @@ private func weeklyProviderGroupABedrockCall(
     #expect(novaOptions["reasoningConfig"]?["maxReasoningEffort"]?.stringValue == "high")
 }
 
-@Test func WeeklyProviderGroupA20260927BedrockOpus55UsesJSONInstructionInsteadOfForcedTool() async throws {
+@Test func WeeklyProviderGroupA20260927BedrockOpus55UsesNativeStructuredOutputWithoutForcedTool() async throws {
     let schema: JSONValue = [
         "type": "object",
         "properties": ["answer": ["type": "string"]],
-        "required": ["answer"]
+        "required": ["answer"],
+        "additionalProperties": false
     ]
     let call = try await weeklyProviderGroupABedrockCall(
         modelID: "us.anthropic.claude-opus-5-5",
@@ -231,10 +232,8 @@ private func weeklyProviderGroupABedrockCall(
         )
     )
     #expect(call.body["toolConfig"] == nil)
-    #expect(call.body["additionalModelRequestFields"]?["output_config"] == nil)
-    let systemText = call.body["system"]?[0]?["text"]?.stringValue ?? ""
-    #expect(systemText.contains("JSON schema:"))
-    #expect(systemText.contains("You MUST answer with only a JSON object"))
+    #expect(call.body["additionalModelRequestFields"]?["output_config"]?["format"] == ["type": "json_schema", "schema": schema])
+    #expect(call.body["system"] == nil)
 }
 
 @Test func WeeklyProviderGroupA20260927GoogleEmbeddingOptionsSlicePreservesNullEntries() async throws {

@@ -51,7 +51,7 @@ func openAIImageDistributedTokens(_ tokens: Int, index: Int, total: Int) -> Int 
 }
 
 public func openAIImageSupportsFileInputs(_ modelID: String) -> Bool? {
-    if ["dall-e-2", "gpt-image-1", "gpt-image-1-mini", "gpt-image-1.5", "gpt-image-2", "gpt-image-2.5-flare", "gpt-image-2.5-flare-2026-09-08", "gpt-image-2.5-sunburst", "gpt-image-2.5-sunburst-2026-09-08", "chatgpt-image-latest"].contains(modelID) { return true }
+    if ["gpt-image-2.6-flare", "gpt-image-2.6-sunburst", "dall-e-2", "gpt-image-1", "gpt-image-1-mini", "gpt-image-1.5", "gpt-image-2", "gpt-image-2.5-flare", "gpt-image-2.5-flare-2026-09-08", "gpt-image-2.5-sunburst", "gpt-image-2.5-sunburst-2026-09-08", "chatgpt-image-latest"].contains(modelID) { return true }
     if modelID == "dall-e-3" { return false }
     return nil
 }

@@ -44,7 +44,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.openai.com/v1/files")
     #expect(request.headers["authorization"] == "Bearer test-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-openai/4.0.106")
+    #expect(request.headers["user-agent"] == "ai-sdk-openai/4.0.111")
     #expect(request.headers["content-type"]?.hasPrefix("multipart/form-data; boundary=SwiftAISDK-") == true)
     let bodyText = String(data: try #require(request.body), encoding: .utf8) ?? ""
     #expect(bodyText.contains("name=\"file\"; filename=\"notes.txt\""))
@@ -141,7 +141,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.x.ai/v1/files")
     #expect(request.headers["authorization"] == "Bearer xai-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-xai/5.0.35")
+    #expect(request.headers["user-agent"] == "ai-sdk-xai/5.0.40")
     let bodyText = String(data: try #require(request.body), encoding: .utf8) ?? ""
     #expect(bodyText.contains("name=\"file\"; filename=\"blob\""))
     #expect(bodyText.contains("name=\"team_id\""))
@@ -251,7 +251,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.openai.com/v1/skills")
     #expect(request.headers["authorization"] == "Bearer test-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-openai/4.0.106")
+    #expect(request.headers["user-agent"] == "ai-sdk-openai/4.0.111")
     #expect(request.headers["content-type"]?.hasPrefix("multipart/form-data; boundary=SwiftAISDK-") == true)
     let bodyText = String(data: try #require(request.body), encoding: .utf8) ?? ""
     #expect(bodyText.contains("name=\"files[]\"; filename=\"index.ts\""))
@@ -587,7 +587,6 @@ import Testing
 @Test func uploadOnlyFilesClientsKeepOptionalOperationsAndCancelStreams() async throws {
     let transport = RecordingTransport(responses: [])
     let clients: [any AIFileClient] = [
-        try AIProviders.anthropic(settings: ProviderSettings(apiKey: "anthropic-key", transport: transport)).files(),
         try AIProviders.google(settings: ProviderSettings(apiKey: "google-key", transport: transport)).files(),
         try AIProviders.deepSeek(settings: ProviderSettings(apiKey: "deepseek-key", transport: transport)).files()
     ]
@@ -607,6 +606,41 @@ import Testing
         #expect(await waitForFileStreamCancellation(probe))
     }
     #expect(await transport.requests().isEmpty)
+}
+
+@Test func anthropicFilesExposeManagedOperationsAndCancelStreamingUploads() async throws {
+    let transport = RecordingTransport(responses: [
+        jsonResponse(#"{"id":"file-1"}"#),
+        jsonResponse(#"{"id":"file-1","type":"file","filename":"data.txt","mime_type":"text/plain","size_bytes":7,"created_at":"2026-01-01T00:00:00Z","expires_at":"2026-12-01T00:00:00Z","downloadable":true}"#),
+        AIHTTPResponse(statusCode: 200, headers: ["content-type": "text/plain; charset=utf-8"], body: Data("content".utf8)),
+        jsonResponse(#"{"id":"file-1","type":"file_deleted"}"#)
+    ])
+    let files = try AIProviders.anthropic(settings: ProviderSettings(apiKey: "anthropic-key", transport: transport)).files()
+    #expect(files.supportedFileOperations == [.upload, .getMetadata, .download, .delete])
+    let uploaded = try await files.uploadFile(.init(data: Data("content".utf8), mediaType: "text/plain", filename: "data.txt"))
+    #expect(uploaded.providerReference == ["anthropic": "file-1"])
+    #expect(uploaded.filename == "data.txt" && uploaded.mediaType == "text/plain")
+    let reference = ["anthropic": "folder/id? #"]
+    let metadata = try await files.getFileMetadata(.init(file: reference, headers: ["Anthropic-Beta": "custom-beta"]))
+    #expect(metadata.providerReference == ["anthropic": "file-1"] && metadata.filename == "data.txt")
+    #expect(metadata.byteSize == 7 && metadata.createdAt != nil && metadata.expiresAt != nil)
+    #expect(metadata.providerMetadata["anthropic"]?["downloadable"] == true)
+    let downloaded = try await files.downloadFile(.init(file: reference))
+    #expect(downloaded.mediaType == "text/plain")
+    #expect(try await collectFileTestStream(downloaded.content) == Data("content".utf8))
+    let deleted = try await files.deleteFile(.init(file: reference))
+    #expect(deleted.deleted && deleted.providerReference == ["anthropic": "file-1"])
+    let requests = await transport.requests()
+    #expect(requests.map(\.method) == ["POST", "GET", "GET", "DELETE"])
+    #expect(requests.map { $0.url.absoluteString } == ["https://api.anthropic.com/v1/files", "https://api.anthropic.com/v1/files/folder%2Fid%3F%20%23", "https://api.anthropic.com/v1/files/folder%2Fid%3F%20%23/content", "https://api.anthropic.com/v1/files/folder%2Fid%3F%20%23"])
+    #expect(requests[1].headers["anthropic-beta"] == "custom-beta")
+    for index in [0, 2, 3] { #expect(requests[index].headers["anthropic-beta"] == "files-api-2025-04-14") }
+    #expect(requests.allSatisfy { $0.headers["x-api-key"] == "anthropic-key" && $0.headers["user-agent"] == "ai-sdk-anthropic/4.0.99" })
+    await #expect(throws: AIError.self) { _ = try await files.deleteFile(.init(file: ["other": "file-1"])) }
+    let probe = FileStreamCancellationProbe()
+    await #expect(throws: AIError.self) { _ = try await files.uploadFile(.init(stream: cancellationObservedFileStream(probe), mediaType: "text/plain")) }
+    #expect(await waitForFileStreamCancellation(probe))
+    #expect(await transport.requests().count == 4)
 }
 
 private func collectFileTestStream(

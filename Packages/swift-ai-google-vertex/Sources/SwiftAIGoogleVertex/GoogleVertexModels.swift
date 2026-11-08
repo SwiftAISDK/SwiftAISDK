@@ -28,7 +28,7 @@ public final class GoogleVertexLanguageModel: LanguageModel, @unchecked Sendable
         let response = try await googleGenerateContentWithContinuation(body: prepared.body, abortSignal: request.abortSignal) { body in
             try await config.sendJSONResponse(path: "/models/\(modelID):generateContent", body: body, headers: request.headers.mergingHeaders(prepared.headers), abortSignal: request.abortSignal)
         }
-        return try response.result(providerID: providerID, modelID: modelID, prepared: prepared, jsonResponseToolName: jsonResponse.name)
+        return try response.result(providerID: providerID, modelID: modelID, prepared: prepared, jsonResponseToolName: jsonResponse.name, requestMetadata: .init(body: prepared.body, headers: request.headers, url: config.baseURL + "/models/\(modelID):generateContent"))
     }
 
     public func stream(_ request: LanguageModelRequest) -> AsyncThrowingStream<LanguageStreamPart, Error> {

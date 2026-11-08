@@ -72,7 +72,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://aiplatform.googleapis.com/v1/publishers/google/models/text-embedding-005:predict")
     #expect(request.headers["x-goog-api-key"] == "vertex-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-google-vertex/5.0.129")
+    #expect(request.headers["user-agent"] == "ai-sdk-google-vertex/5.0.134")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["instances"]?[0]?["content"]?.stringValue == "hello")
     #expect(body["instances"]?[0]?["task_type"]?.stringValue == "RETRIEVAL_DOCUMENT")
@@ -166,7 +166,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://aiplatform.googleapis.com/v1beta1/projects/test-project/locations/global/publishers/google/models/gemini-2.5-flash-tts:generateContent")
     #expect(request.headers["Authorization"] == "Bearer token")
-    #expect(request.headers["user-agent"] == "ai-sdk-google-vertex/5.0.129")
+    #expect(request.headers["user-agent"] == "ai-sdk-google-vertex/5.0.134")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["contents"]?[0]?["parts"]?[0]?["text"]?.stringValue == "Say cheerfully: Hello there")
     #expect(body["generationConfig"]?["responseModalities"]?[0]?.stringValue == "AUDIO")
@@ -203,11 +203,12 @@ import Testing
     #expect(result.warnings.contains { $0.type == "unsupported" && $0.feature == "instructions" })
     #expect(result.warnings.contains { $0.type == "unsupported" && $0.feature == "outputFormat" })
     #expect(result.warnings.contains { $0.type == "unsupported" && $0.feature == "speed" })
-    #expect(result.warnings.contains { $0.type == "unsupported" && $0.feature == "language" })
+    #expect(!result.warnings.contains { $0.type == "unsupported" && $0.feature == "language" })
     let body = try decodeJSONBody(try #require((await transport.requests()).first?.body))
     #expect(body["contents"]?[0]?["parts"]?[0]?["text"]?.stringValue == "Joe: Hi. Jane: Hello.")
     #expect(body["generationConfig"]?["speechConfig"]?["multiSpeakerVoiceConfig"]?["speakerVoiceConfigs"]?[1]?["speaker"]?.stringValue == "Jane")
     #expect(body["generationConfig"]?["speechConfig"]?["voiceConfig"] == nil)
+    #expect(body["generationConfig"]?["speechConfig"]?["languageCode"] == "en")
 }
 
 @Test func googleVertexInteractionsUsesLocationScopedEndpointAndRejectsExpressMode() async throws {
@@ -364,7 +365,7 @@ import Testing
 
     let request = try #require(await transport.requests().first)
     #expect(request.headers["x-goog-api-key"] == "vertex-key")
-    #expect(request.headers["user-agent"] == "CustomApp/1.0 ai-sdk-google-vertex/5.0.129")
+    #expect(request.headers["user-agent"] == "CustomApp/1.0 ai-sdk-google-vertex/5.0.134")
 }
 @Test func googleVertexImageAndVideoUsePredictEndpoints() async throws {
     let imageTransport = RecordingTransport(response: jsonResponse("""

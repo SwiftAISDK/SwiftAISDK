@@ -1,9 +1,9 @@
 # Structured output
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/components/structured-output/
+Source URL: /components/structured-output/
 
 :::note[Development API reference]
-These declarations follow the canonical repository's main branch. Match your installed versions to the published release documentation. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for published packages and version-compatible examples.
+These declarations follow the canonical repository's main branch. Match your installed versions to the published release documentation. See [Install](/getting-started/install/) for published packages and version-compatible examples.
 :::
 
 ## Symbol counts

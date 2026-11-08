@@ -162,8 +162,7 @@ func openAIResponsesOutputContentItem(
         case "message":
             guard let itemID = item["id"]?.stringValue else { return [] }
             return item["content"]?.arrayValue?.compactMap { part in
-                guard part["type"]?.stringValue == "output_text",
-                      let text = part["text"]?.stringValue else { return nil }
+                guard let text = part["type"]?.stringValue == "refusal" ? part["refusal"]?.stringValue : part["type"]?.stringValue == "output_text" ? part["text"]?.stringValue : nil else { return nil }
                 let annotations: [JSONValue]
                 if case .openResponses = mode {
                     annotations = openResponsesURLCitationAnnotations(part["annotations"])
@@ -762,12 +761,12 @@ func openAIResponsesEscapeJSONStringFragment(_ value: String) -> String {
 
 func openAIResponsesIsTextDelta(_ raw: JSONValue) -> Bool {
     guard let type = raw["type"]?.stringValue else { return true }
-    return type == "response.output_text.delta" || type == "response.output_text.done"
+    return ["response.output_text.delta", "response.output_text.done", "response.refusal.delta"].contains(type)
 }
 
 func openAIResponsesStreamEventStartsOutput(_ raw: JSONValue) -> Bool {
     guard let type = raw["type"]?.stringValue else { return false }
-    return type.hasPrefix("response.output_")
+    return type.hasPrefix("response.output_") || type.hasPrefix("response.refusal.")
 }
 
 func openAIResponsesStreamAPIError(_ raw: JSONValue, providerID: String) -> AIError {
@@ -787,7 +786,7 @@ func openAIResponsesStreamFailedError(_ raw: JSONValue, providerID: String) -> A
     openAIResponsesStreamAPIError(raw, providerID: providerID)
 }
 
-func openAIResponsesFinishReason(status: String?, incompleteReason: String?, hasToolCalls: Bool = false) -> String? {
+func openAIResponsesFinishReason(status: String?, incompleteReason: String?, hasToolCalls: Bool = false, hasRefusal: Bool = false) -> String? {
     if let incompleteReason {
         switch incompleteReason {
         case "max_output_tokens", "length":
@@ -807,7 +806,7 @@ func openAIResponsesFinishReason(status: String?, incompleteReason: String?, has
 
     switch status {
     case "completed":
-        return hasToolCalls ? "tool-calls" : "stop"
+        return hasToolCalls ? "tool-calls" : hasRefusal ? "content-filter" : "stop"
     case "failed":
         return "error"
     case "incomplete":
@@ -833,7 +832,8 @@ func openResponsesFinishReason(incompleteReason: String?, hasToolCalls: Bool) ->
 func openResponsesStreamFinishReason(
     response: JSONValue,
     hasToolCalls: Bool,
-    mode: ResponsesRequestMode
+    mode: ResponsesRequestMode,
+    hasRefusal: Bool = false
 ) -> String? {
     let incompleteReason = response["incomplete_details"]?["reason"]?.stringValue
     if case .openResponses = mode {
@@ -842,7 +842,13 @@ func openResponsesStreamFinishReason(
     let reason = openAIResponsesFinishReason(
         status: response["status"]?.stringValue,
         incompleteReason: incompleteReason,
-        hasToolCalls: hasToolCalls
+        hasToolCalls: hasToolCalls,
+        hasRefusal: hasRefusal || openAIResponsesHasRefusal(response)
     )
     return ["stop", "length", "content-filter", "tool-calls", "error", "other"].contains(reason ?? "") ? reason : "other"
+}
+func openAIResponsesHasRefusal(_ raw: JSONValue) -> Bool {
+    (raw["output"]?.arrayValue ?? []).contains { item in
+        (item["content"]?.arrayValue ?? []).contains { $0["type"]?.stringValue == "refusal" }
+    }
 }

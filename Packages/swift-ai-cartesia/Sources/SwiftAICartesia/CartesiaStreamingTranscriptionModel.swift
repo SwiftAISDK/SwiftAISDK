@@ -50,6 +50,11 @@ public final class CartesiaStreamingTranscriptionModel:
         }
 
         var warnings: [AIWarning] = []
+        if options.turnDetection == false {
+            for key in options.turnThresholds.keys.sorted() {
+                warnings.append(.init(type: "unsupported", feature: "providerOptions.cartesia.streaming.\(key)", message: "Turn thresholds require turnDetection to be enabled."))
+            }
+        }
         if options.hasTimestampGranularities {
             warnings.append(AIWarning(
                 type: "unsupported",
@@ -81,7 +86,9 @@ public final class CartesiaStreamingTranscriptionModel:
             format: request.inputAudioFormat,
             language: options.language,
             token: token,
-            useTurnDetection: useTurnDetection
+            useTurnDetection: useTurnDetection,
+            keyterms: options.keyterms,
+            turnThresholds: options.turnThresholds
         )
 
         let connection: any AIDuplexWebSocketConnection
@@ -157,6 +164,8 @@ private struct ParsedCartesiaStreamingOptions {
     var hasTimestampGranularities = false
     var encoding: String?
     var turnDetection: Bool?
+    var keyterms: [String] = []
+    var turnThresholds: [String: JSONValue] = [:]
 }
 
 private let cartesiaStreamingEncodings: Set<String> = [
@@ -239,6 +248,20 @@ private func parseCartesiaStreamingOptions(
             }
             options.turnDetection = turnDetection
         }
+        if let value = streaming["keyterms"] {
+            guard let list = value.arrayValue, list.count <= 100, list.allSatisfy({ $0.stringValue != nil }) else {
+                throw AIError.invalidArgument(argument: "providerOptions.cartesia.streaming.keyterms", message: "Cartesia keyterms must contain at most 100 strings.")
+            }
+            options.keyterms = list.compactMap(\.stringValue)
+        }
+        for key in ["turnStartThreshold", "turnEagerEndThreshold", "turnEndThreshold", "turnEndTimeoutMs"] {
+            if let value = streaming[key] {
+                guard let number = value.doubleValue, number.isFinite, key != "turnEndTimeoutMs" || number.rounded() == number else {
+                    throw AIError.invalidArgument(argument: "providerOptions.cartesia.streaming.\(key)", message: "Cartesia turn thresholds must be numbers and turnEndTimeoutMs must be an integer.")
+                }
+                options.turnThresholds[key] = value
+            }
+        }
     }
 
     return options
@@ -272,7 +295,9 @@ private func cartesiaStreamingURLs(
     format: AIStreamingAudioFormat,
     language: String?,
     token: String,
-    useTurnDetection: Bool
+    useTurnDetection: Bool,
+    keyterms: [String],
+    turnThresholds: [String: JSONValue]
 ) throws -> (authenticated: URL, redacted: URL) {
     let path = useTurnDetection
         ? "/stt/turns/websocket"
@@ -308,6 +333,11 @@ private func cartesiaStreamingURLs(
     ])
     if !useTurnDetection, let language {
         queryItems.append(URLQueryItem(name: "language", value: language))
+    }
+    queryItems.append(contentsOf: keyterms.map { URLQueryItem(name: "keyterm", value: $0) })
+    if useTurnDetection {
+        let mapping = ["turnStartThreshold": "turn_start_threshold", "turnEagerEndThreshold": "turn_eager_end_threshold", "turnEndThreshold": "turn_end_threshold", "turnEndTimeoutMs": "turn_end_timeout_ms"]
+        for key in turnThresholds.keys.sorted() { queryItems.append(URLQueryItem(name: mapping[key]!, value: jsonScalarString(turnThresholds[key]!))) }
     }
     components.queryItems = queryItems
     guard let authenticated = components.url else {

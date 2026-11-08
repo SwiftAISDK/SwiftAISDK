@@ -1268,5 +1268,425 @@
     "name": "@ai-sdk/workflow-harness",
     "version": "1.0.170",
     "integrity": "sha512-I44oOiR92eiwAUfjlC/fEVJ5cfv/WDYjN2usLm+QxUFMn6kGOqLsdq42AE0vXg0TeHYjiAHCaDWr+UvSsbEONg=="
+  },
+  {
+    "name": "@ai-sdk/klingai",
+    "version": "4.0.79",
+    "integrity": "sha512-vpfgln4cME3wf4ow61BiYp/69hd+GUQLgP/S9shCoM7OpNosh9lCQjvpIybHDDj5/ukBRYbit4Z/a7WmuzsaEQ=="
+  },
+  {
+    "name": "@ai-sdk/hume",
+    "version": "3.0.76",
+    "integrity": "sha512-FcTtTBzOunyyBE81piHOZw3vdf+fqaQMBCf7N3wMeMR7f0d5a+mJXDh+1zMo/xHmP7l6onvDccKMDxlzNlg4bA=="
+  },
+  {
+    "name": "@ai-sdk/typesafe-ai",
+    "version": "3.0.35",
+    "integrity": "sha512-vmqj3uCrmlR+oUI1DMgxT7n7P8LmB11FSl4i5ErGUqMrnp7PSVw3rD0A8oxNHezNU1zBvX0b8gdY/50EgiiCMA=="
+  },
+  {
+    "name": "@ai-sdk/topaz",
+    "version": "3.0.23",
+    "integrity": "sha512-yy/LIQEmAJAVxxXHQjrCSGlcevHlToZu1Hqvpa483y1syR1iW5bIZ0f4l2dUo56sN/zwUI2Rh2KI7jGXFbmYdw=="
+  },
+  {
+    "name": "@ai-sdk/google",
+    "version": "4.0.114",
+    "integrity": "sha512-8LHlrbu7FFYjQAXCmg60dfc619zu7GhPTTMSs+tLjGh+aFHAFp3HqxGuCQ9zqgLywu+h1bDOrZgizCkExGecjA=="
+  },
+  {
+    "name": "@ai-sdk/gladia",
+    "version": "3.0.77",
+    "integrity": "sha512-q6iEpMZikLbk+f4DA1T3cCaOlG6sFgm/R2L0VxY0mdM4Mls+OoeAH/EjTtEzfHAXVvN7HRAKp9V31eofZk0wUA=="
+  },
+  {
+    "name": "@ai-sdk/fish-audio",
+    "version": "3.0.54",
+    "integrity": "sha512-dkMkOzezdt61PtneA9g9Qrha7yojVwuCMluu0Pazk9Vp5QJS91KNKr2MBig8hhr7sE2w+GhDVVQiFhF3TZ4Klw=="
+  },
+  {
+    "name": "@ai-sdk/cerebras",
+    "version": "3.0.87",
+    "integrity": "sha512-0UvtQOu5rp8qtrtWKO+sckC56WGro1KxhGbvBwGGna6EOITi4cKmMavfjcXfupb4Pph+0IHZBQ8zfB7zYIeNpQ=="
+  },
+  {
+    "name": "@ai-sdk/deepinfra",
+    "version": "3.0.87",
+    "integrity": "sha512-AJnsIoPIHbG0VAjp7R/DFY0XWSANkzY/aiw7yD5wWjCSnX72z6Ms/GYBlZExRwTwbvBNeoGvmOxMEp/pbPVowQ=="
+  },
+  {
+    "name": "@ai-sdk/azure",
+    "version": "4.0.119",
+    "integrity": "sha512-8HZsSqhuIpNUakRHvaI7SY3BqMQ5iv0zOfK/uk+idcJREvJPCNvGa7Rn5vMlxlYi2zcALdAKQ9GgysDMMh3J6w=="
+  },
+  {
+    "name": "@ai-sdk/togetherai",
+    "version": "3.0.88",
+    "integrity": "sha512-SqaWH2iUqzK7UGcyYcVXTz2cjpDKfcD0rOI+Dywx0WKl6MT1IG5q/aJ/w66ZASGQyjZGLc1MS8EujZxPP/y6RQ=="
+  },
+  {
+    "name": "@ai-sdk/moonshotai",
+    "version": "3.0.87",
+    "integrity": "sha512-eriP1ek/ukDugE5xgTIUoBD4k+ydvm0ZfS1A4Tn38HNX7dQBGb2lFu6BHNwYvTgGB8D6EkNOz/NP6Y4il8jHSQ=="
+  },
+  {
+    "name": "@ai-sdk/fireworks",
+    "version": "3.0.90",
+    "integrity": "sha512-C0xpFI1DYfaMoRKZklubckkubXxhtU9Gxs5wMF9YGbPpRwHSnkzEb21okgXPapDzxCLaeF9qh8MTr7+nbOoTcQ=="
+  },
+  {
+    "name": "@ai-sdk/google-vertex",
+    "version": "5.0.134",
+    "integrity": "sha512-bbQl1s/iWFdoy/AsoaiyCFxsF6HqDZQAzgO3d7zBew/dlGvhH7IO2Ud6LrbRE1f7JxIWJIKX/LAevWUAKN6rdQ=="
+  },
+  {
+    "name": "@ai-sdk/gateway",
+    "version": "4.0.138",
+    "integrity": "sha512-7a/LGqioUyU2CmjRjMwnX4WR5V4vP3+YdPZEAbh7CH9OXf1GcPSsiySsHxNbqiDlDnL+KdqPvWeipIR7u/VFHA=="
+  },
+  {
+    "name": "@ai-sdk/xai",
+    "version": "5.0.40",
+    "integrity": "sha512-Qbvoen0jqa5NnQdBJOy+57Wu4PVUck0KratXDFrsdM06gyeeKqGUstU+wzytsD8dqe2lH3wXG9D6ZNQmb+AcMw=="
+  },
+  {
+    "name": "@ai-sdk/mistral",
+    "version": "4.0.81",
+    "integrity": "sha512-Ac/XEI2VEfyOet7DKTzBbuCkj0+zirX0Vszo2+E2YwQS5M9FKOWeeJ0MXTEBv5C5+UFhLAvAntMjgTU5ADJJLw=="
+  },
+  {
+    "name": "@ai-sdk/mcp",
+    "version": "2.0.93",
+    "integrity": "sha512-Jo9NZNfpDVYUhrq/FkFo+AVQJpoFo8YHOfkgjvY4VxJ00njb3Pu129S6AYcjdcelOZSJ10ASJM6T06/oGslGTw=="
+  },
+  {
+    "name": "@ai-sdk/provider-utils",
+    "version": "5.0.76",
+    "integrity": "sha512-76QcCmVtSunSAbQBJtgQTTE8e+Yaz4rJJe1MRWnJ3GAQYUvNPHJejKx4jZTbhGGTdSSLaYcMBT62SISNgnGq9w=="
+  },
+  {
+    "name": "@ai-sdk/cohere",
+    "version": "4.0.78",
+    "integrity": "sha512-qhM+PT8PQ95AkaWsXi8Zbe9PEC6HEwvtxYjJ4Y1E5/a6gk8XVivl/AZIk8QE1+hWAnnAYSu5k79e7VEM9icaWA=="
+  },
+  {
+    "name": "@ai-sdk/fal",
+    "version": "3.0.78",
+    "integrity": "sha512-7WGYKRMb8ZZ7ZCmWf+CDB3/1PGiJ2thj8mkiGR0TeKXEzQRimeE2WmXl6YlxPuhtjdIgODvoWgngFTp5jXwtVQ=="
+  },
+  {
+    "name": "@ai-sdk/prodia",
+    "version": "2.0.78",
+    "integrity": "sha512-Sc+2ymsoFfUYKMjaTzFUeX9le6YtGPEcmWFVAJNjbpCUV/eRkoowemwlwyb5fsske1QPoNUV0kfcwPDQ38X8QQ=="
+  },
+  {
+    "name": "@ai-sdk/deepgram",
+    "version": "3.1.48",
+    "integrity": "sha512-65igB58P8Jy4TEtI00uC3QaJYSfuPrFU0KIrMU+loABxWNoHJJBVfDqct3xCPTT22z4diGiPOWGGcyMNSJSgNQ=="
+  },
+  {
+    "name": "@ai-sdk/bytedance",
+    "version": "2.0.80",
+    "integrity": "sha512-0esNLzlz0OOKR/XKuSs6KfhiQYwO7Ae53vytHUNZYFm5WSMe2tLZ+eyLebUQlDzcpQtCApMcxWWgc3aKnaE3gA=="
+  },
+  {
+    "name": "@ai-sdk/provider",
+    "version": "4.0.37",
+    "integrity": "sha512-4uPgZ3qiX/JaQFr0dQoibUzHImZit9u05ro2BxGUnJwU4fV28BOAbKUa2OjQvqtM1tMac3bTKkaXdyzGovQXqg=="
+  },
+  {
+    "name": "@ai-sdk/voyage",
+    "version": "2.0.77",
+    "integrity": "sha512-3VwZp/u93etmV2qIUr2MMy+EGbpIs9kycBfVdFBIVZC9yC60BueyU7CCGObmHGn/akLgNdTt2x6EiuMPKFSeWQ=="
+  },
+  {
+    "name": "@ai-sdk/perplexity",
+    "version": "5.0.28",
+    "integrity": "sha512-I/sJuOG1gYzOuHJWqXqNzYpboRwS4vMUqWuje+Jzg0HbdgZY2AeAcTlrQadetVnBSJoXKG4B0hDirexNVwjmrA=="
+  },
+  {
+    "name": "@ai-sdk/luma",
+    "version": "3.0.78",
+    "integrity": "sha512-37avUzniTzE3uxwM0XP5j6gxs/sOi0inbXpuT7smjzBvWpHpCf+zZGJUTl0Cdvbmc3Bi4swOXRXVnwLcAW7KRw=="
+  },
+  {
+    "name": "@ai-sdk/deepseek",
+    "version": "3.0.81",
+    "integrity": "sha512-oaW8zX9NxdyTkL/f6fxePmMK9uYoaE9ZgJFhGTag+D+evofzTyYYGNoVabV++dXIlYmhMOE+mfAPApApjnrBrw=="
+  },
+  {
+    "name": "@ai-sdk/openai",
+    "version": "4.0.111",
+    "integrity": "sha512-r6aLB/7MlBlD4c/Ep7oAam7NbEDzShFXAmz68DyFj+JTIPvWR6Il8mPI2yw82kCtxeXLbL48dW+8p/IQANKoWQ=="
+  },
+  {
+    "name": "@ai-sdk/elevenlabs",
+    "version": "3.0.81",
+    "integrity": "sha512-v5e7baVtX8S5VTiSEPHFav+lsAuhBpFiWJK60y9X2sN0f73penjIj8Z1HCqp8bwtPkRo6HJeQhZ8ZZzwZ5Sw7Q=="
+  },
+  {
+    "name": "@ai-sdk/huggingface",
+    "version": "2.0.87",
+    "integrity": "sha512-YGLl1AN5jUUT21VqPt36iE0F4LYvz2KrzSTtovRR/lYUAYePtQQIIo98x3UXR0nfg5nYyb7CxyUAezpYgiZhhw=="
+  },
+  {
+    "name": "@ai-sdk/anthropic",
+    "version": "4.0.99",
+    "integrity": "sha512-N5VA8soxdvb+eX5jKs7g+a0RahCXNnvnzT96/Hiqm+LxoLFO2U8dSYhWKrQjG1i04LM/itp8vCVl7RCn6Kvohg=="
+  },
+  {
+    "name": "@ai-sdk/assemblyai",
+    "version": "3.0.77",
+    "integrity": "sha512-8YdQP6/LDm0+i/oSrGD2F5sS/68BgJUWTYYU9ZcTU5VjvD/d+XYy6mEkGrDRX9gHwwjoHZ3r0jLAzSYDhj5Sxg=="
+  },
+  {
+    "name": "@ai-sdk/baseten",
+    "version": "2.1.65",
+    "integrity": "sha512-shlKxcU1GXT0IKqu39e1F2WDTP67JTqIuhG/HHyWfMcgrK6dLGiFOE+WaRSDGE0veyfklqbNZdyt/UyFpUFFSQ=="
+  },
+  {
+    "name": "ai",
+    "version": "7.0.165",
+    "integrity": "sha512-cEeORsLF+9+fNzvo4nQo9hxgQoEfupjc9Xmq6OM2NGUwQQQdkHxByBdFoqnNfBE0H+qwhGQaZejvbCFFD84tBA=="
+  },
+  {
+    "name": "@ai-sdk/zai",
+    "version": "3.0.49",
+    "integrity": "sha512-6aewCWwHKm4o6iw9WHbWFVdBRMTE7kDI9JYGORBv9TF7L1rb7vAQPx32D0GU0NkzekjZqTcp98sGO1Fjd9x3gQ=="
+  },
+  {
+    "name": "@ai-sdk/heygen",
+    "version": "3.0.19",
+    "integrity": "sha512-Sj+deqYQjc6mN8oxwP81Nwkhup997TRohx8nqZgHMBLblly6CswRCE3AlGZmRB79ISQ8GfKOfg1YtNkU0yTIKw=="
+  },
+  {
+    "name": "@ai-sdk/alibaba",
+    "version": "2.0.85",
+    "integrity": "sha512-68eVWQCTozBYknLCz8PPY9sHfmWC+L4SAR2u04g8Dgak7Be40tccAijz675pdOAlDfXrBVYCPlk4MLxomCP+KQ=="
+  },
+  {
+    "name": "@ai-sdk/amazon-bedrock",
+    "version": "5.0.135",
+    "integrity": "sha512-3iP20eXI5JaWJZCV/dKMBsAbhTtz+6rHpkm2KP6OF5tQqgpQkI/UldOpCmGDEUJuyAIHy40fA3RJEEdtUvqCrg=="
+  },
+  {
+    "name": "@ai-sdk/replicate",
+    "version": "3.0.78",
+    "integrity": "sha512-bPihHZ37quu6sf2HDg4ve+BCHC7920cbnSsBCWzwynAiKlqZkZqIDy3uNE56bWsTfO/EkkE8l0FW/o2EE85kmQ=="
+  },
+  {
+    "name": "@ai-sdk/minimax",
+    "version": "3.0.76",
+    "integrity": "sha512-EQQ+9I2eixP3sinf1IQGR5c7Vdko7Tl8uRbjZTKrht8oAKe91sB+l4B4FaBpgfXL36WdXUyKHoKeEptLi4f20A=="
+  },
+  {
+    "name": "@ai-sdk/anthropic-aws",
+    "version": "2.0.92",
+    "integrity": "sha512-FHBZKihin6Ddj65gwDVtazlWXQQa0Ypixdakmw3KEDQzNu79i47yUUY+g6LDYLPZnLhjDkL+MOSyhe6O530M+A=="
+  },
+  {
+    "name": "@ai-sdk/groq",
+    "version": "4.0.78",
+    "integrity": "sha512-MphM4VQICkecl9hLDjQb3R9l7wdRk2VbbGzlvnLTdHmBT1btwFj0gZSbBb+ePQk1J3GIviQKyAYRwPSq4Aizqw=="
+  },
+  {
+    "name": "@ai-sdk/openai-compatible",
+    "version": "3.0.87",
+    "integrity": "sha512-8eODsrV/DKW9KYoVXi1AhATGitZ1ANZrA5poa192EHUWCmrNjWL6fW7ymVQx+Svx7WtAGJcU+5hlxTG58zDzGw=="
+  },
+  {
+    "name": "@ai-sdk/cartesia",
+    "version": "3.0.71",
+    "integrity": "sha512-YWs9rV4e/2dYIInON31FRsRM46lg7Vx7huFnj7An3Mqzhd5VbG/W4HvPgij3INvs5QOEVmr0BDzYFIHxeRlO6g=="
+  },
+  {
+    "name": "@ai-sdk/gmicloud",
+    "version": "3.0.58",
+    "integrity": "sha512-aZ9zEv3dB3AplAuPKwDXHnf2O/NLfVeCvaG2X/XQhU3Sp0/yuw7H2nX4fSYzuymlmCH/bggS9bTQ+PZyfvp9pw=="
+  },
+  {
+    "name": "@ai-sdk/black-forest-labs",
+    "version": "2.0.79",
+    "integrity": "sha512-glGZxu+Tz/tGczFKn4vQL47WzO8GPY3Sc1WKDL4v/RoyhDtROdSTSijHago0+zNTfTUj0Wf1bn/NWcAkD/sSjA=="
+  },
+  {
+    "name": "@ai-sdk/revai",
+    "version": "3.0.76",
+    "integrity": "sha512-YlQg5O9EgmU9taY2d8ukqVXalVdklxbhiX9Lkw5MjLO2tWJmxHxB5IT3vcIA4uL7p/joRzYiPoyZB4666I6xJQ=="
+  },
+  {
+    "name": "@ai-sdk/quiverai",
+    "version": "2.0.78",
+    "integrity": "sha512-8xEaVPON1XCIrXuh6lz1IMCKVvVTnu2zRL77cEPN6rbQt1AKMRpYevy1lRuItb2CX1SCWM5uFb+bb//PrfJEkQ=="
+  },
+  {
+    "name": "@ai-sdk/react",
+    "version": "4.0.169",
+    "integrity": "sha512-RAJImk2l6BCMI4MOVEvNLCVi2o2adJBiXhqCpZ50TOc7YL9sk+RB6U9uYYGpsJ9Ap00S36Uz2GbjPYArWJFmUw=="
+  },
+  {
+    "name": "@ai-sdk/open-responses",
+    "version": "2.0.82",
+    "integrity": "sha512-Da3TmSK/qW3LzwA7haM31hRi45IP+HT2QQAmnrIEA1WGjj/6bH0qBvThXBXFi+aMjaOmOZ962X5wN4+38/b40Q=="
+  },
+  {
+    "name": "@ai-sdk/parallel",
+    "version": "3.0.4",
+    "integrity": "sha512-T+lzIkF44o2eY8pxSgxhikiSIE2DlmtaINf3ysK0u3NVPFcA3ItlWJHm5Rp1GUaG/j5XHU45zt9pX5DZP+mmiQ=="
+  },
+  {
+    "name": "@ai-sdk/angular",
+    "version": "3.0.165",
+    "integrity": "sha512-NKPDuLupYmuJosBRHPWiI5sxqxackTVN4Yh9u0aZ6rdqAxz2bqFMlBOo4ZT+gRl0px5oYom1Z00lnASHVFcSAg=="
+  },
+  {
+    "name": "@ai-sdk/code-mode",
+    "version": "1.0.122",
+    "integrity": "sha512-YnPLQJAsUtTBRmjIZjkKgSiQBQtmPHUbwQMO254xm6LOgA4dfXTt3VmbA42USX0pO014H0OWBf7Z0QbBUR5fww=="
+  },
+  {
+    "name": "@ai-sdk/codemod",
+    "version": "4.0.4",
+    "integrity": "sha512-jLClDeLmQHFlU0munQKsYyTk3ELIYWLH1VLuiA92K9tn7vgTHELm+eAoUb/+aGS9+GIi3jMav4XwKsIRqbfAgA=="
+  },
+  {
+    "name": "@ai-sdk/devtools",
+    "version": "1.0.68",
+    "integrity": "sha512-DXvfxITyAzVQ8UVhTjTDs6d3TlySh2cABZ5tv8sQEoVFoSplUALbUXaTVz60yAB04x8PPHT+O6YoCUZD1Ah24w=="
+  },
+  {
+    "name": "@ai-sdk/harness",
+    "version": "1.0.176",
+    "integrity": "sha512-WMieG9UUlniznirYD6Ebu5GDPG2KHmnWKM1XbcMWV9P3OxwNxoouMEZ+wpWZAE0Wk1f0gNdxIJDaAtNtBU6a5w=="
+  },
+  {
+    "name": "@ai-sdk/harness-acp",
+    "version": "1.0.116",
+    "integrity": "sha512-3x7Zk6nf93xsdTJzyIwr8+8FKL1dKUfD2mC8byOghZp9A9eopbFwAGR028omnnWaOlUdg8uWVkG9UBRIhCPxEg=="
+  },
+  {
+    "name": "@ai-sdk/harness-claude-code",
+    "version": "1.0.180",
+    "integrity": "sha512-VzNXfR+CkoQTJYr9ImMc+JMUHaXg/MXG1mfYDzlwxDxnqM+/2MqXtRtjZ/ifzoaFH00hXo5YXGr6YMYjgmAE8A=="
+  },
+  {
+    "name": "@ai-sdk/harness-cline",
+    "version": "1.0.104",
+    "integrity": "sha512-eE0oRlB0CZEBrjQfYy2fIGuQRQpgmvwBmQ9iwp1Fnk9TLQnjQ8CfvvSCuqU/xsNndI+T0UGYDI93eGMgBkqRmA=="
+  },
+  {
+    "name": "@ai-sdk/harness-codex",
+    "version": "1.0.178",
+    "integrity": "sha512-no6jHuvOpQnSyTWiumaYbZa03cX/tuiRYkUjZt1VGjpDi4QwgcLnjO+1faovcw6LxqwBGonzz6SkhGI3zk1+WQ=="
+  },
+  {
+    "name": "@ai-sdk/harness-cursor",
+    "version": "1.0.91",
+    "integrity": "sha512-BJW8d6VY0BJ5tNk/2C8N383gptJw1z59skMJz1OTD0cHFJbtjiwYwWQvy53y+lACV+5qFK9MiROiNx1xsYut0g=="
+  },
+  {
+    "name": "@ai-sdk/harness-deepagents",
+    "version": "1.0.176",
+    "integrity": "sha512-zDf8qqPCFeq2AbE7Ja6IsJzaKE0pQ7biINz3Oe88mCn0MwRTxjsMKw0bUDmqdB+e2zeh6+yVEiO+i4yZm4+eHA=="
+  },
+  {
+    "name": "@ai-sdk/harness-fx",
+    "version": "1.0.92",
+    "integrity": "sha512-ji6HR8DnpEVHMMUTTAnso0MJqRdwWJ9YybEe+g/B/d3c7xGhH0+J98SJ7aBubQ6a9wmZCQhq8aNvdmTuqhWmow=="
+  },
+  {
+    "name": "@ai-sdk/harness-github-copilot",
+    "version": "1.0.73",
+    "integrity": "sha512-GfFdsZ8EuZizbRTAhTkwmpRVNdNXMC0AmLRf2JE+PM89rVkdeivX4dDx7r1fTggg63MzvwQ5p6N8y4m8Nlx8Cw=="
+  },
+  {
+    "name": "@ai-sdk/harness-grok-build",
+    "version": "1.0.115",
+    "integrity": "sha512-oSYI+3q6HExS/8xXs1A0ogvXlQiW7s4dnu32+8cYQn3U+mGhYsUrTIyGabPKSdXX6ROviQsQHgqWz0HUHuzrDA=="
+  },
+  {
+    "name": "@ai-sdk/harness-opencode",
+    "version": "1.0.179",
+    "integrity": "sha512-8mx5DzIAQrM7EPQnVyhAtP2NwyCFXCo6xHrnPZO2733e0ZtIMM14Ub1F6wEkqG9zUlIb9PTQI5U/jEiYXOlyZw=="
+  },
+  {
+    "name": "@ai-sdk/harness-pi",
+    "version": "1.0.179",
+    "integrity": "sha512-iyPf10fmxa+U9ItTe8Jtm6skcQxR6ha2OYHIvZaeRl812Wu5sjLnSd0pi/AzL6bqDZNxcl2IZL5vDDaWlP8lkQ=="
+  },
+  {
+    "name": "@ai-sdk/langchain",
+    "version": "3.0.165",
+    "integrity": "sha512-qPtVQvNPxS81I8l+AtI9tumItaXPUmMQrvKMWQ6OrpBZWwS2TC5f6A5PQOr70ujawbcA+9K+Fr0JoLsqaAJ2KA=="
+  },
+  {
+    "name": "@ai-sdk/llamaindex",
+    "version": "3.0.165",
+    "integrity": "sha512-mqXlBiVv/x/C41Bp8Ab0joLmJ9wUmTpirCeV1Ip6nhRKrIEqfSK82+q6RCg/RyN9FIXNT/+DnBuWSAL5xSQoGQ=="
+  },
+  {
+    "name": "@ai-sdk/otel",
+    "version": "1.0.165",
+    "integrity": "sha512-oNxM0Us0u03hKpN9gToj09cnjpWa6EuntPii9IA6MDGH+Q9zinHWP8G2hvPGfz8mY/2BVT/hkJPXw6eP32hIaA=="
+  },
+  {
+    "name": "@ai-sdk/policy-opa",
+    "version": "1.0.165",
+    "integrity": "sha512-UJ7oHHPqvBailQ1QfFM5zoAi7BMprvAIF1T0zgSL9BulkOK3b89Lb+gF1opHWXX0KsCCl/ZxmmndthqJjdcEFg=="
+  },
+  {
+    "name": "@ai-sdk/rsc",
+    "version": "3.0.165",
+    "integrity": "sha512-gsQVEwRTQDjoOgl49qNu+aaVXaf+JvuEQoYvuLCH2TJXAm7qZljK3v3YHR8lcOMV6epf+QDBb3YuhyAhrKlVgA=="
+  },
+  {
+    "name": "@ai-sdk/sandbox-just-bash",
+    "version": "1.0.176",
+    "integrity": "sha512-GMUO7IkdmdKacEgYm0hh5AFg3aPQ5CjIgpjqZb+P5RdA42vOsMukQbRePK1YQMpFq0v1INk3xTufPr5g1lxvCg=="
+  },
+  {
+    "name": "@ai-sdk/sandbox-vercel",
+    "version": "1.0.176",
+    "integrity": "sha512-M60KaTVKHnYb+ZnT0XS9XUcLWXqVHJDBvhXaj6otUZYBYig0KwFM8HkrPkySiDf0ZTbPY5VhK+lR7kCOXysJ0w=="
+  },
+  {
+    "name": "@ai-sdk/svelte",
+    "version": "5.0.165",
+    "integrity": "sha512-3hWHYGBviNHLbb4VEnXSI1K88SRYJBSn6qfMDP6YueHHYydZLZoadv+wW4opH3s3r5hE1ZcSarv5eogGsl7BFA=="
+  },
+  {
+    "name": "@ai-sdk/tool-bash",
+    "version": "1.0.19",
+    "integrity": "sha512-ZEQVgJfdZhkr1VFLY7Yg5SQGtVX7FEvEprQOg+cWxH/j/NXNC+7olxHWQ2DWQrT15ilcg2ZASzJLm9nDqVQB2A=="
+  },
+  {
+    "name": "@ai-sdk/tool-web-fetch",
+    "version": "1.0.15",
+    "integrity": "sha512-ceRCRCVjdwc6C9637hJFBD1EDHlTSnb9ijCwT+nu7tJ5qLh4INVte02kXeGa4REyuyCcCwK67uNIN4d14frluA=="
+  },
+  {
+    "name": "@ai-sdk/tui",
+    "version": "1.0.166",
+    "integrity": "sha512-c4l7XQum5JaPZJP2Y4N/V17k3D4y8qdH+m1lprH2NMUrEdv/O+t6uMzkA2tqlcyb540MHZBMe+fF0lQgknE+0w=="
+  },
+  {
+    "name": "@ai-sdk/valibot",
+    "version": "3.0.76",
+    "integrity": "sha512-afJ4En+DeK5KR/mrAdL5C+g4EbsiTWWSfghwgfg8NtIViMX7ildVPUZW36ohjH4D0f3v8pwFeoZprkPTRj8Gxw=="
+  },
+  {
+    "name": "@ai-sdk/vue",
+    "version": "4.0.165",
+    "integrity": "sha512-HOCvjLE90nm9mnJOFgLuVOSotUxRwD21Y8pDYVpT1GwD1YxT5M1U71wYH44xWnqeiXIq9qfwnJNpH2FuSZ6b0Q=="
+  },
+  {
+    "name": "@ai-sdk/workflow",
+    "version": "2.0.97",
+    "integrity": "sha512-mWkfPgPd3RXWRiEgEM/T2TE/hSmiLQ1uBt4OxBRK5QpPyavpqzTX7fh6FI6IJtN5MCeL1GglRQY8+mV43kLB5Q=="
+  },
+  {
+    "name": "@ai-sdk/workflow-harness",
+    "version": "1.0.176",
+    "integrity": "sha512-lhLRsDbgzTSopDzPsc+9PSkija7nVF953lFEvyf4Xcm59cLR5IFVqe9pcjoexMiWcdgM8C5tZfARzpMZQjD/Sg=="
   }
 ]

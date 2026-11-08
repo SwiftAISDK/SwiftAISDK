@@ -9,7 +9,7 @@ and provider behavior belongs in focused tests.
 The current snapshot versions below are generated from `Porting/upstream-lock.json`;
 parity explanations remain hand-authored.
 Implementation-sensitive UI/chat items are also checked against npm source
-snapshots, currently `ai@7.0.159`, `@ai-sdk/provider@4.0.35`, `@ai-sdk/provider-utils@5.0.72`, and `@ai-sdk/react@4.0.163`.
+snapshots, currently `ai@7.0.165`, `@ai-sdk/provider@4.0.37`, `@ai-sdk/provider-utils@5.0.76`, and `@ai-sdk/react@4.0.169`.
 
 References:
 
@@ -25,6 +25,25 @@ semantics or a whole-facade retention bound. The offline OAuth migration example
 exercises the existing published MCP 2.0.81 binding contract. See
 `PostReleaseRepairAudit.md` and `DownloadSecurity.md` for current evidence and
 compatibility details; older dated audit sections retain their historical state.
+
+## 2026-11-08 Native delta
+
+The reviewed delta adds per-task steering queues and delivered-message stream/UI
+history, keepalive pings, low-level endpoint metadata with high-level origin
+sanitization, telemetry content-capture filtering, native URL transcription and
+word timings, caller-storage uploaded-video descriptors, and video/reranking/
+decision capability sections. Tool approval metadata is rebuilt from current
+trusted definitions. Shared provider-option resolution and tool-alias precedence
+are explicit. Realtime usage and intent overloads preserve existing event case
+arity; exhaustive language-stream/UI switches must handle the new cases.
+
+Default downloads also reject HTTPS-to-HTTP redirects. Swift Data/JSONValue
+semantics already avoid JS cross-realm, BigInt and reference-cycle behavior; the
+new JavaScript binary-field scanner memory optimization and durable workflow/
+Node tracing hooks have no matching native product surface. Native buffering and
+browser transport limitations remain explicit. See
+[the package audit](WeeklyUpstreamAudit20261108.md) for matching-release evidence,
+fixture dispositions and the completed verification/publication state.
 
 ## 2026-11-01 Native delta
 
@@ -734,7 +753,7 @@ Port decisions:
 | `generateSpeech` | `covered` | `AI.generateSpeech`, `SpeechRequest` | Native model family exists. |
 | `experimental_generateVideo` | `covered` | `AI.generateVideo`, `AI.startVideo`, `AI.getVideoStatus`, `VideoGenerationRequest`, `AsyncVideoModel`, `VideoGenerationPollOptions` | Stable Swift naming preserves unary generation and adds directly persistable V4 start/status, polling, webhook waiting, cancellation, metadata merging, logical-start idempotency, and count splitting. BFL, Fal, ByteDance, and Gateway are vertical adapters; Fal and Gateway support native callback URLs while BFL and ByteDance fall back to polling with a warning. |
 | `startTextBatch` / `getBatchStatus` / `getBatchResults` | `covered` | `AI.startTextBatch`, `AI.getBatchStatus`, `AI.getBatchResults`, `BatchLanguageModel` | Durable text batches expose persistable references, optional completion webhooks, normalized status/counts, full result content, and complete per-item terminal streams through Anthropic Messages Batch, OpenAI Responses Batch, Gateway Batch V4, and xAI Responses Batch. Gateway forwards webhooks; the direct providers warn that they are unsupported. |
-| `Experimental_RealtimeModelV4` | `covered` | `AIRealtimeModelV4`, `AIRealtimeSession`, `XAIRealtimeModel`, `OpenAILiveModel` | Provider-neutral turn-based and continuous duplex lifecycles with normalized audio/text/tool/delegation/usage/error events, aborts, and confirmed close behavior. xAI provides turn-based sessions and OpenAI Live provides authenticated continuous server WebSockets; browser WebRTC, provider-backed Responses delegation, non-Live OpenAI Realtime, and Google Realtime remain deferred. |
+| `Experimental_RealtimeModelV4` | `covered` | `AIRealtimeModelV4`, `AIRealtimeSession`, `XAIRealtimeModel`, `OpenAILiveModel`, `GoogleRealtimeModel`, `GatewayRealtimeModel` | Native turn-based and continuous WebSocket lifecycles with normalized audio/text/tool/delegation/usage/error events, aborts and close behavior. Google and Gateway support ephemeral-client and trusted-server connections with per-session parsing and usage snapshots. Browser WebRTC, provider-backed Responses delegation and non-Live OpenAI Realtime remain deferred. |
 | `Output` | `covered` | `Output.text/object/array/choice/json`, `AI.generateText(... output:)`, `AI.streamText(... output:)`, existing object-generation facades | Swift now mirrors the v6-style `generateText/streamText + Output.*` entry point while still keeping the older Swift-native object/array/enum/json facades. `Output.object` partial streaming uses `JSONValue` because Swift has no automatic `DeepPartial<T>`. |
 | `Agent` interface | `covered` | `AIAgent`, `AIAgentCallOptions` | Swift-native agent protocol mirrors upstream `version: "agent-v1"`, optional `id`, tool exposure, and generate/stream calls over model messages or prompts. |
 | `ToolLoopAgent` | `covered` | `AIToolLoopAgent`, tool-loop overloads on `AI.generateText` and `AI.streamText` | Reusable agent object wraps the existing Swift tool loop. Default `maxSteps` is 20 to match upstream `stepCountIs(20)` behavior. |

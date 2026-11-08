@@ -142,11 +142,34 @@ import Testing
     #expect(utterances[1]["speaker"]?.stringValue == "speaker-1")
 }
 
-@Test func WeeklyRemainingProviders20260913GladiaRejectsMalformedExpandedUtterances() async throws {
+@Test func WeeklyRemainingProviders20260913GladiaPreservesUnknownExpandedUtteranceFields() async throws {
+    let final = #"{"status":"done","result":{"metadata":{"audio_duration":1},"transcription":{"full_transcript":"future","languages":["en"],"utterances":[{"start":0,"end":1,"text":"future","speaker":true,"words":"future-shape","extension":{"future":1}}]}}}"#
+    let transport = RecordingTransport(responses: [
+        jsonResponse(#"{"audio_url":"https://audio.example.com/file.wav"}"#),
+        jsonResponse(#"{"result_url":"https://api.gladia.io/v2/pre-recorded/result/job-future"}"#),
+        jsonResponse(final)
+    ])
+    let provider = try AIProviders.gladia(settings: ProviderSettings(apiKey: "key", transport: transport))
+    let result = try await provider.transcriptionModel("default").transcribe(AudioTranscriptionRequest(audio: Data("audio".utf8), mimeType: "audio/wav"))
+    #expect(result.text == "future")
+    #expect(result.segments == [.init(text: "future", startSecond: 0, endSecond: 1)])
+    #expect(result.providerMetadata["gladia"] == (try decodeJSONBody(Data(final.utf8))))
+    #expect(result.providerMetadata["gladia"]?["result"]?["transcription"]?["utterances"]?[0]?["speaker"] == true)
+    #expect(result.providerMetadata["gladia"]?["result"]?["transcription"]?["utterances"]?[0]?["words"] == "future-shape")
+}
+
+@Test(arguments: [
+    JSONValue.object(["start": "bad", "end": 1, "text": "bad", "speaker": true]),
+    .object(["start": 0, "end": "bad", "text": "bad", "speaker": true]),
+    .object(["start": 0, "end": 1, "text": 17, "speaker": true]),
+    .object(["start": 0, "end": 1, "speaker": true])
+])
+func WeeklyRemainingProviders20260913GladiaRejectsMalformedExpandedUtterances(_ utterance: JSONValue) async throws {
+    let final: JSONValue = ["status": "done", "result": ["metadata": ["audio_duration": 1], "transcription": ["full_transcript": "bad", "languages": ["en"], "utterances": .array([utterance])]]]
     let transport = RecordingTransport(responses: [
         jsonResponse(#"{"audio_url":"https://audio.example.com/file.wav"}"#),
         jsonResponse(#"{"result_url":"https://api.gladia.io/v2/pre-recorded/result/job-invalid"}"#),
-        jsonResponse(#"{"status":"done","result":{"metadata":{"audio_duration":1},"transcription":{"full_transcript":"bad","languages":["en"],"utterances":[{"start":0,"end":1,"text":"bad","speaker":true}]}}}"#)
+        jsonResponse(String(decoding: try encodeJSONBody(final), as: UTF8.self))
     ])
     let provider = try AIProviders.gladia(settings: ProviderSettings(apiKey: "key", transport: transport))
 

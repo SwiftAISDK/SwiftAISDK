@@ -1,6 +1,6 @@
 # Transcribe audio
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/
+Source URL: /core/transcribe/
 
 Use `transcribe` when you have audio data and want normalized text back.
 
@@ -39,6 +39,29 @@ let request = AudioTranscriptionRequest(
 
 let result = try await AI.transcribe(model: model, request: request)
 ```
+
+## URL audio and word timings
+
+Use `AudioURLTranscriptionRequest` for remote audio. The model can accept the URL
+directly; otherwise the facade downloads it through the validated download
+transport and retries transcription with the same downloaded bytes. Request
+headers authenticate the provider and are not forwarded to the audio host.
+Supplying an explicit `download` callback selects local download processing.
+
+```swift
+let result = try await AI.transcribe(
+    model: model,
+    request: AudioURLTranscriptionRequest(
+        audio: URL(string: "https://example.com/clip.wav")!,
+        timestampGranularities: [.word, .segment]
+    )
+)
+```
+
+Binary `AudioTranscriptionRequest` also accepts `timestampGranularities`.
+`TranscriptionResult.words` and `segments` contain normalized text and start/end
+seconds when supported by the provider. Unsupported timing requests produce
+provider warnings; requesting timings does not guarantee their availability.
 
 ## Streaming Transcription
 
@@ -91,11 +114,26 @@ client tokens on a trusted server. The underlying
 networking; stopping consumption, `result.cancel()`, or an `AIAbortSignal`
 closes the socket and the audio producer.
 
+Deepgram v1 Listen and Mistral Voxtral also implement the native streaming
+contract, including injected duplex transports, handshake/finalization and
+producer/socket cancellation. See their provider guides for raw formats and
+provider-specific options. Azure's OpenAI transcription route delegates to the
+configured native WebSocket transport.
+
 Streaming transcription is intentionally narrower than a full bidirectional
 speech session. For audio/text responses, function-call events, and session
 configuration, use [Realtime sessions](../realtime/). xAI is the first full
 Realtime V4 provider; ElevenLabs realtime STT and Google/OpenAI streaming
 translation remain deferred.
+
+## Vertex Gemini transcription
+
+Vertex Gemini file models use generateContent and expose shared word timings.
+`GoogleVertexProvider.streamingTranscriptionModel` adds Gemini Live transcription
+with 16 kHz PCM, project/location and OAuth credentials. Express Mode keys do not
+authenticate that live route. Input waits for setup acknowledgment, interim text
+may be revised, and cancellation stops the producer/socket. See the Vertex guide
+for namespace precedence, timing warnings and quiet-grace finalization.
 
 ## Options
 

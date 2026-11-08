@@ -44,6 +44,14 @@ func cerebrasJSONString(_ value: JSONValue) -> String? {
 
 func cerebrasPreparedCall(for request: LanguageModelRequest, modelID: String, stream: Bool) throws -> CerebrasPreparedCall {
     var options = try cerebrasOptions(from: request)
+    var headers = normalizeHeaders(request.headers)
+    if let threshold = options.removeValue(forKey: "queueThreshold") {
+        guard let value = threshold.doubleValue, value.isFinite,
+              value.rounded() == value, (50...20000).contains(value) else {
+            throw AIError.invalidArgument(argument: "providerOptions.cerebras.queueThreshold", message: "Cerebras queueThreshold must be an integer from 50 to 20000.")
+        }
+        headers["queue_threshold"] = String(Int(value))
+    }
     let responseFormat = cerebrasResolvedResponseFormat(request: request, options: &options)
     let toolChoiceInput = request.toolChoice ?? options.removeValue(forKey: "toolChoice")
     var body: [String: JSONValue] = [
@@ -78,6 +86,7 @@ func cerebrasPreparedCall(for request: LanguageModelRequest, modelID: String, st
     }
     return CerebrasPreparedCall(
         body: body,
+        headers: headers,
         warnings: cerebrasWarnings(for: request)
             + cerebrasCallWarnings(for: request)
             + preparedTools.warnings
@@ -93,6 +102,12 @@ func cerebrasOptions(from request: LanguageModelRequest) throws -> [String: JSON
         guard value != .null else { continue }
         guard let nested = value.objectValue else {
             throw AIError.invalidArgument(argument: "providerOptions.\(key)", message: "Cerebras provider options must be an object.")
+        }
+        if key == "cerebras" {
+            // The provider validates queueThreshold when preparing its header.
+            // Other dynamic options remain an upstream-compatible escape hatch.
+            output.merge(nested) { _, nested in nested }
+            continue
         }
         let known = try cerebrasValidateOpenAICompatibleOptions(nested, argumentPrefix: "providerOptions.\(key)")
         let passthrough = nested.filter { !cerebrasOpenAICompatibleOptionKeys.contains($0.key) }
@@ -112,6 +127,7 @@ let cerebrasOpenAICompatibleOptionKeys: Set<String> = [
     "topLogprobs",
     "logitBias",
     "serviceTier",
+    "queueThreshold",
     "reasoningFormat",
     "prediction",
     "promptCacheKey"
@@ -125,6 +141,10 @@ func cerebrasValidateOpenAICompatibleOptions(_ options: [String: JSONValue], arg
             throw AIError.invalidArgument(argument: "\(argumentPrefix).\(key)", message: "Cerebras \(key) cannot be null.")
         }
         switch key {
+        case "queueThreshold":
+            guard let count = value.doubleValue, count.isFinite, count.rounded() == count, (50...20000).contains(count) else {
+                throw AIError.invalidArgument(argument: "\(argumentPrefix).queueThreshold", message: "Cerebras queueThreshold must be an integer from 50 to 20000.")
+            }
         case "user", "textVerbosity":
             guard value.stringValue != nil else {
                 throw AIError.invalidArgument(argument: "\(argumentPrefix).\(key)", message: "Cerebras \(key) must be a string.")

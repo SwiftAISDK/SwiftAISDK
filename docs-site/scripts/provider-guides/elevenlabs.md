@@ -109,3 +109,10 @@ keys and header overrides remain supported. API errors accept object, validation
 array and string `detail` shapes as well as legacy `error` objects. Typed API
 errors expose the provider message and code while retaining the full wire body,
 status and response headers.
+
+## Current request and response behavior
+
+Set `providerOptions.elevenlabs.sourceUrl` to let ElevenLabs fetch an audio
+file. The multipart request sends `source_url` and omits `file`. Supplying nonempty
+local audio alongside this option emits a warning that the audio was ignored.
+This provider option is distinct from the core native URL negotiation hook.

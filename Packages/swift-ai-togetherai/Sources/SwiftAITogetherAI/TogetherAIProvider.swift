@@ -46,7 +46,7 @@ public final class TogetherAIProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-togetherai/3.0.83")
+        headers = withUserAgentSuffix(headers, "ai-sdk-togetherai/3.0.88")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.together.xyz/v1")
         let http = AIProviderHTTPClient(providerID: "togetherai", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

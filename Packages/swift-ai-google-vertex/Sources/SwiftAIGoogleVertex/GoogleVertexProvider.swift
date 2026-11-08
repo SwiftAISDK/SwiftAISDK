@@ -102,8 +102,14 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
     public let providerID = "google.vertex"
     public let supportedCapabilities: Set<ModelCapability> = [.language, .embedding, .image, .speech, .transcription, .video]
     private let config: GoogleVertexConfig
+    private let webSocketTransport: any AIDuplexWebSocketTransport
 
-    public init(settings: GoogleVertexProviderSettings = GoogleVertexProviderSettings()) throws {
+    public convenience init(settings: GoogleVertexProviderSettings = GoogleVertexProviderSettings()) throws {
+        try self.init(settings: settings, webSocketTransport: URLSessionDuplexWebSocketTransport.shared)
+    }
+
+    public init(settings: GoogleVertexProviderSettings = GoogleVertexProviderSettings(), webSocketTransport: any AIDuplexWebSocketTransport) throws {
+        self.webSocketTransport = webSocketTransport
         let apiKey = settings.apiKey ?? environmentValue(["GOOGLE_VERTEX_API_KEY"])
         let project = settings.project ?? environmentValue(["GOOGLE_VERTEX_PROJECT"])
         let location = settings.location ?? environmentValue(["GOOGLE_VERTEX_LOCATION"])
@@ -134,7 +140,7 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
             baseURL = "https://\(host)/v1beta1/projects/\(project)/locations/\(location)/publishers/google"
         }
 
-        let headers = withUserAgentSuffix(settings.headers, "ai-sdk-google-vertex/5.0.129")
+        let headers = withUserAgentSuffix(settings.headers, "ai-sdk-google-vertex/5.0.134")
         config = GoogleVertexConfig(
             providerID: providerID,
             baseURL: baseURL,
@@ -197,7 +203,15 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
 
     public func transcriptionModel(_ modelID: String) throws -> any TranscriptionModel {
         if let location = config.location { try validateHostnamePart(location, argument: "location") }
+        if modelID.hasPrefix("gemini") {
+            return GoogleVertexGeminiTranscriptionModel(modelID: modelID, config: config.withProviderID("google.vertex.transcription"), webSocketTransport: webSocketTransport)
+        }
         return GoogleVertexTranscriptionModel(modelID: modelID, config: config.withProviderID("google.vertex.transcription"))
+    }
+
+    public func streamingTranscriptionModel(_ modelID: String) throws -> any StreamingTranscriptionModel {
+        guard modelID.hasPrefix("gemini"), modelID.contains("-live") else { throw AIError.invalidArgument(argument: "modelID", message: "Vertex streaming transcription requires a Gemini Live model such as gemini-3.5-transcribe-live.") }
+        return GoogleVertexGeminiTranscriptionModel(modelID: modelID, config: config.withProviderID("google.vertex.transcription"), webSocketTransport: webSocketTransport)
     }
 
     public func speechModel(_ modelID: String) throws -> any SpeechModel {

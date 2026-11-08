@@ -55,3 +55,6 @@ provider factory for application code.
 
 Licensed under Apache-2.0; see LICENSE. Vercel names identify provenance, not
 affiliation. Contribute through the canonical SwiftAISDK repository. Distribution repositories are generated from it.
+
+Original public initializer and helper signatures remain available for typed
+function references, alongside the extended APIs. Their original defaults are preserved.

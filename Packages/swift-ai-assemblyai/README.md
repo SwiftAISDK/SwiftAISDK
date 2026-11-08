@@ -9,8 +9,7 @@ let provider = try AssemblyAIProvider(configuration: .init(apiKey: "..."))
 ```
 
 Settings accept a custom base URL, headers, query parameters and an injected
-`AITransport`. Models use the common SwiftAIProvider protocols. Existing upstream
-baselines, capabilities and documented gaps remain unchanged.
+`AITransport`. Models use the common SwiftAIProvider protocols.
 
 Run the standalone suite from the canonical checkout:
 
@@ -20,3 +19,6 @@ swift test --package-path Packages/swift-ai-assemblyai
 
 The canonical repository owns all edits. Distribution manifests and repositories
 are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
+## Behavior notes
+
+Transcription errors preserve AssemblyAI's flat `{ "error": "message" }` response as well as the older nested error shape on upload, submission and polling failures.

@@ -1,6 +1,6 @@
 # Porting Status
 
-Snapshot date: 2026-11-01
+Snapshot date: 2026-11-08
 
 SwiftAISDK currently ports the provider-facing parts of Vercel AI SDK into a
 SwiftPM library. The package has a broad Swift-native facade, provider registry,
@@ -32,6 +32,21 @@ skips), exported-package tests, independent-version consumers and iOS compilatio
 Public 3.0.0 and 2.8.1 consumers compiled and ran. Hosted Swift 6.3.3 source tests
 also passed; the redundant full migration workflow was cancelled to conserve CI.
 Automatic CI now selects relevant checks, without migration rehearsals.
+
+## Weekly upstream review (2026-11-08)
+
+This pass compares 52 newer npm baselines across 54 tracked packages using 104
+integrity-verified archives and exact matching-release tests. The 93-name registry
+prefix and 76-result scoped search reveal one new model provider:
+`@ai-sdk/parallel@3.0.4`. Its Decision endpoint requires a separate native provider
+vertical; it is reported for the next implementation and is not added automatically.
+
+The source review includes steering queues/UI replay, URL/timing transcription,
+request-origin telemetry, admission tiers/threads/Files, refusal/tool handling,
+OAuth binding/resource fixes and media lifecycle changes. Public docs and the
+[package-by-package audit](WeeklyUpstreamAudit20261108.md) record the exact scope.
+Final integration and publication gates are pending; this source status does not
+claim a new public release.
 
 ## Weekly upstream review (2026-11-01)
 
@@ -477,12 +492,12 @@ one of these is true:
 
 | Priority | Gap | Next action |
 | --- | --- | --- |
-| P1 | Google/Vertex Gemini transcription and Open Responses extension codecs remain absent native adapters. | Design and port each complete request/stream/replay surface before advertising parity. |
+| P1 | Standalone Google transcription/speech translation and Open Responses extension codecs remain absent native products. Vertex Gemini unary/Live transcription is implemented. | Design and port each remaining complete request/stream/replay surface before advertising parity. |
 | P0 | Completion evidence can drift as npm packages and upstream tests change. | Before release, rerun package discovery, regenerate upstream inventory, compare ledgers, run full `swift test`, and record the audit. |
 | P0 | Live verification is representative, not exhaustive. | Add opt-in live smoke only for distinct transport families or concrete production risks. Keep it disabled by default. |
 | P2 | Native Anthropic Messages ends and cancels its body at the first message_stop; the JS codec can consume multiple messages in one body. | Keep the existing single-response cancellation contract. A future multi-message session needs an explicit lifecycle/EOF mode and independent cleanup tests. |
 | P2 | The URLSession byte adapter is now demand-driven, but still produces one Data value per byte; Foundation and higher-level parser/tool-loop buffers do not have a whole-facade memory bound. | Use the offline memory probe before a separate chunked-delegate or low-memory API design; retain injected-session compatibility and cancellation behavior. |
-| P1 | xAI realtime and OpenAI Live server WebSocket are represented, but browser WebRTC/client permissions, provider-backed Responses delegation, non-Live OpenAI Realtime, Google Realtime 3.8, ElevenLabs realtime STT, and streaming translation remain deferred. | Extend `AIRealtimeModelV4` one complete transport/provider vertical at a time; do not advertise browser or delegation modes until their native lifecycle is implemented and tested. |
+| P1 | xAI, OpenAI Live, Google and Gateway native WebSocket sessions are represented. Browser WebRTC/client permissions, provider-backed Responses delegation, non-Live OpenAI Realtime, ElevenLabs realtime STT and streaming translation remain deferred. | Extend `AIRealtimeModelV4` one complete transport/provider vertical at a time; do not advertise browser or delegation modes until their native lifecycle is implemented and tested. |
 | P1 | Batch V4 has Anthropic, OpenAI Responses, Gateway, Google, and xAI adapters. Async Video V4 has Black Forest Labs, Fal, ByteDance, Gateway, Topaz and HeyGen adapters, but other capable providers still use unary or internal-polling paths. | Migrate additional batch/video providers incrementally when persisted operation state, native webhook behavior, and provider-specific cancellation semantics can be translated with focused tests. |
 | P1 | Browser HTTP/WebSocket chat framing, Node stream-response helpers, tracing-channel/workflow codecs and legacy EventSource SSE are not native adapters. | Add a complete native public adapter only after lifecycle, replay, auth and serialization behavior are designed and tested. |
 | P1 | Upstream preserves repeated tool-call IDs across explicit UI stream steps; Swift stream parts do not expose step boundaries. | Add a public step-boundary representation, then scope reducer tool-part identity to the active step with backwards lookup for late results. |

@@ -66,7 +66,7 @@ func mistralSupportsReasoningEffort(_ modelID: String, conversation: Bool = fals
 func mistralReasoningEffort(_ reasoning: String?, modelID: String? = nil, warnings: inout [AIWarning]) -> JSONValue? {
     guard isCustomReasoning(reasoning), let reasoning else { return nil }
     let efforts = ["zai-glm-5", "zai-glm-5-3", "zai-glm-5-3-flash", "zai-glm-latest"].contains(modelID ?? "")
-        ? ["low", "high", "max"] : ["none", "high"]
+        ? ["low", "high", "max"] : (["mistral-large-4", "mistral-large-4-0"].contains(modelID ?? "") ? ["low", "medium", "high"] : ["none", "high"])
     return mapReasoningToProviderEffort(
         reasoning: reasoning,
         effortMap: Dictionary(uniqueKeysWithValues: efforts.map { ($0, $0) }),
@@ -173,8 +173,8 @@ func mistralValidateLanguageProviderOptions(_ options: [String: JSONValue]) thro
             }
             output[key] = value
         case "reasoningEffort":
-            guard let string = value.stringValue, ["high", "none", "low", "max"].contains(string) else {
-                throw AIError.invalidArgument(argument: "providerOptions.mistral.reasoningEffort", message: "Mistral reasoningEffort must be high, none, low or max.")
+            guard let string = value.stringValue, ["high", "none", "low", "medium", "max"].contains(string) else {
+                throw AIError.invalidArgument(argument: "providerOptions.mistral.reasoningEffort", message: "Mistral reasoningEffort must be high, none, low, medium or max.")
             }
             output[key] = value
         default:

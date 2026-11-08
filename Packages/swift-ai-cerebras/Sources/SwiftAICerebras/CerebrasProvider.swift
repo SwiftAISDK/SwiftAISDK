@@ -38,7 +38,7 @@ public final class CerebrasProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-cerebras/3.0.82")
+        headers = withUserAgentSuffix(headers, "ai-sdk-cerebras/3.0.87")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.cerebras.ai/v1")
         http = AIProviderHTTPClient(providerID: "cerebras", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

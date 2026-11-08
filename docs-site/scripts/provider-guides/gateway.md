@@ -71,3 +71,26 @@ becoming a retryable Gateway 500. Native `AIAbortError`, task cancellation and
 Foundation cancellation/timeout errors remain distinguishable from service
 failures. Model identifiers stay open strings, including newly published
 Gateway speech, transcription, realtime and language aliases.
+
+## Native realtime, costs and uploaded assets
+
+`GatewayProvider.realtimeModel("openai/gpt-realtime-2")` implements the normalized
+Gateway WebSocket protocol. It supports ephemeral client-secret/team protocols
+and trusted server connections with fresh headers via
+`AIRealtimeSession.connectServer`. Transcription intent rejects before I/O;
+streaming transcription retains its separate route. Usage remains in the raw
+event envelope and is exposed through `event.usage`.
+
+`GatewayTools.deepseekSearch` and `deepseekFetch` expose Gateway-executed tools.
+Structured tool errors preserve retryAfter, statusText and additive fields in
+generation and streams. Generation info adds optional marketCost, surchargeCost
+and gatewayCost, preserving zero. Transcription returns independent words; the
+shared timestampGranularities setting warns because the wire route cannot
+forward it. Completed video outputs retain uploadedVideos without requiring
+URLs or inline bytes.
+
+An empty configured key falls through to current Vercel OIDC credentials; a
+nonempty invalid key remains selected. The client-only
+`gateway.experimental_streamingImageDecoding` flag is removed from the wire and
+warns when true. Native image results remain buffered base64: the incremental
+JSON/binary parser and reduced-memory result contract remain unimplemented.

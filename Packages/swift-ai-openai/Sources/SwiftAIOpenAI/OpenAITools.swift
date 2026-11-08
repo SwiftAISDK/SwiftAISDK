@@ -233,6 +233,7 @@ public enum OpenAITools {
         ]).objectValue ?? [:])
     }
 
+    /// Preserves the original function-reference signature.
     public static func mcp(
         serverLabel: String,
         allowedTools: JSONValue? = nil,
@@ -243,6 +244,22 @@ public enum OpenAITools {
         serverDescription: String? = nil,
         serverURL: String? = nil
     ) -> JSONValue {
+        mcp(serverLabel: serverLabel, allowedTools: allowedTools, authorization: authorization,
+            connectorID: connectorID, headers: headers, requireApproval: requireApproval,
+            serverDescription: serverDescription, serverURL: serverURL, tunnelID: nil)
+    }
+
+    public static func mcp(
+        serverLabel: String,
+        allowedTools: JSONValue? = nil,
+        authorization: String? = nil,
+        connectorID: String? = nil,
+        headers: JSONValue? = nil,
+        requireApproval: JSONValue? = nil,
+        serverDescription: String? = nil,
+        serverURL: String? = nil,
+        tunnelID: String? = nil
+    ) -> JSONValue {
         providerTool(id: "openai.mcp", name: "mcp", args: JSONValue.object([
             "serverLabel": .string(serverLabel),
             "allowedTools": allowedTools,
@@ -251,7 +268,8 @@ public enum OpenAITools {
             "headers": headers,
             "requireApproval": requireApproval,
             "serverDescription": serverDescription.map(JSONValue.string),
-            "serverUrl": serverURL.map(JSONValue.string)
+            "serverUrl": serverURL.map(JSONValue.string),
+            "tunnelId": tunnelID.map(JSONValue.string)
         ]).objectValue ?? [:])
     }
 

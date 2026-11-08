@@ -1,6 +1,6 @@
 # Generate video
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/generate-video/
+Source URL: /core/generate-video/
 
 Use `generateVideo` when a provider exposes text-to-video or image-to-video.
 
@@ -133,6 +133,12 @@ one-video limit, so multi-video requests use this split automatically.
 - `providerMetadata`
 - `requestMetadata`
 - `responseMetadata`
+
+`VideoGenerationResult.uploadedVideos` describes outputs written directly to
+caller-owned storage. Each `UploadedVideo` contains its media type; no URL or
+inline bytes are required for that delivery mode. Handle these descriptors
+alongside the existing URL/base64 video arrays. The native result does not expose
+the JavaScript generated-file getter or automatically download every video.
 
 HeyGen supports text, first-frame image, and mixed image/video/audio reference
 generation through `AIProviders.heyGen().video("heygen-video-1")`. Its completed

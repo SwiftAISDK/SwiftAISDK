@@ -4,7 +4,7 @@ import SwiftAITransport
 import SwiftAIProviderUtilities
 
 
-func mistralTools(from tools: [String: JSONValue], only forcedName: String?) -> MistralPreparedTools {
+func mistralTools(from tools: [String: JSONValue]) -> MistralPreparedTools {
     var warnings: [AIWarning] = []
     let values: [JSONValue] = tools.compactMap { name, schema in
         let object = schema.objectValue
@@ -15,7 +15,7 @@ func mistralTools(from tools: [String: JSONValue], only forcedName: String?) -> 
             ))
             return nil
         }
-        if let forcedName, forcedName != name { return nil }
+
         var parameters = schema
         var function: [String: JSONValue] = [
             "name": .string(name),
@@ -47,8 +47,10 @@ func mistralToolChoice(from value: JSONValue?) -> JSONValue? {
     switch object["type"]?.stringValue {
     case "auto", "none":
         return object["type"]
-    case "required", "tool":
-        return .string("any")
+    case "required": return .string("any")
+    case "tool":
+        guard let name = object["toolName"] ?? object["tool_name"] else { return nil }
+        return .object(["type": "function", "function": .object(["name": name])])
     default:
         return nil
     }

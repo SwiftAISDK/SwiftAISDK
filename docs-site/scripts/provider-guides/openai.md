@@ -45,3 +45,29 @@ Portable `reasoning` is mapped to the nearest supported effort, preferring a low
 Decisions accepts `providerOptions.openai.promptCacheKey`. Object JSON evidence and nonempty arrays of objects use native `input_json` within 32 container levels, 10,000 values and 256 KiB of UTF-8 JSON. Other values and larger evidence retain their JSON text representation. JSON Schema `propertyNames` without an explicit type is removed with a compatibility warning; an explicit non-string type is rejected. A web-search item still marked `searching` at completion is an error result.
 
 `provider.streamingTranscriptionModel("gpt-transcribe")` exposes native incremental transcription. `gpt-live-transcribe` and the existing `gpt-realtime-whisper` alias also support streaming; dated snapshots are accepted. Supply `OpenAIProviderSettings.webSocketTransport` for a custom native connection. The new models send language hints as `languages`; `gpt-transcribe` ignores `streaming.delay` with a warning. The Live and realtime-whisper families require streaming. REST transcription leaves response format unset unless requested, except Whisper (`verbose_json`) and diarization (`diarized_json`); segment timestamps default only with `verbose_json`. Duration falls back to duration-billed usage, while token usage does not invent a duration.
+
+## Refusals, tools and image controls
+
+Chat and Responses retain refusal text, ordered content and log probabilities.
+A refusal with a normal stop maps to `contentFilter`; a client tool call retains
+its finish precedence. Responses streams and batch results preserve refusal
+content and item/phase metadata. Low-level request metadata records the actual
+endpoint; high-level results expose only its origin.
+
+Set a message-level `providerMetadata.openai.name` for system/developer/user or
+assistant names. Tool messages warn and omit the name. Content-part metadata does
+not supply a message name. Secure MCP tools accept `tunnelID` as an exclusive
+target alternative; code interpreter supports memory limits and disabled/allowlist
+network policies, including domain secrets.
+
+GPT Image 2.6 accepts complexity, safety identifiers and GIF frame-count/duration
+controls for generation. GIF edits and mask-plus-markup combinations reject before
+I/O. Edit markup can be supplied as a data URL or downloaded URL; download aborts
+propagate.
+
+Shared transcription `timestampGranularities` supplies word/segment requests when
+provider-specific timestamps are absent. Only `verbose_json` sends timestamp
+controls; `diarized_json` retains its own segments. Results expose independent
+`words`, and unsupported or excluded timing requests warn. REST language/keyword
+hint arrays use `languages[]`/`keywords[]`; empty arrays are omitted. Streaming
+models warn for unsupported hints.

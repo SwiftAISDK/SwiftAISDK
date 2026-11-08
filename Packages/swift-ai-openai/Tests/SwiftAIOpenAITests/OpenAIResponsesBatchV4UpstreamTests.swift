@@ -769,3 +769,15 @@ private func openAIBatchMultipartJSONLines(_ multipart: String) throws -> [JSONV
         .split(separator: "\n", omittingEmptySubsequences: true)
         .map { try secureJSONParse(String($0)) }
 }
+
+@Test func weekly20261108BatchRefusalRemainsSuccessfulContentFilteredResult() async throws {
+    let raw: JSONValue = ["id": "resp", "created_at": 1700000000, "model": "gpt-4.1", "status": "completed", "output": [["type": "message", "role": "assistant", "id": "msg", "content": [["type": "refusal", "refusal": "Cannot answer."]]]]]
+    let line = openAIBatchResultLine(id: "refusal", statusCode: 200, body: raw)
+    let transport = OpenAIBatchScriptedTransport(sendResponses: [jsonResponse(openAIBatchMetadata(status: "completed", outputFileID: "output"))], streamScripts: [OpenAIBatchStreamScript(chunks: [Data((line + "\n").utf8)])])
+    let provider = try OpenAIProvider(configuration: .init(apiKey: "key", transport: transport))
+    let stream = try await provider.batchLanguageModel("gpt-4.1").getBatchResults(.init(batchID: "batch"))
+    var results: [AIBatchItemResult<TextGenerationResult>] = []
+    for try await result in stream { results.append(result) }
+    guard case let .succeeded(_, result) = try #require(results.first) else { Issue.record("Refusal must remain a successful result"); return }
+    #expect(result.text == "Cannot answer."); #expect(result.finishReason == "content-filter")
+}

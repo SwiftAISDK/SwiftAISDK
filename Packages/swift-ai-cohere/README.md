@@ -8,3 +8,6 @@ Existing upstream baselines, capabilities and documented gaps remain unchanged.
 See `Porting/map.json` and the canonical provider guide.
 
 See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/cohere.md) for authentication, options and supported surfaces.
+## Behavior notes
+
+Partial document citations are accepted, including streaming `citation-start` events. Tool-only citations remain in the raw response and do not produce document sources. Response metadata prefers the v2 `id`; missing token usage stays unknown, while billed units remain in raw usage. Tool replay preserves valid JSON argument text and quotes malformed text as a JSON string.

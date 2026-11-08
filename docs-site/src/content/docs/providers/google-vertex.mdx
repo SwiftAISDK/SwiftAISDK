@@ -51,16 +51,31 @@ zero and at most 24. Gemini 2.5 Pro's shared reasoning minimum is 128 tokens;
 Gemini 3 uses its lowest supported level and reports a compatibility warning
 when `none` cannot disable thinking.
 
-For Anthropic-hosted JSON output, schemas supported by native structured output
-use `output_config.format` on Claude Sonnet 5.5, Opus 5.5 and Fable 5.1, which
-reject forced tool selection. Other hosted Claude families retain the JSON
-response-tool fallback. Recursive or otherwise unsupported schemas retain that
-fallback too; automatic tool selection is used when the model rejects forcing.
+For Anthropic-hosted JSON output, see the hosted Anthropic guide for automatic
+opt-in, explicit output-format selection and forced-tool fallback rules. Native
+service support also depends on the Google Cloud organization policy.
+
+## Gemini unary and Live transcription
+
+`transcriptionModel("gemini-3.5-transcribe")` uses generateContent inline audio.
+Other families retain Cloud Speech routing. Options select the first present
+`googleVertex`, `vertex`, then `google` namespace. Shared word-timing requests
+set `wordTimestamp` unless explicitly disabled; valid timings populate `words`
+and existing segments. Unsupported segment requests and missing requested word
+timings warn, while usage and raw transcription metadata remain available.
+
+`streamingTranscriptionModel("gemini-3.5-transcribe-live")` uses regional OAuth
+WebSockets with project/location and 16 kHz PCM. Express Mode keys do not
+support this route. Audio waits for setupComplete; interim text may be revised
+before final segments. Cancellation closes input and socket; a resettable
+three-second quiet grace handles servers omitting a terminal signal.
+`GoogleVertexProvider` accepts injected `webSocketTransport` through an additive
+overload; its original initializer/function reference is retained.
 
 
 ## Notes
 
-Vertex's implemented Gemini language, tuned endpoint, embedding, Gemini TTS speech, Cloud Speech-to-Text transcription, Veo video, and Interactions surface was audited against upstream Google Vertex 5.0.129. The current pass exposes the published embedding limits: 250 inputs for standard models and one input for Gemini multimodal embeddings. Imagen image generation/editing factories remain locally available for source compatibility after their removal from the current upstream package. Shared Gemini request behavior includes local JSON Schema `$ref` expansion with boolean-schema references, the Gemini 3.7 Flash `low` thinking floor, forward-compatible future-model capabilities, and response IDs; standard Vertex function-call and function-response IDs are omitted while server-tool IDs remain intact. Video supports first/last frame images, reference images, and top-level generateAudio precedence. Speech routes `chirp*` model IDs to authenticated Cloud TTS `text:synthesize` with Chirp voice/language defaults, LINEAR16/WAV handling, speed mapping, warnings, and metadata; other IDs keep Gemini TTS generateContent with WAV-wrapped PCM by default, raw PCM opt-in, multi-speaker provider options, sample-rate metadata, and upstream warnings. Google Batch, Gemini 3.5 transcription, and the broader shared Google language/safety/usage/request changes remain deferred to a dedicated Vertex pass. Node google-auth-library options, workflow serialization, ProviderV4 type names, and ESM-only packaging remain JS-runtime/package-surface concerns. The 5.0.76 pass adds an exact Maverick/Scout MaaS default of `max_tokens: 8192` without overwriting caller values and inherits the audited Google, Anthropic, and OpenAI-compatible shared behavior. The 2026-09-27 pass adds `gs://` tool-result media and the shared current TTS behavior. The 2026-10-04 pass validates generated location/Chirp region hosts, reports Gemini image capabilities, and retains speech usageMetadata; Vertex Gemini transcription remains deferred. The 2026-10-11 pass inherits JSON-with-tools conversion and shared embedding dimensions; native Gemini transcription remains a declared gap. The 2026-10-18 pass: Inherited GenerateContent continuation/usage/AUDIO/thinking and background Interactions behavior is current. Vertex Anthropic labels are covered by its separate adapter. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
+Vertex's implemented Gemini language, tuned endpoint, embedding, Gemini TTS speech, Cloud Speech-to-Text transcription, Veo video, and Interactions surface was audited against upstream Google Vertex 5.0.134. The native embedding limits remain: 250 inputs for standard models and one input for Gemini multimodal embeddings. Imagen image generation/editing factories remain locally available for source compatibility after their removal from the current upstream package. Shared Gemini request behavior includes local JSON Schema `$ref` expansion with boolean-schema references, the Gemini 3.7 Flash `low` thinking floor, forward-compatible future-model capabilities, and response IDs; standard Vertex function-call and function-response IDs are omitted while server-tool IDs remain intact. Video supports first/last frame images, reference images, and top-level generateAudio precedence. Speech routes `chirp*` model IDs to authenticated Cloud TTS `text:synthesize` with Chirp voice/language defaults, LINEAR16/WAV handling, speed mapping, warnings, and metadata; other IDs keep Gemini TTS generateContent with WAV-wrapped PCM by default, raw PCM opt-in, multi-speaker provider options, sample-rate metadata, and upstream warnings. Vertex Batch and remaining broader shared Google language/safety/usage/request gaps retain their documented scope. Native Vertex Gemini unary and Live transcription are available. Node google-auth-library options, workflow serialization, ProviderV4 type names, and ESM-only packaging remain JS-runtime/package-surface concerns. The 5.0.76 pass adds an exact Maverick/Scout MaaS default of `max_tokens: 8192` without overwriting caller values and inherits the audited Google, Anthropic, and OpenAI-compatible shared behavior. The 2026-09-27 pass adds `gs://` tool-result media and the shared current TTS behavior. The 2026-10-04 pass validates generated location/Chirp region hosts, reports Gemini image capabilities, and retains speech usageMetadata; Vertex Gemini transcription was deferred at that snapshot and is implemented in the 2026-11-08 pass. The 2026-10-11 pass inherits JSON-with-tools conversion and shared embedding dimensions; native Gemini transcription was a gap at that snapshot and is implemented in the 2026-11-08 pass. The 2026-10-18 pass: Inherited GenerateContent continuation/usage/AUDIO/thinking and background Interactions behavior is current. Vertex Anthropic labels are covered by its separate adapter. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

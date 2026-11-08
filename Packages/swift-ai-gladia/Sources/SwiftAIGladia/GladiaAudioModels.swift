@@ -16,7 +16,10 @@ public final class GladiaTranscriptionModel: TranscriptionModel, @unchecked Send
     }
 
     public func transcribe(_ request: AudioTranscriptionRequest) async throws -> TranscriptionResult {
+        try request.abortSignal?.throwIfAborted()
         let options = try gladiaProviderOptions(from: request)
+        try validatePollingConfiguration(options)
+        let resolved = gladiaResolvedOptions(options, modelID: modelID)
         var form = MultipartFormData()
         form.appendFile(name: "audio", fileName: "audio.\(mediaTypeToExtension(request.mimeType))", mimeType: request.mimeType, data: request.audio)
         let uploadResponse = try await config.transport.send(config.rawRequest(
@@ -35,14 +38,35 @@ public final class GladiaTranscriptionModel: TranscriptionModel, @unchecked Send
             throw AIError.invalidResponse(provider: providerID, message: "Gladia upload response did not contain audio_url.")
         }
 
-        var body: [String: JSONValue] = ["audio_url": .string(audioURL)]
-        body.merge(gladiaTranscriptionOptions(from: options)) { _, new in new }
+        return try await transcribeAudioURL(audioURL, options: options, resolved: resolved, headers: request.headers, abortSignal: request.abortSignal)
+    }
+
+    public func transcribeFromURL(_ request: AudioURLTranscriptionRequest) async throws -> TranscriptionResult? {
+        try request.abortSignal?.throwIfAborted()
+        guard ["http", "https"].contains(request.audio.scheme?.lowercased() ?? ""), request.audio.host != nil else {
+            throw AIError.invalidArgument(argument: "audio", message: "Gladia audio URL must use HTTP or HTTPS.")
+        }
+        let native = AudioTranscriptionRequest(audio: Data(), providerOptions: request.providerOptions, extraBody: request.extraBody, headers: request.headers, abortSignal: request.abortSignal)
+        let options = try gladiaProviderOptions(from: native)
+        try validatePollingConfiguration(options)
+        return try await transcribeAudioURL(request.audio.absoluteString, options: options, resolved: gladiaResolvedOptions(options, modelID: modelID), headers: request.headers, abortSignal: request.abortSignal)
+    }
+
+    private func validatePollingConfiguration(_ options: [String: JSONValue]) throws {
+        for (name, value) in [("pollIntervalMs", options["pollIntervalMs"]?.doubleValue ?? Double(config.pollIntervalMs ?? 1_000)), ("pollTimeoutMs", options["pollTimeoutMs"]?.doubleValue ?? Double(config.pollTimeoutMs ?? 600_000))] {
+            guard value.isFinite, value > 0, value.rounded() == value else { throw AIError.invalidArgument(argument: name, message: "Gladia \(name) must be a positive integer.") }
+        }
+    }
+
+    private func transcribeAudioURL(_ audioURL: String, options: [String: JSONValue], resolved: (body: [String: JSONValue], warnings: [AIWarning]), headers: [String: String], abortSignal: AIAbortSignal?) async throws -> TranscriptionResult {
+        var body = resolved.body
+        body["audio_url"] = .string(audioURL)
         let initResponse = try await config.transport.send(config.request(
             path: "/v2/pre-recorded",
             modelID: modelID,
             body: .object(body),
-            headers: request.headers,
-            abortSignal: request.abortSignal
+            headers: headers,
+            abortSignal: abortSignal
         ))
         guard (200..<300).contains(initResponse.statusCode) else {
             throw audioProviderHTTPStatusError(provider: providerID, response: initResponse)
@@ -52,10 +76,10 @@ public final class GladiaTranscriptionModel: TranscriptionModel, @unchecked Send
             throw AIError.invalidResponse(provider: providerID, message: "Gladia initiation response did not contain result_url.")
         }
 
-        let finalResponse = try await pollGladiaResultResponse(url: resultURL, request: request)
+        let finalResponse = try await pollGladiaResultResponse(url: resultURL, headers: headers, abortSignal: abortSignal, options: options)
         let raw = finalResponse.json
         guard raw["status"]?.stringValue != "error" else {
-            throw AIError.invalidResponse(provider: providerID, message: "Transcription job failed")
+            throw AIError.invalidResponse(provider: providerID, message: raw["error_code"]?.doubleValue.map { "Transcription job failed with error code \($0.rounded() == $0 ? String(format: "%.0f", $0) : String($0))" } ?? "Transcription job failed")
         }
         try validateGladiaTranscriptionResult(raw, providerID: providerID)
         guard raw["result"]?.objectValue != nil else {
@@ -69,19 +93,24 @@ public final class GladiaTranscriptionModel: TranscriptionModel, @unchecked Send
             segments: segments,
             language: raw["result"]?["transcription"]?["languages"]?[0]?.stringValue,
             durationInSeconds: raw["result"]?["metadata"]?["audio_duration"]?.doubleValue ?? transcriptionDuration(from: segments),
+            warnings: resolved.warnings,
             providerMetadata: ["gladia": raw],
             responseMetadata: aiResponseMetadata(from: raw, response: finalResponse.response, modelID: modelID)
         )
     }
 
-    private func pollGladiaResultResponse(url: String, request: AudioTranscriptionRequest) async throws -> (json: JSONValue, response: AIHTTPResponse) {
+    private func pollGladiaResultResponse(url: String, headers: [String: String], abortSignal: AIAbortSignal?, options: [String: JSONValue]) async throws -> (json: JSONValue, response: AIHTTPResponse) {
+        let interval = options["pollIntervalMs"]?.doubleValue ?? Double(config.pollIntervalMs ?? 1_000)
+        let timeout = options["pollTimeoutMs"]?.doubleValue ?? Double(config.pollTimeoutMs ?? 600_000)
         let started = DispatchTime.now().uptimeNanoseconds
         while true {
-            if DispatchTime.now().uptimeNanoseconds - started > 60_000_000_000 {
-                throw AIError.invalidResponse(provider: providerID, message: "Transcription job polling timed out")
+            try Task.checkCancellation()
+            try abortSignal?.throwIfAborted()
+            if Double(DispatchTime.now().uptimeNanoseconds - started) / 1_000_000 > timeout {
+                throw AIError.invalidResponse(provider: providerID, message: "Transcription job polling timed out after \(String(format: "%.0f", timeout)) ms")
             }
-            let pollHeaders = isSameOrigin(url, config.baseURL) ? config.headers.mergingHeaders(request.headers) : [:]
-            let response = try await downloadURL(url, transport: config.transport, headers: pollHeaders, abortSignal: request.abortSignal)
+            let pollHeaders = isSameOrigin(url, config.baseURL) ? config.headers.mergingHeaders(headers) : [:]
+            let response = try await downloadURL(url, transport: config.transport, headers: pollHeaders, abortSignal: abortSignal)
             guard (200..<300).contains(response.statusCode) else {
                 throw audioProviderHTTPStatusError(provider: providerID, response: response)
             }
@@ -89,11 +118,17 @@ public final class GladiaTranscriptionModel: TranscriptionModel, @unchecked Send
             guard let status = raw["status"]?.stringValue, ["queued", "processing", "done", "error"].contains(status) else {
                 throw AIError.invalidResponse(provider: providerID, message: "Gladia transcription status is invalid.")
             }
+            if let code = raw["error_code"], code != .null, code.doubleValue == nil { throw AIError.invalidResponse(provider: providerID, message: "Gladia transcription error_code is invalid.") }
             switch status {
             case "done", "error":
                 return (raw, response)
             default:
-                try await sleepWithAbortSignal(nanoseconds: 1_000_000_000, abortSignal: request.abortSignal)
+                do {
+                    try await sleepWithAbortSignal(nanoseconds: UInt64(min(interval, Double(UInt64.max / 1_000_000))) * 1_000_000, abortSignal: abortSignal)
+                } catch {
+                    try abortSignal?.throwIfAborted()
+                    throw error
+                }
             }
         }
     }
@@ -113,43 +148,8 @@ private func validateGladiaTranscriptionResult(_ raw: JSONValue, providerID: Str
     guard languages.allSatisfy({ $0.stringValue != nil }) else {
         throw AIError.invalidResponse(provider: providerID, message: "Gladia transcription result is invalid.")
     }
-    for utterance in utterances {
-        guard
-            utterance["start"]?.doubleValue != nil,
-            utterance["end"]?.doubleValue != nil,
-            utterance["text"]?.stringValue != nil
-        else {
-            throw AIError.invalidResponse(provider: providerID, message: "Gladia transcription result is invalid.")
-        }
-        if let speaker = utterance["speaker"],
-           speaker != .null,
-           speaker.stringValue == nil,
-           speaker.doubleValue == nil {
-            throw AIError.invalidResponse(provider: providerID, message: "Gladia transcription result is invalid.")
-        }
-        if let confidence = utterance["confidence"], confidence != .null, confidence.doubleValue == nil {
-            throw AIError.invalidResponse(provider: providerID, message: "Gladia transcription result is invalid.")
-        }
-        if let language = utterance["language"], language != .null, language.stringValue == nil {
-            throw AIError.invalidResponse(provider: providerID, message: "Gladia transcription result is invalid.")
-        }
-        if let words = utterance["words"], words != .null {
-            guard let words = words.arrayValue else {
-                throw AIError.invalidResponse(provider: providerID, message: "Gladia transcription result is invalid.")
-            }
-            for word in words {
-                guard
-                    word["word"]?.stringValue != nil,
-                    word["start"]?.doubleValue != nil,
-                    word["end"]?.doubleValue != nil
-                else {
-                    throw AIError.invalidResponse(provider: providerID, message: "Gladia transcription result is invalid.")
-                }
-                if let confidence = word["confidence"], confidence != .null, confidence.doubleValue == nil {
-                    throw AIError.invalidResponse(provider: providerID, message: "Gladia transcription result is invalid.")
-                }
-            }
-        }
+    guard utterances.allSatisfy({ $0["start"]?.doubleValue != nil && $0["end"]?.doubleValue != nil && $0["text"]?.stringValue != nil }) else {
+        throw AIError.invalidResponse(provider: providerID, message: "Gladia transcription result is invalid.")
     }
 }
 
@@ -177,6 +177,7 @@ private func gladiaProviderOptions(from request: AudioTranscriptionRequest) thro
 }
 
 private let gladiaTranscriptionProviderOptionKeys: Set<String> = [
+    "languageConfig", "piiRedaction", "piiRedactionConfig", "pollIntervalMs", "pollTimeoutMs",
     "contextPrompt",
     "customVocabulary",
     "customVocabularyConfig",
@@ -214,8 +215,29 @@ private let gladiaTranscriptionProviderOptionKeys: Set<String> = [
 private func gladiaValidateTranscriptionProviderOptions(_ options: [String: JSONValue]) throws -> [String: JSONValue] {
     var output: [String: JSONValue] = [:]
     for (key, value) in options where gladiaTranscriptionProviderOptionKeys.contains(key) {
-        guard value != .null else { continue }
+        if value == .null {
+            if ["languageConfig", "piiRedaction", "piiRedactionConfig"].contains(key) { throw AIError.invalidArgument(argument: "providerOptions.gladia.\(key)", message: "Gladia \(key) cannot be null.") }
+            continue
+        }
         switch key {
+        case "pollIntervalMs", "pollTimeoutMs":
+            guard let number = value.doubleValue, number.isFinite, number > 0, number.rounded() == number else { throw AIError.invalidArgument(argument: "providerOptions.gladia.\(key)", message: "Gladia \(key) must be a positive integer.") }
+            output[key] = value
+        case "languageConfig":
+            guard let object = value.objectValue else { throw AIError.invalidArgument(argument: "providerOptions.gladia.languageConfig", message: "Gladia languageConfig must be an object.") }
+            var config: [String: JSONValue] = [:]
+            if let languages = object["languages"] { config["languages"] = try gladiaStringArray(languages, argument: "providerOptions.gladia.languageConfig.languages") }
+            if let codeSwitching = object["codeSwitching"] { try gladiaRequireBoolean(codeSwitching, argument: "providerOptions.gladia.languageConfig.codeSwitching", message: "Gladia codeSwitching must be a boolean."); config["codeSwitching"] = codeSwitching }
+            output[key] = .object(config)
+        case "piiRedactionConfig":
+            guard let object = value.objectValue else { throw AIError.invalidArgument(argument: "providerOptions.gladia.piiRedactionConfig", message: "Gladia piiRedactionConfig must be an object.") }
+            var config: [String: JSONValue] = [:]
+            if let types = object["entityTypes"] { config["entityTypes"] = try gladiaStringArray(types, argument: "providerOptions.gladia.piiRedactionConfig.entityTypes") }
+            if let type = object["processedTextType"] {
+                guard ["MARKER", "MASK"].contains(type.stringValue ?? "") else { throw AIError.invalidArgument(argument: "providerOptions.gladia.piiRedactionConfig.processedTextType", message: "Gladia processedTextType must be MARKER or MASK.") }
+                config["processedTextType"] = type
+            }
+            output[key] = .object(config)
         case "contextPrompt", "language":
             try gladiaRequireString(value, argument: "providerOptions.gladia.\(key)", message: "Gladia \(key) must be a string.")
             output[key] = value
@@ -223,7 +245,7 @@ private func gladiaValidateTranscriptionProviderOptions(_ options: [String: JSON
             output[key] = try gladiaValidatedCustomVocabulary(value)
         case "customVocabularyConfig":
             output[key] = try gladiaValidatedCustomVocabularyConfig(value)
-        case "detectLanguage", "enableCodeSwitching", "callback", "subtitles", "diarization", "translation", "summarization", "moderation", "namedEntityRecognition", "chapterization", "nameConsistency", "customSpelling", "structuredDataExtraction", "sentimentAnalysis", "audioToLlm", "sentences", "displayMode", "punctuationEnhanced":
+        case "piiRedaction", "detectLanguage", "enableCodeSwitching", "callback", "subtitles", "diarization", "translation", "summarization", "moderation", "namedEntityRecognition", "chapterization", "nameConsistency", "customSpelling", "structuredDataExtraction", "sentimentAnalysis", "audioToLlm", "sentences", "displayMode", "punctuationEnhanced":
             try gladiaRequireBoolean(value, argument: "providerOptions.gladia.\(key)", message: "Gladia \(key) must be a boolean.")
             output[key] = value
         case "codeSwitchingConfig":
@@ -408,7 +430,7 @@ private func gladiaValidatedTranslationConfig(_ value: JSONValue) throws -> JSON
     ]
     if let model = object["model"] {
         if model != .null {
-            guard let modelValue = model.stringValue, ["base", "enhanced"].contains(modelValue) else {
+            guard let modelValue = model.stringValue, ["base", "batch", "enhanced"].contains(modelValue) else {
                 throw AIError.invalidArgument(argument: "providerOptions.gladia.translationConfig.model", message: "Gladia translationConfig.model must be base or enhanced.")
             }
             output["model"] = model
@@ -419,6 +441,14 @@ private func gladiaValidatedTranslationConfig(_ value: JSONValue) throws -> JSON
             try gladiaRequireBoolean(matchOriginalUtterances, argument: "providerOptions.gladia.translationConfig.matchOriginalUtterances", message: "Gladia translationConfig.matchOriginalUtterances must be a boolean.")
             output["matchOriginalUtterances"] = matchOriginalUtterances
         }
+    }
+    for key in ["lipsync", "contextAdaptation", "informal"] where object[key] != nil {
+        try gladiaRequireBoolean(object[key]!, argument: "providerOptions.gladia.translationConfig.\(key)", message: "Gladia \(key) must be a boolean.")
+        output[key] = object[key]
+    }
+    if let context = object["context"] {
+        try gladiaRequireString(context, argument: "providerOptions.gladia.translationConfig.context", message: "Gladia context must be a string.")
+        output["context"] = context
     }
     return .object(output)
 }
@@ -464,7 +494,9 @@ private func gladiaValidatedAudioToLLMConfig(_ value: JSONValue) throws -> JSONV
     guard let object = value.objectValue, let prompts = object["prompts"] else {
         throw AIError.invalidArgument(argument: "providerOptions.gladia.audioToLlmConfig.prompts", message: "Gladia audioToLlmConfig.prompts is required.")
     }
-    return .object(["prompts": try gladiaStringArray(prompts, argument: "providerOptions.gladia.audioToLlmConfig.prompts")])
+    var output: [String: JSONValue] = ["prompts": try gladiaStringArray(prompts, argument: "providerOptions.gladia.audioToLlmConfig.prompts")]
+    if let model = object["model"] { try gladiaRequireString(model, argument: "providerOptions.gladia.audioToLlmConfig.model", message: "Gladia audioToLlmConfig.model must be a string."); output["model"] = model }
+    return .object(output)
 }
 
 private func gladiaStringArray(_ value: JSONValue, argument: String, allowedValues: Set<String>? = nil) throws -> JSONValue {
@@ -489,7 +521,7 @@ private func gladiaRequireString(_ value: JSONValue, argument: String, message: 
 }
 
 private func gladiaRequireNumber(_ value: JSONValue, argument: String, message: String) throws {
-    guard value.doubleValue != nil else {
+    guard value.doubleValue?.isFinite == true else {
         throw AIError.invalidArgument(argument: argument, message: message)
     }
 }
@@ -590,4 +622,76 @@ private func gladiaTranscriptionOptions(from extraBody: [String: JSONValue]) -> 
 private func gladiaNestedOptions(_ value: JSONValue, mapping: [String: String]) -> JSONValue {
     guard let object = value.objectValue else { return value }
     return .object(mapKeys(object, mapping))
+}
+/// Resolves deprecated options before serialization so only current API fields reach Gladia.
+private func gladiaResolvedOptions(_ options: [String: JSONValue], modelID: String) -> (body: [String: JSONValue], warnings: [AIWarning]) {
+    var warnings: [AIWarning] = []
+    var current = options
+    for key in ["contextPrompt", "moderation", "chapterization", "nameConsistency", "structuredDataExtraction", "structuredDataExtractionConfig", "displayMode"] {
+        if let value = current.removeValue(forKey: key), value != .null {
+            warnings.append(.init(type: "unsupported", feature: key, message: "No longer supported by the Gladia v2 pre-recorded API; ignored."))
+        }
+    }
+    if var diarization = current["diarizationConfig"]?.objectValue, let value = diarization.removeValue(forKey: "enhanced"), value != .null {
+        warnings.append(.init(type: "unsupported", feature: "diarizationConfig.enhanced", message: "No longer supported by the Gladia v2 pre-recorded API; ignored."))
+        current["diarizationConfig"] = .object(diarization)
+    }
+    var language = current.removeValue(forKey: "languageConfig")?.objectValue
+    let explicitLanguage = language != nil
+    if language == nil {
+        var resolved: [String: JSONValue] = [:]
+        if let switching = options["enableCodeSwitching"], switching != .null { resolved["codeSwitching"] = switching }
+        if options["enableCodeSwitching"] == .bool(true), let languages = options["codeSwitchingConfig"]?["languages"], languages != .null {
+            resolved["languages"] = languages
+        } else if let value = options["language"]?.stringValue {
+            resolved["languages"] = .array([.string(value)])
+        } else if options["detectLanguage"] == .bool(true) { resolved["languages"] = .array([JSONValue]()) }
+        if !resolved.isEmpty { language = resolved }
+    }
+    for key in ["language", "detectLanguage", "enableCodeSwitching", "codeSwitchingConfig"] {
+        if let value = current.removeValue(forKey: key), value != .null {
+            warnings.append(.init(type: "deprecated", setting: key, message: explicitLanguage ? "Ignored because languageConfig is provided; remove this deprecated option." : "Use languageConfig instead."))
+        }
+    }
+    if let vocabulary = current["customVocabulary"]?.arrayValue {
+        warnings.append(.init(type: "deprecated", setting: "customVocabulary", message: "Use customVocabulary: true with customVocabularyConfig instead of an array."))
+        if current["customVocabularyConfig"]?["vocabulary"] != nil {
+            warnings.append(.init(type: "other", message: "customVocabularyConfig.vocabulary overrides the deprecated customVocabulary array."))
+            current["customVocabulary"] = .bool(true)
+        } else {
+            let valid = vocabulary.filter { item in
+                if item.stringValue != nil { return true }
+                guard item["value"]?.stringValue != nil else { return false }
+                if let value = item["intensity"], value != .null, value.doubleValue?.isFinite != true { return false }
+                if let value = item["language"], value != .null, value.stringValue == nil { return false }
+                if let value = item["pronunciations"], value != .null, value.arrayValue?.allSatisfy({ $0.stringValue != nil }) != true { return false }
+                return true
+            }
+            let mapped = valid.map { item -> JSONValue in
+                guard let object = item.objectValue else { return item }
+                return .object(object.filter { ["value", "intensity", "pronunciations", "language"].contains($0.key) && $0.value != .null })
+            }
+            if valid.count != vocabulary.count { warnings.append(.init(type: "other", message: "Invalid customVocabulary entries were ignored; use strings or objects with a string value and correctly typed optional fields.")) }
+            current.removeValue(forKey: "customVocabulary")
+            if !valid.isEmpty {
+                current["customVocabulary"] = .bool(true)
+                current["customVocabularyConfig"] = .object(["vocabulary": .array(mapped)])
+            }
+        }
+    }
+    current.removeValue(forKey: "pollIntervalMs"); current.removeValue(forKey: "pollTimeoutMs")
+    var body = gladiaTranscriptionOptions(from: current).filter { $0.value != .null }
+    if modelID != "default" { body["model"] = .string(modelID) }
+    if let language { body["language_config"] = gladiaNestedOptions(.object(language), mapping: ["codeSwitching": "code_switching"]) }
+    if let pii = body.removeValue(forKey: "piiRedaction") { body["pii_redaction"] = pii }
+    if let pii = body.removeValue(forKey: "piiRedactionConfig") {
+        body["pii_redaction_config"] = gladiaNestedOptions(pii, mapping: ["entityTypes": "entity_types", "processedTextType": "processed_text_type"])
+        if options["piiRedaction"] != .bool(true) { warnings.append(.init(type: "other", message: "piiRedactionConfig has no effect unless piiRedaction is true.")) }
+    }
+    if let translation = body["translation_config"] { body["translation_config"] = gladiaNestedOptions(translation, mapping: ["contextAdaptation": "context_adaptation"]) }
+    if modelID == "solaria-3" {
+        if language?["languages"]?.arrayValue?.count != 1 { warnings.append(.init(type: "other", message: "The \"solaria-3\" model supports a single language only. Pass exactly one language in languageConfig.languages; Gladia may reject the request.")) }
+        if language?["codeSwitching"] == .bool(true) { warnings.append(.init(type: "other", message: "The \"solaria-3\" model does not support code switching; Gladia may reject the request.")) }
+    }
+    return (body, warnings)
 }

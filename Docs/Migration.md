@@ -102,6 +102,19 @@ frameworks. No existing 2.x tag is rewritten. The 2.x line remains available for
 pinned applications; ongoing feature ports use modular releases, with any 2.x
 backport evaluated separately.
 
+## Core 1.3 and UI 1.1 additions
+
+The new optional request/result fields and provider settings retain the original
+initializer and helper overloads, including typed function references. New
+overloads expose URL/timing transcription, uploaded-video delivery, telemetry
+origins, steering queues and current provider options.
+
+Exhaustive switches must handle new cases in `LanguageStreamPart`,
+`AIUIMessagePart`, `AIRealtimeConnectionKind`,
+`AIModelCapabilities.Realtime.Connection` and `AIModelCapabilitySection`.
+Existing `AIRealtimeServerEvent` associated-value arity remains unchanged;
+normalized usage is available through its computed `usage` property.
+
 ## Contribute and synchronize upstream
 
 Edit the canonical `SwiftAISDK/SwiftAISDK` repository. Distribution repositories

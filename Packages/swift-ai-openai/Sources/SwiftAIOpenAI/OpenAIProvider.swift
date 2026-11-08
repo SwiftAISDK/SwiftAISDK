@@ -21,7 +21,7 @@ public final class OpenAIProvider: AIProvider, AIEvaluationProvider, AIDecisionP
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
         if let organization = settings.organization { headers["openai-organization"] = headers["openai-organization"] ?? organization }
         if let project = settings.project { headers["openai-project"] = headers["openai-project"] ?? project }
-        headers = withUserAgentSuffix(headers, "ai-sdk-openai/4.0.106")
+        headers = withUserAgentSuffix(headers, "ai-sdk-openai/4.0.111")
         let baseURL = withoutTrailingSlash(settings.baseURL ?? settings.environmentValue(["OPENAI_BASE_URL"]) ?? "https://api.openai.com/v1")
         var config = OpenAIModelConfiguration(http: AIProviderHTTPClient(providerID: providerID, headers: headers, transport: settings.transport, credentialResolver: credential,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: settings.queryParams) }), baseURL: baseURL, openAIBackedProviderRoot: providerID)

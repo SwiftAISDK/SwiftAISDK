@@ -10,12 +10,22 @@ public struct GladiaProviderSettings: Sendable {
     public var baseURL: String?
     public var headers: [String: String]
     public var queryParams: [String: String]
+    public var pollIntervalMs: Int?
+    public var pollTimeoutMs: Int?
     public var transport: any AITransport
 
+    /// Preserves the original initializer function-reference signature.
     public init(apiKey: String? = nil, apiKeyProvider: (@Sendable () async throws -> String)? = nil, baseURL: String? = nil, headers: [String: String] = [:],
                 queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared) {
+        self.init(apiKey: apiKey, apiKeyProvider: apiKeyProvider, baseURL: baseURL, headers: headers,
+                  queryParams: queryParams, transport: transport, pollIntervalMs: nil, pollTimeoutMs: nil)
+    }
+
+    public init(apiKey: String? = nil, apiKeyProvider: (@Sendable () async throws -> String)? = nil, baseURL: String? = nil, headers: [String: String] = [:],
+                queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared, pollIntervalMs: Int? = nil, pollTimeoutMs: Int? = nil) {
         self.apiKey = apiKey; self.apiKeyProvider = apiKeyProvider; self.baseURL = baseURL; self.headers = headers
         self.queryParams = queryParams; self.transport = transport
+        self.pollIntervalMs = pollIntervalMs; self.pollTimeoutMs = pollTimeoutMs
     }
 }
 
@@ -25,6 +35,9 @@ public final class GladiaProvider: AIProvider, Sendable {
     private let config: GladiaModelConfiguration
 
     public init(configuration: GladiaProviderSettings = .init()) throws {
+        for (name, value) in [("pollIntervalMs", configuration.pollIntervalMs), ("pollTimeoutMs", configuration.pollTimeoutMs)] {
+            if let value, value <= 0 { throw AIError.invalidArgument(argument: name, message: "Gladia \(name) must be a positive integer.") }
+        }
         var resolvedSettings = configuration
         if let supplier = resolvedSettings.apiKeyProvider {
             let credential = AIAsyncCredential(supplier)
@@ -38,11 +51,12 @@ public final class GladiaProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["x-gladia-key"] = headers["x-gladia-key"] ?? "\(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-gladia/3.0.72")
+        headers["x-gladia-version"] = headers["x-gladia-version"] ?? "ai-sdk/3.0.77"
+        headers = withUserAgentSuffix(headers, "ai-sdk-gladia/3.0.77")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.gladia.io")
         let http = AIProviderHTTPClient(providerID: "gladia", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })
-        config = GladiaModelConfiguration(http: http, baseURL: baseURL)
+        config = GladiaModelConfiguration(http: http, baseURL: baseURL, pollIntervalMs: configuration.pollIntervalMs, pollTimeoutMs: configuration.pollTimeoutMs)
     }
 
     public func languageModel(_ modelID: String) throws -> any LanguageModel {
@@ -75,6 +89,7 @@ public final class GladiaProvider: AIProvider, Sendable {
 
     public func transcriptionModel() throws -> any TranscriptionModel { try transcriptionModel("default") }
     public func transcription() throws -> any TranscriptionModel { try transcriptionModel() }
+    public func transcription(_ modelID: String) throws -> any TranscriptionModel { try transcriptionModel(modelID) }
 
     public func chatModel(_ modelID: String) throws -> any LanguageModel { try languageModel(modelID) }
 }
@@ -88,7 +103,15 @@ public extension AIProviders {
 public struct GladiaModelConfiguration: AIProviderHTTPConfiguration {
     public var http: AIProviderHTTPClient
     public var baseURL: String
+    public var pollIntervalMs: Int?
+    public var pollTimeoutMs: Int?
+    /// Preserves the original initializer function-reference signature.
     public init(http: AIProviderHTTPClient, baseURL: String) {
+        self.init(http: http, baseURL: baseURL, pollIntervalMs: nil, pollTimeoutMs: nil)
+    }
+
+    public init(http: AIProviderHTTPClient, baseURL: String, pollIntervalMs: Int? = nil, pollTimeoutMs: Int? = nil) {
         self.http = http; self.baseURL = withoutTrailingSlash(baseURL)
+        self.pollIntervalMs = pollIntervalMs; self.pollTimeoutMs = pollTimeoutMs
     }
 }

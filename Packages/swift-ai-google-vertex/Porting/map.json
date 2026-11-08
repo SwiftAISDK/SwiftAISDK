@@ -21,6 +21,7 @@
         "packages/google-vertex/src/google-vertex-cloud-tts-speech-model.test.ts",
         "packages/google-vertex/src/google-vertex-embedding-model.test.ts",
         "packages/google-vertex/src/google-vertex-image-model.test.ts",
+        "packages/google-vertex/src/google-vertex-interactions-language-model.test.ts",
         "packages/google-vertex/src/google-vertex-language-model.test.ts",
         "packages/google-vertex/src/google-vertex-location-validation.test.ts",
         "packages/google-vertex/src/google-vertex-provider-base.test.ts",
@@ -41,6 +42,7 @@
     "sources": [
       "Packages/swift-ai-google-vertex/Sources/SwiftAIGoogleVertex/GoogleVertexAnthropicTools.swift",
       "Packages/swift-ai-google-vertex/Sources/SwiftAIGoogleVertex/GoogleVertexCloudTTSSpeechModel.swift",
+      "Packages/swift-ai-google-vertex/Sources/SwiftAIGoogleVertex/GoogleVertexGeminiTranscriptionModel.swift",
       "Packages/swift-ai-google-vertex/Sources/SwiftAIGoogleVertex/GoogleVertexHostedProvider.swift",
       "Packages/swift-ai-google-vertex/Sources/SwiftAIGoogleVertex/GoogleVertexHostedRouting.swift",
       "Packages/swift-ai-google-vertex/Sources/SwiftAIGoogleVertex/GoogleVertexImageInputCapabilities.swift",
@@ -53,7 +55,8 @@
       "Packages/swift-ai-google-vertex/Tests/SwiftAIGoogleVertexTests/GoogleVertexMediaAndMaaSTests.swift",
       "Packages/swift-ai-google-vertex/Tests/SwiftAIGoogleVertexTests/TestSupport.swift",
       "Packages/swift-ai-google-vertex/Tests/SwiftAIGoogleVertexTests/Weekly20261101VertexTests.swift",
-      "Tests/SwiftAISDKTests/ProviderInitializerCompatibility160Tests.swift"
+      "Packages/swift-ai-google-vertex/Tests/SwiftAIGoogleVertexTests/Weekly20261108VertexOutputPolicyTests.swift",
+      "Packages/swift-ai-google-vertex/Tests/SwiftAIGoogleVertexTests/Weekly20261108VertexTests.swift"
     ],
     "resources": []
   },
@@ -63,5 +66,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "M6: Vertex runtime and focused tests extracted. Gemini hosting reuses Google; Anthropic hosting reuses Anthropic; MaaS/xAI hosting reuses the compatible wire adapter. Mixed legacy initializer assertions remain in the workspace. Baselines and documented gaps unchanged. 2026-11-01: reviewed @ai-sdk/google-vertex 5.0.122 -> 5.0.129 archives and release-matched tests (612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 028a025398782f4938303f48fbeee45c79af544b). Weekly20261101VertexTests translate the new google-vertex-anthropic-structured-output test and cover async Express key rotation/nonempty validation plus Google video-metadata namespace precedence. Edge/Node credential-provider mechanics remain JS-specific; native OAuth/service-account behavior is retained. Shared Google/Anthropic behavior is verified through real hosted adapters, not promoted from baseline review alone."
+  "reviewNote": "M6: Vertex runtime and focused tests extracted. Gemini hosting reuses Google; Anthropic hosting reuses Anthropic; MaaS/xAI hosting reuses the compatible wire adapter. Mixed legacy initializer assertions remain in the workspace. Baselines and documented gaps unchanged. 2026-11-01: reviewed @ai-sdk/google-vertex 5.0.122 -> 5.0.129 archives and release-matched tests (612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 028a025398782f4938303f48fbeee45c79af544b). Weekly20261101VertexTests translate the new google-vertex-anthropic-structured-output test and cover async Express key rotation/nonempty validation plus Google video-metadata namespace precedence. Edge/Node credential-provider mechanics remain JS-specific; native OAuth/service-account behavior is retained. Shared Google/Anthropic behavior is verified through real hosted adapters, not promoted from baseline review alone. 2026-11-08: reviewed @ai-sdk/google-vertex 5.0.129 -> 5.0.134 published source/declarations and matching-release tests. Ported opt-in Claude 4.5+ native structured output without strict tools and Gemini word timing/warning behavior. Repaired Gemini transcription routing with native unary generateContent and OAuth Live PCM WebSockets (setup gating, revisable interim/final segments, usage, quiet grace, cancellation). Existing catalog routing/maxima and seed zero are equivalent; declared missing gemini-nano-banana-2.1 file input. Confirmed MaaS foreign image downloads exclude credentials. Shared Google changes inherited; Node/edge auth adapters map to native Foundation credentials and transport rather than JS runtimes."
 }

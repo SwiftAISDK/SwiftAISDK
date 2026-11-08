@@ -40,10 +40,10 @@ public func openAIProviderOptionNamespaceKeys(providerID: String, providerRoot: 
         guard let key, !keys.contains(key) else { return }
         keys.append(key)
     }
-    append(providerRoot ?? openAIBackedProviderRoot(providerID))
-    append(openAIBackedProviderRoot(providerID))
-    append(providerID)
     append("openai")
+    append(openAIBackedProviderRoot(providerID))
+    append(providerRoot ?? openAIBackedProviderRoot(providerID))
+    append(providerID)
     return keys
 }
 public func openAIBackedProviderRoot(_ providerID: String) -> String? {
@@ -251,13 +251,21 @@ public func openAIResponsesProviderOptions(from extraBody: [String: JSONValue], 
     openAIProviderOptions(from: extraBody, providerID: providerID, providerRoot: providerRoot)
 }
 public func openAIResponsesProviderOptions(providerOptions: [String: JSONValue], extraBody: [String: JSONValue], providerID: String, providerRoot: String? = nil) -> [String: JSONValue] {
-    openAIProviderOptions(providerOptions: providerOptions, extraBody: extraBody, providerID: providerID, providerRoot: providerRoot)
+    let root = providerRoot ?? openAIBackedProviderRoot(providerID) ?? "openai"
+    var output = openAIProviderOptions(from: extraBody, providerID: providerID, providerRoot: providerRoot)
+    let selected = providerOptions[root].flatMap { $0 == .null ? nil : $0.objectValue }
+        ?? providerOptions["openai"].flatMap { $0 == .null ? nil : $0.objectValue }
+    if let selected { output.merge(selected) { _, new in new } }
+    return output
 }
 func openAIImageOptions(from extraBody: [String: JSONValue], providerID: String = "openai", providerRoot: String? = nil) -> [String: JSONValue] {
     var output = openAIProviderOptions(from: extraBody, providerID: providerID, providerRoot: providerRoot)
     openAIResponsesMoveKey("outputFormat", to: "output_format", in: &output)
     openAIResponsesMoveKey("outputCompression", to: "output_compression", in: &output)
     openAIResponsesMoveKey("inputFidelity", to: "input_fidelity", in: &output)
+    openAIResponsesMoveKey("safetyIdentifier", to: "safety_identifier", in: &output)
+    openAIResponsesMoveKey("frameCount", to: "frame_count", in: &output)
+    openAIResponsesMoveKey("frameDurationMs", to: "frame_duration_ms", in: &output)
     return output
 }
 func openAIImageOptions(providerOptions: [String: JSONValue], extraBody: [String: JSONValue], providerID: String = "openai", providerRoot: String? = nil) -> [String: JSONValue] {
@@ -265,5 +273,8 @@ func openAIImageOptions(providerOptions: [String: JSONValue], extraBody: [String
     openAIResponsesMoveKey("outputFormat", to: "output_format", in: &output)
     openAIResponsesMoveKey("outputCompression", to: "output_compression", in: &output)
     openAIResponsesMoveKey("inputFidelity", to: "input_fidelity", in: &output)
+    openAIResponsesMoveKey("safetyIdentifier", to: "safety_identifier", in: &output)
+    openAIResponsesMoveKey("frameCount", to: "frame_count", in: &output)
+    openAIResponsesMoveKey("frameDurationMs", to: "frame_duration_ms", in: &output)
     return output
 }

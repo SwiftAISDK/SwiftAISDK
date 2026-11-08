@@ -28,7 +28,8 @@
       "Packages/swift-ai-typesafe-ai/Tests/SwiftAITypeSafeAITests/TestSupport.swift",
       "Packages/swift-ai-typesafe-ai/Tests/SwiftAITypeSafeAITests/TypeSafeAIDecisionCompatibilityTests.swift",
       "Packages/swift-ai-typesafe-ai/Tests/SwiftAITypeSafeAITests/TypesafeAIProviderTests.swift",
-      "Packages/swift-ai-typesafe-ai/Tests/SwiftAITypeSafeAITests/Weekly20261101CredentialsTests.swift"
+      "Packages/swift-ai-typesafe-ai/Tests/SwiftAITypeSafeAITests/Weekly20261101CredentialsTests.swift",
+      "Packages/swift-ai-typesafe-ai/Tests/SwiftAITypeSafeAITests/Weekly20261108DecisionTests.swift"
     ],
     "resources": []
   },
@@ -38,5 +39,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "M6: TypeSafe Decision and legacy Evaluation runtime, lazy authentication and focused suites extracted. Prior baselines, aliases and documented gaps retained."
+  "reviewNote": "2026-11-08: published @ai-sdk/typesafe-ai 3.0.31..3.0.35 source, declarations and matching-release tests reviewed independently. Structured score legends, primitive state normalization and question limits/default box instructions. Delta review is not a claim of whole-provider parity; existing documented gaps remain."
 }

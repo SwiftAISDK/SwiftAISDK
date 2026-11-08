@@ -29,7 +29,8 @@
       "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/BlackForestLabsVideoOperationTests.swift",
       "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/TestSupport.swift",
-      "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/Weekly20261101CredentialsTests.swift"
+      "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/Weekly20261101CredentialsTests.swift",
+      "Packages/swift-ai-black-forest-labs/Tests/SwiftAIBlackForestLabsTests/Weekly20261108WebhookTests.swift"
     ],
     "resources": []
   },
@@ -39,5 +40,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
+  "reviewNote": "2026-11-08: published @ai-sdk/black-forest-labs 2.0.74..2.0.79 source, declarations and matching-release tests reviewed independently. Webhook-only submissions can poll the configured fallback, with bounded registration retries. Delta review is not a claim of whole-provider parity; existing documented gaps remain."
 }

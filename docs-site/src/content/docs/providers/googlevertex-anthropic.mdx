@@ -19,10 +19,25 @@ description: "googleVertex.anthropic provider capabilities and factories."
 
 Set `providerOptions["vertex"]["labels"]` to an object of string values to attach billing and usage labels to a Claude request. Generate and stream calls encode its UTF-8 JSON as a base64 `x-vertex-ai-labels` header. An explicit request or provider header takes precedence regardless of casing. Labels stay isolated to each call; they are omitted from the Anthropic request body. Invalid labels fail before network I/O.
 
+## Native structured output selection
+
+Ordinary automatic native schemas require explicit
+`GoogleVertexHostedProviderSettings.supportsNativeStructuredOutput = true`,
+a recognized Claude version of at least 4.5, and a Google Cloud organization
+policy permitting `structured_outputs`. The setting defaults to false; strict
+tool inputs remain disabled.
+
+Shared Anthropic selection rules still apply: explicit `outputFormat` can
+request native output, and models rejecting forced JSON tools use the lossless
+native-schema fallback even when hosting defaults disable automatic selection.
+Schemas that cannot be preserved keep the JSON-tool path in automatic mode.
+The setting controls ordinary automatic selection; it is not a service-policy
+enforcement switch.
+
 
 ## Notes
 
-Vertex Anthropic mirrors upstream Google Vertex 5.0.129 and inherits the shared Anthropic 4.0.82 model recognition, system options, thinking behavior, citations, and beta headers. The 2026-10-18 pass: Validated labels are UTF-8 JSON/base64 encoded into x-vertex-ai-labels after final request-header merging, with explicit caller header precedence. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
+Vertex Anthropic mirrors upstream Google Vertex 5.0.134 and inherits the shared Anthropic 4.0.99 model recognition, system options, thinking behavior, citations, and beta headers. The 2026-10-18 pass: Validated labels are UTF-8 JSON/base64 encoded into x-vertex-ai-labels after final request-header merging, with explicit caller header precedence. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. Automatic native structured output requires host opt-in and a supported Claude4.5+ model; strict tool inputs remain disabled. Explicit outputFormat and lossless fallback for forced-tool-rejecting models retain the shared policy override.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

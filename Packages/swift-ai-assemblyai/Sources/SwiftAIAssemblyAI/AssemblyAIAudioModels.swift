@@ -27,7 +27,7 @@ public final class AssemblyAITranscriptionModel: TranscriptionModel, @unchecked 
             abortSignal: request.abortSignal
         ))
         guard (200..<300).contains(uploadResponse.statusCode) else {
-            throw audioProviderHTTPStatusError(provider: providerID, response: uploadResponse)
+            throw assemblyAIHTTPStatusError(provider: providerID, response: uploadResponse)
         }
         let uploadRaw = try uploadResponse.jsonValue()
         guard let uploadURL = uploadRaw["upload_url"]?.stringValue else {
@@ -51,7 +51,7 @@ public final class AssemblyAITranscriptionModel: TranscriptionModel, @unchecked 
             abortSignal: request.abortSignal
         ))
         guard (200..<300).contains(submitResponse.statusCode) else {
-            throw audioProviderHTTPStatusError(provider: providerID, response: submitResponse)
+            throw assemblyAIHTTPStatusError(provider: providerID, response: submitResponse)
         }
         let submitRaw = try submitResponse.jsonValue()
         guard let submitStatus = submitRaw["status"]?.stringValue, assemblyAITranscriptStatuses.contains(submitStatus) else {
@@ -86,7 +86,7 @@ public final class AssemblyAITranscriptionModel: TranscriptionModel, @unchecked 
         while true {
             let response = try await config.transport.send(try getRequest(path: "/v2/transcript/\(id)", headers: request.headers, abortSignal: request.abortSignal))
             guard (200..<300).contains(response.statusCode) else {
-                throw audioProviderHTTPStatusError(provider: providerID, response: response)
+                throw assemblyAIHTTPStatusError(provider: providerID, response: response)
             }
             let raw = try response.jsonValue()
             guard let status = raw["status"]?.stringValue, assemblyAITranscriptStatuses.contains(status) else {

@@ -100,13 +100,45 @@ known protocol events while preserving unknown events as `.custom`, and maps
 audio, transcript, usage, delegation, acknowledgement, and error events onto
 the shared contract.
 
+## Google and Gateway
+
+Google Gemini Live and Gateway's normalized realtime route also implement the
+native WebSocket contract:
+
+```swift
+let google = try GoogleGenerativeAIProvider(settings: .init(apiKey: "..."))
+let session = try await AIRealtimeSession.connectServer(
+    model: google.realtimeModel("gemini-3.8-live")
+)
+```
+
+Gateway exposes `GatewayProvider.realtimeModel("openai/gpt-realtime-2")` through
+the same session runtime. Both support ephemeral client-secret and trusted
+server connections, resolve async credentials before a server connection, and
+reject transcription intent. Google parsers are per session; `generationComplete`
+does not close a turn, and late transcripts retain the preceding turn identity.
+Unassociated usage snapshots remain separate from completion.
+
 ## Scope
 
 Realtime sessions are separate from `StreamingTranscriptionModel`, which only
 streams audio in and transcript events out. Cartesia Ink 2 and Gateway use that
 narrower transcription contract. Browser WebRTC/client-permission flows,
-provider-backed Responses delegation, non-Live OpenAI Realtime models, Google
-realtime, and ElevenLabs realtime transcription remain deferred until their
+provider-backed Responses delegation, non-Live OpenAI Realtime models and
+ElevenLabs realtime transcription remain deferred until their
 provider-specific semantics are translated onto the shared duplex contracts.
 
 Async credential providers resolve at each server connection. `AIRealtimeSession.connectServer` awaits `getResolvedServerWebSocketConfig()`; existing models keep their synchronous configuration hook through the default implementation. OpenAI models with dynamic credentials require the async hook when obtaining configuration directly.
+
+## Intent and usage
+
+Connection and configuration overloads accept `AIRealtimeSessionIntent`, defaulting
+to `.conversation`. A provider must explicitly support `.transcription`; unsupported
+intents fail before connecting. Server WebSocket configuration carries trusted
+server credentials and belongs on the server.
+
+`AIRealtimeServerEvent.usage` exposes an optional `AIRealtimeUsage` snapshot with
+gross input/output tokens, cached input counts, modality details and duration
+where available. Cached counts are included in gross input tokens. Raw provider
+events are retained, and snapshots are not summed automatically. Existing realtime
+event associated-value patterns remain valid.

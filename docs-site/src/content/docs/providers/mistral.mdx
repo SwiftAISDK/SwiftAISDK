@@ -82,11 +82,38 @@ Chat-only GLM 5.3 and unknown model IDs do not gain Conversations reasoning.
 resolved before each authenticated Chat, Conversations, embedding, speech or
 transcription request. Static keys and provider/request header overrides remain
 available. Supplier errors fail the operation before sending a request.
+## Streaming transcription and managed voice control
+
+`MistralProvider.streamingTranscriptionModel(...)` (also
+`streamingTranscription`) supports Voxtral realtime transcription with PCM16 and
+a positive sample rate, defaulting to 16 kHz. It waits for the handshake, sends
+64 KiB frames with backpressure, and finalizes only on `transcription.done`.
+Cancellation, invalid events, errors and early close stop the producer/socket.
+
+Realtime options include `language`, `contextBias`, `diarize`,
+`targetStreamingDelayMs` (80...1200 or 2400), `speakerReferences` and
+`turnDetection`. Diarization/turn and speaker clip constraints are validated.
+Offline-only options warn in streams; realtime-only options warn in file calls.
+Untimed speaker segments remain in metadata without invented timestamps, and
+raw provider usage is retained. Settings support injected WebSocket transports
+and per-connection async credentials.
+
+`provider.voiceSessions.create(modelID:sessionConfiguration:)` and
+`close(sessionID:)` provide authenticated `/audio/sessions` server control.
+`buildSessionConfiguration(_:modelID:update:)` throws for unsupported normalized
+or strict Mistral settings. `MistralVoiceSessions.parseServerEvent` maps final
+transcripts, updates and errors while retaining raw/unknown events. Browser
+LiveKit room, microphone, playback, tool RPC and reconnect transport remain
+unimplemented; these APIs do not advertise a managed-voice server WebSocket.
+
+Chat supports medium reasoning on Large 4 and specific function choice while
+retaining all tools. Conversations keeps its distinct tool-selection contract.
+Tool argument strings retain valid JSON verbatim and JSON-quote malformed text.
 
 
 ## Notes
 
-Mistral chat, embeddings, Voxtral transcription, and speech mirror upstream Mistral 4.0.77: `MISTRAL_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language/chat, embedding/textEmbedding, transcription, and speech/speechModel aliases, chat `/v1/chat/completions`, embeddings `/v1/embeddings`, transcription `/v1/audio/transcriptions`, speech `/v1/audio/speech`, structured outputs, JSON-object instruction injection, stop sequences via native `stop`, top-level reasoning mapped to supported Mistral reasoning effort with providerOptions precedence, provider option schema validation including speech `refAudio`, tool/tool-choice mapping, fragmented streaming tool-call buffering, tool-result output conversion, image/PDF user file support, typed assistant thinking blocks, Voxtral option validation and rich segment/usage metadata, streaming text/reasoning/tool lifecycle, `promptCacheKey` to `prompt_cache_key` mapping, complete raw usage and cached-token accounting, speech reference-audio metadata redaction, response metadata, Mistral error schema, and unsupported image family. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-04 pass maps error finish reasons, injects JSON schemas when structuredOutputs is false, and retains native transcription usage. The 2026-10-11 pass: conversation(modelID) provides stateless /conversations generation and SSE with replayable builtin tools, sources, usage and errors. MistralTools.webSearch/webSearchPremium, Large 4 reasoning and common embedding dimensions are available. The 2026-10-18 pass: Known non-reasoning exclusions retain warnings while future model IDs inherit reasoning-effort support. The 2026-10-25 pass: Voxtral 3 speech forwards validated expressiveness and IPA phoneme hints; transcription supports detected language, phrase context bias and model-aware language/timestamp validation. Missing chat completion signals are interrupted. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
+Mistral chat, embeddings, Voxtral transcription, and speech mirror upstream Mistral 4.0.81: `MISTRAL_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language/chat, embedding/textEmbedding, transcription, and speech/speechModel aliases, chat `/v1/chat/completions`, embeddings `/v1/embeddings`, transcription `/v1/audio/transcriptions`, speech `/v1/audio/speech`, structured outputs, JSON-object instruction injection, stop sequences via native `stop`, top-level reasoning mapped to supported Mistral reasoning effort with providerOptions precedence, provider option schema validation including speech `refAudio`, tool/tool-choice mapping, fragmented streaming tool-call buffering, tool-result output conversion, image/PDF user file support, typed assistant thinking blocks, Voxtral option validation and rich segment/usage metadata, streaming text/reasoning/tool lifecycle, `promptCacheKey` to `prompt_cache_key` mapping, complete raw usage and cached-token accounting, speech reference-audio metadata redaction, response metadata, Mistral error schema, and unsupported image family. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-04 pass maps error finish reasons, injects JSON schemas when structuredOutputs is false, and retains native transcription usage. The 2026-10-11 pass: conversation(modelID) provides stateless /conversations generation and SSE with replayable builtin tools, sources, usage and errors. MistralTools.webSearch/webSearchPremium, Large 4 reasoning and common embedding dimensions are available. The 2026-10-18 pass: Known non-reasoning exclusions retain warnings while future model IDs inherit reasoning-effort support. The 2026-10-25 pass: Voxtral 3 speech forwards validated expressiveness and IPA phoneme hints; transcription supports detected language, phrase context bias and model-aware language/timestamp validation. Missing chat completion signals are interrupted. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-08 pass adds native streaming transcription and managed Voice session creation/closure with pure event contracts; browser LiveKit media remains unimplemented.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

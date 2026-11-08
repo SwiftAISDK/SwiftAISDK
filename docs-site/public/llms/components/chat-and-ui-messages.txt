@@ -1,24 +1,24 @@
 # Chat and UI messages
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/components/chat-and-ui-messages/
+Source URL: /components/chat-and-ui-messages/
 
 :::note[Development API reference]
-These declarations follow the canonical repository's main branch. Match your installed versions to the published release documentation. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for published packages and version-compatible examples.
+These declarations follow the canonical repository's main branch. Match your installed versions to the published release documentation. See [Install](/getting-started/install/) for published packages and version-compatible examples.
 :::
 
 ## Symbol counts
 
 | Symbol kind | Count |
 | --- | --- |
-| Case | 26 |
+| Case | 27 |
 | Class | 1 |
 | Enumeration | 5 |
 | Function | 17 |
-| Initializer | 20 |
+| Initializer | 21 |
 | Instance Method | 23 |
-| Instance Property | 105 |
+| Instance Property | 107 |
 | Protocol | 1 |
-| Structure | 16 |
+| Structure | 17 |
 | Type Alias | 3 |
 | Type Method | 5 |
 
@@ -41,6 +41,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Case | `SwiftAIUI.AIUIMessagePart.reasoning(_:)` | `case reasoning(AIUIReasoningPart)` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Case | `SwiftAIUI.AIUIMessagePart.reasoningFile(_:)` | `case reasoningFile(AIStreamFile)` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Case | `SwiftAIUI.AIUIMessagePart.source(_:)` | `case source(AISource)` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
+| Case | `SwiftAIUI.AIUIMessagePart.steeringMessage(_:)` | `case steeringMessage(AIUISteeringMessagePart)` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Case | `SwiftAIUI.AIUIMessagePart.text(_:)` | `case text(AIUITextPart)` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Case | `SwiftAIUI.AIUIMessagePart.toolApprovalRequest(_:)` | `case toolApprovalRequest(AIToolApprovalRequest)` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Case | `SwiftAIUI.AIUIMessagePart.toolApprovalResponse(_:)` | `case toolApprovalResponse(AIToolApprovalResponse)` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
@@ -81,6 +82,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Initializer | `SwiftAIUI.init(chatID:transport:messages:generateMessageID:onError:onFinish:sendAutomaticallyWhen:)` | `@MainActor init(chatID: String = UUID().uuidString, transport: any AIChatTransport, messages: [AIUIMessage] = [], generateMessageID: @escaping @Sendable () -> String = { UUID().uuidString }, onError: (@MainActor @Sendable (Error) -> Void)? = nil, onFinish: (@MainActor @Sendable (AIChatSessionFinishEvent) -> Void)? = nil, sendAutomaticallyWhen: (@MainActor @Sendable ([AIUIMessage]) -> Bool)? = nil)` | [Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatSession.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatSession.swift) |
 | Initializer | `SwiftAIUI.init(chatID:trigger:messageID:responseMessageID:messages:abortSignal:headers:body:metadata:)` | `init(chatID: String, trigger: AIChatTransportTrigger = .submitMessage, messageID: String? = nil, responseMessageID: String? = nil, messages: [AIUIMessage], abortSignal: AIAbortSignal? = nil, headers: [String : String] = [:], body: [String : JSONValue] = [:], metadata: JSONValue? = nil)` | [Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatTransport.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatTransport.swift) |
 | Initializer | `SwiftAIUI.init(headers:body:metadata:)` | `init(headers: [String : String] = [:], body: [String : JSONValue] = [:], metadata: JSONValue? = nil)` | [Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatSession.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatSession.swift) |
+| Initializer | `SwiftAIUI.init(id:content:)` | `init(id: String, content: [AIContentPart])` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Initializer | `SwiftAIUI.init(id:role:parts:metadata:)` | `init(id: String = UUID().uuidString, role: MessageRole, parts: [AIUIMessagePart] = [], metadata: [String : JSONValue] = [:])` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Initializer | `SwiftAIUI.init(id:role:parts:metadata:unavailableStaticToolCallIDs:)` | `init(id: String = UUID().uuidString, role: MessageRole, parts: [AIUIMessagePart] = [], metadata: [String : JSONValue] = [:], unavailableStaticToolCallIDs: Set<String>)` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Initializer | `SwiftAIUI.init(id:text:state:providerMetadata:)` | `init(id: String? = nil, text: String, state: AIUIStreamingPartState? = nil, providerMetadata: [String : JSONValue] = [:])` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
@@ -147,6 +149,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Instance Property | `SwiftAIUI.chunkID` | `var chunkID: String?` | [Packages/swift-ai-ui/Sources/SwiftAIUI/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/Errors.swift) |
 | Instance Property | `SwiftAIUI.chunkType` | `var chunkType: String?` | [Packages/swift-ai-ui/Sources/SwiftAIUI/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/Errors.swift) |
 | Instance Property | `SwiftAIUI.citations` | `var citations: [AICitation]` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
+| Instance Property | `SwiftAIUI.content` | `var content: [AIContentPart]` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Instance Property | `SwiftAIUI.description` | `var description: String { get }` | [Packages/swift-ai-ui/Sources/SwiftAIUI/AIUIMessageValidation.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/AIUIMessageValidation.swift) |
 | Instance Property | `SwiftAIUI.description` | `var description: String { get }` | [Packages/swift-ai-ui/Sources/SwiftAIUI/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/Errors.swift) |
 | Instance Property | `SwiftAIUI.error` | `@Published @MainActor var error: Error? { get set }` | [Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatSession.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatSession.swift) |
@@ -161,6 +164,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Instance Property | `SwiftAIUI.id` | `var id: String?` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Instance Property | `SwiftAIUI.id` | `var id: String?` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Instance Property | `SwiftAIUI.id` | `var id: String?` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
+| Instance Property | `SwiftAIUI.id` | `var id: String` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Instance Property | `SwiftAIUI.id` | `var id: String` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Instance Property | `SwiftAIUI.inputSchema` | `var inputSchema: JSONValue` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Instance Property | `SwiftAIUI.isAbort` | `var isAbort: Bool` | [Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatSession.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatSession.swift) |
@@ -238,6 +242,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Structure | `SwiftAIUI.AIUIMessageValidationIssue` | `struct AIUIMessageValidationIssue` | [Packages/swift-ai-ui/Sources/SwiftAIUI/AIUIMessageValidation.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/AIUIMessageValidation.swift) |
 | Structure | `SwiftAIUI.AIUIMessageValidationResult` | `struct AIUIMessageValidationResult` | [Packages/swift-ai-ui/Sources/SwiftAIUI/AIUIMessageValidation.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/AIUIMessageValidation.swift) |
 | Structure | `SwiftAIUI.AIUIReasoningPart` | `struct AIUIReasoningPart` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
+| Structure | `SwiftAIUI.AIUISteeringMessagePart` | `struct AIUISteeringMessagePart` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Structure | `SwiftAIUI.AIUITextPart` | `struct AIUITextPart` | [Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/CoreUIMessages.swift) |
 | Structure | `SwiftAIUI.DirectAIChatTransport` | `struct DirectAIChatTransport` | [Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatTransport.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/AIChatTransport.swift) |
 | Type Alias | `SwiftAIUI.AIUIDataPartConverter` | `typealias AIUIDataPartConverter = @Sendable (AIUIDataPart) throws -> AIContentPart?` | [Packages/swift-ai-ui/Sources/SwiftAIUI/AIUIMessageConversion.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-ui/Sources/SwiftAIUI/AIUIMessageConversion.swift) |
@@ -273,3 +278,12 @@ When a streamed tool call reuses an ID, its latest nonempty name replaces the
 previous name during input and completion. `pruneMessages` removes a reasoning
 group when all following content before the next reasoning group was pruned;
 reasoning attached to retained text/tools and trailing reasoning survive.
+
+## Delivered steering history
+
+The reducer persists `.steeringMessage` parts with their delivery ID, user message
+and step number. `convertToModelMessages` expands them in assistant/tool/user order
+and preserves user text/file metadata and references. Steering content must have
+the user role. Use the plural conversion for this history: converting a single UI
+message rejects embedded steering rather than dropping delivered user messages.
+Consumers with exhaustive switches over `AIUIMessagePart` must handle the new case.

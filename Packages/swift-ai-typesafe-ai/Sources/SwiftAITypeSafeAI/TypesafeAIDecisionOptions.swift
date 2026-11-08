@@ -94,7 +94,12 @@ func prepareTypesafeState(_ state: [AIDecisionStatePart]) throws -> (state: JSON
         images.append(TypeSafeImagePart(name: name, filename: filename ?? "\(name).\(mediaType == "image/png" ? "png" : "jpeg")", mediaType: mediaType, bytes: bytes))
         if options["insertReference"]?.boolValue ?? !stateStrings.contains(where: { $0.contains(reference) }) { parts.append(.text(reference)) }
     }
-    if parts.count == 1, case let .json(value) = parts[0] { return (value, assets, images) }
+    if parts.count == 1, case let .json(value) = parts[0] {
+        switch value {
+        case .string, .object, .array: return (value, assets, images)
+        default: break
+        }
+    }
     let text = try parts.map { part -> String in
         switch part {
         case let .text(value): value

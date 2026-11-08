@@ -10,14 +10,24 @@ public struct MistralProviderSettings: Sendable {
     public var baseURL: String?
     public var headers: [String: String]
     public var queryParams: [String: String]
+    public var webSocketTransport: any AIDuplexWebSocketTransport
     public var transport: any AITransport
 
+    /// Preserves the original initializer function-reference signature.
     public init(apiKey: String? = nil, baseURL: String? = nil, headers: [String: String] = [:],
                 queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared,
                 apiKeyProvider: (@Sendable () async throws -> String)? = nil) {
+        self.init(apiKey: apiKey, baseURL: baseURL, headers: headers, queryParams: queryParams,
+                  transport: transport, apiKeyProvider: apiKeyProvider,
+                  webSocketTransport: URLSessionDuplexWebSocketTransport.shared)
+    }
+
+    public init(apiKey: String? = nil, baseURL: String? = nil, headers: [String: String] = [:],
+                queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared,
+                apiKeyProvider: (@Sendable () async throws -> String)? = nil, webSocketTransport: any AIDuplexWebSocketTransport = URLSessionDuplexWebSocketTransport.shared) {
         self.apiKey = apiKey; self.baseURL = baseURL; self.headers = headers
         self.queryParams = queryParams; self.transport = transport
-        self.apiKeyProvider = apiKeyProvider
+        self.apiKeyProvider = apiKeyProvider; self.webSocketTransport = webSocketTransport
     }
 }
 
@@ -25,8 +35,10 @@ public final class MistralProvider: AIProvider, Sendable {
     public let providerID = "mistral"
     public let supportedCapabilities: Set<ModelCapability> = [.language, .embedding, .transcription, .speech]
     private let http: AIProviderHTTPClient
+    private let webSocketTransport: any AIDuplexWebSocketTransport
 
     public init(configuration: MistralProviderSettings = .init()) throws {
+        webSocketTransport = configuration.webSocketTransport
         let names = ["MISTRAL_API_KEY"]
         let credential = configuration.apiKeyProvider.map(AIAsyncCredential.init)
         guard let key = credential?.placeholder ?? configuration.apiKey ?? environmentValue(names) else {
@@ -34,7 +46,7 @@ public final class MistralProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-mistral/4.0.77")
+        headers = withUserAgentSuffix(headers, "ai-sdk-mistral/4.0.81")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.mistral.ai/v1")
         http = AIProviderHTTPClient(providerID: "mistral", headers: headers, transport: configuration.transport, credentialResolver: credential,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })
@@ -55,6 +67,14 @@ public final class MistralProvider: AIProvider, Sendable {
     public func transcriptionModel(_ modelID: String) throws -> any TranscriptionModel {
         MistralTranscriptionModel(modelID: modelID, http: http)
     }
+
+    public func streamingTranscriptionModel(_ modelID: String) throws -> any StreamingTranscriptionModel {
+        MistralStreamingTranscriptionModel(modelID: modelID, http: http, webSocketTransport: webSocketTransport)
+    }
+    public func streamingTranscription(_ modelID: String) throws -> any StreamingTranscriptionModel { try streamingTranscriptionModel(modelID) }
+
+    /// Server control API for managed voice sessions; media uses a separate LiveKit client.
+    public var voiceSessions: MistralVoiceSessions { .init(http: http) }
 
     public func speechModel(_ modelID: String) throws -> any SpeechModel {
         MistralSpeechModel(modelID: modelID, http: http)

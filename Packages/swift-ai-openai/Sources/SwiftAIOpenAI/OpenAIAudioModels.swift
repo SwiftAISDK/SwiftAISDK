@@ -87,7 +87,24 @@ public final class OpenAICompatibleTranscriptionModel: TranscriptionModel, Strea
             form.appendField(name: "prompt", value: prompt)
             metadataBody["prompt"] = .string(prompt)
         }
-        let extraBody = try isOpenAIBackedProvider(providerID, config: config) ? openAITranscriptionOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, providerRoot: config.openAIBackedProviderRoot, modelID: modelID) : request.extraBody
+        var extraBody = try isOpenAIBackedProvider(providerID, config: config) ? openAITranscriptionOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, providerRoot: config.openAIBackedProviderRoot, modelID: modelID) : request.extraBody
+        var warnings: [AIWarning] = []
+        if isOpenAIBackedProvider(providerID, config: config) {
+            let rawOptions = openAIProviderOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, providerRoot: config.openAIBackedProviderRoot)
+            let explicit = rawOptions["timestampGranularities"] ?? rawOptions["timestamp_granularities"]
+            let requested = request.timestampGranularities?.map(\.rawValue)
+            let effective = explicit?.arrayValue?.compactMap(\.stringValue) ?? requested ?? (extraBody["response_format"]?.stringValue == "verbose_json" ? ["segment"] : nil)
+            if explicit != nil {
+                for granularity in requested ?? [] where explicit?.arrayValue?.contains(.string(granularity)) != true {
+                    warnings.append(AIWarning(type: "unsupported", feature: "timestampGranularities", message: "The \"\(granularity)\" timestamp granularity is excluded by providerOptions.openai.timestampGranularities."))
+                }
+            }
+            let format = extraBody["response_format"]?.stringValue
+            for granularity in effective ?? [] where format != "verbose_json" && !(format == "diarized_json" && granularity == "segment") {
+                warnings.append(AIWarning(type: "unsupported", feature: explicit == nil ? "timestampGranularities" : "providerOptions.openai.timestampGranularities", message: "OpenAI transcription with the \(format ?? "default JSON") response format does not support \(granularity) timestamps."))
+            }
+            extraBody["timestamp_granularities"] = format == "verbose_json" ? effective.map { .array($0.map(JSONValue.string)) } : nil
+        }
         for (key, value) in extraBody {
             if case let .array(items) = value {
                 metadataBody[key] = value
@@ -108,7 +125,7 @@ public final class OpenAICompatibleTranscriptionModel: TranscriptionModel, Strea
                 modelID: modelID,
                 body: body,
                 contentType: "multipart/form-data; boundary=\(form.boundary)",
-                headers: request.headers
+                headers: request.headers, abortSignal: request.abortSignal
             )
         )
         guard (200..<300).contains(response.statusCode) else {
@@ -142,10 +159,12 @@ public final class OpenAICompatibleTranscriptionModel: TranscriptionModel, Strea
             segments: segments,
             language: openAITranscriptionLanguageCode(raw["language"]?.stringValue, languages: raw["languages"]),
             durationInSeconds: raw["duration"]?.doubleValue ?? (raw["usage"]?["type"]?.stringValue == "duration" ? raw["usage"]?["seconds"]?.doubleValue : nil),
+            warnings: warnings,
             providerMetadata: metadata.isEmpty ? [:] : ["openai": .object(metadata)],
             requestMetadata: AIRequestMetadata(body: .object(metadataBody), headers: request.headers),
             responseMetadata: openAICompatibleResponseMetadata(from: raw, response: response, modelID: modelID),
-            usage: raw["usage"]?.objectValue
+            usage: raw["usage"]?.objectValue,
+            words: openAITranscriptionWords(raw)
         )
     }
 }
@@ -226,3 +245,10 @@ let openAITranscriptionLanguageMap: [String: String] = [
     "vietnamese": "vi",
     "welsh": "cy"
 ]
+private func openAITranscriptionWords(_ raw: JSONValue) -> [TranscriptionSegment]? {
+    let words = raw["words"]?.arrayValue?.compactMap { word -> TranscriptionSegment? in
+        guard let text = word["word"]?.stringValue, let start = word["start"]?.doubleValue, let end = word["end"]?.doubleValue else { return nil }
+        return TranscriptionSegment(text: text, startSecond: start, endSecond: end)
+    } ?? []
+    return words.isEmpty ? nil : words
+}

@@ -1,6 +1,6 @@
 # "gladia"
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/gladia/
+Source URL: /providers/gladia/
 
 ## Package
 
@@ -21,11 +21,35 @@ asynchronous throwing closure. It is resolved for every authenticated request,
 so credentials can refresh without recreating the provider or model. Static
 `apiKey` settings remain supported. Supplier failures stop the request before
 it reaches the transport.
+## Current models, options and URL input
+
+`GladiaProvider.transcriptionModel()` selects the service default. The native
+`"default"` model-ID sentinel also omits the wire model; other explicit IDs pass
+through. Solaria 3 expects exactly one language and no code switching, with
+warnings for incompatible settings.
+
+Use `languageConfig.languages` / `codeSwitching`. Legacy `language`,
+`detectLanguage`, `enableCodeSwitching` and `codeSwitchingConfig` are translated
+with deprecation warnings; an explicit `languageConfig` overrides them. Current
+vocabulary uses Boolean `customVocabulary` plus
+`customVocabularyConfig.vocabulary`; legacy arrays are translated and invalid
+entries warn. Removed context/moderation/chapterization/extraction/display
+settings warn and are ignored. Current PII, translation and audio-to-LLM options
+are validated before upload.
+
+Provider and per-call `pollIntervalMs` / `pollTimeoutMs` must be positive
+integers, defaulting to 1 second / 10 minutes; call options win. Polling settings
+stay out of the API body, and waits honor abort. `x-gladia-version` defaults to
+`ai-sdk/3.0.77` and can be overridden. Future add-on fields remain in metadata.
+
+The native URL-transcription hook passes an HTTP(S) audio URL directly to
+`audio_url`, sharing job validation, polling and results while skipping the audio
+upload/download. This is a Swift convenience over the provider's wire field.
 
 ## Notes
 
-Gladia transcription mirrors upstream 3.0.72: `GLADIA_API_KEY`, `x-gladia-key` auth, custom headers, versioned user-agent suffix, `transcription`/`transcriptionModel` aliases, `/v2/upload` multipart audio upload, `/v2/pre-recorded` initiation, provider-supplied result polling with same-origin credential forwarding, foreign result URL credential stripping, providerOptions.gladia schema and snake_case mapping, result text/language/segments/duration, response/provider metadata, Gladia error schema, lifecycle errors, and unsupported language/embedding/image families. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
+Gladia transcription mirrors upstream 3.0.77: `GLADIA_API_KEY`, `x-gladia-key` auth, custom headers, versioned user-agent suffix, `transcription`/`transcriptionModel` aliases, `/v2/upload` multipart audio upload, `/v2/pre-recorded` initiation, provider-supplied result polling with same-origin credential forwarding, foreign result URL credential stripping, providerOptions.gladia schema and snake_case mapping, result text/language/segments/duration, response/provider metadata, Gladia error schema, lifecycle errors, and unsupported language/embedding/image families. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-08 pass adds native source-URL transcription, polling configuration and current model/options mapping. Expanded unknown utterance fields remain raw-preserved while required timing/text fields are validated.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+Return to the [provider matrix](/providers/).

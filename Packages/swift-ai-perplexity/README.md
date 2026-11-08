@@ -8,3 +8,6 @@ Existing upstream baselines, capabilities and documented gaps remain unchanged.
 See `Porting/map.json` and the canonical provider guide.
 
 See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/perplexity.md) for authentication, options and supported surfaces.
+## Behavior notes
+
+Agent requests with `toolChoice: "none"` omit native and function tool definitions and set `max_tool_calls` to zero, including presets. Conversation tool-call history is preserved.

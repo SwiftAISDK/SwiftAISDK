@@ -17,13 +17,14 @@ public final class CerebrasLanguageModel: LanguageModel, @unchecked Sendable {
 
     public func generate(_ request: LanguageModelRequest) async throws -> TextGenerationResult {
         let prepared = try cerebrasPreparedCall(for: request, modelID: modelID, stream: false)
-        let httpResponse = try await config.transport.send(config.request(
+        let httpRequest = try config.request(
             path: "/chat/completions",
             modelID: modelID,
             body: .object(prepared.body),
-            headers: request.headers,
+            headers: prepared.headers,
             abortSignal: request.abortSignal
-        ))
+        )
+        let httpResponse = try await config.transport.send(httpRequest)
         guard (200..<300).contains(httpResponse.statusCode) else {
             throw cerebrasHTTPStatusError(response: httpResponse)
         }
@@ -31,14 +32,18 @@ public final class CerebrasLanguageModel: LanguageModel, @unchecked Sendable {
         let raw = response.json
         let choice = raw["choices"]?[0]
         let toolCalls = cerebrasToolCalls(from: choice?["message"]?["tool_calls"])
-        guard let text = choice?["message"]?["content"]?.stringValue ?? (toolCalls.isEmpty ? nil : "") else {
+        let content = choice?["message"]?["content"]?.stringValue
+        let refusal = choice?["message"]?["refusal"]?.stringValue ?? ""
+        guard content != nil || !refusal.isEmpty || !toolCalls.isEmpty else {
             throw AIError.invalidResponse(provider: providerID, message: "No text content found in Cerebras response.")
         }
+        let text = (content ?? "") + refusal
         let rawFinishReason = choice?["finish_reason"]?.stringValue
         let finishReason = cerebrasFinishReason(
             rawFinishReason,
             hasText: !text.isEmpty,
-            normalizeStructuredToolCalls: prepared.normalizesStructuredToolCalls
+            normalizeStructuredToolCalls: prepared.normalizesStructuredToolCalls,
+            hasRefusal: !refusal.isEmpty
         )
         return TextGenerationResult(
             text: text,
@@ -52,6 +57,7 @@ public final class CerebrasLanguageModel: LanguageModel, @unchecked Sendable {
             providerMetadata: cerebrasProviderMetadata(from: raw, choice: choice),
             rawValue: raw,
             warnings: prepared.warnings,
+            requestMetadata: AIRequestMetadata(body: .object(prepared.body), headers: prepared.headers, url: httpRequest.url.absoluteString),
             responseMetadata: cerebrasResponseMetadata(from: raw, response: response.response, modelID: modelID)
         )
     }
@@ -65,7 +71,7 @@ public final class CerebrasLanguageModel: LanguageModel, @unchecked Sendable {
                         path: "/chat/completions",
                         modelID: modelID,
                         body: .object(prepared.body),
-                        headers: request.headers,
+                        headers: prepared.headers,
                         abortSignal: request.abortSignal
                     )
                     let response = try await config.streamRequest(httpRequest)
@@ -77,8 +83,11 @@ public final class CerebrasLanguageModel: LanguageModel, @unchecked Sendable {
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
 
                     continuation.yield(.streamStart(warnings: prepared.warnings))
+                    continuation.yield(.requestMetadata(AIRequestMetadata(body: .object(prepared.body), headers: prepared.headers, url: httpRequest.url.absoluteString)))
                     var latestUsage: TokenUsage? = TokenUsage()
                     var hasText = false
+                    var hasRefusal = false
+                    var rawFinishReason: String?
                     var finishReason: String? = "other"
                     var toolCalls = CerebrasStreamingToolCalls()
                     var emittedResponseMetadata = false
@@ -121,7 +130,10 @@ public final class CerebrasLanguageModel: LanguageModel, @unchecked Sendable {
                             }
                             continuation.yield(.reasoningDeltaPart(id: id, delta: reasoning))
                         }
-                        if let delta = raw["choices"]?[0]?["delta"]?["content"]?.stringValue, !delta.isEmpty {
+                        let content = raw["choices"]?[0]?["delta"]?["content"]?.stringValue
+                        let refusal = raw["choices"]?[0]?["delta"]?["refusal"]?.stringValue
+                        if refusal?.isEmpty == false { hasRefusal = true }
+                        for delta in [content, refusal].compactMap({ $0 }) where !delta.isEmpty {
                             hasText = true
                             if let reasoningID = activeReasoningID {
                                 continuation.yield(.reasoningEnd(id: reasoningID))
@@ -153,10 +165,12 @@ public final class CerebrasLanguageModel: LanguageModel, @unchecked Sendable {
                             }
                         }
                         if let reason = raw["choices"]?[0]?["finish_reason"]?.stringValue {
+                            rawFinishReason = reason
                             finishReason = cerebrasFinishReason(
                                 reason,
                                 hasText: hasText,
-                                normalizeStructuredToolCalls: prepared.normalizesStructuredToolCalls
+                                normalizeStructuredToolCalls: prepared.normalizesStructuredToolCalls,
+                                hasRefusal: hasRefusal
                             )
                         }
                     }
@@ -168,6 +182,9 @@ public final class CerebrasLanguageModel: LanguageModel, @unchecked Sendable {
                     }
                     for part in toolCalls.finishedParts() {
                         continuation.yield(part)
+                    }
+                    if hasRefusal, rawFinishReason == "stop", finishReason != "error" {
+                        finishReason = "content-filter"
                     }
                     continuation.yield(.finishMetadata(
                         reason: finishReason,
@@ -190,6 +207,7 @@ typealias CerebrasStreamingToolCalls = OpenAIStyleStreamingToolCalls
 
 struct CerebrasPreparedCall {
     var body: [String: JSONValue]
+    var headers: [String: String]
     var warnings: [AIWarning]
     var normalizesStructuredToolCalls: Bool
 }

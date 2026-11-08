@@ -26,7 +26,8 @@
       "Packages/swift-ai-replicate/Tests/SwiftAIReplicateTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-replicate/Tests/SwiftAIReplicateTests/ReplicateProviderTests.swift",
       "Packages/swift-ai-replicate/Tests/SwiftAIReplicateTests/TestSupport.swift",
-      "Packages/swift-ai-replicate/Tests/SwiftAIReplicateTests/Weekly20261101CredentialsTests.swift"
+      "Packages/swift-ai-replicate/Tests/SwiftAIReplicateTests/Weekly20261101CredentialsTests.swift",
+      "Packages/swift-ai-replicate/Tests/SwiftAIReplicateTests/Weekly20261108CancelTests.swift"
     ],
     "resources": []
   },
@@ -36,5 +37,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
+  "reviewNote": "2026-11-08: published @ai-sdk/replicate 3.0.73..3.0.78 source, declarations and matching-release tests reviewed independently. Image abort/timeout cleanup uses trusted best-effort cancellation; seed 0 already native. Delta review is not a claim of whole-provider parity; existing documented gaps remain."
 }

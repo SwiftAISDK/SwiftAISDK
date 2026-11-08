@@ -47,7 +47,7 @@ public final class DeepInfraProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-deepinfra/3.0.82")
+        headers = withUserAgentSuffix(headers, "ai-sdk-deepinfra/3.0.87")
         let baseURL = deepInfraRootBaseURL(configuration.baseURL ?? "https://api.deepinfra.com/v1")
         let http = AIProviderHTTPClient(providerID: "deepinfra", headers: headers, transport: configuration.transport,
             url: { _, path in try deepInfraOpenAIURL(root: baseURL, path: path, queryParams: configuration.queryParams) })

@@ -28,8 +28,10 @@ public final class AzureImageModel: ImageModel, @unchecked Sendable {
         if (options["api"]?.stringValue ?? (defaultsToMAI ? "mai" : "openai")) == "mai" {
             return try await mai.generateImage(request, options: options)
         }
-        var result = try await openAI.generateImage(request)
-        result.warnings += options.keys.sorted().filter { $0 != "api" }.map {
+        var delegated = request
+        delegated.providerOptions["azure"] = .object(options.filter { !["api", "autoAspectRatio", "webGrounding"].contains($0.key) })
+        var result = try await openAI.generateImage(delegated)
+        result.warnings += options.keys.sorted().filter { ["autoAspectRatio", "webGrounding"].contains($0) }.map {
             AIWarning(type: "unsupported", feature: "providerOptions.azure.\($0)", message: "This option requires the MAI image API.")
         }
         return result
@@ -166,8 +168,9 @@ private let azureMAIImageModels: Set<String> = ["mai-image-2.5", "mai-image-2.5-
 private func azureImageOptions(_ providerOptions: [String: JSONValue]) throws -> [String: JSONValue] {
     guard let value = providerOptions["azure"], value != .null else { return [:] }
     guard let raw = value.objectValue else { throw AIError.invalidArgument(argument: "providerOptions.azure", message: "Azure image options must be an object.") }
-    let options = raw.filter { ["api", "autoAspectRatio", "webGrounding"].contains($0.key) }
+    let options = raw.filter { ["api", "autoAspectRatio", "webGrounding", "quality", "background", "size", "outputFormat", "outputCompression", "complexity", "frameCount", "frameDurationMs", "inputFidelity", "markup", "moderation", "user", "safetyIdentifier", "style"].contains($0.key) }
     for (key, value) in options {
+        guard ["api", "autoAspectRatio", "webGrounding"].contains(key) else { continue }
         let valid = key == "api" ? value.stringValue.map { ["openai", "mai"].contains($0) } ?? false : value.boolValue != nil
         if !valid { throw AIError.invalidArgument(argument: "providerOptions.azure.\(key)", message: "Invalid Azure image option \(key).") }
     }

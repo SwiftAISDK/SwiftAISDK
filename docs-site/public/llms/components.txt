@@ -1,25 +1,25 @@
 # Components
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/components/
+Source URL: /components/
 
 :::note[Development API reference]
-These declarations follow the canonical repository's main branch. Match your installed versions to the published release documentation. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for published packages and version-compatible examples.
+These declarations follow the canonical repository's main branch. Match your installed versions to the published release documentation. See [Install](/getting-started/install/) for published packages and version-compatible examples.
 :::
 
 SwiftAISDK groups public APIs into component areas so you can browse exact types without starting from the full symbol table.
 
 | Component | Public symbols |
 | --- | --- |
-| [Audio](audio/) | 303 |
-| [Chat and UI messages](chat-and-ui-messages/) | 222 |
-| [Core runtime](core-runtime/) | 1956 |
+| [Audio](audio/) | 323 |
+| [Chat and UI messages](chat-and-ui-messages/) | 227 |
+| [Core runtime](core-runtime/) | 2051 |
 | [Errors](errors/) | 116 |
 | [MCP](mcp/) | 600 |
 | [Media](media/) | 128 |
 | [Middleware](middleware/) | 109 |
-| [Provider models](provider-models/) | 1289 |
-| [Providers](providers/) | 2046 |
+| [Provider models](provider-models/) | 1362 |
+| [Providers](providers/) | 2086 |
 | [Structured output](structured-output/) | 297 |
-| [Telemetry](telemetry/) | 192 |
-| [Tools](tools/) | 286 |
-| [Video and reranking](video-and-reranking/) | 111 |
+| [Telemetry](telemetry/) | 194 |
+| [Tools](tools/) | 296 |
+| [Video and reranking](video-and-reranking/) | 116 |

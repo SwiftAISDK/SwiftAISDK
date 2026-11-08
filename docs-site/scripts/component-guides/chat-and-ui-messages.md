@@ -22,3 +22,12 @@ When a streamed tool call reuses an ID, its latest nonempty name replaces the
 previous name during input and completion. `pruneMessages` removes a reasoning
 group when all following content before the next reasoning group was pruned;
 reasoning attached to retained text/tools and trailing reasoning survive.
+
+## Delivered steering history
+
+The reducer persists `.steeringMessage` parts with their delivery ID, user message
+and step number. `convertToModelMessages` expands them in assistant/tool/user order
+and preserves user text/file metadata and references. Steering content must have
+the user role. Use the plural conversion for this history: converting a single UI
+message rejects embedded steering rather than dropping delivered user messages.
+Consumers with exhaustive switches over `AIUIMessagePart` must handle the new case.

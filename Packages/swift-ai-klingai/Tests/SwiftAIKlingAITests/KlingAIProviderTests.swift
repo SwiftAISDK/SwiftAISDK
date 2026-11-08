@@ -170,7 +170,7 @@ import Testing
     #expect(requests.count == 2)
     #expect(requests[0].url.absoluteString == "https://api-singapore.klingai.com/v1/videos/text2video")
     #expect(requests[0].headers["authorization"] == "Bearer kling-token")
-    #expect(requests[0].headers["user-agent"] == "ai-sdk-klingai/4.0.74")
+    #expect(requests[0].headers["user-agent"] == "ai-sdk-klingai/4.0.79")
     let body = try decodeJSONBody(try #require(requests[0].body))
     #expect(body["model_name"]?.stringValue == "kling-v2-1")
     #expect(body["prompt"]?.stringValue == "cat running")
@@ -184,7 +184,7 @@ import Testing
     #expect(requests[1].method == "GET")
     #expect(requests[1].url.absoluteString == "https://api-singapore.klingai.com/v1/videos/text2video/task-1")
     #expect(requests[1].headers["authorization"] == "Bearer kling-token")
-    #expect(requests[1].headers["user-agent"] == "ai-sdk-klingai/4.0.74")
+    #expect(requests[1].headers["user-agent"] == "ai-sdk-klingai/4.0.79")
 }
 
 @Test func klingAIAppendsVersionedUserAgentToCustomHeader() async throws {
@@ -203,9 +203,9 @@ import Testing
 
     let requests = await transport.requests()
     #expect(requests[0].headers["authorization"] == "Bearer kling-token")
-    #expect(requests[0].headers["user-agent"] == "CustomApp/1.0 ai-sdk-klingai/4.0.74")
+    #expect(requests[0].headers["user-agent"] == "CustomApp/1.0 ai-sdk-klingai/4.0.79")
     #expect(requests[1].headers["authorization"] == "Bearer kling-token")
-    #expect(requests[1].headers["user-agent"] == "CustomApp/1.0 ai-sdk-klingai/4.0.74")
+    #expect(requests[1].headers["user-agent"] == "CustomApp/1.0 ai-sdk-klingai/4.0.79")
 }
 
 @Test func klingAIT2VMapsProviderOptionsAndWarnings() async throws {
@@ -220,7 +220,7 @@ import Testing
         image: ImageInputFile(url: "https://example.com/not-for-t2v.png"),
         resolution: "1080p",
         fps: 30,
-        seed: 42,
+        seed: 0,
         count: 2,
         providerOptions: [
             "klingai": .object([
@@ -257,6 +257,7 @@ import Testing
     #expect(body["extra_passthrough"]?.stringValue == "kept")
     #expect(body["element_list"] == nil)
     #expect(body["image"] == nil)
+    #expect(body["seed"] == nil)
     #expect(body["n"] == nil)
 }
 

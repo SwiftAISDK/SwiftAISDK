@@ -1,6 +1,6 @@
 # "typesafe"
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/typesafe/
+Source URL: /providers/typesafe/
 
 ## Package
 
@@ -35,10 +35,23 @@ for a complete typed example and reference insertion rules.
 each authenticated request; static `apiKey` settings remain supported. Supplier
 errors stop the request before it reaches the transport.
 
+## Current decision limits and state
+
+Decision Choice questions require 1...255 options, and Score questions
+require 1...10 non-null levels. Structured score legends are retained in
+`providerMetadata.typesafe.legend` keyed by question ID. A single JSON string,
+object or array state is forwarded directly; null, Boolean and number states are
+serialized as text. The high-level legacy Evaluation API keeps its existing
+stricter question contract.
+
+Decision `.box()` may omit instructions, represented as JSON null. Box questions
+enable the image feature header even without image assets. Missing/null score
+legends produce an empty root legend map; a non-object legend is invalid.
+
 ## Notes
 
-TypeSafe AI mirrors upstream 3.0.31 with native Decision V4 text/JSON/PNG/JPEG evidence and /systemone Choice/Score/Boolean/Box decisions. Validated multipart image references preserve state ordering and explicit insertion controls. Box answers expose normalized finite ordered edges; experimental longContext enables the separate 262k-token header. Typed model/file options, question limits, two-decimal rounding, confidence/usage, lazy bearer auth and strict errors are represented. Existing Evaluation adapters remain callable; JavaScript workflow serialization and unrelated model families stay out of scope. The 2026-10-23 pass: Decision requests report unsupported maxOutputTokens and reasoning controls. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
+TypeSafe AI mirrors upstream 3.0.35 with native Decision V4 text/JSON/PNG/JPEG evidence and /systemone Choice/Score/Boolean/Box decisions. Validated multipart image references preserve state ordering and explicit insertion controls. Box answers expose normalized finite ordered edges; experimental longContext enables the separate 262k-token header. Typed model/file options, question limits, two-decimal rounding, confidence/usage, lazy bearer auth and strict errors are represented. Existing Evaluation adapters remain callable; JavaScript workflow serialization and unrelated model families stay out of scope. The 2026-10-23 pass: Decision requests report unsupported maxOutputTokens and reasoning controls. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+Return to the [provider matrix](/providers/).

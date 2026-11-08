@@ -163,7 +163,7 @@ public final class MistralLanguageModel: LanguageModel, @unchecked Sendable {
         }
         let toolChoiceInput = request.toolChoice ?? options["toolChoice"]
         let toolChoice = mistralToolChoice(from: toolChoiceInput)
-        let preparedTools = mistralTools(from: request.tools, only: mistralForcedToolName(from: toolChoiceInput))
+        let preparedTools = mistralTools(from: request.tools)
         if !preparedTools.tools.isEmpty {
             body["tools"] = .array(preparedTools.tools)
             if let toolChoice {

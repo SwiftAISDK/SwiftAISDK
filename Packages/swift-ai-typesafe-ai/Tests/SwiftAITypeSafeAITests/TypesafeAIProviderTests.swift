@@ -17,7 +17,7 @@ struct TypesafeAIProviderTests {
         let upstreamCasedProvider = createTypeSafeAi(configuration: TypeSafeAIProviderSettings(environment: [:]))
         let model = try provider.evaluationModel("jev-latest")
 
-        #expect(typeSafeAIProviderVersion == "3.0.31")
+        #expect(typeSafeAIProviderVersion == "3.0.35")
         #expect(typeSafeAI.providerID == "typesafe")
         #expect(typeSafeAi.providerID == "typesafe")
         #expect(upstreamCasedProvider.providerID == "typesafe")
@@ -73,7 +73,7 @@ struct TypesafeAIProviderTests {
         #expect(result.usage == AIEvaluationModelUsage(inputTokens: 471, outputTokens: 71))
         #expect(result.warnings.isEmpty)
         #expect(result.providerMetadata == [
-            "typesafe": ["confidence": ["department": 1, "severity": 0.64]]
+            "typesafe": ["confidence": ["department": 1, "severity": 0.64], "legend": ["severity": ["0": ["meaning": "Cosmetic; functionality works"]]]]
         ])
         #expect(result.response?.modelID == "jev-1.13.0")
         #expect(result.response?.headers["x-request-id"] == "request-1")
@@ -85,7 +85,7 @@ struct TypesafeAIProviderTests {
         #expect(request.abortSignal === abortController.signal)
         #expect(request.headers["authorization"] == "Bearer test-api-key")
         #expect(request.headers["content-type"] == "application/json")
-        #expect(request.headers["user-agent"] == "ai-sdk-typesafe-ai/3.0.31")
+        #expect(request.headers["user-agent"] == "ai-sdk-typesafe-ai/3.0.35")
         let requestBody = try decodeJSONBody(try #require(request.body))
         #expect(requestBody["model"] == "jev-latest")
         #expect(requestBody["state"] == typesafeState())
@@ -127,7 +127,7 @@ struct TypesafeAIProviderTests {
         #expect(request.headers["authorization"] == "Bearer header-key")
         #expect(request.headers["custom"] == "provider")
         #expect(request.headers["shared"] == "call")
-        #expect(request.headers["user-agent"] == "Example/1.0 ai-sdk-typesafe-ai/3.0.31")
+        #expect(request.headers["user-agent"] == "Example/1.0 ai-sdk-typesafe-ai/3.0.35")
         #expect(try decodeJSONBody(try #require(request.body))["model"] == "jev-future")
         #expect(result.response?.headers["x-request-id"] == "custom-request")
     }
@@ -192,7 +192,7 @@ struct TypesafeAIProviderTests {
 
         await #expect(throws: AIError.invalidArgument(
             argument: "questions.choice.criteria",
-            message: "TypeSafe Choice questions support at most 255 options."
+            message: "TypeSafe Choice questions require 1 to 255 options."
         )) {
             _ = try await model.doEvaluate(AIEvaluationModelV4CallOptions(
                 state: "state",
@@ -201,7 +201,7 @@ struct TypesafeAIProviderTests {
         }
         await #expect(throws: AIError.invalidArgument(
             argument: "questions.score.criteria",
-            message: "TypeSafe Score questions support at most 10 levels."
+            message: "TypeSafe Score questions require 1 to 10 non-null levels."
         )) {
             _ = try await model.doEvaluate(AIEvaluationModelV4CallOptions(
                 state: "state",
@@ -323,7 +323,7 @@ struct TypesafeAIProviderTests {
 
         #expect(result.usage == AIEvaluationModelUsage(inputTokens: nil, outputTokens: nil))
         #expect(result.response?.modelID == "jev-latest")
-        #expect(result.providerMetadata == ["typesafe": ["confidence": [:]]])
+        #expect(result.providerMetadata == ["typesafe": ["confidence": [:], "legend": [:]]])
     }
 }
 

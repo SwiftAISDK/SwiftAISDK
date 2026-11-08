@@ -18,13 +18,14 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
     public func generate(_ request: LanguageModelRequest) async throws -> TextGenerationResult {
         let prepared = try preparedBody(for: request, stream: false)
         let metadataNamespace = metadataNamespace(for: request)
-        let httpResponse = try await config.transport.send(config.request(
+        let httpRequest = try config.request(
             path: "/chat/completions",
             modelID: modelID,
             body: .object(prepared.body),
             headers: request.headers,
             abortSignal: request.abortSignal
-        ))
+        )
+        let httpResponse = try await config.transport.send(httpRequest)
         guard (200..<300).contains(httpResponse.statusCode) else {
             throw config.chatHTTPStatusError(httpResponse)
         }
@@ -75,6 +76,8 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         if contentText.isEmpty, let audioTranscript, !audioTranscript.isEmpty {
             orderedContent.append(.text(audioTranscript))
         }
+        let refusal = choice?["message"]?["refusal"]?.stringValue ?? ""
+        if !refusal.isEmpty { orderedContent.append(.text(refusal)) }
         let callContent = toolCalls.map(AIResultContentPart.toolCall)
         if config.toolCallsBeforeText {
             orderedContent.insert(contentsOf: callContent, at: separateReasoning.isEmpty ? 0 : 1)
@@ -99,24 +102,25 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         let text = messageText
             ?? usableAudioTranscript
             ?? legacyText
-        guard let text = text ?? (toolCalls.isEmpty && !config.allowsEmptyTextResponse ? nil : "") else {
+        guard let text = text ?? (!refusal.isEmpty || !toolCalls.isEmpty || config.allowsEmptyTextResponse ? "" : nil) else {
             throw AIError.invalidResponse(provider: providerID, message: "No text content found in chat completion response.")
         }
-        var providerMetadata = openAICompatibleChatProviderMetadata(from: raw, choice: choice, providerID: providerID, namespace: metadataNamespace)
+        var providerMetadata = openAICompatibleChatProviderMetadata(from: raw, choice: choice, providerID: providerID, namespace: metadataNamespace, includesRefusalLogprobs: isOpenAIBackedProvider(providerID, config: config))
         openAICompatibleMergeProviderMetadata(config.responseMetadata?(raw, metadataNamespace) ?? [:], into: &providerMetadata)
         if config.toolCallsBeforeText {
             openAICompatibleMergeProviderMetadata(config.responseHeaderMetadata?(httpResponse.headers, metadataNamespace) ?? [:], into: &providerMetadata)
         }
         return TextGenerationResult(
-            text: text,
+            text: text + refusal,
             content: orderedContent,
             reasoning: separateReasoning + contentReasoning,
-            finishReason: openAICompatibleFinishReason(choice?["finish_reason"]?.stringValue),
+            finishReason: openAICompatibleChatFinishReason(choice?["finish_reason"]?.stringValue, hasRefusal: !refusal.isEmpty),
             usage: usage(from: raw),
             toolCalls: toolCalls,
             providerMetadata: providerMetadata,
             rawValue: raw,
             warnings: prepared.warnings,
+            requestMetadata: AIRequestMetadata(body: .object(prepared.body), headers: request.headers, url: httpRequest.url.absoluteString),
             responseMetadata: openAICompatibleResponseMetadata(
                 from: raw,
                 response: response.response,
@@ -140,6 +144,7 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                     }
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
                     continuation.yield(.streamStart(warnings: prepared.warnings))
+                    continuation.yield(.requestMetadata(AIRequestMetadata(body: body, headers: request.headers, url: httpRequest.url.absoluteString)))
                     var toolCalls = OpenAICompatibleStreamingToolCalls(
                         thoughtSignatureNamespace: metadataNamespace
                     )
@@ -149,6 +154,9 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                     var activeReasoningID: String?
                     var activeTextID: String?
                     var finishReason: String?
+                    var hasRefusal = false
+                    var streamedLogprobs: [JSONValue] = []
+                    var hasLogprobs = false
                     var finishUsage: TokenUsage?
                     let shouldThrowPreOutputStreamErrors = isOpenAIBackedProvider(providerID, config: config)
                     var hasOutputStarted = false
@@ -208,11 +216,15 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                         }
                         let choice = raw["choices"]?[0]
                         openAICompatibleMergeProviderMetadata(
-                            openAICompatibleChatProviderMetadata(from: raw, choice: choice, providerID: providerID, namespace: metadataNamespace),
+                            openAICompatibleChatProviderMetadata(from: raw, choice: choice, providerID: providerID, namespace: metadataNamespace, includesRefusalLogprobs: isOpenAIBackedProvider(providerID, config: config)),
                             into: &providerMetadata
                         )
                         openAICompatibleMergeProviderMetadata(config.responseMetadata?(raw, metadataNamespace) ?? [:], into: &providerMetadata)
                         finishUsage = usage(from: raw) ?? finishUsage
+                        if isOpenAIBackedProvider(providerID, config: config) {
+                            if let content = choice?["logprobs"]?["content"]?.arrayValue { streamedLogprobs += content; hasLogprobs = true }
+                            if let refusal = choice?["logprobs"]?["refusal"]?.arrayValue { streamedLogprobs += refusal; hasLogprobs = true }
+                        }
                         let delta = choice?["delta"]
                         if let reasoning = delta?["reasoning_content"]?.stringValue ?? delta?["reasoning"]?.stringValue {
                             if !reasoning.isEmpty { hasOutputStarted = true }
@@ -250,6 +262,14 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                                 }
                                 continuation.yield(.textDeltaPart(id: id, delta: text))
                             }
+                        }
+                        if let refusal = delta?["refusal"]?.stringValue, !refusal.isEmpty {
+                            hasRefusal = true
+                            hasOutputStarted = true
+                            if let reasoningID = activeReasoningID { continuation.yield(.reasoningEnd(id: reasoningID)); activeReasoningID = nil }
+                            let id = activeTextID ?? "txt-0"
+                            if activeTextID == nil { activeTextID = id; continuation.yield(.textStart(id: id)) }
+                            continuation.yield(.textDeltaPart(id: id, delta: refusal))
                         }
                         if let toolCallDeltas = delta?["tool_calls"]?.arrayValue,
                            !toolCallDeltas.isEmpty {
@@ -297,6 +317,13 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                             finishReason = isOpenAIBackedProvider(providerID, config: config) || root == "moonshotai"
                                 ? "interrupted" : "other"
                         }
+                    }
+                    if hasRefusal, finishReason == "stop" { finishReason = "content-filter" }
+                    if hasLogprobs {
+                        let namespace = metadataNamespace ?? openAICompatibleProviderMetadataNamespace(providerID)
+                        var details = providerMetadata[namespace]?.objectValue ?? [:]
+                        details["logprobs"] = .array(streamedLogprobs)
+                        providerMetadata[namespace] = .object(details)
                     }
                     continuation.yield(.finishMetadata(
                         reason: finishReason,
@@ -428,10 +455,14 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         } else {
             var converted: [JSONValue] = []
             for message in request.messages {
+                if unwrapOpenAIProviderOptions, let name = message.providerMetadata["openai"]?["name"] {
+                    guard name.stringValue != nil else { throw AIError.invalidArgument(argument: "providerOptions.openai.name", message: "Message name must be a string.") }
+                    if message.role == .tool { warnings.append(AIWarning(type: "unsupported", feature: "message name on tool messages")) }
+                }
                 if message.role == .system, systemMessageMode == "remove" {
                     continue
                 }
-                converted.append(try Self.messageJSON(
+                var convertedMessage = try Self.messageJSON(
                     message,
                     providerID: providerID,
                     providerOptionsKey: openAICompatibleProviderMetadataNamespace(
@@ -441,7 +472,12 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                     systemRole: message.role == .system ? systemMessageMode : nil,
                     supportsMultiPartToolContent: supportsMultiPartToolContent,
                     wrapToolErrors: unwrapOpenAIProviderOptions
-                ))
+                )
+                if unwrapOpenAIProviderOptions, message.role != .tool, let name = message.providerMetadata["openai"]?["name"]?.stringValue, var object = convertedMessage.objectValue {
+                    object["name"] = .string(name)
+                    convertedMessage = .object(object)
+                }
+                converted.append(convertedMessage)
             }
             messages = converted
         }
@@ -582,9 +618,9 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                 "content": .string(message.combinedText)
             ]
             output["tool_calls"] = .array(toolCalls.map { call in
-                let arguments = isOpenAIBackedProvider(providerID)
+                let arguments = wrapToolErrors || isOpenAIBackedProvider(providerID)
                     ? openAIChatSerializedToolCallArguments(call.arguments)
-                    : call.arguments
+                    : (try? decodeJSONBody(Data(call.arguments.utf8))) != nil ? call.arguments : (openAICompatibleJSONString(.string(call.arguments)) ?? "\"\"")
                 var toolCall: [String: JSONValue] = [
                     "id": .string(call.id),
                     "type": .string("function"),
@@ -636,7 +672,8 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                     providerMetadata: providerMetadata,
                     index: index,
                     providerID: providerID,
-                    providerOptionsKey: providerOptionsKey
+                    providerOptionsKey: providerOptionsKey,
+                    supportsInlineText: !wrapToolErrors
                 )
             case let .file(mimeType, data, filename, providerMetadata):
                 return try chatFilePart(
@@ -646,7 +683,8 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                     providerMetadata: providerMetadata,
                     index: index,
                     providerID: providerID,
-                    providerOptionsKey: providerOptionsKey
+                    providerOptionsKey: providerOptionsKey,
+                    supportsInlineText: !wrapToolErrors
                 )
             case let .providerReference(mimeType, reference, _, providerMetadata):
                 if mimeType.hasPrefix("video/"),
@@ -717,12 +755,13 @@ private func openAICompatibleToolContentPart(_ part: JSONValue, index: Int, prov
         if mediaType.hasPrefix("text/") { return withMetadata(["type": .string("text"), "text": .string(url)]) }
         throw AIError.invalidArgument(argument: "toolResult.content", message: "Audio and PDF tool content cannot use URLs.")
     }
+    if data?["type"]?.stringValue == "text", mediaType.hasPrefix("text/"), let text = data?["text"]?.stringValue { return withMetadata(["type": .string("text"), "text": .string(text)]) }
     guard data?["type"]?.stringValue == "data", let encoded = data?["data"]?.stringValue,
           let bytes = Data(base64Encoded: encoded) else {
-        throw AIError.invalidArgument(argument: "toolResult.content", message: "Tool files require base64 data, a provider reference or a supported URL; inline text files are unsupported.")
+        throw AIError.invalidArgument(argument: "toolResult.content", message: "Tool files require base64 data, inline text with a text media type, a provider reference or a supported URL.")
     }
     var converted = try chatFilePart(mimeType: mediaType, data: bytes, filename: part["filename"]?.stringValue,
-                                     providerMetadata: [:], index: index, providerID: providerID, providerOptionsKey: providerOptionsKey).objectValue ?? [:]
+                                     providerMetadata: [:], index: index, providerID: providerID, providerOptionsKey: providerOptionsKey, supportsInlineText: true).objectValue ?? [:]
     converted.merge(metadata) { _, new in new }
     return .object(converted)
 }
@@ -791,9 +830,17 @@ private func chatFilePart(
     providerMetadata: [String: JSONValue],
     index: Int,
     providerID: String,
-    providerOptionsKey: String?
+    providerOptionsKey: String?,
+    supportsInlineText: Bool = false
 ) throws -> JSONValue {
     let base64 = data.base64EncodedString()
+    if supportsInlineText, mimeType.hasPrefix("text/") {
+        guard let text = String(data: data, encoding: .utf8) else { throw AIError.invalidArgument(argument: "messages", message: "Text files must contain UTF-8 data.") }
+        let namespace = providerOptionsKey ?? openAICompatibleProviderMetadataNamespace(providerID)
+        var output: [String: JSONValue] = ["type": .string("text"), "text": .string(text)]
+        if let metadata = providerMetadata[namespace]?.objectValue ?? providerMetadata["openaiCompatible"]?.objectValue { output.merge(metadata) { _, new in new } }
+        return .object(output)
+    }
     if mimeType.hasPrefix("image/") {
         var imageURL: [String: JSONValue] = ["url": .string("data:\(mimeType);base64,\(base64)")]
         if let imageDetail = openAIChatImageDetail(from: providerMetadata, providerID: providerID) {

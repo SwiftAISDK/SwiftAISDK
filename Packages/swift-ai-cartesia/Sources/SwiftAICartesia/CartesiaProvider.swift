@@ -66,7 +66,7 @@ public final class CartesiaProvider: AIProvider, @unchecked Sendable {
 
         var headers = withUserAgentSuffix(
             settings.headers,
-            "ai-sdk-cartesia/3.0.67"
+            "ai-sdk-cartesia/3.0.71"
         )
         headers["authorization"] = headers["authorization"] ?? "Bearer \(apiKey)"
         headers["cartesia-version"] = headers["cartesia-version"] ?? settings.version

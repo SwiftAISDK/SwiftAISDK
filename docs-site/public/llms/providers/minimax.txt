@@ -1,6 +1,6 @@
 # "minimax"
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/minimax/
+Source URL: /providers/minimax/
 
 ## Package
 
@@ -66,11 +66,18 @@ Attach `MiniMaxCacheControlOptions(cacheControl: .ephemeral).providerOptions` as
 `MiniMaxProviderSettings.apiKeyProvider` accepts an asynchronous throwing closure and refreshes credentials before each Messages or video HTTP request. Model construction does not call it; supplier errors propagate before sending. Existing static keys and custom-header precedence remain supported.
 
 On M3.1 and later, portable `none` and `minimal` reasoning select `low` effort with the shared compatibility warning. Explicit provider effort still takes precedence. The native open-string API continues to warn and omit invalid reasoning strings, which are outside upstream's typed reasoning union.
+## Admission tiers
+
+`MiniMaxLanguageModelOptions(serviceTier: .priority)` requests priority admission;
+`.standard` requests standard admission. Both map to `service_tier` for unary and
+streaming Messages. Omit the field for the provider default. The `minimax`
+namespace overrides `anthropic`; known foreign tiers warn and are omitted, while
+invalid or null tier values fail before I/O.
 
 ## Notes
 
-MiniMax language and video models mirror upstream 3.0.71: `MINIMAX_API_KEY`, separate language/video base URLs, custom headers, versioned user-agent suffix, callable provider plus `languageModel`/`chat` and `video`/`videoModel` aliases, and `minimax.messages`/`minimax.video` provider IDs. Language reuses the Anthropic Messages request builder, error handling, streaming lifecycle, telemetry metadata, and ordered generate-content parser, including signed/redacted reasoning, citation metadata, compaction, and adaptive/disabled thinking options. MiniMax H3/H3-Max video uses model-aware 480P/768P/2K tiers, duration bounds, audio support, and reference-input validation, and covers text-to-video, first/last-frame and reference-to-video inputs, 2K resolution and ratio mapping, reference audio, text-to-video `16:9` default/fallback behavior, duration/cap warnings, submit/poll lifecycle, aborts, structured errors, response/provider metadata, and custom polling controls. Embedding and image families remain unsupported. Status polling now follows only validated redirects and never forwards credentials away from the configured origin. The 2026-10-23 pass: M3.1+ and future model IDs support image/video inputs and reasoning effort; older M2 families remain text-only. MiniMax cache options and sampling semantics use the compatible Messages hooks. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
+MiniMax language and video models mirror upstream 3.0.76: `MINIMAX_API_KEY`, separate language/video base URLs, custom headers, versioned user-agent suffix, callable provider plus `languageModel`/`chat` and `video`/`videoModel` aliases, and `minimax.messages`/`minimax.video` provider IDs. Language reuses the Anthropic Messages request builder, error handling, streaming lifecycle, telemetry metadata, and ordered generate-content parser, including signed/redacted reasoning, citation metadata, compaction, and adaptive/disabled thinking options. MiniMax H3/H3-Max video uses model-aware 480P/768P/2K tiers, duration bounds, audio support, and reference-input validation, and covers text-to-video, first/last-frame and reference-to-video inputs, 2K resolution and ratio mapping, reference audio, text-to-video `16:9` default/fallback behavior, duration/cap warnings, submit/poll lifecycle, aborts, structured errors, response/provider metadata, and custom polling controls. Embedding and image families remain unsupported. Status polling now follows only validated redirects and never forwards credentials away from the configured origin. The 2026-10-23 pass: M3.1+ and future model IDs support image/video inputs and reasoning effort; older M2 families remain text-only. MiniMax cache options and sampling semantics use the compatible Messages hooks. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+Return to the [provider matrix](/providers/).

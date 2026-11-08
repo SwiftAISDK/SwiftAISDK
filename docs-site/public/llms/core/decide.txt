@@ -1,6 +1,6 @@
 # Decision
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/decide/
+Source URL: /core/decide/
 
 `AI.experimentalDecide` returns validated answers to a named question map.
 OpenAI uses `/decisions`, Perplexity uses `/v1/decisions`, Gateway uses `/decision-model`, TypeSafe AI uses
@@ -56,7 +56,8 @@ Both controls are included in start/end callbacks and recorded telemetry input.
 Choice, Score and Boolean instructions may be omitted (`.null` in the native
 representation) when criteria describe the judgment. A Score rubric may have
 one level. Boolean questions without instructions need at least one non-null
-criterion. Box instructions remain required. Provider restrictions still apply:
+criterion. Box instructions may also be omitted in the shared Decision contract.
+Provider restrictions still apply:
 OpenAI omits absent Choice/Score instructions and composes Boolean criteria
 into the predicate text; Perplexity accepts one to ten non-null score levels. Legacy Evaluation validation stays
 unchanged.

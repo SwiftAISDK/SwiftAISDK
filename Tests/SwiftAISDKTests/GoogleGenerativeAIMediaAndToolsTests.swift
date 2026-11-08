@@ -618,7 +618,9 @@ import Testing
     #expect(result.contentType == "audio/L16;rate=24000")
     #expect(result.warnings.contains { $0.type == "unsupported" && $0.feature == "outputFormat" })
     #expect(result.warnings.contains { $0.type == "unsupported" && $0.feature == "speed" })
-    #expect(result.warnings.contains { $0.type == "unsupported" && $0.feature == "language" })
+    #expect(!result.warnings.contains { $0.type == "unsupported" && $0.feature == "language" })
+    let body = try decodeJSONBody(try #require(await transport.requests().first?.body))
+    #expect(body["generationConfig"]?["speechConfig"]?["languageCode"] == "en")
 }
 
 @Test func googleSpeechReturnsEmptyAudioWhenInlineDataIsMissing() async throws {

@@ -62,3 +62,30 @@ Chat-only GLM 5.3 and unknown model IDs do not gain Conversations reasoning.
 resolved before each authenticated Chat, Conversations, embedding, speech or
 transcription request. Static keys and provider/request header overrides remain
 available. Supplier errors fail the operation before sending a request.
+## Streaming transcription and managed voice control
+
+`MistralProvider.streamingTranscriptionModel(...)` (also
+`streamingTranscription`) supports Voxtral realtime transcription with PCM16 and
+a positive sample rate, defaulting to 16 kHz. It waits for the handshake, sends
+64 KiB frames with backpressure, and finalizes only on `transcription.done`.
+Cancellation, invalid events, errors and early close stop the producer/socket.
+
+Realtime options include `language`, `contextBias`, `diarize`,
+`targetStreamingDelayMs` (80...1200 or 2400), `speakerReferences` and
+`turnDetection`. Diarization/turn and speaker clip constraints are validated.
+Offline-only options warn in streams; realtime-only options warn in file calls.
+Untimed speaker segments remain in metadata without invented timestamps, and
+raw provider usage is retained. Settings support injected WebSocket transports
+and per-connection async credentials.
+
+`provider.voiceSessions.create(modelID:sessionConfiguration:)` and
+`close(sessionID:)` provide authenticated `/audio/sessions` server control.
+`buildSessionConfiguration(_:modelID:update:)` throws for unsupported normalized
+or strict Mistral settings. `MistralVoiceSessions.parseServerEvent` maps final
+transcripts, updates and errors while retaining raw/unknown events. Browser
+LiveKit room, microphone, playback, tool RPC and reconnect transport remain
+unimplemented; these APIs do not advertise a managed-voice server WebSocket.
+
+Chat supports medium reasoning on Large 4 and specific function choice while
+retaining all tools. Conversations keeps its distinct tool-selection contract.
+Tool argument strings retain valid JSON verbatim and JSON-quote malformed text.

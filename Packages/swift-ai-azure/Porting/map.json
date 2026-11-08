@@ -37,7 +37,8 @@
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/TestSupport.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/Weekly20261101AzureTests.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/WeeklyAzure20261011Tests.swift",
-      "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/WeeklyAzureAudio20261004Tests.swift"
+      "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/WeeklyAzureAudio20261004Tests.swift",
+      "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/Weekly20261108AzureTests.swift"
     ],
     "resources": []
   },
@@ -51,5 +52,5 @@
       "reason": "2026-11-01: @ai-sdk/azure 4.0.110 -> 4.0.114; integrity-verified published sources/declarations and matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700 reviewed independently. New native behavior is covered by Weekly20261101 suites. Internal TypeScript catalog/documentation/type-inference declarations are represented by native request policies, not an exact JS export contract. Prior imported provenance and known gaps remain unchanged. Async API keys resolve per OpenAI, MAI and Speech request with appropriate header names, request overrides and Entra exclusivity. MAI WebSocket uses resolved current headers. Expose Azure toolSearch and providerOptions.azure deferLoading with openai fallback in shared Responses requests. Keep original 502 status and retryability for Envoy protocol reset errors; invalid 400 requests retain native guidance."
     }
   ],
-  "reviewNote": "M6: Azure routing, token authentication, MAI/Speech adapters, tool factories and focused tests extracted. Native configuration composes OpenAI/compatible and DeepSeek hosting APIs; the aggregate retains old ProviderSettings initializers. Existing URLs, model/deployment identity, auth and capabilities preserved. 2026-11-01: @ai-sdk/azure 4.0.110 -> 4.0.114; integrity-verified published sources/declarations and matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700 reviewed independently. New native behavior is covered by Weekly20261101 suites. Internal TypeScript catalog/documentation/type-inference declarations are represented by native request policies, not an exact JS export contract. Prior imported provenance and known gaps remain unchanged."
+  "reviewNote": "M6: Azure routing, token authentication, MAI/Speech adapters, tool factories and focused tests extracted. Native configuration composes OpenAI/compatible and DeepSeek hosting APIs; the aggregate retains old ProviderSettings initializers. Existing URLs, model/deployment identity, auth and capabilities preserved. 2026-11-01: @ai-sdk/azure 4.0.110 -> 4.0.114; integrity-verified published sources/declarations and matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700 reviewed independently. New native behavior is covered by Weekly20261101 suites. Internal TypeScript catalog/documentation/type-inference declarations are represented by native request policies, not an exact JS export contract. Prior imported provenance and known gaps remain unchanged. 2026-11-08 published delta review and focused translations: Docs/WeeklyUpstreamAudit20261108.json; release-matched provenance and native adaptations retained separately from full-package parity."
 }

@@ -31,3 +31,18 @@ transcription, video polling and realtime client-secret HTTP requests, and
 before each native streaming-transcription WebSocket connection. Static
 keys and caller header overrides remain supported; browser-specific transport
 and TypeScript catalog mechanics keep their documented native differences.
+
+## Server realtime and caller-storage video
+
+Server realtime connections derive their WebSocket URL from the configured base
+path and resolve current credentials before connecting. The client-secret route
+retains its canonical `/v1` URL. Conversation intent is supported; transcription
+intent fails before I/O. Read normalized usage through `event.usage`, including
+cached/modality counts without automatically summing provider snapshots.
+
+Video `output.uploadUrl` selects direct delivery to caller-owned HTTPS storage.
+The native unary polling result returns `uploadedVideos` descriptors even when no
+download URL exists. Signed upload URLs are removed from returned request/raw
+metadata and diagnostics. This does not introduce persisted Async Video operations.
+Transcription returns independent word timings and warns when requested timings
+are unavailable.

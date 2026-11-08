@@ -1,6 +1,6 @@
 # "gateway"
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/gateway/
+Source URL: /providers/gateway/
 
 ## Package
 
@@ -96,10 +96,33 @@ Foundation cancellation/timeout errors remain distinguishable from service
 failures. Model identifiers stay open strings, including newly published
 Gateway speech, transcription, realtime and language aliases.
 
+## Native realtime, costs and uploaded assets
+
+`GatewayProvider.realtimeModel("openai/gpt-realtime-2")` implements the normalized
+Gateway WebSocket protocol. It supports ephemeral client-secret/team protocols
+and trusted server connections with fresh headers via
+`AIRealtimeSession.connectServer`. Transcription intent rejects before I/O;
+streaming transcription retains its separate route. Usage remains in the raw
+event envelope and is exposed through `event.usage`.
+
+`GatewayTools.deepseekSearch` and `deepseekFetch` expose Gateway-executed tools.
+Structured tool errors preserve retryAfter, statusText and additive fields in
+generation and streams. Generation info adds optional marketCost, surchargeCost
+and gatewayCost, preserving zero. Transcription returns independent words; the
+shared timestampGranularities setting warns because the wire route cannot
+forward it. Completed video outputs retain uploadedVideos without requiring
+URLs or inline bytes.
+
+An empty configured key falls through to current Vercel OIDC credentials; a
+nonempty invalid key remains selected. The client-only
+`gateway.experimental_streamingImageDecoding` flag is removed from the wire and
+warns when true. Native image results remain buffered base64: the incremental
+JSON/binary parser and reduced-memory result contract remain unimplemented.
+
 ## Notes
 
-Gateway mirrors upstream 4.0.132: default `/v4/ai` base URL, `AI_GATEWAY_API_KEY`/`VERCEL_OIDC_TOKEN` auth, team scoping, protocol/auth-method headers, versioned user-agent suffix, language/embedding/image/video/reranking/speech/transcription aliases, durable Batch V4 start/status/results with ordered mixed content, callback URL forwarding, reconciled nonnegative native request counts, typed `not_found` errors, Tako Search, async-video start/status and native callback registration, unary transcription plus duplex streaming transcription, and a callable experimental transcription factory that mints short-lived route-bound tokens. Gateway providerOptions cover BYOK, routing order/fallbacks, provider allow-lists, prompt-training restrictions, `has` filtering, sort, serviceTier, quota, and tags; response/provider metadata, model/credits/spend/generation APIs, retryable structured errors, and provider tools are retained. Full realtime model sessions, Vercel o11y headers, metadata-cache refresh policy, ProviderV4 type names, ESM-only packaging, Node 22 engines, and workflow serialization helpers remain JS/runtime-only gaps. The 2026-09-20 pass adds native Evaluation V4 models, catalog discovery, headers, abort propagation, result metadata, and structured error mapping. The 2026-09-27 pass adds Browserbase search and fetch tools, forward-compatible has filters, and provider-owned batch cancellation with lifecycle-status validation. Gateway 4.0.95 also validates conditional Evaluation V4 fallbacks and attributes results to the model that actually answered. The 2026-10-04 pass routes credits team IDs/slugs through query parameters, accepts all-question conditional evaluation fallback thresholds, and preserves native audio usage including stream finishes. The 2026-10-11 pass: Decision V4 uses /decision-model with normalized inline file evidence; batch JSONL downloads have a configurable 64 MiB default line limit. Shared embedding dimensions and missing xAI diarization evidence are handled. The 2026-10-23 pass: Decision requests forward optional maxOutputTokens and reasoning without adding absent defaults. The 2026-10-25 pass: Native streaming speech, speech-bound client secrets and interoperable WebSocket envelopes are available. Parallel Search supports GA modes, top-level maxCharsTotal, fetch timeout/cache policy and location; raw results preserve GA snake_case fields. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps.
+Gateway mirrors upstream 4.0.138: default `/v4/ai` base URL, `AI_GATEWAY_API_KEY`/`VERCEL_OIDC_TOKEN` auth, team scoping, protocol/auth-method headers, versioned user-agent suffix, language/embedding/image/video/reranking/speech/transcription aliases, durable Batch V4 start/status/results with ordered mixed content, callback URL forwarding, reconciled nonnegative native request counts, typed `not_found` errors, Tako Search, async-video start/status and native callback registration, unary transcription plus duplex streaming transcription, and a callable experimental transcription factory that mints short-lived route-bound tokens. Gateway providerOptions cover BYOK, routing order/fallbacks, provider allow-lists, prompt-training restrictions, `has` filtering, sort, serviceTier, quota, and tags; response/provider metadata, model/credits/spend/generation APIs, retryable structured errors, and provider tools are retained. Native Gateway realtime WebSocket sessions are available. Vercel o11y headers, metadata-cache refresh policy, ProviderV4 type names, ESM-only packaging, Node 22 engines, and workflow serialization helpers remain separate native gaps or JS/runtime concerns. The 2026-09-20 pass adds native Evaluation V4 models, catalog discovery, headers, abort propagation, result metadata, and structured error mapping. The 2026-09-27 pass adds Browserbase search and fetch tools, forward-compatible has filters, and provider-owned batch cancellation with lifecycle-status validation. Gateway 4.0.95 also validates conditional Evaluation V4 fallbacks and attributes results to the model that actually answered. The 2026-10-04 pass routes credits team IDs/slugs through query parameters, accepts all-question conditional evaluation fallback thresholds, and preserves native audio usage including stream finishes. The 2026-10-11 pass: Decision V4 uses /decision-model with normalized inline file evidence; batch JSONL downloads have a configurable 64 MiB default line limit. Shared embedding dimensions and missing xAI diarization evidence are handled. The 2026-10-23 pass: Decision requests forward optional maxOutputTokens and reasoning without adding absent defaults. The 2026-10-25 pass: Native streaming speech, speech-bound client secrets and interoperable WebSocket envelopes are available. Parallel Search supports GA modes, top-level maxCharsTotal, fetch timeout/cache policy and location; raw results preserve GA snake_case fields. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. Incremental binary image-stream decoding remains deferred; unsupported streaming options are stripped with a warning.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+Return to the [provider matrix](/providers/).

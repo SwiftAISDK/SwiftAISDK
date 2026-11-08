@@ -21,7 +21,11 @@
         "packages/mistral/src/mistral-embedding-model.test.ts",
         "packages/mistral/src/mistral-prepare-tools.test.ts",
         "packages/mistral/src/mistral-speech-model.test.ts",
-        "packages/mistral/src/mistral-transcription-model.test.ts"
+        "packages/mistral/src/mistral-transcription-model.test-d.ts",
+        "packages/mistral/src/mistral-transcription-model.test.ts",
+        "packages/mistral/src/mistral-transcription-stream.test.ts",
+        "packages/mistral/src/realtime/mistral-realtime-model.test.ts",
+        "packages/mistral/src/realtime/mistral-realtime-transport.test.ts"
       ]
     }
   ],
@@ -36,8 +40,10 @@
       "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralModels.swift",
       "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralProvider.swift",
       "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralSpeechModel.swift",
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralStreamingTranscriptionModel.swift",
       "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralTools.swift",
-      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralTranscriptionModel.swift"
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralTranscriptionModel.swift",
+      "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralVoiceSessions.swift"
     ],
     "tests": [
       "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/FixtureDownloadTransport.swift",
@@ -46,6 +52,8 @@
       "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/MistralTests.swift",
       "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/TestSupport.swift",
       "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/Weekly20261101MistralTests.swift",
+      "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/Weekly20261108MistralTests.swift",
+      "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/Weekly20261108ProviderSelectorCompatibilityTests.swift",
       "Packages/swift-ai-mistral/Tests/SwiftAIMistralTests/WeeklyMistral20261011Tests.swift"
     ],
     "resources": []
@@ -54,7 +62,11 @@
     {
       "kind": "native-adaptation",
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "Native streaming uses raw Data, actor-owned cleanup and awaited sends; 64 KiB JSON/base64 frames preserve the provider protocol. Managed voice REST/configuration/event mapping is native, while LiveKit browser MediaStream/DOM, media ownership, tool RPC and reconnection mechanics remain a documented gap. No native managed media transport or invented server socket route is advertised; JSONValue has no BigInt/cyclic-object input representation."
     }
   ],
-  "reviewNote": "M6: Mistral runtime and focused upstream-derived tests own their package; HTTP construction is shared, options and wire policy remain local. Prior baselines and known gaps are retained. 2026-11-01: reviewed @ai-sdk/mistral 4.0.72 -> 4.0.77 archives and release-matched tests (612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 028a025398782f4938303f48fbeee45c79af544b). Ported changed mistral-chat-language-model test deltas in Weekly20261101MistralTests: GLM 5.3 low/high/max mapping and provider-effort passthrough; retain the distinct Conversations reasoning whitelist. Async key suppliers refresh before each native HTTP request, preserving typed errors and overrides. New internal catalog metadata does not change existing transcription restrictions, speech formats or embedding dimensions; those are already covered by current native behavior."
+  "reviewNote": "M6: Mistral runtime and focused upstream-derived tests own their package; HTTP construction is shared, options and wire policy remain local. Prior baselines and known gaps are retained. 2026-11-01: reviewed @ai-sdk/mistral 4.0.72 -> 4.0.77 archives and release-matched tests (612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 028a025398782f4938303f48fbeee45c79af544b). Ported changed mistral-chat-language-model test deltas in Weekly20261101MistralTests: GLM 5.3 low/high/max mapping and provider-effort passthrough; retain the distinct Conversations reasoning whitelist. Async key suppliers refresh before each native HTTP request, preserving typed errors and overrides. New internal catalog metadata does not change existing transcription restrictions, speech formats or embedding dimensions; those are already covered by current native behavior. 2026-11-08: reviewed @ai-sdk/mistral 4.0.77 -> 4.0.81 verified npm archives, declarations and release-matched tests (028a025398782f4938303f48fbeee45c79af544b -> 0f3a85f92d1ce06ccde01d662407ef83e097a712). Ported native Chat specific tool choice with all tools retained, valid/raw string argument serialization in Chat and Conversations, Large 4 low/medium/high Chat reasoning, realtime transcription options and duplex streaming. Managed voice REST create/close, throwing strict configuration mapper and pure normalized event parser are ported. Weekly20261108MistralTests covers changed native behaviors. Browser LiveKit room/media/playback/tool RPC/reconnection transport remains explicitly unimplemented; no server WebSocket route or media capability is claimed. Native JSONValue cannot contain BigInt or cycles. Existing Conversations reasoning/tool-selection contracts remain distinct; prior gaps retained. 2026-11-08 compatibility supplement: preserved exact public function-reference selectors from canonical pre-run b34e233f033adde06bff302f5d3d11c12f73733e: MistralProviderSettings.init(apiKey:baseURL:headers:queryParams:transport:apiKeyProvider:). Forwarding overloads retain original defaults and explicit new-option defaults; Weekly20261108ProviderSelectorCompatibilityTests also verifies extended references, defaulted calls and runtime forwarding. No upstream baseline or behavioral disposition is changed by this supplement."
 }

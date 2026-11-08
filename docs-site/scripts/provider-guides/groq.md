@@ -22,3 +22,15 @@ failure stops the request before it reaches the transport.
 ## Model-aware disabled reasoning
 
 For GPT-OSS models, portable `reasoning: "none"` maps to `low` with a compatibility warning because the model always reasons. Qwen `qwen/qwen3.6-27b` accepts `none` directly. Models without reasoning omit that setting and report an unsupported warning. Explicit provider options retain precedence.
+
+## Current request and response behavior
+
+`TranscriptionModel.transcribeFromURL` sends an HTTP(S) audio URL directly
+to Groq as multipart `url`, without a local upload or download. URLs with userinfo
+are rejected, and fragments are removed. A specific Groq 400 response indicating
+an unhandled 301/302/303/307/308 redirect declines the native route so the core
+can use its secure download fallback; other provider errors propagate. API request
+headers are never forwarded to the audio host.
+Plain-text transcription responses are accepted for both URL and file input.
+Tool replay preserves valid serialized JSON arguments and JSON-quotes malformed
+raw text.

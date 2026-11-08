@@ -86,7 +86,7 @@ import Testing
     #expect(requestHeader(tokenRequest, "cartesia-version") == "2026-03-01")
     #expect(requestHeader(tokenRequest, "custom-provider-header") == "provider-value")
     #expect(requestHeader(tokenRequest, "custom-request-header") == "request-value")
-    #expect(requestHeader(tokenRequest, "user-agent")?.contains("ai-sdk-cartesia/3.0.67") == true)
+    #expect(requestHeader(tokenRequest, "user-agent")?.contains("ai-sdk-cartesia/3.0.71") == true)
     #expect(try tokenRequestBody(tokenRequest) == .object([
         "grants": .object(["stt": .bool(true)])
     ]))
@@ -565,5 +565,49 @@ private final class TestDuplexWebSocketConnection:
         lock.lock()
         closes.append((code, reason))
         lock.unlock()
+    }
+}
+
+@Suite("Weekly20261108 Cartesia turn thresholds")
+struct Weekly20261108CartesiaTurnTests {
+    @Test(arguments: [
+        JSONValue.object(["keyterms": .array(Array(repeating: .string("term"), count: 101))]),
+        ["keyterms": .null], ["keyterms": [1]],
+        ["turnStartThreshold": "0.5"], ["turnEagerEndThreshold": .null],
+        ["turnEndThreshold": false], ["turnEndTimeoutMs": 800.5]
+    ])
+    func invalidStreamingSchemasStopBeforeTokenRequest(_ streaming: JSONValue) async throws {
+        let http = RecordingTransport(responses: [])
+        let socket = TestDuplexWebSocketTransport()
+        let provider = try CartesiaProvider(settings: .init(apiKey: "key", transport: http, webSocketTransport: socket))
+        await #expect(throws: AIError.self) {
+            try await provider.streamingTranscription("ink-2").stream(.init(
+                audio: .chunks([]), inputAudioFormat: .init(mediaType: "audio/pcm", sampleRate: 16000),
+                providerOptions: ["cartesia": ["streaming": streaming]]
+            ))
+        }
+        #expect(await http.requests().isEmpty)
+        #expect(socket.requests().isEmpty)
+    }
+
+    @Test(arguments: [false, true])
+    func keytermsRepeatAndThresholdsRequireTurnDetection(_ detect: Bool) async throws {
+        let http = RecordingTransport(response: jsonResponse(#"{"token":"token"}"#))
+        let socket = TestDuplexWebSocketTransport()
+        let provider = try CartesiaProvider(settings: .init(apiKey: "key", transport: http, webSocketTransport: socket))
+        let model = try provider.streamingTranscription("ink-2")
+        let result = try await model.stream(.init(audio: .chunks([]), inputAudioFormat: .init(mediaType: "audio/pcm", sampleRate: 16000), providerOptions: ["cartesia": ["streaming": ["turnDetection": .bool(detect), "keyterms": ["Swift", "SDK"], "turnStartThreshold": 0.7, "turnEndTimeoutMs": 800]]]))
+        let request = try #require(socket.requests().first)
+        let items = try #require(URLComponents(url: request.url, resolvingAgainstBaseURL: false)?.queryItems)
+        #expect(items.filter { $0.name == "keyterm" }.compactMap(\.value) == ["Swift", "SDK"])
+        #expect(items.contains { $0.name == "turn_start_threshold" && $0.value == "0.7" } == detect)
+        #expect(items.contains { $0.name == "turn_end_timeout_ms" && $0.value == "800" } == detect)
+        let parts = Task { try await collect(result.stream) }
+        socket.connection.open()
+        #expect(await waitForCondition { !socket.connection.sentMessages().isEmpty })
+        socket.connection.serverClose(code: 1000)
+        let values = try await parts.value
+        guard case let .streamStart(warnings) = values.first else { Issue.record("Missing start"); return }
+        #expect(warnings.count == (detect ? 0 : 2))
     }
 }

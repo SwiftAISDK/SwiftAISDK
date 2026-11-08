@@ -32,7 +32,8 @@
       "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/CartesiaTranscriptionModelTests.swift",
       "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/TestSupport.swift",
-      "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/Weekly20261101CredentialsTests.swift"
+      "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/Weekly20261101CredentialsTests.swift",
+      "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/Weekly20261108SpeechTests.swift"
     ],
     "resources": []
   },
@@ -42,5 +43,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "M6: native audio provider, models and focused suites extracted with the existing batch and streaming contract. Prior baselines and gaps unchanged. 2026-11-01 published package source/declarations and exact release-matched tests reviewed; native async credential suppliers preserve existing static keys, overrides and cancellation. See Docs/WeeklyUpstreamAudit20261101.json for archive identities and exact test provenance."
+  "reviewNote": "2026-11-08: published @ai-sdk/cartesia 3.0.67..3.0.71 source, declarations and matching-release tests reviewed independently. New speech generation/locale options and streaming keyterms/turn thresholds. Delta review is not a claim of whole-provider parity; existing documented gaps remain."
 }

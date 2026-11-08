@@ -105,6 +105,13 @@ Messages queued before the run start reach step zero. Messages queued during a s
 
 Set an explicit step limit for steering. Swift retains its existing prompt/tool-loop default of five steps and agent default of twenty; the single request overload permits one step. `AIOutput` overloads also accept steering.
 
+Use `steering.queue("Next task", id: "task-2")` to wait until the current task
+finishes before starting another. Queued messages are promoted one at a time;
+`steer` messages take precedence at the next step boundary. A truncated response
+does not start the next queued task. Both methods share the same idempotent ID
+and receipt rules. Normal completion, abort and the step limit settle messages
+that were never delivered.
+
 ## Failed-step callbacks
 
 `onStepError` receives `AIGenerateTextStepErrorEvent`, including the step number, provider/model identity, request, previous steps and original error. It fires once after retries fail, including an aborted or timed out `generateText` call. Successful steps do not fire it. Callback failures do not replace the generation error.

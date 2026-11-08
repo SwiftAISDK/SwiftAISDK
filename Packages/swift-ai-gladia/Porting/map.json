@@ -11,6 +11,7 @@
       "tests": [
         "packages/gladia/src/gladia-error.test.ts",
         "packages/gladia/src/gladia-transcription-model.test.ts",
+        "packages/gladia/src/gladia-transcription-options-resolution.test.ts",
         "packages/gladia/src/lazy-schemas.test.ts"
       ]
     }
@@ -26,7 +27,9 @@
       "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/GladiaProviderTests.swift",
       "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/GladiaTranscriptionSchemaAndLifecycleTests.swift",
       "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/TestSupport.swift",
-      "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/Weekly20261101CredentialsTests.swift"
+      "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/Weekly20261101CredentialsTests.swift",
+      "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/Weekly20261108GladiaTests.swift",
+      "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/Weekly20261108ProviderSelectorCompatibilityTests.swift"
     ],
     "resources": []
   },
@@ -34,7 +37,11 @@
     {
       "kind": "native-adaptation",
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "JavaScript workflow serialization hooks do not apply to native model instances. Native transcribeFromURL is an HTTP(S)-only convenience over the same provider audio_url request and polling path; all current options and warnings are shared with uploaded audio."
     }
   ],
-  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
+  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained. 2026-11-08: reviewed @ai-sdk/gladia 3.0.72 -> 3.0.77 verified npm archives, declarations and release-matched tests (9b603d36186b75e58d5479445a96c76f6e2d2700 -> 0f3a85f92d1ce06ccde01d662407ef83e097a712). Ported model selection, current language/vocabulary resolution, deprecated/unsupported warnings, PII/current translation/audio-to-LLM options, generous configurable cancellable polling, API version header, error codes and loose response add-on metadata. Native HTTP(S) URL hook skips upload as a Swift convenience over audio_url. Weekly20261108GladiaTests translates changed transcription/options-resolution tests. JavaScript workflow model serialization is inapplicable to native instances; prior unrelated gaps retained. 2026-11-08 compatibility supplement: preserved exact public function-reference selectors from canonical pre-run b34e233f033adde06bff302f5d3d11c12f73733e: GladiaProviderSettings.init(apiKey:apiKeyProvider:baseURL:headers:queryParams:transport:), GladiaModelConfiguration.init(http:baseURL:). Forwarding overloads retain original defaults and explicit new-option defaults; Weekly20261108ProviderSelectorCompatibilityTests also verifies extended references, defaulted calls and runtime forwarding. No upstream baseline or behavioral disposition is changed by this supplement."
 }

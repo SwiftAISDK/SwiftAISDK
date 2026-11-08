@@ -728,7 +728,7 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
             return withUserAgentSuffix(headers, "ai-sdk-google/4.0.109")
         }
         if providerID == "moonshotai" {
-            return withUserAgentSuffix(headers, "ai-sdk-moonshotai/3.0.82")
+            return withUserAgentSuffix(headers, "ai-sdk-moonshotai/3.0.87")
         }
         if providerID == "cerebras" {
             return withUserAgentSuffix(headers, "ai-sdk-cerebras/3.0.82")
@@ -752,7 +752,7 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
             return withUserAgentSuffix(headers, "ai-sdk-elevenlabs/3.0.76")
         }
         if providerID == "assemblyai" {
-            return withUserAgentSuffix(headers, "ai-sdk-assemblyai/3.0.72")
+            return withUserAgentSuffix(headers, "ai-sdk-assemblyai/3.0.81")
         }
         if providerID == "deepgram" {
             return withUserAgentSuffix(headers, "ai-sdk-deepgram/3.1.43")
@@ -764,7 +764,7 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
             return withUserAgentSuffix(headers, "ai-sdk-hume/3.0.72")
         }
         if providerID == "revai" {
-            return withUserAgentSuffix(headers, "ai-sdk-revai/3.0.72")
+            return withUserAgentSuffix(headers, "ai-sdk-revai/3.0.81")
         }
         if providerID == "gladia" {
             return withUserAgentSuffix(headers, "ai-sdk-gladia/3.0.72")
@@ -785,7 +785,7 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
             return withUserAgentSuffix(headers, "ai-sdk-luma/3.0.73")
         }
         if providerID == "klingai" {
-            return withUserAgentSuffix(headers, "ai-sdk-klingai/4.0.74")
+            return withUserAgentSuffix(headers, "ai-sdk-klingai/4.0.78")
         }
         if providerID == "replicate" {
             return withUserAgentSuffix(headers, "ai-sdk-replicate/3.0.73")
@@ -797,10 +797,10 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
             return withUserAgentSuffix(headers, "ai-sdk-prodia/2.0.73")
         }
         if providerID == "quiverai" {
-            return withUserAgentSuffix(headers, "ai-sdk-quiverai/2.0.73")
+            return withUserAgentSuffix(headers, "ai-sdk-quiverai/2.0.78")
         }
         if providerID == "togetherai" {
-            return withUserAgentSuffix(headers, "ai-sdk-togetherai/3.0.83")
+            return withUserAgentSuffix(headers, "ai-sdk-togetherai/3.0.88")
         }
         if providerID == "fireworks" {
             return withUserAgentSuffix(headers, "ai-sdk-fireworks/3.0.85")
@@ -809,7 +809,7 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
             return withUserAgentSuffix(headers, "ai-sdk-deepinfra/3.0.82")
         }
         if providerID == "xai" {
-            return withUserAgentSuffix(headers, "ai-sdk-xai/5.0.35")
+            return withUserAgentSuffix(headers, "ai-sdk-xai/5.0.40")
         }
         headers["user-agent"] = headers["user-agent"] ?? userAgent(providerID)
         return headers

@@ -35,7 +35,7 @@ import Testing
     let request = try #require(requests.first)
     #expect(request.url.absoluteString == "https://fal.run/fal-ai/flux/schnell")
     #expect(request.headers["authorization"] == "Key fal-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-fal/3.0.73")
+    #expect(request.headers["user-agent"] == "ai-sdk-fal/3.0.78")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["prompt"]?.stringValue == "cat")
     #expect(body["image_size"]?.stringValue == "landscape_16_9")
@@ -67,7 +67,7 @@ import Testing
 
     let requests = await transport.requests()
     #expect(requests[0].headers["authorization"] == "Key fal-key")
-    #expect(requests[0].headers["user-agent"] == "CustomApp/1.0 ai-sdk-fal/3.0.73")
+    #expect(requests[0].headers["user-agent"] == "CustomApp/1.0 ai-sdk-fal/3.0.78")
     #expect(requests[1].headers["authorization"] == nil)
     #expect(requests[1].headers["user-agent"] == nil)
 }
@@ -158,11 +158,11 @@ import Testing
     #expect(requests[1].method == "GET")
     #expect(requests[1].url.absoluteString == "https://queue.fal.run/fal-ai/kling-video/requests/req-1")
     #expect(requests[1].headers["authorization"] == "Key fal-key")
-    #expect(requests[1].headers["user-agent"] == "ai-sdk-fal/3.0.73")
+    #expect(requests[1].headers["user-agent"] == "ai-sdk-fal/3.0.78")
     #expect(requests[2].method == "GET")
     #expect(requests[2].url.absoluteString == "https://queue.fal.run/fal-ai/kling-video/requests/req-1")
     #expect(requests[2].headers["authorization"] == "Key fal-key")
-    #expect(requests[2].headers["user-agent"] == "ai-sdk-fal/3.0.73")
+    #expect(requests[2].headers["user-agent"] == "ai-sdk-fal/3.0.78")
 }
 
 @Test func falVideoDoesNotSendCredentialsToForeignResponseURL() async throws {
@@ -189,13 +189,13 @@ import Testing
     #expect(requests.count == 2)
     #expect(requests[0].url.absoluteString == "https://queue.fal.run/fal-ai/kling-video/v1/standard/text-to-video")
     #expect(requests[0].headers["authorization"] == "Key fal-key")
-    #expect(requests[0].headers["user-agent"] == "CustomApp/1.0 ai-sdk-fal/3.0.73")
+    #expect(requests[0].headers["user-agent"] == "CustomApp/1.0 ai-sdk-fal/3.0.78")
     #expect(requests[1].url.absoluteString == "https://status.example.com/fal/requests/req-foreign")
     #expect(requests[1].headers["authorization"] == nil)
-    #expect(requests[1].headers["user-agent"] == "CustomApp/1.0 ai-sdk-fal/3.0.73")
+    #expect(requests[1].headers["user-agent"] == "CustomApp/1.0 ai-sdk-fal/3.0.78")
 }
 
-@Test func falVideoAsyncStartStatusMatchesUpstreamQueueOperation() async throws {
+@Test(arguments: [0, 42]) func falVideoAsyncStartStatusMatchesUpstreamQueueOperation(seed: Int) async throws {
     let transport = RecordingTransport(responses: [
         jsonResponse(#"{"request_id":"req-async","response_url":"https://queue.fal.run/fal-ai/luma-dream-machine/requests/req-async"}"#),
         AIHTTPResponse(
@@ -209,7 +209,7 @@ import Testing
     let model = try #require(try provider.videoModel("fal-ai/luma-dream-machine") as? any AsyncVideoModel)
 
     let started = try await model.startVideoGeneration(VideoGenerationOperationStartRequest(
-        request: VideoGenerationRequest(prompt: "async clip", seed: 42)
+        request: VideoGenerationRequest(prompt: "async clip", seed: seed)
     ))
     #expect(started.operation == [
         "responseUrl": "https://queue.fal.run/fal-ai/luma-dream-machine/requests/req-async",
@@ -240,6 +240,8 @@ import Testing
     let requests = await transport.requests()
     #expect(requests.count == 3)
     #expect(requests[0].method == "POST")
+    let body = try decodeJSONBody(try #require(requests[0].body))
+    #expect(body["seed"]?.intValue == seed)
     #expect(requests[1].method == "GET")
     #expect(requests[2].method == "GET")
     #expect(requests.dropFirst().allSatisfy { !$0.followRedirects })
@@ -339,7 +341,7 @@ import Testing
     #expect(speechRequests.count == 2)
     #expect(speechRequests[0].url.absoluteString == "https://fal.run/fal-ai/minimax/speech-02-hd")
     #expect(speechRequests[0].headers["authorization"] == "Key fal-key")
-    #expect(speechRequests[0].headers["user-agent"] == "ai-sdk-fal/3.0.73")
+    #expect(speechRequests[0].headers["user-agent"] == "ai-sdk-fal/3.0.78")
     let speechBody = try decodeJSONBody(try #require(speechRequests[0].body))
     #expect(speechBody["text"]?.stringValue == "hello")
     #expect(speechBody["voice"]?.stringValue == "voice-id")
@@ -364,7 +366,7 @@ import Testing
     #expect(transcriptionRequests.count == 2)
     #expect(transcriptionRequests[0].url.absoluteString == "https://queue.fal.run/fal-ai/whisper")
     #expect(transcriptionRequests[0].headers["authorization"] == "Key fal-key")
-    #expect(transcriptionRequests[0].headers["user-agent"] == "ai-sdk-fal/3.0.73")
+    #expect(transcriptionRequests[0].headers["user-agent"] == "ai-sdk-fal/3.0.78")
     let transcriptionBody = try decodeJSONBody(try #require(transcriptionRequests[0].body))
     #expect(transcriptionBody["task"]?.stringValue == "transcribe")
     #expect(transcriptionBody["language"]?.stringValue == "en")
@@ -375,7 +377,7 @@ import Testing
     #expect(transcriptionRequests[1].method == "GET")
     #expect(transcriptionRequests[1].url.absoluteString == "https://queue.fal.run/fal-ai/whisper/requests/transcription-1")
     #expect(transcriptionRequests[1].headers["authorization"] == "Key fal-key")
-    #expect(transcriptionRequests[1].headers["user-agent"] == "ai-sdk-fal/3.0.73")
+    #expect(transcriptionRequests[1].headers["user-agent"] == "ai-sdk-fal/3.0.78")
 }
 
 @Test func falAudioModelsMapNestedProviderOptions() async throws {

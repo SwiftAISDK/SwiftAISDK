@@ -17,3 +17,16 @@ for a complete typed example and reference insertion rules.
 `TypeSafeAIProviderSettings.apiKeyProvider` resolves a fresh key before
 each authenticated request; static `apiKey` settings remain supported. Supplier
 errors stop the request before it reaches the transport.
+
+## Current decision limits and state
+
+Decision Choice questions require 1...255 options, and Score questions
+require 1...10 non-null levels. Structured score legends are retained in
+`providerMetadata.typesafe.legend` keyed by question ID. A single JSON string,
+object or array state is forwarded directly; null, Boolean and number states are
+serialized as text. The high-level legacy Evaluation API keeps its existing
+stricter question contract.
+
+Decision `.box()` may omit instructions, represented as JSON null. Box questions
+enable the image feature header even without image assets. Missing/null score
+legends produce an empty root legend map; a non-object legend is invalid.

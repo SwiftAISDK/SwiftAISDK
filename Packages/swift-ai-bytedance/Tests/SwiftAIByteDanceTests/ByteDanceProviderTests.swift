@@ -36,7 +36,7 @@ import Testing
     }
 }
 
-@Test func byteDanceVideoSubmitsPollsAndPreservesMetadata() async throws {
+@Test(arguments: [0, 11]) func byteDanceVideoSubmitsPollsAndPreservesMetadata(seed: Int) async throws {
     let transport = RecordingTransport(responses: [
         jsonResponse(#"{"id":"task-1"}"#),
         jsonResponse(
@@ -52,7 +52,7 @@ import Testing
         aspectRatio: "16:9",
         durationSeconds: 4,
         resolution: "1920x1080",
-        seed: 11,
+        seed: seed,
         providerOptions: [
             "bytedance": .object([
                 "serviceTier": "flex"
@@ -88,7 +88,7 @@ import Testing
     #expect(body["content"]?[0]?["text"]?.stringValue == "cat running")
     #expect(body["ratio"]?.stringValue == "16:9")
     #expect(body["duration"]?.intValue == 4)
-    #expect(body["seed"]?.intValue == 11)
+    #expect(body["seed"]?.intValue == seed)
     #expect(body["resolution"]?.stringValue == "1080p")
     #expect(body["service_tier"]?.stringValue == "flex")
     #expect(body["openai"] == nil)

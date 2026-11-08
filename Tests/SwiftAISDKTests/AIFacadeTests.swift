@@ -292,7 +292,10 @@ private struct NativeAPISummary: Decodable, Sendable, Equatable {
         #expect(events.map(\.kind) == [.start, .stepError, .error])
         #expect(events[0].input?["messages"]?[0]?["content"]?[0]?["text"]?.stringValue == "Telemetry error")
         #expect(events[2].output == nil)
-        #expect(events[2].errorDescription?.contains("HTTP 400") == true)
+        #expect(String(describing: error).contains("HTTP 400"))
+        let errorEvents = events.filter { $0.kind == .stepError || $0.kind == .error }
+        #expect(errorEvents.count == 2)
+        #expect(errorEvents.allSatisfy { $0.errorDescription == "AI SDK operation failed" && $0.output == nil && !$0.includesOutput })
     }
 }
 @Test func aiGenerateTextAbortsBeforeModelCallWhenSignalIsAborted() async throws {

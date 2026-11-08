@@ -38,7 +38,7 @@ public final class AssemblyAIProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "\(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-assemblyai/3.0.72")
+        headers = withUserAgentSuffix(headers, "ai-sdk-assemblyai/3.0.77")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.assemblyai.com")
         let http = AIProviderHTTPClient(providerID: "assemblyai", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

@@ -31,3 +31,12 @@ Unary generation places the separate reasoning block before text, followed by fu
 `OpenAICompatibleProviderSettings.apiKeyProvider` accepts an async throwing key supplier resolved before each authenticated request. Static keys and explicit provider/request authorization headers remain available. Trusted returned image URLs resolve credentials at download time; cross-origin downloads retain the existing credential stripping policy.
 
 Custom wire adapters can set `OpenAICompatibleModelConfiguration.mapReasoning` to map portable `reasoning` and append warnings. Explicit provider `reasoningEffort` bypasses this callback. Completion prompt errors include the content of a misplaced system message.
+
+## Refusals and replay
+
+Generic compatible Chat retains string refusals after content, maps a normal stop
+with refusal to `contentFilter`, and preserves tool/error precedence in unary and
+incremental streams. Valid pre-serialized tool JSON is retained; malformed strings
+are JSON-quoted. Inline UTF-8 text files become text with their part metadata.
+An explicit `reasoningEffort: null` remains a wire null and overrides portable
+reasoning. Backend capability descriptions remain unknown unless declared.

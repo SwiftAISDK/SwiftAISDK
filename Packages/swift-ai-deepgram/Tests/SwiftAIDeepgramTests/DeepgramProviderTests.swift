@@ -43,7 +43,7 @@ import Testing
     #expect(request.headers["authorization"] == "Token deepgram-key")
     #expect(request.headers["custom-provider-header"] == "provider-header-value")
     #expect(request.headers["Custom-Request-Header"] == "request-header-value")
-    #expect(request.headers["user-agent"] == "ai-sdk-deepgram/3.1.43")
+    #expect(request.headers["user-agent"] == "ai-sdk-deepgram/3.1.48")
     #expect(request.headers["content-type"] == "audio/wav")
     #expect(request.body == Data("wav".utf8))
 }
@@ -266,7 +266,7 @@ import Testing
     ))
 
     let speechRequest = try #require(await speechTransport.requests().first)
-    #expect(speechRequest.url.absoluteString == "https://api.deepgram.com/v1/speak?bit_rate=48000&callback_method=POST&encoding=mp3&mip_opt_out=true&model=aura-2-helena-en")
+    #expect(speechRequest.url.absoluteString == "https://api.deepgram.com/v1/speak?bit_rate=48000&encoding=mp3&mip_opt_out=true&model=aura-2-helena-en")
 }
 
 @Test func deepgramSpeechUsesSpeakEndpointWithFormatQuery() async throws {
@@ -279,7 +279,6 @@ import Testing
         voice: "ignored-voice",
         format: "wav_24000",
         extraBody: [
-            "callback": .string("https://example.com/hook"),
             "callbackMethod": .string("PUT"),
             "mipOptOut": .bool(true),
             "tag": .array([.string("test"), .string("swift")])
@@ -290,9 +289,9 @@ import Testing
     #expect(result.contentType == "audio/wav")
     #expect(result.providerMetadata == ["deepgram": [:]])
     let request = try #require(await transport.requests().first)
-    #expect(request.url.absoluteString == "https://api.deepgram.com/v1/speak?callback=https%3A%2F%2Fexample.com%2Fhook&callback_method=PUT&container=wav&encoding=linear16&mip_opt_out=true&model=aura-2-helena-en&sample_rate=24000&tag=test%2Cswift")
+    #expect(request.url.absoluteString == "https://api.deepgram.com/v1/speak?container=wav&encoding=linear16&mip_opt_out=true&model=aura-2-helena-en&sample_rate=24000&tag=test%2Cswift")
     #expect(request.headers["authorization"] == "Token deepgram-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-deepgram/3.1.43")
+    #expect(request.headers["user-agent"] == "ai-sdk-deepgram/3.1.48")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["text"]?.stringValue == "Hello")
 }
@@ -403,7 +402,7 @@ import Testing
     #expect(request.headers["content-type"] == "application/json")
     #expect(request.headers["custom-provider-header"] == "provider-header-value")
     #expect(request.headers["Custom-Request-Header"] == "request-header-value")
-    #expect(request.headers["user-agent"] == "ai-sdk-deepgram/3.1.43")
+    #expect(request.headers["user-agent"] == "ai-sdk-deepgram/3.1.48")
 }
 
 @Test func deepgramSpeechParsesOutputFormatSampleRatesLikeUpstream() async throws {
@@ -450,7 +449,6 @@ import Testing
                 "container": .string("wav"),
                 "sampleRate": .number(16000),
                 "bitRate": .number(48000),
-                "callback": .string("https://example.com/callback"),
                 "callbackMethod": .string("POST"),
                 "mipOptOut": .bool(true),
                 "tag": .array([.string("tag1"), .string("tag2")]),
@@ -463,6 +461,7 @@ import Testing
 
     #expect(result.audio == Data("deepgram-audio".utf8))
     #expect(result.warnings == [
+        AIWarning(type: "unsupported", feature: "providerOptions.deepgram.callbackMethod", message: "callbackMethod is ignored because callback speech generation is not supported."),
         AIWarning(
             type: "unsupported",
             feature: "providerOptions",
@@ -482,7 +481,7 @@ import Testing
 
     let request = try #require(await transport.requests().first)
     #expect(request.abortSignal === controller.signal)
-    #expect(request.url.absoluteString == "https://api.deepgram.com/v1/speak?bit_rate=48000&callback=https%3A%2F%2Fexample.com%2Fcallback&callback_method=POST&encoding=mp3&mip_opt_out=true&model=aura-2-helena-en&tag=tag1%2Ctag2")
+    #expect(request.url.absoluteString == "https://api.deepgram.com/v1/speak?bit_rate=48000&encoding=mp3&mip_opt_out=true&model=aura-2-helena-en&tag=tag1%2Ctag2")
     let body = try decodeJSONBody(try #require(request.body))
     #expect(body["text"]?.stringValue == "Hello")
 }

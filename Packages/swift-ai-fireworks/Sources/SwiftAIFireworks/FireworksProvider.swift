@@ -47,7 +47,7 @@ public final class FireworksProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-fireworks/3.0.85")
+        headers = withUserAgentSuffix(headers, "ai-sdk-fireworks/3.0.90")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.fireworks.ai/inference/v1")
         let http = AIProviderHTTPClient(providerID: "fireworks", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

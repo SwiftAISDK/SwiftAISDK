@@ -42,7 +42,7 @@ public final class QuiverAIProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-quiverai/2.0.73")
+        headers = withUserAgentSuffix(headers, "ai-sdk-quiverai/2.0.78")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? environmentValue(["QUIVERAI_BASE_URL"]) ?? "https://api.quiver.ai/v1")
         let http = AIProviderHTTPClient(providerID: "quiverai", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

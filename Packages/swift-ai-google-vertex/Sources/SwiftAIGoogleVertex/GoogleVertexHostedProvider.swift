@@ -17,6 +17,8 @@ public struct GoogleVertexHostedProviderSettings: Sendable {
     public var transport: any AITransport
     public var includeUsage: Bool
     public var supportsStructuredOutputs: Bool
+    /// Opts into Claude 4.5+ native output on a project whose organization policy enables structured_outputs.
+    public var supportsNativeStructuredOutput: Bool
     public var supportsMultiPartToolContent: Bool
     public var maxEmbeddingsPerCall: Int?
     public var transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])?
@@ -29,9 +31,25 @@ public struct GoogleVertexHostedProviderSettings: Sendable {
                 transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil,
                 transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])? = nil,
                 apiKeyProvider: (@Sendable () async throws -> String)? = nil) {
+        self.init(apiKey: apiKey, baseURL: baseURL, headers: headers, queryParams: queryParams,
+                  transport: transport, includeUsage: includeUsage, supportsStructuredOutputs: supportsStructuredOutputs,
+                  supportsMultiPartToolContent: supportsMultiPartToolContent, maxEmbeddingsPerCall: maxEmbeddingsPerCall,
+                  transformRequestBody: transformRequestBody, transformRequestBodyWithWarnings: transformRequestBodyWithWarnings,
+                  apiKeyProvider: apiKeyProvider, supportsNativeStructuredOutput: false)
+    }
+
+    public init(apiKey: String? = nil, baseURL: String? = nil, headers: [String: String] = [:],
+                queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared,
+                includeUsage: Bool = false, supportsStructuredOutputs: Bool = false,
+                supportsMultiPartToolContent: Bool = false, maxEmbeddingsPerCall: Int? = nil,
+                transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil,
+                transformRequestBodyWithWarnings: (@Sendable ([String: JSONValue], inout [AIWarning]) -> [String: JSONValue])? = nil,
+                apiKeyProvider: (@Sendable () async throws -> String)? = nil,
+                supportsNativeStructuredOutput: Bool) {
         self.apiKey = apiKey; self.baseURL = baseURL; self.headers = headers; self.queryParams = queryParams
         self.transport = transport; self.includeUsage = includeUsage
         self.supportsStructuredOutputs = supportsStructuredOutputs
+        self.supportsNativeStructuredOutput = supportsNativeStructuredOutput
         self.supportsMultiPartToolContent = supportsMultiPartToolContent
         self.maxEmbeddingsPerCall = maxEmbeddingsPerCall
         self.transformRequestBody = transformRequestBody
@@ -49,10 +67,12 @@ public final class GoogleVertexHostedProvider: AIProvider, Sendable {
     private let endpoint: GoogleVertexHostedEndpoint
     private let compatible: OpenAICompatibleModelConfiguration
     private let anthropic: AnthropicModelConfiguration
+    private let supportsNativeStructuredOutput: Bool
 
     public init(endpoint: GoogleVertexHostedEndpoint, project: String? = nil, location: String? = nil,
                 configuration settings: GoogleVertexHostedProviderSettings) throws {
         self.endpoint = endpoint
+        self.supportsNativeStructuredOutput = settings.supportsNativeStructuredOutput
         switch endpoint {
         case .maaS: providerID = "googleVertex.maas"; supportedCapabilities = [.language, .completion, .embedding, .image]
         case .xai: providerID = "googleVertex.xai"; supportedCapabilities = [.language]
@@ -104,7 +124,9 @@ public final class GoogleVertexHostedProvider: AIProvider, Sendable {
 
     public func languageModel(_ modelID: String) throws -> any LanguageModel {
         if case .anthropic = endpoint {
-            return AnthropicLanguageModel(modelID: modelID, config: anthropic,
+            var modelConfiguration = anthropic
+            modelConfiguration.supportsNativeStructuredOutput = supportsNativeStructuredOutput && googleVertexAnthropicSupportsStructuredOutput(modelID)
+            return AnthropicLanguageModel(modelID: modelID, config: modelConfiguration,
                 transformRequestHeaders: googleVertexAnthropicRequestHeaders)
         }
         return OpenAICompatibleChatModel(modelID: modelID, config: compatible)
@@ -129,6 +151,15 @@ public final class GoogleVertexHostedProvider: AIProvider, Sendable {
     private func require(_ capability: ModelCapability, _ modelID: String) throws {
         guard supportedCapabilities.contains(capability) else { throw unsupported(capability, modelID) }
     }
+}
+
+private func googleVertexAnthropicSupportsStructuredOutput(_ modelID: String) -> Bool {
+    guard let expression = try? NSRegularExpression(pattern: "^claude-[a-z]+-(\\d+)(?:-(\\d+))?(?:@|$)"),
+          let match = expression.firstMatch(in: modelID, range: NSRange(modelID.startIndex..., in: modelID)),
+          let majorRange = Range(match.range(at: 1), in: modelID),
+          let major = Int(modelID[majorRange]) else { return false }
+    let minor = Range(match.range(at: 2), in: modelID).flatMap { Int(modelID[$0]) } ?? 0
+    return major > 4 || (major == 4 && minor >= 5)
 }
 
 public extension AIProviders {

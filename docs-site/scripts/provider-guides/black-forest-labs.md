@@ -13,3 +13,12 @@ The native `BlackForestLabsProviderSettings` accepts an optional
 authenticated request, so short-lived credentials can refresh without recreating
 the provider or model. Static `apiKey` settings remain supported. A supplier
 failure stops the request before it reaches the transport.
+
+## Current request and response behavior
+
+An image submission without `polling_url` uses the configured
+`get_result?id=...` endpoint. For that webhook-shaped response only, temporary
+`Task not found` statuses (including HTTP 404) are retried at the polling interval,
+with a separate cap of 20 attempts and the existing overall timeout. Explicit
+polling URLs retain their prior failure behavior. Auth headers follow the existing
+trusted-host policy.

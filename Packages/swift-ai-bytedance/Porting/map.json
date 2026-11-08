@@ -34,5 +34,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained."
+  "reviewNote": "2026-11-08: published @ai-sdk/bytedance 2.0.75..2.0.80 source, declarations and matching-release tests reviewed independently. Only test/declaration/internal catalog extraction changes; explicit seed zero was already native. Delta review is not a claim of whole-provider parity; existing documented gaps remain."
 }

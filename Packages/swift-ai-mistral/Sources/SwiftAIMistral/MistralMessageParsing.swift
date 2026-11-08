@@ -83,7 +83,7 @@ func mistralAssistantToolCallJSON(_ part: AIContentPart) -> JSONValue? {
         "type": .string("function"),
         "function": .object([
             "name": .string(call.name),
-            "arguments": .string(call.arguments)
+            "arguments": .string(mistralSerializeToolArguments(call.arguments))
         ])
     ])
 }
@@ -219,4 +219,9 @@ func mistralResponseMetadata(from raw: JSONValue? = nil, response: AIHTTPRespons
         headers: response.headers,
         body: raw
     )
+}
+/// Tool arguments are already serialized in Swift. Preserve valid JSON verbatim.
+func mistralSerializeToolArguments(_ value: String) -> String {
+    if (try? decodeJSONBody(Data(value.utf8))) != nil { return value }
+    return mistralJSONString(.string(value))!
 }

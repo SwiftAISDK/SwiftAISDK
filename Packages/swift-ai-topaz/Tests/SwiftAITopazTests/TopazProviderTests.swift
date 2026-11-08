@@ -80,7 +80,7 @@ struct TopazProviderTests {
         #expect(request.headers["accept"] == "application/json")
         #expect(request.headers["x-custom"] == "custom-value")
         #expect(request.headers["x-call"] == "call-value")
-        #expect(request.headers["user-agent"] == "App/1.0 ai-sdk-topaz/3.0.19")
+        #expect(request.headers["user-agent"] == "App/1.0 ai-sdk-topaz/3.0.23")
     }
 
     @Test func customAndCallHeadersOverrideCaseInsensitively() async throws {
@@ -303,7 +303,7 @@ struct TopazProviderTests {
         #expect(requests[0].headers["x-api-key"] == "test-key")
         #expect(requests[1].body == video.data)
         #expect(requests[1].headers["content-type"] == "video/mp4")
-        #expect(requests[1].headers["user-agent"] == "ai-sdk-topaz/3.0.19")
+        #expect(requests[1].headers["user-agent"] == "ai-sdk-topaz/3.0.23")
         #expect(requests[1].headers["x-api-key"] == nil)
         #expect(!requests[1].followRedirects)
         let body = try decodeJSONBody(#require(requests[0].body))
@@ -398,16 +398,17 @@ struct TopazProviderTests {
         #expect(result.operation["outputContainer"] == .string(expected))
     }
 
-    @Test(arguments: ["missing-url", "upload-error", "unsafe-url", "redirect"])
+    @Test(arguments: ["missing-url", "upload-error", "unsafe-url", "redirect307", "redirect308"])
     func videoCleanupPreservesOriginalFailure(kind: String) async throws {
         let url = kind == "unsafe-url" ? "http://127.0.0.1/internal" : "https://uploads.topazlabs.example.com/video"
         let created = kind == "missing-url" ? #"{"requestId":"req-123"}"# : "{\"requestId\":\"req-123\",\"uploadUrls\":[\"\(url)\"]}"
-        let transport = videoTransport(created, uploadStatus: kind == "redirect" ? 307 : 503)
+        let redirectStatus = kind == "redirect307" ? 307 : kind == "redirect308" ? 308 : nil
+        let transport = videoTransport(created, uploadStatus: redirectStatus ?? 503)
         do { _ = try await start(transport); Issue.record("Expected start failure") }
         catch AIError.apiCall(let error) {
-            #expect(["upload-error", "redirect"].contains(kind))
-            #expect(error.statusCode == (kind == "redirect" ? 307 : 503))
-            #expect(error.isRetryable == (kind != "redirect"))
+            #expect(kind == "upload-error" || redirectStatus != nil)
+            #expect(error.statusCode == (redirectStatus ?? 503))
+            #expect(error.isRetryable == (redirectStatus == nil))
         } catch { #expect(["missing-url", "unsafe-url"].contains(kind)) }
         let requests = await transport.requests()
         #expect(requests.last?.method == "DELETE")
@@ -415,6 +416,10 @@ struct TopazProviderTests {
         #expect(requests.last?.headers["x-api-key"] == "test-key")
         #expect(requests.last?.abortSignal == nil)
         #expect(!requests.contains { $0.url.host == "127.0.0.1" })
+        if redirectStatus != nil {
+            #expect(requests.filter { $0.method == "PUT" }.count == 1)
+            #expect(requests.first { $0.method == "PUT" }?.followRedirects == false)
+        }
     }
 
     @Test func completedVideoReportsCheapestSettledCreditsAndMediaType() async throws {

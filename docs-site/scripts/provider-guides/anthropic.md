@@ -1,3 +1,31 @@
+## Message threads, inline tools and Files
+
+Message threads are opt-in through `providerOptions.anthropic.thread`:
+`["type": "create"]` starts a thread; `["type": "continue",
+"previousMessageId": "msg_..."]` sends the new turns. Keep full history locally
+for expiry recovery. Continuations omit leading system instructions and tool
+definitions from the wire; start a new thread to change them. Pin
+`anthropicBeta` content-specific headers on every turn. Threads reject batches
+and compaction/context edits except `clear_thinking_20251015` with `keep: "all"`.
+
+Mid-conversation system `toolChanges` can add function/provider definitions using
+`tool`, or add/remove references using `toolName`. Inline tools preserve alias
+mapping and enable the required beta headers. Computer tools must be top-level
+definitions referenced by name. Unknown or disabled toolset members reject before
+execution; returned actions cannot be replaced by a spoofed input `action`.
+
+`includePings: true` exposes keepalive `.ping` stream parts and defaults to false.
+It is never included in the request body. Applied admission is available as
+`providerMetadata.anthropic.serviceTier`; requests accept `auto` or `standard_only`
+and warn for known incompatible tiers. Automatic native structured output is used
+only when it preserves the schema; open maps and recursion retain JSON-tool
+fallback with the caller's selected tools.
+
+Files support buffered upload, metadata lookup, streaming download and deletion,
+including lifecycle timestamps and size. Streaming upload remains unsupported.
+Errors with non-null `details` retain the raw body and a readable message,
+including `thread_not_found` recovery information.
+
 ## Haiku 5.5, decisions, and stream metadata
 
 Haiku 5.5 supports adaptive thinking, xhigh effort and a 128k maximum output. Budget thinking is converted to adaptive with a compatibility warning; sampling is rejected. Explicit disabled thinking remains valid at supported effort levels. Unsupported models no longer warn for an explicit `strict: false` tool.

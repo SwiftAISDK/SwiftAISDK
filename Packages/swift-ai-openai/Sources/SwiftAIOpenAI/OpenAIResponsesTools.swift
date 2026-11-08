@@ -258,9 +258,12 @@ func openAIResponsesProviderTool(
             if let containerID = container.stringValue {
                 tool["container"] = .string(containerID)
             } else if let containerObject = container.objectValue {
+                if let memory = containerObject["memoryLimit"] ?? containerObject["memory_limit"], !["1g", "4g", "16g", "64g"].contains(memory.stringValue ?? "") { throw AIError.invalidArgument(argument: "tools.codeInterpreter.container.memoryLimit", message: "Unsupported code interpreter memory limit.") }
                 tool["container"] = .object([
                     "type": .string("auto"),
-                    "file_ids": containerObject["fileIds"] ?? containerObject["file_ids"]
+                    "file_ids": containerObject["fileIds"] ?? containerObject["file_ids"],
+                    "memory_limit": containerObject["memoryLimit"] ?? containerObject["memory_limit"],
+                    "network_policy": try (containerObject["networkPolicy"] ?? containerObject["network_policy"]).map(openAIResponsesCodeInterpreterNetworkPolicy)
                 ])
             }
         } else {
@@ -288,7 +291,14 @@ func openAIResponsesProviderTool(
         if let value = args["outputFormat"] ?? args["output_format"] { tool["output_format"] = value }
         return .object(tool)
     case "openai.mcp":
+        let tunnel = args["tunnelId"] ?? args["tunnel_id"]
+        let server = args["serverUrl"] ?? args["server_url"]
+        let connector = args["connectorId"] ?? args["connector_id"]
+        for value in [tunnel, server, connector].compactMap({ $0 }) where value.stringValue == nil { throw AIError.invalidArgument(argument: "tools.mcp", message: "MCP targets must be strings.") }
+        guard tunnel != nil || server != nil || connector != nil else { throw AIError.invalidArgument(argument: "tools.mcp", message: "One of serverUrl, connectorId, or tunnelId must be provided.") }
+        guard tunnel == nil || (server == nil && connector == nil) else { throw AIError.invalidArgument(argument: "tools.mcp", message: "tunnelId cannot be combined with serverUrl or connectorId.") }
         var tool: [String: JSONValue] = ["type": .string("mcp")]
+        if let tunnel { tool["tunnel_id"] = tunnel }
         if let value = args["serverLabel"] ?? args["server_label"] { tool["server_label"] = value }
         if let value = args["allowedTools"] ?? args["allowed_tools"] { tool["allowed_tools"] = openAIResponsesMCPAllowedTools(value) }
         if let value = args["authorization"] { tool["authorization"] = value }
@@ -658,4 +668,13 @@ func openAIResponsesSnakeCasedKey(_ key: String) -> String {
         }
     }
     return output
+}
+private func openAIResponsesCodeInterpreterNetworkPolicy(_ value: JSONValue) throws -> JSONValue {
+    guard var policy = value.objectValue, let type = policy["type"]?.stringValue, ["disabled", "allowlist"].contains(type) else { throw AIError.invalidArgument(argument: "tools.codeInterpreter.container.networkPolicy", message: "Invalid network policy.") }
+    if type == "disabled" { return ["type": "disabled"] }
+    guard (policy["allowedDomains"] ?? policy["allowed_domains"])?.arrayValue?.allSatisfy({ $0.stringValue != nil }) == true else { throw AIError.invalidArgument(argument: "tools.codeInterpreter.container.networkPolicy.allowedDomains", message: "Allowlist requires string domains.") }
+    if let secrets = policy["domainSecrets"] ?? policy["domain_secrets"], secrets.arrayValue?.allSatisfy({ $0["domain"]?.stringValue != nil && $0["name"]?.stringValue != nil && $0["value"]?.stringValue != nil }) != true { throw AIError.invalidArgument(argument: "tools.codeInterpreter.container.networkPolicy.domainSecrets", message: "Invalid domain secret definitions.") }
+    if let domains = policy.removeValue(forKey: "allowedDomains") { policy["allowed_domains"] = domains }
+    if let secrets = policy.removeValue(forKey: "domainSecrets") { policy["domain_secrets"] = secrets }
+    return .object(policy)
 }

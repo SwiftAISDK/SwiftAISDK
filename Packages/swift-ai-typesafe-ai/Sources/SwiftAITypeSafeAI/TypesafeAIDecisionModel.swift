@@ -131,7 +131,8 @@ public final class TypeSafeAIDecisionModel: AIDecisionModelV4, @unchecked Sendab
             warnings: warnings,
             providerMetadata: [
                 "typesafe": .object([
-                    "confidence": .object(parsed.confidence.mapValues(JSONValue.number))
+                    "confidence": .object(parsed.confidence.mapValues(JSONValue.number)),
+                    "legend": .object(parsed.legend)
                 ])
             ],
             response: AIResponseMetadata(
@@ -147,6 +148,7 @@ private struct TypeSafeParsedDecisionResponse {
     var modelID: String?
     var answers: [String: AIDecisionAnswer]
     var confidence: [String: Double]
+    var legend: [String: JSONValue]
     var usage: AIDecisionModelUsage
 }
 
@@ -159,15 +161,15 @@ private func validateTypesafeLimits(
 ) throws {
     for (id, question) in questions {
         switch question {
-        case let .choice(_, criteria) where criteria.count > 255:
+        case let .choice(_, criteria) where criteria.isEmpty || criteria.count > 255:
             throw AIError.invalidArgument(
                 argument: "questions.\(id).criteria",
-                message: "TypeSafe Choice questions support at most 255 options."
+                message: "TypeSafe Choice questions require 1 to 255 options."
             )
-        case let .score(_, criteria) where criteria.count > 10:
+        case let .score(_, criteria) where criteria.isEmpty || criteria.count > 10 || criteria.contains(.null):
             throw AIError.invalidArgument(
                 argument: "questions.\(id).criteria",
-                message: "TypeSafe Score questions support at most 10 levels."
+                message: "TypeSafe Score questions require 1 to 10 non-null levels."
             )
         default:
             continue
@@ -223,6 +225,7 @@ private func parseTypesafeResponse(
 
     var answers: [String: AIDecisionAnswer] = [:]
     var confidence: [String: Double] = [:]
+    var legend: [String: JSONValue] = [:]
     answers.reserveCapacity(rawAnswers.count)
 
     for (id, rawAnswer) in rawAnswers {
@@ -243,6 +246,10 @@ private func parseTypesafeResponse(
                 confidence[id] = value
             }
         case "score":
+            if let value = answer["legend"], value != .null {
+                guard value.objectValue != nil else { throw TypeSafeResponseValidationError(message: "TypeSafe AI score legend must be an object or null.") }
+                legend[id] = value
+            }
             guard let score = typesafeFiniteNumber(answer["score"]) else {
                 throw TypeSafeResponseValidationError(message: "TypeSafe AI score answer \"\(id)\" is missing score.")
             }
@@ -278,6 +285,7 @@ private func parseTypesafeResponse(
         modelID: modelID,
         answers: answers,
         confidence: confidence,
+        legend: legend,
         usage: usage
     )
 }

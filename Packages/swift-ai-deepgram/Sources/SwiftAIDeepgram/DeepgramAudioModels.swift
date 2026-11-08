@@ -42,6 +42,7 @@ public final class DeepgramTranscriptionModel: TranscriptionModel, @unchecked Se
             segments: segments,
             language: raw["results"]?["channels"]?[0]?["detected_language"]?.stringValue,
             durationInSeconds: raw["metadata"]?["duration"]?.doubleValue ?? transcriptionDuration(from: segments),
+            warnings: options["streaming"] == nil ? [] : [.init(type: "unsupported", feature: "providerOptions.deepgram.streaming", message: "Streaming options are ignored for non-streaming transcription.")],
             responseMetadata: aiResponseMetadata(from: raw, response: response, modelID: modelID),
             usage: raw["metadata"]?["duration"]?.doubleValue.map { ["seconds": .number($0)] }
         )
@@ -155,14 +156,31 @@ private func deepgramProviderOptions(extraBody: [String: JSONValue], providerOpt
     return output
 }
 
-private func deepgramValidateTranscriptionProviderOptions(_ options: [String: JSONValue]) throws -> [String: JSONValue] {
+func deepgramValidateTranscriptionProviderOptions(_ options: [String: JSONValue]) throws -> [String: JSONValue] {
     var output: [String: JSONValue] = [:]
     for (key, value) in options where deepgramTranscriptionProviderOptionKeys.contains(key) {
         if value == .null {
+            if key == "streaming" { throw AIError.invalidArgument(argument: "providerOptions.deepgram.streaming", message: "Deepgram streaming must be an object.") }
             output[key] = value
             continue
         }
         switch key {
+        case "streaming":
+            guard let streaming = value.objectValue else { throw AIError.invalidArgument(argument: "providerOptions.deepgram.streaming", message: "Deepgram streaming must be an object.") }
+            var validated: [String: JSONValue] = [:]
+            for (name, item) in streaming where ["interimResults", "endpointing", "channels", "multichannel", "vadEvents", "utteranceEndMs"].contains(name) {
+                let valid: Bool
+                switch name {
+                case "interimResults", "multichannel", "vadEvents": valid = item.boolValue != nil
+                case "endpointing": valid = item == .bool(false) || (item.doubleValue.map { $0.isFinite && $0 >= 0 && $0.rounded() == $0 } ?? false)
+                case "channels": valid = item.doubleValue.map { $0.isFinite && $0 > 0 && $0.rounded() == $0 } ?? false
+                default: valid = item.doubleValue.map { $0.isFinite && $0 >= 1000 && $0.rounded() == $0 } ?? false
+                }
+                guard valid else { throw AIError.invalidArgument(argument: "providerOptions.deepgram.streaming.\(name)", message: "Invalid Deepgram streaming \(name).") }
+                validated[name] = item
+            }
+            output[key] = .object(validated)
+            continue
         case "language", "replace", "search", "keyterm":
             try deepgramRequireString(value, argument: "providerOptions.deepgram.\(key)", message: "Deepgram \(key) must be a string.")
         case "detectLanguage", "smartFormat", "punctuate", "paragraphs", "topics", "intents", "sentiment", "detectEntities", "diarize", "utterances", "fillerWords":
@@ -223,7 +241,8 @@ private func deepgramValidateSpeechProviderOptions(_ options: [String: JSONValue
     return output
 }
 
-private let deepgramTranscriptionProviderOptionKeys: Set<String> = [
+let deepgramTranscriptionProviderOptionKeys: Set<String> = [
+    "streaming",
     "language",
     "detectLanguage",
     "smartFormat",
@@ -267,6 +286,8 @@ private func deepgramSpeechOptions(from extraBody: [String: JSONValue], current:
     var query = current
     var warnings: [AIWarning] = []
     var upstreamModelID = modelID
+    if let callback = extraBody["callback"], callback != .null { throw AIError.invalidArgument(argument: "providerOptions.deepgram.callback", message: "Callback speech generation does not return audio.") }
+    if let method = extraBody["callbackMethod"], method != .null { warnings.append(.init(type: "unsupported", feature: "providerOptions.deepgram.callbackMethod", message: "callbackMethod is ignored because callback speech generation is not supported.")) }
 
     if deepgramVoiceFamilyIDs.contains(modelID) {
         let voice = request.voice?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -292,8 +313,8 @@ private func deepgramSpeechOptions(from extraBody: [String: JSONValue], current:
         switch key {
         case "bitRate":
             continue
-        case "callbackMethod":
-            if let scalar = deepgramQueryValue(value) { query["callback_method"] = scalar }
+        case "callback", "callbackMethod":
+            continue
         case "mipOptOut":
             if let scalar = deepgramQueryValue(value) { query["mip_opt_out"] = scalar }
         case "sampleRate":

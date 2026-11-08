@@ -82,7 +82,7 @@ public extension KlingAIModelConfiguration {
                                                        secretKey: secretKey, currentDate: settings.currentDate)
             }
         }
-        headers = withUserAgentSuffix(headers, "ai-sdk-klingai/4.0.74")
+        headers = withUserAgentSuffix(headers, "ai-sdk-klingai/4.0.79")
         let baseURL = withoutTrailingSlash(settings.baseURL ?? "https://api-singapore.klingai.com")
         self.init(http: .init(providerID: "klingai", headers: headers, transport: transport,
                              url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: [:]) }), baseURL: baseURL)

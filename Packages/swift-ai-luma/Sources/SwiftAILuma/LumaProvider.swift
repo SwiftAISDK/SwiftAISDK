@@ -38,7 +38,7 @@ public final class LumaProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-luma/3.0.73")
+        headers = withUserAgentSuffix(headers, "ai-sdk-luma/3.0.78")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.lumalabs.ai")
         let http = AIProviderHTTPClient(providerID: "luma", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

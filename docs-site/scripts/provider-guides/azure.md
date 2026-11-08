@@ -36,3 +36,18 @@ Azure Responses inherits the OpenAI citation and retrieved-source separation, pr
 `AzureOpenAIProviderSettings.apiKeyProvider` accepts an async throwing key supplier. Each request resolves its current key, using `api-key` for OpenAI and MAI and `Ocp-Apim-Subscription-Key` for Speech. Provider/request header overrides retain precedence. Configure either an API key supplier or the existing Entra `tokenProvider`.
 
 `AzureOpenAITools.toolSearch()` exposes the hosted OpenAI tool-search protocol through Azure Responses. Function tools can set `providerOptions.azure.deferLoading: true`; the `openai` namespace remains a fallback. These options apply to both generation and streaming.
+
+## Option namespaces, tools and timings
+
+Chat/Completion and delegated OpenAI media merge `openai` options followed by
+`azure`, so Azure keys win while unrelated OpenAI keys remain. Responses instead
+uses the entire first-present `azure` namespace, falling back to `openai` only
+when Azure is absent or null. Routing and Speech/MAI-only controls are filtered
+before delegation.
+
+`AzureOpenAITools` includes custom-tool, apply-patch and shell forwarding helpers.
+OpenAI streaming transcription uses the configured WebSocket transport and merged
+options; Azure Speech streaming remains unsupported. Speech file transcription
+maps shared timestamp requests to provider timestamps when omitted and exposes
+flattened `words` independently of phrases/segments. Excluded timings and
+MAI-Transcribe-1.5 restrictions produce warnings.

@@ -10,6 +10,7 @@ import SwiftAIOpenAICompatible
 public final class XAIRealtimeModel: AIRealtimeModelV4, @unchecked Sendable {
     public let providerID = "xai.realtime"
     public let modelID: String
+    public let capabilities: AIRealtimeModelCapabilities? = .init(conversation: .turnBased, transports: [.webSocket], connections: [.clientSecretWebSocket, .serverWebSocket])
 
     let config: XAIModelConfiguration
 
@@ -81,6 +82,21 @@ public final class XAIRealtimeModel: AIRealtimeModelV4, @unchecked Sendable {
             protocols: ["xai-client-secret.\(token)"]
         )
     }
+
+    public func getServerWebSocketConfig() throws -> AIRealtimeWebSocketConfiguration {
+        guard config.http.credentialResolver == nil else { throw AIError.invalidArgument(argument: "apiKeyProvider", message: "Use getResolvedServerWebSocketConfig() for asynchronous credentials.") }
+        return .init(url: try realtimeWebSocketURL(server: true), headers: config.http.headers)
+    }
+    public func getResolvedServerWebSocketConfig() async throws -> AIRealtimeWebSocketConfiguration {
+        .init(url: try realtimeWebSocketURL(server: true), headers: try await config.http.resolvedHeaders())
+    }
+    private func assertIntent(_ intent: AIRealtimeSessionIntent) throws {
+        guard intent == .conversation else { throw AIError.invalidArgument(argument: "intent", message: "xAI realtime does not support the '\(intent.rawValue)' session intent.") }
+    }
+    public func getServerWebSocketConfig(intent: AIRealtimeSessionIntent) throws -> AIRealtimeWebSocketConfiguration { try assertIntent(intent); return try getServerWebSocketConfig() }
+    public func getResolvedServerWebSocketConfig(intent: AIRealtimeSessionIntent) async throws -> AIRealtimeWebSocketConfiguration { try assertIntent(intent); return try await getResolvedServerWebSocketConfig() }
+    public func serializeClientEvent(_ event: AIRealtimeClientEvent, intent: AIRealtimeSessionIntent) async throws -> AIRealtimeWireMessage? { try assertIntent(intent); return try await serializeClientEvent(event) }
+    public func buildSessionConfig(_ configuration: AIRealtimeSessionConfiguration, intent: AIRealtimeSessionIntent) throws -> JSONValue { try assertIntent(intent); return buildSessionConfig(configuration) }
 
     public func parseServerEvent(
         _ raw: JSONValue
@@ -412,7 +428,7 @@ public final class XAIRealtimeModel: AIRealtimeModelV4, @unchecked Sendable {
         return .object(session)
     }
 
-    private func realtimeWebSocketURL() throws -> String {
+    private func realtimeWebSocketURL(server: Bool = false) throws -> String {
         guard let components = URLComponents(string: config.baseURL),
               let host = components.host, !host.isEmpty else {
             throw AIError.invalidURL(config.baseURL)
@@ -429,7 +445,8 @@ public final class XAIRealtimeModel: AIRealtimeModelV4, @unchecked Sendable {
                 message: "Could not encode the xAI realtime model ID."
             )
         }
-        return "wss://\(host)\(port)/v1/realtime?model=\(encodedModelID)"
+        if !server { return "wss://\(host)\(port)/v1/realtime?model=\(encodedModelID)" }
+        return "\(components.scheme == "http" ? "ws" : "wss")://\(host)\(port)\(components.path.hasSuffix("/") ? String(components.path.dropLast()) : components.path)/realtime?model=\(encodedModelID)"
     }
 
     private func serializeConversationItem(

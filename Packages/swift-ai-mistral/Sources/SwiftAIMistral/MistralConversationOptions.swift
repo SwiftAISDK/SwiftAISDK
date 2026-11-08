@@ -70,10 +70,10 @@ func mistralConversationInputs(_ messages: [AIMessage], mapping: MistralConversa
                 case let .toolCall(call):
                     flush()
                     var name = call.name
-                    var arguments = call.arguments
+                    var arguments = mistralSerializeToolArguments(call.arguments)
                     if call.providerExecuted {
                         name = call.providerMetadata["mistral"]?["function"]?.stringValue ?? call.providerMetadata["mistral"]?["name"]?.stringValue ?? mapping.toProvider(call.name)
-                        arguments = (try? decodeJSONBody(Data(call.arguments.utf8)))?["arguments"]?.stringValue ?? call.arguments
+                        arguments = (try? decodeJSONBody(Data(call.arguments.utf8)))?["arguments"]?.stringValue ?? mistralSerializeToolArguments(call.arguments)
                         executions.insert(call.id)
                     }
                     inputs.append(.object(["type": "function.call", "tool_call_id": .string(call.id), "name": .string(name), "arguments": .string(arguments)]))

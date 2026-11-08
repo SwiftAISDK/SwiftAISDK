@@ -38,7 +38,7 @@ public final class FalProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Key \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-fal/3.0.73")
+        headers = withUserAgentSuffix(headers, "ai-sdk-fal/3.0.78")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://fal.run")
         let http = AIProviderHTTPClient(providerID: "fal", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

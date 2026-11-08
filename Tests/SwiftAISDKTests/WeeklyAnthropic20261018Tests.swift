@@ -156,10 +156,13 @@ struct WeeklyAnthropic20261018Tests {
         let empty = try anthropicPrepareTools(from: [:], toolChoice: ["type": "required"], rejectsForcedToolUse: true)
         #expect(empty.tools.isEmpty && empty.toolChoice == nil && empty.warnings.isEmpty)
         let none = try AnthropicLanguageModel.body(for: LanguageModelRequest(messages: [.user("No tool calls")], tools: tools, toolChoice: ["type": "none"], providerOptions: ["anthropic": ["disableParallelToolUse": true]]), modelID: "claude-haiku-4-5", providerID: "anthropic.messages")
-        #expect(none.body["tools"]?.arrayValue?.count == 2)
+        #expect(Set(none.body["tools"]?.arrayValue?.compactMap { $0["name"]?.stringValue } ?? []) == ["lookup", "other"])
         #expect(none.body["tool_choice"] == ["type": "none"])
         let jsonTool = try AnthropicLanguageModel.body(for: LanguageModelRequest(messages: [.user("Return JSON")], responseFormat: .json(schema: schema), tools: tools, toolChoice: ["type": "tool", "toolName": "lookup"], providerOptions: ["anthropic": ["thinking": ["type": "enabled", "budgetTokens": 5000], "structuredOutputMode": "jsonTool"]]), modelID: "claude-haiku-4-5", providerID: "anthropic.messages")
-        #expect(jsonTool.body["tools"]?.arrayValue?.count == 3)
+        let fallbackTools = try #require(jsonTool.body["tools"]?.arrayValue)
+        #expect(Set(fallbackTools.compactMap { $0["name"]?.stringValue }) == ["lookup", "json"])
+        #expect(fallbackTools.first { $0["name"] == "json" }?["input_schema"] == schema)
+        #expect(jsonTool.usesJSONToolResponseFormat)
         #expect(jsonTool.body["tool_choice"] == ["type": "auto", "disable_parallel_tool_use": true])
         #expect(jsonTool.warnings.filter { $0.feature == "toolChoice" }.count == 1)
     }
@@ -214,7 +217,7 @@ struct WeeklyAnthropic20261018Tests {
         }
     }
 
-    @Test(arguments: ["anthropic.claude-3-7-sonnet-20250219-v1:0", "anthropic.claude-sonnet-4-20250514-v1:0", "us.anthropic.claude-opus-4-1-20250805-v1:0", "anthropic.claude-sonnet-4-5-20250929-v1:0", "anthropic.claude-opus-4-6-v1", "meta.llama3-70b-instruct-v1:0", "arn:aws:bedrock:us-east-1:123456789012:application-inference-profile/custom"])
+    @Test(arguments: ["anthropic.claude-3-7-sonnet-20250219-v1:0", "anthropic.claude-sonnet-4-20250514-v1:0", "us.anthropic.claude-opus-4-1-20250805-v1:0", "anthropic.claude-sonnet-4-5-20250929-v1:0", "anthropic.claude-opus-4-6-v1", "meta.llama3-70b-instruct-v1:0", "arn:aws:bedrock:us-east-1:123456789012:application-inference-profile/custom", "anthropic.claude-opus-5", "anthropic.claude-sonnet-5-5", "global.anthropic.claude-haiku-5-5"])
     func bedrockPreservesKnownAndOpaqueNativeSupport(_ modelID: String) {
         #expect(bedrockSupportsStrictToolSpec(modelID: modelID))
         #expect(bedrockSupportsNativeStructuredOutput(modelID: modelID))
@@ -226,10 +229,25 @@ struct WeeklyAnthropic20261018Tests {
         #expect(!bedrockSupportsNativeStructuredOutput(modelID: modelID))
     }
 
-    @Test(arguments: ["anthropic.claude-opus-4-7", "anthropic.claude-opus-5", "anthropic.claude-sonnet-5-5", "us.anthropic.claude-opus-6-v1:0", "global.anthropic.claude-future-v1:0", "anthropic.claude-opus-4-60-v1"])
+    @Test(arguments: ["anthropic.claude-opus-4-7", "us.anthropic.claude-opus-6-v1:0", "global.anthropic.claude-future-v1:0", "anthropic.claude-opus-4-60-v1", "anthropic.claude-opus-5-60-v1", "anthropic.claude-sonnet-5-9", "anthropic.claude-haiku-5-5-preview", "anthropic.claude-haiku-5-5-9"])
     func bedrockUnknownClaudeModelsDoNotReceiveUnsupportedStrictFields(_ modelID: String) {
         #expect(!bedrockSupportsStrictToolSpec(modelID: modelID))
         #expect(!bedrockSupportsNativeStructuredOutput(modelID: modelID))
+    }
+
+    @Test(arguments: ["anthropic.claude-opus-5", "global.anthropic.claude-sonnet-5-5", "us.anthropic.claude-haiku-5-5"])
+    func bedrockClaude5NativeOutputPreservesStrictFunctionTools(_ modelID: String) async throws {
+        let transport = RecordingTransport(response: jsonResponse(#"{"output":{"message":{"content":[{"text":"{\"name\":\"Test\"}"}]}},"stopReason":"end_turn","usage":{"inputTokens":1,"outputTokens":1}}"#))
+        let model = try AIProviders.amazonBedrock(settings: AmazonBedrockProviderSettings(region: "us-east-1", apiKey: "key", transport: transport)).languageModel(modelID)
+        let result = try await model.generate(.init(messages: [.user("Return a name")], responseFormat: .json(schema: schema), tools: ["lookup": ["type": "object", "properties": [:], "additionalProperties": false, "strict": true]]))
+        let body = try decodeJSONBody(try #require(await transport.requests().first?.body))
+        #expect(body["additionalModelRequestFields"]?["output_config"]?["format"] == ["type": "json_schema", "schema": schema])
+        let tools = try #require(body["toolConfig"]?["tools"]?.arrayValue)
+        #expect(tools.count == 1 && tools[0]["toolSpec"]?["name"] == "lookup")
+        #expect(tools[0]["toolSpec"]?["strict"] == true)
+        #expect(body["system"] == nil)
+        #expect(try decodeJSONBody(Data(result.text.utf8)) == ["name": "Test"])
+        #expect(result.toolCalls.isEmpty && result.finishReason == "stop")
     }
 
     @Test(arguments: ["us.anthropic.claude-opus-6-v1:0", "us.anthropic.claude-opus-4-9-v1:0"], [false, true])

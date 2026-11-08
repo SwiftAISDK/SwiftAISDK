@@ -1,6 +1,6 @@
 # Stream text
 
-Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/stream-text/
+Source URL: /core/stream-text/
 
 Use `streamText` when the UI or caller should receive partial output as it is generated.
 
@@ -166,8 +166,9 @@ timeout: ...)` overloads use the same timeout lifecycle.
 Streamed file and reasoning-file parts use the same materialization policy as
 `generateText`: `data:` and HTTP(S) URLs become inline data before the part is
 emitted, while provider references stay opaque. Downloads honor aborts,
-redirect validation, private-host rejection, and byte limits. Resolver-backed
-DNS address pinning is still a transport-level gap.
+redirect validation, private-host rejection, and byte limits. The default
+download transport pins the validated DNS addresses and preserves
+original-host TLS trust.
 
 `AIUIMessageStreamReducer.snapshots` can continue an existing
 `originalMessage` instead of starting a new assistant message. Its async
@@ -183,3 +184,9 @@ DNS address pinning is still a transport-level gap.
 `onStepError` fires once when a started model step fails before producing a result: a thrown provider/stream error or a stream ending without output or its terminal finish. It reports the actual continuation-step index and completed previous steps. A provider error chunk completes an errored step and invokes `onError`, without a failed-step callback. An abort or timeout invokes `onAbort`, without `onStepError` or `onError`.
 
 `AIStreamTextAbortEvent` contains completed steps and the available abort reason. `AIToolLoopAgent` forwards its constructor callbacks. Ordinary completion preserves the receipt's completion reason; cancelling the consumer settles pending steering as aborted.
+
+Delivered messages emit `.steeringMessage(id:message:stepNumber:)` before that
+step's provider output. The stream also supports `.requestMetadata` and `.ping`.
+Keepalive pings pass through smoothing and retry buffering; they neither flush
+pending text nor reset the semantic-output timeout. Add these cases to exhaustive
+switches over `LanguageStreamPart`.

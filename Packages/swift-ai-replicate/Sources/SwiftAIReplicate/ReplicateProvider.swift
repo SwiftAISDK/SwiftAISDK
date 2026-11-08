@@ -38,7 +38,7 @@ public final class ReplicateProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-replicate/3.0.73")
+        headers = withUserAgentSuffix(headers, "ai-sdk-replicate/3.0.78")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.replicate.com/v1")
         let http = AIProviderHTTPClient(providerID: "replicate", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

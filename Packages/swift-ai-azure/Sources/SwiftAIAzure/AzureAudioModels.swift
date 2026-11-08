@@ -40,7 +40,7 @@ struct AzureAudioConfig: Sendable {
 
     func requestHeaders(api: String) -> [String: String] {
         let authentication = tokenProvider == nil ? apiKey.map { [api == "speech" ? "Ocp-Apim-Subscription-Key" : "api-key": $0] } ?? [:] : [:]
-        return withUserAgentSuffix(authentication.mergingHeaders(headers), "ai-sdk-azure/4.0.114")
+        return withUserAgentSuffix(authentication.mergingHeaders(headers), "ai-sdk-azure/4.0.119")
     }
 }
 
@@ -59,11 +59,13 @@ public final class AzureSpeechModel: SpeechModel, @unchecked Sendable {
         let model = azureVoiceModels[modelID.lowercased()]
         let api = options["api"]?.stringValue ?? (model == nil ? "openai" : "speech")
         if api == "openai" {
-            var result = try await openAI.speak(request)
-            result.warnings += azureAudioUnusedOptions(options.filter { $0.key != "api" }, api: "Speech")
+            var delegated = request
+            delegated.providerOptions["azure"] = .object(options.filter { !["api", "style", "styleDegree"].contains($0.key) })
+            var result = try await openAI.speak(delegated)
+            result.warnings += azureAudioUnusedOptions(options.filter { ["style", "styleDegree"].contains($0.key) }, api: "Speech")
             return result
         }
-        var warnings: [AIWarning] = []
+        var warnings: [AIWarning] = options.keys.sorted().filter { !["api", "style", "styleDegree"].contains($0) }.map { AIWarning(type: "unsupported", feature: "providerOptions.azure.\($0)", message: "This option requires the OpenAI speech API.") }
         if request.instructions != nil {
             warnings.append(AIWarning(type: "unsupported", feature: "instructions", message: "Use providerOptions.azure.style to control speaking style."))
         }
@@ -136,13 +138,22 @@ public final class AzureTranscriptionModel: TranscriptionModel, StreamingTranscr
         if api == "mai" { throw AIError.invalidArgument(argument: "model", message: "File transcription with \(modelID) is unsupported; use streaming transcription.") }
         let speechOptions = options.filter { !["api", "language"].contains($0.key) }
         if api == "openai" {
-            var result = try await openAI.transcribe(request)
-            result.warnings += azureAudioUnusedOptions(speechOptions, api: "Speech")
-            if options["language"] != nil { result.warnings += azureAudioUnusedOptions(["language": options["language"]!], api: "MAI streaming transcription") }
+            var delegated = request
+            delegated.providerOptions["azure"] = .object(options.filter { !["api", "timestamps", "transcribeStyle", "locales", "diarization", "phraseList"].contains($0.key) })
+            var result = try await openAI.transcribe(delegated)
+            result.warnings += azureAudioUnusedOptions(speechOptions.filter { ["timestamps", "transcribeStyle", "locales", "diarization", "phraseList"].contains($0.key) }, api: "Speech")
             return result
         }
         let model = azureTranscribeModels[modelID.lowercased()]
         var modelOptions = speechOptions.filter { ["timestamps", "transcribeStyle"].contains($0.key) }
+        var timingWarnings: [AIWarning] = []
+        if let granularities = request.timestampGranularities, !granularities.isEmpty {
+            if modelID.lowercased() == "mai-transcribe-1.5" {
+                timingWarnings.append(AIWarning(type: "unsupported", feature: "timestampGranularities", message: "MAI-Transcribe-1.5 cannot return word or segment timings."))
+            } else if let explicit = modelOptions["timestamps"]?.stringValue {
+                if granularities.contains(.word) && explicit != "word" || granularities.contains(.segment) && explicit == "none" { timingWarnings.append(AIWarning(type: "unsupported", feature: "timestampGranularities", message: "providerOptions.azure.timestamps is \"\(explicit)\" and overrides the requested timestamp granularities.")) }
+            } else { modelOptions["timestamps"] = .string(granularities.contains(.word) ? "word" : "segment") }
+        }
         if modelOptions["timestamps"] == nil, modelID.lowercased() != "mai-transcribe-1.5" { modelOptions["timestamps"] = "segment" }
         var definition: [String: JSONValue] = ["enhancedMode": .object(["enabled": true, "model": .string(model ?? modelID), "modelOptions": .object(modelOptions)])]
         for key in ["locales", "diarization", "phraseList"] { definition[key] = speechOptions[key] }
@@ -175,13 +186,18 @@ public final class AzureTranscriptionModel: TranscriptionModel, StreamingTranscr
             guard let offset = phrase["offsetMilliseconds"]?.doubleValue, let duration = phrase["durationMilliseconds"]?.doubleValue else { return nil }
             return TranscriptionSegment(text: phrase["text"]?.stringValue ?? "", startSecond: offset / 1000, endSecond: (offset + duration) / 1000)
         }
-        let warnings = options["language"].map { azureAudioUnusedOptions(["language": $0], api: "MAI streaming transcription") } ?? []
+        var warnings = timingWarnings
+        warnings += options.keys.sorted().filter { !["api", "timestamps", "transcribeStyle", "locales", "diarization", "phraseList"].contains($0) }.map { AIWarning(type: "unsupported", feature: "providerOptions.azure.\($0)", message: "This option requires the OpenAI transcription API.") }
+        let words = phrases.flatMap { $0["words"]?.arrayValue ?? [] }.compactMap { word -> TranscriptionSegment? in
+            guard let text = word["text"]?.stringValue, let offset = word["offsetMilliseconds"]?.doubleValue, let duration = word["durationMilliseconds"]?.doubleValue else { return nil }
+            return .init(text: text, startSecond: offset / 1000, endSecond: (offset + duration) / 1000)
+        }
         return TranscriptionResult(text: combined.compactMap { $0["text"]?.stringValue }.joined(separator: " "), rawValue: raw, segments: segments,
                                    language: language.flatMap { $0.range(of: #"^[a-z]{2}$"#, options: .regularExpression) == nil ? nil : $0 },
                                    durationInSeconds: raw["durationMilliseconds"]?.doubleValue.map { $0 / 1000 }, warnings: warnings,
                                    providerMetadata: ["azure": .object(["phrases": .array(normalizedPhrases)])],
                                    requestMetadata: AIRequestMetadata(body: .object(definition), headers: request.headers),
-                                   responseMetadata: aiResponseMetadata(from: raw, response: response, modelID: modelID))
+                                   responseMetadata: aiResponseMetadata(from: raw, response: response, modelID: modelID), words: words.isEmpty ? nil : words)
     }
 }
 
@@ -202,7 +218,7 @@ private func azureValidTranscriptionPhrase(_ phrase: JSONValue) -> Bool {
 func azureAudioOptions(_ providerOptions: [String: JSONValue], transcription: Bool) throws -> [String: JSONValue] {
     guard let value = providerOptions["azure"] else { return [:] }
     guard let options = value.objectValue else { throw azureAudioOptionError("options", "must be an object") }
-    let allowed: Set<String> = transcription ? ["api", "timestamps", "transcribeStyle", "locales", "diarization", "phraseList", "language"] : ["api", "style", "styleDegree"]
+    let allowed: Set<String> = transcription ? ["api", "timestamps", "transcribeStyle", "locales", "diarization", "phraseList", "language", "include", "languages", "keywords", "prompt", "temperature", "timestampGranularities", "responseFormat", "chunkingStrategy", "streaming"] : ["api", "style", "styleDegree", "speed", "instructions"]
     guard Set(options.keys).isSubset(of: allowed) else { throw azureAudioOptionError("options", "contains unknown keys") }
     for (key, value) in options {
         let valid: Bool
@@ -211,6 +227,15 @@ func azureAudioOptions(_ providerOptions: [String: JSONValue], transcription: Bo
         case "timestamps": valid = value.stringValue.map { ["word", "segment", "none"].contains($0) } ?? false
         case "transcribeStyle": valid = value.stringValue.map { ["verbatim", "clean"].contains($0) } ?? false
         case "style", "language": valid = value.stringValue?.isEmpty == false
+        case "instructions": valid = value == .null || value.stringValue != nil
+        case "prompt": valid = value.stringValue != nil
+        case "speed": valid = value == .null || value.doubleValue.map { $0.isFinite && (0.25...4).contains($0) } ?? false
+        case "include", "languages", "keywords": valid = value.arrayValue?.allSatisfy { $0.stringValue != nil } == true
+        case "timestampGranularities": valid = value.arrayValue?.allSatisfy { ["word", "segment"].contains($0.stringValue ?? "") } == true
+        case "responseFormat": valid = ["json", "verbose_json", "diarized_json"].contains(value.stringValue ?? "")
+        case "temperature": valid = value.doubleValue.map { $0.isFinite && (0...1).contains($0) } ?? false
+        case "chunkingStrategy": valid = value.stringValue == "auto" || value.objectValue != nil
+        case "streaming": valid = value.objectValue != nil
         case "styleDegree": valid = value.doubleValue.map { $0.isFinite && (0.01...2).contains($0) } ?? false
         case "locales": valid = value.arrayValue?.count == 1 && value.arrayValue?.allSatisfy { $0.stringValue != nil } == true
         case "diarization": valid = value.objectValue?.keys.sorted() == ["enabled"] && value["enabled"]?.boolValue != nil
