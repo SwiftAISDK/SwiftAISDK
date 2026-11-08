@@ -16,15 +16,19 @@ for exact evidence.
 
 ## Modular packages
 
-SwiftAISDK 3.1.0 is published with 52 independent distributions. Core and Anthropic
-are 1.2.0; 46 other updated units are 1.1.0. ByteDance, LMNT, Vercel and UI retain
-1.0.0.
-The optional compatibility umbrella retains `import SwiftAISDK` and raises minimums
-for its new forwarding APIs. Native package tags, standalone CI and clean public
-consumers are recorded in [ReleaseVerification20261101.json](ReleaseVerification20261101.json).
-The immutable modular set is in [Releases/sets/weekly-upstream-20261101.json](../Releases/sets/weekly-upstream-20261101.json).
+SwiftAISDK 3.2.0 is published with 52 independent distributions. Core and Anthropic
+are 1.3.0; 18 other feature units are 1.2.0; UI is 1.1.0; 27 corrected providers/MCP
+are 1.1.1. Hugging Face retains 1.1.0; ByteDance, LMNT and Vercel retain 1.0.0.
+The optional compatibility umbrella retains `import SwiftAISDK`, adds URL
+transcription forwarding and raises installation minimums for the reviewed APIs.
+Five public enums gain cases; see the exhaustive-switch guidance in Migration.md.
+Native package tags, standalone CI, public consumers and hosted documentation are
+recorded in [ReleaseVerification20261108.json](ReleaseVerification20261108.json).
+The immutable modular set is [weekly-upstream-20261108](../Releases/sets/weekly-upstream-20261108.json).
 See [Migration.md](Migration.md), [PackageCatalog.md](PackageCatalog.md) and
 [the release workflow](../Releases/README.md).
+
+## Initial 3.0 migration evidence
 
 The migration retained existing runtime behavior, upstream baselines, capabilities
 and known gaps. Local verification passed 3549 source tests (33 explicit live
@@ -45,8 +49,9 @@ The source review includes steering queues/UI replay, URL/timing transcription,
 request-origin telemetry, admission tiers/threads/Files, refusal/tool handling,
 OAuth binding/resource fixes and media lifecycle changes. Public docs and the
 [package-by-package audit](WeeklyUpstreamAudit20261108.md) record the exact scope.
-Final integration and publication gates are pending; this source status does not
-claim a new public release.
+All local, exact-source Swift 6.3.3, independent-release, standalone-CI, public-consumer
+and hosted-page gates passed. 48 changed units and separate umbrella 3.2.0 are published;
+this delta review does not claim full-package parity or paid live-service acceptance.
 
 ## Weekly upstream review (2026-11-01)
 

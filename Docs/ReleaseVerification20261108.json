@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "modular-published-umbrella-pending",
+  "status": "published",
   "canonicalSourceCommit": "8e233ff96fb809445aff9a5c06bb6149a24b94da",
   "canonicalCI": {
     "schemaVersion": 1,
@@ -4613,5 +4613,1498 @@
     "identical": true,
     "publication": true,
     "bundleSHA256": "f445d08dd9ca70894fa12aa881cd00c4879cb9d72ebdb1b65b4894739afdbdb2"
+  },
+  "umbrella": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "checkedAt": "2026-11-08T05:03:36.527064+00:00",
+    "version": "3.2.0",
+    "sourceCommit": "8e233ff96fb809445aff9a5c06bb6149a24b94da",
+    "branchSHA": "e5b635c2e0da75da4b86c78c92770b9ca48f59f9",
+    "tagObject": "22de6e93e70751ab60b71506e8ab1a98d20d6479",
+    "peeledTag": "e5b635c2e0da75da4b86c78c92770b9ca48f59f9",
+    "preservedHistoricalTagRefs": 71,
+    "runtimeTestsManifestsAndToolingUnchangedSinceSourceCI": true,
+    "manifestSHA256": "e006a4e47b21bb865c7f3de33678ac085a5d26f4ee63e4919b585a8ca4b83ab7",
+    "release": {
+      "id": 438043903,
+      "url": "https://github.com/SwiftAISDK/SwiftAISDK/releases/tag/3.2.0",
+      "target": "e5b635c2e0da75da4b86c78c92770b9ca48f59f9",
+      "tag": "3.2.0",
+      "notesSHA256": "7814139f1f84c43a77c885bd2c5a82139458b406113a8c279d7049e26500f642"
+    }
+  },
+  "umbrellaPublicConsumers": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "sourceCommit": "8e233ff96fb809445aff9a5c06bb6149a24b94da",
+    "swiftVersion": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx26.0",
+    "mirrors": false,
+    "localDependencies": false,
+    "credentialsRequired": false,
+    "packageCount": 52,
+    "providerCalls": "offline injected transports",
+    "priorModularEvidence": {
+      "file": "public-consumers.json",
+      "sha256": "50530e4609fa3b02c521fe7ae2f45f672603ce4371a3f896008bd5bd45273dba",
+      "consumerCount": 59
+    },
+    "checks": [
+      {
+        "name": "swift-version",
+        "command": [
+          "swift",
+          "--version"
+        ],
+        "exitCode": 0,
+        "logSHA256": "0ec620bf28e5c4190b1a72d64b10c1ec7a2635f6db99c472668b09f6b298ceae",
+        "summaries": []
+      },
+      {
+        "name": "umbrella-refs-3.2.0",
+        "command": [
+          "git",
+          "ls-remote",
+          "https://github.com/SwiftAISDK/SwiftAISDK.git",
+          "refs/tags/3.2.0",
+          "refs/tags/3.2.0^{}"
+        ],
+        "exitCode": 0,
+        "logSHA256": "fd52e6e9f6500d8a1bbe8073e5f6110fde588677885aabc6ea85b4ffea4c531c",
+        "summaries": []
+      },
+      {
+        "name": "complete-3.2.0",
+        "command": [
+          "swift",
+          "run",
+          "--disable-dependency-cache",
+          "--config-path",
+          "CLEAN_CONSUMER_WORKSPACE",
+          "--cache-path",
+          "CLEAN_CONSUMER_WORKSPACE",
+          "--security-path",
+          "CLEAN_CONSUMER_WORKSPACE",
+          "--scratch-path",
+          "CLEAN_CONSUMER_WORKSPACE",
+          "-c",
+          "release",
+          "CompleteConsumer"
+        ],
+        "exitCode": 0,
+        "logSHA256": "23f9a38ab6702cab4a7e2de24e3e8ad602b7fa2bf12006ad7dad8fc742576edc",
+        "summaries": [
+          "COMPLETE_CONSUMER_OK",
+          "Build complete! (68.15 sec)"
+        ]
+      },
+      {
+        "name": "umbrella-refs-2.8.1",
+        "command": [
+          "git",
+          "ls-remote",
+          "https://github.com/SwiftAISDK/SwiftAISDK.git",
+          "refs/tags/2.8.1",
+          "refs/tags/2.8.1^{}"
+        ],
+        "exitCode": 0,
+        "logSHA256": "ca5327efc8ec80bcd7c585409454c82de9794bb46ea0e8cb9d09683fd4063e51",
+        "summaries": []
+      },
+      {
+        "name": "complete-2.8.1",
+        "command": [
+          "swift",
+          "run",
+          "--disable-dependency-cache",
+          "--config-path",
+          "CLEAN_CONSUMER_WORKSPACE",
+          "--cache-path",
+          "CLEAN_CONSUMER_WORKSPACE",
+          "--security-path",
+          "CLEAN_CONSUMER_WORKSPACE",
+          "--scratch-path",
+          "CLEAN_CONSUMER_WORKSPACE",
+          "-c",
+          "release",
+          "CompleteConsumer"
+        ],
+        "exitCode": 0,
+        "logSHA256": "d85acefca23dd53f49395f075914d496053b58dfcab8c0d8220581d783726b7f",
+        "summaries": [
+          "COMPLETE_CONSUMER_OK",
+          "Build complete! (131.74 sec)"
+        ]
+      }
+    ],
+    "consumers": [
+      {
+        "name": "complete-3.2.0",
+        "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(\n    name: \"CompleteConsumer\",\n    platforms: [.macOS(.v12), .iOS(.v15)],\n    dependencies: [.package(url: \"https://github.com/SwiftAISDK/SwiftAISDK.git\", exact: \"3.2.0\")],\n    targets: [.executableTarget(name: \"CompleteConsumer\", dependencies: [\n        .product(name: \"SwiftAISDK\", package: \"SwiftAISDK\")\n    ])],\n    swiftLanguageModes: [.v6]\n)\n",
+        "lockfile": {
+          "originHash": "d01013d08947d9e75a7d3fa1a0b6de57c663c0c5205bf998b81fb7f4297ef7f0",
+          "pins": [
+            {
+              "identity": "swift-ai-alibaba",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-alibaba.git",
+              "state": {
+                "revision": "95bd81f841aa614a47b2ec6abbde9723dcd5f2f5",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-amazon-bedrock",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock.git",
+              "state": {
+                "revision": "aacd6fcaf42a9fa0c190c937c42a841451932bab",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-anthropic",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-anthropic.git",
+              "state": {
+                "revision": "3057125848253dd117262a967502f55e7e0b0942",
+                "version": "1.3.0"
+              }
+            },
+            {
+              "identity": "swift-ai-anthropic-aws",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws.git",
+              "state": {
+                "revision": "b15f33a8cea759276b2445fc8a8494d8afea3bf7",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-assemblyai",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-assemblyai.git",
+              "state": {
+                "revision": "26b5ba11754476bdb87112db01314ad265539f2a",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-azure",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-azure.git",
+              "state": {
+                "revision": "abe24ae83dd4f9526c14a040a31fe8beee0e90e9",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-baseten",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-baseten.git",
+              "state": {
+                "revision": "5047d7b0033e03a55a550ae167deb2a30fd3bfe9",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-black-forest-labs",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs.git",
+              "state": {
+                "revision": "58a3c911205c945dfbdf3015eaf16425a9ff398c",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-bytedance",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-bytedance.git",
+              "state": {
+                "revision": "873fc0663154897c2e384370f3bee91f2a8a5f5b",
+                "version": "1.0.0"
+              }
+            },
+            {
+              "identity": "swift-ai-cartesia",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-cartesia.git",
+              "state": {
+                "revision": "ef7116074e6e76061f42dec0c8afa2f06ff138b7",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-cerebras",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-cerebras.git",
+              "state": {
+                "revision": "92ebe9fea55d80aae36f9f91d00cdb807ff09de0",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-cohere",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-cohere.git",
+              "state": {
+                "revision": "b68d25210e9e89fb9ddd35a1cbf885b6bb11ca92",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-core",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-core.git",
+              "state": {
+                "revision": "08eb81c15a457d7a7cac08df56e2562e0fb0e290",
+                "version": "1.3.0"
+              }
+            },
+            {
+              "identity": "swift-ai-deepgram",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-deepgram.git",
+              "state": {
+                "revision": "7be90ca732dc0245c23c17d8d6a10283fc18b4fd",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-deepinfra",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-deepinfra.git",
+              "state": {
+                "revision": "9c76c6927869c60ed3f5d99916368831528af885",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-deepseek",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-deepseek.git",
+              "state": {
+                "revision": "580ddf18865bcfe03035d64e665a1339914485d7",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-elevenlabs",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-elevenlabs.git",
+              "state": {
+                "revision": "d9d38799950258c029e05f4f646abdc40e694b0d",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-fal",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-fal.git",
+              "state": {
+                "revision": "8e4f3ad8a2f0cd71e4fa22af0f92b7c32135de84",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-fireworks",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-fireworks.git",
+              "state": {
+                "revision": "158ab080675722cbf23b9dd9e597d359dc215574",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-fish-audio",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-fish-audio.git",
+              "state": {
+                "revision": "cc15b178766347e8d019c11b2703c85d3bd1bb5f",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-gateway",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-gateway.git",
+              "state": {
+                "revision": "070597f7f95b77b403677f772995a973831ba757",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-gladia",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-gladia.git",
+              "state": {
+                "revision": "144f2c20f24a8ac9ace5c215f940d34665ccbd7f",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-gmicloud",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-gmicloud.git",
+              "state": {
+                "revision": "0a9db14ebfd77e28458aeaf8fddc5fdef1616306",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-google",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-google.git",
+              "state": {
+                "revision": "a624886292a421ab66dad9abc4cf3a01bcb5151c",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-google-vertex",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-google-vertex.git",
+              "state": {
+                "revision": "05149492886282f575a5d6c86c127e25896f28e9",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-groq",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-groq.git",
+              "state": {
+                "revision": "8faf3ddfb8d61c02d3899de14e93a6a7fb4ccc74",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-heygen",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-heygen.git",
+              "state": {
+                "revision": "f3e54cb4276b1470c0e8e6ffd276c2bd24f267b5",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-huggingface",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-huggingface.git",
+              "state": {
+                "revision": "6984f4f3efd09036661deb2ba9c91a32d43a57d6",
+                "version": "1.1.0"
+              }
+            },
+            {
+              "identity": "swift-ai-hume",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-hume.git",
+              "state": {
+                "revision": "301f0cb906c80f1d3f581cde5719f64f6b17702e",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-klingai",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-klingai.git",
+              "state": {
+                "revision": "8c8a171b86fc81211fbd9e302341b4d904a124ed",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-lmnt",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-lmnt.git",
+              "state": {
+                "revision": "41f346d0a3085662d592090c535959d1c36d578d",
+                "version": "1.0.0"
+              }
+            },
+            {
+              "identity": "swift-ai-luma",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-luma.git",
+              "state": {
+                "revision": "d7011d060a1940089a1c433d21d8cc0c0c351dbf",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-mcp",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-mcp.git",
+              "state": {
+                "revision": "6fa438545f9535e463841e95166c1825923c8598",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-minimax",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-minimax.git",
+              "state": {
+                "revision": "5ffe788d86258881f2dacf0049d7ddb614e66f23",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-mistral",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-mistral.git",
+              "state": {
+                "revision": "4cb0cd3c3115db068fd4409f1256c566165956d4",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-moonshotai",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-moonshotai.git",
+              "state": {
+                "revision": "7f5588f8203e71b01c89db70db200bbe7efde854",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-open-responses",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-open-responses.git",
+              "state": {
+                "revision": "fdf30c519789cf6c589c706916a75d5f39cdf0e5",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-openai",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-openai.git",
+              "state": {
+                "revision": "ad463db6b2895b28f9d73ebcffbca280cdb8bd61",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-openai-compatible",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git",
+              "state": {
+                "revision": "20e8e91abae0eb9a3e7ff823fc84ed907d16f65c",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-perplexity",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-perplexity.git",
+              "state": {
+                "revision": "e6aff3721676d619a29ff6b015295ef60689e027",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-prodia",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-prodia.git",
+              "state": {
+                "revision": "cac1bd6ae2279f7d6297d8a4090f884c7f7e17e9",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-quiverai",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-quiverai.git",
+              "state": {
+                "revision": "1071f75bb48d10acdfadbeb043f2436cf3f6159e",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-replicate",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-replicate.git",
+              "state": {
+                "revision": "63b44d7e811040601ac58f149b0995fb3354a165",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-revai",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-revai.git",
+              "state": {
+                "revision": "60953796909a3fa1ffd4259b783126b67d80f582",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-togetherai",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-togetherai.git",
+              "state": {
+                "revision": "f3b2a21fbe88cb3a53da9d3cdbc2c43f7a42da26",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-topaz",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-topaz.git",
+              "state": {
+                "revision": "fb4d8b00e734b558281ae95b5a63ddc094fde389",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-typesafe-ai",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-typesafe-ai.git",
+              "state": {
+                "revision": "07a28b2c6941644595480aeacae305a7b442dbb0",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-ui",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-ui.git",
+              "state": {
+                "revision": "88daef05492772b3859c29b1beb8383ad1650fa0",
+                "version": "1.1.0"
+              }
+            },
+            {
+              "identity": "swift-ai-vercel",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-vercel.git",
+              "state": {
+                "revision": "01cb843a414be82c1f1dc35108ac3bc461969c8c",
+                "version": "1.0.0"
+              }
+            },
+            {
+              "identity": "swift-ai-voyage",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-voyage.git",
+              "state": {
+                "revision": "ff11771e2f90ef45fcc6835984f17e86438120a9",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swift-ai-xai",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-xai.git",
+              "state": {
+                "revision": "91b9a8b31814d5a93a63d3a25136342c976fe8a8",
+                "version": "1.2.0"
+              }
+            },
+            {
+              "identity": "swift-ai-zai",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/swift-ai-zai.git",
+              "state": {
+                "revision": "3b4695f234505f355b6f14a026f527871208688f",
+                "version": "1.1.1"
+              }
+            },
+            {
+              "identity": "swiftaisdk",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/SwiftAISDK.git",
+              "state": {
+                "revision": "e5b635c2e0da75da4b86c78c92770b9ca48f59f9",
+                "version": "3.2.0"
+              }
+            }
+          ],
+          "version": 3
+        },
+        "marker": "COMPLETE_CONSUMER_OK"
+      },
+      {
+        "name": "complete-2.8.1",
+        "manifest": "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(\n    name: \"CompleteConsumer\",\n    platforms: [.macOS(.v12), .iOS(.v15)],\n    dependencies: [.package(url: \"https://github.com/SwiftAISDK/SwiftAISDK.git\", exact: \"2.8.1\")],\n    targets: [.executableTarget(name: \"CompleteConsumer\", dependencies: [\n        .product(name: \"SwiftAISDK\", package: \"SwiftAISDK\")\n    ])],\n    swiftLanguageModes: [.v6]\n)\n",
+        "lockfile": {
+          "originHash": "69445eb0241b10f63e3be3c8f4986177b974d09a50aef6a86c7c61811a7d9e44",
+          "pins": [
+            {
+              "identity": "swiftaisdk",
+              "kind": "remoteSourceControl",
+              "location": "https://github.com/SwiftAISDK/SwiftAISDK.git",
+              "state": {
+                "revision": "fc4e5dc5116435d995c71ef36062662b38c42181",
+                "version": "2.8.1"
+              }
+            }
+          ],
+          "version": 3
+        },
+        "marker": "COMPLETE_CONSUMER_OK"
+      }
+    ]
+  },
+  "hostedDocumentation": {
+    "status": "passed",
+    "checkedAt": "2026-11-08T05:01:09.543Z",
+    "sourceCommit": "e5b635c2e0da75da4b86c78c92770b9ca48f59f9",
+    "run": {
+      "id": 42448834524,
+      "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/42448834524",
+      "path": ".github/workflows/docs.yml",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "jobs": [
+      {
+        "id": 128633480118,
+        "name": "changes",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-08T04:57:20Z",
+            "completed_at": "2026-11-08T04:57:21Z"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-08T04:57:21Z",
+            "completed_at": "2026-11-08T04:57:25Z"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-08T04:57:25Z",
+            "completed_at": "2026-11-08T04:57:25Z"
+          },
+          {
+            "name": "Select checks",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-11-08T04:57:25Z",
+            "completed_at": "2026-11-08T04:57:25Z"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-11-08T04:57:25Z",
+            "completed_at": "2026-11-08T04:57:25Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-11-08T04:57:25Z",
+            "completed_at": "2026-11-08T04:57:26Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-11-08T04:57:26Z",
+            "completed_at": "2026-11-08T04:57:26Z"
+          }
+        ]
+      },
+      {
+        "id": 128633513060,
+        "name": "tooling",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-08T04:57:32Z",
+            "completed_at": "2026-11-08T04:57:33Z"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-08T04:57:33Z",
+            "completed_at": "2026-11-08T04:57:37Z"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-08T04:57:37Z",
+            "completed_at": "2026-11-08T04:57:38Z"
+          },
+          {
+            "name": "Check catalog and tooling",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-11-08T04:57:38Z",
+            "completed_at": "2026-11-08T05:00:27Z"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-11-08T05:00:27Z",
+            "completed_at": "2026-11-08T05:00:28Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-11-08T05:00:28Z",
+            "completed_at": "2026-11-08T05:00:29Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-11-08T05:00:29Z",
+            "completed_at": "2026-11-08T05:00:30Z"
+          }
+        ]
+      },
+      {
+        "id": 128633513099,
+        "name": "docs",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-08T04:57:32Z",
+            "completed_at": "2026-11-08T04:57:33Z"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-08T04:57:33Z",
+            "completed_at": "2026-11-08T04:57:35Z"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-08T04:57:35Z",
+            "completed_at": "2026-11-08T04:57:38Z"
+          },
+          {
+            "name": "Run npm ci --prefix docs-site",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-11-08T04:57:38Z",
+            "completed_at": "2026-11-08T04:57:43Z"
+          },
+          {
+            "name": "Generate documentation",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-11-08T04:57:43Z",
+            "completed_at": "2026-11-08T04:57:44Z"
+          },
+          {
+            "name": "Check and build documentation",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-11-08T04:57:44Z",
+            "completed_at": "2026-11-08T04:58:11Z"
+          },
+          {
+            "name": "Upload documentation",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-11-08T04:58:11Z",
+            "completed_at": "2026-11-08T04:58:14Z"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13,
+            "started_at": "2026-11-08T04:58:14Z",
+            "completed_at": "2026-11-08T04:58:14Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 14,
+            "started_at": "2026-11-08T04:58:14Z",
+            "completed_at": "2026-11-08T04:58:14Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15,
+            "started_at": "2026-11-08T04:58:14Z",
+            "completed_at": "2026-11-08T04:58:14Z"
+          }
+        ]
+      },
+      {
+        "id": 128633514103,
+        "name": "test",
+        "status": "completed",
+        "conclusion": "skipped",
+        "steps": []
+      },
+      {
+        "id": 128634088058,
+        "name": "deploy",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-08T05:00:38Z",
+            "completed_at": "2026-11-08T05:00:39Z"
+          },
+          {
+            "name": "Deploy to GitHub Pages",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-08T05:00:39Z",
+            "completed_at": "2026-11-08T05:00:48Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-08T05:00:48Z",
+            "completed_at": "2026-11-08T05:00:48Z"
+          }
+        ]
+      }
+    ]
+  },
+  "actualHostedPage": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "checkedAt": "2026-11-08T05:02:16.134Z",
+    "deployedSourceCommit": "e5b635c2e0da75da4b86c78c92770b9ca48f59f9",
+    "browser": "running main Zen",
+    "url": "https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/",
+    "title": "Install | SwiftAISDK",
+    "documentId": "328564998145",
+    "readyState": "complete",
+    "verifiedValues": [
+      "umbrella3.2.0",
+      "Core/Anthropic1.3.0",
+      "feature units1.2.0",
+      "UI1.1.0",
+      "patches1.1.1",
+      "unchangedHF1.1.0/ByteDance/LMNT/Vercel1.0.0"
+    ],
+    "viewport": {
+      "width": 2245,
+      "height": 1393,
+      "x": 0,
+      "y": 0
+    },
+    "viewportScreenshotVisuallyInspected": true,
+    "text": "Install\nAdd SwiftAISDK to your package manifest:\nPackage.swift\ndependencies\n:\n[\n.\npackage\n(\nurl\n:\n\"\nhttps://github.com/SwiftAISDK/SwiftAISDK.git\n\"\n,\nfrom\n:\n\"\n3.2.0\n\"\n),\n],\ntargets\n:\n[\n.\ntarget\n(\nname\n:\n\"\nYourApp\n\"\n,\ndependencies\n: [\n.\nproduct\n(\nname\n:\n\"\nSwiftAISDK\n\"\n,\npackage\n:\n\"\nSwiftAISDK\n\"\n)\n,\n]\n),\n]\nAn application can pin the validated umbrella release with SwiftPM\u2019s\nexact:\nrequirement. Commit\nPackage.resolved\nto preserve every dependency revision; an exact umbrella version alone does not freeze the provider/core graph. Production applications should not depend on the moving\nmain\nbranch.\nThen import the library:\nimport\nSwiftAISDK\nCredentials\nSection titled \u201cCredentials\u201d\nProvider factories read upstream-style environment variables by default:\nProvider\nDefault environment variable\nOpenAI\nOPENAI_API_KEY\nAnthropic\nANTHROPIC_API_KEY\nGoogle Generative AI\nGOOGLE_GENERATIVE_AI_API_KEY\nor\nGEMINI_API_KEY\nYou can also pass credentials explicitly:\nlet\nprovider\n=\ntry\nAIProviders.\nopenAI\n(\nsettings\n:\nProviderSettings\n(\napiKey\n:\n\"\nyour-api-key\n\"\n)\n)\nUse explicit settings when you need custom headers, a custom base URL, a mock transport, or per-environment credentials.\nIndependent modular packages\nSection titled \u201cIndependent modular packages\u201d\nAll 52 independent packages are published: core, 49 provider adapters, MCP and UI. Core and Anthropic are at\n1.3.0\n; 18 other feature units are at\n1.2.0\n, UI is at\n1.1.0\n, and 27 corrected providers/MCP are at\n1.1.1\n. Hugging Face retains\n1.1.0\n; ByteDance, LMNT and Vercel retain\n1.0.0\n. Choose packages from the\ncatalog\n, or use the complete 3.2 umbrella above. See the\n3.0 migration guide\nfor native imports, configuration and compatibility details.\nFor a modular OpenAI client:\nPackage.swift\ndependencies\n:\n[\n.\npackage\n(\nurl\n:\n\"\nhttps://github.com/SwiftAISDK/swift-ai-core.git\n\"\n,\nfrom\n:\n\"\n1.3.0\n\"\n),\n.\npackage\n(\nurl\n:\n\"\nhttps://github.com/SwiftAISDK/swift-ai-openai.git\n\"\n,\nfrom\n:\n\"\n1.2.0\n\"\n),\n],\ntargets\n:\n[\n.\ntarget\n(\nname\n:\n\"\nYourApp\n\"\n,\ndependencies\n: [\n.\nproduct\n(\nname\n:\n\"\nSwiftAI\n\"\n,\npackage\n:\n\"\nswift-ai-core\n\"\n)\n,\n.\nproduct\n(\nname\n:\n\"\nSwiftAIOpenAI\n\"\n,\npackage\n:\n\"\nswift-ai-openai\n\"\n)\n,\n]\n),\n]\nimport\nSwiftAI\nimport\nSwiftAIOpenAI\nlet\nprovider\n=\ntry\nAIProviders.\nopenAI\n(\nconfiguration\n:\nOpenAIProviderSettings\n(\napiKey\n:\n\"\nyour-api-key\n\"\n)\n)\nlet\nmodel\n=\ntry\nprovider.\nlanguageModel\n(\n\"\ngpt-4.1\n\"\n)\nlet\nresult\n=\ntry\nawait\nAI.\ngenerateText\n(\nmodel\n: model,\nrequest\n: .\ninit\n(\nmessages\n: [.\nuser\n(\n\"\nHello\n\"\n)\n]\n)\n)\nAnthropic uses\nSwiftAIAnthropic\nand\nAnthropicProviderSettings\n. A generic compatible endpoint uses\nSwiftAIOpenAICompatible\nwith\nOpenAICompatibleProviderSettings(name:baseURL:...)\n. Native factories accept\nconfiguration:\n; the 3.x compatibility API continues to accept\nsettings:\n. Native clients pass model objects or use explicit registries; core does not initialize an implicit Gateway.\nThe canonical repository contains complete offline\nAnthropicOnly\n,\nOpenAICompatibleOnly\n,\nOpenAIOnly\nand\nMixedProviders\nexamples. OpenAI shares chat/completion, embedding and image wire code with the compatible package; selecting it does not require unrelated providers, MCP or UI. See the\n3.0 migration guide\n.\nProvider versions can be selected independently as long as their shared dependency requirements intersect. SwiftPM resolves one version per package identity. Swift release numbers do not track npm release numbers. Applications should commit their\nPackage.resolved\n; reusable libraries should normally express compatible ranges.\nThe 3.2 umbrella shares model and request types with the modular packages and preserves the ordinary\nimport SwiftAISDK\nAPI. Existing 2.x tags remain usable, but their separately defined types cannot be mixed with modular values. Moving modules is not a binary compatibility guarantee; rebuild your application. The\ntested 3.2 release set\nrecords the complete dependency selection.\nThe 3.2 release adds queued steering and ordered UI replay, native URL transcription and word timings, uploaded-video descriptors, request-origin privacy and provider request/stream fixes. Existing exhaustive switches must handle the new documented enum cases. See the\nweekly audit\nfor every npm/Swift version, verified release ref and retained gap.\nEdit page\nPrevious\nIntroduction\nNext\nMigrate to 3.0"
+  },
+  "trueMinimumCoverage": {
+    "status": "passed",
+    "checkedAt": "2026-11-08T03:59:30.268Z",
+    "packages": [
+      {
+        "package": "swift-ai-core",
+        "version": "1.3.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-alibaba",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-alibaba": "1.1.1",
+          "swift-ai-core": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-anthropic",
+        "version": "1.3.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-anthropic": "1.3.0",
+          "swift-ai-core": "1.3.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-openai-compatible",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-openai-compatible": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-openai",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-openai": "1.2.0",
+          "swift-ai-openai-compatible": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-amazon-bedrock",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-amazon-bedrock": "1.1.1",
+          "swift-ai-anthropic": "1.3.0",
+          "swift-ai-core": "1.3.0",
+          "swift-ai-openai": "1.2.0",
+          "swift-ai-openai-compatible": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-anthropic-aws",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-anthropic": "1.3.0",
+          "swift-ai-anthropic-aws": "1.2.0",
+          "swift-ai-core": "1.3.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-assemblyai",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-assemblyai": "1.1.1",
+          "swift-ai-core": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-deepseek",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-deepseek": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-azure",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-azure": "1.2.0",
+          "swift-ai-core": "1.3.0",
+          "swift-ai-deepseek": "1.1.1",
+          "swift-ai-openai": "1.2.0",
+          "swift-ai-openai-compatible": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-baseten",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-baseten": "1.1.1",
+          "swift-ai-core": "1.3.0",
+          "swift-ai-openai-compatible": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-black-forest-labs",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-black-forest-labs": "1.1.1",
+          "swift-ai-core": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-bytedance",
+        "version": "1.0.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-bytedance": "1.0.1",
+          "swift-ai-core": "1.1.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-cartesia",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-cartesia": "1.2.0",
+          "swift-ai-core": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-cerebras",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-cerebras": "1.2.0",
+          "swift-ai-core": "1.3.0",
+          "swift-ai-openai-compatible": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-cohere",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-cohere": "1.2.0",
+          "swift-ai-core": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-deepgram",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-deepgram": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-deepinfra",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-deepinfra": "1.1.1",
+          "swift-ai-openai-compatible": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-elevenlabs",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-elevenlabs": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-fal",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-fal": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-fireworks",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-fireworks": "1.1.1",
+          "swift-ai-openai-compatible": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-fish-audio",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-fish-audio": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-gateway",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-gateway": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-gladia",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-gladia": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-gmicloud",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-gmicloud": "1.1.1",
+          "swift-ai-openai-compatible": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-google",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-google": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-google-vertex",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-anthropic": "1.3.0",
+          "swift-ai-core": "1.3.0",
+          "swift-ai-google": "1.2.0",
+          "swift-ai-google-vertex": "1.2.0",
+          "swift-ai-openai": "1.0.0",
+          "swift-ai-openai-compatible": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-groq",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-groq": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-heygen",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-heygen": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-huggingface",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-huggingface": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-hume",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-hume": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-klingai",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-klingai": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-lmnt",
+        "version": "1.0.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.1.0",
+          "swift-ai-lmnt": "1.0.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-luma",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-luma": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-mcp",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.0.0",
+          "swift-ai-mcp": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-minimax",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-anthropic": "1.3.0",
+          "swift-ai-core": "1.3.0",
+          "swift-ai-minimax": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-mistral",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-mistral": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-moonshotai",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-moonshotai": "1.1.1",
+          "swift-ai-openai-compatible": "1.0.0"
+        },
+        "evidence": "retained-version-specific-supplement"
+      },
+      {
+        "package": "swift-ai-open-responses",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-open-responses": "1.1.1",
+          "swift-ai-openai": "1.1.0",
+          "swift-ai-openai-compatible": "1.1.0"
+        },
+        "evidence": "retained-version-specific-supplement"
+      },
+      {
+        "package": "swift-ai-perplexity",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-perplexity": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-prodia",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-prodia": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-quiverai",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-open-responses": "1.1.0",
+          "swift-ai-openai": "1.1.0",
+          "swift-ai-openai-compatible": "1.1.0",
+          "swift-ai-quiverai": "1.1.1"
+        },
+        "evidence": "retained-version-specific-supplement"
+      },
+      {
+        "package": "swift-ai-replicate",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-replicate": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-revai",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-revai": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-togetherai",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-openai-compatible": "1.2.0",
+          "swift-ai-togetherai": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-topaz",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-topaz": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-typesafe-ai",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-typesafe-ai": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-ui",
+        "version": "1.1.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-ui": "1.1.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-vercel",
+        "version": "1.0.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.0.0",
+          "swift-ai-openai-compatible": "1.0.0",
+          "swift-ai-vercel": "1.0.1"
+        },
+        "evidence": "retained-version-specific-supplement"
+      },
+      {
+        "package": "swift-ai-voyage",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.2.0",
+          "swift-ai-voyage": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-xai",
+        "version": "1.2.0",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-openai": "1.2.0",
+          "swift-ai-openai-compatible": "1.2.0",
+          "swift-ai-xai": "1.2.0"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      },
+      {
+        "package": "swift-ai-zai",
+        "version": "1.1.1",
+        "status": "passed",
+        "exactMinimum": {
+          "swift-ai-core": "1.3.0",
+          "swift-ai-openai-compatible": "1.2.0",
+          "swift-ai-zai": "1.1.1"
+        },
+        "evidence": "catalog-wide-minimum-client"
+      }
+    ],
+    "supplemented": [
+      "swift-ai-moonshotai",
+      "swift-ai-open-responses",
+      "swift-ai-quiverai",
+      "swift-ai-vercel"
+    ],
+    "scope": "All52 current standalone source trees compile at their true version-specific minimum graph. The catalog-wide checker provides48 exact minima plus all latest/mixed/umbrella checks; four old-dependency graphs are independently supplemented, including the unchanged actual public Vercel1.0 tag with identical current owning source.",
+    "versionScope": "Catalog version fields are synthetic rehearsal tags for the current source trees, not a list of public releases. Unchanged ByteDance 1.0.0, Hugging Face 1.1.0, LMNT 1.0.0 and Vercel 1.0.0 were not republished. Actual public versions, immutable refs and public-consumer evidence are recorded separately in publication/exports and public consumer verification."
   }
 }
