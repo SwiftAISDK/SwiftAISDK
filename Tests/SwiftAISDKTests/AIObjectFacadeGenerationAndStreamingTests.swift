@@ -53,7 +53,6 @@ import Testing
     ])
     #expect(typedPartials == [
         [],
-        [ObjectFacadeAnswer(value: "one", count: 1)],
         [ObjectFacadeAnswer(value: "one", count: 1), ObjectFacadeAnswer(value: "two", count: 2)]
     ])
     #expect(object?.object == [
@@ -69,6 +68,39 @@ import Testing
     let request = try #require(model.streamRequests.first)
     #expect(request.responseFormat == .json(schema: arrayOutputSchemaForTest(elementSchema: objectFacadeAnswerSchema()), name: "answers"))
     #expect(request.extraBody["responseFormat"]?["schema"]?["properties"]?["elements"]?["items"]?["properties"]?["value"]?["type"]?.stringValue == "string")
+}
+@Test func aiStreamObjectArrayCommitsPendingElementAtNextChunkSeparator() async throws {
+    let model = ObjectFacadeMockLanguageModel(
+        result: TextGenerationResult(text: "", rawValue: .object([:])),
+        streamParts: [
+            .textDelta(#"{"elements":[{"value":"one","count":1}"#),
+            .textDelta(",{"),
+            .textDelta(#""value":"two","count":2}]}"#),
+            .finish(reason: "stop", usage: nil)
+        ]
+    )
+    var rawPartials: [JSONValue] = []
+    var typedPartials: [[ObjectFacadeAnswer]] = []
+    var result: ObjectGenerationResult<[ObjectFacadeAnswer]>?
+    for try await part in AI.streamObjectArray(
+        model: model, prompt: "Stream answers.", as: ObjectFacadeAnswer.self,
+        elementSchema: objectFacadeAnswerSchema()
+    ) {
+        switch part {
+        case let .partialObject(value): rawPartials.append(value)
+        case let .partial(value): typedPartials.append(value)
+        case let .object(value): result = value
+        default: break
+        }
+    }
+    let one = ObjectFacadeAnswer(value: "one", count: 1)
+    let two = ObjectFacadeAnswer(value: "two", count: 2)
+    let rawOne: JSONValue = .object(["value": "one", "count": 1])
+    let rawTwo: JSONValue = .object(["value": "two", "count": 2])
+    #expect(rawPartials == [.array([]), .array([rawOne]), .array([rawOne, rawTwo])])
+    #expect(typedPartials == [[], [one], [one, two]])
+    #expect(result?.object == [one, two])
+    #expect(result?.rawObject == rawPartials.last)
 }
 @Test func aiStreamEnumStreamsSelectedValue() async throws {
     let model = ObjectFacadeMockLanguageModel(

@@ -45,7 +45,7 @@ public final class OpenAICompatibleProvider: AIProvider, Sendable {
         var headers = normalizeHeaders(settings.headers)
         let credential = settings.apiKeyProvider.map(AIAsyncCredential.init)
         if let apiKey = credential?.placeholder ?? settings.apiKey { headers["authorization"] = headers["authorization"] ?? "Bearer \(apiKey)" }
-        headers = withUserAgentSuffix(headers, "ai-sdk-openai-compatible/3.0.87")
+        headers = withUserAgentSuffix(headers, "ai-sdk-openai-compatible/3.0.92")
         var config = OpenAICompatibleModelConfiguration(http: AIProviderHTTPClient(
             providerID: settings.name, headers: headers, transport: settings.transport, credentialResolver: credential,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: settings.queryParams) }

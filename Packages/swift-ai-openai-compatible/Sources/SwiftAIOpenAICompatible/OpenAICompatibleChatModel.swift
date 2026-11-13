@@ -17,7 +17,6 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
 
     public func generate(_ request: LanguageModelRequest) async throws -> TextGenerationResult {
         let prepared = try preparedBody(for: request, stream: false)
-        let metadataNamespace = metadataNamespace(for: request)
         let httpRequest = try config.request(
             path: "/chat/completions",
             modelID: modelID,
@@ -30,7 +29,35 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
             throw config.chatHTTPStatusError(httpResponse)
         }
         let response = (json: try httpResponse.jsonValue(), response: httpResponse)
-        let raw = response.json
+        var result = try convertGeneratedResponse(body: response.json, providerOptions: request.providerOptions, httpResponse: httpResponse)
+        result.warnings = prepared.warnings
+        result.requestMetadata = AIRequestMetadata(body: .object(prepared.body), headers: request.headers, url: httpRequest.url.absoluteString)
+        return result
+    }
+
+    /// Builds the unary request body and warnings, including configured transforms, without sending a request.
+    public func prepareRequest(_ request: LanguageModelRequest) throws -> (body: JSONValue, warnings: [AIWarning]) {
+        let prepared = try preparedBody(for: request, stream: false)
+        return (.object(prepared.body), prepared.warnings)
+    }
+
+    /// Converts a detached Chat Completions body without sending a request or manufacturing HTTP metadata.
+    public func convertResponse(body: JSONValue, providerOptions: [String: JSONValue] = [:]) throws -> TextGenerationResult {
+        guard body.objectValue != nil,
+              let choices = body["choices"]?.arrayValue,
+              choices.allSatisfy({ choice in
+                  choice.objectValue != nil && isValidNullableChatMessage(choice["message"])
+              }) else {
+            throw AIError.invalidResponse(provider: providerID, message: "Invalid Chat Completions response body.")
+        }
+        var result = try convertGeneratedResponse(body: body, providerOptions: providerOptions, httpResponse: AIHTTPResponse(statusCode: 200, headers: [:], body: Data()))
+        result.responseMetadata.headers = [:]
+        result.responseMetadata.body = nil
+        return result
+    }
+
+    private func convertGeneratedResponse(body raw: JSONValue, providerOptions: [String: JSONValue], httpResponse: AIHTTPResponse) throws -> TextGenerationResult {
+        let metadataNamespace = metadataNamespace(for: LanguageModelRequest(messages: [], providerOptions: providerOptions))
         guard let choices = raw["choices"]?.arrayValue, !choices.isEmpty else {
             throw AIError.invalidResponse(
                 provider: providerID,
@@ -119,11 +146,11 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
             toolCalls: toolCalls,
             providerMetadata: providerMetadata,
             rawValue: raw,
-            warnings: prepared.warnings,
-            requestMetadata: AIRequestMetadata(body: .object(prepared.body), headers: request.headers, url: httpRequest.url.absoluteString),
+            warnings: [],
+            requestMetadata: AIRequestMetadata(),
             responseMetadata: openAICompatibleResponseMetadata(
                 from: raw,
-                response: response.response,
+                response: httpResponse,
                 modelID: modelID,
                 suppressZeroCreatedTimestamp: isOpenAIBackedProvider(providerID, config: config)
             )

@@ -31,3 +31,28 @@ and preserves user text/file metadata and references. Steering content must have
 the user role. Use the plural conversion for this history: converting a single UI
 message rejects embedded steering rather than dropping delivered user messages.
 Consumers with exhaustive switches over `AIUIMessagePart` must handle the new case.
+
+## Message queue and tool errors
+
+`AIChatSession(transport: transport, experimentalQueue: true)` queues user
+messages while a response or client tool is pending. Observe
+`experimentalQueuedMessages`, remove an item with
+`experimentalRemoveQueuedMessage(_:)`, or prioritize it with
+`experimentalSendQueuedMessageNow(_:)`. Request headers, body and metadata stay
+with each item. Stop/errors/interrupted responses pause the queue; sending another
+message resumes it. Editing or regenerating clears it. Approval replies reach the
+model before queued user messages. The original initializer retains immediate
+replacement behavior; native automatic-send callbacks remain synchronous.
+
+Tool errors retain the text already seen by the model. `AIUIMessageErrorOptions`
+provides `redactToolErrors` and an optional `onError` formatter through reducer
+snapshots, `createAgentUIStream`, or `DirectAIChatTransport.errorOptions`. A formatter
+opts into redaction by default. Redacted tool errors can change restored reasoning
+history; a compatibility warning appears when later reasoning is streamed.
+Throw safe errors inside a tool when both the model and UI need a safe message.
+Native failed-tool display uses `AIToolResult.isError`; browser chunk framing and
+input-error state names are not a separate native protocol.
+
+Validation reports the first invalid message/part/citation, and non-finite
+provider/tool metadata produces a bounded issue. Opaque application data keeps
+its existing typed behavior.

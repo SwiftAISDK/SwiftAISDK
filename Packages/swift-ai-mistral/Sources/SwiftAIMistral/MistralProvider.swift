@@ -46,7 +46,7 @@ public final class MistralProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-mistral/4.0.81")
+        headers = withUserAgentSuffix(headers, "ai-sdk-mistral/4.0.86")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.mistral.ai/v1")
         http = AIProviderHTTPClient(providerID: "mistral", headers: headers, transport: configuration.transport, credentialResolver: credential,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

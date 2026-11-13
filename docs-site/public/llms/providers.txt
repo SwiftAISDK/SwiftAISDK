@@ -7,7 +7,7 @@ This page is generated from the package catalog. Update [Porting/packages.json](
 Language: 35
 Completion: 7
 Embedding: 17
-Image: 19
+Image: 20
 Transcription: 15
 Speech: 14
 Audio generation: 1
@@ -58,7 +58,7 @@ Skills: 3
 | [`klingai`](klingai/) | `@ai-sdk/klingai` | `AIProviders.klingAI` |  |  |  |  |  |  |  |  |  | ✅ |  |  |  |  |  |
 | [`lmnt`](lmnt/) | `@ai-sdk/lmnt` | `AIProviders.lmnt` |  |  |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |
 | [`luma`](luma/) | `@ai-sdk/luma` | `AIProviders.luma` |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |
-| [`minimax`](minimax/) | `@ai-sdk/minimax` | `AIProviders.miniMax` | ✅ |  |  |  |  |  |  |  |  | ✅ |  |  |  |  |  |
+| [`minimax`](minimax/) | `@ai-sdk/minimax` | `AIProviders.miniMax` | ✅ |  |  | ✅ |  |  |  |  |  | ✅ |  |  |  |  |  |
 | [`mistral`](mistral/) | `@ai-sdk/mistral` | `AIProviders.mistral` | ✅ |  | ✅ |  | ✅ | ✅ |  |  |  |  |  |  |  |  |  |
 | [`moonshotai`](moonshotai/) | `@ai-sdk/moonshotai` | `AIProviders.moonshotAI` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | [`open-responses.responses`](open-responses-responses/) | `@ai-sdk/open-responses` | `AIProviders.openResponses` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |

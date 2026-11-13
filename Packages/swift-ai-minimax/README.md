@@ -31,3 +31,18 @@ See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/b
 
 Original public initializer and helper signatures remain available for typed
 function references, alongside the extended APIs. Their original defaults are preserved.
+
+## Current upstream review
+
+The reviewed baseline is `@ai-sdk/minimax` 3.0.81. `image("MiniMax-H3-Image")` and `imageModel("MiniMax-H3-Image-Highspeed")` now support text-to-image and reference-image editing. `MiniMaxProviderSettings.imageBaseURL` defaults to `https://api.minimax.io/v1`; the existing settings initializer selector remains available.
+
+```swift
+let image = try await provider.image("MiniMax-H3-Image").generateImage(.init(
+    prompt: "A red circle", aspectRatio: "1:1", count: 2,
+    providerOptions: MiniMaxImageModelOptions(area: .twoK, outputFormat: .png).providerOptions
+))
+```
+
+Requests use `/images/generations` or `/images/edits`, always request URL output and securely download successful images through the configured transport. Bearer tokens and provider headers are omitted from downloads. Results contain normalized base64 images, per-image size/revised prompt, output format/request ID and usage details (request usage appears once in per-image metadata).
+
+The maximum advertised batch size is ten. Individual image failures become warnings while successful images survive; seed is unsupported, masks fail before HTTP, and edits warn and omit the generation-only prompt-enhancement option. Compression accepts integers from 0 through 100. Async credentials continue to resolve only for authenticated provider requests.

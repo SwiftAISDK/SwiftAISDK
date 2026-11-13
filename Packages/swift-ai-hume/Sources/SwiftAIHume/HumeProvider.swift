@@ -38,7 +38,7 @@ public final class HumeProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["X-Hume-Api-Key"] = headers["X-Hume-Api-Key"] ?? "\(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-hume/3.0.76")
+        headers = withUserAgentSuffix(headers, "ai-sdk-hume/3.0.81")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.hume.ai")
         http = AIProviderHTTPClient(providerID: "hume", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

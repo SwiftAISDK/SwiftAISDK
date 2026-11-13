@@ -9,6 +9,7 @@ import SwiftAIOpenAICompatible
 public final class OpenAIResponsesBatchLanguageModel: BatchLanguageModel, @unchecked Sendable {
     public let providerID: String
     public let modelID: String
+    public var telemetryRedactor: AITelemetryRedactor? { openAIRedactedTelemetry }
     public let supportedURLs: [String: [AISupportedURLPattern]]
 
     private let languageModel: OpenAICompatibleResponsesModel
@@ -779,7 +780,7 @@ private func convertOpenAIResponsesBatchBody(
             hasToolCalls: hasClientToolCall, hasRefusal: openAIResponsesHasRefusal(raw)
         ),
         usage: tokenUsage(from: raw),
-        providerMetadata: openAIBatchProviderMetadata(from: raw, providerID: providerID),
+        providerMetadata: try openAIBatchProviderMetadata(from: raw, providerID: providerID),
         rawValue: raw,
         responseMetadata: AIResponseMetadata(
             id: raw["id"]?.stringValue,
@@ -792,8 +793,8 @@ private func convertOpenAIResponsesBatchBody(
 private func openAIBatchProviderMetadata(
     from raw: JSONValue,
     providerID: String
-) -> [String: JSONValue] {
-    var providerMetadata = openAIResponsesProviderMetadata(from: raw, providerID: providerID)
+) throws -> [String: JSONValue] {
+    var providerMetadata = try openAIResponsesProviderMetadata(from: raw, providerID: providerID)
     let namespace = openAICompatibleProviderMetadataNamespace(providerID)
     var metadata = providerMetadata[namespace]?.objectValue ?? [:]
     let logprobs = raw["output"]?.arrayValue?.flatMap { item in

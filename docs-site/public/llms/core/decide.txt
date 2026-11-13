@@ -4,8 +4,10 @@ Source URL: /core/decide/
 
 `AI.experimentalDecide` returns validated answers to a named question map.
 OpenAI uses `/decisions`, Perplexity uses `/v1/decisions`, Gateway uses `/decision-model`, TypeSafe AI uses
-`/systemone`, and Anthropic/Google use `DecisionLanguageModel` with structured
-output. These providers expose `decisionModel(...)`; registries and custom
+`/systemone`, and Anthropic uses `DecisionLanguageModel` with structured output. Google uses
+its native `/decisions` endpoint for `gemini-decision-*` IDs and retains its prior
+language adapter for other IDs. Use `nativeDecisionModel` to opt custom IDs into
+the native endpoint. These providers expose `decisionModel(...)`; registries and custom
 providers route `AIDecisionModelReference` values.
 
 ```swift

@@ -23,6 +23,8 @@ public struct OpenAICompatibleLanguageCapabilities: Sendable {
 public struct OpenAICompatibleModelConfiguration: Sendable {
     public var http: AIProviderHTTPClient
     public var baseURL: String
+    /// Unauthenticated transport for untrusted image input URLs.
+    public var downloadTransport: (any AITransport)?
     public var wireProfile: OpenAICompatibleWireProfile = .generic
     public var includeUsage = false
     public var supportsMultiPartToolContent = false

@@ -2,7 +2,7 @@
 
 SwiftAISDK is a SwiftPM port of the provider-facing parts of Vercel AI SDK.
 It provides provider factories plus an `AI` facade for text, durable batches,
-structured output, decisions, evaluation, embeddings, media, streaming and realtime audio, reranking,
+structured output, decisions, extraction, evaluation, embeddings, media, streaming and realtime audio, reranking,
 file operations, middleware, MCP tools, and typed tool execution.
 
 Experimental [streaming speech](https://swiftaisdk.github.io/SwiftAISDK/core/stream-speech/)
@@ -617,6 +617,15 @@ retrieved sources, including through typed text output and native UI. See the
 [citation guide](https://swiftaisdk.github.io/SwiftAISDK/core/stream-text/).
 `LanguageModelRequest.toolCallConcurrency` bounds local tool execution; 1 is
 sequential and nil is unlimited, while returned results retain model order.
+
+## Extraction V4
+
+`AI.experimentalExtract` returns validated nullable fields from ordered shared
+text/file evidence, with guesses, confidence and source metadata. OpenAI,
+Anthropic and Google expose `extractionModel(_:)`; Anthropic splits requests
+at 16 fields. Registries, custom fallbacks and the compatibility default-provider
+resolver route the new contract. See the [Extraction guide](https://swiftaisdk.github.io/SwiftAISDK/core/extract/)
+for typed fields, complete-call failures, downloads, retries and cancellation.
 
 ## Decision V4
 

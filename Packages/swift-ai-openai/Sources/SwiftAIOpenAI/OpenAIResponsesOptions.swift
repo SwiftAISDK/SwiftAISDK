@@ -274,6 +274,12 @@ func openAIResponsesInputMessageJSON(
                         "tools": .array(additionalTools)
                     ]))
                 }
+                if let groups = result.providerMetadata["__swiftParallelAdditionalTools"]?.arrayValue {
+                    for value in groups {
+                        let definitions = try openAIResponsesValidatedAdditionalTools(value)
+                        if !definitions.isEmpty { items.append(["type": "additional_tools", "role": "developer", "tools": .array(definitions)]) }
+                    }
+                }
                 return items
             default:
                 return []
@@ -473,37 +479,33 @@ func openAIResponsesInputMessageJSON(
             ?? message.providerMetadata["openai"]?.objectValue
         let effortValue = options?["reasoningEffortUpdate"]
             ?? options?["reasoning_effort_update"]
-        if let effortValue {
-            guard let effort = effortValue.stringValue,
-                  ["none", "low", "medium", "high", "xhigh", "max"].contains(effort) else {
-                throw AIError.invalidArgument(
-                    argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate",
-                    message: "Message-level reasoningEffortUpdate must be none, low, medium, high, xhigh, or max."
-                )
-            }
+        let textFormat = options?["textFormatUpdate"]
+        let additionalTools = options?["additionalTools"]
+        if effortValue != nil || textFormat != nil || additionalTools != nil {
+            let feature = effortValue != nil ? "reasoningEffortUpdate" : textFormat != nil ? "textFormatUpdate" : "additionalTools"
             guard message.combinedText.isEmpty else {
-                throw AIError.invalidArgument(
-                    argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate",
-                    message: "Message-level reasoningEffortUpdate requires empty system message content."
-                )
+                throw AIError.invalidArgument(argument: "messages.providerMetadata.\(namespace).\(feature)", message: "Message-level \(feature) requires empty system message content.")
             }
-            if let configurationUpdateUnsupportedReason {
-                throw AIError.invalidArgument(
-                    argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate",
-                    message: configurationUpdateUnsupportedReason
-                )
+            var update: [String: JSONValue] = ["type": "configuration_update"]
+            if effortValue != nil || textFormat != nil, let configurationUpdateUnsupportedReason {
+                throw AIError.invalidArgument(argument: "messages.providerMetadata.\(namespace).\(feature)", message: configurationUpdateUnsupportedReason)
             }
-            if let supportedConfigurationUpdateReasoningEfforts,
-               !supportedConfigurationUpdateReasoningEfforts.contains(effort) {
-                throw AIError.invalidArgument(
-                    argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate",
-                    message: "The selected model only supports these reasoning efforts: \(supportedConfigurationUpdateReasoningEfforts.joined(separator: ", "))."
-                )
+            if let effortValue {
+                guard let effort = effortValue.stringValue, ["none", "low", "medium", "high", "xhigh", "max"].contains(effort) else {
+                    throw AIError.invalidArgument(argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate", message: "Message-level reasoningEffortUpdate must be none, low, medium, high, xhigh, or max.")
+                }
+                if let supportedConfigurationUpdateReasoningEfforts, !supportedConfigurationUpdateReasoningEfforts.contains(effort) {
+                    throw AIError.invalidArgument(argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate", message: "The selected model only supports these reasoning efforts: \(supportedConfigurationUpdateReasoningEfforts.joined(separator: ", ")).")
+                }
+                update["reasoning"] = ["effort": .string(effort)]
             }
-            return [.object([
-                "type": .string("configuration_update"),
-                "reasoning": .object(["effort": .string(effort)])
-            ])]
+            if let textFormat { update["text"] = ["format": try openAIResponsesNormalizedTextFormat(textFormat, warnings: &warnings)] }
+            var items: [JSONValue] = effortValue != nil || textFormat != nil ? [.object(update)] : []
+            if let additionalTools {
+                let definitions = try openAIResponsesValidatedAdditionalTools(additionalTools)
+                if !definitions.isEmpty { items.append(["type": "additional_tools", "role": "developer", "tools": .array(definitions)]) }
+            }
+            return items
         }
     }
 
@@ -531,30 +533,17 @@ func openAIResponsesScalarToolResultPromptCacheBreakpoint(_ result: AIToolResult
         ?? resultOptions["prompt_cache_breakpoint"]
 }
 
-/// History-loaded functions follow an ordinary tool result in an additional_tools item.
+/// History-loaded tools follow an ordinary result and support OpenAI fallback metadata for hosting adapters.
 func openAIResponsesAdditionalTools(_ result: AIToolResult, providerID: String) throws -> [JSONValue]? {
     let namespace = openAICompatibleProviderMetadataNamespace(providerID)
-    guard let options = result.providerMetadata[namespace], options != .null else { return nil }
-    guard let object = options.objectValue else {
-        throw AIError.invalidArgument(argument: "toolResult.providerOptions.\(namespace)", message: "Tool result options must be an object.")
-    }
-    guard let value = object["additionalTools"] else { return nil }
-    guard let definitions = value.arrayValue else {
-        throw AIError.invalidArgument(argument: "additionalTools", message: "additionalTools must be an array of function definitions.")
-    }
-    let allowed: Set<String> = ["type", "name", "description", "parameters", "strict"]
-    for definition in definitions {
-        guard let definition = definition.objectValue,
-              Set(definition.keys).isSubset(of: allowed),
-              definition["type"]?.stringValue == "function",
-              let name = definition["name"]?.stringValue, !name.isEmpty,
-              definition["parameters"]?.objectValue != nil,
-              definition["description"] == nil || definition["description"]?.stringValue != nil,
-              definition["strict"] == nil || definition["strict"]?.boolValue != nil else {
-            throw AIError.invalidArgument(argument: "additionalTools", message: "Invalid additionalTools function definition.")
+    for key in namespace == "openai" ? [namespace] : [namespace, "openai"] {
+        guard let options = result.providerMetadata[key], options != .null else { continue }
+        guard let object = options.objectValue else {
+            throw AIError.invalidArgument(argument: "toolResult.providerOptions.\(key)", message: "Tool result options must be an object.")
         }
+        if let value = object["additionalTools"] { return try openAIResponsesValidatedAdditionalTools(value) }
     }
-    return definitions
+    return nil
 }
 
 func openAIResponsesWebSearchReplayItem(_ result: AIToolResult, itemID: String) -> JSONValue? {
@@ -1221,6 +1210,10 @@ func openAIResponsesOptions(from extraBody: [String: JSONValue]) -> [String: JSO
         output["reasoning"] = .object(reasoning)
     }
 
+    if var cache = output["prompt_cache_options"]?.objectValue {
+        if let comparison = cache.removeValue(forKey: "comparisonResponseId") { cache["comparison_response_id"] = comparison }
+        output["prompt_cache_options"] = .object(cache)
+    }
     return output
 }
 
@@ -1235,6 +1228,9 @@ func openAIResponsesValidatePromptCacheOptions(_ value: JSONValue?, providerID: 
     }
     if let ttl = options["ttl"], ![JSONValue.string("30m"), .string("12h")].contains(ttl) {
         throw AIError.invalidArgument(argument: "\(argument).ttl", message: "must be 30m or 12h")
+    }
+    if let comparison = options["comparison_response_id"], comparison.stringValue == nil {
+        throw AIError.invalidArgument(argument: "\(argument).comparisonResponseId", message: "must be a string")
     }
     if let prewarm = options["prewarm"], prewarm.boolValue == nil {
         throw AIError.invalidArgument(argument: "\(argument).prewarm", message: "must be a boolean")

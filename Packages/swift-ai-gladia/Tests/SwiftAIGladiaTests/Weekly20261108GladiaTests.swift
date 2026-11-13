@@ -111,6 +111,6 @@ func weekly20261108GladiaValidationBeforeUpload(_ input: JSONValue) async throws
     abort.abort(reason: "custom stop", reasonName: "TimeoutError")
     await #expect(throws: AIAbortError(reason: "custom stop", reasonName: "TimeoutError")) { _ = try await operation.value }
     #expect(await transport.requests().count == 2)
-    #expect(await transport.requests().first?.headers["x-gladia-version"] == "ai-sdk/3.0.77")
+    #expect(await transport.requests().first?.headers["x-gladia-version"] == "ai-sdk/3.0.82")
     await #expect(throws: AIError.self) { _ = try await provider.transcriptionModel().transcribeFromURL(.init(audio: URL(string: "file:///audio.wav")!)) }
 }

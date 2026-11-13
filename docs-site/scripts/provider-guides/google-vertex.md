@@ -1,3 +1,9 @@
+## Current reviewed behavior
+
+The reviewed baseline is `@ai-sdk/google-vertex` 5.0.140. Gemini 4 Carbon uses the shared Gemini request behavior, and Claude Fable 5.2 uses the existing Anthropic hosting policy. Model identifiers remain open strings.
+
+Tool-result files use the caller-configured download transport without Express Mode API keys. MaaS image downloads and every redirect are validated without cloud bearer tokens or provider headers. Abort signals reach downloads and prevent preaborted work before network I/O. Shared native transport tests cover these guarantees; JavaScript Node/edge browser fallback differences remain platform-specific. No browser or live-service parity is claimed.
+
 ## Current Vertex behavior
 
 Vertex inherits the Google structured JSON plus function-tool handling, error/denial envelopes and incremental JSON response parsing. Generic embedding dimensions are forwarded when provider-specific output dimensions are absent. `nano-banana-2.1` selects the generateContent image path and preserves binary or `gs://` image inputs, `IMAGE` response modality, typed aspect ratio and provider `imageConfig`, and returned usage/metadata. Masks and multiple image inputs are rejected. Future model IDs remain open strings. Vertex's Anthropic adapter recognizes the published Haiku 5.5 model family through its shared native implementation.

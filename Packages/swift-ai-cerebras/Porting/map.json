@@ -37,5 +37,5 @@
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
     }
   ],
-  "reviewNote": "2026-11-08: published @ai-sdk/cerebras 3.0.82..3.0.87 source, declarations and matching-release tests reviewed independently. Queue-threshold request header and effective service-tier metadata. Delta review is not a claim of whole-provider parity; existing documented gaps remain."
+  "reviewNote": "2026-11-08: published @ai-sdk/cerebras 3.0.82..3.0.87 source, declarations and matching-release tests reviewed independently. Queue-threshold request header and effective service-tier metadata. Delta review is not a claim of whole-provider parity; existing documented gaps remain. 2026-11-14: each changed published source/declaration and exact-release test delta is reviewed separately in Docs/WeeklyUpstreamAudit20261114.json; native catalog policies retained where equivalent, headers synchronized and TogetherAI schema routing extended. Existing gaps remain."
 }

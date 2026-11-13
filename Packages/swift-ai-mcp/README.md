@@ -13,3 +13,15 @@ and the canonical version ledger. Distribution manifests are catalog-generated.
 ## Behavior notes
 
 OAuth discovery rejects HTTPS-to-HTTP redirects before another request. OAuth requests always include a resource: the canonical server URL with its fragment removed is the fallback when custom validation returns nil. A stored refresh token needs its original authorization-server binding; an unbound token must be cleared before dynamic client registration can save a new binding.
+
+MCP Apps CSP metadata includes `baseUriDomains`; known domain arrays discard
+non-string values while unknown fields remain available. Streamable HTTP
+protocol discovery propagates the original network failure instead of issuing
+legacy initialization against the same unreachable endpoint.
+
+OAuth discovery uses the native DNS-pinned GET path for metadata-derived
+origins. Untrusted token/registration endpoints require an explicitly supplied
+transport that performs connect-time DNS validation. Configured server origins
+retain their trust; new `trustedOrigin:` overloads let direct credential calls
+identify an explicitly configured origin. This value must come from application
+configuration, never response metadata. The original selectors remain available.

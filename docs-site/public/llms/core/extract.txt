@@ -1,0 +1,44 @@
+# Extract fields
+
+Source URL: /core/extract/
+
+`AI.experimentalExtract` reads one evidence state and returns named extraction
+answers. OpenAI, Anthropic and Google expose language-backed extraction adapters
+through their existing structured-generation models. The experimental contract is independent
+of structured text output and Decision questions.
+
+```swift
+import SwiftAI
+import SwiftAIOpenAI
+
+let provider = try OpenAIProvider(configuration: .init(apiKey: "..."))
+let result = try await AI.experimentalExtract(
+    model: provider.extractionModel("gpt-5.5"),
+    state: .text("Invoice total: 1200 yen. Issued on 2026-11-14."),
+    fields: [
+        "total": .init(type: .number, unit: "JPY", integer: true),
+        "issued": .init(type: .date)
+    ],
+    referenceDate: "2026-11-14"
+)
+let total = result.answers["total"]?.value
+```
+
+Fields support text, number, date, time, datetime, duration and lists of text,
+number or date items. Field instructions, units, integer/decimal constraints and
+an optional calendar reference date guide extraction. An absent value is `nil`,
+with a separate `guess` where the model can supply one. Answers retain confidence,
+`pNull`, source evidence, usage and provider metadata. Text source offsets count
+UTF-16 code units. File sources identify the original evidence part.
+
+The facade validates input before model work and checks every returned answer.
+Unsupported field types, malformed/incomplete answers and refusals throw typed
+errors for the complete call. Retry settings and abort signals follow native
+provider conventions. URL evidence uses protected downloads; an explicit
+`download` function can supply an application-owned downloader.
+
+Use `AIProviderRegistry.extractionModel("provider:model")` for a registered
+provider. With the compatibility umbrella, the string overload resolves through
+`AIDefaultProvider`. Its default Gateway provider currently has no extraction
+factory, so configure a capable provider or pass a model explicitly. ScaleDown
+is a discovered upstream provider and is not implemented by this release.

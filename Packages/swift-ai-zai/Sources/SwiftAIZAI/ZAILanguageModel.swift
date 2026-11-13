@@ -186,6 +186,7 @@ private func zaiPreparedRequest(_ request: LanguageModelRequest) throws -> ZAIPr
 
     if request.topK != nil {
         baseWarnings.append(AIWarning(type: "unsupported", feature: "topK"))
+        normalized.topK = nil
     }
     if case let .json(schema, _, _)? = request.responseFormat, schema != nil {
         baseWarnings.append(AIWarning(

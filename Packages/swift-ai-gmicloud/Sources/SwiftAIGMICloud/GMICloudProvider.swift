@@ -5,7 +5,7 @@ import SwiftAIProviderUtilities
 import SwiftAIOpenAICompatible
 
 
-public let gmiCloudProviderVersion = "3.0.58"
+public let gmiCloudProviderVersion = "3.0.63"
 
 public func createGMICloud(configuration settings: GMICloudProviderSettings) throws -> GMICloudProvider {
     try GMICloudProvider(configuration: settings)

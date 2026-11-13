@@ -21,6 +21,7 @@ Legend:
 - `R`: reranking
 - `EV`: evaluation
 - `DC`: decision
+- `EX`: extraction
 - `F`: file upload client
 - `K`: skill upload client
 

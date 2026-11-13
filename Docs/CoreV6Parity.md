@@ -1,6 +1,6 @@
 # Core V7 Parity
 
-Snapshot date: 2026-11-01
+Snapshot date: 2026-11-14
 
 This document tracks SwiftAISDK against the current AI SDK Core and Errors
 reference. It is intentionally high-level: product status belongs in
@@ -9,7 +9,7 @@ and provider behavior belongs in focused tests.
 The current snapshot versions below are generated from `Porting/upstream-lock.json`;
 parity explanations remain hand-authored.
 Implementation-sensitive UI/chat items are also checked against npm source
-snapshots, currently `ai@7.0.165`, `@ai-sdk/provider@4.0.37`, `@ai-sdk/provider-utils@5.0.76`, and `@ai-sdk/react@4.0.169`.
+snapshots, currently `ai@7.0.172`, `@ai-sdk/provider@4.0.38`, `@ai-sdk/provider-utils@5.0.81`, and `@ai-sdk/react@4.0.176`.
 
 References:
 
@@ -880,3 +880,22 @@ they are candidate Swift-native product surfaces for a future SwiftUI layer.
 
 1. Add examples/docs for `AIObjectGenerationSession` and agent UI streams once the public naming settles.
 2. Consider `useCompletion` only if real SwiftUI app code repeatedly needs a dedicated completion session.
+
+## Reviewed 2026-11-14 delta
+
+Extraction V4 is a distinct typed contract with nullable named fields, guesses,
+confidence/source metadata, all-answer validation/refusal failures, retries and
+abort-aware evidence downloads. OpenAI/Anthropic use the language-backed adapter
+(Anthropic splits at 16 fields); Google uses the same language-backed extraction contract. Registries
+and custom fallback providers route it. The compatibility string overload uses
+the configured default provider; Gateway has no extraction factory.
+
+Native UI adds an opt-in observable message queue, per-message options, approval
+ordering, pause/resume and history-reset behavior. Automatic-send predicates remain
+synchronous. Validation stops at the first invalid message/part/citation and
+bounds invalid metadata errors. Tool errors preserve model history by default,
+with explicit display redaction and later-reasoning compatibility warnings.
+Provider-executed error codes bypass application redaction. Browser wire chunks,
+React/DOM rendering, MCP iframes and Promise-specific callback scheduling remain
+platform-only. ModelCapability gains extraction; existing public selectors are
+retained. See WeeklyUpstreamAudit20261114 for the package-by-package evidence.

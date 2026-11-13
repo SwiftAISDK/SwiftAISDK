@@ -21,7 +21,16 @@ func openAIResponsesStreamResponseMetadata(from raw: JSONValue, response: AIHTTP
     )
 }
 
-func openAIResponsesProviderMetadata(from raw: JSONValue, providerID: String) -> [String: JSONValue] {
+func openAIResponsesProviderMetadata(from raw: JSONValue, providerID: String) throws -> [String: JSONValue] {
+    if let diagnostics = raw["prompt_cache_diagnostics"], diagnostics != .null {
+        guard let object = diagnostics.objectValue, object["type"]?.stringValue != nil,
+              object["reason"] == nil || object["reason"] == .null || object["reason"]?.stringValue != nil,
+              ["cache_missed_tokens", "comparison_reusable_tokens"].allSatisfy({ key in
+                  object[key] == nil || object[key] == .null || object[key]?.doubleValue != nil
+              }) else {
+            throw AIError.invalidResponse(provider: providerID, message: "Invalid OpenAI prompt cache diagnostics.")
+        }
+    }
     var metadata: [String: JSONValue] = [:]
     if let responseID = raw["id"] {
         metadata["responseId"] = responseID
@@ -39,6 +48,9 @@ func openAIResponsesProviderMetadata(from raw: JSONValue, providerID: String) ->
         if let safetyIdentifier = raw["safety_identifier"], safetyIdentifier != .null {
             metadata["safetyIdentifier"] = safetyIdentifier
         }
+    }
+    if let diagnostics = raw["prompt_cache_diagnostics"], diagnostics != .null {
+        metadata["promptCacheDiagnostics"] = diagnostics
     }
     if let reasoningContext = raw["reasoning"]?["context"], reasoningContext != .null {
         metadata["reasoningContext"] = reasoningContext

@@ -11,6 +11,7 @@ public struct MiniMaxProviderSettings: Sendable {
     public var apiKeyProvider: (@Sendable () async throws -> String)?
     public var baseURL: String?
     public var videoBaseURL: String?
+    public var imageBaseURL: String?
     public var headers: [String: String]
     public var environment: [String: String]?
     public var transport: any AITransport
@@ -28,9 +29,18 @@ public struct MiniMaxProviderSettings: Sendable {
         self.apiKeyProvider = apiKeyProvider
         self.baseURL = baseURL
         self.videoBaseURL = videoBaseURL
+        self.imageBaseURL = nil
         self.headers = headers
         self.environment = environment
         self.transport = transport
+    }
+
+    public init(apiKey: String? = nil, baseURL: String? = nil, videoBaseURL: String? = nil, imageBaseURL: String?,
+                headers: [String: String] = [:], environment: [String: String]? = nil,
+                transport: any AITransport = URLSessionTransport.shared, apiKeyProvider: (@Sendable () async throws -> String)? = nil) {
+        self.init(apiKey: apiKey, baseURL: baseURL, videoBaseURL: videoBaseURL, headers: headers,
+                  environment: environment, transport: transport, apiKeyProvider: apiKeyProvider)
+        self.imageBaseURL = imageBaseURL
     }
 
     func environmentValue(_ name: String) -> String? {
@@ -41,10 +51,11 @@ public struct MiniMaxProviderSettings: Sendable {
 
 public final class MiniMaxProvider: AIProvider, @unchecked Sendable {
     public let providerID = "minimax"
-    public let supportedCapabilities: Set<ModelCapability> = [.language, .video]
+    public let supportedCapabilities: Set<ModelCapability> = [.language, .image, .video]
 
     private let config: MiniMaxHTTPConfiguration
     private let videoConfig: MiniMaxHTTPConfiguration
+    private let imageConfig: MiniMaxHTTPConfiguration
 
     public init(settings: MiniMaxProviderSettings = MiniMaxProviderSettings()) throws {
         let credentialResolver = settings.apiKeyProvider.map(AIAsyncCredential.init)
@@ -59,7 +70,7 @@ public final class MiniMaxProvider: AIProvider, @unchecked Sendable {
         var languageHeaders = normalizeHeaders(settings.headers)
         languageHeaders["anthropic-version"] = languageHeaders["anthropic-version"] ?? "2023-06-01"
         languageHeaders["x-api-key"] = languageHeaders["x-api-key"] ?? apiKey
-        languageHeaders = withUserAgentSuffix(languageHeaders, "ai-sdk-minimax/3.0.76")
+        languageHeaders = withUserAgentSuffix(languageHeaders, "ai-sdk-minimax/3.0.81")
 
         config = MiniMaxHTTPConfiguration(
             providerID: "minimax.messages",
@@ -71,7 +82,7 @@ public final class MiniMaxProvider: AIProvider, @unchecked Sendable {
 
         var videoHeaders = normalizeHeaders(settings.headers)
         videoHeaders["authorization"] = videoHeaders["authorization"] ?? "Bearer \(apiKey)"
-        videoHeaders = withUserAgentSuffix(videoHeaders, "ai-sdk-minimax/3.0.76")
+        videoHeaders = withUserAgentSuffix(videoHeaders, "ai-sdk-minimax/3.0.81")
         videoConfig = MiniMaxHTTPConfiguration(
             providerID: "minimax.video",
             baseURL: settings.videoBaseURL ?? "https://api.minimax.io",
@@ -79,7 +90,10 @@ public final class MiniMaxProvider: AIProvider, @unchecked Sendable {
             transport: settings.transport,
             credentialResolver: credentialResolver
         )
+        imageConfig = MiniMaxHTTPConfiguration(providerID: "minimax.image", baseURL: settings.imageBaseURL ?? "https://api.minimax.io/v1", headers: videoHeaders, transport: settings.transport, credentialResolver: credentialResolver)
     }
+
+    public func image(_ modelID: String) -> MiniMaxImageModel { MiniMaxImageModel(modelID: modelID, config: imageConfig) }
 
     public func languageModel(_ modelID: String) throws -> any LanguageModel {
         AnthropicLanguageModel(
@@ -97,7 +111,7 @@ public final class MiniMaxProvider: AIProvider, @unchecked Sendable {
     }
 
     public func imageModel(_ modelID: String) throws -> any ImageModel {
-        throw AIError.unsupportedModel(provider: providerID, capability: .image, modelID: modelID)
+        image(modelID)
     }
 
     public func transcriptionModel(_ modelID: String) throws -> any TranscriptionModel {

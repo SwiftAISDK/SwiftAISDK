@@ -4,9 +4,9 @@ import SwiftAITransport
 import SwiftAIProviderUtilities
 import SwiftAIOpenAICompatible
 
-public final class OpenAIProvider: AIProvider, AIEvaluationProvider, AIDecisionProvider, Sendable {
+public final class OpenAIProvider: AIProvider, AIEvaluationProvider, AIDecisionProvider, AIExtractionProvider, Sendable {
     public let providerID: String
-    public let supportedCapabilities: Set<ModelCapability> = [.language, .completion, .embedding, .image, .transcription, .speech, .evaluation, .decision]
+    public let supportedCapabilities: Set<ModelCapability> = [.language, .completion, .embedding, .image, .transcription, .speech, .evaluation, .decision, .extraction]
     private let config: OpenAIModelConfiguration
     private let settings: OpenAIProviderSettings
 
@@ -21,10 +21,11 @@ public final class OpenAIProvider: AIProvider, AIEvaluationProvider, AIDecisionP
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
         if let organization = settings.organization { headers["openai-organization"] = headers["openai-organization"] ?? organization }
         if let project = settings.project { headers["openai-project"] = headers["openai-project"] ?? project }
-        headers = withUserAgentSuffix(headers, "ai-sdk-openai/4.0.111")
+        headers = withUserAgentSuffix(headers, "ai-sdk-openai/4.0.117")
         let baseURL = withoutTrailingSlash(settings.baseURL ?? settings.environmentValue(["OPENAI_BASE_URL"]) ?? "https://api.openai.com/v1")
         var config = OpenAIModelConfiguration(http: AIProviderHTTPClient(providerID: providerID, headers: headers, transport: settings.transport, credentialResolver: credential,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: settings.queryParams) }), baseURL: baseURL, openAIBackedProviderRoot: providerID)
+        config.downloadTransport = settings.transport
         config.webSocketTransport = settings.webSocketTransport
         config.transformRequestBody = settings.transformRequestBody; config.batchResultMaxLineBytes = settings.batchResultDownloads?.maxLineBytes
         config.strictResponseInput = settings.strictResponseInput; config.supportsStructuredOutputs = settings.supportsStructuredOutputs
@@ -47,6 +48,9 @@ public final class OpenAIProvider: AIProvider, AIEvaluationProvider, AIDecisionP
     public func transcriptionModel(_ modelID: String) throws -> any TranscriptionModel { OpenAICompatibleTranscriptionModel(modelID: modelID, config: config.withProviderID("\(providerID).transcription")) }
     public func streamingTranscriptionModel(_ modelID: String) -> any StreamingTranscriptionModel { OpenAICompatibleTranscriptionModel(modelID: modelID, config: config.withProviderID("\(providerID).transcription")) }
     public func speechModel(_ modelID: String) throws -> any SpeechModel { OpenAICompatibleSpeechModel(modelID: modelID, config: config.withProviderID("\(providerID).speech")) }
+    public func extractionModel(_ modelID: String) throws -> any AIExtractionModelV4 {
+        AIExtractionLanguageModel(model: try languageModel(modelID), providerID: "\(providerID).extraction")
+    }
     public func decisionModel(_ modelID: String) throws -> any AIDecisionModelV4 { OpenAIDecisionModel(modelID: modelID, config: config.withProviderID("\(providerID).decision")) }
     public func evaluationModel(_ modelID: String) throws -> any AIEvaluationModelV4 { OpenAIDecisionModel(modelID: modelID, config: config.withProviderID("\(providerID).evaluation")) }
     public func experimentalDecisionModel(_ modelID: String) throws -> any AIDecisionModelV4 { try decisionModel(modelID) }

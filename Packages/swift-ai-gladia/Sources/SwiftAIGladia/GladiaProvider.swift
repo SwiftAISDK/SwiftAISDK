@@ -51,8 +51,8 @@ public final class GladiaProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["x-gladia-key"] = headers["x-gladia-key"] ?? "\(key)"
-        headers["x-gladia-version"] = headers["x-gladia-version"] ?? "ai-sdk/3.0.77"
-        headers = withUserAgentSuffix(headers, "ai-sdk-gladia/3.0.77")
+        headers["x-gladia-version"] = headers["x-gladia-version"] ?? "ai-sdk/3.0.82"
+        headers = withUserAgentSuffix(headers, "ai-sdk-gladia/3.0.82")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.gladia.io")
         let http = AIProviderHTTPClient(providerID: "gladia", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

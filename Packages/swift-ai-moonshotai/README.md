@@ -22,3 +22,7 @@ The canonical repository owns all edits. Distribution manifests and repositories
 are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
 
 See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/moonshotai.md) for authentication, options and supported surfaces.
+
+## Current upstream review
+
+The reviewed baseline is `@ai-sdk/moonshotai` 3.0.92. MFJS schema conversion now traverses array and tuple children once, retaining existing `prefixItems` before rewritten tuple entries. Nested unions, boolean schemas and source input values preserve their established behavior. The change avoids repeated recursive work for deeply nested array schemas without changing wire output.

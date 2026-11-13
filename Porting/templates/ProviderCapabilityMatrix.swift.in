@@ -74,6 +74,7 @@ public enum AIProviderCapabilities {
             "- `R`: reranking",
             "- `EV`: evaluation",
             "- `DC`: decision",
+            "- `EX`: extraction",
             "- `F`: file upload client",
             "- `K`: skill upload client",
             "",
@@ -197,6 +198,7 @@ private let capabilityColumns: [(label: String, capability: ModelCapability)] = 
     ("R", .reranking),
     ("EV", .evaluation),
     ("DC", .decision),
+    ("EX", .extraction),
 ]
 
 private func escapeMarkdownTable(_ value: String) -> String {

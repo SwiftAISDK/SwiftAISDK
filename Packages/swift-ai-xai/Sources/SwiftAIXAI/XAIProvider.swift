@@ -53,7 +53,7 @@ public final class XAIProvider: AIProvider, Sendable {
         self.configuration = configuration
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-xai/5.0.40")
+        headers = withUserAgentSuffix(headers, "ai-sdk-xai/5.0.45")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.x.ai/v1")
         self.baseURL = baseURL
         self.http = AIProviderHTTPClient(providerID: "xai", headers: headers, transport: configuration.transport, credentialResolver: credentialResolver,

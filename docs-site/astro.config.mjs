@@ -48,6 +48,7 @@ export default defineConfig({
             { label: 'Batch text', slug: 'core/batch-text' },
             { label: 'Structured output', slug: 'core/structured-output' },
             { label: 'Decisions', slug: 'core/decide' },
+            { label: 'Extract fields', slug: 'core/extract' },
             { label: 'Evaluation compatibility', slug: 'core/evaluate' },
             { label: 'Tools', slug: 'core/tools' },
             { label: 'Model metadata', slug: 'core/model-metadata' },

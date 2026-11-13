@@ -75,7 +75,11 @@ the model performs work.
 - `output` for the final validated output
 - `source`, `warning`, `metadata`, `responseMetadata`, `finish`, and `raw` for surrounding stream state
 
-Partial object and array parsing uses the Swift partial JSON repair path, so incomplete trailing fragments can be ignored while already-complete fields or elements continue to stream.
+Partial objects use Swift partial JSON repair. Array streams commit an element
+when the next element starts or the enclosing object closes. Raw and typed
+partial arrays contain the same committed elements. Updates follow text chunks,
+which the object facade may coalesce; one chunk can commit several elements
+together. The last element remains pending until its boundary is confirmed.
 
 Typed object and array streams accept the same `streamRetries` option as raw
 `streamText`. A retryable in-band provider error can restart the whole typed

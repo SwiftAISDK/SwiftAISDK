@@ -1,3 +1,7 @@
+## Current reviewed behavior
+
+The reviewed baseline is `@ai-sdk/moonshotai` 3.0.92. MFJS schema conversion now traverses array and tuple children once, retaining existing `prefixItems` before rewritten tuple entries. Nested unions, boolean schemas and source input values preserve their established behavior. The change avoids repeated recursive work for deeply nested array schemas without changing wire output.
+
 ## Structured output model support
 
 Every Moonshot model ID, including legacy `moonshot-v1-*` and custom/future IDs, forwards JSON Schema structured output. Capability detection no longer depends on the `kimi-k` family prefix.

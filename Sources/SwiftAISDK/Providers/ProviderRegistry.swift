@@ -16,7 +16,7 @@ extension AIProviders {
         if let project = settings.project {
             settings.headers["OpenAI-Project"] = settings.headers["OpenAI-Project"] ?? project
         }
-        return try OpenAICompatibleProvider(providerID: providerID, defaultBaseURL: "https://api.openai.com/v1", authorization: .bearer(environmentVariables: ["OPENAI_API_KEY"]), supportedCapabilities: [.language, .completion, .embedding, .image, .transcription, .speech], settings: settings, routesLikeOpenAI: true, userAgentSuffix: "ai-sdk-openai/4.0.111", supportsProviderOwnedBatch: true)
+        return try OpenAICompatibleProvider(providerID: providerID, defaultBaseURL: "https://api.openai.com/v1", authorization: .bearer(environmentVariables: ["OPENAI_API_KEY"]), supportedCapabilities: [.language, .completion, .embedding, .image, .transcription, .speech], settings: settings, routesLikeOpenAI: true, userAgentSuffix: "ai-sdk-openai/4.0.117", supportsProviderOwnedBatch: true)
     }
 
     public static func anthropic(settings: ProviderSettings = ProviderSettings()) throws -> AnthropicProvider {
@@ -334,7 +334,7 @@ extension AIProviders {
             headers: headers,
             transport: settings.transport,
             dynamicHeaders: dynamicHeaders,
-            userAgentSuffix: userAgentSuffix ?? "ai-sdk-open-responses/2.0.77",
+            userAgentSuffix: userAgentSuffix ?? "ai-sdk-open-responses/2.0.82",
             includeUsage: settings.includeUsage,
             queryParams: settings.queryParams,
             supportsStructuredOutputs: structuredOutputs,
@@ -424,7 +424,7 @@ extension AIProviders {
         return try OpenAICompatibleProvider(
             providerID: "topaz", defaultBaseURL: "https://api.topazlabs.com",
             authorization: .apiKeyHeader(name: "x-api-key", environmentVariables: ["TOPAZ_API_KEY"]),
-            supportedCapabilities: [.image, .video], settings: settings, userAgentSuffix: "ai-sdk-topaz/3.0.19"
+            supportedCapabilities: [.image, .video], settings: settings, userAgentSuffix: "ai-sdk-topaz/3.0.24"
         )
     }
 

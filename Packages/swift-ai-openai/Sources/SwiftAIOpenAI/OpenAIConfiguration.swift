@@ -53,6 +53,8 @@ public struct OpenAIProviderSettings: Sendable {
 public struct OpenAIModelConfiguration: Sendable {
     public var http: AIProviderHTTPClient
     public var baseURL: String
+    /// Unauthenticated transport for untrusted image input URLs.
+    public var downloadTransport: (any AITransport)?
     public var openAIBackedProviderRoot: String?
     public var transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])?
     public var batchResultMaxLineBytes: Int?
@@ -94,6 +96,7 @@ public struct OpenAIModelConfiguration: Sendable {
 
     public func compatibleConfiguration() -> OpenAICompatibleModelConfiguration {
         var result = OpenAICompatibleModelConfiguration(http: http, baseURL: baseURL)
+        result.downloadTransport = downloadTransport
         if let root = openAIBackedProviderRoot { result.wireProfile = .openAI(namespace: root) }
         result.usesGenericOpenAICompatibleProviderOptions = false
         result.allowsEmptyTextResponse = false

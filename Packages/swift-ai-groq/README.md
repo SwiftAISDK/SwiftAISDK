@@ -11,3 +11,7 @@ See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/b
 ## Behavior notes
 
 `transcribeFromURL` sends HTTP(S) audio URLs without userinfo directly to Groq and removes fragments. It returns nil only for Groq's HTTP 400 redirect-fetch limitation, allowing the facade to use its secure downloader; authentication and other media failures propagate. Plain-text transcription responses work for both URL and file input. Tool replay preserves valid JSON argument text and quotes malformed text.
+
+## Current upstream review
+
+The reviewed baseline is `@ai-sdk/groq` 4.0.83. Published runtime source, declarations and matching-release tests are unchanged from 4.0.78 apart from dependency/version propagation. The user-agent suffix now identifies the reviewed npm baseline. Existing URL transcription, timestamp and language behavior remain unchanged.

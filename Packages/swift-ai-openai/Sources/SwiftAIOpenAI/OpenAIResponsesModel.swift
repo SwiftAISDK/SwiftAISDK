@@ -8,6 +8,7 @@ import SwiftAIOpenAICompatible
 public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sendable {
     public let providerID: String
     public let modelID: String
+    public var telemetryRedactor: AITelemetryRedactor? { openAIRedactedTelemetry }
     private let config: OpenAIModelConfiguration
 
     public init(modelID: String, config: OpenAIModelConfiguration) {
@@ -91,7 +92,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         let isPrewarmResponse = prepared.body["prompt_cache_options"]?["prewarm"]?.boolValue == true
             && raw["status"]?.stringValue == "completed"
             && raw["output"]?.arrayValue?.isEmpty == true
-        guard let text = text ?? ((!toolCalls.isEmpty || hasReasoning || isPrewarmResponse) ? "" : nil) else {
+        guard let text = text ?? ((!toolCalls.isEmpty || hasReasoning || isPrewarmResponse || raw["output"]?.arrayValue?.isEmpty == true) ? "" : nil) else {
             throw AIError.invalidResponse(provider: providerID, message: "No output text found in responses API response.")
         }
         let hasClientToolCalls = toolCalls.contains { !$0.providerExecuted }
@@ -129,7 +130,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             toolResults: toolResults,
             toolApprovalRequests: toolApprovalRequests,
             sources: sources,
-            providerMetadata: openAIResponsesProviderMetadata(from: raw, providerID: providerID),
+            providerMetadata: try openAIResponsesProviderMetadata(from: raw, providerID: providerID),
             rawValue: raw,
             warnings: prepared.warnings,
             requestMetadata: AIRequestMetadata(body: .object(prepared.body), headers: request.headers, url: httpRequest.url.absoluteString),
@@ -322,7 +323,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             ))
                         }
                         openAICompatibleMergeProviderMetadata(
-                            openAIResponsesProviderMetadata(from: responsePayload, providerID: providerID),
+                            try openAIResponsesProviderMetadata(from: responsePayload, providerID: providerID),
                             into: &providerMetadata
                         )
                         if openAIResponsesStreamEventStartsOutput(raw) {
@@ -748,6 +749,9 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         let isEffectiveReasoningModel = openAIResponsesEffectiveReasoningModel(modelID: modelID, options: options)
         let isOpenAIBacked = isOpenAIBackedProvider(providerID, config: config)
         var warnings = openResponsesWarnings(for: request)
+        let requestTextFormat = try options.removeValue(forKey: "textFormat").map {
+            try openAIResponsesNormalizedTextFormat($0, warnings: &warnings)
+        }
         if isOpenAIBacked {
             try openAIResponsesValidatePromptCacheOptions(options["prompt_cache_options"], providerID: providerID)
             warnings.append(contentsOf: openAIResponsesOpenAIBackedWarnings(options: options))
@@ -823,11 +827,11 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         let capabilities = openAILanguageModelCapabilities(modelID)
         let configurationUpdateUnsupportedReason: String?
         if !capabilities.supportsConfigurationUpdate {
-            configurationUpdateUnsupportedReason = "reasoningEffortUpdate is only supported by GPT-6 and later models"
+            configurationUpdateUnsupportedReason = "Configuration updates are only supported by GPT-6 and later models"
         } else if options["reasoning"]?["mode"]?.stringValue == "pro"
             || options["context_management"] != nil
             || options["truncation"]?.stringValue == "auto" {
-            configurationUpdateUnsupportedReason = "reasoningEffortUpdate requires standard reasoning mode without automatic compaction or automatic truncation"
+            configurationUpdateUnsupportedReason = "Configuration updates require standard reasoning mode without automatic compaction or automatic truncation"
         } else {
             configurationUpdateUnsupportedReason = nil
         }
@@ -835,7 +839,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
 
         let compactionTrigger = (options.removeValue(forKey: "compactionTrigger")
             ?? options.removeValue(forKey: "compaction_trigger"))?.boolValue == true
-        let preparedMessages = openAIResponsesMessagesByCollapsingParallelToolResults(
+        let preparedMessages = try openAIResponsesMessagesByCollapsingParallelToolResults(
             request.messages,
             providerID: providerID,
             hasConversation: hasConversation,
@@ -914,7 +918,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                 && input[index]["type"]?.stringValue == "configuration_update" {
                 throw AIError.invalidArgument(
                     argument: "messages",
-                    message: "Adjacent reasoning effort configuration updates are not supported."
+                    message: "Configuration updates cannot be consecutive. Set reasoningEffortUpdate and textFormatUpdate in the same empty system message, and omit request-level reasoningEffortUpdate when using message-level updates."
                 )
             }
         }
@@ -922,7 +926,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             input.append(.object(["type": .string("compaction_trigger")]))
         }
         var samplingOptions = options
-        for item in input where item["type"]?.stringValue == "configuration_update" {
+        for item in input where item["type"]?.stringValue == "configuration_update" && item["reasoning"]?["effort"] != nil {
             var reasoning = samplingOptions["reasoning"]?.objectValue ?? [:]
             reasoning["effort"] = item["reasoning"]?["effort"]
             samplingOptions["reasoning"] = .object(reasoning)
@@ -962,7 +966,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         }
         let strictJsonSchema = body.removeValue(forKey: "strictJsonSchema")
         let normalizedResponseFormat: AIResponseFormat?
-        if isOpenAIBacked,
+        if isOpenAIBacked, requestTextFormat == nil,
            case let .json(schema?, name, description) = request.responseFormat {
             let normalized = try normalizeOpenAIJSONSchema(schema)
             normalizedResponseFormat = .json(schema: normalized.schema, name: name, description: description)
@@ -970,7 +974,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         } else {
             normalizedResponseFormat = request.responseFormat
         }
-        if let textFormat = openAIResponsesTextFormat(from: normalizedResponseFormat, strictJsonSchema: strictJsonSchema) {
+        if let textFormat = requestTextFormat ?? openAIResponsesTextFormat(from: normalizedResponseFormat, strictJsonSchema: strictJsonSchema) {
             var text = body["text"]?.objectValue ?? [:]
             text["format"] = textFormat
             body["text"] = .object(text)

@@ -147,3 +147,16 @@ Adding a selected provider starts with one `sdk.mjs package add` registration.
 Manifests, package indexes, CI selection and export inputs are generated. An empty
 or unreviewed scaffold cannot be released. This migration does not automatically
 select newly discovered upstream packages or claim complete upstream parity.
+
+## 2026-11-14 additive APIs
+
+`ModelCapability` gains `.extraction`. Consumers with exhaustive switches must
+add that case (or an appropriate unknown/default branch). This follows the
+project's additive minor-release convention; old selectors remain available.
+
+UI message validation now reports the first invalid array element; code that
+expects every issue should validate elements individually. Chat queuing is opt-in
+through `experimentalQueue: true`; the old initializer retains immediate sends.
+Tool-error redaction is an explicit presentation choice because it can change
+model-visible reasoning history. Google keeps existing nondecision model IDs on
+the language adapter; use `nativeDecisionModel` for custom native decision IDs.

@@ -214,6 +214,26 @@ extension AI {
     }
 
 
+    public static func experimentalDecide(
+        model: any AIDecisionModelV4,
+        state: AIDecisionState,
+        questions: [String: AIDecisionQuestion],
+        maxOutputTokens: Int? = nil,
+        reasoning: String? = nil,
+        maxRetries: Int? = nil,
+        abortSignal: AIAbortSignal? = nil,
+        download: AIDownloadFunction?,
+        headers: [String: String] = [:],
+        providerOptions: [String: JSONValue] = [:],
+        telemetry: Telemetry.Options? = nil,
+        runtimeContext: [String: JSONValue] = [:],
+        onStart: AICallback<AIDecisionStartEvent>? = nil,
+        onEnd: AICallback<AIDecisionEndEvent>? = nil
+    ) async throws -> AIDecisionResult {
+        return try await SwiftAI.AI.experimentalDecide(model: model, state: state, questions: questions, maxOutputTokens: maxOutputTokens, reasoning: reasoning, maxRetries: maxRetries, abortSignal: abortSignal, download: download, headers: headers, providerOptions: providerOptions, telemetry: telemetry, runtimeContext: runtimeContext, onStart: onStart, onEnd: onEnd)
+    }
+
+
     /// Decides with either a direct model or a default-provider model ID.
     public static func experimentalDecide(
         model reference: AIDecisionModelReference,
@@ -231,6 +251,26 @@ extension AI {
         onEnd: AICallback<AIDecisionEndEvent>? = nil
     ) async throws -> AIDecisionResult {
         return try await SwiftAI.AI.experimentalDecide(model: .model(try compatibilityResolveDecisionModel(reference)), state: state, questions: questions, maxOutputTokens: maxOutputTokens, reasoning: reasoning, maxRetries: maxRetries, abortSignal: abortSignal, headers: headers, providerOptions: providerOptions, telemetry: telemetry, runtimeContext: runtimeContext, onStart: onStart, onEnd: onEnd)
+    }
+
+
+    public static func experimentalDecide(
+        model reference: AIDecisionModelReference,
+        state: AIDecisionState,
+        questions: [String: AIDecisionQuestion],
+        maxOutputTokens: Int? = nil,
+        reasoning: String? = nil,
+        maxRetries: Int? = nil,
+        abortSignal: AIAbortSignal? = nil,
+        download: AIDownloadFunction?,
+        headers: [String: String] = [:],
+        providerOptions: [String: JSONValue] = [:],
+        telemetry: Telemetry.Options? = nil,
+        runtimeContext: [String: JSONValue] = [:],
+        onStart: AICallback<AIDecisionStartEvent>? = nil,
+        onEnd: AICallback<AIDecisionEndEvent>? = nil
+    ) async throws -> AIDecisionResult {
+        return try await SwiftAI.AI.experimentalDecide(model: .model(try compatibilityResolveDecisionModel(reference)), state: state, questions: questions, maxOutputTokens: maxOutputTokens, reasoning: reasoning, maxRetries: maxRetries, abortSignal: abortSignal, download: download, headers: headers, providerOptions: providerOptions, telemetry: telemetry, runtimeContext: runtimeContext, onStart: onStart, onEnd: onEnd)
     }
 
     /// Source-compatible direct-model entry point retained from SwiftAISDK 1.9.0.
@@ -329,6 +369,23 @@ extension AI {
         onEnd: AICallback<AIEvaluationEndEvent>? = nil
     ) async throws -> AIEvaluationResult {
         return try await SwiftAI.AI.experimentalEvaluate(model: .model(try compatibilityResolveEvaluationModel(reference)), stateParts: stateParts, questions: questions, maxRetries: maxRetries, abortSignal: abortSignal, headers: headers, providerOptions: providerOptions, telemetry: telemetry, runtimeContext: runtimeContext, onStart: onStart, onEnd: onEnd)
+    }
+
+    /// Extracts every requested field from shared evidence or fails the entire call.
+    public static func experimentalExtract(
+        model: any AIExtractionModelV4,
+        state: AIDecisionState,
+        fields: [String: AIExtractionField],
+        referenceDate: String? = nil,
+        maxOutputTokens: Int? = nil,
+        reasoning: String? = nil,
+        maxRetries: Int? = nil,
+        abortSignal: AIAbortSignal? = nil,
+        download: AIDownloadFunction? = nil,
+        headers: [String: String] = [:],
+        providerOptions: [String: JSONValue] = [:]
+    ) async throws -> AIExtractionResult {
+        return try await SwiftAI.AI.experimentalExtract(model: model, state: state, fields: fields, referenceDate: referenceDate, maxOutputTokens: maxOutputTokens, reasoning: reasoning, maxRetries: maxRetries, abortSignal: abortSignal, download: download, headers: headers, providerOptions: providerOptions)
     }
 
     public static func generateObject<Object: Decodable & Sendable>(
@@ -1859,7 +1916,7 @@ public static func rerank(
     }
 }
 
-public final class AICustomProvider: AIFileProvider, AISkillsProvider, AIEvaluationProvider, AIDecisionProvider, Sendable {
+public final class AICustomProvider: AIFileProvider, AISkillsProvider, AIEvaluationProvider, AIDecisionProvider, AIExtractionProvider, Sendable {
     private let base: SwiftAI.AICustomProvider
     public var providerID: String { base.providerID }
     public var supportedCapabilities: Set<ModelCapability> { base.supportedCapabilities }
@@ -1981,6 +2038,11 @@ public final class AICustomProvider: AIFileProvider, AISkillsProvider, AIEvaluat
 
     public func decisionModel(_ modelID: String) throws -> any AIDecisionModelV4 {
         return try base.decisionModel(modelID)
+    }
+
+
+    public func extractionModel(_ modelID: String) throws -> any AIExtractionModelV4 {
+        return try base.extractionModel(modelID)
     }
 
 

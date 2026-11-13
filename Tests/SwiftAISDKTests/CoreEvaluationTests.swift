@@ -47,7 +47,7 @@ struct CoreEvaluationTests {
         #expect(model.callCount == 1)
         #expect(model.lastOptions?.state == ["message": "refund", "history": ["hello"]])
         #expect(model.lastOptions?.headers["custom"] == "value")
-        #expect(model.lastOptions?.headers["user-agent"] == "ai/7.0.165")
+        #expect(model.lastOptions?.headers["user-agent"] == "ai/7.0.172")
         #expect(model.lastOptions?.providerOptions == ["test": ["option": true]])
         #expect(model.lastOptions?.abortSignal === controller.signal)
         #expect(result.answers == answers)

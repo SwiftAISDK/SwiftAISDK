@@ -144,7 +144,7 @@ func openAICompatibleChatWarnings(for request: LanguageModelRequest, providerID:
             warnings.append(contentsOf: openAICompatibleProviderOptionWarnings(from: request.extraBody, providerID: providerID, includeCompatibilityNamespace: true))
         }
     }
-    if isOpenAIBacked, request.topK != nil {
+    if isOpenAIBacked || usesGenericProviderOptions, request.topK != nil {
         warnings.append(AIWarning(type: "unsupported", feature: "topK"))
     }
     if isOpenAIBacked, request.providerOptions["openai"]?["reasoningSummary"] != nil,

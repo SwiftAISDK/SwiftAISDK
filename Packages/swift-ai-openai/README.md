@@ -39,6 +39,12 @@ model catalogs, authentication/defaults, Responses and audio behavior are owned 
 `OpenAIProvider` is the native concrete factory type; the legacy OpenAI factory's
 `SwiftAISDK.OpenAICompatibleProvider` return type remains unchanged.
 
+## Current provider behavior
+
+The provider exposes `extractionModel(_:)` for experimental typed nullable field extraction through Responses. `providerOptions.openai.textFormat` fixes the initial text format independently of Output parsing; empty system messages can replay `textFormatUpdate`, `reasoningEffortUpdate` and `additionalTools` at their original position. Format changes require GPT-6 or later with standard reasoning and no automatic compaction/truncation. Combine consecutive format and reasoning changes in one empty control message. Additional tools accept function, custom and namespace definitions; hosted adapters also read OpenAI tool-result options.
+
+Set `promptCacheOptions.comparisonResponseId` to request comparison diagnostics. `providerMetadata.openai.promptCacheDiagnostics` preserves their raw fields across unary, streaming and batch results. OpenAI tool credentials are removed from telemetry copies while request/response values returned to applications remain intact. Image file, mask and markup downloads use the configured raw transport, without Azure provider credentials.
+
 ## Porting and verification
 
 Run `swift test --package-path Packages/swift-ai-openai --no-parallel` from the

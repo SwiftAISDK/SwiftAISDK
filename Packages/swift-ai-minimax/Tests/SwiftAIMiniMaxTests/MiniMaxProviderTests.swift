@@ -22,7 +22,7 @@ import Testing
     let chatModel = try provider.chat("minimax-m2.1")
 
     #expect(provider.providerID == "minimax")
-    #expect(provider.supportedCapabilities == [.language, .video])
+    #expect(provider.supportedCapabilities == [.language, .image, .video])
     #expect(callableModel.providerID == "minimax.messages")
     #expect(languageModel.providerID == "minimax.messages")
     #expect(chatModel.providerID == "minimax.messages")
@@ -37,7 +37,7 @@ import Testing
     #expect(requests.allSatisfy { $0.url.absoluteString == "https://api.minimax.io/anthropic/v1/messages" })
     #expect(requests.allSatisfy { $0.headers["x-api-key"] == "env-key" })
     #expect(requests.allSatisfy { $0.headers["anthropic-version"] == "2023-06-01" })
-    #expect(requests.allSatisfy { $0.headers["user-agent"] == "ai-sdk-minimax/3.0.76" })
+    #expect(requests.allSatisfy { $0.headers["user-agent"] == "ai-sdk-minimax/3.0.81" })
 }
 
 @Test func miniMaxCustomConfigurationMatchesUpstreamHeaderPrecedence() async throws {
@@ -66,7 +66,7 @@ import Testing
     #expect(request.headers["x-api-key"] == "header-key")
     #expect(request.headers["anthropic-version"] == "custom-version")
     #expect(request.headers["x-custom"] == "custom-value")
-    #expect(request.headers["user-agent"] == "CustomApp/1.0 ai-sdk-minimax/3.0.76")
+    #expect(request.headers["user-agent"] == "CustomApp/1.0 ai-sdk-minimax/3.0.81")
 }
 
 @Test func miniMaxRequiresAPIKeyLikeUpstream() throws {
@@ -91,9 +91,7 @@ import Testing
     #expect(throws: AIError.unsupportedModel(provider: "minimax", capability: .embedding, modelID: "embed")) {
         _ = try provider.textEmbeddingModel("embed")
     }
-    #expect(throws: AIError.unsupportedModel(provider: "minimax", capability: .image, modelID: "image")) {
-        _ = try provider.imageModel("image")
-    }
+    #expect(try provider.imageModel("MiniMax-H3-Image").providerID == "minimax.image")
 }
 
 @Test func miniMaxReasoningRequestAndResponseMatchUpstreamFixture() async throws {
@@ -377,7 +375,7 @@ import Testing
     #expect(requests[0].headers["authorization"] == "Bearer video-key")
     #expect(requests[0].headers["x-api-key"] == nil)
     #expect(requests[0].headers["anthropic-version"] == nil)
-    #expect(requests[0].headers["user-agent"] == "ai-sdk-minimax/3.0.76")
+    #expect(requests[0].headers["user-agent"] == "ai-sdk-minimax/3.0.81")
     #expect(requests[0].headers["x-request"] == "video")
     let body = try decodeJSONBody(try #require(requests[0].body))
     #expect(body["model"]?.stringValue == "MiniMax-H3")

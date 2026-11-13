@@ -38,7 +38,7 @@ public final class RevAIProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-revai/3.0.76")
+        headers = withUserAgentSuffix(headers, "ai-sdk-revai/3.0.81")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.rev.ai")
         let http = AIProviderHTTPClient(providerID: "revai", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

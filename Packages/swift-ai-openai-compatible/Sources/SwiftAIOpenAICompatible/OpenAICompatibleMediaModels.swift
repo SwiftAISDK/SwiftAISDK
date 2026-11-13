@@ -148,7 +148,7 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
             let resolved = try await openAICompatibleResolveImageFile(
                 file,
                 providerID: providerID,
-                transport: config.transport,
+                transport: config.downloadTransport ?? config.transport,
                 abortSignal: request.abortSignal
             )
             form.appendFile(name: "image", fileName: resolved.fileName, mimeType: resolved.mediaType, data: resolved.data)
@@ -157,7 +157,7 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
             let resolved = try await openAICompatibleResolveImageFile(
                 mask,
                 providerID: providerID,
-                transport: config.transport,
+                transport: config.downloadTransport ?? config.transport,
                 abortSignal: request.abortSignal
             )
             form.appendFile(name: "mask", fileName: resolved.fileName, mimeType: resolved.mediaType, data: resolved.data)
@@ -186,7 +186,7 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
                 guard header.hasSuffix(";base64"), let data = Data(base64Encoded: String(markup[markup.index(after: comma)...])) else { throw AIError.invalidArgument(argument: "providerOptions.openai.markup", message: "`markup` data URLs must be base64 encoded.") }
                 bytes = data; mediaType = String(header.dropLast(7)).isEmpty ? "image/png" : String(header.dropLast(7))
             } else {
-                let response = try await downloadURL(markup, transport: config.transport, abortSignal: request.abortSignal)
+                let response = try await downloadURL(markup, transport: config.downloadTransport ?? config.transport, abortSignal: request.abortSignal)
                 guard (200..<300).contains(response.statusCode) else { throw apiCallError(provider: providerID, response: response) }
                 bytes = response.body; mediaType = response.headers.contentType ?? "image/png"
             }

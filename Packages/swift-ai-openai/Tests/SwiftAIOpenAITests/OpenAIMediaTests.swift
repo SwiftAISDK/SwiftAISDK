@@ -513,7 +513,7 @@ import Testing
     let request = try #require(await transport.requests().first)
     #expect(request.url.absoluteString == "https://api.openai.com/v1/images/edits")
     #expect(request.headers["authorization"] == "Bearer test-key")
-    #expect(request.headers["user-agent"] == "ai-sdk-openai/4.0.111")
+    #expect(request.headers["user-agent"] == "ai-sdk-openai/4.0.117")
     #expect(request.headers["content-type"]?.hasPrefix("multipart/form-data; boundary=SwiftAISDK-") == true)
     let body = try #require(request.body)
     #expect(body.range(of: Data(#"name="model""#.utf8)) != nil)
@@ -531,7 +531,7 @@ import Testing
 }
 
 @Test func openAIImageEditForwardsAbortSignalToURLImageAndMaskDownloadsLikeUpstream() async throws {
-    for downloadTarget in ["image", "mask"] {
+    for downloadTarget in ["image", "mask", "markup"] {
         let transport = OpenAIImageEditDownloadAbortTransport()
         let provider = try AIProviders.openAI(configuration: OpenAIProviderSettings(apiKey: "test-key", transport: transport))
         let model = try provider.imageModel("gpt-image-1")
@@ -548,6 +548,7 @@ import Testing
                 prompt: "edit",
                 files: files,
                 mask: mask,
+                providerOptions: downloadTarget == "markup" ? ["openai": ["markup": "https://example.com/markup.png"]] : [:],
                 abortSignal: controller.signal
             ))
         }

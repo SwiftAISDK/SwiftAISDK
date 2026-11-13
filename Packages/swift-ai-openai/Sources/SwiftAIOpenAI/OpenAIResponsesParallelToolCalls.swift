@@ -9,7 +9,7 @@ struct OpenAIResponsesParallelToolCallMetadata: Equatable {
     var itemID: String
     var toolCallID: String
     var toolName: String
-    var input: String
+    var input: String?
     var index: Int
     var count: Int
 }
@@ -26,7 +26,7 @@ private func openAIResponsesSameParallelToolCall(
     lhs.itemID == rhs.itemID
         && lhs.toolCallID == rhs.toolCallID
         && lhs.toolName == rhs.toolName
-        && lhs.input == rhs.input
+        && (lhs.input == nil || rhs.input == nil || lhs.input == rhs.input)
         && lhs.count == rhs.count
 }
 
@@ -81,20 +81,18 @@ func openAIResponsesExpandedParallelToolCalls(
         guard !name.isEmpty, functionToolNames.contains(name) else {
             return nil
         }
+        var parallelMetadata: [String: JSONValue] = [
+            "itemId": .string(itemID), "toolCallId": .string(toolCall.id), "toolName": .string(toolCall.name),
+            "index": .number(Double(index)), "count": .number(Double(toolUses.count))
+        ]
+        if index == 0 { parallelMetadata["input"] = .string(toolCall.arguments) }
         expanded.append(AIToolCall(
             id: "\(toolCall.id)_\(index)",
             name: name,
             arguments: openAIResponsesJSONString(parameters) ?? "{}",
             providerMetadata: [
                 providerOptionsName: .object([
-                    "parallelToolCall": .object([
-                        "itemId": .string(itemID),
-                        "toolCallId": .string(toolCall.id),
-                        "toolName": .string(toolCall.name),
-                        "input": .string(toolCall.arguments),
-                        "index": .number(Double(index)),
-                        "count": .number(Double(toolUses.count))
-                    ])
+                    "parallelToolCall": .object(parallelMetadata)
                 ])
             ]
         ))
@@ -113,7 +111,7 @@ func openAIResponsesParallelToolCallMetadata(
           let itemID = value["itemId"]?.stringValue,
           let toolCallID = value["toolCallId"]?.stringValue,
           let toolName = value["toolName"]?.stringValue,
-          let input = value["input"]?.stringValue,
+          value["input"] == nil || value["input"]?.stringValue != nil,
           let index = value["index"]?.intValue,
           let count = value["count"]?.intValue,
           index >= 0,
@@ -124,7 +122,7 @@ func openAIResponsesParallelToolCallMetadata(
         itemID: itemID,
         toolCallID: toolCallID,
         toolName: toolName,
-        input: input,
+        input: value["input"]?.stringValue,
         index: index,
         count: count
     )
@@ -154,6 +152,7 @@ func openAIResponsesCompleteParallelToolResultGroups(
                     || group.results[metadata.index] != nil {
                     group.invalid = true
                 } else {
+                    if group.metadata.input == nil, metadata.input != nil { group.metadata = metadata }
                     group.results[metadata.index] = result
                 }
                 pending[metadata.toolCallID] = group
@@ -170,7 +169,7 @@ func openAIResponsesCompleteParallelToolResultGroups(
     var complete: [String: OpenAIResponsesParallelToolResultGroup] = [:]
     for (toolCallID, group) in pending where !group.invalid && group.results.count == group.metadata.count {
         let ordered = (0..<group.metadata.count).compactMap { group.results[$0] }
-        guard ordered.count == group.metadata.count else { continue }
+        guard ordered.count == group.metadata.count, group.metadata.input != nil else { continue }
         complete[toolCallID] = OpenAIResponsesParallelToolResultGroup(
             metadata: group.metadata,
             results: ordered
@@ -186,7 +185,7 @@ func openAIResponsesMessagesByCollapsingParallelToolResults(
     hasPreviousResponseID: Bool,
     outputSchemaToolNames: Set<String>,
     warnings: inout [AIWarning]
-) -> [AIMessage] {
+) throws -> [AIMessage] {
     guard hasConversation || hasPreviousResponseID else { return messages }
     let groups = openAIResponsesCompleteParallelToolResultGroups(
         from: messages,
@@ -196,7 +195,7 @@ func openAIResponsesMessagesByCollapsingParallelToolResults(
 
     var emittedCalls: Set<String> = []
     var emittedResults: Set<String> = []
-    return messages.map { message in
+    return try messages.map { message in
         var message = message
         var content: [AIContentPart] = []
         for part in message.content {
@@ -215,7 +214,7 @@ func openAIResponsesMessagesByCollapsingParallelToolResults(
                     content.append(.toolCall(AIToolCall(
                         id: metadata.toolCallID,
                         name: metadata.toolName,
-                        arguments: metadata.input
+                        arguments: group.metadata.input!
                     )))
                 }
             case let .toolResult(result):
@@ -266,7 +265,10 @@ func openAIResponsesMessagesByCollapsingParallelToolResults(
                     content.append(.toolResult(AIToolResult(
                         toolCallID: metadata.toolCallID,
                         toolName: metadata.toolName,
-                        result: collapsedResult
+                        result: collapsedResult,
+                        providerMetadata: ["__swiftParallelAdditionalTools": .array(try group.results.compactMap {
+                            try openAIResponsesAdditionalTools($0, providerID: providerID).map(JSONValue.array)
+                        })]
                     )))
                 }
             default:

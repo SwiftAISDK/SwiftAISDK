@@ -11,3 +11,9 @@ See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/b
 ## Behavior notes
 
 Agent requests with `toolChoice: "none"` omit native and function tool definitions and set `max_tool_calls` to zero, including presets. Conversation tool-call history is preserved.
+
+## Current upstream review
+
+The reviewed baseline is `@ai-sdk/perplexity` 5.0.34. Native decisions accept `PerplexityDecisionModelOptions(mode: .webGrounding, maxStaleness: 0)`. `mode` sends `web_grounding`; maximum staleness is a nonnegative integer representing fetched-page age in seconds, including zero.
+
+Results expose `searchResults`, `fetchedResults` and exact `toolCalls` invocation counts under `providerMetadata.perplexity`. Missing invocation counts remain null and reported zeros are preserved. HTTP failures retain grounding-count headers and retryability. Unknown decision options still produce unsupported warnings; invalid grounding options fail before HTTP.

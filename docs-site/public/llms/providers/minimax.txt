@@ -13,7 +13,23 @@ Source URL: /providers/minimax/
 ## Capabilities
 
 - Language
+- Image
 - Video
+
+## Current reviewed behavior
+
+The reviewed baseline is `@ai-sdk/minimax` 3.0.81. `image("MiniMax-H3-Image")` and `imageModel("MiniMax-H3-Image-Highspeed")` now support text-to-image and reference-image editing. `MiniMaxProviderSettings.imageBaseURL` defaults to `https://api.minimax.io/v1`; the existing settings initializer selector remains available.
+
+```swift
+let image = try await provider.image("MiniMax-H3-Image").generateImage(.init(
+    prompt: "A red circle", aspectRatio: "1:1", count: 2,
+    providerOptions: MiniMaxImageModelOptions(area: .twoK, outputFormat: .png).providerOptions
+))
+```
+
+Requests use `/images/generations` or `/images/edits`, always request URL output and securely download successful images through the configured transport. Bearer tokens and provider headers are omitted from downloads. Results contain normalized base64 images, per-image size/revised prompt, output format/request ID and usage details (request usage appears once in per-image metadata).
+
+The maximum advertised batch size is ten. Individual image failures become warnings while successful images survive; seed is unsupported, masks fail before HTTP, and edits warn and omit the generation-only prompt-enhancement option. Compression accepts integers from 0 through 100. Async credentials continue to resolve only for authenticated provider requests.
 
 ## M3.1 reasoning and sampling
 
@@ -76,7 +92,7 @@ invalid or null tier values fail before I/O.
 
 ## Notes
 
-MiniMax language and video models mirror upstream 3.0.76: `MINIMAX_API_KEY`, separate language/video base URLs, custom headers, versioned user-agent suffix, callable provider plus `languageModel`/`chat` and `video`/`videoModel` aliases, and `minimax.messages`/`minimax.video` provider IDs. Language reuses the Anthropic Messages request builder, error handling, streaming lifecycle, telemetry metadata, and ordered generate-content parser, including signed/redacted reasoning, citation metadata, compaction, and adaptive/disabled thinking options. MiniMax H3/H3-Max video uses model-aware 480P/768P/2K tiers, duration bounds, audio support, and reference-input validation, and covers text-to-video, first/last-frame and reference-to-video inputs, 2K resolution and ratio mapping, reference audio, text-to-video `16:9` default/fallback behavior, duration/cap warnings, submit/poll lifecycle, aborts, structured errors, response/provider metadata, and custom polling controls. Embedding and image families remain unsupported. Status polling now follows only validated redirects and never forwards credentials away from the configured origin. The 2026-10-23 pass: M3.1+ and future model IDs support image/video inputs and reasoning effort; older M2 families remain text-only. MiniMax cache options and sampling semantics use the compatible Messages hooks. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied.
+MiniMax language and video models mirror upstream 3.0.81: `MINIMAX_API_KEY`, separate language/video base URLs, custom headers, versioned user-agent suffix, callable provider plus `languageModel`/`chat` and `video`/`videoModel` aliases, and `minimax.messages`/`minimax.video` provider IDs. Language reuses the Anthropic Messages request builder, error handling, streaming lifecycle, telemetry metadata, and ordered generate-content parser, including signed/redacted reasoning, citation metadata, compaction, and adaptive/disabled thinking options. MiniMax H3/H3-Max video uses model-aware 480P/768P/2K tiers, duration bounds, audio support, and reference-input validation, and covers text-to-video, first/last-frame and reference-to-video inputs, 2K resolution and ratio mapping, reference audio, text-to-video `16:9` default/fallback behavior, duration/cap warnings, submit/poll lifecycle, aborts, structured errors, response/provider metadata, and custom polling controls. Embedding remains unsupported. Status polling now follows only validated redirects and never forwards credentials away from the configured origin. The 2026-10-23 pass: M3.1+ and future model IDs support image/video inputs and reasoning effort; older M2 families remain text-only. MiniMax cache options and sampling semantics use the compatible Messages hooks. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

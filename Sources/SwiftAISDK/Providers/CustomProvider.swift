@@ -60,6 +60,18 @@ public enum AIDefaultProvider {
         return try validateDecisionModelVersion(decisionProvider.decisionModel(modelID))
     }
 
+    public static func resolveExtractionModel(_ modelID: String) throws -> any AIExtractionModelV4 {
+        let provider = try resolved()
+        guard let extractionProvider = provider as? any AIExtractionProvider else {
+            throw AIError.unsupportedModel(provider: provider.providerID, capability: .extraction, modelID: modelID)
+        }
+        let model = try extractionProvider.extractionModel(modelID)
+        guard model.specificationVersion == "v4" else {
+            throw AIError.invalidResponse(provider: model.providerID, message: "Unsupported extraction model specification version: \(model.specificationVersion)")
+        }
+        return model
+    }
+
     public static func withProvider<Result>(
         _ provider: any AIProvider,
         operation: () throws -> Result

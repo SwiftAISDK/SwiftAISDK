@@ -1,6 +1,6 @@
 # Porting Status
 
-Snapshot date: 2026-11-08
+Snapshot date: 2026-11-14
 
 SwiftAISDK currently ports the provider-facing parts of Vercel AI SDK into a
 SwiftPM library. The package has a broad Swift-native facade, provider registry,
@@ -36,6 +36,32 @@ skips), exported-package tests, independent-version consumers and iOS compilatio
 Public 3.0.0 and 2.8.1 consumers compiled and ran. Hosted Swift 6.3.3 source tests
 also passed; the redundant full migration workflow was cancelled to conserve CI.
 Automatic CI now selects relevant checks, without migration rehearsals.
+
+## Weekly upstream review (2026-11-14)
+
+Fresh npm metadata finds 52 differing baselines among 54 tracked packages. All
+52 comparisons have 104 integrity-verified archives and 1705 exact immutable
+release-test files; no fallback snapshot is treated as release evidence. Separate
+npm search returns 76 scoped names and the exact registry prefix returns 96.
+All 43 unimplemented published packages have separately verified old/latest
+archives and per-package source/entrypoint dispositions.
+
+Two new usable providers are reported without implementation: Tencent 3.0.3
+(TokenHub language/video plus TC3-signed VOD), and ScaleDown 3.0.1 (Decision and
+Extraction). Inception 0.0.0 is only a seed. Previously discovered Parallel is
+still unimplemented at 3.0.9. A separate ScaleDown vertical is the recommended
+next small port, reusing the new native Decision/Extraction contracts.
+
+This pass adds Extraction V4, native Google Decisions, DeepSeek Responses and
+web search, MiniMax H3 images, current provider controls/metadata, reusable
+compatible request/response conversion, telemetry-copy credential redaction,
+protected downloads/OAuth, and native UI message queues/bounded validation.
+Exact per-package decisions, tests and retained gaps are in
+[WeeklyUpstreamAudit20261114.md](WeeklyUpstreamAudit20261114.md). All mandatory
+local checks passed: 52 owning packages, 1731 facade tests, deterministic exports
+and 106 minimum/latest clients, tooling and the 101-page documentation build.
+Publication awaits the source commit and exact-source hosted CI; no full-package
+or paid live-service parity is claimed.
 
 ## Weekly upstream review (2026-11-08)
 

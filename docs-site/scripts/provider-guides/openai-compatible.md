@@ -1,3 +1,8 @@
+## Current reviewed behavior
+
+`OpenAICompatibleChatModel.prepareRequest(_:)` returns `(body: JSONValue, warnings: [AIWarning])` for unary generation without sending a request. It applies request transforms and reasoning/option warnings while omitting streaming fields. `convertResponse(body:providerOptions:)` converts an already received JSON body through the same content, tool, usage and metadata logic; the native metadata wrappers remain empty for absent HTTP information. A custom model configuration can set `downloadTransport` for unauthenticated image URLs.
+
+
 ## Request transforms with warnings
 
 ```swift

@@ -122,7 +122,7 @@ import SwiftAI
 
     let request = try #require(await transport.requests().first)
     #expect(request.headers["authorization"] == "Bearer mistral-key")
-    #expect(request.headers["user-agent"] == "custom-client/1.0 ai-sdk-mistral/4.0.81")
+    #expect(request.headers["user-agent"] == "custom-client/1.0 ai-sdk-mistral/4.0.86")
 }
 @Test func mistralMissingFinishReasonMapsToOtherAndUsageCountsCache() async throws {
     let transport = RecordingTransport(response: jsonResponse("""

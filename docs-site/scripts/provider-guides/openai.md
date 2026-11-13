@@ -1,3 +1,10 @@
+## Current reviewed behavior
+
+The provider exposes `extractionModel(_:)` for experimental typed nullable field extraction through Responses. `providerOptions.openai.textFormat` fixes the initial text format independently of Output parsing; empty system messages can replay `textFormatUpdate`, `reasoningEffortUpdate` and `additionalTools` at their original position. Format changes require GPT-6 or later with standard reasoning and no automatic compaction/truncation. Combine consecutive format and reasoning changes in one empty control message. Additional tools accept function, custom and namespace definitions; hosted adapters also read OpenAI tool-result options.
+
+Set `promptCacheOptions.comparisonResponseId` to request comparison diagnostics. `providerMetadata.openai.promptCacheDiagnostics` preserves their raw fields across unary, streaming and batch results. OpenAI tool credentials are removed from telemetry copies while request/response values returned to applications remain intact. Image file, mask and markup downloads use the configured raw transport, without Azure provider credentials.
+
+
 ## Decisions and current Responses behavior
 
 Use `provider.decisionModel("gpt-6-luna")` with [`AI.experimentalDecide`](../../core/decide/). OpenAI Decisions send `/decisions`, named questions and inline image evidence; the experimental Evaluation entry points remain available through the same native implementation. Choice, score and boolean questions can omit instructions. Boolean criteria still become predicate instructions. The native Decisions endpoint ignores `maxOutputTokens` and `reasoning`, reporting an unsupported warning for each supplied setting.

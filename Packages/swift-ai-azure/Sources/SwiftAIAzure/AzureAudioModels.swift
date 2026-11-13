@@ -40,7 +40,7 @@ struct AzureAudioConfig: Sendable {
 
     func requestHeaders(api: String) -> [String: String] {
         let authentication = tokenProvider == nil ? apiKey.map { [api == "speech" ? "Ocp-Apim-Subscription-Key" : "api-key": $0] } ?? [:] : [:]
-        return withUserAgentSuffix(authentication.mergingHeaders(headers), "ai-sdk-azure/4.0.119")
+        return withUserAgentSuffix(authentication.mergingHeaders(headers), "ai-sdk-azure/4.0.125")
     }
 }
 

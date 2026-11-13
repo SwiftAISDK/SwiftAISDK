@@ -46,7 +46,7 @@ public final class TogetherAIProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-togetherai/3.0.88")
+        headers = withUserAgentSuffix(headers, "ai-sdk-togetherai/3.0.93")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.together.xyz/v1")
         let http = AIProviderHTTPClient(providerID: "togetherai", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })
@@ -55,7 +55,7 @@ public final class TogetherAIProvider: AIProvider, Sendable {
 
     public func languageModel(_ modelID: String) throws -> any LanguageModel {
         var wire = compatibleConfiguration(surface: "chat")
-        wire.supportsStructuredOutputs = config.supportsStructuredOutputs || modelID == "deepseek-ai/DeepSeek-V4-Flash-0731"
+        wire.supportsStructuredOutputs = config.supportsStructuredOutputs || togetherAIJSONSchemaModelIDs.contains(modelID)
         return OpenAICompatibleChatModel(modelID: modelID, config: wire)
     }
 
@@ -104,6 +104,19 @@ public final class TogetherAIProvider: AIProvider, Sendable {
 
     public func chatModel(_ modelID: String) throws -> any LanguageModel { try languageModel(modelID) }
 }
+
+// Exact IDs verified by the upstream catalog. Unknown IDs keep the JSON-object
+// fallback instead of promising that the service will enforce a JSON schema.
+private let togetherAIJSONSchemaModelIDs: Set<String> = [
+    "deepseek-ai/DeepSeek-V4-Flash-0731",
+    "deepseek-ai/DeepSeek-V4.1-Flash",
+    "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+    "openai/gpt-oss-120b",
+    "zai-org/GLM-5.2",
+    "zai-org/GLM-5.3-Flash",
+    "moonshotai/Kimi-K3",
+    "MiniMaxAI/MiniMax-M3.1-Flash"
+]
 
 public extension AIProviders {
     static func togetherAI(configuration: TogetherAIProviderSettings) throws -> TogetherAIProvider {

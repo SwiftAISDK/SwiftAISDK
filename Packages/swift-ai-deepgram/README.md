@@ -1,6 +1,6 @@
 # SwiftAIDeepgram
 
-Swift-native port of `@ai-sdk/deepgram`, reviewed through npm 3.1.48. The canonical
+Swift-native port of `@ai-sdk/deepgram`, reviewed through npm 3.1.53. The canonical
 SwiftAISDK repository owns all source edits; this repository is its deterministic
 standalone export.
 

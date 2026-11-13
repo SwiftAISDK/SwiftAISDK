@@ -38,7 +38,7 @@ public final class ProdiaProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-prodia/2.0.78")
+        headers = withUserAgentSuffix(headers, "ai-sdk-prodia/2.0.83")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://inference.prodia.com/v2")
         let http = AIProviderHTTPClient(providerID: "prodia", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

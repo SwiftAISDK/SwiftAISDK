@@ -3,13 +3,13 @@
   "packages": [
     {
       "name": "@ai-sdk/alibaba",
-      "reviewedVersion": "2.0.85",
+      "reviewedVersion": "2.0.90",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.alibaba`, `AlibabaLanguageModel`, `AlibabaEmbeddingModel`, `AlibabaProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.alibaba`, `AlibabaLanguageModel`, `AlibabaEmbeddingModel`, `AlibabaProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-68eVWQCTozBYknLCz8PPY9sHfmWC+L4SAR2u04g8Dgak7Be40tccAijz675pdOAlDfXrBVYCPlk4MLxomCP+KQ==",
-      "sourceRef": "npm:@ai-sdk/alibaba@2.0.85",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-5ogjM08UXY4pnjDX9WgATTRw1uMq0ySMyeBFGeciGfVwyP4GFPOHoNU2IUGNXmWeiqaLJ07tuOlzDiB7Ozmf3Q==",
+      "sourceRef": "npm:@ai-sdk/alibaba@2.0.90",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "EmbeddingModelV4",
@@ -17,17 +17,17 @@
         "ProviderV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/amazon-bedrock",
-      "reviewedVersion": "5.0.135",
+      "reviewedVersion": "5.0.141",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.amazonBedrock`, `AIProviders.amazonBedrockAnthropic`, `AIProviders.bedrockMantle`, `AmazonBedrockModels.swift`, `AmazonBedrockTests.swift`, `AnthropicBedrockUpstream202609Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.amazonBedrock`, `AIProviders.amazonBedrockAnthropic`, `AIProviders.bedrockMantle`, `AmazonBedrockModels.swift`, `AmazonBedrockTests.swift`, `AnthropicBedrockUpstream202609Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-3iP20eXI5JaWJZCV/dKMBsAbhTtz+6rHpkm2KP6OF5tQqgpQkI/UldOpCmGDEUJuyAIHy40fA3RJEEdtUvqCrg==",
-      "sourceRef": "npm:@ai-sdk/amazon-bedrock@5.0.135",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-PB0K1fM/Ic4Xui7JpgJqwidMMATk0ZwktA32dm0SQMhdzdjvecUg8UmwK4+ZWcc5A2hLl37WSFLTM8dQ4GAZlg==",
+      "sourceRef": "npm:@ai-sdk/amazon-bedrock@5.0.141",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "EmbeddingModelV4",
@@ -36,66 +36,67 @@
         "ProviderV4",
         "RerankingModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/anthropic",
-      "reviewedVersion": "4.0.99",
+      "reviewedVersion": "4.0.104",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.anthropic`, `AnthropicLanguageModel`, `AnthropicBatchLanguageModel`, `AnthropicTools`, `AnthropicTests.swift`, `AnthropicBatchV4UpstreamTests.swift`, `AnthropicBedrockUpstream202609Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.anthropic`, `AnthropicLanguageModel`, `AnthropicBatchLanguageModel`, `AnthropicTools`, `AnthropicTests.swift`, `AnthropicBatchV4UpstreamTests.swift`, `AnthropicBedrockUpstream202609Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-N5VA8soxdvb+eX5jKs7g+a0RahCXNnvnzT96/Hiqm+LxoLFO2U8dSYhWKrQjG1i04LM/itp8vCVl7RCn6Kvohg==",
-      "sourceRef": "npm:@ai-sdk/anthropic@4.0.99",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-8Es3QS7oeNH72O5LbeZMS+AP0Jf7bYJR80GgrOEZ0yGA6A4hnJ+QgFiIeUrzqSiVlqDTTNCk73NxXW2iwqSQuQ==",
+      "sourceRef": "npm:@ai-sdk/anthropic@4.0.104",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "DecisionModelV4",
+        "ExtractionModelV4",
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/anthropic-aws",
-      "reviewedVersion": "2.0.92",
+      "reviewedVersion": "2.0.97",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.anthropicAWS`, `AnthropicAWSProvider`, `AnthropicTests.swift`, `AnthropicBedrockUpstream202609Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.anthropicAWS`, `AnthropicAWSProvider`, `AnthropicTests.swift`, `AnthropicBedrockUpstream202609Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-FHBZKihin6Ddj65gwDVtazlWXQQa0Ypixdakmw3KEDQzNu79i47yUUY+g6LDYLPZnLhjDkL+MOSyhe6O530M+A==",
-      "sourceRef": "npm:@ai-sdk/anthropic-aws@2.0.92",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-2xNpW327UbW268XaB6SgcMTIuWClCd9ghI0ly4ArMzOXXMA8dtjzbd8dXYTfozdjGyMmhtbIx/eVoFakIF1cvQ==",
+      "sourceRef": "npm:@ai-sdk/anthropic-aws@2.0.97",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/assemblyai",
-      "reviewedVersion": "3.0.77",
+      "reviewedVersion": "3.0.82",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.assemblyAI`, `AssemblyAITranscriptionModel`, `AssemblyAIProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.assemblyAI`, `AssemblyAITranscriptionModel`, `AssemblyAIProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-8YdQP6/LDm0+i/oSrGD2F5sS/68BgJUWTYYU9ZcTU5VjvD/d+XYy6mEkGrDRX9gHwwjoHZ3r0jLAzSYDhj5Sxg==",
-      "sourceRef": "npm:@ai-sdk/assemblyai@3.0.77",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-t0TAScmFfg9S2FacQH7D8DIAoRhNHStEkPbmLuL0eVsHNUc0lklg/Uc1bMPmZ+fLjlrWS4vava8fyL5BSvRorw==",
+      "sourceRef": "npm:@ai-sdk/assemblyai@3.0.82",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ProviderV4",
         "TranscriptionModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/azure",
-      "reviewedVersion": "4.0.119",
+      "reviewedVersion": "4.0.125",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.azure`, `AzureOpenAIProvider`, `AzureOpenAITools`, `AlibabaProdiaAzureQuiverTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.azure`, `AzureOpenAIProvider`, `AzureOpenAITools`, `AlibabaProdiaAzureQuiverTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-8HZsSqhuIpNUakRHvaI7SY3BqMQ5iv0zOfK/uk+idcJREvJPCNvGa7Rn5vMlxlYi2zcALdAKQ9GgysDMMh3J6w==",
-      "sourceRef": "npm:@ai-sdk/azure@4.0.119",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-ifCA1n6gecWnC6ZvXTebSKNqQs48F2FEkCVF9mhOWjDP0d5f3KwzjiaVvSIgFZF+Hu3BtfY0A3cKM8lcIH3LlQ==",
+      "sourceRef": "npm:@ai-sdk/azure@4.0.125",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "EmbeddingModelV4",
@@ -105,68 +106,68 @@
         "SpeechModelV4",
         "TranscriptionModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/baseten",
-      "reviewedVersion": "2.1.65",
+      "reviewedVersion": "2.1.70",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.baseten`, `OpenAICompatibleProvider`, `BasetenProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.baseten`, `OpenAICompatibleProvider`, `BasetenProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-shlKxcU1GXT0IKqu39e1F2WDTP67JTqIuhG/HHyWfMcgrK6dLGiFOE+WaRSDGE0veyfklqbNZdyt/UyFpUFFSQ==",
-      "sourceRef": "npm:@ai-sdk/baseten@2.1.65",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-Di6x62q79FSbq833g1RNPB+hTZ36YeRNKur/MEnrO8FLpfhJXjYUpFnXI+OZZ/HbdKMnfPXwP24EOLW1c5F8lQ==",
+      "sourceRef": "npm:@ai-sdk/baseten@2.1.70",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "EmbeddingModelV4",
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/black-forest-labs",
-      "reviewedVersion": "2.0.79",
+      "reviewedVersion": "2.0.84",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.blackForestLabs`, `BlackForestLabsImageModel`, `BlackForestLabsVideoModel`, `AsyncVideoModel`, `BlackForestLabsVideoModelTests.swift`, `BlackForestLabsVideoOperationTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.blackForestLabs`, `BlackForestLabsImageModel`, `BlackForestLabsVideoModel`, `AsyncVideoModel`, `BlackForestLabsVideoModelTests.swift`, `BlackForestLabsVideoOperationTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-glGZxu+Tz/tGczFKn4vQL47WzO8GPY3Sc1WKDL4v/RoyhDtROdSTSijHago0+zNTfTUj0Wf1bn/NWcAkD/sSjA==",
-      "sourceRef": "npm:@ai-sdk/black-forest-labs@2.0.79",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-0rnCdU/8tr2xGPj+uBaozPtO0MjFAd+peSpjrpERZWNS6BFerLRqfnjc6KpYBDOfIHNYfuZ1ceEGRYnveHqdMQ==",
+      "sourceRef": "npm:@ai-sdk/black-forest-labs@2.0.84",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ImageModelV4",
         "ProviderV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/bytedance",
-      "reviewedVersion": "2.0.80",
+      "reviewedVersion": "2.0.85",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.byteDance`, `ByteDanceVideoModel`, `AsyncVideoModel`, `ByteDanceProviderTests.swift`, `ByteDanceAsyncVideoUpstreamParityTests.swift`, `MediaStatusRedirectUpstreamTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.byteDance`, `ByteDanceVideoModel`, `AsyncVideoModel`, `ByteDanceProviderTests.swift`, `ByteDanceAsyncVideoUpstreamParityTests.swift`, `MediaStatusRedirectUpstreamTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-0esNLzlz0OOKR/XKuSs6KfhiQYwO7Ae53vytHUNZYFm5WSMe2tLZ+eyLebUQlDzcpQtCApMcxWWgc3aKnaE3gA==",
-      "sourceRef": "npm:@ai-sdk/bytedance@2.0.80",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-CWglEsLI6NQ5nSZbJIN9dkmfzhsyruhwsw335kpYx2RSASz+of9WyOzEafVlTyFnM+ATuvAY94EO+EXdcCfg5Q==",
+      "sourceRef": "npm:@ai-sdk/bytedance@2.0.85",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ImageModelV4",
         "ProviderV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/cartesia",
-      "reviewedVersion": "3.0.71",
+      "reviewedVersion": "3.0.76",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.cartesia`, `CartesiaProvider`, `CartesiaSpeechModel`, `CartesiaTranscriptionModel`, `CartesiaStreamingTranscriptionModel`, `Cartesia*Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.cartesia`, `CartesiaProvider`, `CartesiaSpeechModel`, `CartesiaTranscriptionModel`, `CartesiaStreamingTranscriptionModel`, `Cartesia*Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-YWs9rV4e/2dYIInON31FRsRM46lg7Vx7huFnj7An3Mqzhd5VbG/W4HvPgij3INvs5QOEVmr0BDzYFIHxeRlO6g==",
-      "sourceRef": "npm:@ai-sdk/cartesia@3.0.71",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-zJCzWKVpjGxcfrfqoH3gwe7nV8BgtKv4Sk9agBZ5qIgGtEILL1Xo26I+oUyask+6Tp9o5ZiAAp8EDJzQ6Tx3Eg==",
+      "sourceRef": "npm:@ai-sdk/cartesia@3.0.76",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ProviderV4",
@@ -174,33 +175,33 @@
         "SpeechModelV4",
         "TranscriptionModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/cerebras",
-      "reviewedVersion": "3.0.87",
+      "reviewedVersion": "3.0.92",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.cerebras`, `CerebrasLanguageModel`, `CerebrasProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.cerebras`, `CerebrasLanguageModel`, `CerebrasProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-0UvtQOu5rp8qtrtWKO+sckC56WGro1KxhGbvBwGGna6EOITi4cKmMavfjcXfupb4Pph+0IHZBQ8zfB7zYIeNpQ==",
-      "sourceRef": "npm:@ai-sdk/cerebras@3.0.87",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-hr0MgQhUUTQu5AfdX/wRZCEO87QfBs6mGxdOff37bxlGtZEBRjyqSpcA0En9OTaLFZFLF2uZAh4TAkxmcgTdyQ==",
+      "sourceRef": "npm:@ai-sdk/cerebras@3.0.92",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/cohere",
-      "reviewedVersion": "4.0.78",
+      "reviewedVersion": "4.0.83",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.cohere`, `CohereLanguageModel`, `CohereEmbeddingModel`, `CohereRerankingModel`, `CohereMistralVoyageTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.cohere`, `CohereLanguageModel`, `CohereEmbeddingModel`, `CohereRerankingModel`, `CohereMistralVoyageTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-qhM+PT8PQ95AkaWsXi8Zbe9PEC6HEwvtxYjJ4Y1E5/a6gk8XVivl/AZIk8QE1+hWAnnAYSu5k79e7VEM9icaWA==",
-      "sourceRef": "npm:@ai-sdk/cohere@4.0.78",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-voUBankBr2xcHjPX7idUSl7krspgoHHYEdPyYFalqMves1T0WvMZr1exkENslQtjhDqxyCWhuwqzjyqxUz/rcA==",
+      "sourceRef": "npm:@ai-sdk/cohere@4.0.83",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "EmbeddingModelV4",
@@ -208,34 +209,34 @@
         "ProviderV4",
         "RerankingModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/deepgram",
-      "reviewedVersion": "3.1.48",
+      "reviewedVersion": "3.1.53",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.deepgram`, `DeepgramTranscriptionModel`, `DeepgramSpeechModel`, `DeepgramProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.deepgram`, `DeepgramTranscriptionModel`, `DeepgramSpeechModel`, `DeepgramProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-65igB58P8Jy4TEtI00uC3QaJYSfuPrFU0KIrMU+loABxWNoHJJBVfDqct3xCPTT22z4diGiPOWGGcyMNSJSgNQ==",
-      "sourceRef": "npm:@ai-sdk/deepgram@3.1.48",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-JPL6I3WU+9KpEXXagA1Rz2WDRVh0NhX0sAAqBa3I0rPEKag/62rTV4OPIPCJAM7GOWbzwVjGOGsYG/m4RIJQqw==",
+      "sourceRef": "npm:@ai-sdk/deepgram@3.1.53",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ProviderV4",
         "SpeechModelV4",
         "TranscriptionModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/deepinfra",
-      "reviewedVersion": "3.0.87",
+      "reviewedVersion": "3.0.92",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.deepInfra`, `OpenAICompatibleProvider`, `DeepInfraProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.deepInfra`, `OpenAICompatibleProvider`, `DeepInfraProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-AJnsIoPIHbG0VAjp7R/DFY0XWSANkzY/aiw7yD5wWjCSnX72z6Ms/GYBlZExRwTwbvBNeoGvmOxMEp/pbPVowQ==",
-      "sourceRef": "npm:@ai-sdk/deepinfra@3.0.87",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-ES6XAbS1ZJPA5wv9akeDybJe8Vb2G+vO8tjgWlsOHSQUu5xL56YU5AORBPcmOyNelW0ES988IFbxRS1mi/AiLg==",
+      "sourceRef": "npm:@ai-sdk/deepinfra@3.0.92",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "EmbeddingModelV4",
@@ -243,50 +244,50 @@
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/deepseek",
-      "reviewedVersion": "3.0.81",
+      "reviewedVersion": "3.0.86",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.deepSeek`, `DeepSeekLanguageModel`, `DeepSeekFileClient`, `DeepSeekProviderTests.swift`, `DeepSeekVisionAndFilesUpstreamParityTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.deepSeek`, `DeepSeekLanguageModel`, `DeepSeekFileClient`, `DeepSeekProviderTests.swift`, `DeepSeekVisionAndFilesUpstreamParityTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-oaW8zX9NxdyTkL/f6fxePmMK9uYoaE9ZgJFhGTag+D+evofzTyYYGNoVabV++dXIlYmhMOE+mfAPApApjnrBrw==",
-      "sourceRef": "npm:@ai-sdk/deepseek@3.0.81",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-QtkTSY1ugev+ZP8uFwqD2334w+FfdheWcr7qxZ/jI50gQbLCc4tE0KSD+d8WxPdqzBnqNBkTcFqVaiOJAB7orQ==",
+      "sourceRef": "npm:@ai-sdk/deepseek@3.0.86",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/elevenlabs",
-      "reviewedVersion": "3.0.81",
+      "reviewedVersion": "3.0.86",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.elevenLabs`, `ElevenLabsSpeechModel`, `ElevenLabsTranscriptionModel`, `ElevenLabsProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.elevenLabs`, `ElevenLabsSpeechModel`, `ElevenLabsTranscriptionModel`, `ElevenLabsProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-v5e7baVtX8S5VTiSEPHFav+lsAuhBpFiWJK60y9X2sN0f73penjIj8Z1HCqp8bwtPkRo6HJeQhZ8ZZzwZ5Sw7Q==",
-      "sourceRef": "npm:@ai-sdk/elevenlabs@3.0.81",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-L/OVfGJrcGIGM4vTMvadwQvu6MWRyPZlscbeOxMcn08a6Gpq9fQsET7z8yLWLJDzUA+nFgY+KON6bMnDcKuSlw==",
+      "sourceRef": "npm:@ai-sdk/elevenlabs@3.0.86",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ProviderV4",
         "SpeechModelV4",
         "TranscriptionModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/fal",
-      "reviewedVersion": "3.0.78",
+      "reviewedVersion": "3.0.83",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.fal`, `FalMediaProviderTests.swift`, `FalProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.fal`, `FalMediaProviderTests.swift`, `FalProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-7WGYKRMb8ZZ7ZCmWf+CDB3/1PGiJ2thj8mkiGR0TeKXEzQRimeE2WmXl6YlxPuhtjdIgODvoWgngFTp5jXwtVQ==",
-      "sourceRef": "npm:@ai-sdk/fal@3.0.78",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-LwfMPQfbh8W7Cxta5VDEr9W+WPDo4//XmrGCJJ7+AnteGChgJBHyElu+SueO9ez5VwoT/fb1KPi8dN5WC6XoTw==",
+      "sourceRef": "npm:@ai-sdk/fal@3.0.83",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ImageModelV4",
@@ -295,34 +296,34 @@
         "TranscriptionModelV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/fish-audio",
-      "reviewedVersion": "3.0.54",
+      "reviewedVersion": "3.0.59",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.fishAudio`, `FishAudioProvider`, `FishAudioSpeechModel`, `FishAudioTranscriptionModel`, `FishAudio*Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.fishAudio`, `FishAudioProvider`, `FishAudioSpeechModel`, `FishAudioTranscriptionModel`, `FishAudio*Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-dkMkOzezdt61PtneA9g9Qrha7yojVwuCMluu0Pazk9Vp5QJS91KNKr2MBig8hhr7sE2w+GhDVVQiFhF3TZ4Klw==",
-      "sourceRef": "npm:@ai-sdk/fish-audio@3.0.54",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-i3oTA2OmEVOLdJrxgMUzooEsrXCzHoyYbGCplrCjlgpBDgtdWFIaWKtGgaPUBM9B03T85mDwFIeEnyrW9X+3vA==",
+      "sourceRef": "npm:@ai-sdk/fish-audio@3.0.59",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ProviderV4",
         "SpeechModelV4",
         "TranscriptionModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/fireworks",
-      "reviewedVersion": "3.0.90",
+      "reviewedVersion": "3.0.95",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.fireworks`, `FireworksProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.fireworks`, `FireworksProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-C0xpFI1DYfaMoRKZklubckkubXxhtU9Gxs5wMF9YGbPpRwHSnkzEb21okgXPapDzxCLaeF9qh8MTr7+nbOoTcQ==",
-      "sourceRef": "npm:@ai-sdk/fireworks@3.0.90",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-jbZcfK13l7erfRiE40ynyTSnOycv4TXHTI8hCrry2iMHq4QR4b04Y6r94OauanFAZcrjq8e33PaN7NNUgBpo6g==",
+      "sourceRef": "npm:@ai-sdk/fireworks@3.0.95",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "EmbeddingModelV4",
@@ -330,17 +331,17 @@
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/gateway",
-      "reviewedVersion": "4.0.138",
+      "reviewedVersion": "4.0.145",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.gateway`, `GatewayProvider`, `GatewayModels.swift`, `GatewayStreamingTranscriptionModel.swift`, `GatewayTests.swift`, `Gateway*UpstreamParityTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.gateway`, `GatewayProvider`, `GatewayModels.swift`, `GatewayStreamingTranscriptionModel.swift`, `GatewayTests.swift`, `Gateway*UpstreamParityTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-7a/LGqioUyU2CmjRjMwnX4WR5V4vP3+YdPZEAbh7CH9OXf1GcPSsiySsHxNbqiDlDnL+KdqPvWeipIR7u/VFHA==",
-      "sourceRef": "npm:@ai-sdk/gateway@4.0.138",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-vquqCrEut1jlWshy2lWaOrBvyrpVjhLWoR/EVpb+m7JKtHtmpy0vpl9rtpB6xNFiumjT9e2s70MZmRth/hH9tw==",
+      "sourceRef": "npm:@ai-sdk/gateway@4.0.145",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "DecisionModelV4",
@@ -354,53 +355,54 @@
         "TranscriptionModelV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/gmicloud",
-      "reviewedVersion": "3.0.58",
+      "reviewedVersion": "3.0.63",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.gmiCloud`, `GMICloudProvider`, `OpenAICompatibleChatModel`, `GMICloudProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.gmiCloud`, `GMICloudProvider`, `OpenAICompatibleChatModel`, `GMICloudProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-aZ9zEv3dB3AplAuPKwDXHnf2O/NLfVeCvaG2X/XQhU3Sp0/yuw7H2nX4fSYzuymlmCH/bggS9bTQ+PZyfvp9pw==",
-      "sourceRef": "npm:@ai-sdk/gmicloud@3.0.58",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-Hi704yYZg7dT9vwsJr9HVVj3y+O1gPcX64M9PC/NRuri1NK5ILP2N1g/crjfzQLTWoroVDUWIPxUgKGZxdc6/g==",
+      "sourceRef": "npm:@ai-sdk/gmicloud@3.0.63",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/gladia",
-      "reviewedVersion": "3.0.77",
+      "reviewedVersion": "3.0.82",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.gladia`, `GladiaTranscriptionModel`, `GladiaProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.gladia`, `GladiaTranscriptionModel`, `GladiaProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-q6iEpMZikLbk+f4DA1T3cCaOlG6sFgm/R2L0VxY0mdM4Mls+OoeAH/EjTtEzfHAXVvN7HRAKp9V31eofZk0wUA==",
-      "sourceRef": "npm:@ai-sdk/gladia@3.0.77",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-SroOj2eHGJ2KUkYVzioRn9wgWdP6rS2zFpjZAzWqJ2VQNSASTJh/YZqCVjcpq5JgK5IPNPThWA/S9LL3dLoOOQ==",
+      "sourceRef": "npm:@ai-sdk/gladia@3.0.82",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ProviderV4",
         "TranscriptionModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/google",
-      "reviewedVersion": "4.0.114",
+      "reviewedVersion": "4.0.120",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.google`, `GoogleGenerativeAIProvider`, `GoogleGenerativeAI.swift`, `GoogleGenerativeMediaModels.swift`, `GoogleGenerativeAITests.swift`, `GoogleGenerativeAIMediaAndToolsTests.swift`, `GoogleBatchLanguageModel`, `GoogleBatchUpstreamTests.swift`, `GoogleGenerativeAIVideoAndInteractionsTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.google`, `GoogleGenerativeAIProvider`, `GoogleGenerativeAI.swift`, `GoogleGenerativeMediaModels.swift`, `GoogleGenerativeAITests.swift`, `GoogleGenerativeAIMediaAndToolsTests.swift`, `GoogleBatchLanguageModel`, `GoogleBatchUpstreamTests.swift`, `GoogleGenerativeAIVideoAndInteractionsTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-8LHlrbu7FFYjQAXCmg60dfc619zu7GhPTTMSs+tLjGh+aFHAFp3HqxGuCQ9zqgLywu+h1bDOrZgizCkExGecjA==",
-      "sourceRef": "npm:@ai-sdk/google@4.0.114",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-x3xxRbHtL076DKGMECyQeA9768KLVtpg4bQ9dE+NbRajVY/DqiBbnXfTdWGYqcl3DQ+oVXo3JXlgMJT3jEBFFQ==",
+      "sourceRef": "npm:@ai-sdk/google@4.0.120",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "DecisionModelV4",
         "EmbeddingModelV4",
+        "ExtractionModelV4",
         "ImageModelV4",
         "LanguageModelV4",
         "ProviderV4",
@@ -410,17 +412,17 @@
         "TranscriptionModelV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/google-vertex",
-      "reviewedVersion": "5.0.134",
+      "reviewedVersion": "5.0.140",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.googleVertex`, `GoogleVertexProvider`, `GoogleVertexProvider.swift`, `GoogleVertexModels.swift`, `GoogleVertexTests.swift`, `GoogleVertexMediaAndMaaSTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.googleVertex`, `GoogleVertexProvider`, `GoogleVertexProvider.swift`, `GoogleVertexModels.swift`, `GoogleVertexTests.swift`, `GoogleVertexMediaAndMaaSTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-bbQl1s/iWFdoy/AsoaiyCFxsF6HqDZQAzgO3d7zBew/dlGvhH7IO2Ud6LrbRE1f7JxIWJIKX/LAevWUAKN6rdQ==",
-      "sourceRef": "npm:@ai-sdk/google-vertex@5.0.134",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-4WOEs8ltWGRt6iZx//E0NiQs73MUS6RNq2PXHTzHwwYUJ829D2PDX72btAV1AKtnAe+Yn8qr9/vF4VFLt2RXxg==",
+      "sourceRef": "npm:@ai-sdk/google-vertex@5.0.140",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "EmbeddingModelV4",
@@ -431,88 +433,88 @@
         "TranscriptionModelV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/groq",
-      "reviewedVersion": "4.0.78",
+      "reviewedVersion": "4.0.83",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.groq`, `GroqLanguageModel`, `GroqTranscriptionModel`, `GroqProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.groq`, `GroqLanguageModel`, `GroqTranscriptionModel`, `GroqProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-MphM4VQICkecl9hLDjQb3R9l7wdRk2VbbGzlvnLTdHmBT1btwFj0gZSbBb+ePQk1J3GIviQKyAYRwPSq4Aizqw==",
-      "sourceRef": "npm:@ai-sdk/groq@4.0.78",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-wP1AMgEiMgcxi93K9Yv1dIEcnOls/NCw9H7itlcFjCmXY1yTGfqY6Aa9tdc+oVLdHnRO5nTS2jGpjdgQhiReng==",
+      "sourceRef": "npm:@ai-sdk/groq@4.0.83",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "LanguageModelV4",
         "ProviderV4",
         "TranscriptionModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/heygen",
-      "reviewedVersion": "3.0.19",
+      "reviewedVersion": "3.0.24",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.heyGen`, `HeyGenVideoModel`, `HeyGenVideoModelOptions`, `HeyGenVideoAsset`, `HeyGen*Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.heyGen`, `HeyGenVideoModel`, `HeyGenVideoModelOptions`, `HeyGenVideoAsset`, `HeyGen*Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-Sj+deqYQjc6mN8oxwP81Nwkhup997TRohx8nqZgHMBLblly6CswRCE3AlGZmRB79ISQ8GfKOfg1YtNkU0yTIKw==",
-      "sourceRef": "npm:@ai-sdk/heygen@3.0.19",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-Kws7NYd/2+gr62gTN5HHsf16n7659Sf+Bcp6xH7+XmTyYkDFKHXS8YTWeRyqNDH1ssdFF6kfr7mko92akwomyw==",
+      "sourceRef": "npm:@ai-sdk/heygen@3.0.24",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ProviderV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/huggingface",
-      "reviewedVersion": "2.0.87",
+      "reviewedVersion": "2.0.92",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.huggingFace`, `HuggingFaceProvider`, `HuggingFaceResponsesLanguageModel`, `HuggingFaceProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.huggingFace`, `HuggingFaceProvider`, `HuggingFaceResponsesLanguageModel`, `HuggingFaceProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-YGLl1AN5jUUT21VqPt36iE0F4LYvz2KrzSTtovRR/lYUAYePtQQIIo98x3UXR0nfg5nYyb7CxyUAezpYgiZhhw==",
-      "sourceRef": "npm:@ai-sdk/huggingface@2.0.87",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-mfFruMFWIs3CTyBdw55QceEySO3VcJIP8oBUQVuV2siCpJXgYnbSWU/508x/Ma/mDRJdCKSdVc2WteHmenZfBg==",
+      "sourceRef": "npm:@ai-sdk/huggingface@2.0.92",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/hume",
-      "reviewedVersion": "3.0.76",
+      "reviewedVersion": "3.0.81",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.hume`, `HumeSpeechModel`, `HumeProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.hume`, `HumeSpeechModel`, `HumeProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-FcTtTBzOunyyBE81piHOZw3vdf+fqaQMBCf7N3wMeMR7f0d5a+mJXDh+1zMo/xHmP7l6onvDccKMDxlzNlg4bA==",
-      "sourceRef": "npm:@ai-sdk/hume@3.0.76",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-u37yfmjjs8OzmeMCQiPVLWI53JpUAD8aXfVFiJ6jmJib4Opr0m8ekTWStOzicmF4Ll/wH4d4Cwt80hW7qV7oTg==",
+      "sourceRef": "npm:@ai-sdk/hume@3.0.81",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ProviderV4",
         "SpeechModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/klingai",
-      "reviewedVersion": "4.0.79",
+      "reviewedVersion": "4.0.84",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.klingAI`, `KlingAIVideoModel`, `KlingAIProviderTests.swift`, `MediaStatusRedirectUpstreamTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.klingAI`, `KlingAIVideoModel`, `KlingAIProviderTests.swift`, `MediaStatusRedirectUpstreamTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-vpfgln4cME3wf4ow61BiYp/69hd+GUQLgP/S9shCoM7OpNosh9lCQjvpIybHDDj5/ukBRYbit4Z/a7WmuzsaEQ==",
-      "sourceRef": "npm:@ai-sdk/klingai@4.0.79",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-+UBbnm3tsmsyxh++xccnhsesAWWP8C4todn3zkyaFWbPVNHd4yrqPkh+2PLqPpPrzAYXyoGV+/UdFBERx8dXug==",
+      "sourceRef": "npm:@ai-sdk/klingai@4.0.84",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ProviderV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/lmnt",
@@ -529,61 +531,62 @@
     },
     {
       "name": "@ai-sdk/luma",
-      "reviewedVersion": "3.0.78",
+      "reviewedVersion": "3.0.83",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.luma`, `LumaImageModel`, `LumaProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.luma`, `LumaImageModel`, `LumaProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-37avUzniTzE3uxwM0XP5j6gxs/sOi0inbXpuT7smjzBvWpHpCf+zZGJUTl0Cdvbmc3Bi4swOXRXVnwLcAW7KRw==",
-      "sourceRef": "npm:@ai-sdk/luma@3.0.78",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-Hnf5ZcqAVk1LCCPKPpN6oyW2FsKoKfuMY2XxujQZtuBmoz+mpAb+4pb6F2zqQGVP1K1ef5cUjU+Ha9doGPC/ww==",
+      "sourceRef": "npm:@ai-sdk/luma@3.0.83",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ImageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/mcp",
-      "reviewedVersion": "2.0.93",
+      "reviewedVersion": "2.0.99",
       "ledgerKind": "provider",
-      "evidence": "`MCPClient`, `MCPHTTPTransport`, `MCPStdioTransport`, `MCPApps`, `MCPClientTests.swift`, `MCPOAuthTests.swift`, `MCPStdioTransportTests.swift`, `MCPModernProtocolTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`MCPClient`, `MCPHTTPTransport`, `MCPStdioTransport`, `MCPApps`, `MCPClientTests.swift`, `MCPOAuthTests.swift`, `MCPStdioTransportTests.swift`, `MCPModernProtocolTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-Jo9NZNfpDVYUhrq/FkFo+AVQJpoFo8YHOfkgjvY4VxJ00njb3Pu129S6AYcjdcelOZSJ10ASJM6T06/oGslGTw==",
-      "sourceRef": "npm:@ai-sdk/mcp@2.0.93",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-9yDWp5WABLMRNKYuLrLIXGtJpIkjwXAdJyYUSu5XpD0cqtuM11LGqk3gb5XGiShco3RT/79W8CkqXskegTtWKw==",
+      "sourceRef": "npm:@ai-sdk/mcp@2.0.99",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "MCPClient"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/minimax",
-      "reviewedVersion": "3.0.76",
+      "reviewedVersion": "3.0.81",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.miniMax`, `MiniMaxProvider`, `AnthropicLanguageModel`, `MiniMaxVideoModel`, `MiniMaxProviderTests.swift`, `MediaStatusRedirectUpstreamTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.miniMax`, `MiniMaxProvider`, `AnthropicLanguageModel`, `MiniMaxVideoModel`, `MiniMaxProviderTests.swift`, `MediaStatusRedirectUpstreamTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-EQQ+9I2eixP3sinf1IQGR5c7Vdko7Tl8uRbjZTKrht8oAKe91sB+l4B4FaBpgfXL36WdXUyKHoKeEptLi4f20A==",
-      "sourceRef": "npm:@ai-sdk/minimax@3.0.76",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-La/+AeLQx0otQAdrGrkE0+qk5rpWh0oe01VniZbmUjBDs0gKz6tB1J3fhuCnL3k0a7JcbYlCl8b/cC3xFuTnsw==",
+      "sourceRef": "npm:@ai-sdk/minimax@3.0.81",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
+        "ImageModelV4",
         "LanguageModelV4",
         "ProviderV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/mistral",
-      "reviewedVersion": "4.0.81",
+      "reviewedVersion": "4.0.86",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.mistral`, `MistralLanguageModel`, `MistralEmbeddingModel`, `MistralTranscriptionModel`, `MistralSpeechModel`, `PerplexityMistralUpstreamTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.mistral`, `MistralLanguageModel`, `MistralEmbeddingModel`, `MistralTranscriptionModel`, `MistralSpeechModel`, `PerplexityMistralUpstreamTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-Ac/XEI2VEfyOet7DKTzBbuCkj0+zirX0Vszo2+E2YwQS5M9FKOWeeJ0MXTEBv5C5+UFhLAvAntMjgTU5ADJJLw==",
-      "sourceRef": "npm:@ai-sdk/mistral@4.0.81",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-bda1lDusQ3NiW46mcVVXh8HsXvU2jmJJI7tyqMGiwNqyfUIY/KChS6alUOcNIZOdsV1vtECK9aKEJrV39nPLDA==",
+      "sourceRef": "npm:@ai-sdk/mistral@4.0.86",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "EmbeddingModelV4",
@@ -593,53 +596,54 @@
         "SpeechModelV4",
         "TranscriptionModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/moonshotai",
-      "reviewedVersion": "3.0.87",
+      "reviewedVersion": "3.0.92",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.moonshotAI`, `MoonshotLanguageModel`, `MoonshotAIProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.moonshotAI`, `MoonshotLanguageModel`, `MoonshotAIProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-eriP1ek/ukDugE5xgTIUoBD4k+ydvm0ZfS1A4Tn38HNX7dQBGb2lFu6BHNwYvTgGB8D6EkNOz/NP6Y4il8jHSQ==",
-      "sourceRef": "npm:@ai-sdk/moonshotai@3.0.87",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-5eWw+xJgDuvdijZ28xDBNdsC5N1OFeneiIixFp71z5VPM+vMY+0zXz6jIM8ctphfsJnM4I2iL+5h6UhrCIIZCA==",
+      "sourceRef": "npm:@ai-sdk/moonshotai@3.0.92",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/open-responses",
-      "reviewedVersion": "2.0.82",
+      "reviewedVersion": "2.0.87",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.openResponses`, `ResponsesRequestMode.openResponses`, `OpenResponsesTools`, `ResponsesEndpointTests.swift`, `OpenAIResponsesMessageConversionTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.openResponses`, `ResponsesRequestMode.openResponses`, `OpenResponsesTools`, `ResponsesEndpointTests.swift`, `OpenAIResponsesMessageConversionTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-Da3TmSK/qW3LzwA7haM31hRi45IP+HT2QQAmnrIEA1WGjj/6bH0qBvThXBXFi+aMjaOmOZ962X5wN4+38/b40Q==",
-      "sourceRef": "npm:@ai-sdk/open-responses@2.0.82",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-mQrAeQ5qjvUcNVFI0fiOjzUDur2aciy8onbMpr2r99BbS1GmwyyHsb6Y3am/ItV5Gp84Ywq7nE4mV+bucatGFw==",
+      "sourceRef": "npm:@ai-sdk/open-responses@2.0.87",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/openai",
-      "reviewedVersion": "4.0.111",
+      "reviewedVersion": "4.0.117",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.openAI`, `OpenAICompatible*Model`, `OpenAITools`, `OpenAI*Tests.swift`, `FileAndSkillClientTests.swift`, `CoreOpenAIUpstream202609Tests.swift`, `OpenAIResponsesBatchV4UpstreamTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.openAI`, `OpenAICompatible*Model`, `OpenAITools`, `OpenAI*Tests.swift`, `FileAndSkillClientTests.swift`, `CoreOpenAIUpstream202609Tests.swift`, `OpenAIResponsesBatchV4UpstreamTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-r6aLB/7MlBlD4c/Ep7oAam7NbEDzShFXAmz68DyFj+JTIPvWR6Il8mPI2yw82kCtxeXLbL48dW+8p/IQANKoWQ==",
-      "sourceRef": "npm:@ai-sdk/openai@4.0.111",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-iRa4elI5AtKfzeOsuFwMS71Oga9MMOP1A15IYFBQL0dC3q+hvMxp02ytNOBZvk+E9zh7IvHyr0rLmC8uISDVig==",
+      "sourceRef": "npm:@ai-sdk/openai@4.0.117",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "DecisionModelV4",
         "EmbeddingModelV4",
+        "ExtractionModelV4",
         "ImageModelV4",
         "LanguageModelV4",
         "ProviderV4",
@@ -648,17 +652,17 @@
         "SpeechTranslationModelV4",
         "TranscriptionModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/openai-compatible",
-      "reviewedVersion": "3.0.87",
+      "reviewedVersion": "3.0.92",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.openAICompatible`, `OpenAICompatibleProvider`, `OpenAICompatibleTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.openAICompatible`, `OpenAICompatibleProvider`, `OpenAICompatibleTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-8eODsrV/DKW9KYoVXi1AhATGitZ1ANZrA5poa192EHUWCmrNjWL6fW7ymVQx+Svx7WtAGJcU+5hlxTG58zDzGw==",
-      "sourceRef": "npm:@ai-sdk/openai-compatible@3.0.87",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-2gV7HHV4qpx+8GotOZMmGqY270ExkftwFG5+DM6nChLmRaP6WP9JKj4e9WjLhih/GsPL9dSGnZHzwCsofHwiAQ==",
+      "sourceRef": "npm:@ai-sdk/openai-compatible@3.0.92",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "EmbeddingModelV4",
@@ -666,17 +670,17 @@
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/perplexity",
-      "reviewedVersion": "5.0.28",
+      "reviewedVersion": "5.0.34",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.perplexity`, `PerplexityLanguageModel`, `PerplexitySonarLanguageModel`, `PerplexityEmbeddingModel`, `PerplexityDecisionModel`, `WeeklyPerplexity20261023Tests.swift`, `PerplexityMistralUpstreamTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.perplexity`, `PerplexityLanguageModel`, `PerplexitySonarLanguageModel`, `PerplexityEmbeddingModel`, `PerplexityDecisionModel`, `WeeklyPerplexity20261023Tests.swift`, `PerplexityMistralUpstreamTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-I/sJuOG1gYzOuHJWqXqNzYpboRwS4vMUqWuje+Jzg0HbdgZY2AeAcTlrQadetVnBSJoXKG4B0hDirexNVwjmrA==",
-      "sourceRef": "npm:@ai-sdk/perplexity@5.0.28",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-OPAQiazSBrvT405woOpJA/RW/F5AkKSWQHsQz7GGgsxpYdB83bM4Z0OXqdZWtMH8SBUhv6fLoZQhSgprmnqJrQ==",
+      "sourceRef": "npm:@ai-sdk/perplexity@5.0.34",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "DecisionModelV4",
@@ -684,17 +688,17 @@
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/prodia",
-      "reviewedVersion": "2.0.78",
+      "reviewedVersion": "2.0.83",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.prodia`, `ProdiaLanguageModel`, `ProdiaMediaModel`, `ProdiaProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.prodia`, `ProdiaLanguageModel`, `ProdiaMediaModel`, `ProdiaProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-Sc+2ymsoFfUYKMjaTzFUeX9le6YtGPEcmWFVAJNjbpCUV/eRkoowemwlwyb5fsske1QPoNUV0kfcwPDQ38X8QQ==",
-      "sourceRef": "npm:@ai-sdk/prodia@2.0.78",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-+bT2WXArjBgaryhTicNbKAvo63EvAJsmdoLc6uBHGnx+XblJKBuw5ErcayRtRQdIvTFtFrfSsUxjo9Zpy6qlRQ==",
+      "sourceRef": "npm:@ai-sdk/prodia@2.0.83",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ImageModelV4",
@@ -702,67 +706,67 @@
         "ProviderV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/quiverai",
-      "reviewedVersion": "2.0.78",
+      "reviewedVersion": "2.0.83",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.quiverAI`, `OpenAICompatibleResponsesModel`, `QuiverAITools`, `QuiverAIImageModel`, `QuiverAIProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.quiverAI`, `OpenAICompatibleResponsesModel`, `QuiverAITools`, `QuiverAIImageModel`, `QuiverAIProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-8xEaVPON1XCIrXuh6lz1IMCKVvVTnu2zRL77cEPN6rbQt1AKMRpYevy1lRuItb2CX1SCWM5uFb+bb//PrfJEkQ==",
-      "sourceRef": "npm:@ai-sdk/quiverai@2.0.78",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-XVL8pg9N8jMhe4aTs3mn3y3D5QKUvEC+RPx8xq3cFkwBsGx3QQ3v9LrvIN9mLHk8Ss2K/FcQge8NSuKWai0PwA==",
+      "sourceRef": "npm:@ai-sdk/quiverai@2.0.83",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ImageModelV4",
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/replicate",
-      "reviewedVersion": "3.0.78",
+      "reviewedVersion": "3.0.83",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.replicate`, `ReplicateImageModel`, `ReplicateVideoModel`, `ReplicateProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.replicate`, `ReplicateImageModel`, `ReplicateVideoModel`, `ReplicateProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-bPihHZ37quu6sf2HDg4ve+BCHC7920cbnSsBCWzwynAiKlqZkZqIDy3uNE56bWsTfO/EkkE8l0FW/o2EE85kmQ==",
-      "sourceRef": "npm:@ai-sdk/replicate@3.0.78",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-pOXbkjmcpzyOj9tXbpR/6HaNX2YxjC5vX2SpnluoL4PolzCRcf3YQ99hopW+pVoUweySkraPbfWa6qxckix/WQ==",
+      "sourceRef": "npm:@ai-sdk/replicate@3.0.83",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ImageModelV4",
         "ProviderV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/revai",
-      "reviewedVersion": "3.0.76",
+      "reviewedVersion": "3.0.81",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.revAI`, `RevAITranscriptionModel`, `RevAIProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.revAI`, `RevAITranscriptionModel`, `RevAIProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-YlQg5O9EgmU9taY2d8ukqVXalVdklxbhiX9Lkw5MjLO2tWJmxHxB5IT3vcIA4uL7p/joRzYiPoyZB4666I6xJQ==",
-      "sourceRef": "npm:@ai-sdk/revai@3.0.76",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-tmpaV23f+QDXe/BVjVr/gRCsTukJ2PH6VQMYbFW7de/ffURlCiU31iE8Zj7UwML31pGcgq0T1btoki/Wsm9SAQ==",
+      "sourceRef": "npm:@ai-sdk/revai@3.0.81",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ProviderV4",
         "TranscriptionModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/togetherai",
-      "reviewedVersion": "3.0.88",
+      "reviewedVersion": "3.0.93",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.togetherAI`, `TogetherAIImageModel`, `TogetherAIRerankingModel`, `TogetherAIProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.togetherAI`, `TogetherAIImageModel`, `TogetherAIRerankingModel`, `TogetherAIProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-SqaWH2iUqzK7UGcyYcVXTz2cjpDKfcD0rOI+Dywx0WKl6MT1IG5q/aJ/w66ZASGQyjZGLc1MS8EujZxPP/y6RQ==",
-      "sourceRef": "npm:@ai-sdk/togetherai@3.0.88",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-rt4Uubojj1IneVLP/UZEm+xYEAUN9FB8Ob/MS26Z0TUiWSx0XXihnpAOxblapVs3XAJ+cPHmrRTNu8qtgGKa9w==",
+      "sourceRef": "npm:@ai-sdk/togetherai@3.0.93",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "EmbeddingModelV4",
@@ -771,40 +775,40 @@
         "ProviderV4",
         "RerankingModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/topaz",
-      "reviewedVersion": "3.0.23",
+      "reviewedVersion": "3.0.28",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.topaz`, `TopazImageModel`, `TopazVideoModel`, `TopazProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.topaz`, `TopazImageModel`, `TopazVideoModel`, `TopazProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-yy/LIQEmAJAVxxXHQjrCSGlcevHlToZu1Hqvpa483y1syR1iW5bIZ0f4l2dUo56sN/zwUI2Rh2KI7jGXFbmYdw==",
-      "sourceRef": "npm:@ai-sdk/topaz@3.0.23",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-1CGCKo74SJwgzE6XaKEj18oV5QyY6b6ZuSAKnU5r4FaRSgj80+RqmS+HPUXVyOPuphz8IP6m2I3h49d9mhsZZg==",
+      "sourceRef": "npm:@ai-sdk/topaz@3.0.28",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ImageModelV4",
         "ProviderV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/typesafe-ai",
-      "reviewedVersion": "3.0.35",
+      "reviewedVersion": "3.0.40",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.typeSafeAI`, `TypeSafeAIProvider`, `TypeSafeAIEvaluationModel`, `TypeSafeAIDecisionModel`, `TypeSafeAIDecisionModelOptions`, `WeeklyCore20261018Tests.swift`, `TypesafeAIProviderTests.swift`, `DecisionProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.typeSafeAI`, `TypeSafeAIProvider`, `TypeSafeAIEvaluationModel`, `TypeSafeAIDecisionModel`, `TypeSafeAIDecisionModelOptions`, `WeeklyCore20261018Tests.swift`, `TypesafeAIProviderTests.swift`, `DecisionProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-vmqj3uCrmlR+oUI1DMgxT7n7P8LmB11FSl4i5ErGUqMrnp7PSVw3rD0A8oxNHezNU1zBvX0b8gdY/50EgiiCMA==",
-      "sourceRef": "npm:@ai-sdk/typesafe-ai@3.0.35",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-IALJV4gyHaL+8nHHv5ZUO2+dNf7q3cG/RN8MktKWkyYtzYFQBs2qq07GUzs1oALkcdhgTQY8N/ZBy2MVGylQUg==",
+      "sourceRef": "npm:@ai-sdk/typesafe-ai@3.0.40",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "DecisionModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/vercel",
@@ -821,30 +825,30 @@
     },
     {
       "name": "@ai-sdk/voyage",
-      "reviewedVersion": "2.0.77",
+      "reviewedVersion": "2.0.82",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.voyage`, `VoyageEmbeddingModel`, `VoyageRerankingModel`, `VoyageProviderOptionSchemaTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.voyage`, `VoyageEmbeddingModel`, `VoyageRerankingModel`, `VoyageProviderOptionSchemaTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-3VwZp/u93etmV2qIUr2MMy+EGbpIs9kycBfVdFBIVZC9yC60BueyU7CCGObmHGn/akLgNdTt2x6EiuMPKFSeWQ==",
-      "sourceRef": "npm:@ai-sdk/voyage@2.0.77",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-PkVxQTbtKfmd5fd51ATwbbMAtkXIfr+XZjjLKiLmFgmiVrlw5q/SARrGJc2IolH0PKj97TbHkPFIfyk3fgc6FQ==",
+      "sourceRef": "npm:@ai-sdk/voyage@2.0.82",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "EmbeddingModelV4",
         "ProviderV4",
         "RerankingModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/xai",
-      "reviewedVersion": "5.0.40",
+      "reviewedVersion": "5.0.45",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.xAI`, `XAIResponses.swift`, `XAIResponsesBatchLanguageModel.swift`, `XAITools`, `XAIImageModel`, `XAIVideoModel`, `XAIProviderTests.swift`, `ProviderGroupBUpstreamParity20260831Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.xAI`, `XAIResponses.swift`, `XAIResponsesBatchLanguageModel.swift`, `XAITools`, `XAIImageModel`, `XAIVideoModel`, `XAIProviderTests.swift`, `ProviderGroupBUpstreamParity20260831Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-Qbvoen0jqa5NnQdBJOy+57Wu4PVUck0KratXDFrsdM06gyeeKqGUstU+wzytsD8dqe2lH3wXG9D6ZNQmb+AcMw==",
-      "sourceRef": "npm:@ai-sdk/xai@5.0.40",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-6ZPt65wnDbboC8Aseu4OdVYrO1mvM7QIoEefWQ7+TP/s6GhQxurn56kGsBmVkvQ2FXWG+/ZLl6fEG7nQZOo07Q==",
+      "sourceRef": "npm:@ai-sdk/xai@5.0.45",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "ImageModelV4",
@@ -855,33 +859,33 @@
         "TranscriptionModelV4",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/zai",
-      "reviewedVersion": "3.0.49",
+      "reviewedVersion": "3.0.54",
       "ledgerKind": "provider",
-      "evidence": "`AIProviders.zai`, `ZAIProvider`, `ZAILanguageModel`, `ZAIProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "`AIProviders.zai`, `ZAIProvider`, `ZAILanguageModel`, `ZAIProviderTests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-6aewCWwHKm4o6iw9WHbWFVdBRMTE7kDI9JYGORBv9TF7L1rb7vAQPx32D0GU0NkzekjZqTcp98sGO1Fjd9x3gQ==",
-      "sourceRef": "npm:@ai-sdk/zai@3.0.49",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-ZEvyvzdNlft5XeuQsNkcPY2p78bsxxQYY4p/uR9bbid47VPEG5up1IJctI5eALYIsE8QJWNohA3/q1RrfjO/5g==",
+      "sourceRef": "npm:@ai-sdk/zai@3.0.54",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "LanguageModelV4",
         "ProviderV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "ai",
-      "reviewedVersion": "7.0.165",
+      "reviewedVersion": "7.0.172",
       "ledgerKind": "core",
-      "evidence": "Docs/CoreV6Parity.md; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "Docs/CoreV6Parity.md; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-cEeORsLF+9+fNzvo4nQo9hxgQoEfupjc9Xmq6OM2NGUwQQQdkHxByBdFoqnNfBE0H+qwhGQaZejvbCFFD84tBA==",
-      "sourceRef": "npm:ai@7.0.165",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-FDY7I0I/BE6mqa+hoeWwECO5fbnpXl9vYdvm7n5pNjru1mjrBhX1ZQrYOZOtYledTp0c0vCP/eGYPD5P3bLl3Q==",
+      "sourceRef": "npm:ai@7.0.172",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "DecisionMockModelV4",
@@ -890,6 +894,8 @@
         "EmbeddingModelV4",
         "EvaluationMockModelV4",
         "EvaluationModelV4",
+        "ExtractionMockModelV4",
+        "ExtractionModelV4",
         "ImageModelV3",
         "ImageModelV4",
         "LanguageModelV3",
@@ -900,6 +906,7 @@
         "MockImageModelV4",
         "MockLanguageModelV3",
         "MockLanguageModelV4",
+        "MockProviderV4",
         "MockRerankingModelV3",
         "MockRerankingModelV4",
         "MockSpeechModelV3",
@@ -923,23 +930,24 @@
         "VideoModelV3",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/provider",
-      "reviewedVersion": "4.0.37",
+      "reviewedVersion": "4.0.38",
       "ledgerKind": "core",
-      "evidence": "Docs/CoreV6Parity.md; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "Docs/CoreV6Parity.md; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-4uPgZ3qiX/JaQFr0dQoibUzHImZit9u05ro2BxGUnJwU4fV28BOAbKUa2OjQvqtM1tMac3bTKkaXdyzGovQXqg==",
-      "sourceRef": "npm:@ai-sdk/provider@4.0.37",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-GElz70UUCuDFFyD6m6aQJFgRY0HEABQzB5otzgkrisYaF5mnss7o0upAmbBTSD6KWiM9h7lZm1ls2c7xzHR8CA==",
+      "sourceRef": "npm:@ai-sdk/provider@4.0.38",
+      "testRef": "75036a5ce40e9d3e6238370ca9525f7480c8c102",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "DecisionModelV4",
         "EmbeddingModelV3",
         "EmbeddingModelV4",
         "EvaluationModelV4",
+        "ExtractionModelV4",
         "ImageModelV3",
         "ImageModelV4",
         "LanguageModelV3",
@@ -957,40 +965,41 @@
         "VideoModelV3",
         "VideoModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/provider-utils",
-      "reviewedVersion": "5.0.76",
+      "reviewedVersion": "5.0.81",
       "ledgerKind": "core",
-      "evidence": "Docs/CoreV6Parity.md; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "Docs/CoreV6Parity.md; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-76QcCmVtSunSAbQBJtgQTTE8e+Yaz4rJJe1MRWnJ3GAQYUvNPHJejKx4jZTbhGGTdSSLaYcMBT62SISNgnGq9w==",
-      "sourceRef": "npm:@ai-sdk/provider-utils@5.0.76",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-pfvvdQ3d1WxdBuug/mnGEP6E48cPokwD8dMBnsFeeAUp0/rb/H2aj0f3mwOiY62gu/Cu5GO44e+SE5nDHyBWMA==",
+      "sourceRef": "npm:@ai-sdk/provider-utils@5.0.81",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "DecisionModelV4",
+        "ExtractionModelV4",
         "LanguageModelV4",
         "StreamingSpeechModelV4",
         "TranscriptionModelV4"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     },
     {
       "name": "@ai-sdk/react",
-      "reviewedVersion": "4.0.169",
+      "reviewedVersion": "4.0.176",
       "ledgerKind": "core",
-      "evidence": "Docs/CoreV6Parity.md; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json",
+      "evidence": "Docs/CoreV6Parity.md; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
       "reviewStatus": "imported-reviewed-with-gaps",
-      "archiveIntegrity": "sha512-RAJImk2l6BCMI4MOVEvNLCVi2o2adJBiXhqCpZ50TOc7YL9sk+RB6U9uYYGpsJ9Ap00S36Uz2GbjPYArWJFmUw==",
-      "sourceRef": "npm:@ai-sdk/react@4.0.169",
-      "testRef": "0f3a85f92d1ce06ccde01d662407ef83e097a712",
+      "archiveIntegrity": "sha512-pqGoKP2WZhqPloM3tO/zMFTuLlfTab3DDKoneMXsT+BIl05RuopVN5OsgUQYCLH7SoQ/tlTS7oE464JB39hscg==",
+      "sourceRef": "npm:@ai-sdk/react@4.0.176",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
       "testRefRelationship": "matching-release",
       "contractFamilies": [
         "Swift native API equivalents"
       ],
-      "contractReview": "2026-11-08: published declarations/source and exact matching-release changed tests reviewed; native implementations, per-file dispositions and broader retained gaps are recorded in Docs/WeeklyUpstreamAudit20261108.json. Reviewed delta is not full-package or live-service parity."
+      "contractReview": "2026-11-14: verified published source/declarations and exact matching-release changed tests reviewed separately; native ports, per-file dispositions and retained gaps are recorded in Docs/WeeklyUpstreamAudit20261114.json. Delta review is not full-package or live-service parity."
     }
   ]
 }

@@ -1,6 +1,6 @@
 # SwiftAIGladia
 
-Swift-native port of `@ai-sdk/gladia`, reviewed through npm 3.0.77. Source edits
+Swift-native port of `@ai-sdk/gladia`, reviewed through npm 3.0.82. Source edits
 belong to the canonical SwiftAISDK repository and are exported deterministically.
 
 ```swift
@@ -46,7 +46,7 @@ Provider and per-call `pollIntervalMs`/`pollTimeoutMs` must be positive integers
 per-call options take precedence. Defaults are 1 second and 10 minutes. Polling
 and waits honor cancellation. Polling settings never reach the API body. Same-origin
 polls include credentials; foreign result origins receive no credentials. The
-`x-gladia-version` header defaults to `ai-sdk/3.0.77` and can be overridden.
+`x-gladia-version` header defaults to `ai-sdk/3.0.82` and can be overridden.
 Audio intelligence results and future add-on fields are preserved in provider
 metadata without validating unused response shapes.
 

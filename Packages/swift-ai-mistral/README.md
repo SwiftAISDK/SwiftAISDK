@@ -1,6 +1,6 @@
 # SwiftAIMistral
 
-Swift-native port of `@ai-sdk/mistral`, reviewed through npm 4.0.81. Source edits
+Swift-native port of `@ai-sdk/mistral`, reviewed through npm 4.0.86. Source edits
 belong to the canonical SwiftAISDK repository and are exported deterministically.
 
 ```swift
@@ -58,3 +58,7 @@ canonical checkout. See `Porting/map.json` for exact reviewed scope and adaptati
 
 Original public initializer and helper signatures remain available for typed
 function references, alongside the extended APIs. Their original defaults are preserved.
+
+## Current upstream review
+
+The reviewed baseline is `@ai-sdk/mistral` 4.0.86. Published runtime source, declarations and matching-release tests are unchanged from 4.0.81 apart from dependency/version propagation. The user-agent suffix now identifies the reviewed npm baseline. Existing speech, transcription and language options remain unchanged.

@@ -1,3 +1,7 @@
+## Image URL transport
+
+Azure OpenAI and MAI image/mask/markup downloads use the configured raw transport. API keys, bearer tokens and provider headers stay on authenticated API requests; redirects retain download validation and cancellation. Token suppliers run only for the provider request.
+
 ## Deployment names and underlying models
 
 ```swift

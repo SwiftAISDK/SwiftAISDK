@@ -42,7 +42,7 @@ public final class DeepgramProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Token \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-deepgram/3.1.48")
+        headers = withUserAgentSuffix(headers, "ai-sdk-deepgram/3.1.53")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.deepgram.com")
         http = AIProviderHTTPClient(providerID: "deepgram", headers: headers, transport: configuration.transport, credentialResolver: credential,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

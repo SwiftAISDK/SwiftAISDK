@@ -87,7 +87,7 @@ public final class AnthropicAWSProvider: AIProvider, @unchecked Sendable {
         var headers = settings.headers
         headers["anthropic-version"] = headers["anthropic-version"] ?? "2023-06-01"
         headers["anthropic-workspace-id"] = headers["anthropic-workspace-id"] ?? workspaceID
-        headers = withUserAgentSuffix(headers, "ai-sdk-anthropic-aws/2.0.92")
+        headers = withUserAgentSuffix(headers, "ai-sdk-anthropic-aws/2.0.97")
 
         let credentialResolver = settings.apiKeyProvider.map { resolve in
             AIAsyncCredential {

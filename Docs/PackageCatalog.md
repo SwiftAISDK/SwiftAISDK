@@ -5,11 +5,11 @@ Generated from `Porting/packages.json`. All package states are explicit; planned
 | Package | State | Modules | Upstream | Dependencies |
 | --- | --- | --- | --- | --- |
 | [swift-ai-alibaba](https://github.com/SwiftAISDK/swift-ai-alibaba) | extracted | `SwiftAIAlibaba` | `@ai-sdk/alibaba` | `swift-ai-core` from `1.2.0` |
-| [swift-ai-amazon-bedrock](https://github.com/SwiftAISDK/swift-ai-amazon-bedrock) | extracted | `SwiftAIAmazonBedrock` | `@ai-sdk/amazon-bedrock` | `swift-ai-core` from `1.3.0`, `swift-ai-anthropic` from `1.3.0`, `swift-ai-openai` from `1.2.0`, `swift-ai-openai-compatible` from `1.2.0` |
-| [swift-ai-anthropic](https://github.com/SwiftAISDK/swift-ai-anthropic) | extracted | `SwiftAIAnthropic` | `@ai-sdk/anthropic` | `swift-ai-core` from `1.3.0` |
-| [swift-ai-anthropic-aws](https://github.com/SwiftAISDK/swift-ai-anthropic-aws) | extracted | `SwiftAIAnthropicAWS` | `@ai-sdk/anthropic-aws` | `swift-ai-core` from `1.2.0`, `swift-ai-anthropic` from `1.3.0` |
+| [swift-ai-amazon-bedrock](https://github.com/SwiftAISDK/swift-ai-amazon-bedrock) | extracted | `SwiftAIAmazonBedrock` | `@ai-sdk/amazon-bedrock` | `swift-ai-core` from `1.3.0`, `swift-ai-anthropic` from `1.4.0`, `swift-ai-openai` from `1.2.0`, `swift-ai-openai-compatible` from `1.2.0` |
+| [swift-ai-anthropic](https://github.com/SwiftAISDK/swift-ai-anthropic) | extracted | `SwiftAIAnthropic` | `@ai-sdk/anthropic` | `swift-ai-core` from `1.4.0` |
+| [swift-ai-anthropic-aws](https://github.com/SwiftAISDK/swift-ai-anthropic-aws) | extracted | `SwiftAIAnthropicAWS` | `@ai-sdk/anthropic-aws` | `swift-ai-core` from `1.2.0`, `swift-ai-anthropic` from `1.4.0` |
 | [swift-ai-assemblyai](https://github.com/SwiftAISDK/swift-ai-assemblyai) | extracted | `SwiftAIAssemblyAI` | `@ai-sdk/assemblyai` | `swift-ai-core` from `1.2.0` |
-| [swift-ai-azure](https://github.com/SwiftAISDK/swift-ai-azure) | extracted | `SwiftAIAzure` | `@ai-sdk/azure` | `swift-ai-core` from `1.3.0`, `swift-ai-openai` from `1.2.0`, `swift-ai-openai-compatible` from `1.2.0`, `swift-ai-deepseek` from `1.1.1` |
+| [swift-ai-azure](https://github.com/SwiftAISDK/swift-ai-azure) | extracted | `SwiftAIAzure` | `@ai-sdk/azure` | `swift-ai-core` from `1.3.0`, `swift-ai-openai` from `1.3.0`, `swift-ai-openai-compatible` from `1.2.0`, `swift-ai-deepseek` from `1.1.1` |
 | [swift-ai-baseten](https://github.com/SwiftAISDK/swift-ai-baseten) | extracted | `SwiftAIBaseten` | `@ai-sdk/baseten` | `swift-ai-core` from `1.2.0`, `swift-ai-openai-compatible` from `1.2.0` |
 | [swift-ai-black-forest-labs](https://github.com/SwiftAISDK/swift-ai-black-forest-labs) | extracted | `SwiftAIBlackForestLabs` | `@ai-sdk/black-forest-labs` | `swift-ai-core` from `1.2.0` |
 | [swift-ai-bytedance](https://github.com/SwiftAISDK/swift-ai-bytedance) | extracted | `SwiftAIByteDance` | `@ai-sdk/bytedance` | `swift-ai-core` from `1.1.0` |
@@ -19,16 +19,16 @@ Generated from `Porting/packages.json`. All package states are explicit; planned
 | [swift-ai-core](https://github.com/SwiftAISDK/swift-ai-core) | extracted | `SwiftAI`, `SwiftAIProvider`, `SwiftAIProviderUtilities`, `SwiftAITransport` | `@ai-sdk/provider`, `@ai-sdk/provider-utils`, `ai` | None |
 | [swift-ai-deepgram](https://github.com/SwiftAISDK/swift-ai-deepgram) | extracted | `SwiftAIDeepgram` | `@ai-sdk/deepgram` | `swift-ai-core` from `1.3.0` |
 | [swift-ai-deepinfra](https://github.com/SwiftAISDK/swift-ai-deepinfra) | extracted | `SwiftAIDeepInfra` | `@ai-sdk/deepinfra` | `swift-ai-core` from `1.2.0`, `swift-ai-openai-compatible` from `1.2.0` |
-| [swift-ai-deepseek](https://github.com/SwiftAISDK/swift-ai-deepseek) | extracted | `SwiftAIDeepSeek` | `@ai-sdk/deepseek` | `swift-ai-core` from `1.2.0` |
+| [swift-ai-deepseek](https://github.com/SwiftAISDK/swift-ai-deepseek) | extracted | `SwiftAIDeepSeek` | `@ai-sdk/deepseek` | `swift-ai-core` from `1.3.0` |
 | [swift-ai-elevenlabs](https://github.com/SwiftAISDK/swift-ai-elevenlabs) | extracted | `SwiftAIElevenLabs` | `@ai-sdk/elevenlabs` | `swift-ai-core` from `1.2.0` |
 | [swift-ai-fal](https://github.com/SwiftAISDK/swift-ai-fal) | extracted | `SwiftAIFal` | `@ai-sdk/fal` | `swift-ai-core` from `1.2.0` |
-| [swift-ai-fireworks](https://github.com/SwiftAISDK/swift-ai-fireworks) | extracted | `SwiftAIFireworks` | `@ai-sdk/fireworks` | `swift-ai-core` from `1.2.0`, `swift-ai-openai-compatible` from `1.2.0` |
+| [swift-ai-fireworks](https://github.com/SwiftAISDK/swift-ai-fireworks) | extracted | `SwiftAIFireworks` | `@ai-sdk/fireworks` | `swift-ai-core` from `1.2.0`, `swift-ai-openai-compatible` from `1.3.0` |
 | [swift-ai-fish-audio](https://github.com/SwiftAISDK/swift-ai-fish-audio) | extracted | `SwiftAIFishAudio` | `@ai-sdk/fish-audio` | `swift-ai-core` from `1.2.0` |
 | [swift-ai-gateway](https://github.com/SwiftAISDK/swift-ai-gateway) | extracted | `SwiftAIGateway` | `@ai-sdk/gateway` | `swift-ai-core` from `1.3.0` |
 | [swift-ai-gladia](https://github.com/SwiftAISDK/swift-ai-gladia) | extracted | `SwiftAIGladia` | `@ai-sdk/gladia` | `swift-ai-core` from `1.3.0` |
 | [swift-ai-gmicloud](https://github.com/SwiftAISDK/swift-ai-gmicloud) | extracted | `SwiftAIGMICloud` | `@ai-sdk/gmicloud` | `swift-ai-core` from `1.2.0`, `swift-ai-openai-compatible` from `1.2.0` |
-| [swift-ai-google](https://github.com/SwiftAISDK/swift-ai-google) | extracted | `SwiftAIGoogle` | `@ai-sdk/google` | `swift-ai-core` from `1.3.0` |
-| [swift-ai-google-vertex](https://github.com/SwiftAISDK/swift-ai-google-vertex) | extracted | `SwiftAIGoogleVertex` | `@ai-sdk/google-vertex` | `swift-ai-core` from `1.3.0`, `swift-ai-google` from `1.2.0`, `swift-ai-anthropic` from `1.3.0`, `swift-ai-openai-compatible` from `1.2.0`, `swift-ai-openai` from `1.0.0` |
+| [swift-ai-google](https://github.com/SwiftAISDK/swift-ai-google) | extracted | `SwiftAIGoogle` | `@ai-sdk/google` | `swift-ai-core` from `1.4.0` |
+| [swift-ai-google-vertex](https://github.com/SwiftAISDK/swift-ai-google-vertex) | extracted | `SwiftAIGoogleVertex` | `@ai-sdk/google-vertex` | `swift-ai-core` from `1.4.0`, `swift-ai-google` from `1.3.0`, `swift-ai-anthropic` from `1.4.0`, `swift-ai-openai-compatible` from `1.2.0`, `swift-ai-openai` from `1.0.0` |
 | [swift-ai-groq](https://github.com/SwiftAISDK/swift-ai-groq) | extracted | `SwiftAIGroq` | `@ai-sdk/groq` | `swift-ai-core` from `1.3.0` |
 | [swift-ai-heygen](https://github.com/SwiftAISDK/swift-ai-heygen) | extracted | `SwiftAIHeyGen` | `@ai-sdk/heygen` | `swift-ai-core` from `1.2.0` |
 | [swift-ai-huggingface](https://github.com/SwiftAISDK/swift-ai-huggingface) | extracted | `SwiftAIHuggingFace` | `@ai-sdk/huggingface` | `swift-ai-core` from `1.2.0` |
@@ -41,7 +41,7 @@ Generated from `Porting/packages.json`. All package states are explicit; planned
 | [swift-ai-mistral](https://github.com/SwiftAISDK/swift-ai-mistral) | extracted | `SwiftAIMistral` | `@ai-sdk/mistral` | `swift-ai-core` from `1.3.0` |
 | [swift-ai-moonshotai](https://github.com/SwiftAISDK/swift-ai-moonshotai) | extracted | `SwiftAIMoonshotAI` | `@ai-sdk/moonshotai` | `swift-ai-core` from `1.2.0`, `swift-ai-openai-compatible` from `1.0.0` |
 | [swift-ai-open-responses](https://github.com/SwiftAISDK/swift-ai-open-responses) | extracted | `SwiftAIOpenResponses` | `@ai-sdk/open-responses` | `swift-ai-core` from `1.2.0`, `swift-ai-openai` from `1.1.0` |
-| [swift-ai-openai](https://github.com/SwiftAISDK/swift-ai-openai) | extracted | `SwiftAIOpenAI` | `@ai-sdk/openai` | `swift-ai-core` from `1.3.0`, `swift-ai-openai-compatible` from `1.2.0` |
+| [swift-ai-openai](https://github.com/SwiftAISDK/swift-ai-openai) | extracted | `SwiftAIOpenAI` | `@ai-sdk/openai` | `swift-ai-core` from `1.4.0`, `swift-ai-openai-compatible` from `1.3.0` |
 | [swift-ai-openai-compatible](https://github.com/SwiftAISDK/swift-ai-openai-compatible) | extracted | `SwiftAIOpenAICompatible` | `@ai-sdk/openai-compatible` | `swift-ai-core` from `1.3.0` |
 | [swift-ai-perplexity](https://github.com/SwiftAISDK/swift-ai-perplexity) | extracted | `SwiftAIPerplexity` | `@ai-sdk/perplexity` | `swift-ai-core` from `1.2.0` |
 | [swift-ai-prodia](https://github.com/SwiftAISDK/swift-ai-prodia) | extracted | `SwiftAIProdia` | `@ai-sdk/prodia` | `swift-ai-core` from `1.2.0` |

@@ -38,7 +38,7 @@ public final class BlackForestLabsProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["x-key"] = headers["x-key"] ?? "\(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-black-forest-labs/2.0.79")
+        headers = withUserAgentSuffix(headers, "ai-sdk-black-forest-labs/2.0.84")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.bfl.ai/v1")
         let http = AIProviderHTTPClient(providerID: "black-forest-labs", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

@@ -1,10 +1,28 @@
+## Current reviewed behavior
+
+The reviewed baseline is `@ai-sdk/google` 4.0.120. `decisionModel("gemini-decision-1")` uses the native `/decisions` endpoint for Choice, Score and Boolean questions. Safety-blocked input returns refusals. Ordered text, JSON, inline media and media URLs are preserved; Box and provider file references are rejected before HTTP.
+
+For source and behavior compatibility, existing non-`gemini-decision-*` IDs passed to `decisionModel` retain the Swift structured-generation adapter, including Box. Use `nativeDecisionModel("custom-decision-id")` to opt any custom or future ID into the native endpoint. This explicit routing differs from the current JavaScript factory, which routes all decision IDs natively. Existing `evaluationModel` semantics are also preserved.
+
+Typed extraction is a distinct contract:
+
+```swift
+let extraction = try provider.extractionModel("gemini-3.8-flash")
+let result = try await extraction.doExtract(.init(
+    state: [.text("The invoice total is 42 EUR.")],
+    fields: ["total": .init(type: .number, instructions: "Invoice total", unit: "EUR")]
+))
+```
+
+Gemini 4 Hydrogen accepts portable and explicit `xhigh` thinking with a `low` minimum. Service-tier metadata falls back to `x-gemini-service-tier` when usage omits the value. Streaming document sources deduplicate by full resource URI, and File Search sources by store and title. Dotted array indexes obey the same contiguous bounds and string continuation as bracket indexes. Vertex shares these request/response algorithms.
+
 ## Structured JSON with application tools
 
 A request with `.json(schema: ...)` and function tools can return JSON while retaining real application tool calls. Pre-Gemini 3 and forced-tool cases use a collision-safe synthetic response tool. Its arguments become JSON text/stream deltas; its internal tool call and unrelated prose are omitted. Gemini 3 automatic selection uses native JSON output. Reasoning, signatures and application tool calls remain available.
 
 Tool failures and denials use `functionResponse.error`. Generic embedding dimensions apply unless provider-specific output dimensions override them. `nano-banana-2.1` uses the generateContent image route; retrieved-context custom metadata stays in provider metadata.
 
-`decisionModel(...)` uses `DecisionLanguageModel`; see [Decision](../../core/decide/). Batch downloads use the configurable per-row limit.
+For non-`gemini-decision-*` IDs, `decisionModel(...)` retains `DecisionLanguageModel`; see [Decision](../../core/decide/). Batch downloads use the configurable per-row limit.
 
 Gemini image requests merge the typed aspect ratio with provider `imageConfig`; configuring output settings does not discard the caller’s ratio.
 

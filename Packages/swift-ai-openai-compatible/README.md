@@ -40,6 +40,10 @@ same name; qualify that type when importing both modules. OpenAI model catalog
 rules and concrete host policies are supplied by adapters rather than importing
 those provider implementations here.
 
+## Current provider behavior
+
+`OpenAICompatibleChatModel.prepareRequest(_:)` returns `(body: JSONValue, warnings: [AIWarning])` for unary generation without sending a request. It applies request transforms and reasoning/option warnings while omitting streaming fields. `convertResponse(body:providerOptions:)` converts an already received JSON body through the same content, tool, usage and metadata logic; the native metadata wrappers remain empty for absent HTTP information. A custom model configuration can set `downloadTransport` for unauthenticated image URLs.
+
 ## Porting and verification
 
 Run `swift test --package-path Packages/swift-ai-openai-compatible --no-parallel` from the
