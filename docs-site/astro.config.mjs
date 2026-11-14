@@ -2,6 +2,10 @@ import { defineConfig } from 'astro/config';
 import { unified } from '@astrojs/markdown-remark';
 import starlight from '@astrojs/starlight';
 import remarkGfm from 'remark-gfm';
+import { currentReleaseVersion } from './scripts/release-version.mjs';
+import { markdownRoutes } from './scripts/markdown-routes.mjs';
+
+const sdkVersion = currentReleaseVersion();
 
 const base = process.env.DOCS_BASE ?? '/';
 const site = process.env.DOCS_SITE ?? 'https://swiftaisdk.github.io';
@@ -14,11 +18,40 @@ export default defineConfig({
   markdown: {
     processor: unified({ remarkPlugins: [remarkGfm] }),
   },
+  vite: {
+    define: { __SDK_VERSION__: JSON.stringify(sdkVersion) },
+  },
   integrations: [
+    markdownRoutes(),
     starlight({
       title: 'SwiftAISDK',
       description: 'SwiftPM port of the provider-facing Vercel AI SDK.',
-      customCss: ['./src/styles/custom.css'],
+      customCss: [
+        '@fontsource-variable/geist',
+        '@fontsource-variable/geist-mono',
+        './src/styles/custom.css',
+      ],
+      components: {
+        SiteTitle: './src/components/SiteTitle.astro',
+        PageTitle: './src/components/PageTitle.astro',
+        Hero: './src/components/Hero.astro',
+      },
+      expressiveCode: {
+        themes: ['github-dark-default', 'github-light-default'],
+        styleOverrides: {
+          borderRadius: '10px',
+          borderColor: 'var(--sl-color-hairline)',
+          codeFontFamily: 'var(--sl-font-mono)',
+          codeFontSize: '0.8125rem',
+          codeLineHeight: '1.7',
+          uiFontFamily: 'var(--sl-font)',
+          frames: {
+            shadowColor: 'transparent',
+            editorActiveTabIndicatorTopColor: 'transparent',
+            editorActiveTabIndicatorBottomColor: 'var(--sl-color-white)',
+          },
+        },
+      },
       editLink: {
         baseUrl:
           'https://github.com/SwiftAISDK/SwiftAISDK/edit/main/docs-site/',

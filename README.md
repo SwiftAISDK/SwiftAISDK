@@ -351,7 +351,7 @@ let started = try await AI.startBatch(
     provider: batch,
     requests: [.text(TextBatchRequest(
         id: "summary-1",
-        modelID: "claude-sonnet-4-5",
+        modelID: "claude-opus-5-5",
         request: LanguageModelRequest(messages: [.user("Summarize this.")])
     ))]
 )
@@ -477,7 +477,7 @@ let registry = createProviderRegistry([
 AIDefaultProvider.set(registry)
 
 let result = try await AI.generateText(
-    model: "openai:gpt-4.1-mini",
+    model: "openai:gpt-6.1-sol",
     prompt: "Write a launch checklist."
 )
 ```

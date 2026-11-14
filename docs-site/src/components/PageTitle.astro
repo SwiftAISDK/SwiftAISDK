@@ -1,0 +1,79 @@
+---
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+import { llmsPathForRoute, sdkVersion, withBase } from '../lib/site';
+
+const markdownUrl = withBase(llmsPathForRoute(Astro.locals.starlightRoute.id));
+---
+
+<Default><slot /></Default>
+<div class="page-actions" data-markdown-url={markdownUrl}>
+  <span class="page-version">SwiftAISDK {sdkVersion}</span>
+  <button type="button" class="page-action" data-copy-markdown>
+    <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="2"></rect><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"></path></svg>
+    <span data-label>Copy page</span>
+  </button>
+  <a class="page-action" href={markdownUrl}>
+    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h5l3 3v9H4z"></path><path d="M9 2v3h3"></path></svg>
+    View as Markdown
+  </a>
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('.page-actions')) {
+    const button = root.querySelector<HTMLButtonElement>('[data-copy-markdown]');
+    const label = button?.querySelector('[data-label]');
+    button?.addEventListener('click', async () => {
+      if (!label) return;
+      try {
+        const response = await fetch(root.dataset.markdownUrl ?? '');
+        if (!response.ok) throw new Error(String(response.status));
+        await navigator.clipboard.writeText(await response.text());
+        label.textContent = 'Copied';
+      } catch {
+        label.textContent = 'Copy failed';
+      }
+      setTimeout(() => (label.textContent = 'Copy page'), 1600);
+    });
+  }
+</script>
+
+<style>
+  .page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .page-version {
+    margin-inline-end: auto;
+    color: var(--sl-color-gray-3);
+    font-family: var(--sl-font-mono);
+    font-size: 0.75rem;
+  }
+  .page-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--sl-color-gray-2);
+    font: 500 0.8125rem/1.4 var(--sl-font);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .page-action:hover {
+    border-color: var(--sl-color-gray-3);
+    color: var(--sl-color-white);
+  }
+  .page-action svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+  }
+</style>

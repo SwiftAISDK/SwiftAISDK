@@ -24,7 +24,7 @@ struct StructuredOutputExample {
         )
 
         let provider = try AIProviders.openAI()
-        let model = try provider.languageModel("gpt-4.1-mini")
+        let model = try provider.languageModel("gpt-6.1-sol")
 
         let result = try await model.generateObject(
             "Summarize the SwiftAISDK README.",

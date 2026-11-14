@@ -1,0 +1,699 @@
+---
+import { Code } from '@astrojs/starlight/components';
+import { releaseUrl, sdkVersion, withBase } from '../lib/site';
+
+const { data } = Astro.locals.starlightRoute.entry;
+const { title = data.title, tagline } = data.hero ?? {};
+
+const installSnippet = `.package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "${sdkVersion}")`;
+
+type OutputLine = { kind: 'call' | 'result' | 'text' | 'meta'; text: string };
+
+const slides: { label: string; file: string; code: string; output: OutputLine[] }[] = [
+  {
+    label: 'Generate',
+    file: 'GenerateText.swift',
+    code: `import SwiftAISDK
+
+let provider = try AIProviders.openAI()
+let model = try provider.languageModel("gpt-6.1-sol")
+
+let result = try await model.generateText(
+    "Explain Swift concurrency in one sentence."
+)
+print(result.text)`,
+    output: [
+      {
+        kind: 'text',
+        text: 'Swift concurrency lets async tasks suspend without blocking threads, while actors keep shared state safe.',
+      },
+    ],
+  },
+  {
+    label: 'Stream',
+    file: 'StreamText.swift',
+    code: `for try await part in model.streamText(
+    "Write a short haiku about APIs."
+) {
+    switch part {
+    case .textDelta(let text):
+        print(text, terminator: "")
+    case .finish(let reason, _):
+        print("\\nFinished: \\(reason ?? "unknown")")
+    default:
+        break
+    }
+}`,
+    output: [
+      { kind: 'text', text: 'Requests drift like leaves,\nJSON settles in the stream,\na token, then calm.' },
+      { kind: 'meta', text: 'Finished: stop' },
+    ],
+  },
+  {
+    label: 'Tools',
+    file: 'Tools.swift',
+    code: `let weather = AITool(
+    name: "weather",
+    description: "Get the current weather in a city.",
+    parameters: [
+        "type": "object",
+        "properties": ["city": ["type": "string"]],
+    ]
+) { _ in
+    ["forecast": "sunny", "temperatureCelsius": 24]
+}
+
+let answer = try await model.generateText(
+    "What should I wear in Tokyo today?",
+    tools: LanguageToolOptions([weather], maxSteps: 3)
+)`,
+    output: [
+      { kind: 'call', text: 'weather({ "city": "Tokyo" })' },
+      { kind: 'result', text: '{ "forecast": "sunny", "temperatureCelsius": 24 }' },
+      { kind: 'text', text: 'Sunny and 24 °C: a T-shirt, light trousers and sunglasses will do.' },
+    ],
+  },
+  {
+    label: 'Providers',
+    file: 'Registry.swift',
+    code: `let registry = createProviderRegistry([
+    "openai": try AIProviders.openAI(),
+    "anthropic": try AIProviders.anthropic(),
+])
+AIDefaultProvider.set(registry)
+
+let answer = try await AI.generateText(
+    model: "anthropic:claude-opus-5-5",
+    prompt: "Write a release checklist."
+)`,
+    output: [
+      { kind: 'meta', text: 'Same call shape for every provider package.' },
+      { kind: 'text', text: '1. Bump the tag  2. Run the package suites  3. Verify consumers  4. Publish notes' },
+    ],
+  },
+];
+---
+
+<div class="sdk-hero not-content">
+  <div class="sdk-hero-copy">
+    <a class="sdk-hero-eyebrow" href={releaseUrl}>
+      <span class="dot" aria-hidden="true"></span>
+      SwiftAISDK {sdkVersion} is out
+      <span aria-hidden="true">→</span>
+    </a>
+    <h1 id="_top" data-page-title set:html={title} />
+    {tagline && <p class="sdk-hero-tagline" set:html={tagline} />}
+    <div class="sdk-hero-actions">
+      <a class="sdk-button primary" href={withBase('/getting-started/quickstart/')}>Get started</a>
+    </div>
+    <div class="sdk-install">
+      <div class="sdk-install-tabs" role="tablist" aria-label="Install">
+        <button type="button" role="tab" aria-selected="true">Swift Package</button>
+        <button type="button" role="tab" aria-selected="false" aria-disabled="true" title="Coming soon">
+          Agent skill <span class="soon">soon</span>
+        </button>
+      </div>
+      <div class="sdk-install-row" role="tabpanel">
+        <code>{installSnippet}</code>
+        <button type="button" data-copy={installSnippet} aria-label="Copy package dependency">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="2"></rect><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"></path></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sdk-slides" data-slides>
+    <div class="sdk-slides-bar">
+      <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+      <div class="sdk-slides-tabs" role="tablist" aria-label="SwiftAISDK examples">
+        {
+          slides.map((slide, index) => (
+            <button
+              type="button"
+              role="tab"
+              id={`sdk-slide-tab-${index}`}
+              aria-controls={`sdk-slide-${index}`}
+              aria-selected={index === 0 ? 'true' : 'false'}
+              tabindex={index === 0 ? 0 : -1}
+            >
+              {slide.label}
+              <span class="progress" aria-hidden="true" />
+            </button>
+          ))
+        }
+      </div>
+    </div>
+    <div class="sdk-slides-stage">
+      {
+        slides.map((slide, index) => (
+          <section
+            class="sdk-slide"
+            role="tabpanel"
+            id={`sdk-slide-${index}`}
+            aria-labelledby={`sdk-slide-tab-${index}`}
+            data-active={index === 0 ? '' : undefined}
+          >
+            <div class="sdk-slide-file">{slide.file}</div>
+            <div class="sdk-slide-code">
+              <Code code={slide.code} lang="swift" frame="none" wrap />
+            </div>
+            <div class="sdk-slide-output" aria-label="Model output">
+              <div class="sdk-slide-output-label">
+                <span class="spark" aria-hidden="true">✦</span> Output
+              </div>
+              {slide.output.map((line) => (
+                <p class={`line ${line.kind}`} data-text={line.text}>
+                  {line.text}
+                </p>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<script>
+  const slideDuration = 7000;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('.sdk-install button[data-copy]')) {
+    button.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(button.dataset.copy ?? '');
+      button.dataset.copied = '';
+      setTimeout(() => delete button.dataset.copied, 1400);
+    });
+  }
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-slides]')) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    let current = 0;
+    let rotateTimer: number | undefined;
+    let typeTimer: number | undefined;
+    let paused = false;
+
+    const typeOutput = (panel: HTMLElement) => {
+      window.clearTimeout(typeTimer);
+      const lines = [...panel.querySelectorAll<HTMLElement>('.line')];
+      if (reduceMotion.matches) {
+        for (const line of lines) {
+          line.textContent = line.dataset.text ?? '';
+          line.dataset.state = 'done';
+        }
+        return;
+      }
+      for (const line of lines) {
+        line.textContent = '';
+        line.dataset.state = 'pending';
+      }
+      let lineIndex = 0;
+      let tokens: string[] = [];
+      const step = () => {
+        const line = lines[lineIndex];
+        if (!line) return;
+        if (line.dataset.state === 'pending') {
+          line.dataset.state = 'typing';
+          tokens = (line.dataset.text ?? '').match(/\s*\S+|\s+/g) ?? [];
+        }
+        const token = tokens.shift();
+        if (token !== undefined) {
+          line.textContent += token;
+          typeTimer = window.setTimeout(step, line.classList.contains('text') ? 85 : 30);
+        } else {
+          line.dataset.state = 'done';
+          lineIndex += 1;
+          typeTimer = window.setTimeout(step, 320);
+        }
+      };
+      typeTimer = window.setTimeout(step, 450);
+    };
+
+    const show = (index: number, focus = false) => {
+      current = (index + panels.length) % panels.length;
+      tabs.forEach((tab, i) => {
+        const selected = i === current;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        tab.style.removeProperty('--slide-duration');
+      });
+      panels.forEach((panel, i) => {
+        if (i === current) panel.dataset.active = '';
+        else delete panel.dataset.active;
+      });
+      if (focus) tabs[current]?.focus();
+      const panel = panels[current];
+      if (panel) typeOutput(panel);
+      schedule();
+    };
+
+    const schedule = () => {
+      window.clearTimeout(rotateTimer);
+      root.dataset.running = String(!paused && !reduceMotion.matches);
+      if (paused || reduceMotion.matches) return;
+      const tab = tabs[current];
+      if (tab) {
+        // Restart the progress animation for the active tab.
+        tab.style.setProperty('--slide-duration', `${slideDuration}ms`);
+        tab.classList.remove('animate');
+        void tab.offsetWidth;
+        tab.classList.add('animate');
+      }
+      rotateTimer = window.setTimeout(() => show(current + 1), slideDuration);
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        paused = true;
+        show(index);
+      });
+      tab.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+          event.preventDefault();
+          paused = true;
+          show(current + (event.key === 'ArrowRight' ? 1 : -1), true);
+        }
+      });
+    });
+
+    root.addEventListener('pointerenter', () => {
+      if (paused) return;
+      window.clearTimeout(rotateTimer);
+      root.dataset.running = 'false';
+    });
+    root.addEventListener('pointerleave', () => {
+      if (!paused) schedule();
+    });
+
+    new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting && root.dataset.started === undefined) {
+          root.dataset.started = '';
+          show(0);
+        }
+      }
+    }).observe(root);
+  }
+</script>
+
+<style>
+  .sdk-hero {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+    padding-block: 2rem 3rem;
+  }
+
+  .sdk-hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    min-width: 0;
+  }
+
+  .sdk-hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem 0.25rem 0.6rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 999px;
+    color: var(--sl-color-gray-2);
+    font-size: 0.8125rem;
+    text-decoration: none;
+    transition: border-color 150ms, color 150ms;
+  }
+  .sdk-hero-eyebrow:hover {
+    border-color: var(--sl-color-gray-3);
+    color: var(--sl-color-white);
+  }
+  .sdk-hero-eyebrow .dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--sl-color-white);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sl-color-white) 18%, transparent);
+  }
+
+  .sdk-hero h1 {
+    margin: 0;
+    color: var(--sl-color-white);
+    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.25rem);
+    font-weight: 600;
+    letter-spacing: -0.055em;
+    line-height: 1;
+  }
+
+  .sdk-hero-tagline {
+    margin: 0;
+    max-width: 34rem;
+    color: var(--sl-color-gray-2);
+    font-size: clamp(1rem, 0.9rem + 0.4vw, 1.1875rem);
+    line-height: 1.55;
+  }
+
+  .sdk-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .sdk-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    padding: 0 1.1rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 999px;
+    color: var(--sl-color-white);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 150ms, border-color 150ms, opacity 150ms;
+  }
+  .sdk-button:hover {
+    border-color: var(--sl-color-gray-3);
+    background: var(--sl-color-bg-subtle);
+  }
+  .sdk-button.primary {
+    border-color: var(--sl-color-white);
+    background: var(--sl-color-white);
+    color: var(--sl-color-black);
+  }
+  .sdk-button.primary:hover {
+    opacity: 0.86;
+  }
+
+  .sdk-install {
+    width: 100%;
+    max-width: 34rem;
+  }
+  .sdk-install-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .sdk-install-tabs button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0 0 0.25rem;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    background: none;
+    color: var(--sl-color-gray-3);
+    font: 500 0.8125rem/1.4 var(--sl-font);
+  }
+  .sdk-install-tabs button[aria-selected='true'] {
+    border-bottom-color: var(--sl-color-white);
+    color: var(--sl-color-white);
+  }
+  /* The agent skill is not published yet. */
+  .sdk-install-tabs button[aria-disabled='true'] {
+    color: var(--sl-color-gray-4);
+    cursor: not-allowed;
+  }
+  .sdk-install-tabs .soon {
+    padding: 0 0.35rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 999px;
+    font-family: var(--sl-font-mono);
+    font-size: 0.625rem;
+    line-height: 1.5;
+  }
+  .sdk-install-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.5rem 0.55rem 0.85rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 10px;
+    background: var(--sl-color-bg-subtle);
+  }
+  .sdk-install-row code {
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--sl-color-white);
+    font-family: var(--sl-font-mono);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  .sdk-install-row button {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 1.875rem;
+    height: 1.875rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--sl-color-gray-3);
+    cursor: pointer;
+  }
+  .sdk-install-row button:hover {
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-white);
+  }
+  .sdk-install-row button[data-copied] {
+    color: var(--sl-color-white);
+  }
+  .sdk-install-row svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+  }
+
+  /* Slides */
+  .sdk-slides {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 14px;
+    background: var(--sl-color-bg-subtle);
+    box-shadow: 0 30px 80px -40px rgb(0 0 0 / 0.55);
+  }
+
+  .sdk-slides-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--sl-color-hairline-light);
+  }
+  .lights {
+    display: flex;
+    flex: none;
+    gap: 0.35rem;
+  }
+  .lights i {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--sl-color-gray-5);
+  }
+  .sdk-slides-tabs {
+    display: flex;
+    gap: 0.25rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .sdk-slides-tabs button {
+    position: relative;
+    flex: none;
+    overflow: hidden;
+    padding: 0.3rem 0.7rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--sl-color-gray-3);
+    font: 500 0.8125rem/1.4 var(--sl-font);
+    cursor: pointer;
+  }
+  .sdk-slides-tabs button:hover {
+    color: var(--sl-color-white);
+  }
+  .sdk-slides-tabs button[aria-selected='true'] {
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-white);
+  }
+  .sdk-slides-tabs .progress {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 2px;
+    background: var(--sl-color-white);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  [data-running='true'] .sdk-slides-tabs button.animate[aria-selected='true'] .progress {
+    animation: sdk-progress var(--slide-duration, 7s) linear forwards;
+  }
+
+  .sdk-slides-stage {
+    display: grid;
+  }
+  .sdk-slide {
+    display: flex;
+    grid-area: 1 / 1;
+    flex-direction: column;
+    min-width: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity 350ms ease, transform 350ms ease, visibility 0s linear 350ms;
+  }
+  .sdk-slide[data-active] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: opacity 350ms ease, transform 350ms ease;
+  }
+
+  .sdk-slide-file {
+    padding: 0.75rem 1rem 0;
+    color: var(--sl-color-gray-3);
+    font-family: var(--sl-font-mono);
+    font-size: 0.75rem;
+  }
+  .sdk-slide-code {
+    flex: 1;
+    min-width: 0;
+  }
+  .sdk-slide-code :global(.expressive-code) {
+    margin: 0;
+  }
+  .sdk-slide-code :global(.expressive-code pre) {
+    border: 0;
+    background: transparent !important;
+  }
+  .sdk-slide-code :global(.expressive-code .frame) {
+    box-shadow: none;
+  }
+  .sdk-slide-code :global(.expressive-code .copy) {
+    display: none;
+  }
+
+  .sdk-slide-output {
+    min-height: 8.5rem;
+    margin: 0 0.75rem 0.75rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 10px;
+    background: var(--sl-color-bg);
+    font-family: var(--sl-font-mono);
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+  .sdk-slide-output-label {
+    margin-bottom: 0.4rem;
+    color: var(--sl-color-gray-3);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .spark {
+    display: inline-block;
+    color: var(--sl-color-white);
+  }
+  [data-running='true'] .sdk-slide[data-active] .spark {
+    animation: sdk-spin 2.4s linear infinite;
+  }
+  .sdk-slide-output .line {
+    margin: 0.15rem 0 0;
+    color: var(--sl-color-gray-1);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .sdk-slide-output .line.call::before {
+    content: '→ ';
+    color: var(--sl-color-gray-3);
+  }
+  .sdk-slide-output .line.result {
+    color: var(--sl-color-gray-2);
+  }
+  .sdk-slide-output .line.result::before {
+    content: '← ';
+    color: var(--sl-color-gray-3);
+  }
+  .sdk-slide-output .line.meta {
+    color: var(--sl-color-gray-3);
+  }
+  .sdk-slide-output .line[data-state='pending'] {
+    display: none;
+  }
+  .sdk-slide-output .line[data-state='typing']::after {
+    content: '';
+    display: inline-block;
+    width: 0.5em;
+    height: 1.05em;
+    margin-inline-start: 2px;
+    vertical-align: text-bottom;
+    background: var(--sl-color-white);
+    animation: sdk-caret 0.9s steps(1) infinite;
+  }
+
+  @keyframes sdk-progress {
+    to {
+      transform: scaleX(1);
+    }
+  }
+  @keyframes sdk-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+  @keyframes sdk-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Narrow screens: size the window to the active slide instead of the tallest one. */
+  @media (max-width: 59.99rem) {
+    .sdk-slide:not([data-active]) {
+      display: none;
+    }
+    .sdk-slide[data-active] {
+      animation: sdk-fade 350ms ease;
+    }
+    .sdk-slide-code :global(.expressive-code) {
+      --ec-codeFontSize: 0.72rem;
+    }
+    .sdk-slide-output {
+      min-height: 0;
+    }
+  }
+
+  @keyframes sdk-fade {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .sdk-hero {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      gap: 3.5rem;
+      padding-block: clamp(2.5rem, 1rem + 8vmin, 6rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sdk-slide,
+    .sdk-slide[data-active] {
+      transition: none;
+      animation: none;
+    }
+  }
+</style>

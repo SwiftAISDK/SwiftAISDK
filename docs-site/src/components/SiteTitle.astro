@@ -1,0 +1,60 @@
+---
+import { releaseUrl, sdkVersion } from '../lib/site';
+
+const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute;
+---
+
+<div class="brand">
+  <a href={siteTitleHref} class="site-title">
+    <svg class="mark" viewBox="0 0 24 24" aria-hidden="true">
+      <rect width="24" height="24" rx="6" fill="currentColor"></rect>
+      <path
+        d="M12 4.5c.5 3.9 3.6 7 7.5 7.5-3.9.5-7 3.6-7.5 7.5-.5-3.9-3.6-7-7.5-7.5 3.9-.5 7-3.6 7.5-7.5Z"
+        fill="var(--sl-color-black)"></path>
+    </svg>
+    <span translate="no">{siteTitle}</span>
+  </a>
+  <a class="version" href={releaseUrl} title={`Release notes for SwiftAISDK ${sdkVersion}`}>
+    v{sdkVersion}
+  </a>
+</div>
+
+<style>
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+  .site-title {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--sl-color-white);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .mark {
+    width: 1.5rem;
+    height: 1.5rem;
+    flex: none;
+  }
+  .version {
+    flex: none;
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 999px;
+    color: var(--sl-color-gray-2);
+    font-family: var(--sl-font-mono);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    text-decoration: none;
+  }
+  .version:hover {
+    border-color: var(--sl-color-gray-3);
+    color: var(--sl-color-white);
+  }
+</style>

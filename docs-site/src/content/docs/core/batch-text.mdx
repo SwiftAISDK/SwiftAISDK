@@ -21,7 +21,7 @@ let started = try await AI.startBatch(
     requests: [
         .text(TextBatchRequest(
             id: "summary-1",
-            modelID: "claude-sonnet-4-5",
+            modelID: "claude-opus-5-5",
             request: LanguageModelRequest(messages: [
                 .user("Summarize the release notes.")
             ])
@@ -170,7 +170,7 @@ transport layer.
 The model-owned API remains source compatible for existing callers:
 
 ```swift
-let model = try anthropic.messages("claude-sonnet-4-5")
+let model = try anthropic.messages("claude-opus-5-5")
 let started = try await AI.startTextBatch(
     model: model,
     requests: [TextBatchRequest(

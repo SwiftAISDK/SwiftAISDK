@@ -12,6 +12,7 @@ import {
 } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { currentReleaseVersion } from './release-version.mjs';
 
 const docsSiteRoot = fileURLToPath(new URL('..', import.meta.url));
 const repoRoot = fileURLToPath(new URL('../..', import.meta.url));
@@ -497,6 +498,10 @@ function generateLLMSFiles() {
     '# SwiftAISDK documentation',
     '',
     'SwiftAISDK is a SwiftPM port of the provider-facing Vercel AI SDK.',
+    '',
+    `Current release: ${currentReleaseVersion()}`,
+    '',
+    'Every page is also available as Markdown: replace the trailing slash of a page URL with `.md` (for example `/core/tools.md`).',
     '',
     '## LLM-readable pages',
     ...pages.map(

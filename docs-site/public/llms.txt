@@ -2,6 +2,10 @@
 
 SwiftAISDK is a SwiftPM port of the provider-facing Vercel AI SDK.
 
+Current release: 3.3.0
+
+Every page is also available as Markdown: replace the trailing slash of a page URL with `.md` (for example `/core/tools.md`).
+
 ## LLM-readable pages
 - [Introduction](/llms/index.txt): Learn what SwiftAISDK is and where to start.
 - [Components](/llms/components.txt): Generated component map for SwiftAISDK public APIs.
