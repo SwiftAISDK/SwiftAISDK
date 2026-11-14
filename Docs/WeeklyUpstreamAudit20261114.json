@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "date": "2026-11-14",
-  "status": "modular-releases-verified-umbrella-pending",
+  "status": "published",
   "sourceStartCommit": "f2a7eb7a2b4eb4bd7f908e8bae4a5bc1566f14f9",
   "canonicalRepository": "https://github.com/SwiftAISDK/SwiftAISDK",
   "sourceReview": "Published archives and exact immutable matching-release tests control the delta review. Fresh main test inventory is a separate discovery checklist.",
@@ -26182,10 +26182,405 @@
         "firstFailureLogSHA256": "229044cc601571cee32647114c90125f9283935052188df513149708b60489b6",
         "knownGap": "Unchanged MCP discovery fixture has only50ms between1.05s delayed response and1s separately scheduled timeout. First CI attempt failed method-sequence expectation; same immutable export passed one bounded rerun. Scheduling-race explanation is inferred from fixture/runtime source; no stability fix included."
       }
-    ]
+    ],
+    "umbrella": {
+      "status": "published",
+      "version": "3.3.0",
+      "manifestSourceCommit": "ba19e200105d162fd743d271d6fe58cc33065230",
+      "canonicalImplementationSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+      "umbrellaManifestSHA256": "20e5cbeb11b1797d94cd249e8574711ee17f07d8797aa02132547231f1e666fd",
+      "remoteMain": "ba19e200105d162fd743d271d6fe58cc33065230",
+      "annotatedTag": "93c11a416bab46ac2033349933b2e8ae5f826ce4",
+      "peeledTag": "ba19e200105d162fd743d271d6fe58cc33065230",
+      "existingTagRefsPreserved": 73,
+      "release": {
+        "id": 444893096,
+        "url": "https://github.com/SwiftAISDK/SwiftAISDK/releases/tag/3.3.0",
+        "target": "ba19e200105d162fd743d271d6fe58cc33065230"
+      },
+      "notesSHA256": "92f2cb7d1a5446acd40187b84196216c97c78888f4ad296be005dcca8727565d",
+      "canonicalCI": {
+        "schemaVersion": 1,
+        "status": "passed",
+        "checkedAt": "2026-11-14T00:43:31.210Z",
+        "sourceCommit": "ba19e200105d162fd743d271d6fe58cc33065230",
+        "canonicalCI": {
+          "id": 43534092929,
+          "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929",
+          "sourceCommit": "ba19e200105d162fd743d271d6fe58cc33065230"
+        },
+        "swiftToolchain": "6.3.3",
+        "jobs": [
+          {
+            "id": 132258731708,
+            "name": "changes",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929/job/132258731708",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-14T00:25:34Z",
+                "completed_at": "2026-11-14T00:25:36Z"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-14T00:25:36Z",
+                "completed_at": "2026-11-14T00:25:43Z"
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-14T00:25:43Z",
+                "completed_at": "2026-11-14T00:25:47Z"
+              },
+              {
+                "name": "Select checks",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-14T00:25:47Z",
+                "completed_at": "2026-11-14T00:25:47Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7,
+                "started_at": "2026-11-14T00:25:47Z",
+                "completed_at": "2026-11-14T00:25:47Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8,
+                "started_at": "2026-11-14T00:25:47Z",
+                "completed_at": "2026-11-14T00:25:48Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 9,
+                "started_at": "2026-11-14T00:25:48Z",
+                "completed_at": "2026-11-14T00:25:48Z"
+              }
+            ]
+          },
+          {
+            "id": 132258852383,
+            "name": "docs",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929/job/132258852383",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-14T00:25:53Z",
+                "completed_at": "2026-11-14T00:25:54Z"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-14T00:25:54Z",
+                "completed_at": "2026-11-14T00:25:56Z"
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-14T00:25:56Z",
+                "completed_at": "2026-11-14T00:25:58Z"
+              },
+              {
+                "name": "Run npm ci --prefix docs-site",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-14T00:25:58Z",
+                "completed_at": "2026-11-14T00:26:03Z"
+              },
+              {
+                "name": "Generate documentation",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-11-14T00:26:03Z",
+                "completed_at": "2026-11-14T00:26:03Z"
+              },
+              {
+                "name": "Check and build documentation",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-11-14T00:26:03Z",
+                "completed_at": "2026-11-14T00:26:29Z"
+              },
+              {
+                "name": "Upload documentation",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7,
+                "started_at": "2026-11-14T00:26:29Z",
+                "completed_at": "2026-11-14T00:26:31Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 13,
+                "started_at": "2026-11-14T00:26:31Z",
+                "completed_at": "2026-11-14T00:26:31Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 14,
+                "started_at": "2026-11-14T00:26:31Z",
+                "completed_at": "2026-11-14T00:26:31Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 15,
+                "started_at": "2026-11-14T00:26:31Z",
+                "completed_at": "2026-11-14T00:26:31Z"
+              }
+            ]
+          },
+          {
+            "id": 132258852452,
+            "name": "test",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929/job/132258852452",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-14T00:25:53Z",
+                "completed_at": "2026-11-14T00:25:54Z"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-14T00:25:54Z",
+                "completed_at": "2026-11-14T00:25:57Z"
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-14T00:25:57Z",
+                "completed_at": "2026-11-14T00:25:59Z"
+              },
+              {
+                "name": "Check Swift version",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-14T00:25:59Z",
+                "completed_at": "2026-11-14T00:26:03Z"
+              },
+              {
+                "name": "Test affected packages and compatibility facade once",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-11-14T00:26:03Z",
+                "completed_at": "2026-11-14T00:39:22Z"
+              },
+              {
+                "name": "Compile for iOS",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-11-14T00:39:22Z",
+                "completed_at": "2026-11-14T00:41:04Z"
+              },
+              {
+                "name": "Build examples",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7,
+                "started_at": "2026-11-14T00:41:04Z",
+                "completed_at": "2026-11-14T00:43:05Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 13,
+                "started_at": "2026-11-14T00:43:05Z",
+                "completed_at": "2026-11-14T00:43:05Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 14,
+                "started_at": "2026-11-14T00:43:05Z",
+                "completed_at": "2026-11-14T00:43:06Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 15,
+                "started_at": "2026-11-14T00:43:06Z",
+                "completed_at": "2026-11-14T00:43:08Z"
+              }
+            ]
+          },
+          {
+            "id": 132258852473,
+            "name": "tooling",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929/job/132258852473",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-14T00:25:54Z",
+                "completed_at": "2026-11-14T00:25:55Z"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-14T00:25:55Z",
+                "completed_at": "2026-11-14T00:25:59Z"
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-14T00:25:59Z",
+                "completed_at": "2026-11-14T00:26:00Z"
+              },
+              {
+                "name": "Check catalog and tooling",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-14T00:26:00Z",
+                "completed_at": "2026-11-14T00:28:40Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7,
+                "started_at": "2026-11-14T00:28:40Z",
+                "completed_at": "2026-11-14T00:28:41Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8,
+                "started_at": "2026-11-14T00:28:41Z",
+                "completed_at": "2026-11-14T00:28:42Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 9,
+                "started_at": "2026-11-14T00:28:42Z",
+                "completed_at": "2026-11-14T00:28:43Z"
+              }
+            ]
+          },
+          {
+            "id": 132265216100,
+            "name": "deploy",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929/job/132265216100",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-14T00:43:15Z",
+                "completed_at": "2026-11-14T00:43:16Z"
+              },
+              {
+                "name": "Deploy to GitHub Pages",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-14T00:43:16Z",
+                "completed_at": "2026-11-14T00:43:24Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-14T00:43:24Z",
+                "completed_at": "2026-11-14T00:43:24Z"
+              }
+            ]
+          }
+        ]
+      },
+      "publicConsumers": {
+        "status": "passed",
+        "consumerCount": 2,
+        "versions": [
+          "3.3.0",
+          "2.8.1"
+        ],
+        "mirrors": false,
+        "localDependencies": false,
+        "report": "Docs/UmbrellaConsumerVerification20261114.json",
+        "reportSHA256": "435ce876d328aa9397645702c601362fc5d87b1abbcd796cbc438dffeef27082"
+      },
+      "modularPrerequisite": {
+        "status": "passed",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "consumerCount": 59,
+        "packageCount": 52,
+        "report": "Docs/PublicConsumerVerification20261114.json",
+        "reportSHA256": "9ccb1e8add77264f5c65d4e9d457ec7acee248dcad8f9db0f3286f17123653f9",
+        "releasedSet": "Releases/sets/weekly-upstream-20261114.json",
+        "releasedSetSHA256": "7f04b152bfa3479963ef3fb56bdc38dd1d4ab81333e0720b5c0ec4a78feeebdb"
+      },
+      "selection": "Releases/umbrella/3.3.0.json"
+    }
   },
   "publication": {
-    "status": "48-independent-releases-verified",
+    "status": "published",
     "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
     "canonicalCI": {
       "id": 43526272128,
@@ -27413,9 +27808,425 @@
       }
     ],
     "standaloneCI": "48 exact exported commits passed",
-    "publicConsumers": "59 clean clients passed using actual public tags without local overrides",
+    "publicConsumers": "59 clean modular clients and two complete-umbrella clients passed using actual public tags without mirrors or local overrides; the preserved 2.8.1 fixture is unchanged.",
     "verification": "Docs/ReleaseVerification20261114.json",
-    "umbrella": "3.3.0 selection pending separate exact-source verification and publication"
+    "umbrella": {
+      "status": "published",
+      "version": "3.3.0",
+      "manifestSourceCommit": "ba19e200105d162fd743d271d6fe58cc33065230",
+      "canonicalImplementationSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+      "umbrellaManifestSHA256": "20e5cbeb11b1797d94cd249e8574711ee17f07d8797aa02132547231f1e666fd",
+      "remoteMain": "ba19e200105d162fd743d271d6fe58cc33065230",
+      "annotatedTag": "93c11a416bab46ac2033349933b2e8ae5f826ce4",
+      "peeledTag": "ba19e200105d162fd743d271d6fe58cc33065230",
+      "existingTagRefsPreserved": 73,
+      "release": {
+        "id": 444893096,
+        "url": "https://github.com/SwiftAISDK/SwiftAISDK/releases/tag/3.3.0",
+        "target": "ba19e200105d162fd743d271d6fe58cc33065230"
+      },
+      "notesSHA256": "92f2cb7d1a5446acd40187b84196216c97c78888f4ad296be005dcca8727565d",
+      "canonicalCI": {
+        "schemaVersion": 1,
+        "status": "passed",
+        "checkedAt": "2026-11-14T00:43:31.210Z",
+        "sourceCommit": "ba19e200105d162fd743d271d6fe58cc33065230",
+        "canonicalCI": {
+          "id": 43534092929,
+          "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929",
+          "sourceCommit": "ba19e200105d162fd743d271d6fe58cc33065230"
+        },
+        "swiftToolchain": "6.3.3",
+        "jobs": [
+          {
+            "id": 132258731708,
+            "name": "changes",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929/job/132258731708",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-14T00:25:34Z",
+                "completed_at": "2026-11-14T00:25:36Z"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-14T00:25:36Z",
+                "completed_at": "2026-11-14T00:25:43Z"
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-14T00:25:43Z",
+                "completed_at": "2026-11-14T00:25:47Z"
+              },
+              {
+                "name": "Select checks",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-14T00:25:47Z",
+                "completed_at": "2026-11-14T00:25:47Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7,
+                "started_at": "2026-11-14T00:25:47Z",
+                "completed_at": "2026-11-14T00:25:47Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8,
+                "started_at": "2026-11-14T00:25:47Z",
+                "completed_at": "2026-11-14T00:25:48Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 9,
+                "started_at": "2026-11-14T00:25:48Z",
+                "completed_at": "2026-11-14T00:25:48Z"
+              }
+            ]
+          },
+          {
+            "id": 132258852383,
+            "name": "docs",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929/job/132258852383",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-14T00:25:53Z",
+                "completed_at": "2026-11-14T00:25:54Z"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-14T00:25:54Z",
+                "completed_at": "2026-11-14T00:25:56Z"
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-14T00:25:56Z",
+                "completed_at": "2026-11-14T00:25:58Z"
+              },
+              {
+                "name": "Run npm ci --prefix docs-site",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-14T00:25:58Z",
+                "completed_at": "2026-11-14T00:26:03Z"
+              },
+              {
+                "name": "Generate documentation",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-11-14T00:26:03Z",
+                "completed_at": "2026-11-14T00:26:03Z"
+              },
+              {
+                "name": "Check and build documentation",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-11-14T00:26:03Z",
+                "completed_at": "2026-11-14T00:26:29Z"
+              },
+              {
+                "name": "Upload documentation",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7,
+                "started_at": "2026-11-14T00:26:29Z",
+                "completed_at": "2026-11-14T00:26:31Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 13,
+                "started_at": "2026-11-14T00:26:31Z",
+                "completed_at": "2026-11-14T00:26:31Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 14,
+                "started_at": "2026-11-14T00:26:31Z",
+                "completed_at": "2026-11-14T00:26:31Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 15,
+                "started_at": "2026-11-14T00:26:31Z",
+                "completed_at": "2026-11-14T00:26:31Z"
+              }
+            ]
+          },
+          {
+            "id": 132258852452,
+            "name": "test",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929/job/132258852452",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-14T00:25:53Z",
+                "completed_at": "2026-11-14T00:25:54Z"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-14T00:25:54Z",
+                "completed_at": "2026-11-14T00:25:57Z"
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-14T00:25:57Z",
+                "completed_at": "2026-11-14T00:25:59Z"
+              },
+              {
+                "name": "Check Swift version",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-14T00:25:59Z",
+                "completed_at": "2026-11-14T00:26:03Z"
+              },
+              {
+                "name": "Test affected packages and compatibility facade once",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-11-14T00:26:03Z",
+                "completed_at": "2026-11-14T00:39:22Z"
+              },
+              {
+                "name": "Compile for iOS",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-11-14T00:39:22Z",
+                "completed_at": "2026-11-14T00:41:04Z"
+              },
+              {
+                "name": "Build examples",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7,
+                "started_at": "2026-11-14T00:41:04Z",
+                "completed_at": "2026-11-14T00:43:05Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 13,
+                "started_at": "2026-11-14T00:43:05Z",
+                "completed_at": "2026-11-14T00:43:05Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 14,
+                "started_at": "2026-11-14T00:43:05Z",
+                "completed_at": "2026-11-14T00:43:06Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 15,
+                "started_at": "2026-11-14T00:43:06Z",
+                "completed_at": "2026-11-14T00:43:08Z"
+              }
+            ]
+          },
+          {
+            "id": 132258852473,
+            "name": "tooling",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929/job/132258852473",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-14T00:25:54Z",
+                "completed_at": "2026-11-14T00:25:55Z"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-14T00:25:55Z",
+                "completed_at": "2026-11-14T00:25:59Z"
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-14T00:25:59Z",
+                "completed_at": "2026-11-14T00:26:00Z"
+              },
+              {
+                "name": "Check catalog and tooling",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-11-14T00:26:00Z",
+                "completed_at": "2026-11-14T00:28:40Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7,
+                "started_at": "2026-11-14T00:28:40Z",
+                "completed_at": "2026-11-14T00:28:41Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8,
+                "started_at": "2026-11-14T00:28:41Z",
+                "completed_at": "2026-11-14T00:28:42Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 9,
+                "started_at": "2026-11-14T00:28:42Z",
+                "completed_at": "2026-11-14T00:28:43Z"
+              }
+            ]
+          },
+          {
+            "id": 132265216100,
+            "name": "deploy",
+            "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929/job/132265216100",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-11-14T00:43:15Z",
+                "completed_at": "2026-11-14T00:43:16Z"
+              },
+              {
+                "name": "Deploy to GitHub Pages",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-11-14T00:43:16Z",
+                "completed_at": "2026-11-14T00:43:24Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-11-14T00:43:24Z",
+                "completed_at": "2026-11-14T00:43:24Z"
+              }
+            ]
+          }
+        ]
+      },
+      "publicConsumers": {
+        "status": "passed",
+        "consumerCount": 2,
+        "versions": [
+          "3.3.0",
+          "2.8.1"
+        ],
+        "mirrors": false,
+        "localDependencies": false,
+        "report": "Docs/UmbrellaConsumerVerification20261114.json",
+        "reportSHA256": "435ce876d328aa9397645702c601362fc5d87b1abbcd796cbc438dffeef27082"
+      },
+      "modularPrerequisite": {
+        "status": "passed",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "consumerCount": 59,
+        "packageCount": 52,
+        "report": "Docs/PublicConsumerVerification20261114.json",
+        "reportSHA256": "9ccb1e8add77264f5c65d4e9d457ec7acee248dcad8f9db0f3286f17123653f9",
+        "releasedSet": "Releases/sets/weekly-upstream-20261114.json",
+        "releasedSetSHA256": "7f04b152bfa3479963ef3fb56bdc38dd1d4ab81333e0720b5c0ec4a78feeebdb"
+      },
+      "selection": "Releases/umbrella/3.3.0.json"
+    },
+    "modularConsumerVerification": {
+      "status": "passed",
+      "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+      "consumerCount": 59,
+      "packageCount": 52,
+      "report": "Docs/PublicConsumerVerification20261114.json",
+      "reportSHA256": "9ccb1e8add77264f5c65d4e9d457ec7acee248dcad8f9db0f3286f17123653f9",
+      "releasedSet": "Releases/sets/weekly-upstream-20261114.json",
+      "releasedSetSHA256": "7f04b152bfa3479963ef3fb56bdc38dd1d4ab81333e0720b5c0ec4a78feeebdb"
+    },
+    "umbrellaConsumerVerification": {
+      "status": "passed",
+      "consumerCount": 2,
+      "versions": [
+        "3.3.0",
+        "2.8.1"
+      ],
+      "mirrors": false,
+      "localDependencies": false,
+      "report": "Docs/UmbrellaConsumerVerification20261114.json",
+      "reportSHA256": "435ce876d328aa9397645702c601362fc5d87b1abbcd796cbc438dffeef27082"
+    }
   },
   "rootIntegrationClarifications": [
     "Google extraction uses AIExtractionLanguageModel over structured generation; only Decisions has a native /decisions endpoint.",

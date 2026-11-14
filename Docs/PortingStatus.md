@@ -21,15 +21,16 @@ All 52 independent distributions are published. The 2026-11-14 set updates
 Vercel. Core and Anthropic are 1.4.0; exact old/new versions and immutable
 refs for every changed unit are in ReleaseVerification20261114.json.
 
-SwiftAISDK 3.2.0 remains the latest complete umbrella while the separate 3.3.0
-selection is verified. That selection adds compatibility extraction routing and
-raises installation minimums only to actual verified dependency tags. Original
+SwiftAISDK 3.3.0 is published as the complete optional umbrella. Its tested
+52-package selection adds compatibility extraction routing and raises installation
+minimums only to actual verified dependency tags. Original
 selectors remain available; ModelCapability.extraction requires updates to
 exhaustive switches under the project's additive minor convention. This is a
 source migration caveat, not a binary compatibility guarantee.
 
 All 48 exported commits passed standalone hosted CI and 59 clean consumers of
-real public tags. Eight version-specific historical dependency clients supplement
+real public tags. Actual SwiftAISDK 3.3.0 and preserved 2.8.1 complete-umbrella
+consumers also passed, with a separate immutable two-client report. Eight version-specific historical dependency clients supplement
 the catalog-wide minimum checks. One unchanged MCP discovery timeout fixture
 needed a bounded same-SHA CI rerun; the initial failure and timing debt are
 retained in the verification report. Paid/live checks remain disabled.
@@ -66,9 +67,10 @@ Exact per-package decisions, tests and retained gaps are in
 [WeeklyUpstreamAudit20261114.md](WeeklyUpstreamAudit20261114.md). All mandatory
 local checks passed: 52 owning packages, 1731 facade tests, deterministic exports
 and 106 minimum/latest clients, tooling and the 101-page documentation build.
-Independent publication is verified; the separate umbrella selection remains
-pending. No full-package
-or paid live-service parity is claimed.
+The 48 independent releases and separate SwiftAISDK 3.3.0 umbrella are published
+and verified, including exact-source hosted CI, public tag/Release readback, 59
+modular consumers and two complete-umbrella consumers. No full-package or paid
+live-service parity is claimed.
 
 ## Weekly upstream review (2026-11-08)
 

@@ -1,6 +1,6 @@
 # Weekly upstream audit — 2026-11-14
 
-Implementation, canonical hosted CI and 48 independent Swift releases are verified; the separate umbrella selection is pending. This is a delta review, not a full-package or live-service parity certificate.
+Implementation, canonical hosted CI, 48 independent Swift releases and SwiftAISDK 3.3.0 are published and verified. All 59 modular and two complete-umbrella public consumers passed. This is a delta review, not a full-package or live-service parity certificate.
 
 Fresh registry: 54 tracked packages; 52 newer npm baselines. npm search returned 76 scoped names, while exact registry-prefix enumeration returned 96. The 52 required preparations verified 104 published archives and 1705 exact release-test files without fallback evidence. The 43 additional unimplemented packages have 74 integrity-verified old/latest archives and separate entrypoint/source/declaration dispositions.
 
@@ -76,7 +76,7 @@ Recommend a separate ScaleDown vertical next: Decision and Extraction reuse the 
 
 All 52 owning package suites (2353 tests across their targets) and 1731 facade tests in 48 suites passed through `node Scripts/test-packages.mjs`. Tooling 27/27, generation, core/provider isolation and version-resolution checks passed. Deterministic exports using disposable local Git tags and real published lower bounds passed standalone suites for 52 packages and 106 minimum/latest/mixed/umbrella consumers. Documentation installation, check (zero errors/warnings/hints) and build (101 pages) passed. No optional paid/live checks ran. The JSON audit records exact owning commands/results for every package.
 
-The 48 independent releases (11 minor, 37 patch) are published and verified from [canonical source 07fbf86b](https://github.com/SwiftAISDK/SwiftAISDK/commit/07fbf86b82d83d9724bd03622e9e87e74395286f). All 48 exact exported commits passed standalone CI, and 59 public consumers passed with actual public tags and no local overrides. True version-specific minimum graphs are additionally verified; see the structured release verification. ByteDance, Hugging Face, LMNT and Vercel retain their versions. The separate umbrella 3.3.0 is not yet published.
+The 48 independent releases (11 minor, 37 patch) are published and verified from [canonical source 07fbf86b](https://github.com/SwiftAISDK/SwiftAISDK/commit/07fbf86b82d83d9724bd03622e9e87e74395286f). All 48 exact exported commits passed standalone CI, and 59 public consumers passed with actual public tags and no local overrides. True version-specific minimum graphs are additionally verified; see the structured release verification. ByteDance, Hugging Face, LMNT and Vercel retain their versions. The separate [SwiftAISDK 3.3.0 umbrella](https://github.com/SwiftAISDK/SwiftAISDK/releases/tag/3.3.0) is published at [manifest/source ba19e200](https://github.com/SwiftAISDK/SwiftAISDK/commit/ba19e200105d162fd743d271d6fe58cc33065230). Its exact-source Swift 6.3.3 CI and actual 3.3.0/preserved 2.8.1 complete consumers passed.
 
 ## Swift releases
 
@@ -132,6 +132,12 @@ The 48 independent releases (11 minor, 37 patch) are published and verified from
 | `swift-ai-zai` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-zai/releases/tag/1.1.2) |
 
 Exact canonical/export commits, annotated/peeled tags, export hashes, dependency requirements, CI and Release targets are in [ReleaseVerification20261114.json](ReleaseVerification20261114.json).
+
+## Umbrella 3.3.0 proof
+
+The modular implementation source remains `07fbf86b82d83d9724bd03622e9e87e74395286f`; the umbrella manifest and annotated tag target `ba19e200105d162fd743d271d6fe58cc33065230`. The [52-version selection](../Releases/umbrella/3.3.0.json) records actual dependency versions and immutable export/tag refs. [Exact-source hosted CI](https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43534092929), annotated/peeled root tags, the GitHub Release target and the saved English notes digest are verified.
+
+The original [59-consumer report](PublicConsumerVerification20261114.json) and modular released set remain unchanged. The separate [two-consumer report](UmbrellaConsumerVerification20261114.json) verifies the public 3.3.0 umbrella and the preserved 2.8.1 fixture without mirrors or local dependency overrides. [ReleaseVerification20261114.json](ReleaseVerification20261114.json) links both digests and retains the MCP first-failure/rerun evidence. Paid/live provider checks and broader parity gaps remain unchanged.
 
 ## Retained gaps and native choices
 

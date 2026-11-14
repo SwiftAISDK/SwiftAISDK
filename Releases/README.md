@@ -19,8 +19,13 @@ selection after its dependency tags passed public consumers and hosted CI.
 The 2026-11-14 set is in `sets/weekly-upstream-20261114.json`: 48 changed
 units (11 minor, 37 patch), with four unchanged distributions retained. All
 48 standalone CI runs and 59 clean public consumers passed. Version-specific
-lower bounds are additionally verified. The separate 3.3.0 umbrella selection
-is pending its exact-source verification and publication.
+lower bounds are additionally verified. `umbrella/3.3.0.json` records the separate
+52-version compatibility selection after exact-source Swift 6.3.3 CI, annotated
+tag/GitHub Release readback and actual 3.3.0/preserved 2.8.1 consumers passed. The
+59 modular consumer report remains immutable; the two umbrella consumers have a
+separate report in `Docs/UmbrellaConsumerVerification20261114.json`. The unchanged
+MCP fixture needed one bounded same-SHA CI rerun; the initial failure and its
+50 ms timing margin remain recorded test-stability debt.
 
 ## Reviewed changes
 
