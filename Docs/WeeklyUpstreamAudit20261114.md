@@ -1,6 +1,6 @@
 # Weekly upstream audit — 2026-11-14
 
-Implementation and all local verification passed; canonical hosted CI and publication are pending. This is a delta review, not a full-package or live-service parity certificate.
+Implementation, canonical hosted CI and 48 independent Swift releases are verified; the separate umbrella selection is pending. This is a delta review, not a full-package or live-service parity certificate.
 
 Fresh registry: 54 tracked packages; 52 newer npm baselines. npm search returned 76 scoped names, while exact registry-prefix enumeration returned 96. The 52 required preparations verified 104 published archives and 1705 exact release-test files without fallback evidence. The 43 additional unimplemented packages have 74 integrity-verified old/latest archives and separate entrypoint/source/declaration dispositions.
 
@@ -76,10 +76,67 @@ Recommend a separate ScaleDown vertical next: Decision and Extraction reuse the 
 
 All 52 owning package suites (2353 tests across their targets) and 1731 facade tests in 48 suites passed through `node Scripts/test-packages.mjs`. Tooling 27/27, generation, core/provider isolation and version-resolution checks passed. Deterministic exports using disposable local Git tags and real published lower bounds passed standalone suites for 52 packages and 106 minimum/latest/mixed/umbrella consumers. Documentation installation, check (zero errors/warnings/hints) and build (101 pages) passed. No optional paid/live checks ran. The JSON audit records exact owning commands/results for every package.
 
-The reviewed release selects 48 independently changed Swift packages (11 minor, 37 patch); ByteDance, Hugging Face, LMNT and Vercel remain unchanged. Original selectors are retained; ModelCapability.extraction requires updates to exhaustive switches under the documented minor convention. Publication awaits a source commit, fast-forward push and green exact-source Swift 6.3.3 CI. No public tags or Releases have been created.
+The 48 independent releases (11 minor, 37 patch) are published and verified from [canonical source 07fbf86b](https://github.com/SwiftAISDK/SwiftAISDK/commit/07fbf86b82d83d9724bd03622e9e87e74395286f). All 48 exact exported commits passed standalone CI, and 59 public consumers passed with actual public tags and no local overrides. True version-specific minimum graphs are additionally verified; see the structured release verification. ByteDance, Hugging Face, LMNT and Vercel retain their versions. The separate umbrella 3.3.0 is not yet published.
+
+## Swift releases
+
+| Package | Old | New | SemVer | Verified Release |
+| --- | --- | --- | --- | --- |
+| `swift-ai-core` | 1.3.0 | 1.4.0 | minor | [Release](https://github.com/SwiftAISDK/swift-ai-core/releases/tag/1.4.0) |
+| `swift-ai-alibaba` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-alibaba/releases/tag/1.1.2) |
+| `swift-ai-anthropic` | 1.3.0 | 1.4.0 | minor | [Release](https://github.com/SwiftAISDK/swift-ai-anthropic/releases/tag/1.4.0) |
+| `swift-ai-openai-compatible` | 1.2.0 | 1.3.0 | minor | [Release](https://github.com/SwiftAISDK/swift-ai-openai-compatible/releases/tag/1.3.0) |
+| `swift-ai-openai` | 1.2.0 | 1.3.0 | minor | [Release](https://github.com/SwiftAISDK/swift-ai-openai/releases/tag/1.3.0) |
+| `swift-ai-amazon-bedrock` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-amazon-bedrock/releases/tag/1.1.2) |
+| `swift-ai-anthropic-aws` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-anthropic-aws/releases/tag/1.2.1) |
+| `swift-ai-assemblyai` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-assemblyai/releases/tag/1.1.2) |
+| `swift-ai-deepseek` | 1.1.1 | 1.2.0 | minor | [Release](https://github.com/SwiftAISDK/swift-ai-deepseek/releases/tag/1.2.0) |
+| `swift-ai-azure` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-azure/releases/tag/1.2.1) |
+| `swift-ai-baseten` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-baseten/releases/tag/1.1.2) |
+| `swift-ai-black-forest-labs` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-black-forest-labs/releases/tag/1.1.2) |
+| `swift-ai-cartesia` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-cartesia/releases/tag/1.2.1) |
+| `swift-ai-cerebras` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-cerebras/releases/tag/1.2.1) |
+| `swift-ai-cohere` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-cohere/releases/tag/1.2.1) |
+| `swift-ai-deepgram` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-deepgram/releases/tag/1.2.1) |
+| `swift-ai-deepinfra` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-deepinfra/releases/tag/1.1.2) |
+| `swift-ai-elevenlabs` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-elevenlabs/releases/tag/1.2.1) |
+| `swift-ai-fal` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-fal/releases/tag/1.1.2) |
+| `swift-ai-fireworks` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-fireworks/releases/tag/1.1.2) |
+| `swift-ai-fish-audio` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-fish-audio/releases/tag/1.1.2) |
+| `swift-ai-gateway` | 1.2.0 | 1.3.0 | minor | [Release](https://github.com/SwiftAISDK/swift-ai-gateway/releases/tag/1.3.0) |
+| `swift-ai-gladia` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-gladia/releases/tag/1.2.1) |
+| `swift-ai-gmicloud` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-gmicloud/releases/tag/1.1.2) |
+| `swift-ai-google` | 1.2.0 | 1.3.0 | minor | [Release](https://github.com/SwiftAISDK/swift-ai-google/releases/tag/1.3.0) |
+| `swift-ai-google-vertex` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-google-vertex/releases/tag/1.2.1) |
+| `swift-ai-groq` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-groq/releases/tag/1.2.1) |
+| `swift-ai-heygen` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-heygen/releases/tag/1.1.2) |
+| `swift-ai-hume` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-hume/releases/tag/1.1.2) |
+| `swift-ai-klingai` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-klingai/releases/tag/1.1.2) |
+| `swift-ai-luma` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-luma/releases/tag/1.1.2) |
+| `swift-ai-mcp` | 1.1.1 | 1.2.0 | minor | [Release](https://github.com/SwiftAISDK/swift-ai-mcp/releases/tag/1.2.0) |
+| `swift-ai-minimax` | 1.2.0 | 1.3.0 | minor | [Release](https://github.com/SwiftAISDK/swift-ai-minimax/releases/tag/1.3.0) |
+| `swift-ai-mistral` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-mistral/releases/tag/1.2.1) |
+| `swift-ai-moonshotai` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-moonshotai/releases/tag/1.1.2) |
+| `swift-ai-open-responses` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-open-responses/releases/tag/1.1.2) |
+| `swift-ai-perplexity` | 1.1.1 | 1.2.0 | minor | [Release](https://github.com/SwiftAISDK/swift-ai-perplexity/releases/tag/1.2.0) |
+| `swift-ai-prodia` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-prodia/releases/tag/1.1.2) |
+| `swift-ai-quiverai` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-quiverai/releases/tag/1.1.2) |
+| `swift-ai-replicate` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-replicate/releases/tag/1.1.2) |
+| `swift-ai-revai` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-revai/releases/tag/1.1.2) |
+| `swift-ai-togetherai` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-togetherai/releases/tag/1.1.2) |
+| `swift-ai-topaz` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-topaz/releases/tag/1.1.2) |
+| `swift-ai-typesafe-ai` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-typesafe-ai/releases/tag/1.2.1) |
+| `swift-ai-ui` | 1.1.0 | 1.2.0 | minor | [Release](https://github.com/SwiftAISDK/swift-ai-ui/releases/tag/1.2.0) |
+| `swift-ai-voyage` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-voyage/releases/tag/1.1.2) |
+| `swift-ai-xai` | 1.2.0 | 1.2.1 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-xai/releases/tag/1.2.1) |
+| `swift-ai-zai` | 1.1.1 | 1.1.2 | patch | [Release](https://github.com/SwiftAISDK/swift-ai-zai/releases/tag/1.1.2) |
+
+Exact canonical/export commits, annotated/peeled tags, export hashes, dependency requirements, CI and Release targets are in [ReleaseVerification20261114.json](ReleaseVerification20261114.json).
 
 ## Retained gaps and native choices
 
 Browser media/WebRTC/iframes, JS framework hooks/workflows/harnesses, legacy EventSource, separate Google transcription/speech translation, Gateway incremental binary-image decoding and Open Responses extension codecs remain explicit gaps. Google keeps nondecision Gemini IDs on its existing native language adapter; custom native Decision IDs use nativeDecisionModel. Native UI callbacks are synchronous; native failed-tool display uses AIToolResult.isError. Existing ByteDance and Hugging Face native request identities are retained without releases. Paid/live provider checks remain disabled.
 
 The [structured package-by-package audit](WeeklyUpstreamAudit20261114.json) contains archive integrity, immutable test refs, declarations/source/test dispositions, native changes and test paths for each package. The test inventory tracks fresh upstream main independently of release-matched baseline evidence.
+
+Known CI stability debt: the unchanged MCP discovery fixture has a 50 ms timer/response margin. Its first standalone attempt failed; one bounded rerun on the same immutable export passed. The initial failure is retained, and no fixture-stability fix is included.

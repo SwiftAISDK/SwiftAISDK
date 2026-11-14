@@ -16,17 +16,23 @@ for exact evidence.
 
 ## Modular packages
 
-SwiftAISDK 3.2.0 is published with 52 independent distributions. Core and Anthropic
-are 1.3.0; 18 other feature units are 1.2.0; UI is 1.1.0; 27 corrected providers/MCP
-are 1.1.1. Hugging Face retains 1.1.0; ByteDance, LMNT and Vercel retain 1.0.0.
-The optional compatibility umbrella retains `import SwiftAISDK`, adds URL
-transcription forwarding and raises installation minimums for the reviewed APIs.
-Five public enums gain cases; see the exhaustive-switch guidance in Migration.md.
-Native package tags, standalone CI, public consumers and hosted documentation are
-recorded in [ReleaseVerification20261108.json](ReleaseVerification20261108.json).
-The immutable modular set is [weekly-upstream-20261108](../Releases/sets/weekly-upstream-20261108.json).
-See [Migration.md](Migration.md), [PackageCatalog.md](PackageCatalog.md) and
-[the release workflow](../Releases/README.md).
+All 52 independent distributions are published. The 2026-11-14 set updates
+48 units (11 minor, 37 patch), retaining ByteDance, Hugging Face, LMNT and
+Vercel. Core and Anthropic are 1.4.0; exact old/new versions and immutable
+refs for every changed unit are in ReleaseVerification20261114.json.
+
+SwiftAISDK 3.2.0 remains the latest complete umbrella while the separate 3.3.0
+selection is verified. That selection adds compatibility extraction routing and
+raises installation minimums only to actual verified dependency tags. Original
+selectors remain available; ModelCapability.extraction requires updates to
+exhaustive switches under the project's additive minor convention. This is a
+source migration caveat, not a binary compatibility guarantee.
+
+All 48 exported commits passed standalone hosted CI and 59 clean consumers of
+real public tags. Eight version-specific historical dependency clients supplement
+the catalog-wide minimum checks. One unchanged MCP discovery timeout fixture
+needed a bounded same-SHA CI rerun; the initial failure and timing debt are
+retained in the verification report. Paid/live checks remain disabled.
 
 ## Initial 3.0 migration evidence
 
@@ -60,7 +66,8 @@ Exact per-package decisions, tests and retained gaps are in
 [WeeklyUpstreamAudit20261114.md](WeeklyUpstreamAudit20261114.md). All mandatory
 local checks passed: 52 owning packages, 1731 facade tests, deterministic exports
 and 106 minimum/latest clients, tooling and the 101-page documentation build.
-Publication awaits the source commit and exact-source hosted CI; no full-package
+Independent publication is verified; the separate umbrella selection remains
+pending. No full-package
 or paid live-service parity is claimed.
 
 ## Weekly upstream review (2026-11-08)

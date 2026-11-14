@@ -16,6 +16,12 @@ units (21 minor, 27 patch). ByteDance, Hugging Face, LMNT and Vercel retain
 their distributions. `umbrella/3.2.0.json` records the separate compatibility
 selection after its dependency tags passed public consumers and hosted CI.
 
+The 2026-11-14 set is in `sets/weekly-upstream-20261114.json`: 48 changed
+units (11 minor, 37 patch), with four unchanged distributions retained. All
+48 standalone CI runs and 59 clean public consumers passed. Version-specific
+lower bounds are additionally verified. The separate 3.3.0 umbrella selection
+is pending its exact-source verification and publication.
+
 ## Reviewed changes
 
 Add one `changes/<id>.json` for a meaningful implementation, public metadata or

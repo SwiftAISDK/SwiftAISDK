@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "date": "2026-11-14",
-  "status": "local-verification-passed-publication-pending",
+  "status": "modular-releases-verified-umbrella-pending",
   "sourceStartCommit": "f2a7eb7a2b4eb4bd7f908e8bae4a5bc1566f14f9",
   "canonicalRepository": "https://github.com/SwiftAISDK/SwiftAISDK",
   "sourceReview": "Published archives and exact immutable matching-release tests control the delta review. Fresh main test inventory is a separate discovery checklist.",
@@ -25579,11 +25579,1843 @@
         "status": "passed",
         "logSHA256": "0a3cec9084b0d7050f6363b71639eb8d27a792854f900da978d261d273d8d73f"
       }
+    ],
+    "versionSpecificMinima": {
+      "schemaVersion": 1,
+      "status": "passed",
+      "checkedAt": "2026-11-13T23:46:43.535Z",
+      "sourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+      "packageCount": 52,
+      "packages": [
+        {
+          "package": "swift-ai-core",
+          "version": "1.4.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.4.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-alibaba",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-alibaba": "1.1.2",
+            "swift-ai-core": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-anthropic",
+          "version": "1.4.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-anthropic": "1.4.0",
+            "swift-ai-core": "1.4.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "version": "1.3.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-openai-compatible": "1.3.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-openai",
+          "version": "1.3.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.4.0",
+            "swift-ai-openai": "1.3.0",
+            "swift-ai-openai-compatible": "1.3.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-amazon-bedrock",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-amazon-bedrock": "1.1.2",
+            "swift-ai-anthropic": "1.4.0",
+            "swift-ai-core": "1.4.0",
+            "swift-ai-openai": "1.2.0",
+            "swift-ai-openai-compatible": "1.2.0"
+          },
+          "evidence": "version-specific exact-pinned supplemental consumer"
+        },
+        {
+          "package": "swift-ai-anthropic-aws",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-anthropic": "1.4.0",
+            "swift-ai-anthropic-aws": "1.2.1",
+            "swift-ai-core": "1.4.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-assemblyai",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-assemblyai": "1.1.2",
+            "swift-ai-core": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-deepseek",
+          "version": "1.2.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-deepseek": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-azure",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-azure": "1.2.1",
+            "swift-ai-core": "1.4.0",
+            "swift-ai-deepseek": "1.1.1",
+            "swift-ai-openai": "1.3.0",
+            "swift-ai-openai-compatible": "1.3.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-baseten",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-baseten": "1.1.2",
+            "swift-ai-core": "1.3.0",
+            "swift-ai-openai-compatible": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-black-forest-labs",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-black-forest-labs": "1.1.2",
+            "swift-ai-core": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-bytedance",
+          "version": "1.0.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-bytedance": "1.0.0",
+            "swift-ai-core": "1.1.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-cartesia",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-cartesia": "1.2.1",
+            "swift-ai-core": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-cerebras",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-cerebras": "1.2.1",
+            "swift-ai-core": "1.3.0",
+            "swift-ai-openai-compatible": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-cohere",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-cohere": "1.2.1",
+            "swift-ai-core": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-deepgram",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-deepgram": "1.2.1"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-deepinfra",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-deepinfra": "1.1.2",
+            "swift-ai-openai-compatible": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-elevenlabs",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-elevenlabs": "1.2.1"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-fal",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-fal": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-fireworks",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-fireworks": "1.1.2",
+            "swift-ai-openai-compatible": "1.3.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-fish-audio",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-fish-audio": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-gateway",
+          "version": "1.3.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-gateway": "1.3.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-gladia",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-gladia": "1.2.1"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-gmicloud",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-gmicloud": "1.1.2",
+            "swift-ai-openai-compatible": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-google",
+          "version": "1.3.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.4.0",
+            "swift-ai-google": "1.3.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-google-vertex",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-anthropic": "1.4.0",
+            "swift-ai-core": "1.4.0",
+            "swift-ai-google": "1.3.0",
+            "swift-ai-google-vertex": "1.2.1",
+            "swift-ai-openai": "1.0.0",
+            "swift-ai-openai-compatible": "1.2.0"
+          },
+          "evidence": "version-specific exact-pinned supplemental consumer"
+        },
+        {
+          "package": "swift-ai-groq",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-groq": "1.2.1"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-heygen",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-heygen": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-huggingface",
+          "version": "1.1.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-huggingface": "1.1.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-hume",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-hume": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-klingai",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-klingai": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-lmnt",
+          "version": "1.0.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.1.0",
+            "swift-ai-lmnt": "1.0.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-luma",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-luma": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-mcp",
+          "version": "1.2.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.0.0",
+            "swift-ai-mcp": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-minimax",
+          "version": "1.3.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-anthropic": "1.3.0",
+            "swift-ai-core": "1.3.0",
+            "swift-ai-minimax": "1.3.0"
+          },
+          "evidence": "version-specific exact-pinned supplemental consumer"
+        },
+        {
+          "package": "swift-ai-mistral",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-mistral": "1.2.1"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-moonshotai",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-moonshotai": "1.1.2",
+            "swift-ai-openai-compatible": "1.0.0"
+          },
+          "evidence": "version-specific exact-pinned supplemental consumer"
+        },
+        {
+          "package": "swift-ai-open-responses",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-open-responses": "1.1.2",
+            "swift-ai-openai": "1.1.0",
+            "swift-ai-openai-compatible": "1.1.0"
+          },
+          "evidence": "version-specific exact-pinned supplemental consumer"
+        },
+        {
+          "package": "swift-ai-perplexity",
+          "version": "1.2.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-perplexity": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-prodia",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-prodia": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-quiverai",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-open-responses": "1.1.0",
+            "swift-ai-openai": "1.1.0",
+            "swift-ai-openai-compatible": "1.1.0",
+            "swift-ai-quiverai": "1.1.2"
+          },
+          "evidence": "version-specific exact-pinned supplemental consumer"
+        },
+        {
+          "package": "swift-ai-replicate",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-replicate": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-revai",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-revai": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-togetherai",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-openai-compatible": "1.2.0",
+            "swift-ai-togetherai": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-topaz",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-topaz": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-typesafe-ai",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-typesafe-ai": "1.2.1"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-ui",
+          "version": "1.2.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-ui": "1.2.0"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-vercel",
+          "version": "1.0.0",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.0.0",
+            "swift-ai-openai-compatible": "1.0.0",
+            "swift-ai-vercel": "1.0.0"
+          },
+          "evidence": "version-specific exact-pinned supplemental consumer"
+        },
+        {
+          "package": "swift-ai-voyage",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.2.0",
+            "swift-ai-voyage": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        },
+        {
+          "package": "swift-ai-xai",
+          "version": "1.2.1",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-openai": "1.2.0",
+            "swift-ai-openai-compatible": "1.2.0",
+            "swift-ai-xai": "1.2.1"
+          },
+          "evidence": "version-specific exact-pinned supplemental consumer"
+        },
+        {
+          "package": "swift-ai-zai",
+          "version": "1.1.2",
+          "status": "passed",
+          "exactMinimum": {
+            "swift-ai-core": "1.3.0",
+            "swift-ai-openai-compatible": "1.2.0",
+            "swift-ai-zai": "1.1.2"
+          },
+          "evidence": "catalog-wide minimum client; unchanged synthetic root label normalized"
+        }
+      ],
+      "supplemented": [
+        "swift-ai-amazon-bedrock",
+        "swift-ai-google-vertex",
+        "swift-ai-minimax",
+        "swift-ai-moonshotai",
+        "swift-ai-open-responses",
+        "swift-ai-quiverai",
+        "swift-ai-vercel",
+        "swift-ai-xai"
+      ],
+      "sourceTestFilesVerified": 913,
+      "analysisSHA256": "8b8ea1963ad50524ec1d604784f92bb67caf452d748982f189897d1e3310691d",
+      "supplementSHA256": "7b09ede1541de61d24d1526780688e0720ae5a3e3b4fc1dea9a1202b0d350d53",
+      "supplementCommands": 1649,
+      "scope": "All52 current standalone source/test payloads match the complete catalog-wide exports.44 exact minimal dependency graphs are covered there;8 older-transitive graphs passed separate exact-pinned consumers with immutable public historical tags and source07fb candidates. Synthetic unchanged root version labels do not change code. Local rehearsal uses mirrors; real post-publication consumers remain a separate gate."
+    },
+    "ciReruns": [
+      {
+        "requestedAt": "2026-11-14T00:11:20.189028+00:00",
+        "runID": 43531236655,
+        "repository": "SwiftAISDK/swift-ai-mcp",
+        "headSHA": "c9456c1ff378213f1636c320ba229ef22bd8ef40",
+        "command": [
+          "gh",
+          "run",
+          "rerun",
+          "43531236655",
+          "--repo",
+          "SwiftAISDK/swift-ai-mcp",
+          "--failed"
+        ],
+        "reason": "Only unchanged1.05s delayed-discovery vs1s deadline assertion failed;50ms timing margin is susceptible to runner scheduling. Canonical Swift6.3.3 and full local/export suites passed. One bounded failed-job rerun on immutable export; no tags/source changed.",
+        "initialFailureLog": "mcp-standalone-failed.log",
+        "status": "passed",
+        "completedObservedAt": "2026-11-14T00:16:57.426682+00:00",
+        "result": {
+          "conclusion": "success",
+          "head_sha": "c9456c1ff378213f1636c320ba229ef22bd8ef40",
+          "html_url": "https://github.com/SwiftAISDK/swift-ai-mcp/actions/runs/43531236655",
+          "id": 43531236655,
+          "run_attempt": 2,
+          "status": "completed"
+        },
+        "firstFailureLogSHA256": "229044cc601571cee32647114c90125f9283935052188df513149708b60489b6",
+        "knownGap": "Unchanged MCP discovery fixture has only50ms between1.05s delayed response and1s separately scheduled timeout. First CI attempt failed method-sequence expectation; same immutable export passed one bounded rerun. Scheduling-race explanation is inferred from fixture/runtime source; no stability fix included."
+      }
     ]
   },
   "publication": {
-    "status": "not-started",
-    "reason": "All mandatory local gates passed. Commit/push and exact-source hosted Swift 6.3.3 CI precede canonical publication; no tag or release yet."
+    "status": "48-independent-releases-verified",
+    "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+    "canonicalCI": {
+      "id": 43526272128,
+      "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43526272128",
+      "sourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f"
+    },
+    "releaseUnits": [
+      {
+        "package": "swift-ai-core",
+        "bump": "minor",
+        "oldVersion": "1.3.0",
+        "version": "1.4.0",
+        "semverRationale": "Additive native APIs or capabilities under the project minor-release convention. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "5d84bdba3ac6910239ec84368294943bcd5c0b716102c3bf399bd3fb64443056",
+        "exportCommit": "d5cf21ef506edbebf3fecd4372ef9a775f15b844",
+        "annotatedTag": "bf12202001ccdc49b7dd3a775855b52ad04c5fa6",
+        "peeledTag": "d5cf21ef506edbebf3fecd4372ef9a775f15b844",
+        "remoteBranch": "d5cf21ef506edbebf3fecd4372ef9a775f15b844",
+        "release": {
+          "id": 444855333,
+          "url": "https://github.com/SwiftAISDK/swift-ai-core/releases/tag/1.4.0",
+          "target": "d5cf21ef506edbebf3fecd4372ef9a775f15b844"
+        },
+        "standaloneCI": {
+          "id": 43529925016,
+          "url": "https://github.com/SwiftAISDK/swift-ai-core/actions/runs/43529925016",
+          "headSHA": "d5cf21ef506edbebf3fecd4372ef9a775f15b844",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-alibaba",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "e1c2c1ad4224dec9e2a2df515fa6e0c5d70e98083d9a248c947fb8b794ce44c8",
+        "exportCommit": "94219a34371385a3e88834e9eb394bbb6cbc75e6",
+        "annotatedTag": "14017d154184fdce7bb3d75420c9965e5e582161",
+        "peeledTag": "94219a34371385a3e88834e9eb394bbb6cbc75e6",
+        "remoteBranch": "94219a34371385a3e88834e9eb394bbb6cbc75e6",
+        "release": {
+          "id": 444855536,
+          "url": "https://github.com/SwiftAISDK/swift-ai-alibaba/releases/tag/1.1.2",
+          "target": "94219a34371385a3e88834e9eb394bbb6cbc75e6"
+        },
+        "standaloneCI": {
+          "id": 43529969790,
+          "url": "https://github.com/SwiftAISDK/swift-ai-alibaba/actions/runs/43529969790",
+          "headSHA": "94219a34371385a3e88834e9eb394bbb6cbc75e6",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-anthropic",
+        "bump": "minor",
+        "oldVersion": "1.3.0",
+        "version": "1.4.0",
+        "semverRationale": "Additive native APIs or capabilities under the project minor-release convention. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity. Required direct minimums: swift-ai-core 1.3.0 to 1.4.0.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "b1397c9015885e05fbadf043607c189af6ef2c13b7bae75bd2a4160d4b3d96c6",
+        "exportCommit": "13ad5dde230793a168dbbba2dc8c867250f6301b",
+        "annotatedTag": "524c964ab65170b6cc8811d9a637adff1c01e8c1",
+        "peeledTag": "13ad5dde230793a168dbbba2dc8c867250f6301b",
+        "remoteBranch": "13ad5dde230793a168dbbba2dc8c867250f6301b",
+        "release": {
+          "id": 444855749,
+          "url": "https://github.com/SwiftAISDK/swift-ai-anthropic/releases/tag/1.4.0",
+          "target": "13ad5dde230793a168dbbba2dc8c867250f6301b"
+        },
+        "standaloneCI": {
+          "id": 43530013239,
+          "url": "https://github.com/SwiftAISDK/swift-ai-anthropic/actions/runs/43530013239",
+          "headSHA": "13ad5dde230793a168dbbba2dc8c867250f6301b",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-openai-compatible",
+        "bump": "minor",
+        "oldVersion": "1.2.0",
+        "version": "1.3.0",
+        "semverRationale": "Additive native APIs or capabilities under the project minor-release convention. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "64c18360795722c40289748a17144a0d90ba921178e983516ae187d049f63678",
+        "exportCommit": "59affa91d12b5d25c756e443450b975310b1e543",
+        "annotatedTag": "64cdf34371fe062197e9fa989cde56a4cb862d28",
+        "peeledTag": "59affa91d12b5d25c756e443450b975310b1e543",
+        "remoteBranch": "59affa91d12b5d25c756e443450b975310b1e543",
+        "release": {
+          "id": 444855968,
+          "url": "https://github.com/SwiftAISDK/swift-ai-openai-compatible/releases/tag/1.3.0",
+          "target": "59affa91d12b5d25c756e443450b975310b1e543"
+        },
+        "standaloneCI": {
+          "id": 43530058842,
+          "url": "https://github.com/SwiftAISDK/swift-ai-openai-compatible/actions/runs/43530058842",
+          "headSHA": "59affa91d12b5d25c756e443450b975310b1e543",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-openai",
+        "bump": "minor",
+        "oldVersion": "1.2.0",
+        "version": "1.3.0",
+        "semverRationale": "Additive native APIs or capabilities under the project minor-release convention. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity. Required direct minimums: swift-ai-core 1.3.0 to 1.4.0, swift-ai-openai-compatible 1.2.0 to 1.3.0.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "cbb0451563a3bf069444ea2802934a80fdc0f1b2a721667d08091d6e8ad45e70",
+        "exportCommit": "e11ef3032eb4a4793e2050dc51c925ef44d283e0",
+        "annotatedTag": "35bf22a366a8a957d415779f293bf1fd55d742e3",
+        "peeledTag": "e11ef3032eb4a4793e2050dc51c925ef44d283e0",
+        "remoteBranch": "e11ef3032eb4a4793e2050dc51c925ef44d283e0",
+        "release": {
+          "id": 444856282,
+          "url": "https://github.com/SwiftAISDK/swift-ai-openai/releases/tag/1.3.0",
+          "target": "e11ef3032eb4a4793e2050dc51c925ef44d283e0"
+        },
+        "standaloneCI": {
+          "id": 43530106997,
+          "url": "https://github.com/SwiftAISDK/swift-ai-openai/actions/runs/43530106997",
+          "headSHA": "e11ef3032eb4a4793e2050dc51c925ef44d283e0",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-amazon-bedrock",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity. Required direct minimums: swift-ai-anthropic 1.3.0 to 1.4.0.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "306315ed4a99247b01ee84f7a55e4a550ecbbc4f3968bcff4bb8bac074e7e2d0",
+        "exportCommit": "7605c50683b18d6f4f54f5d50f281ec583204bff",
+        "annotatedTag": "634b9b3974d1a2a439ac5901dbeecb386a3a00fc",
+        "peeledTag": "7605c50683b18d6f4f54f5d50f281ec583204bff",
+        "remoteBranch": "7605c50683b18d6f4f54f5d50f281ec583204bff",
+        "release": {
+          "id": 444856566,
+          "url": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock/releases/tag/1.1.2",
+          "target": "7605c50683b18d6f4f54f5d50f281ec583204bff"
+        },
+        "standaloneCI": {
+          "id": 43530166284,
+          "url": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock/actions/runs/43530166284",
+          "headSHA": "7605c50683b18d6f4f54f5d50f281ec583204bff",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-anthropic-aws",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity. Required direct minimums: swift-ai-anthropic 1.3.0 to 1.4.0.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "7456605069b1f5f131e53e37630ff89f4c8ae2fac82b307265641c7a349d379c",
+        "exportCommit": "afc675bc48df8f8c730b4505ee6c09372b395615",
+        "annotatedTag": "240699cd46c7674a7d6f12d6aafae1bca8ac68b5",
+        "peeledTag": "afc675bc48df8f8c730b4505ee6c09372b395615",
+        "remoteBranch": "afc675bc48df8f8c730b4505ee6c09372b395615",
+        "release": {
+          "id": 444856822,
+          "url": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws/releases/tag/1.2.1",
+          "target": "afc675bc48df8f8c730b4505ee6c09372b395615"
+        },
+        "standaloneCI": {
+          "id": 43530210188,
+          "url": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws/actions/runs/43530210188",
+          "headSHA": "afc675bc48df8f8c730b4505ee6c09372b395615",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-assemblyai",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "d37fa817fbda9ab491156de9dc21fa419614a293c5d7fc72e203f96a083242c1",
+        "exportCommit": "4a34bbce4b3f143d10f6bd420e537a658a1ef911",
+        "annotatedTag": "5374ce873462d386251bb29359358977a4328ebf",
+        "peeledTag": "4a34bbce4b3f143d10f6bd420e537a658a1ef911",
+        "remoteBranch": "4a34bbce4b3f143d10f6bd420e537a658a1ef911",
+        "release": {
+          "id": 444857016,
+          "url": "https://github.com/SwiftAISDK/swift-ai-assemblyai/releases/tag/1.1.2",
+          "target": "4a34bbce4b3f143d10f6bd420e537a658a1ef911"
+        },
+        "standaloneCI": {
+          "id": 43530248665,
+          "url": "https://github.com/SwiftAISDK/swift-ai-assemblyai/actions/runs/43530248665",
+          "headSHA": "4a34bbce4b3f143d10f6bd420e537a658a1ef911",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-deepseek",
+        "bump": "minor",
+        "oldVersion": "1.1.1",
+        "version": "1.2.0",
+        "semverRationale": "Additive native APIs or capabilities under the project minor-release convention. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity. Required direct minimum: swift-ai-core 1.2.0 to 1.3.0 for request URL metadata.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "876f5679cf297a2ca14a368319f019dbaad0bfceacf7ceafcbca6d1239a60077",
+        "exportCommit": "b0b68448cbdc6c50ba01892ed7c65289916bfc93",
+        "annotatedTag": "c11b24fea46c861efca8e0e5aa975848d77a6ef8",
+        "peeledTag": "b0b68448cbdc6c50ba01892ed7c65289916bfc93",
+        "remoteBranch": "b0b68448cbdc6c50ba01892ed7c65289916bfc93",
+        "release": {
+          "id": 444857184,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepseek/releases/tag/1.2.0",
+          "target": "b0b68448cbdc6c50ba01892ed7c65289916bfc93"
+        },
+        "standaloneCI": {
+          "id": 43530287452,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepseek/actions/runs/43530287452",
+          "headSHA": "b0b68448cbdc6c50ba01892ed7c65289916bfc93",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-azure",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity. Required direct minimums: swift-ai-openai 1.2.0 to 1.3.0.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "6967507b3191e29a42d27f990f4297da4563ae69426a39376a2835d56dc59503",
+        "exportCommit": "2fbc6497c3c7dadf4e5432a1bd5946672dcdf43d",
+        "annotatedTag": "d9a9445518e73e18feb3725996f7fd652c6912e7",
+        "peeledTag": "2fbc6497c3c7dadf4e5432a1bd5946672dcdf43d",
+        "remoteBranch": "2fbc6497c3c7dadf4e5432a1bd5946672dcdf43d",
+        "release": {
+          "id": 444857438,
+          "url": "https://github.com/SwiftAISDK/swift-ai-azure/releases/tag/1.2.1",
+          "target": "2fbc6497c3c7dadf4e5432a1bd5946672dcdf43d"
+        },
+        "standaloneCI": {
+          "id": 43530342365,
+          "url": "https://github.com/SwiftAISDK/swift-ai-azure/actions/runs/43530342365",
+          "headSHA": "2fbc6497c3c7dadf4e5432a1bd5946672dcdf43d",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-baseten",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "ad8eb1f2dde12ff38b2294273645f5e47edabdf625a07b44ad941f1afc5e39fa",
+        "exportCommit": "b81c8be7252b5769c1d9b6e217eb35c97ff6f896",
+        "annotatedTag": "031b4b5bac0a7ec295b3c5ab52e745761af0ac6a",
+        "peeledTag": "b81c8be7252b5769c1d9b6e217eb35c97ff6f896",
+        "remoteBranch": "b81c8be7252b5769c1d9b6e217eb35c97ff6f896",
+        "release": {
+          "id": 444857671,
+          "url": "https://github.com/SwiftAISDK/swift-ai-baseten/releases/tag/1.1.2",
+          "target": "b81c8be7252b5769c1d9b6e217eb35c97ff6f896"
+        },
+        "standaloneCI": {
+          "id": 43530384145,
+          "url": "https://github.com/SwiftAISDK/swift-ai-baseten/actions/runs/43530384145",
+          "headSHA": "b81c8be7252b5769c1d9b6e217eb35c97ff6f896",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-black-forest-labs",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "85f7e8e364c385d875497e723a97b87ff04d7d74c237001b5c858c9cb6cfe51c",
+        "exportCommit": "6ce11f96412ecca38ac5b387d83ac578c3723a24",
+        "annotatedTag": "9fd7f126017f394fab2af3abb82dca0d34051f99",
+        "peeledTag": "6ce11f96412ecca38ac5b387d83ac578c3723a24",
+        "remoteBranch": "6ce11f96412ecca38ac5b387d83ac578c3723a24",
+        "release": {
+          "id": 444857866,
+          "url": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs/releases/tag/1.1.2",
+          "target": "6ce11f96412ecca38ac5b387d83ac578c3723a24"
+        },
+        "standaloneCI": {
+          "id": 43530420806,
+          "url": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs/actions/runs/43530420806",
+          "headSHA": "6ce11f96412ecca38ac5b387d83ac578c3723a24",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-cartesia",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "ee2bea9aa5350d28e6c5cd6e07fb7c34663da98b1652b42aaf3afd28c66ac69b",
+        "exportCommit": "d54e4f94032d2a3de0d587c4ad701a91766c99bd",
+        "annotatedTag": "4f20a41241dc5997b7c95eb35881cbaf5c765cd2",
+        "peeledTag": "d54e4f94032d2a3de0d587c4ad701a91766c99bd",
+        "remoteBranch": "d54e4f94032d2a3de0d587c4ad701a91766c99bd",
+        "release": {
+          "id": 444858034,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cartesia/releases/tag/1.2.1",
+          "target": "d54e4f94032d2a3de0d587c4ad701a91766c99bd"
+        },
+        "standaloneCI": {
+          "id": 43530458595,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cartesia/actions/runs/43530458595",
+          "headSHA": "d54e4f94032d2a3de0d587c4ad701a91766c99bd",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-cerebras",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "e41669f73e07f13934657705ab7787ae5f9b4fe748db5fa5f16ed570f299929f",
+        "exportCommit": "292a6d4b5a98b6e937d218a4315b1e9ccdd92e27",
+        "annotatedTag": "e5c82857b3639383fd2bf82d8da91a26d067ea3d",
+        "peeledTag": "292a6d4b5a98b6e937d218a4315b1e9ccdd92e27",
+        "remoteBranch": "292a6d4b5a98b6e937d218a4315b1e9ccdd92e27",
+        "release": {
+          "id": 444858283,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cerebras/releases/tag/1.2.1",
+          "target": "292a6d4b5a98b6e937d218a4315b1e9ccdd92e27"
+        },
+        "standaloneCI": {
+          "id": 43530503642,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cerebras/actions/runs/43530503642",
+          "headSHA": "292a6d4b5a98b6e937d218a4315b1e9ccdd92e27",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-cohere",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "d0c2a4273e4e5dc9e8d658a9b12a5b8db525b4c2e1057cfc5ca192232332b88c",
+        "exportCommit": "71b4dc687a91ef6e413703b8694395e07a0c22be",
+        "annotatedTag": "98052e1c3e3a7395e1b44114a0e6acc8e67ed80b",
+        "peeledTag": "71b4dc687a91ef6e413703b8694395e07a0c22be",
+        "remoteBranch": "71b4dc687a91ef6e413703b8694395e07a0c22be",
+        "release": {
+          "id": 444858506,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cohere/releases/tag/1.2.1",
+          "target": "71b4dc687a91ef6e413703b8694395e07a0c22be"
+        },
+        "standaloneCI": {
+          "id": 43530545264,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cohere/actions/runs/43530545264",
+          "headSHA": "71b4dc687a91ef6e413703b8694395e07a0c22be",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-deepgram",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "3879648f1473296697eb36e106cc5ef58c09664bc5b0c31cb302c61b56fd0a1f",
+        "exportCommit": "27af0bb215d8ab2d5085cee2bfee3b55aef5fff0",
+        "annotatedTag": "fca9bbc9cecdc5b35d6fcb6c67dbfe0d23a52608",
+        "peeledTag": "27af0bb215d8ab2d5085cee2bfee3b55aef5fff0",
+        "remoteBranch": "27af0bb215d8ab2d5085cee2bfee3b55aef5fff0",
+        "release": {
+          "id": 444858701,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepgram/releases/tag/1.2.1",
+          "target": "27af0bb215d8ab2d5085cee2bfee3b55aef5fff0"
+        },
+        "standaloneCI": {
+          "id": 43530583757,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepgram/actions/runs/43530583757",
+          "headSHA": "27af0bb215d8ab2d5085cee2bfee3b55aef5fff0",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-deepinfra",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "709d5a05f78228c77d7d6793dfb53e1a516659f311f0d3ec0b8dd3dcc47d8d85",
+        "exportCommit": "424ed75ab5c188212929c77a18d12c0263175e3e",
+        "annotatedTag": "5b661a06db04df91c1a36f880b518d32fb74d793",
+        "peeledTag": "424ed75ab5c188212929c77a18d12c0263175e3e",
+        "remoteBranch": "424ed75ab5c188212929c77a18d12c0263175e3e",
+        "release": {
+          "id": 444859018,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepinfra/releases/tag/1.1.2",
+          "target": "424ed75ab5c188212929c77a18d12c0263175e3e"
+        },
+        "standaloneCI": {
+          "id": 43530629930,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepinfra/actions/runs/43530629930",
+          "headSHA": "424ed75ab5c188212929c77a18d12c0263175e3e",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-elevenlabs",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "d734040c2bc30b1866a423def2565eb9ae720f1cf5094faf6ebaef3aa6634711",
+        "exportCommit": "f43136d0af1cf0d20ac36f691b2f4e0f0db9777b",
+        "annotatedTag": "5019219ab117d2bfa83968a0ab64f0f58c8f33fb",
+        "peeledTag": "f43136d0af1cf0d20ac36f691b2f4e0f0db9777b",
+        "remoteBranch": "f43136d0af1cf0d20ac36f691b2f4e0f0db9777b",
+        "release": {
+          "id": 444859226,
+          "url": "https://github.com/SwiftAISDK/swift-ai-elevenlabs/releases/tag/1.2.1",
+          "target": "f43136d0af1cf0d20ac36f691b2f4e0f0db9777b"
+        },
+        "standaloneCI": {
+          "id": 43530668607,
+          "url": "https://github.com/SwiftAISDK/swift-ai-elevenlabs/actions/runs/43530668607",
+          "headSHA": "f43136d0af1cf0d20ac36f691b2f4e0f0db9777b",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-fal",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "41f2c9a93175d5901e79b65e84e05e75b96eb11c65e4c6f24d56b07eb5ed7480",
+        "exportCommit": "6ac8eadb57ec8e4cb17df62085dc8975e82d64a8",
+        "annotatedTag": "bf21e8a6f1ab0fb5d31ad400d62acb46a193e779",
+        "peeledTag": "6ac8eadb57ec8e4cb17df62085dc8975e82d64a8",
+        "remoteBranch": "6ac8eadb57ec8e4cb17df62085dc8975e82d64a8",
+        "release": {
+          "id": 444859480,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fal/releases/tag/1.1.2",
+          "target": "6ac8eadb57ec8e4cb17df62085dc8975e82d64a8"
+        },
+        "standaloneCI": {
+          "id": 43530711937,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fal/actions/runs/43530711937",
+          "headSHA": "6ac8eadb57ec8e4cb17df62085dc8975e82d64a8",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-fireworks",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity. Required direct minimums: swift-ai-openai-compatible 1.2.0 to 1.3.0.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "281af33b34123f3552dbe3fa049af5aeedd149a1f1554de79c81e14ac7b081c2",
+        "exportCommit": "53931f6bf5f83a87596bdb5b960a7b41df3511dd",
+        "annotatedTag": "0325334e3b47eb4c439ae9785b88b5e212056014",
+        "peeledTag": "53931f6bf5f83a87596bdb5b960a7b41df3511dd",
+        "remoteBranch": "53931f6bf5f83a87596bdb5b960a7b41df3511dd",
+        "release": {
+          "id": 444859717,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fireworks/releases/tag/1.1.2",
+          "target": "53931f6bf5f83a87596bdb5b960a7b41df3511dd"
+        },
+        "standaloneCI": {
+          "id": 43530757645,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fireworks/actions/runs/43530757645",
+          "headSHA": "53931f6bf5f83a87596bdb5b960a7b41df3511dd",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-fish-audio",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "3a493f90ac4c79b8d0ac332284442fa9a43848c6db04ffb06bf7177dc2ac8274",
+        "exportCommit": "e6fbaa233670418ec97a518dfc9510841995fa0b",
+        "annotatedTag": "918d7868b0776b30e60b364373252a58ecc2fcda",
+        "peeledTag": "e6fbaa233670418ec97a518dfc9510841995fa0b",
+        "remoteBranch": "e6fbaa233670418ec97a518dfc9510841995fa0b",
+        "release": {
+          "id": 444859922,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fish-audio/releases/tag/1.1.2",
+          "target": "e6fbaa233670418ec97a518dfc9510841995fa0b"
+        },
+        "standaloneCI": {
+          "id": 43530795701,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fish-audio/actions/runs/43530795701",
+          "headSHA": "e6fbaa233670418ec97a518dfc9510841995fa0b",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-gateway",
+        "bump": "minor",
+        "oldVersion": "1.2.0",
+        "version": "1.3.0",
+        "semverRationale": "Additive native APIs or capabilities under the project minor-release convention. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "65f55bbec819fcdbe5b3ff021b920bad7851f68fa10e55de6a6d9251a9b06e4a",
+        "exportCommit": "6a9fb75337a2c6618b2b0f53ae518251a38a8653",
+        "annotatedTag": "11da47612c67e872f7462e68577c976ac02ab651",
+        "peeledTag": "6a9fb75337a2c6618b2b0f53ae518251a38a8653",
+        "remoteBranch": "6a9fb75337a2c6618b2b0f53ae518251a38a8653",
+        "release": {
+          "id": 444860131,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gateway/releases/tag/1.3.0",
+          "target": "6a9fb75337a2c6618b2b0f53ae518251a38a8653"
+        },
+        "standaloneCI": {
+          "id": 43530828428,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gateway/actions/runs/43530828428",
+          "headSHA": "6a9fb75337a2c6618b2b0f53ae518251a38a8653",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-gladia",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "f66015b4399e4adce9aba35a928dc7dda98c3e899911c303768bff819e470340",
+        "exportCommit": "7edb18d97730964c2a0157359a99e8a1d244354c",
+        "annotatedTag": "878b2232cbf2b856d4cce209dfa94a0d5e31613f",
+        "peeledTag": "7edb18d97730964c2a0157359a99e8a1d244354c",
+        "remoteBranch": "7edb18d97730964c2a0157359a99e8a1d244354c",
+        "release": {
+          "id": 444860328,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gladia/releases/tag/1.2.1",
+          "target": "7edb18d97730964c2a0157359a99e8a1d244354c"
+        },
+        "standaloneCI": {
+          "id": 43530852708,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gladia/actions/runs/43530852708",
+          "headSHA": "7edb18d97730964c2a0157359a99e8a1d244354c",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-gmicloud",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "b3f58d7f75e23a17c5c1e387005a35bef927f639a216524e5581283674a03d09",
+        "exportCommit": "bbda3b140b17147f020ad030e1f13adb4f4dda49",
+        "annotatedTag": "5ab769542e968d954162a6eaaa79d1d13866de49",
+        "peeledTag": "bbda3b140b17147f020ad030e1f13adb4f4dda49",
+        "remoteBranch": "bbda3b140b17147f020ad030e1f13adb4f4dda49",
+        "release": {
+          "id": 444860522,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gmicloud/releases/tag/1.1.2",
+          "target": "bbda3b140b17147f020ad030e1f13adb4f4dda49"
+        },
+        "standaloneCI": {
+          "id": 43530912624,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gmicloud/actions/runs/43530912624",
+          "headSHA": "bbda3b140b17147f020ad030e1f13adb4f4dda49",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-google",
+        "bump": "minor",
+        "oldVersion": "1.2.0",
+        "version": "1.3.0",
+        "semverRationale": "Additive native APIs or capabilities under the project minor-release convention. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity. Required direct minimums: swift-ai-core 1.3.0 to 1.4.0.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "581a97628546efb1e87b4779c00dc05ea6980f93e70322a70b9ff41a60f11396",
+        "exportCommit": "5f8aa6b541c86fac2ae8fa8b742d79d1bd40b65b",
+        "annotatedTag": "7c3a9e53048ab9b8d0d162f48022bba54ce562a0",
+        "peeledTag": "5f8aa6b541c86fac2ae8fa8b742d79d1bd40b65b",
+        "remoteBranch": "5f8aa6b541c86fac2ae8fa8b742d79d1bd40b65b",
+        "release": {
+          "id": 444860707,
+          "url": "https://github.com/SwiftAISDK/swift-ai-google/releases/tag/1.3.0",
+          "target": "5f8aa6b541c86fac2ae8fa8b742d79d1bd40b65b"
+        },
+        "standaloneCI": {
+          "id": 43530946773,
+          "url": "https://github.com/SwiftAISDK/swift-ai-google/actions/runs/43530946773",
+          "headSHA": "5f8aa6b541c86fac2ae8fa8b742d79d1bd40b65b",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-google-vertex",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity. Required direct minimums: swift-ai-core 1.3.0 to 1.4.0, swift-ai-google 1.2.0 to 1.3.0, swift-ai-anthropic 1.3.0 to 1.4.0.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "814fe85733fe403431c0c687a38237fdc2cba16d77b36c14d3b493c63551aa44",
+        "exportCommit": "8e5a78aad8f673e2084d0f3b35ec172b634c7d41",
+        "annotatedTag": "57cc22abb9ae520749d8e79ea3e0c8991e579f2c",
+        "peeledTag": "8e5a78aad8f673e2084d0f3b35ec172b634c7d41",
+        "remoteBranch": "8e5a78aad8f673e2084d0f3b35ec172b634c7d41",
+        "release": {
+          "id": 444861037,
+          "url": "https://github.com/SwiftAISDK/swift-ai-google-vertex/releases/tag/1.2.1",
+          "target": "8e5a78aad8f673e2084d0f3b35ec172b634c7d41"
+        },
+        "standaloneCI": {
+          "id": 43530992645,
+          "url": "https://github.com/SwiftAISDK/swift-ai-google-vertex/actions/runs/43530992645",
+          "headSHA": "8e5a78aad8f673e2084d0f3b35ec172b634c7d41",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-groq",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "30849177ea2a007f16e22852a8532e54d9cc2c32f135fc3fe3f2c77ab839966d",
+        "exportCommit": "e4d9542d8e3bf75714353c88d65e271f94c8b1f1",
+        "annotatedTag": "758641a19baef6caf34972aff01eef00743869ad",
+        "peeledTag": "e4d9542d8e3bf75714353c88d65e271f94c8b1f1",
+        "remoteBranch": "e4d9542d8e3bf75714353c88d65e271f94c8b1f1",
+        "release": {
+          "id": 444861269,
+          "url": "https://github.com/SwiftAISDK/swift-ai-groq/releases/tag/1.2.1",
+          "target": "e4d9542d8e3bf75714353c88d65e271f94c8b1f1"
+        },
+        "standaloneCI": {
+          "id": 43531031387,
+          "url": "https://github.com/SwiftAISDK/swift-ai-groq/actions/runs/43531031387",
+          "headSHA": "e4d9542d8e3bf75714353c88d65e271f94c8b1f1",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-heygen",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "4baadc76dc040ae0449bc9d02b152e28f1b0ed7b391b9f36bd58fca5f84cf9f7",
+        "exportCommit": "9ac89fbc45d65ad99f2760473aa34b0b308c36fd",
+        "annotatedTag": "e5ee6b7080e979d7813a298f42cccc3bd7e1cf34",
+        "peeledTag": "9ac89fbc45d65ad99f2760473aa34b0b308c36fd",
+        "remoteBranch": "9ac89fbc45d65ad99f2760473aa34b0b308c36fd",
+        "release": {
+          "id": 444861461,
+          "url": "https://github.com/SwiftAISDK/swift-ai-heygen/releases/tag/1.1.2",
+          "target": "9ac89fbc45d65ad99f2760473aa34b0b308c36fd"
+        },
+        "standaloneCI": {
+          "id": 43531069900,
+          "url": "https://github.com/SwiftAISDK/swift-ai-heygen/actions/runs/43531069900",
+          "headSHA": "9ac89fbc45d65ad99f2760473aa34b0b308c36fd",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-hume",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "c941ce0476c8d39e744b2d08dd9791dd99ca426784f4cb51ca2808e6ac15213c",
+        "exportCommit": "76dbe933e99c01d417b94435a3012d253320cff2",
+        "annotatedTag": "6389d9bc23e70b2d4c33bbed9965b2f2dcfb3c23",
+        "peeledTag": "76dbe933e99c01d417b94435a3012d253320cff2",
+        "remoteBranch": "76dbe933e99c01d417b94435a3012d253320cff2",
+        "release": {
+          "id": 444861667,
+          "url": "https://github.com/SwiftAISDK/swift-ai-hume/releases/tag/1.1.2",
+          "target": "76dbe933e99c01d417b94435a3012d253320cff2"
+        },
+        "standaloneCI": {
+          "id": 43531107440,
+          "url": "https://github.com/SwiftAISDK/swift-ai-hume/actions/runs/43531107440",
+          "headSHA": "76dbe933e99c01d417b94435a3012d253320cff2",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-klingai",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "549d087140fc78460b7e67d7007878290db8cfa5c7581cbc75c45c9ed1ad4ee2",
+        "exportCommit": "0b77ffc8993d16d5139bf1a66d9dfa46f1c883ea",
+        "annotatedTag": "29f32958422768494cf70bc20c7d6cdbab5bfe8c",
+        "peeledTag": "0b77ffc8993d16d5139bf1a66d9dfa46f1c883ea",
+        "remoteBranch": "0b77ffc8993d16d5139bf1a66d9dfa46f1c883ea",
+        "release": {
+          "id": 444861913,
+          "url": "https://github.com/SwiftAISDK/swift-ai-klingai/releases/tag/1.1.2",
+          "target": "0b77ffc8993d16d5139bf1a66d9dfa46f1c883ea"
+        },
+        "standaloneCI": {
+          "id": 43531150380,
+          "url": "https://github.com/SwiftAISDK/swift-ai-klingai/actions/runs/43531150380",
+          "headSHA": "0b77ffc8993d16d5139bf1a66d9dfa46f1c883ea",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-luma",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "1643f68989907331374db5d723e1d85154c390fd8ef8812d11e1678aeb164f59",
+        "exportCommit": "2061963ffa25d3691a66197036aec423ce63afbc",
+        "annotatedTag": "9badb19ce1dd276a36b8e36880061aca8281dfb6",
+        "peeledTag": "2061963ffa25d3691a66197036aec423ce63afbc",
+        "remoteBranch": "2061963ffa25d3691a66197036aec423ce63afbc",
+        "release": {
+          "id": 444862127,
+          "url": "https://github.com/SwiftAISDK/swift-ai-luma/releases/tag/1.1.2",
+          "target": "2061963ffa25d3691a66197036aec423ce63afbc"
+        },
+        "standaloneCI": {
+          "id": 43531191576,
+          "url": "https://github.com/SwiftAISDK/swift-ai-luma/actions/runs/43531191576",
+          "headSHA": "2061963ffa25d3691a66197036aec423ce63afbc",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-mcp",
+        "bump": "minor",
+        "oldVersion": "1.1.1",
+        "version": "1.2.0",
+        "semverRationale": "Additive native APIs or capabilities under the project minor-release convention. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "6b1386337c95a74197a4b3e34d57f92ab111517ab15f4080eeeb308a6e2820d5",
+        "exportCommit": "c9456c1ff378213f1636c320ba229ef22bd8ef40",
+        "annotatedTag": "bb6355fae9bfd69e13b62af237883c66a2baaa17",
+        "peeledTag": "c9456c1ff378213f1636c320ba229ef22bd8ef40",
+        "remoteBranch": "c9456c1ff378213f1636c320ba229ef22bd8ef40",
+        "release": {
+          "id": 444862321,
+          "url": "https://github.com/SwiftAISDK/swift-ai-mcp/releases/tag/1.2.0",
+          "target": "c9456c1ff378213f1636c320ba229ef22bd8ef40"
+        },
+        "standaloneCI": {
+          "id": 43531236655,
+          "url": "https://github.com/SwiftAISDK/swift-ai-mcp/actions/runs/43531236655",
+          "headSHA": "c9456c1ff378213f1636c320ba229ef22bd8ef40",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-minimax",
+        "bump": "minor",
+        "oldVersion": "1.2.0",
+        "version": "1.3.0",
+        "semverRationale": "Additive native APIs or capabilities under the project minor-release convention. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "d3d12353042d6c65034cac7aa805fa8e39d71060d8fea6327f89e8c067b15fc0",
+        "exportCommit": "d24b478e4421f8710c9e2383688e0a316a5e042e",
+        "annotatedTag": "e4bf1ffcce16396566c1dfbc33dcfa24b4fd542f",
+        "peeledTag": "d24b478e4421f8710c9e2383688e0a316a5e042e",
+        "remoteBranch": "d24b478e4421f8710c9e2383688e0a316a5e042e",
+        "release": {
+          "id": 444862526,
+          "url": "https://github.com/SwiftAISDK/swift-ai-minimax/releases/tag/1.3.0",
+          "target": "d24b478e4421f8710c9e2383688e0a316a5e042e"
+        },
+        "standaloneCI": {
+          "id": 43531284526,
+          "url": "https://github.com/SwiftAISDK/swift-ai-minimax/actions/runs/43531284526",
+          "headSHA": "d24b478e4421f8710c9e2383688e0a316a5e042e",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-mistral",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "a41ade8650c6a54648b98f5e665dabf754f1285dd64419267a1d9d3e8b93bf2a",
+        "exportCommit": "cea6f6868ba8daadca9318a8b7bc588bc90821dd",
+        "annotatedTag": "60a97fb5431baf9b685e313c95269808d6e0ecd7",
+        "peeledTag": "cea6f6868ba8daadca9318a8b7bc588bc90821dd",
+        "remoteBranch": "cea6f6868ba8daadca9318a8b7bc588bc90821dd",
+        "release": {
+          "id": 444862709,
+          "url": "https://github.com/SwiftAISDK/swift-ai-mistral/releases/tag/1.2.1",
+          "target": "cea6f6868ba8daadca9318a8b7bc588bc90821dd"
+        },
+        "standaloneCI": {
+          "id": 43531324832,
+          "url": "https://github.com/SwiftAISDK/swift-ai-mistral/actions/runs/43531324832",
+          "headSHA": "cea6f6868ba8daadca9318a8b7bc588bc90821dd",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-moonshotai",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "5f8dc1123e96c637eaa24bb55e9c877c8bfec5d0e723a2ccea336d4b64b36769",
+        "exportCommit": "5def71183a7f274d03b3e6a6a2d763f267144fdd",
+        "annotatedTag": "306e739effdce644a965b5209a68b6de21970ef9",
+        "peeledTag": "5def71183a7f274d03b3e6a6a2d763f267144fdd",
+        "remoteBranch": "5def71183a7f274d03b3e6a6a2d763f267144fdd",
+        "release": {
+          "id": 444862915,
+          "url": "https://github.com/SwiftAISDK/swift-ai-moonshotai/releases/tag/1.1.2",
+          "target": "5def71183a7f274d03b3e6a6a2d763f267144fdd"
+        },
+        "standaloneCI": {
+          "id": 43531371255,
+          "url": "https://github.com/SwiftAISDK/swift-ai-moonshotai/actions/runs/43531371255",
+          "headSHA": "5def71183a7f274d03b3e6a6a2d763f267144fdd",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-open-responses",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "c837bff5f955a114c99849d87c3f8108678da5a1e52058c814d100209b27769b",
+        "exportCommit": "022205e992f379f4dc5002a9ab3f164a6c6c7ae5",
+        "annotatedTag": "ce9b00f29c4e2bc8c9033f54dbafdd946190c38d",
+        "peeledTag": "022205e992f379f4dc5002a9ab3f164a6c6c7ae5",
+        "remoteBranch": "022205e992f379f4dc5002a9ab3f164a6c6c7ae5",
+        "release": {
+          "id": 444863137,
+          "url": "https://github.com/SwiftAISDK/swift-ai-open-responses/releases/tag/1.1.2",
+          "target": "022205e992f379f4dc5002a9ab3f164a6c6c7ae5"
+        },
+        "standaloneCI": {
+          "id": 43531413673,
+          "url": "https://github.com/SwiftAISDK/swift-ai-open-responses/actions/runs/43531413673",
+          "headSHA": "022205e992f379f4dc5002a9ab3f164a6c6c7ae5",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-perplexity",
+        "bump": "minor",
+        "oldVersion": "1.1.1",
+        "version": "1.2.0",
+        "semverRationale": "Additive native APIs or capabilities under the project minor-release convention. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "3a4c62bd1d849025ab772e460287099c072b13ea93898f0f8a6edb19d7dd5c0d",
+        "exportCommit": "1d43b2ef9d51125fed068a343a58d640c16a307f",
+        "annotatedTag": "4a138d0bc19fde371809fd62509b2637899ae8f7",
+        "peeledTag": "1d43b2ef9d51125fed068a343a58d640c16a307f",
+        "remoteBranch": "1d43b2ef9d51125fed068a343a58d640c16a307f",
+        "release": {
+          "id": 444863321,
+          "url": "https://github.com/SwiftAISDK/swift-ai-perplexity/releases/tag/1.2.0",
+          "target": "1d43b2ef9d51125fed068a343a58d640c16a307f"
+        },
+        "standaloneCI": {
+          "id": 43531449545,
+          "url": "https://github.com/SwiftAISDK/swift-ai-perplexity/actions/runs/43531449545",
+          "headSHA": "1d43b2ef9d51125fed068a343a58d640c16a307f",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-prodia",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "2ab900f8462cb62cd586f4e713c40991fd469fc4a464a0cac04b539a8b38464e",
+        "exportCommit": "4cb9caf2cdee1e030420b05dd2328844f1edebbe",
+        "annotatedTag": "0f1623e1879fc4545fe1850c5163020de1bc0839",
+        "peeledTag": "4cb9caf2cdee1e030420b05dd2328844f1edebbe",
+        "remoteBranch": "4cb9caf2cdee1e030420b05dd2328844f1edebbe",
+        "release": {
+          "id": 444863510,
+          "url": "https://github.com/SwiftAISDK/swift-ai-prodia/releases/tag/1.1.2",
+          "target": "4cb9caf2cdee1e030420b05dd2328844f1edebbe"
+        },
+        "standaloneCI": {
+          "id": 43531490022,
+          "url": "https://github.com/SwiftAISDK/swift-ai-prodia/actions/runs/43531490022",
+          "headSHA": "4cb9caf2cdee1e030420b05dd2328844f1edebbe",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-quiverai",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "9cb0a48e40834f85a62bbaac7cf30552fd41908d1df17ae453995191e6ce1f56",
+        "exportCommit": "aa0b3a24452fac7c29fe2f5a729d261f3194911c",
+        "annotatedTag": "e853fab8c2c15123ab237664f276718d1ffaa678",
+        "peeledTag": "aa0b3a24452fac7c29fe2f5a729d261f3194911c",
+        "remoteBranch": "aa0b3a24452fac7c29fe2f5a729d261f3194911c",
+        "release": {
+          "id": 444863744,
+          "url": "https://github.com/SwiftAISDK/swift-ai-quiverai/releases/tag/1.1.2",
+          "target": "aa0b3a24452fac7c29fe2f5a729d261f3194911c"
+        },
+        "standaloneCI": {
+          "id": 43531538948,
+          "url": "https://github.com/SwiftAISDK/swift-ai-quiverai/actions/runs/43531538948",
+          "headSHA": "aa0b3a24452fac7c29fe2f5a729d261f3194911c",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-replicate",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "1c231cc8c47a9c9f545e29c0d0af572e13b394b2db57a41c33783682745fdd3a",
+        "exportCommit": "a97d0fd229270a8491a5cbcff7fa9696b639f34b",
+        "annotatedTag": "a79824c47f3a904bd154215704bd051611407bef",
+        "peeledTag": "a97d0fd229270a8491a5cbcff7fa9696b639f34b",
+        "remoteBranch": "a97d0fd229270a8491a5cbcff7fa9696b639f34b",
+        "release": {
+          "id": 444863911,
+          "url": "https://github.com/SwiftAISDK/swift-ai-replicate/releases/tag/1.1.2",
+          "target": "a97d0fd229270a8491a5cbcff7fa9696b639f34b"
+        },
+        "standaloneCI": {
+          "id": 43531580303,
+          "url": "https://github.com/SwiftAISDK/swift-ai-replicate/actions/runs/43531580303",
+          "headSHA": "a97d0fd229270a8491a5cbcff7fa9696b639f34b",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-revai",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "1ac05c7de87c6e07e9af98d6ed8edbd203e18e0e450d9dba5ccf828e4e88a25a",
+        "exportCommit": "6ec36b98e9f716866bdc2c47ef777a02e72c9126",
+        "annotatedTag": "1d431d856caafbfecae046f1b41d4c5e29112764",
+        "peeledTag": "6ec36b98e9f716866bdc2c47ef777a02e72c9126",
+        "remoteBranch": "6ec36b98e9f716866bdc2c47ef777a02e72c9126",
+        "release": {
+          "id": 444864077,
+          "url": "https://github.com/SwiftAISDK/swift-ai-revai/releases/tag/1.1.2",
+          "target": "6ec36b98e9f716866bdc2c47ef777a02e72c9126"
+        },
+        "standaloneCI": {
+          "id": 43531618942,
+          "url": "https://github.com/SwiftAISDK/swift-ai-revai/actions/runs/43531618942",
+          "headSHA": "6ec36b98e9f716866bdc2c47ef777a02e72c9126",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-togetherai",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "4c3f4e0c1b37791b7f45ac52d926816320d6ac9e4f445ac9d86218093e54da60",
+        "exportCommit": "bdda550a632da7931f1a54dec023eabb13eda87a",
+        "annotatedTag": "8ec02d4982a7deecb36e1d0aa4a920378be5b623",
+        "peeledTag": "bdda550a632da7931f1a54dec023eabb13eda87a",
+        "remoteBranch": "bdda550a632da7931f1a54dec023eabb13eda87a",
+        "release": {
+          "id": 444864317,
+          "url": "https://github.com/SwiftAISDK/swift-ai-togetherai/releases/tag/1.1.2",
+          "target": "bdda550a632da7931f1a54dec023eabb13eda87a"
+        },
+        "standaloneCI": {
+          "id": 43531660244,
+          "url": "https://github.com/SwiftAISDK/swift-ai-togetherai/actions/runs/43531660244",
+          "headSHA": "bdda550a632da7931f1a54dec023eabb13eda87a",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-topaz",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "c482b8d4fa080f1c469a6da7043cd62b3a6c47108858f813aafec356a2407d25",
+        "exportCommit": "328096e8dfe42e7e5a21a80fd8ed8929b50ce066",
+        "annotatedTag": "61789e8664ba0d64b7ec7d38890b59de8ec43cad",
+        "peeledTag": "328096e8dfe42e7e5a21a80fd8ed8929b50ce066",
+        "remoteBranch": "328096e8dfe42e7e5a21a80fd8ed8929b50ce066",
+        "release": {
+          "id": 444864513,
+          "url": "https://github.com/SwiftAISDK/swift-ai-topaz/releases/tag/1.1.2",
+          "target": "328096e8dfe42e7e5a21a80fd8ed8929b50ce066"
+        },
+        "standaloneCI": {
+          "id": 43531698267,
+          "url": "https://github.com/SwiftAISDK/swift-ai-topaz/actions/runs/43531698267",
+          "headSHA": "328096e8dfe42e7e5a21a80fd8ed8929b50ce066",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-typesafe-ai",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "8103a681ffdc6a78e9cd0286396969a7b760ae7d9f999677c20cb7d6f586925f",
+        "exportCommit": "29f8b08781e441bcb087e1744245ab1abf5dcefa",
+        "annotatedTag": "543cac208bcd2534065957dc29bc024842efaa69",
+        "peeledTag": "29f8b08781e441bcb087e1744245ab1abf5dcefa",
+        "remoteBranch": "29f8b08781e441bcb087e1744245ab1abf5dcefa",
+        "release": {
+          "id": 444864682,
+          "url": "https://github.com/SwiftAISDK/swift-ai-typesafe-ai/releases/tag/1.2.1",
+          "target": "29f8b08781e441bcb087e1744245ab1abf5dcefa"
+        },
+        "standaloneCI": {
+          "id": 43531738140,
+          "url": "https://github.com/SwiftAISDK/swift-ai-typesafe-ai/actions/runs/43531738140",
+          "headSHA": "29f8b08781e441bcb087e1744245ab1abf5dcefa",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-ui",
+        "bump": "minor",
+        "oldVersion": "1.1.0",
+        "version": "1.2.0",
+        "semverRationale": "Additive native APIs or capabilities under the project minor-release convention. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "eebb437ece969823d29dcef0d5063c7d079a82c367c9c72eaf72908ddfff2a59",
+        "exportCommit": "d8753b487cf6260c7f887c0f2fa8951adeab67ca",
+        "annotatedTag": "b5cdaacb6b1f155f558a011d0846646e45e280ed",
+        "peeledTag": "d8753b487cf6260c7f887c0f2fa8951adeab67ca",
+        "remoteBranch": "d8753b487cf6260c7f887c0f2fa8951adeab67ca",
+        "release": {
+          "id": 444864893,
+          "url": "https://github.com/SwiftAISDK/swift-ai-ui/releases/tag/1.2.0",
+          "target": "d8753b487cf6260c7f887c0f2fa8951adeab67ca"
+        },
+        "standaloneCI": {
+          "id": 43531782046,
+          "url": "https://github.com/SwiftAISDK/swift-ai-ui/actions/runs/43531782046",
+          "headSHA": "d8753b487cf6260c7f887c0f2fa8951adeab67ca",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-voyage",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "9f054c4fb92ef0394cdc7cb3c29f7e07479e34077813fbc0cdc424a78b1b184b",
+        "exportCommit": "55dca67b1a5cc125923d8cd0211ec23a47575867",
+        "annotatedTag": "e1c4d6b015071f944f995ad5eef8dead9c1cb994",
+        "peeledTag": "55dca67b1a5cc125923d8cd0211ec23a47575867",
+        "remoteBranch": "55dca67b1a5cc125923d8cd0211ec23a47575867",
+        "release": {
+          "id": 444865084,
+          "url": "https://github.com/SwiftAISDK/swift-ai-voyage/releases/tag/1.1.2",
+          "target": "55dca67b1a5cc125923d8cd0211ec23a47575867"
+        },
+        "standaloneCI": {
+          "id": 43531822888,
+          "url": "https://github.com/SwiftAISDK/swift-ai-voyage/actions/runs/43531822888",
+          "headSHA": "55dca67b1a5cc125923d8cd0211ec23a47575867",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-xai",
+        "bump": "patch",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "8f7800e2c04491e172e1e9a863204574c5d228350e86c012105de5bf3e948f4d",
+        "exportCommit": "9429f88a982671d6864de66bba47228b746d17c2",
+        "annotatedTag": "38dd78ecbd83fb38aeafcf8fef66ad7473f26d33",
+        "peeledTag": "9429f88a982671d6864de66bba47228b746d17c2",
+        "remoteBranch": "9429f88a982671d6864de66bba47228b746d17c2",
+        "release": {
+          "id": 444865308,
+          "url": "https://github.com/SwiftAISDK/swift-ai-xai/releases/tag/1.2.1",
+          "target": "9429f88a982671d6864de66bba47228b746d17c2"
+        },
+        "standaloneCI": {
+          "id": 43531869102,
+          "url": "https://github.com/SwiftAISDK/swift-ai-xai/actions/runs/43531869102",
+          "headSHA": "9429f88a982671d6864de66bba47228b746d17c2",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-zai",
+        "bump": "patch",
+        "oldVersion": "1.1.1",
+        "version": "1.1.2",
+        "semverRationale": "Compatible behavior/header correction. Original public selectors are preserved. npm baselines and Swift SemVer are independent; this reviewed delta does not establish full-package or live-service parity.",
+        "canonicalSourceCommit": "07fbf86b82d83d9724bd03622e9e87e74395286f",
+        "exportSHA256": "4bbf80197e7cfd451c992468a0ae68a056a80164a5dacc0f55d66ca6a15f2bea",
+        "exportCommit": "702d4f41d6f76c09dcc4b18b9fa025c0dab6b889",
+        "annotatedTag": "178c0fc025d5076e53edce4ca76f8fa5a0ee436a",
+        "peeledTag": "702d4f41d6f76c09dcc4b18b9fa025c0dab6b889",
+        "remoteBranch": "702d4f41d6f76c09dcc4b18b9fa025c0dab6b889",
+        "release": {
+          "id": 444865517,
+          "url": "https://github.com/SwiftAISDK/swift-ai-zai/releases/tag/1.1.2",
+          "target": "702d4f41d6f76c09dcc4b18b9fa025c0dab6b889"
+        },
+        "standaloneCI": {
+          "id": 43531911932,
+          "url": "https://github.com/SwiftAISDK/swift-ai-zai/actions/runs/43531911932",
+          "headSHA": "702d4f41d6f76c09dcc4b18b9fa025c0dab6b889",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      }
+    ],
+    "retained": [
+      {
+        "package": "swift-ai-bytedance",
+        "version": "1.0.0"
+      },
+      {
+        "package": "swift-ai-huggingface",
+        "version": "1.1.0"
+      },
+      {
+        "package": "swift-ai-lmnt",
+        "version": "1.0.0"
+      },
+      {
+        "package": "swift-ai-vercel",
+        "version": "1.0.0"
+      }
+    ],
+    "standaloneCI": "48 exact exported commits passed",
+    "publicConsumers": "59 clean clients passed using actual public tags without local overrides",
+    "verification": "Docs/ReleaseVerification20261114.json",
+    "umbrella": "3.3.0 selection pending separate exact-source verification and publication"
   },
   "rootIntegrationClarifications": [
     "Google extraction uses AIExtractionLanguageModel over structured generation; only Decisions has a native /decisions endpoint.",

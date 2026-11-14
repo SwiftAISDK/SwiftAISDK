@@ -116,7 +116,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/alibaba.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-amazon-bedrock",
@@ -211,7 +211,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/amazon-bedrock.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-anthropic",
@@ -263,7 +263,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/anthropic.md"
       ],
-      "umbrellaFrom": "1.3.0"
+      "umbrellaFrom": "1.4.0"
     },
     {
       "id": "swift-ai-anthropic-aws",
@@ -317,7 +317,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/anthropic-aws.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-assemblyai",
@@ -366,7 +366,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/assemblyai.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-azure",
@@ -435,7 +435,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/azure.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-baseten",
@@ -490,7 +490,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/baseten.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-black-forest-labs",
@@ -540,7 +540,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/black-forest-labs.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-bytedance",
@@ -636,7 +636,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/cartesia.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-cerebras",
@@ -690,7 +690,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/cerebras.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-cohere",
@@ -741,7 +741,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/cohere.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-core",
@@ -784,7 +784,7 @@
       "dependencies": [],
       "capabilityRows": [],
       "guides": [],
-      "umbrellaFrom": "1.3.0"
+      "umbrellaFrom": "1.4.0"
     },
     {
       "id": "swift-ai-deepgram",
@@ -834,7 +834,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/deepgram.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-deepinfra",
@@ -891,7 +891,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/deepinfra.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-deepseek",
@@ -940,7 +940,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/deepseek.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.2.0"
     },
     {
       "id": "swift-ai-elevenlabs",
@@ -993,7 +993,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/elevenlabs.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-fal",
@@ -1045,7 +1045,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/fal.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-fireworks",
@@ -1102,7 +1102,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/fireworks.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-fish-audio",
@@ -1152,7 +1152,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/fish-audio.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-gateway",
@@ -1210,7 +1210,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/gateway.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.3.0"
     },
     {
       "id": "swift-ai-gladia",
@@ -1259,7 +1259,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/gladia.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-gmicloud",
@@ -1313,7 +1313,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/gmicloud.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-google",
@@ -1370,7 +1370,7 @@
         "docs-site/scripts/provider-guides/google-generative-ai.md",
         "docs-site/scripts/provider-guides/google.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.3.0"
     },
     {
       "id": "swift-ai-google-vertex",
@@ -1490,7 +1490,7 @@
         "docs-site/scripts/provider-guides/google-vertex.md",
         "docs-site/scripts/provider-guides/googlevertex-anthropic.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-groq",
@@ -1540,7 +1540,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/groq.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-heygen",
@@ -1589,7 +1589,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/heygen.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-huggingface",
@@ -1687,7 +1687,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/hume.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-klingai",
@@ -1736,7 +1736,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/klingai.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-lmnt",
@@ -1831,7 +1831,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/luma.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-mcp",
@@ -1864,7 +1864,7 @@
       ],
       "capabilityRows": [],
       "guides": [],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.2.0"
     },
     {
       "id": "swift-ai-minimax",
@@ -1920,7 +1920,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/minimax.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.3.0"
     },
     {
       "id": "swift-ai-mistral",
@@ -1972,7 +1972,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/mistral.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-moonshotai",
@@ -2026,7 +2026,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/moonshotai.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-open-responses",
@@ -2080,7 +2080,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/open-responses-responses.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-openai",
@@ -2145,7 +2145,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/openai.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.3.0"
     },
     {
       "id": "swift-ai-openai-compatible",
@@ -2197,7 +2197,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/openai-compatible.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.3.0"
     },
     {
       "id": "swift-ai-perplexity",
@@ -2248,7 +2248,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/perplexity.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.2.0"
     },
     {
       "id": "swift-ai-prodia",
@@ -2299,7 +2299,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/prodia.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-quiverai",
@@ -2354,7 +2354,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/quiverai.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-replicate",
@@ -2404,7 +2404,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/replicate.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-revai",
@@ -2453,7 +2453,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/revai.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-togetherai",
@@ -2511,7 +2511,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/togetherai.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-topaz",
@@ -2561,7 +2561,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/topaz.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-typesafe-ai",
@@ -2611,7 +2611,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/typesafe.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-ui",
@@ -2645,7 +2645,7 @@
       ],
       "capabilityRows": [],
       "guides": [],
-      "umbrellaFrom": "1.1.0"
+      "umbrellaFrom": "1.2.0"
     },
     {
       "id": "swift-ai-vercel",
@@ -2746,7 +2746,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/voyage.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     },
     {
       "id": "swift-ai-xai",
@@ -2809,7 +2809,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/xai.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.2.1"
     },
     {
       "id": "swift-ai-zai",
@@ -2863,7 +2863,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/zai.md"
       ],
-      "umbrellaFrom": "1.1.1"
+      "umbrellaFrom": "1.1.2"
     }
   ]
 }
