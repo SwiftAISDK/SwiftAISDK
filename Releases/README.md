@@ -164,5 +164,6 @@ The 2026-11-15 set is in `sets/weekly-upstream-20261115.json`: 36 changed
 units (31 patch, two minor, three initial), retaining 19 unchanged units. All
 36 standalone CIs and 62 clean actual-public-tag consumers passed. Eight
 version-specific historical graphs and one exact least-version umbrella graph
-supplement 112 generic local clients. The separate compatibility umbrella follows
-after its own actual-tag verification.
+supplement 112 generic local clients. `umbrella/3.4.0.json` records the separate compatibility selection after actual
+3.4.0/preserved2.8.1 clients and tag/Release readback. Complete Swift6.3.3 M3
+verification and the controlled hosted fallback also passed.

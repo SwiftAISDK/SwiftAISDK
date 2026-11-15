@@ -22,8 +22,7 @@ complete Tencent, Parallel and ScaleDown ports, plus HeyGen Decision V4.
 Core signed streaming approvals and per-video MIME descriptors are additive;
 all previous selectors/initializers remain. All required local checks passed:
 55 owning packages, 1,736 facade tests, tooling, 55 deterministic exports and
-exact minimum-dependency consumers. All 36 independent releases are published and verified; the separate
-compatibility umbrella follows after its final public-tag checks.
+exact minimum-dependency consumers. All 36 independent releases and SwiftAISDK 3.4.0 are published and verified.
 
 ## Modular packages
 
@@ -37,8 +36,11 @@ All 36 exported commits passed standalone CI and 62 clean public-tag consumers.
 Local verification covers 55 owning packages, 2,451 owning tests, 1,736 facade
 tests, 55 deterministic exports, 112 generic consumers, eight exact historical
 graphs and one complete least-version umbrella graph. Paid/live checks remain disabled.
-SwiftAISDK 3.3.0 remains the published optional umbrella while the separate 3.4.0
-compatibility release is prepared.
+SwiftAISDK 3.4.0 is the optional compatibility umbrella. Actual 3.4.0 and
+preserved 2.8.1 consumers passed separately from the 62 modular clients. The M3
+runner passed all 4,187 reported package/facade tests, iOS compilation and
+examples; a controlled outage verified automatic hosted fallback. See
+[M3 runner verification](M3RunnerVerification20261115.json).
 
 ## Initial 3.0 migration evidence
 

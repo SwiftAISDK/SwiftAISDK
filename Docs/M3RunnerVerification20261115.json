@@ -1,0 +1,441 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "checkedAt": "2026-11-15T05:18:21.938248+00:00",
+  "configurationSourceCommit": "6a68ab42d15cb3262554e7db5f5eed35634901f5",
+  "runner": {
+    "id": 21,
+    "name": "oz-m3-swiftaisdk",
+    "service": "actions.runner.SwiftAISDK-SwiftAISDK.oz-m3-swiftaisdk",
+    "labels": [
+      "self-hosted",
+      "macOS",
+      "ARM64",
+      "swift-ai-m3"
+    ],
+    "swift": "6.3.3",
+    "macOSSDK": "26.5",
+    "systemXcodeUnchanged": true
+  },
+  "fullCI": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "checkedAt": "2026-11-15T05:04:29.542Z",
+    "sourceCommit": "6a68ab42d15cb3262554e7db5f5eed35634901f5",
+    "canonicalCI": {
+      "id": 43678851385,
+      "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43678851385",
+      "sourceCommit": "6a68ab42d15cb3262554e7db5f5eed35634901f5"
+    },
+    "jobs": [
+      {
+        "name": "changes",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Select checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Select Swift runner",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "test",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Prepare pinned Swift toolchain",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check Swift version",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Test affected packages and compatibility facade once",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Compile for iOS",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Build examples",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "m3_watchdog",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Fall back when M3 cannot start",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "tooling",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check catalog and tooling",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "docs",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run npm ci --prefix docs-site",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Generate documentation",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check and build documentation",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload documentation",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "runner_probe",
+        "status": "completed",
+        "conclusion": "skipped",
+        "steps": []
+      },
+      {
+        "name": "deploy",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Deploy to GitHub Pages",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "requiredSwiftJobExecuted": true,
+    "allowSkipped": false
+  },
+  "testJob": {
+    "id": 132704913113,
+    "runnerID": 21,
+    "runnerName": "oz-m3-swiftaisdk",
+    "conclusion": "success",
+    "owningPackages": 55,
+    "owningTests": 2451,
+    "facadeTests": 1736,
+    "totalReportedTests": 4187,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1,
+        "started_at": "2026-11-15T04:56:01Z",
+        "completed_at": "2026-11-15T04:56:03Z"
+      },
+      {
+        "name": "Run actions/checkout@v6",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2,
+        "started_at": "2026-11-15T04:56:03Z",
+        "completed_at": "2026-11-15T04:56:05Z"
+      },
+      {
+        "name": "Run actions/setup-node@v6",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3,
+        "started_at": "2026-11-15T04:56:05Z",
+        "completed_at": "2026-11-15T04:56:05Z"
+      },
+      {
+        "name": "Prepare pinned Swift toolchain",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4,
+        "started_at": "2026-11-15T04:56:05Z",
+        "completed_at": "2026-11-15T04:56:05Z"
+      },
+      {
+        "name": "Check Swift version",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5,
+        "started_at": "2026-11-15T04:56:05Z",
+        "completed_at": "2026-11-15T04:56:05Z"
+      },
+      {
+        "name": "Test affected packages and compatibility facade once",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6,
+        "started_at": "2026-11-15T04:56:05Z",
+        "completed_at": "2026-11-15T05:01:37Z"
+      },
+      {
+        "name": "Compile for iOS",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7,
+        "started_at": "2026-11-15T05:01:37Z",
+        "completed_at": "2026-11-15T05:02:31Z"
+      },
+      {
+        "name": "Build examples",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8,
+        "started_at": "2026-11-15T05:02:31Z",
+        "completed_at": "2026-11-15T05:03:35Z"
+      },
+      {
+        "name": "Post Run actions/setup-node@v6",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 15,
+        "started_at": "2026-11-15T05:03:35Z",
+        "completed_at": "2026-11-15T05:03:35Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v6",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 16,
+        "started_at": "2026-11-15T05:03:35Z",
+        "completed_at": "2026-11-15T05:03:35Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 17,
+        "started_at": "2026-11-15T05:03:35Z",
+        "completed_at": "2026-11-15T05:03:36Z"
+      }
+    ]
+  },
+  "onlineSmoke": {
+    "runID": 43678530171,
+    "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43678530171",
+    "conclusion": "success"
+  },
+  "controlledOfflineFallback": {
+    "original": {
+      "id": 43678650419,
+      "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43678650419",
+      "conclusion": "cancelled",
+      "targetWasQueuedWithoutRunner": true
+    },
+    "replacement": {
+      "id": 43678783361,
+      "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43678783361",
+      "conclusion": "success",
+      "labels": [
+        "macos-26"
+      ]
+    },
+    "queueGraceSeconds": 90,
+    "observedQueueToReplacementMilliseconds": 100072,
+    "scope": "runner; the smoke is excluded from release acceptance",
+    "runnerRestoredOnline": true,
+    "viscachaServiceUnchanged": true,
+    "authentication": "Ephemeral job GITHUB_TOKEN actions:write; no permanent runner-inventory credential"
+  },
+  "logCollectionNote": "A queued cancelled job has no log; original verification retained the executed watchdog and hosted-probe job logs without repeating the outage."
+}

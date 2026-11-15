@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "modular-releases-verified-umbrella-pending",
+  "status": "release-publication-verified",
   "runtimeSourceCommit": "8d33f9e59076f954ee5aef7c6efc265b8d3cbe7c",
   "ciAttemptHistory": {
     "initial": {
@@ -21,7 +21,7 @@
       "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed"
     }
   },
-  "checkedAt": "2026-11-15T04:58:15.262Z",
+  "checkedAt": "2026-11-15T05:18:21.936703+00:00",
   "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
   "canonicalCI": {
     "schemaVersion": 1,
@@ -4139,7 +4139,9 @@
     "localDependencies": false,
     "report": "Docs/PublicConsumerVerification20261115.json",
     "reportSHA256": "b038d16c87632402dbdff3f52c7b480a1579419bed1b7f26511bb6df1bab84e4",
-    "rawVerifierOutputSHA256": "9e1724a83473f2283bab3436edd23028fbc66545f018ebbe5cd17162a2e5e152"
+    "rawVerifierOutputSHA256": "9e1724a83473f2283bab3436edd23028fbc66545f018ebbe5cd17162a2e5e152",
+    "umbrellaReport": "Docs/UmbrellaConsumerVerification20261115.json",
+    "umbrellaConsumerCount": 2
   },
   "hostedDocumentation": {
     "schemaVersion": 1,
@@ -4324,9 +4326,262 @@
     ]
   },
   "umbrella": {
-    "status": "pending",
-    "candidate": "3.4.0",
-    "reason": "New provider factories/reexports, signed streaming API and per-file video descriptors; required core1.5.0 and HeyGen1.2.0 installation minima."
+    "schemaVersion": 1,
+    "status": "published",
+    "checkedAt": "2026-11-15T05:16:25.008Z",
+    "version": "3.4.0",
+    "manifestSourceCommit": "a6c2f8f456616460c1798e75e62e9552538362b9",
+    "canonicalImplementationSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+    "umbrellaManifestSHA256": "dfce06eb600183e0c6a66fe4cf069b07f3ac10879de2153bbdb7818741348ab4",
+    "remoteMain": "a6c2f8f456616460c1798e75e62e9552538362b9",
+    "annotatedTag": "a6e9bab4244a782bf884563ac1fac1377a8929e0",
+    "peeledTag": "a6c2f8f456616460c1798e75e62e9552538362b9",
+    "existingTagRefsPreserved": 75,
+    "release": {
+      "id": 445827738,
+      "url": "https://github.com/SwiftAISDK/SwiftAISDK/releases/tag/3.4.0",
+      "target": "a6c2f8f456616460c1798e75e62e9552538362b9"
+    },
+    "notesSHA256": "ad6b3764cb43a7b0eaf20db8099563de2087e445c55a32761e1c89b773a52fb0",
+    "canonicalCI": {
+      "schemaVersion": 1,
+      "status": "passed",
+      "checkedAt": "2026-11-15T05:12:31.126Z",
+      "sourceCommit": "a6c2f8f456616460c1798e75e62e9552538362b9",
+      "canonicalCI": {
+        "id": 43679823706,
+        "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43679823706",
+        "sourceCommit": "a6c2f8f456616460c1798e75e62e9552538362b9"
+      },
+      "jobs": [
+        {
+          "name": "changes",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v6",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v6",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Select checks",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Select Swift runner",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v6",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v6",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "docs",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v6",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v6",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci --prefix docs-site",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Generate documentation",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check and build documentation",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload documentation",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v6",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v6",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "tooling",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v6",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v6",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check catalog and tooling",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v6",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v6",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "test",
+          "status": "completed",
+          "conclusion": "skipped",
+          "steps": []
+        },
+        {
+          "name": "m3_watchdog",
+          "status": "completed",
+          "conclusion": "skipped",
+          "steps": []
+        },
+        {
+          "name": "runner_probe",
+          "status": "completed",
+          "conclusion": "skipped",
+          "steps": []
+        },
+        {
+          "name": "deploy",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Deploy to GitHub Pages",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "requiredSwiftJobExecuted": false,
+      "allowSkipped": true
+    },
+    "m3Verification": {
+      "sourceCommit": "6a68ab42d15cb3262554e7db5f5eed35634901f5",
+      "run": {
+        "id": 43678851385,
+        "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43678851385",
+        "sourceCommit": "6a68ab42d15cb3262554e7db5f5eed35634901f5"
+      },
+      "owningPackages": 55,
+      "owningTests": 2451,
+      "compatibilityTests": 1736,
+      "totalReportedTests": 4187,
+      "swift": "6.3.3",
+      "runner": "oz-m3-swiftaisdk"
+    },
+    "publicConsumers": {
+      "status": "passed",
+      "consumerCount": 2,
+      "versions": [
+        "3.4.0",
+        "2.8.1"
+      ],
+      "mirrors": false,
+      "localDependencies": false,
+      "report": "Docs/UmbrellaConsumerVerification20261115.json",
+      "reportSHA256": "b1a5962dc65aa71206b518c8d6980d05a664a5b53863c4da693510ac77a7554f",
+      "rawVerifierOutputSHA256": "6dc740b4e27b0b24f01718577293ab123602c2ae63707e16335f47236b46308c"
+    },
+    "modularPrerequisite": {
+      "status": "passed",
+      "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+      "consumerCount": 62,
+      "packageCount": 55,
+      "report": "Docs/PublicConsumerVerification20261115.json",
+      "reportSHA256": "b038d16c87632402dbdff3f52c7b480a1579419bed1b7f26511bb6df1bab84e4",
+      "releasedSet": "Releases/sets/weekly-upstream-20261115.json",
+      "releasedSetSHA256": "db003bed4ef19e4bc218cefa9f6a1ad68ee6fdc2b664edc9f27d8e97799a6007"
+    },
+    "selection": "Releases/umbrella/3.4.0.json"
   },
   "retainedGaps": [
     "Paid/live provider checks were not run.",
@@ -4347,5 +4602,19 @@
     "hosted-docs-source.json": "2fd9efa876a539321016a96afcf39c35f9ef80ca136c35667bc150601c706ca9",
     "export-comparison.json": "dd599e9fe3930c7e4b7a3abf2986be7d40b360471e55fb49599b668212db94d8",
     "candidate-source-verification.json": "401ab18d19057a65eb753beeed331ead1a24d8f6da3a82b6c984e184d8f0a35f"
+  },
+  "m3RunnerVerification": {
+    "status": "passed",
+    "configurationSourceCommit": "6a68ab42d15cb3262554e7db5f5eed35634901f5",
+    "report": "Docs/M3RunnerVerification20261115.json",
+    "fullCI": {
+      "id": 43678851385,
+      "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43678851385",
+      "sourceCommit": "6a68ab42d15cb3262554e7db5f5eed35634901f5"
+    },
+    "fullSwiftReportedTests": 4187,
+    "toolingTests": 55,
+    "queueGraceSeconds": 90,
+    "actualOfflineProof": "Native runner_probe on hosted replacement; full hosted SDK suite also passed at implementation source1e54."
   }
 }

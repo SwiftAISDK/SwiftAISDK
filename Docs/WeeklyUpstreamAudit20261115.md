@@ -2,7 +2,7 @@
 
 Runtime, matching-release delta review and all required local checks are complete.
 The 36 independent releases passed exact-source hosted CI and public-reference checks.
-The separate compatibility umbrella is the remaining release phase. This is a delta review with retained
+SwiftAISDK 3.4.0 and its actual-tag clients are also verified. This is a delta review with retained
 native/platform gaps; it does not certify full-package or live-service parity.
 
 Fresh npm registry: 54 previously tracked packages, 36 changed versions; three
@@ -167,3 +167,17 @@ Canonical source: `1e543b35e0259a5bda888665dacf2d4a7f1bb0ed`; [Swift 6.3.3/iOS/e
 | swift-ai-voyage | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-voyage/releases/tag/1.1.3) | patch |
 | swift-ai-xai | 1.2.1 | [1.2.2](https://github.com/SwiftAISDK/swift-ai-xai/releases/tag/1.2.2) | patch |
 | swift-ai-zai | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-zai/releases/tag/1.1.3) | patch |
+
+## Verified compatibility umbrella and M3 runner
+
+[SwiftAISDK 3.4.0](https://github.com/SwiftAISDK/SwiftAISDK/releases/tag/3.4.0) is an additive compatibility release
+at `a6c2f8f456616460c1798e75e62e9552538362b9`. The 55-version selection is
+recorded in [Releases/umbrella/3.4.0.json](../Releases/umbrella/3.4.0.json). Actual
+3.4.0 and preserved 2.8.1 clients passed separately; the immutable 62-client
+modular report remains unchanged.
+
+[Complete M3 Swift 6.3.3 CI](https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43678851385)
+passed 4,187 reported tests, iOS compilation and examples. A separate controlled
+outage verified the 90-second queued-job handoff to hosted macOS; the dedicated
+service was restored and Viscacha remained unchanged. See
+[M3RunnerVerification20261115.json](M3RunnerVerification20261115.json).
