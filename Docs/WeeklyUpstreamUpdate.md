@@ -19,8 +19,10 @@ Use the [contributor guide](../CONTRIBUTING.md) for setup, the
   moving published tags, or editing generated distribution implementations.
 - Check configured human Git author and committer identities before committing.
   In the maintainer's checkout use `Nikolay Solovyov <i@mr-ozio.ru>`.
-  Never attribute commits or PRs to an agent or add AI coauthor/signoff trailers,
-  generated-by footers, or session links. Preserve genuine human and legal attribution.
+  Never attribute commits to an agent or add AI coauthor/signoff trailers,
+  generated-by footers, or session links. A PR description carries only the single
+  AI-assistance block defined in AGENTS.md "Pull Request Descriptions". Preserve
+  genuine human and legal attribution.
 - Write observable acceptance gates before substantial work. Record exact source
   revisions, commands, exits, results, and unresolved evidence; do not silently
   lower the acceptance bar to finish a run.
@@ -219,7 +221,10 @@ linked audit. Do not add AI attribution.
    version-specific minimum compatible graphs. A local rehearsal proves neither
    public availability nor published-consumer success.
 9. Only after publication and consumer verification, add the append-only released
-   set and evidence. Preserve historical records and old source/test references.
+   set and evidence. Write the pass's audit and verification records to
+   `Docs/Archive/` under the [archive policy](Archive/README.md), and point
+   `Docs/PortingStatus.md` at the new records instead of appending dated narrative
+   to living documents. Preserve historical records and old source/test references.
    For partial failure, reconcile immutable refs and resume the same journal;
    do not start a conflicting release or silently repeat ambiguous mutations.
 

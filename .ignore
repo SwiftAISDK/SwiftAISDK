@@ -1,0 +1,4 @@
+# Read by ripgrep-based search (including coding agents). Archived pass
+# records stay out of default results; see Docs/Archive/README.md.
+Docs/Archive/*
+!Docs/Archive/README.md

@@ -7,25 +7,10 @@ Release records describe Swift versions. npm baselines remain independent in
 `umbrella/3.0.0.json` records the complete tested selection without imposing an
 exact dependency graph on every consumer.
 
-The 2026-11-01 release set is in `sets/weekly-upstream-20261101.json`: 48 changed
-units, retaining the four unchanged distributions. `umbrella/3.1.0.json` records
-the separate compatibility selection. npm package baselines remain independent.
-
-The 2026-11-08 set is in `sets/weekly-upstream-20261108.json`: 48 changed
-units (21 minor, 27 patch). ByteDance, Hugging Face, LMNT and Vercel retain
-their distributions. `umbrella/3.2.0.json` records the separate compatibility
-selection after its dependency tags passed public consumers and hosted CI.
-
-The 2026-11-14 set is in `sets/weekly-upstream-20261114.json`: 48 changed
-units (11 minor, 37 patch), with four unchanged distributions retained. All
-48 standalone CI runs and 59 clean public consumers passed. Version-specific
-lower bounds are additionally verified. `umbrella/3.3.0.json` records the separate
-52-version compatibility selection after exact-source Swift 6.3.3 CI, annotated
-tag/GitHub Release readback and actual 3.3.0/preserved 2.8.1 consumers passed. The
-59 modular consumer report remains immutable; the two umbrella consumers have a
-separate report in `Docs/UmbrellaConsumerVerification20261114.json`. The unchanged
-MCP fixture needed one bounded same-SHA CI rerun; the initial failure and its
-50 ms timing margin remain recorded test-stability debt.
+Each later release set is listed in `sets/` and each umbrella selection in
+`umbrella/`; the newest umbrella record is the current compatibility selection.
+Narrative summaries of earlier release sets are archived in
+[Docs/Archive/ReleaseSetHistory.md](../Docs/Archive/ReleaseSetHistory.md).
 
 ## Reviewed changes
 
@@ -159,11 +144,3 @@ provider/shared-parser repairs, downstream selection and changed-unit-only local
 releases. It also registers an unimplemented fixture provider and verifies that
 changing its state alone cannot bypass release review. No production baselines,
 capabilities, remote releases or provider calls change during this rehearsal.
-
-The 2026-11-15 set is in `sets/weekly-upstream-20261115.json`: 36 changed
-units (31 patch, two minor, three initial), retaining 19 unchanged units. All
-36 standalone CIs and 62 clean actual-public-tag consumers passed. Eight
-version-specific historical graphs and one exact least-version umbrella graph
-supplement 112 generic local clients. `umbrella/3.4.0.json` records the separate compatibility selection after actual
-3.4.0/preserved2.8.1 clients and tag/Release readback. Complete Swift6.3.3 M3
-verification and the controlled hosted fallback also passed.

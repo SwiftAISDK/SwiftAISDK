@@ -145,7 +145,7 @@ recorded in release history. Temporary migration reports remain in Git history.
 The 2026-11-01 update replaces imported provenance for 52 reviewed deltas with
 integrity-verified published archives and matching-release test refs. Contract
 declarations and changed tests have explicit dispositions in
-`Docs/WeeklyUpstreamAudit20261101.json`; historical full-product gaps remain.
+`Docs/Archive/WeeklyUpstreamAudit20261101.json`; historical full-product gaps remain.
 
 ## Compatibility facade
 
