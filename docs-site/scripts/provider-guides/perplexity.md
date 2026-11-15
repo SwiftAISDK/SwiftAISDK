@@ -1,57 +1,105 @@
-## Current reviewed behavior
-
-The reviewed baseline is `@ai-sdk/perplexity` 5.0.34. Native decisions accept `PerplexityDecisionModelOptions(mode: .webGrounding, maxStaleness: 0)`. `mode` sends `web_grounding`; maximum staleness is a nonnegative integer representing fetched-page age in seconds, including zero.
-
-Results expose `searchResults`, `fetchedResults` and exact `toolCalls` invocation counts under `providerMetadata.perplexity`. Missing invocation counts remain null and reported zeros are preserved. HTTP failures retain grounding-count headers and retryability. Unknown decision options still produce unsupported warnings; invalid grounding options fail before HTTP.
-
-## Perplexity 5 routing
-
-`languageModel(...)` and the callable provider use `/v1/agent`.
-Choose `chatModel(...)` or `sonarModel(...)` for legacy Sonar Chat Completions.
-`embeddingModel(...)` uses `/v1/embeddings`.
-
-## Native decisions
+## Quick start
 
 ```swift
+import SwiftAISDK
+
 let perplexity = try AIProviders.perplexity()
-let result = try await AI.experimentalDecide(
-    model: try perplexity.decisionModel("pplx-judge"),
-    state: .text("The package arrived cracked."),
-    questions: ["damaged": .boolean(criteria: ["true": "Package is damaged"])]
+let model = try perplexity.languageModel("fast")
+let result = try await model.generateText("Summarize this week's Swift news.")
+print(result.text)
+```
+
+For the modular packages, use `import SwiftAI` and `import SwiftAIPerplexity`, then
+`try AIProviders.perplexity(configuration: PerplexityProviderSettings(...))`. The native
+factory requires a configuration argument; pass `PerplexityProviderSettings()` to read
+`PERPLEXITY_API_KEY` from the environment.
+
+## Agent API and Sonar
+
+`languageModel(_:)` and the callable provider use the Agent API (`/v1/agent`). The
+preset IDs `fast`, `low`, `medium`, `high` and `xhigh` are sent as `preset`; any other
+ID, such as `openai/gpt-5`, is sent as `model`. Use `sonarModel(_:)` or `chatModel(_:)`
+for the Sonar Chat Completions API:
+
+```swift
+let agent = try perplexity.languageModel("fast")   // /v1/agent
+let sonar = try perplexity.sonarModel("sonar")     // /chat/completions
+```
+
+Sonar responses expose citations, images and cost under `providerMetadata.perplexity`.
+Reasoning tokens are reported separately from completion tokens.
+
+## Agent provider options
+
+Pass Agent options under `providerOptions["perplexity"]`. The provider validates them
+before sending the request:
+
+| Option | Behavior |
+| --- | --- |
+| `instructions` | System-style instructions string. |
+| `models` | Array of model ID strings. |
+| `maxSteps`, `maxToolCalls` | Positive / nonnegative integer limits. |
+| `previousResponseId`, `store` | Continue a stored response; Boolean storage flag. |
+| `languagePreference` | Preferred response language. |
+| `reasoning` | Object with `effort`: `minimal`, `low`, `medium`, `high` or `xhigh`. |
+| `tools` | Native tools: `web_search`, `fetch_url`, `people_search`, `finance_search`, `sandbox`, `mcp`, `connector`. |
+| `skills` | Built-in (`office`, `office/docx`, `office/pdf`, `office/pptx`, `office/xlsx`) or inline skills. |
+
+```swift
+let result = try await agent.generateText(
+    "Find recent Swift concurrency proposals.",
+    options: LanguageGenerationOptions(providerOptions: ["perplexity": [
+        "maxSteps": 4,
+        "tools": [["type": "web_search", "max_results": 5]]
+    ]])
 )
 ```
 
-The `/v1/decisions` endpoint accepts 1–128 named Choice, Score and Boolean
-questions. Choice supports 1–255 options; Score requires 1–10 non-null levels.
-Instructions may be omitted when the rubric defines the judgment. Box is
-unsupported. State preserves ordered text/JSON and up to eight inline PNG,
-JPEG or WebP images, including images nested in JSON. The facade resolves URLs
-before adapter execution.
+Agent responses list `providerMetadata.perplexity.searchQueries` in first-seen order
+without duplicates, or JSON null when no query was reported.
 
-Answers retain full precision without rounding allowance. Confidence and score
-legends live under `providerMetadata.perplexity`; response metadata keeps
-`x-request-id`, resolved model, headers and raw body. `maxOutputTokens`,
-`reasoning` and Perplexity provider options produce unsupported warnings.
+Portable `reasoning: "none"` maps to `minimal` and `max` maps to `xhigh`, with a
+compatibility warning; an explicit `reasoning.effort` option takes precedence. `topK`,
+stop sequences and `seed` produce unsupported warnings, and the Agent API selects
+tools automatically, so a specific tool choice also warns. Tool choice `none` omits every
+tool definition, including tools enabled by an Agent preset, and sends
+`max_tool_calls: 0`.
 
-## Rotating credentials
+## Embeddings
 
-The native `PerplexityProviderSettings` accepts an optional
-`apiKeyProvider` asynchronous throwing closure. It is resolved for each
-authenticated request, so short-lived credentials can refresh without recreating
-the provider or model. Static `apiKey` settings remain supported. A supplier
-failure stops the request before it reaches the transport.
+```swift
+let embedder = try perplexity.embeddingModel("pplx-embed-v1-0.6b")
+let embedding = try await embedder.embed("Swift concurrency", dimensions: 512)
+```
 
+Embeddings use `/v1/embeddings` with quantized output. `providerOptions["perplexity"]`
+accepts `dimensions` (positive integer, overriding the shared value) and
+`encodingFormat` (`base64_int8`, the default, or `base64_binary`). See
+[Embeddings](../../core/embeddings/).
 
-## Search query metadata
+## Decisions
 
-Agent responses expose `providerMetadata.perplexity.searchQueries` in first-seen order, without duplicates. Generation collects all search-result items; streaming combines reasoning search-query events, completed output items and terminal response output. Fetch URL events do not become search queries. When no query was reported, the value is JSON null. Invalid query arrays fail response validation.
+```swift
+let result = try await AI.experimentalDecide(
+    model: try perplexity.decisionModel("pplx-judge"),
+    state: .text("The package arrived cracked."),
+    questions: ["damaged": .boolean(criteria: ["true": "Package is damaged"])],
+    providerOptions: PerplexityDecisionModelOptions(mode: .webGrounding, maxStaleness: 0).providerOptions
+)
+```
 
-Portable `reasoning: "none"` maps to the lowest supported effort, `minimal`, with a compatibility warning. Explicit native reasoning options keep their precedence.
+Decisions use `/v1/decisions` with 1–128 named Choice, Score and Boolean questions.
+Choice supports 1–255 options and Score 1–10 non-null levels; Box is unsupported.
+State may contain ordered text and JSON plus up to eight inline PNG, JPEG or WebP
+images. `mode: .webGrounding` enables web grounding; `maxStaleness` is the maximum
+fetched-page age in seconds. Answers keep full precision; confidence, score legends
+and `searchResults`, `fetchedResults` and `toolCalls` counts are under
+`providerMetadata.perplexity`. `maxOutputTokens`, `reasoning` and unknown options
+produce warnings. See [Decisions](../../core/decide/).
 
-## Current request and response behavior
+## Headers and rotating credentials
 
-Use tool choice `none` to disable both explicit tools and tools enabled by
-an Agent preset. The adapter omits all tool definitions and forces
-`max_tool_calls: 0`, even when provider options supplied another limit. Historical
-tool calls/results stay in the prompt. Disabled provider tools do not produce
-unsupported-tool warnings or leak tool credentials into the request.
+Requests send `X-Pplx-Integration: vercel-ai-sdk` unless you supply that header
+yourself (matched case-insensitively). The native `PerplexityProviderSettings` also
+accepts `apiKeyProvider`, an async throwing closure resolved before each authenticated
+request; a supplier failure stops the request before it is sent.

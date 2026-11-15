@@ -1,57 +1,129 @@
-## Image URL transport
+## Quick start
 
-Azure OpenAI and MAI image/mask/markup downloads use the configured raw transport. API keys, bearer tokens and provider headers stay on authenticated API requests; redirects retain download validation and cancellation. Token suppliers run only for the provider request.
+```swift
+import SwiftAISDK
+
+let provider = try AIProviders.azure(resourceName: "my-resource")
+// Azure model IDs are your deployment names.
+let model = try provider.languageModel("my-gpt-deployment")
+let result = try await model.generateText("Say hello from Azure OpenAI.")
+print(result.text)
+```
+
+With modular packages, `import SwiftAI` and `import SwiftAIAzure`, then call
+`AIProviders.azure(resourceName:apiVersion:useDeploymentBasedURLs:tokenProvider:configuration:audioSettings:)`;
+the native factory requires `configuration: AzureOpenAIProviderSettings(...)`.
+
+`languageModel(...)` and `responses(...)` use the Responses API. Use `chat(...)`
+for Chat Completions, `completion(...)` for legacy completions and `deepseek(...)`
+for DeepSeek deployments (reasoning text is mapped; thinking options are not
+sent).
+
+## Endpoints
+
+- With `resourceName` (or `AZURE_RESOURCE_NAME`), requests go to
+  `https://<resource>.openai.azure.com/openai/v1/...?api-version=v1`. The resource
+  name must be a single DNS label.
+- `apiVersion` changes the `api-version` query value.
+- `useDeploymentBasedURLs: true` uses `/openai/deployments/<deployment>/...`.
+- `settings.baseURL` replaces the resource URL. Azure OpenAI, Foundry and
+  Cognitive Services hosts are normalized without duplicating `/v1` or
+  `api-version`; Foundry project URLs (`/api/projects/...`) get no `api-version`;
+  any other host is used as-is.
+
+## Authentication
+
+- **API key**: `settings.apiKey` or `AZURE_API_KEY`, sent as `api-key` (and as
+  `Ocp-Apim-Subscription-Key` for Azure Speech).
+- **Microsoft Entra ID**: pass `tokenProvider`, an async closure returning an
+  access token. It is called for each request and sent as a bearer token, including
+  to the Speech and MAI hosts.
+- **Rotating keys**: `AzureOpenAIProviderSettings.apiKeyProvider` resolves a fresh
+  key before each request (native `configuration:` factory).
+
+Use only one method; combining an API key or key supplier with `tokenProvider`
+throws.
+
+```swift
+let provider = try AIProviders.azure(
+    resourceName: "my-resource",
+    tokenProvider: { try await entraTokenSource.accessToken() }
+)
+```
 
 ## Deployment names and underlying models
 
 ```swift
-let azure = try AIProviders.azure(resourceName: "my-resource")
-let model = try azure.responses(
+let model = try provider.responses(
     "production-deployment",
     settings: AzureOpenAILanguageModelSettings(modelID: "gpt-5")
 )
 ```
 
-The deployment name remains in the request body and deployment-based URL. `model.modelID` reports the underlying model, so Responses and Chat apply the correct reasoning, sampling and system-message rules even when the deployment has a custom name. Returned response metadata preserves the server's model ID. The same settings overload is available on the callable provider, `languageModel`, `chat`/`chatModel`, and `completion`/`completionModel`. Omitting settings or leaving `modelID` unset preserves the deployment name as the model identity.
+The deployment name is still sent in the request and URL, while `modelID` tells
+the adapter which model rules (reasoning, sampling, system messages) apply. The
+same `settings:` overload exists for `languageModel`, `chat`/`chatModel` and
+`completion`/`completionModel`. Without settings, the deployment name is used as
+the model identity.
 
-## MAI image generation and editing
+## Provider options and tools
+
+Responses reads the `providerOptions["azure"]` object, falling back to
+`providerOptions["openai"]` only when the Azure key is absent. Chat, completion
+and the delegated OpenAI media models merge both, with `azure` keys winning. See
+[OpenAI](../openai/) for the available option keys.
+
+`AzureOpenAITools` provides `webSearch`, `fileSearch`, `codeInterpreter`,
+`imageGeneration`, `toolSearch`, `customTool`, `applyPatch` and `shell`.
+`webSearchPreview` is deprecated; use `webSearch`. For tool search, a function
+tool definition can include `"providerOptions": ["azure": ["deferLoading": true]]`
+(the `openai` namespace is also accepted).
+
+## Speech (MAI Voice)
 
 ```swift
-let azure = try AIProviders.azure(resourceName: "my-resource")
-let image = try azure.imageModel("mai-image-2.5")
-let result = try await image.generateImage(.init(
-    prompt: "A watercolor mountain village",
-    aspectRatio: "16:9"
-))
+let voice = try provider.speechModel("mai-voice-2")
+let speech = try await voice.generateSpeech(
+    "Welcome back!",
+    voice: "en-US-Harper",
+    format: "mp3",
+    providerOptions: ["azure": ["style": "cheerful", "styleDegree": 1.2]]
+)
+```
+
+`mai-voice-2`, `mai-voice-2-flash`, `mai-voice-2.1` and `mai-voice-2.1-flash` use
+Azure Speech SSML synthesis; other IDs use the OpenAI speech API. Set
+`providerOptions["azure"]["api"]` to `"speech"` or `"openai"` to choose
+explicitly. The Speech path supports `style`, `styleDegree` (0.01–2), `speed`
+and the formats `mp3`, `opus`, `pcm`, `wav` or a raw Azure output format name.
+`instructions` is ignored with a warning; use `style`. Without a voice, a default
+voice for the requested language is used (`en-US-Harper` otherwise).
+
+## Transcription (MAI Transcribe)
+
+`mai-transcribe-2` and `mai-transcribe-1.5` use Azure Speech file transcription
+with options such as `timestamps` (`word`, `segment`, `none`), `transcribeStyle`,
+`locales`, `diarization` and `phraseList`. Results expose timed phrases as
+segments and flattened `words`; some options are unavailable on
+`mai-transcribe-1.5` and produce warnings. Other IDs use the OpenAI transcription
+API.
+
+For live audio, `provider.streamingTranscriptionModel("mai-transcribe-2-streaming")`
+streams over a WebSocket; file transcription with that model throws. Configure
+the socket and custom hosts with `AzureOpenAIAudioSettings(speechBaseURL:maiBaseURL:...)`
+passed as `audioSettings:`. See [Transcribe](../../core/transcribe/).
+
+## Images
+
+```swift
+let image = try provider.imageModel("mai-image-2.5")
+let result = try await image.generateImage("A watercolor mountain village", aspectRatio: "16:9")
 print(result.base64Images.count)
 ```
 
-MAI image models use their own `/images/generations` and `/images/edits` routes, aspect-ratio/pixel-budget sizing, reference-image uploads and Azure/Entra authentication. `AzureOpenAIAudioSettings.maiBaseURL` configures a custom MAI host. The image request's `files` selects editing; unsupported masks warn. Unknown deployment IDs can opt into `providerOptions.azure.api: "mai"`.
-
-Speech service errors retain their original HTTP status. A 502 response, including an Envoy protocol reset, remains retryable. Azure OpenAI image models keep their existing route.
-
-## Shared Responses history and citations
-
-Azure Responses inherits the OpenAI citation and retrieved-source separation, pruned-reasoning replay, and storage-disabled web-search replay. Ordinary tool results accept `providerMetadata.azure.additionalTools` with strict function definitions; each definition batch is inserted immediately after its result. Function omission uses `providerOptions.openai.omitFromRequestTools`, and omitted functions cannot be forced or allow-listed. Custom tool input streams expose text encoding. `AzureOpenAITools.webSearchPreview` is deprecated; use `webSearch`.
-
-
-## Rotating API keys and tool search
-
-`AzureOpenAIProviderSettings.apiKeyProvider` accepts an async throwing key supplier. Each request resolves its current key, using `api-key` for OpenAI and MAI and `Ocp-Apim-Subscription-Key` for Speech. Provider/request header overrides retain precedence. Configure either an API key supplier or the existing Entra `tokenProvider`.
-
-`AzureOpenAITools.toolSearch()` exposes the hosted OpenAI tool-search protocol through Azure Responses. Function tools can set `providerOptions.azure.deferLoading: true`; the `openai` namespace remains a fallback. These options apply to both generation and streaming.
-
-## Option namespaces, tools and timings
-
-Chat/Completion and delegated OpenAI media merge `openai` options followed by
-`azure`, so Azure keys win while unrelated OpenAI keys remain. Responses instead
-uses the entire first-present `azure` namespace, falling back to `openai` only
-when Azure is absent or null. Routing and Speech/MAI-only controls are filtered
-before delegation.
-
-`AzureOpenAITools` includes custom-tool, apply-patch and shell forwarding helpers.
-OpenAI streaming transcription uses the configured WebSocket transport and merged
-options; Azure Speech streaming remains unsupported. Speech file transcription
-maps shared timestamp requests to provider timestamps when omitted and exposes
-flattened `words` independently of phrases/segments. Excluded timings and
-MAI-Transcribe-1.5 restrictions produce warnings.
+`mai-image-2.5`, `mai-image-2.5-flash`, `mai-image-2.5-pro`, `mai-image-2.6` and
+`mai-image-2.6-flash` use the MAI image API with aspect-ratio sizing, reference
+images (passing `files` switches to editing; masks are unsupported) and options
+`autoAspectRatio` and `webGrounding`. Other deployments use the OpenAI image API;
+set `providerOptions["azure"]["api"] = "mai"` for a custom MAI deployment name.
+Images referenced by URL are downloaded without sending your Azure credentials.

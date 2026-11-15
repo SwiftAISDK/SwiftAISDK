@@ -5,7 +5,8 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/files/
 Use a provider's `files()` client when a request needs a durable provider file
 reference rather than inline bytes. Every `AIFileClient` advertises
 `supportedFileOperations`, so applications can distinguish an upload-only
-provider from a complete Files V4 implementation before starting I/O.
+provider from one that supports the full upload, metadata, download and delete
+lifecycle before starting I/O.
 
 ```swift
 let client = try AIProviders.openAI().files()
@@ -84,11 +85,47 @@ URL paths. xAI's `expiresAfter` upload option accepts an integer from 3,600 to
 
 ## Download transport security
 
-Downloads outside an explicitly trusted provider origin resolve DNS once,
-reject any private or disallowed address in the answer set, and connect to a
-validated numeric address. HTTPS keeps the original hostname for SNI and
-system certificate verification. Each redirect is validated independently;
-credentials are stripped when leaving their allowed origin.
+This section is the reference for how SwiftAISDK fetches remote URLs that a
+provider or user controls: file and image URLs in prompts, decision and
+extraction evidence, URL audio, URL-backed generated files (including batch results) and
+`fetchUntrustedURL`. Downloads from an explicitly trusted provider origin use
+the ordinary provider transport; everything else gets the protections below.
+
+**DNS pinning.** The host is resolved once. If any address in the answer set
+is private, loopback, link-local or otherwise disallowed, the download is
+rejected. The connection then goes to one of the validated numeric addresses,
+so a second DNS lookup cannot redirect it (DNS rebinding). HTTPS keeps the
+original hostname for SNI and system certificate verification.
+
+**Redirect validation.** Redirects are followed manually, up to 10 hops. Each
+target is validated the same way as the first URL, including its own DNS
+check, before the next request is sent.
+
+**Credential stripping.** Provider credentials are kept only for hops on the
+same origin. When a redirect leaves that origin, credentials are removed and
+stay removed for the rest of the chain. Connection, proxy, forwarding,
+cloud-metadata and cookie headers are never sent on downloads.
+
+**Limits.** Responses are bounded by a byte limit (2 GiB by default,
+`AIDefaultMaxDownloadSize`), deadlines and cancellation. The protected
+connector accepts HTTP/HTTPS GET responses with identity content encoding,
+Content-Length, chunked framing or EOF framing.
+
+### Application-owned downloads
+
+`fetchUntrustedURL(_:transport:headers:abortSignal:maxBytes:trustedOrigin:credentialedOrigin:untrustedFirstHopHeaders:)`
+applies the same policy to your own downloads. To an unrelated origin it
+forwards only a safe allowlist of first-hop headers (such as `Accept`,
+`Range`, `User-Agent` and trace headers); add names with
+`untrustedFirstHopHeaders`. Arbitrary credentials are forwarded only when the
+URL matches an exact `credentialedOrigin`, and they are removed after any
+cross-origin redirect.
+
+An explicit `trustedOrigin` is a security exception for that exact scheme, host
+and port: requests to it skip the private-address checks. Never derive it from
+an arbitrary URL supplied by a user.
+
+### Custom transports
 
 Custom transports must implement `sendValidatedDownload` and, when streaming,
 `streamValidatedDownload`. Their default implementations reject untrusted
@@ -98,8 +135,20 @@ and authentication behavior. Ordinary provider requests are unchanged. If a
 custom transport intentionally uses the standard protected downloader, its
 hooks can explicitly delegate to `URLSessionTransport.shared`.
 
-The native protected connector accepts HTTP/HTTPS GET responses with identity
-content encoding, Content-Length, chunked framing or EOF framing. It enforces
-size limits, deadlines and cancellation. An explicit `trustedOrigin` is a
-security exception for that exact scheme, host and port; never derive it from
-an arbitrary URL supplied by a user.
+## Custom downloads
+
+When a prompt contains URL-backed files, or a model returns generated file URLs,
+the SDK downloads them with its protected default transport. Set
+`LanguageModelRequest.experimentalDownload` to control those downloads, for
+example to reuse your own `AITransport` or change the size limit:
+
+```swift
+var request = LanguageModelRequest(messages: [.user("Describe the attached report.")])
+request.experimentalDownload = createDownload(transport: myTransport, maxBytes: 20_000_000)
+```
+
+The function receives the URLs in order, with cancellation and whether the model
+can read each URL directly. Returning `nil` for a prompt URL keeps the URL in the
+request; generated files must resolve to bytes. Decision and extraction calls
+accept the same `download` callback. Untrusted URLs keep the transport's
+connect-time DNS validation and redirect protections.

@@ -1,57 +1,186 @@
-## Current reviewed behavior
+## Quick start
 
-The reviewed baseline is `@ai-sdk/google-vertex` 5.0.140. Gemini 4 Carbon uses the shared Gemini request behavior, and Claude Fable 5.2 uses the existing Anthropic hosting policy. Model identifiers remain open strings.
+```swift
+import SwiftAISDK
 
-Tool-result files use the caller-configured download transport without Express Mode API keys. MaaS image downloads and every redirect are validated without cloud bearer tokens or provider headers. Abort signals reach downloads and prevent preaborted work before network I/O. Shared native transport tests cover these guarantees; JavaScript Node/edge browser fallback differences remain platform-specific. No browser or live-service parity is claimed.
+// Reads GOOGLE_VERTEX_PROJECT, GOOGLE_VERTEX_LOCATION and a credential
+// from the environment (see Authentication below).
+let provider = try AIProviders.googleVertex()
+let model = try provider.languageModel("gemini-2.5-flash")
+let result = try await model.generateText("Write a haiku about Swift.")
+print(result.text)
+```
 
-## Current Vertex behavior
+With modular packages, `import SwiftAI` and `import SwiftAIGoogleVertex`, then call
+`AIProviders.googleVertex(configuration: GoogleVertexProviderSettings(...))`. The
+native factory requires the `configuration` argument; pass
+`GoogleVertexProviderSettings()` to rely on the environment.
 
-Vertex inherits the Google structured JSON plus function-tool handling, error/denial envelopes and incremental JSON response parsing. Generic embedding dimensions are forwarded when provider-specific output dimensions are absent. `nano-banana-2.1` selects the generateContent image path and preserves binary or `gs://` image inputs, `IMAGE` response modality, typed aspect ratio and provider `imageConfig`, and returned usage/metadata. Masks and multiple image inputs are rejected. Future model IDs remain open strings. Vertex's Anthropic adapter recognizes the published Haiku 5.5 model family through its shared native implementation.
+## Authentication
 
-## Gemini long decode
+`GoogleVertexProvider` picks the first credential it finds, in this order:
 
-Vertex Gemini shares GenerateContent automatic `CONTINUATION` handling with the Google provider, including appended content, one stream lifecycle, summed billing usage and modality details, and the first request's `initialPromptTokenCount` metadata. `MAX_TOKENS` and failed streaming continuation expose a resumable `continuationToken` under `providerMetadata["google"]`; pass it using the supported `vertex`, `googleVertex`, or `google` provider-options namespace with the original prompt and a larger `maxOutputTokens`.
+1. `GoogleVertexProviderSettings.apiKeyProvider` (Express Mode, resolved before each request).
+2. `apiKey`, or `GOOGLE_VERTEX_API_KEY` (Express Mode).
+3. `accessToken`, or `GOOGLE_VERTEX_ACCESS_TOKEN`, then `GOOGLE_ACCESS_TOKEN` (OAuth bearer token).
+4. `serviceAccount`, or `GOOGLE_CLIENT_EMAIL` plus `GOOGLE_PRIVATE_KEY` (and optional
+   `GOOGLE_PRIVATE_KEY_ID`). The provider signs a JWT and exchanges it for an OAuth
+   token before each request. Literal `\n` sequences in `GOOGLE_PRIVATE_KEY` are
+   converted to newlines.
 
-Automatically continued calls also expose `groundingMetadataPerRequest` under `providerMetadata["google"]`, preserving grounding from each successful request in order and `null` for requests without it. Generation's existing `groundingMetadata` reflects the final response; streaming retains the latest non-null payload. Calls without automatic continuation omit the per-request array.
+If none is present, creating the provider throws `AIError.missingAPIKey`.
 
-Explicit thinking budgets or levels override shared reasoning settings. Dotted routed Gemini IDs retain their model capabilities, and Interactions model requests with `background: true` poll until terminal.
+**Express Mode** (API key) sends `x-goog-api-key` to
+`https://aiplatform.googleapis.com/v1/publishers/google`; project and location are
+not needed. Express Mode does not support tuned `endpoints/...` models,
+Interactions, Chirp speech or Live transcription; those throw and ask for standard
+Google Cloud credentials.
 
-## Rotating Express keys and video preprocessing
+**OAuth and service accounts** need a project and location, from `project` /
+`location` or `GOOGLE_VERTEX_PROJECT` / `GOOGLE_VERTEX_LOCATION`, unless you set
+`baseURL`. There is no default location here. `global` uses
+`aiplatform.googleapis.com`, `us` and `eu` use the regional `rep` hosts, and other
+locations use `<location>-aiplatform.googleapis.com`.
 
-`GoogleVertexProviderSettings.apiKeyProvider` enables Express Mode with an async
-throwing supplier, resolved immediately before each request. The returned key
-must be nonempty. Express authentication sets `x-goog-api-key` after custom
-headers, matching the provider's request policy. OAuth and service-account modes
-retain their existing configuration; tuned endpoints and Interactions still
-require standard Google Cloud credentials. Hosted Anthropic/MaaS/xAI adapters
-also accept `GoogleVertexHostedProviderSettings.apiKeyProvider` for rotating
-bearer credentials.
+```swift
+let provider = try AIProviders.googleVertex(settings: GoogleVertexProviderSettings(
+    project: "my-project",
+    location: "us-central1",
+    accessToken: accessToken
+))
+```
 
-Gemini file parts forward validated video `startOffset`, `endOffset` and `fps`
-metadata. Vertex prefers the `googleVertex` then `vertex` part-metadata namespace
-and accepts `google` as a fallback. `GoogleVideoMetadata.jsonValue` supplies the
-same typed payload as the Google provider. Frame rates must be greater than
-zero and at most 24. Gemini 2.5 Pro's shared reasoning minimum is 128 tokens;
-Gemini 3 uses its lowest supported level and reports a compatibility warning
-when `none` cannot disable thinking.
+A static `accessToken` is not refreshed. Use a service account, or recreate the
+provider when your token expires. Credentials for the hosted
+[Claude](../googlevertex-anthropic/), [MaaS](../googlevertex-maas/) and
+[xAI](../googlevertex-xai/) adapters work differently; see their guides.
 
-For Anthropic-hosted JSON output, see the hosted Anthropic guide for automatic
-opt-in, explicit output-format selection and forced-tool fallback rules. Native
-service support also depends on the Google Cloud organization policy.
+### Rotating Express keys
 
-## Gemini unary and Live transcription
+Set `GoogleVertexProviderSettings.apiKeyProvider` to an async throwing closure. It
+runs before every request, enables Express Mode, and must return a nonempty key.
+The key is sent as `x-goog-api-key` after your custom headers.
 
-`transcriptionModel("gemini-3.5-transcribe")` uses generateContent inline audio.
-Other families retain Cloud Speech routing. Options select the first present
-`googleVertex`, `vertex`, then `google` namespace. Shared word-timing requests
-set `wordTimestamp` unless explicitly disabled; valid timings populate `words`
-and existing segments. Unsupported segment requests and missing requested word
-timings warn, while usage and raw transcription metadata remain available.
+## Gemini language models
 
-`streamingTranscriptionModel("gemini-3.5-transcribe-live")` uses regional OAuth
-WebSockets with project/location and 16 kHz PCM. Express Mode keys do not
-support this route. Audio waits for setupComplete; interim text may be revised
-before final segments. Cancellation closes input and socket; a resettable
-three-second quiet grace handles servers omitting a terminal signal.
-`GoogleVertexProvider` accepts injected `webSocketTransport` through an additive
-overload; its original initializer/function reference is retained.
+`languageModel(_:)` uses Gemini `generateContent`. Model IDs that start with
+`endpoints/` target tuned endpoints (OAuth only). Provider options are read from
+the first present namespace: `googleVertex`, `vertex`, then `google`.
+
+```swift
+let result = try await model.generateText(
+    "Summarize the release notes.",
+    options: LanguageGenerationOptions(
+        maxOutputTokens: 2_048,
+        providerOptions: [
+            "googleVertex": [
+                "thinkingConfig": ["thinkingBudget": 1_024],
+                "sharedRequestType": "priority",
+            ],
+        ]
+    )
+)
+```
+
+Useful keys: `thinkingConfig`, `safetySettings`, `cachedContent`,
+`responseModalities`, `mediaResolution`, `imageConfig`, `labels`,
+`retrievalConfig`, `structuredOutputs`, `audioTimestamp`,
+`streamFunctionCallArguments` (Vertex only) and `continuationToken`.
+
+- `sharedRequestType` and `requestType` become the `X-Vertex-AI-LLM-Shared-Request-Type`
+  and `X-Vertex-AI-LLM-Request-Type` headers. `serviceTier` is a Gemini API option;
+  Vertex drops it with a warning.
+- Explicit `thinkingBudget` or `thinkingLevel` overrides the portable `reasoning`
+  setting. Gemini 3 models that cannot disable thinking use their lowest level and
+  warn when you ask for `none`.
+- Gemini behavior (structured JSON with tools, grounding, continuation) is shared
+  with the [Google Generative AI provider](../google-generative-ai/).
+
+### Long outputs
+
+Responses that hit `CONTINUATION` are continued automatically within one call, and
+usage is summed. When a call stops at `MAX_TOKENS` or a continued stream fails,
+`providerMetadata["google"]` carries a `continuationToken`. To resume, send it in
+provider options with the original prompt and a larger `maxOutputTokens`.
+Continued calls also report `groundingMetadataPerRequest` there.
+
+### Video file parts
+
+User file parts accept `videoMetadata` (`startOffset`, `endOffset`, `fps`) under
+their `googleVertex`, `vertex` or `google` provider metadata. `GoogleVideoMetadata`
+builds the payload through `jsonValue`. Frame rates must be greater than 0 and at
+most 24.
+
+### Tool-result downloads
+
+Remote files in tool results are downloaded through your transport, without the
+Express Mode key, up to 7 MiB each by default. Change the limit with
+`toolResultDownloads: GoogleVertexToolResultDownloadSettings(maxBytes:)`.
+
+## Interactions
+
+`interactionsModel("gemini-omni-flash-preview")` and `interactionsAgent(_:)` use
+the location-scoped Interactions API. They need OAuth or service-account
+credentials. Background interactions are polled until they finish.
+
+## Embeddings
+
+```swift
+let embedder = try provider.embeddingModel("text-embedding-005")
+let result = try await embedder.embedMany(
+    ["alpha", "beta"],
+    providerOptions: ["googleVertex": ["taskType": "RETRIEVAL_DOCUMENT"]]
+)
+```
+
+Standard models accept up to 250 values per call. `gemini-embedding-2` and
+`gemini-embedding-2-preview` use `embedContent` and accept one value per call.
+Options: `taskType`, `title`, `outputDimensionality` (overrides `dimensions`) and
+`autoTruncate`.
+
+## Images
+
+IDs that start with `gemini-` (for example `gemini-nano-banana-2.1`) use
+`generateContent` image output. It takes one input image (binary or `gs://`), no
+masks, and uses the typed aspect ratio together with provider `imageConfig`. Imagen
+IDs such as `imagen-3.0-generate-002` use the `predict` endpoint. Swift keeps
+Imagen, which the JS Vertex provider no longer includes.
+
+## Video
+
+```swift
+let video = try provider.videoModel("veo-2.0-generate-001")
+let result = try await video.generateVideo(
+    "A slow aerial shot over a forest.",
+    providerOptions: ["googleVertex": ["pollIntervalMs": 5_000]]
+)
+```
+
+Veo supports first and last frame images, `referenceImages`, and `generateAudio`;
+the top-level `generateAudio` argument takes precedence. Polling defaults to every
+10 seconds, with a 10-minute timeout (`pollIntervalMs`, `pollTimeoutMs`).
+
+## Speech
+
+- `chirp*` IDs (for example `chirp-3-hd`) use Cloud Text-to-Speech, which needs
+  OAuth or service-account credentials. They return LINEAR16 as WAV, and `speed` sets
+  the speaking rate.
+- Other IDs (for example `gemini-2.5-flash-tts`) use Gemini TTS. Output is
+  WAV-wrapped PCM by default; `format: "pcm"` returns raw 16-bit PCM with a warning.
+  Use `multiSpeakerVoiceConfig` in provider options for several speakers.
+  `providerMetadata["googleVertex"]` reports `sampleRate` and `mimeType`.
+
+## Transcription
+
+- IDs that start with `gemini` (for example `gemini-3.5-transcribe`) send inline
+  audio to `generateContent`. Word timings are requested unless disabled.
+- Other IDs (for example `chirp_3`) use Cloud Speech-to-Text v2 and need a project.
+  Options include `region`, `languageCodes`, `enableWordTimeOffsets` and
+  `enableAutomaticPunctuation`.
+- `streamingTranscriptionModel("gemini-3.5-transcribe-live")` streams 16 kHz PCM over
+  a regional WebSocket. It needs OAuth credentials with a project and location, and
+  interim text can change before final segments arrive. To inject a WebSocket
+  transport, use `GoogleVertexProvider(settings:webSocketTransport:)`.
+
+Transcription options use the first present namespace of `googleVertex`, `vertex`
+and `google`. See [Transcribe](../../core/transcribe/).

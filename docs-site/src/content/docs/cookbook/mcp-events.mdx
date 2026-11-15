@@ -5,8 +5,9 @@ description: Receive authenticated MCP event webhooks with durable subscription 
 
 `MCPClient.experimentalEvents` supports catalog discovery, direct webhook
 subscriptions, renewal and unsubscribe, or an application-managed adapter.
-Direct and managed configurations are mutually exclusive. Existing MCP tools
-and connection signatures continue to work without event configuration.
+Direct and managed configurations are mutually exclusive. MCP tools and
+connections work without any event configuration. OAuth for the underlying
+connection is described in [MCP tools](../mcp-tools/#oauth).
 
 ## Direct subscriptions
 
@@ -98,16 +99,6 @@ idempotency keys, lifetimes, statuses and cleanup fields to that backend;
 `events.list()` still uses the MCP catalog. Direct subscriptions and refresh
 require direct-store configuration.
 
-## OAuth
-
-An `invalid_grant` during refresh invalidates only the failed token generation
-and restarts authorization. The same error during authorization-code exchange
-propagates without invalidating credentials or repeating the code exchange.
-Discovery URLs with repeated slashes retain the original authorization-server
-origin. The deprecated legacy SSE transport remains an unported JS adapter;
-native Streamable HTTP and stdio are the supported transports.
-
 Managed adapters can construct `MCPManagedSubscribeInput(..., ttlMs: value)`;
 `nil` means until explicitly stopped and becomes `.indefinite`. Positive TTLs
-become `.milliseconds`. The original absolute `.expiresAt` native convenience is
-deprecated and remains callable for existing application adapters.
+become `.milliseconds`. The absolute `.expiresAt` convenience is deprecated but still callable.

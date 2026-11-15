@@ -1,0 +1,76 @@
+## Quick start
+
+```swift
+import SwiftAISDK
+
+let provider = try AIProviders.byteDance()
+let model = try provider.videoModel("seedance-1-0-pro-250528")
+let result = try await model.generateVideo(
+    "A hummingbird hovering over a red flower, slow motion",
+    aspectRatio: "16:9",
+    durationSeconds: 5,
+    resolution: "1280x720"
+)
+print(result.urls)
+```
+
+With modular packages, `import SwiftAI` and `import SwiftAIByteDance`, then call
+`AIProviders.byteDance(configuration: ByteDanceProviderSettings(...))`; the
+native factory requires the configuration argument.
+
+Requests go to BytePlus ModelArk at
+`https://ark.ap-southeast.bytepluses.com/api/v3` unless you set `baseURL`. Only
+video models are available. Model IDs in use include `seedance-1-0-pro-250528`,
+`seedance-1-0-pro-fast-251015`, `seedance-1-0-lite-t2v-250428`,
+`seedance-1-0-lite-i2v-250428`, `seedance-1-5-pro-251215`,
+`dreamina-seedance-2-0-260128` and `dreamina-seedance-2-0-fast-260128`.
+
+## Requests
+
+- `aspectRatio` is sent as `ratio`, `durationSeconds` as `duration`.
+- `resolution` accepts `480p`, `720p` or `1080p`; common pixel sizes such as
+  `1280x720` or `1920x1080` are mapped to those tiers.
+- `image` or a first `frameImages` entry becomes the first frame, a last frame
+  image becomes `last_frame`, and `inputReferences` become reference images. When
+  a start image is combined with other references, it is sent as a reference
+  image instead of a first frame.
+- Custom `fps` (fixed at 24) and more than one video per call produce warnings.
+
+## Provider options
+
+Pass options under `providerOptions["bytedance"]`:
+
+```swift
+let result = try await model.generateVideo(
+    "A city skyline timelapse",
+    providerOptions: [
+        "bytedance": [
+            "watermark": false,
+            "cameraFixed": true,
+            "returnLastFrame": true,
+            "serviceTier": "flex",
+        ],
+    ]
+)
+print(result.providerMetadata["bytedance"]?["lastFrameUrl"]?.stringValue ?? "")
+```
+
+- `watermark`, `generateAudio`, `cameraFixed`, `returnLastFrame`, `draft`
+  (Booleans).
+- `serviceTier`: `default` or `flex`.
+- `lastFrameImage` (URL string), `referenceImages`, `referenceVideos`,
+  `referenceAudio` (arrays of URL strings).
+- `pollIntervalMs` (default 3 seconds) and `pollTimeoutMs` (default 5 minutes)
+  for single-call generation.
+
+With `returnLastFrame`, the last frame URL is returned in
+`providerMetadata["bytedance"]["lastFrameUrl"]`; usage is returned there too.
+
+## Long-running jobs
+
+The model supports the start/status operation flow, so you can start a task,
+persist its operation and check it later. In that flow the facade's
+`VideoGenerationPollOptions` control polling, and `pollIntervalMs` /
+`pollTimeoutMs` are ignored with a deprecation warning. Status requests never
+forward credentials away from the configured origin. See
+[Generate video](../../core/generate-video/).

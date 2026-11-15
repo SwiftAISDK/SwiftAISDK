@@ -74,14 +74,12 @@ do {
 }
 ```
 
+For image failures, `AINoOutputError.calls` keeps per-request diagnostics; see
+[Generate images](../generate-image/).
+
 ## Retries And Timeouts
 
 Facade calls retry transient failures by default with `AIRetryPolicy.default`. Disable retries for deterministic tests or when the caller handles retries elsewhere.
-
-Image generation that completes without an image throws `AINoOutputError` with
-`kind == .image`. Its `calls` collection retains per-call warnings, usage,
-provider metadata, and response metadata for diagnosis even though the aggregate
-output is empty.
 
 ```swift
 let result = try await model.generateText(
@@ -103,22 +101,16 @@ let options = LanguageGenerationOptions(
 let result = try await model.generateText("Summarize.", options: options)
 ```
 
-For `AI.streamText`, pass `AIStreamTimeoutConfiguration` to add a per-model-step
-deadline plus first-semantic and inter-semantic deadlines. Semantic timeout
-failures are surfaced as `AIStreamTimeoutError`; non-output metadata and
-keep-alives do not reset those timers. `totalNanoseconds` retains the
-complete-call behavior, while `stepNanoseconds` re-arms for each model call.
-Total and step budgets include retry backoff; a step remains active through
-client-side tool execution. When any configured deadline wins, the provider
-and tool abort signals carry the `TimeoutError` reason name. Typed `Output`
-streams use the same configuration.
+Streams add two controls on top of `retryPolicy`:
 
-By default, streaming retries only happen before the first emitted part. Set
-`streamRetries` to a positive count to additionally retry retryable in-band
-provider error events after streaming has started. Text already delivered to
-the caller cannot be retracted, so a replacement attempt can repeat a prefix;
-thrown post-output transport or framing failures and non-retryable provider
-errors are still surfaced rather than retried.
+- `AIStreamTimeoutConfiguration` sets total, per-step, first-output and
+  between-output deadlines; stalls throw `AIStreamTimeoutError`. See
+  [Semantic stream timeouts](../stream-text/#semantic-stream-timeouts).
+- `streamRetries` opts into retrying retryable in-band provider errors after
+  output has started. By default a stream is retried only before its first
+  emitted part. See [Retry behavior](../stream-text/#retry-behavior).
+
+## Stream Errors
 
 Language streams distinguish provider-reported error events from failures that stop the transport or parser:
 
@@ -127,12 +119,8 @@ Language streams distinguish provider-reported error events from failures that s
 - if a provider closes after an in-band error without its own terminal part, the facade supplies one `finishMetadata` with finish reason `error`;
 - `toTextStream()` intentionally skips in-band error parts, matching its text-only role, but still throws stream-stopping failures.
 
-With `streamRetries` absent or zero, an in-band error is exposed and the model
-call is not retried after the caller could have observed it. When post-start
-recovery is enabled, a qualifying retryable error and the failed attempt's tail
-are suppressed if a replacement attempt succeeds. Consumers that need exposed
-provider error payloads should use the full `LanguageStreamPart` sequence
-rather than `toTextStream()`.
+Consumers that need provider error payloads should iterate the full
+`LanguageStreamPart` sequence rather than `toTextStream()`.
 
 ```swift
 for try await part in model.streamText("Stream this.") {
@@ -144,7 +132,11 @@ for try await part in model.streamText("Stream this.") {
 }
 ```
 
-Language-model streaming requires an `AIStreamingTransport`. If provider settings contain a send-only custom `AITransport`, unary generation still works, while streaming throws a non-retryable `AIError.invalidArgument` instead of silently buffering the complete response. Non-success streaming HTTP responses are bounded by the request response-size limit and retain their status, headers, and body when mapped to the provider error.
+Streaming with a send-only custom `AITransport` throws a non-retryable
+`AIError.invalidArgument`; see [Custom transports](../stream-text/#custom-transports).
+Non-success streaming HTTP responses are bounded by the request response-size
+limit and retain their status, headers, and body when mapped to the provider
+error.
 
 ```swift
 do {
@@ -183,15 +175,11 @@ Cancellation also propagates when a caller stops consuming a language stream ear
 
 ## Redirect Safety
 
-Provider-controlled download URLs are followed manually. SwiftAISDK validates
-every redirect target before issuing the next request, preserves provider
-credentials for same-origin hops, and removes them when the origin changes.
-Use `fetchUntrustedURL` for the same policy in application-owned downloads. It
-forwards only the safe first-hop header allowlist to an unrelated origin;
-arbitrary credentials require an exact `credentialedOrigin` and stay removed
-after any cross-origin redirect.
-This does not yet claim resolver-backed DNS answer pinning; that remains a
-transport-level gap.
+Provider-controlled download URLs are followed manually: every redirect is
+validated, and credentials are removed when the origin changes. Use
+`fetchUntrustedURL` for the same policy in application-owned downloads.
+[Files](../files/#download-transport-security) describes DNS pinning, redirect
+validation, credential stripping and custom-transport requirements.
 
 ## Logging Safely
 

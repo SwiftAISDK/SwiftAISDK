@@ -4,10 +4,116 @@ SwiftAISDK is a SwiftPM port of the provider-facing Vercel AI SDK.
 
 Current release: 3.4.0
 
-Every page is also available as Markdown: replace the trailing slash of a page URL with `.md` (for example `/core/tools.md`).
+Every page is also available as Markdown: replace the trailing slash of a page URL with `.md` (for example https://swiftaisdk.github.io/SwiftAISDK/core/tools.md).
 
-## LLM-readable pages
+## Start
+
 - [Introduction](https://swiftaisdk.github.io/SwiftAISDK/llms/index.txt): Learn what SwiftAISDK is and where to start.
+- [Install](https://swiftaisdk.github.io/SwiftAISDK/llms/getting-started/install.txt): Add SwiftAISDK to a SwiftPM package and configure credentials.
+- [Migrate to 3.0](https://swiftaisdk.github.io/SwiftAISDK/llms/getting-started/migrating-to-3.txt): Choose independent Swift packages or keep the complete compatibility API.
+- [Quickstart](https://swiftaisdk.github.io/SwiftAISDK/llms/getting-started/quickstart.txt): Generate text with a provider and model.
+
+## Core guides
+
+- [Agents](https://swiftaisdk.github.io/SwiftAISDK/llms/core/agents.txt): Package a model, instructions, tools, and stop conditions into a reusable tool-loop agent.
+- [Batches](https://swiftaisdk.github.io/SwiftAISDK/llms/core/batch-text.txt): Run provider-owned text and image batches and resume their lifecycle.
+- [Chat](https://swiftaisdk.github.io/SwiftAISDK/llms/core/chat.txt): Drive a SwiftUI chat view with AIChatSession, chat transports, and streamed UI messages.
+- [Decisions](https://swiftaisdk.github.io/SwiftAISDK/llms/core/decide.txt): Ask typed Choice, Score, Boolean, and image Box questions about ordered text, JSON, and file evidence.
+- [Dubbing](https://swiftaisdk.github.io/SwiftAISDK/llms/core/dubbing.txt): Create and inspect provider dubbing jobs.
+- [Embeddings](https://swiftaisdk.github.io/SwiftAISDK/llms/core/embeddings.txt): Convert text into vectors for search, clustering, and retrieval.
+- [Error handling](https://swiftaisdk.github.io/SwiftAISDK/llms/core/error-handling.txt): Handle validation, provider, retry, timeout, abort, and output errors.
+- [Evaluation](https://swiftaisdk.github.io/SwiftAISDK/llms/core/evaluate.txt): Evaluate shared JSON state with typed Choice, Score, and Boolean questions.
+- [Extract fields](https://swiftaisdk.github.io/SwiftAISDK/llms/core/extract.txt): Extract typed fields from shared text or file evidence.
+- [Files](https://swiftaisdk.github.io/SwiftAISDK/llms/core/files.txt): Upload, inspect, stream, and delete provider-managed files.
+- [Generate audio](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-audio.txt): Generate provider audio that is not speech, such as music and sound effects.
+- [Generate image](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-image.txt): Create or edit images with an image model.
+- [Generate speech](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-speech.txt): Convert text into audio with a speech model.
+- [Generate text](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-text.txt): Use a language model for one-shot text generation.
+- [Generate video](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-video.txt): Create video clips with a video model.
+- [Middleware](https://swiftaisdk.github.io/SwiftAISDK/llms/core/middleware.txt): Wrap language, image, and embedding models to set defaults, transform requests, and post-process results.
+- [Model metadata](https://swiftaisdk.github.io/SwiftAISDK/llms/core/model-metadata.txt): Discover provider capabilities and describe model feature and option support.
+- [Realtime sessions](https://swiftaisdk.github.io/SwiftAISDK/llms/core/realtime.txt): Run bidirectional text, audio, and tool sessions over a provider realtime model.
+- [Rerank](https://swiftaisdk.github.io/SwiftAISDK/llms/core/rerank.txt): Score and reorder documents for a query.
+- [Stream speech](https://swiftaisdk.github.io/SwiftAISDK/llms/core/stream-speech.txt): Synthesize audio incrementally from complete or streaming text.
+- [Stream text](https://swiftaisdk.github.io/SwiftAISDK/llms/core/stream-text.txt): Consume language model output as an async sequence.
+- [Structured output](https://swiftaisdk.github.io/SwiftAISDK/llms/core/structured-output.txt): Generate Decodable Swift values from JSON output.
+- [Telemetry](https://swiftaisdk.github.io/SwiftAISDK/llms/core/telemetry.txt): Record provider calls, retries, streams, tool execution, usage, and metadata.
+- [Tools](https://swiftaisdk.github.io/SwiftAISDK/llms/core/tools.txt): Let a language model call typed Swift tools.
+- [Transcribe audio](https://swiftaisdk.github.io/SwiftAISDK/llms/core/transcribe.txt): Convert audio bytes into text with a transcription model.
+- [Transform audio](https://swiftaisdk.github.io/SwiftAISDK/llms/core/transform-audio.txt): Transform existing audio through provider-native audio tools.
+
+## Cookbook
+
+- [MCP events](https://swiftaisdk.github.io/SwiftAISDK/llms/cookbook/mcp-events.txt): Receive authenticated MCP event webhooks with durable subscription state or delegate subscription management to an adapter.
+- [MCP tools](https://swiftaisdk.github.io/SwiftAISDK/llms/cookbook/mcp-tools.txt): Discover MCP tools and pass them to a language model.
+
+## Troubleshooting
+
+- [Troubleshooting](https://swiftaisdk.github.io/SwiftAISDK/llms/troubleshooting.txt): Diagnose common SwiftAISDK setup and runtime issues.
+
+## Providers
+
+- [Providers](https://swiftaisdk.github.io/SwiftAISDK/llms/providers.txt): Compare SwiftAISDK providers by capability and open each provider's setup guide.
+- [Alibaba Cloud Model Studio (DashScope)](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/alibaba.txt): Install and use Alibaba Cloud Model Studio (DashScope) (@ai-sdk/alibaba) from Swift.
+- [Amazon Bedrock (Anthropic models)](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/amazon-bedrock-anthropic.txt): Install and use Amazon Bedrock (Anthropic models) (@ai-sdk/amazon-bedrock) from Swift.
+- [Amazon Bedrock](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/amazon-bedrock.txt): Install and use Amazon Bedrock (@ai-sdk/amazon-bedrock) from Swift.
+- [Claude Platform on AWS](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/anthropic-aws.txt): Install and use Claude Platform on AWS (@ai-sdk/anthropic-aws) from Swift.
+- [Anthropic](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/anthropic.txt): Install and use Anthropic (@ai-sdk/anthropic) from Swift.
+- [AssemblyAI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/assemblyai.txt): Install and use AssemblyAI (@ai-sdk/assemblyai) from Swift.
+- [Azure OpenAI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/azure.txt): Install and use Azure OpenAI (@ai-sdk/azure) from Swift.
+- [Baseten](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/baseten.txt): Install and use Baseten (@ai-sdk/baseten) from Swift.
+- [Amazon Bedrock Mantle](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/bedrock-mantle.txt): Install and use Amazon Bedrock Mantle (@ai-sdk/amazon-bedrock) from Swift.
+- [Black Forest Labs](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/black-forest-labs.txt): Install and use Black Forest Labs (@ai-sdk/black-forest-labs) from Swift.
+- [ByteDance (BytePlus ModelArk)](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/bytedance.txt): Install and use ByteDance (BytePlus ModelArk) (@ai-sdk/bytedance) from Swift.
+- [Cartesia](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/cartesia.txt): Install and use Cartesia (@ai-sdk/cartesia) from Swift.
+- [Cerebras](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/cerebras.txt): Install and use Cerebras (@ai-sdk/cerebras) from Swift.
+- [Cohere](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/cohere.txt): Install and use Cohere (@ai-sdk/cohere) from Swift.
+- [Deepgram](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/deepgram.txt): Install and use Deepgram (@ai-sdk/deepgram) from Swift.
+- [DeepInfra](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/deepinfra.txt): Install and use DeepInfra (@ai-sdk/deepinfra) from Swift.
+- [DeepSeek](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/deepseek.txt): Install and use DeepSeek (@ai-sdk/deepseek) from Swift.
+- [ElevenLabs](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/elevenlabs.txt): Install and use ElevenLabs (@ai-sdk/elevenlabs) from Swift.
+- [fal](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/fal.txt): Install and use fal (@ai-sdk/fal) from Swift.
+- [Fireworks AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/fireworks.txt): Install and use Fireworks AI (@ai-sdk/fireworks) from Swift.
+- [Fish Audio](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/fish-audio.txt): Install and use Fish Audio (@ai-sdk/fish-audio) from Swift.
+- [Vercel AI Gateway](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/gateway.txt): Install and use Vercel AI Gateway (@ai-sdk/gateway) from Swift.
+- [Gladia](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/gladia.txt): Install and use Gladia (@ai-sdk/gladia) from Swift.
+- [GMI Cloud](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/gmicloud.txt): Install and use GMI Cloud (@ai-sdk/gmicloud) from Swift.
+- [Google Generative AI (Gemini API)](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/google-generative-ai.txt): Install and use Google Generative AI (Gemini API) (@ai-sdk/google) from Swift.
+- [Google Vertex AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/google-vertex.txt): Install and use Google Vertex AI (@ai-sdk/google-vertex) from Swift.
+- [Google Vertex AI — Anthropic Claude](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/googlevertex-anthropic.txt): Install and use Google Vertex AI — Anthropic Claude (@ai-sdk/google-vertex) from Swift.
+- [Google Vertex AI — Model Garden (MaaS)](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/googlevertex-maas.txt): Install and use Google Vertex AI — Model Garden (MaaS) (@ai-sdk/google-vertex) from Swift.
+- [Google Vertex AI — xAI Grok](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/googlevertex-xai.txt): Install and use Google Vertex AI — xAI Grok (@ai-sdk/google-vertex) from Swift.
+- [Groq](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/groq.txt): Install and use Groq (@ai-sdk/groq) from Swift.
+- [HeyGen](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/heygen.txt): Install and use HeyGen (@ai-sdk/heygen) from Swift.
+- [Hugging Face](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/huggingface.txt): Install and use Hugging Face (@ai-sdk/huggingface) from Swift.
+- [Hume AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/hume.txt): Install and use Hume AI (@ai-sdk/hume) from Swift.
+- [Kling AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/klingai.txt): Install and use Kling AI (@ai-sdk/klingai) from Swift.
+- [LMNT](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/lmnt.txt): Install and use LMNT (@ai-sdk/lmnt) from Swift.
+- [Luma AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/luma.txt): Install and use Luma AI (@ai-sdk/luma) from Swift.
+- [MiniMax](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/minimax.txt): Install and use MiniMax (@ai-sdk/minimax) from Swift.
+- [Mistral AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/mistral.txt): Install and use Mistral AI (@ai-sdk/mistral) from Swift.
+- [Moonshot AI (Kimi)](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/moonshotai.txt): Install and use Moonshot AI (Kimi) (@ai-sdk/moonshotai) from Swift.
+- [Open Responses](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/open-responses-responses.txt): Install and use Open Responses (@ai-sdk/open-responses) from Swift.
+- [OpenAI-compatible servers](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/openai-compatible.txt): Install and use OpenAI-compatible servers (@ai-sdk/openai-compatible) from Swift.
+- [OpenAI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/openai.txt): Install and use OpenAI (@ai-sdk/openai) from Swift.
+- [Parallel](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/parallel.txt): Install and use Parallel (@ai-sdk/parallel) from Swift.
+- [Perplexity](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/perplexity.txt): Install and use Perplexity (@ai-sdk/perplexity) from Swift.
+- [Prodia](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/prodia.txt): Install and use Prodia (@ai-sdk/prodia) from Swift.
+- [QuiverAI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/quiverai.txt): Install and use QuiverAI (@ai-sdk/quiverai) from Swift.
+- [Replicate](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/replicate.txt): Install and use Replicate (@ai-sdk/replicate) from Swift.
+- [Rev.ai](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/revai.txt): Install and use Rev.ai (@ai-sdk/revai) from Swift.
+- [ScaleDown](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/scaledown.txt): Install and use ScaleDown (@ai-sdk/scaledown) from Swift.
+- [Tencent (TokenHub and Cloud VOD)](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/tencent.txt): Install and use Tencent (TokenHub and Cloud VOD) (@ai-sdk/tencent) from Swift.
+- [Together AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/togetherai.txt): Install and use Together AI (@ai-sdk/togetherai) from Swift.
+- [Topaz Labs](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/topaz.txt): Install and use Topaz Labs (@ai-sdk/topaz) from Swift.
+- [TypeSafe AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/typesafe.txt): Install and use TypeSafe AI (@ai-sdk/typesafe-ai) from Swift.
+- [Vercel v0](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/vercel.txt): Install and use Vercel v0 (@ai-sdk/vercel) from Swift.
+- [Voyage AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/voyage.txt): Install and use Voyage AI (@ai-sdk/voyage) from Swift.
+- [xAI (Grok)](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/xai.txt): Install and use xAI (Grok) (@ai-sdk/xai) from Swift.
+- [Z.AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/zai.txt): Install and use Z.AI (@ai-sdk/zai) from Swift.
+
+## Generated API reference (large symbol tables; use after a guide names a type)
+
 - [Components](https://swiftaisdk.github.io/SwiftAISDK/llms/components.txt): Generated component map for SwiftAISDK public APIs.
 - [Audio](https://swiftaisdk.github.io/SwiftAISDK/llms/components/audio.txt): Public SwiftAISDK APIs for audio.
 - [Chat and UI messages](https://swiftaisdk.github.io/SwiftAISDK/llms/components/chat-and-ui-messages.txt): Public SwiftAISDK APIs for chat and ui messages.
@@ -22,91 +128,4 @@ Every page is also available as Markdown: replace the trailing slash of a page U
 - [Telemetry](https://swiftaisdk.github.io/SwiftAISDK/llms/components/telemetry.txt): Public SwiftAISDK APIs for telemetry.
 - [Tools](https://swiftaisdk.github.io/SwiftAISDK/llms/components/tools.txt): Public SwiftAISDK APIs for tools.
 - [Video and reranking](https://swiftaisdk.github.io/SwiftAISDK/llms/components/video-and-reranking.txt): Public SwiftAISDK APIs for video and reranking.
-- [MCP events](https://swiftaisdk.github.io/SwiftAISDK/llms/cookbook/mcp-events.txt): Receive authenticated MCP event webhooks with durable subscription state or delegate subscription management to an adapter.
-- [MCP tools](https://swiftaisdk.github.io/SwiftAISDK/llms/cookbook/mcp-tools.txt): Discover MCP tools and pass them to a language model.
-- [Durable batches](https://swiftaisdk.github.io/SwiftAISDK/llms/core/batch-text.txt): Run provider-owned text and image batches and resume their lifecycle.
-- [Decision](https://swiftaisdk.github.io/SwiftAISDK/llms/core/decide.txt): Ask typed Choice, Score, Boolean, and image Box questions about ordered text, JSON, and file evidence.
-- [Dubbing](https://swiftaisdk.github.io/SwiftAISDK/llms/core/dubbing.txt): Create and inspect provider dubbing jobs.
-- [Embeddings](https://swiftaisdk.github.io/SwiftAISDK/llms/core/embeddings.txt): Convert text into vectors for search, clustering, and retrieval.
-- [Error handling](https://swiftaisdk.github.io/SwiftAISDK/llms/core/error-handling.txt): Handle validation, provider, retry, timeout, abort, and output errors.
-- [Evaluation](https://swiftaisdk.github.io/SwiftAISDK/llms/core/evaluate.txt): Evaluate shared JSON state with typed Choice, Score, and Boolean questions.
-- [Extract fields](https://swiftaisdk.github.io/SwiftAISDK/llms/core/extract.txt): Extract typed fields from shared text or file evidence.
-- [Files](https://swiftaisdk.github.io/SwiftAISDK/llms/core/files.txt): Upload, inspect, stream, and delete provider-managed files.
-- [Generate audio](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-audio.txt): Generate provider audio that is not speech.
-- [Generate image](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-image.txt): Create or edit images with an image model.
-- [Generate speech](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-speech.txt): Convert text into audio with a speech model.
-- [Generate text](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-text.txt): Use a language model for one-shot text generation.
-- [Generate video](https://swiftaisdk.github.io/SwiftAISDK/llms/core/generate-video.txt): Create video clips with a video model.
-- [Model metadata](https://swiftaisdk.github.io/SwiftAISDK/llms/core/model-metadata.txt): Describe provider model capabilities and option support.
-- [Realtime sessions](https://swiftaisdk.github.io/SwiftAISDK/llms/core/realtime.txt): Run bidirectional text, audio, and tool sessions over a provider Realtime V4 model.
-- [Rerank](https://swiftaisdk.github.io/SwiftAISDK/llms/core/rerank.txt): Score and reorder documents for a query.
-- [Stream speech](https://swiftaisdk.github.io/SwiftAISDK/llms/core/stream-speech.txt): Synthesize audio incrementally from complete or streaming text.
-- [Stream text](https://swiftaisdk.github.io/SwiftAISDK/llms/core/stream-text.txt): Consume language model output as an async sequence.
-- [Structured output](https://swiftaisdk.github.io/SwiftAISDK/llms/core/structured-output.txt): Generate Decodable Swift values from JSON output.
-- [Telemetry](https://swiftaisdk.github.io/SwiftAISDK/llms/core/telemetry.txt): Record provider calls, retries, streams, tool execution, usage, and metadata.
-- [Tools](https://swiftaisdk.github.io/SwiftAISDK/llms/core/tools.txt): Let a language model call typed Swift tools.
-- [Transcribe audio](https://swiftaisdk.github.io/SwiftAISDK/llms/core/transcribe.txt): Convert audio bytes into text with a transcription model.
-- [Transform audio](https://swiftaisdk.github.io/SwiftAISDK/llms/core/transform-audio.txt): Transform existing audio through provider-native audio tools.
-- [Install](https://swiftaisdk.github.io/SwiftAISDK/llms/getting-started/install.txt): Add SwiftAISDK to a SwiftPM package and configure credentials.
-- [Migrate to 3.0](https://swiftaisdk.github.io/SwiftAISDK/llms/getting-started/migrating-to-3.txt): Choose independent Swift packages or keep the complete compatibility API.
-- [Quickstart](https://swiftaisdk.github.io/SwiftAISDK/llms/getting-started/quickstart.txt): Generate text with a provider and model.
-- [Provider matrix](https://swiftaisdk.github.io/SwiftAISDK/llms/providers.txt): Generated provider capability overview for SwiftAISDK.
-- ["alibaba"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/alibaba.txt): "alibaba provider capabilities and factories."
-- ["amazon-bedrock.anthropic"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/amazon-bedrock-anthropic.txt): "amazon-bedrock.anthropic provider capabilities and factories."
-- ["amazon-bedrock"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/amazon-bedrock.txt): "amazon-bedrock provider capabilities and factories."
-- ["anthropic-aws"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/anthropic-aws.txt): "anthropic-aws provider capabilities and factories."
-- ["anthropic"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/anthropic.txt): "anthropic provider capabilities and factories."
-- ["assemblyai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/assemblyai.txt): "assemblyai provider capabilities and factories."
-- ["azure"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/azure.txt): "azure provider capabilities and factories."
-- ["baseten"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/baseten.txt): "baseten provider capabilities and factories."
-- ["bedrock-mantle"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/bedrock-mantle.txt): "bedrock-mantle provider capabilities and factories."
-- ["black-forest-labs"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/black-forest-labs.txt): "black-forest-labs provider capabilities and factories."
-- ["bytedance"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/bytedance.txt): "bytedance provider capabilities and factories."
-- ["cartesia"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/cartesia.txt): "cartesia provider capabilities and factories."
-- ["cerebras"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/cerebras.txt): "cerebras provider capabilities and factories."
-- ["cohere"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/cohere.txt): "cohere provider capabilities and factories."
-- ["deepgram"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/deepgram.txt): "deepgram provider capabilities and factories."
-- ["deepinfra"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/deepinfra.txt): "deepinfra provider capabilities and factories."
-- ["deepseek"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/deepseek.txt): "deepseek provider capabilities and factories."
-- ["elevenlabs"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/elevenlabs.txt): "elevenlabs provider capabilities and factories."
-- ["fal"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/fal.txt): "fal provider capabilities and factories."
-- ["fireworks"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/fireworks.txt): "fireworks provider capabilities and factories."
-- ["fish-audio"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/fish-audio.txt): "fish-audio provider capabilities and factories."
-- ["gateway"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/gateway.txt): "gateway provider capabilities and factories."
-- ["gladia"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/gladia.txt): "gladia provider capabilities and factories."
-- ["gmicloud"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/gmicloud.txt): "gmicloud provider capabilities and factories."
-- ["google.generative-ai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/google-generative-ai.txt): "google.generative-ai provider capabilities and factories."
-- ["google.vertex"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/google-vertex.txt): "google.vertex provider capabilities and factories."
-- ["googleVertex.anthropic"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/googlevertex-anthropic.txt): "googleVertex.anthropic provider capabilities and factories."
-- ["googleVertex.maas"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/googlevertex-maas.txt): "googleVertex.maas provider capabilities and factories."
-- ["googleVertex.xai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/googlevertex-xai.txt): "googleVertex.xai provider capabilities and factories."
-- ["groq"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/groq.txt): "groq provider capabilities and factories."
-- ["heygen"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/heygen.txt): "heygen provider capabilities and factories."
-- ["huggingface"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/huggingface.txt): "huggingface provider capabilities and factories."
-- ["hume"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/hume.txt): "hume provider capabilities and factories."
-- ["klingai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/klingai.txt): "klingai provider capabilities and factories."
-- ["lmnt"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/lmnt.txt): "lmnt provider capabilities and factories."
-- ["luma"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/luma.txt): "luma provider capabilities and factories."
-- ["minimax"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/minimax.txt): "minimax provider capabilities and factories."
-- ["mistral"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/mistral.txt): "mistral provider capabilities and factories."
-- ["moonshotai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/moonshotai.txt): "moonshotai provider capabilities and factories."
-- ["open-responses.responses"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/open-responses-responses.txt): "open-responses.responses provider capabilities and factories."
-- ["openai-compatible"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/openai-compatible.txt): "openai-compatible provider capabilities and factories."
-- ["openai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/openai.txt): "openai provider capabilities and factories."
-- ["parallel"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/parallel.txt): "parallel provider capabilities and factories."
-- ["perplexity"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/perplexity.txt): "perplexity provider capabilities and factories."
-- ["prodia"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/prodia.txt): "prodia provider capabilities and factories."
-- ["quiverai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/quiverai.txt): "quiverai provider capabilities and factories."
-- ["replicate"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/replicate.txt): "replicate provider capabilities and factories."
-- ["revai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/revai.txt): "revai provider capabilities and factories."
-- ["scaledown"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/scaledown.txt): "scaledown provider capabilities and factories."
-- ["tencent"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/tencent.txt): "tencent provider capabilities and factories."
-- ["togetherai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/togetherai.txt): "togetherai provider capabilities and factories."
-- ["topaz"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/topaz.txt): "topaz provider capabilities and factories."
-- ["typesafe"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/typesafe.txt): "typesafe provider capabilities and factories."
-- ["vercel"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/vercel.txt): "vercel provider capabilities and factories."
-- ["voyage"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/voyage.txt): "voyage provider capabilities and factories."
-- ["xai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/xai.txt): "xai provider capabilities and factories."
-- ["zai"](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/zai.txt): "zai provider capabilities and factories."
 - [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/llms/reference/generated/public-symbols.txt): Generated public SwiftAISDK symbol table.
-- [Troubleshooting](https://swiftaisdk.github.io/SwiftAISDK/llms/troubleshooting.txt): Diagnose common SwiftAISDK setup and runtime issues.

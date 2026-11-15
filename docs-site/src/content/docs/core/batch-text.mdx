@@ -1,10 +1,10 @@
 ---
-title: Durable batches
+title: Batches
 description: Run provider-owned text and image batches and resume their lifecycle.
 ---
 
-Use Batch V4 for durable, asynchronous generation. The batch belongs to the
-provider rather than one model: every request supplies its model ID and its text
+Use provider batches for durable, asynchronous text and image generation. The
+batch belongs to the provider rather than one model: every request supplies its model ID and its text
 or image modality. The returned `AIBatchReference` is persistable, so another
 process can resume status and result reads without keeping the start request
 alive.
@@ -161,9 +161,9 @@ reasoning or tool part so they survive later model-message replay.
 
 Successful text items also materialize URL-backed generated files and
 reasoning files before they are emitted. The same private-host, redirect, size,
-and abort protections used by `generateText` apply; provider file references
-remain opaque. Resolver-backed DNS address pinning remains deferred at the
-transport layer.
+and abort protections used by `generateText` apply (see
+[Files](../files/#download-transport-security)); provider file references
+remain opaque.
 
 ## Legacy text-only API
 

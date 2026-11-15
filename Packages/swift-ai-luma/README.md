@@ -1,22 +1,26 @@
-# SwiftAILuma
+# Luma AI for Swift
 
-Swift-native port of `@ai-sdk/luma`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
+`SwiftAILuma` adds Luma AI to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/luma` and supports image generation.
+
+Provider guide with models, options, streaming and errors:
+
+- [Luma AI](https://swiftaisdk.github.io/SwiftAISDK/providers/luma/)
+
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAILuma` product from this package to your target, then create the provider:
 
 ```swift
+import SwiftAI
 import SwiftAILuma
 
-let provider = try LumaProvider(configuration: .init(apiKey: "..."))
+let provider = try AIProviders.luma(configuration: LumaProviderSettings())
 ```
 
-Settings accept a custom base URL, headers, query parameters and an injected
-`AITransport`. Models use the common SwiftAIProvider protocols. Existing upstream
-baselines, capabilities and documented gaps remain unchanged.
+By default the provider reads `LUMA_API_KEY` from the environment; values set in `LumaProviderSettings` take precedence.
 
-Run the standalone suite from the canonical checkout:
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
 
-```sh
-swift test --package-path Packages/swift-ai-luma
-```
+## Contributing
 
-The canonical repository owns all edits. Distribution manifests and repositories
-are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
+This package is exported from `Packages/swift-ai-luma` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

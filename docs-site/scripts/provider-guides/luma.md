@@ -1,7 +1,68 @@
+## Quick start
+
+```swift
+import SwiftAISDK
+
+let provider = try AIProviders.luma() // reads LUMA_API_KEY
+let model = try provider.imageModel("photon-1")
+let result = try await model.generateImage(
+    "A lighthouse at dusk, watercolor style.",
+    aspectRatio: "16:9"
+)
+print(result.urls.first ?? "")
+```
+
+With modular packages, `import SwiftAI` and `import SwiftAILuma`, then call
+`AIProviders.luma(configuration: LumaProviderSettings(...))`. The native factory
+requires the `configuration` argument; pass `LumaProviderSettings()` to read
+`LUMA_API_KEY`.
+
+## Image generation
+
+Luma image generation (`photon-1`, `photon-flash-1`) is asynchronous. The model
+submits the prompt to `/dream-machine/v1/generations/image` and polls until the
+generation completes. It then downloads the image, so the result has both `urls`
+and `base64Images`.
+
+- Use `aspectRatio`. `size` and `seed` are not supported and return warnings.
+- Polling runs every 500 ms, for up to 120 attempts. Change this with
+  `pollIntervalMillis` and `maxPollAttempts` in provider options.
+- Masks are not supported and throw `AIError.invalidArgument`.
+
+## Reference images
+
+Pass reference images as `files`. Luma accepts only URL-based images
+(`ImageInputFile(url:)`); binary data throws. `providerOptions["luma"]["referenceType"]`
+selects how they are used:
+
+| `referenceType` | Behavior | Default weight |
+| --- | --- | --- |
+| `image` (default) | Image prompt, up to 4 images | 0.85 |
+| `style` | Style reference | 0.8 |
+| `character` | Character identity, up to 4 images per identity | none |
+| `modify_image` | Edit a single image | 1.0 |
+
+`providerOptions["luma"]["images"]` is an array that lines up with `files`. Each
+entry can set a `weight` (0–1) or, for `character`, an `id` that groups images
+into identities (default `identity0`).
+
+```swift
+let result = try await model.generateImage(
+    "The same character, now in a space suit.",
+    files: [ImageInputFile(url: "https://example.com/hero.png")],
+    providerOptions: [
+        "luma": [
+            "referenceType": "character",
+            "images": [["id": "hero"]],
+        ],
+    ]
+)
+```
+
+Other keys in `providerOptions["luma"]` are sent in the request body unchanged.
+
 ## Rotating API keys
 
-`LumaProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+To rotate keys, set `LumaProviderSettings.apiKeyProvider` to an async throwing
+closure and pass it to `AIProviders.luma(configuration:)`. The closure runs before
+each request. If it throws, the request is not sent.

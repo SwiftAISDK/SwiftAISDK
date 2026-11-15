@@ -1,7 +1,93 @@
-## Model-aware portable reasoning
+## Quick start
 
-Fireworks forwards portable reasoning values directly for most models. Families whose model names start with `gpt-oss`, `glm-5p3`, or `muse-spark` map `none` to `minimal`. `nemotron` and `inkling` families map `minimal` to `low`. Only these adaptations add compatibility warnings. Explicit provider `reasoningEffort` and raw request-body effort values pass through unchanged. `configureFireworksChat` installs the same policy for custom compatible hosting integrations.
+```swift
+import SwiftAISDK
+
+let provider = try AIProviders.fireworks()
+let model = try provider.languageModel("accounts/fireworks/models/kimi-k2p6")
+let result = try await model.generateText("Write a haiku about distributed systems.")
+print(result.text)
+```
+
+For a smaller dependency graph, use `import SwiftAI` and `import SwiftAIFireworks`
+with the native factory `AIProviders.fireworks(configuration: FireworksProviderSettings())`.
+The native factory requires the configuration argument; `FireworksProviderSettings()`
+reads `FIREWORKS_API_KEY` from the environment.
+
+Model IDs use Fireworks' full `accounts/fireworks/models/...` form.
+
+## Models
+
+| Factory | Endpoint |
+| --- | --- |
+| `languageModel(_:)`, `chatModel(_:)` | `/inference/v1/chat/completions` |
+| `completionModel(_:)` | `/inference/v1/completions` |
+| `embeddingModel(_:)` | `/inference/v1/embeddings`, for example `nomic-ai/nomic-embed-text-v1.5` |
+| `imageModel(_:)` | Fireworks image workflows (see below) |
+
+Chat models send JSON Schema structured output natively, and streamed responses
+include usage by default.
+
+## Reasoning and provider options
+
+Pass Fireworks options under `providerOptions["fireworks"]`; camelCase keys are
+converted to the wire names.
+
+```swift
+let result = try await model.generateText(
+    "Plan a three-day trip to Kyoto.",
+    options: LanguageGenerationOptions(providerOptions: [
+        "fireworks": [
+            "thinking": ["type": "enabled", "budgetTokens": 2048],
+            "reasoningHistory": "interleaved",
+            "promptCacheKey": "trip-planner",
+            "serviceTier": "priority",
+        ],
+    ])
+)
+```
+
+- `thinking` (`type`, `budgetTokens`), `reasoningEffort`, `reasoningHistory`,
+  `promptCacheKey` and `serviceTier` are mapped to `thinking.budget_tokens`,
+  `reasoning_effort`, `reasoning_history`, `prompt_cache_key` and `service_tier`.
+  Other keys are passed through.
+- The portable `reasoning` option is mapped per model family: `gpt-oss`
+  models have no `none` level and Nemotron models no `minimal` level, so those
+  requests fall back to the nearest supported level with a warning. An explicit
+  `reasoningEffort` bypasses this mapping.
+- Error envelopes in string or object form become typed API errors with the
+  provider message.
+
+## Images
+
+```swift
+let image = try provider.imageModel("accounts/fireworks/models/flux-1-schnell-fp8")
+let result = try await image.generateImage(
+    "A minimalist poster of a mountain sunrise",
+    aspectRatio: "3:4",
+    seed: 7
+)
+let png = result.base64Images.first
+```
+
+The endpoint depends on the model:
+
+- Stable Diffusion XL, SSD-1B and Playground models use `/image_generation/{model}`
+  and accept `size` (`"1024x1024"`), not `aspectRatio`.
+- FLUX workflow models use `/workflows/{model}/text_to_image` and accept
+  `aspectRatio`, not `size`.
+- `flux-kontext-pro` and `flux-kontext-max` run asynchronously: the SDK submits
+  the job, polls `get_result` every 500 ms for up to 120 seconds, then downloads
+  the result. Credentials are sent only to Fireworks-origin result URLs. The
+  timeout covers hung requests too.
+
+Unsupported `size` or `aspectRatio` values produce a warning. Kontext models
+accept one input image through `files`; extra images are ignored with a warning,
+and masks are not supported. `count` maps to `samples`, `seed` is forwarded and
+`providerOptions["fireworks"]` fields are merged into the request body.
 
 ## Rotating credentials
 
-`FireworksProviderSettings.apiKeyProvider` accepts an async throwing closure resolved before each authenticated request, including asynchronous image submission, polling and trusted downloads. Provider/request authorization overrides keep precedence; a supplier failure stops the request before I/O.
+`FireworksProviderSettings(apiKeyProvider:)` takes an async throwing closure that
+is called before every authenticated request, so short-lived keys refresh without
+recreating the provider. If the closure throws, the request is not sent.

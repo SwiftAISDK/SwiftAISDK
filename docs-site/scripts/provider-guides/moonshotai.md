@@ -1,57 +1,88 @@
-## Current reviewed behavior
-
-The reviewed baseline is `@ai-sdk/moonshotai` 3.0.92. MFJS schema conversion now traverses array and tuple children once, retaining existing `prefixItems` before rewritten tuple entries. Nested unions, boolean schemas and source input values preserve their established behavior. The change avoids repeated recursive work for deeply nested array schemas without changing wire output.
-
-## Structured output model support
-
-Every Moonshot model ID, including legacy `moonshot-v1-*` and custom/future IDs, forwards JSON Schema structured output. Capability detection no longer depends on the `kimi-k` family prefix.
-
-Generated content follows Moonshot's order: reasoning, function tool calls, then
-text; the `text` and `toolCalls` convenience fields remain available.
-
-## Kimi K3.1 context caching
-
-`kimi-k3.1-pro` and `kimi-k3.1-pro-highspeed` share Kimi K3's request and history behavior. They always reason and omit the `thinking` request field, including when preserved history is selected. Kimi K2.6 uses `thinking.keep = "all"` for preserved history.
+## Quick start
 
 ```swift
-let provider = try AIProviders.moonshotAI()
-let model = try provider.languageModel("kimi-k3.1-pro")
-let result = try await model.generate(LanguageModelRequest(
-    messages: [.user("Summarize the supplied context")],
-    providerOptions: ["moonshotai": [
-        "promptCacheOptions": ["ttl": "1h"],
-        "reasoningHistory": "preserved"
-    ]]
-))
+import SwiftAISDK
+
+let provider = try AIProviders.moonshotAI() // reads MOONSHOT_API_KEY
+let model = try provider.languageModel("kimi-k2.5")
+let result = try await model.generateText("Write a limerick about compilers.")
+print(result.text)
 ```
 
-`promptCacheOptions` accepts optional `mode: "implicit"` and `ttl: "5m"` or
-`"1h"`. An empty object sends the default implicit mode; omitting the option
-omits the cache object. Invalid values fail before network I/O.
+With modular packages, `import SwiftAI` and `import SwiftAIMoonshotAI`, then call
+`AIProviders.moonshotAI(configuration: MoonshotAIProviderSettings(...))`. The
+native factory requires the `configuration` argument; pass
+`MoonshotAIProviderSettings()` to read `MOONSHOT_API_KEY`.
+
+## Chat models
+
+`languageModel(_:)` and `chatModel(_:)` call the Chat Completions API at
+`https://api.moonshot.ai/v1`. Streaming always requests usage. Model IDs are open
+strings. Examples in use include `kimi-k2.5`, `kimi-k2.6`, `kimi-k2.7-code`,
+`kimi-k3`, `kimi-k3.1-pro` and `moonshot-v1-32k`.
+
+- Every model ID forwards JSON Schema structured output. A top-level `$schema` key
+  is removed, and tool and response schemas are normalized to Moonshot's schema
+  dialect, which requires an object root. A root `anyOf` or `oneOf` of objects is
+  accepted; other root unions throw before sending.
+- Image, video and text input parts are converted to Moonshot's content format.
+  Unsupported media throws before the request is sent.
+- Generated content is ordered reasoning, then tool calls, then text; `text` and
+  `toolCalls` work as usual.
+
+## Provider options
+
+Use `providerOptions["moonshotai"]` (`moonshotAI` is also accepted):
+
+```swift
+let model = try provider.languageModel("kimi-k3.1-pro")
+let result = try await model.generateText(
+    "Summarize the supplied context.",
+    options: LanguageGenerationOptions(
+        providerOptions: ["moonshotai": [
+            "promptCacheOptions": ["ttl": "1h"],
+            "reasoningHistory": "preserved",
+        ]]
+    )
+)
+```
+
+| Key | Values |
+| --- | --- |
+| `thinking` | Object with `type` (`enabled` or `disabled`). `budgetTokens` is deprecated and omitted. |
+| `reasoningEffort` | `low`, `high` or `max`; takes precedence over portable `reasoning`. Sent for Kimi K3 and unknown models; other known models warn and omit it. |
+| `reasoningHistory` | `disabled`, `interleaved` or `preserved`. |
+| `promptCacheOptions` | Object with optional `mode: "implicit"` and `ttl` (`5m` or `1h`). An empty object sends implicit mode. |
+| `promptCacheKey`, `safetyIdentifier` | Strings. |
+
+Invalid values throw `AIError.invalidArgument` before the request is sent. Other
+service-specific fields can go in `extraBody`.
+
+## Reasoning by model
+
+- Kimi K3 (`kimi-k3`, `kimi-k3.1-pro`, `kimi-k3.1-pro-highspeed`) always reasons, so
+  the `thinking` field is never sent. Portable `reasoning` maps to `low`, `high` or
+  `max`, rounding down: `none`, `minimal` and `medium` become `low`, and `xhigh`
+  becomes `high`, each with a warning.
+- Kimi K2.7 (`kimi-k2.7-code`, `kimi-k2.7-code-highspeed`) cannot disable
+  thinking. Portable `none` keeps the default and warns.
+- Kimi K2.6 sends `thinking.keep = "all"` when `reasoningHistory` is `preserved`.
+  Models that do not support preserved history warn.
+- `moonshot-v1-*` models do not support thinking or reasoning; those options warn
+  and are omitted.
+- Unknown model IDs send portable `none` as disabled thinking and let the service
+  decide.
+
+## Cache usage
 
 `usage.inputTokensCacheWrite` reports cache writes, and `inputTokensNoCache`
-excludes cache reads and writes. The `msh-usage-cache-write-tokens-5m` and `-1h`
-response headers populate `providerMetadata["moonshotai"]["cacheWriteTokens"]`
-with `ttl5m` and `ttl1h`; malformed counts are ignored. Both unary and streaming
-calls retain these fields.
+excludes cache reads and writes. The `msh-usage-cache-write-tokens-5m` and
+`msh-usage-cache-write-tokens-1h` response headers fill
+`providerMetadata["moonshotai"]["cacheWriteTokens"]` with `ttl5m` and `ttl1h`,
+for both generate and stream calls.
 
-MFJS tool and response JSON schemas retain `type: "object"` at the root. A root
-`anyOf` or `oneOf` containing only objects is accepted, including one-hop local
-`$defs` and `definitions` references. Non-object, nullable-object and empty root
-unions fail before sending. Nested unions retain the provider's type-placement
-rules.
+## Rotating API keys
 
-## Rotating credentials
-
-The native `MoonshotAIProviderSettings` accepts an optional
-`apiKeyProvider` asynchronous throwing closure. It is resolved for each
-authenticated request, so short-lived credentials can refresh without recreating
-the provider or model. Static `apiKey` settings remain supported. A supplier
-failure stops the request before it reaches the transport.
-
-
-## Portable reasoning effort
-
-Kimi K3 maps portable reasoning to `low`, `high`, or `max`, preferring the closest lower supported effort. `none`, `minimal` and `medium` map to `low`; `xhigh` maps to `high`, with compatibility warnings. Explicit canonical `reasoningEffort` provider options retain precedence. Kimi K2.7 cannot disable thinking: portable `none` keeps the provider default and emits a compatibility warning, while an explicit disabled-thinking option remains unsupported. Unknown model IDs send portable `none` as disabled thinking, allowing the service to decide support.
-
-Typed `thinking.budgetTokens` is deprecated and omitted. The native raw `extraBody` escape hatch remains available for service-specific controls. Model-specific reasoning restrictions apply to the documented IDs; unrecognized names retain the unknown-model policy.
+To rotate keys, set `MoonshotAIProviderSettings.apiKeyProvider` to an async
+throwing closure and pass it to `AIProviders.moonshotAI(configuration:)`. It runs
+before each request. If it throws, the request is not sent.

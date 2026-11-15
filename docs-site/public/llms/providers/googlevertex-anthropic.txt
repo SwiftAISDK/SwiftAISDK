@@ -1,10 +1,43 @@
-# "googleVertex.anthropic"
+# Google Vertex AI — Anthropic Claude
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-anthropic/
 
+Anthropic Claude models hosted on Vertex AI through rawPredict, with the shared Anthropic options, tools and thinking support. Authenticates with an OAuth access token and supports Vertex billing labels.
+
+Provider ID: `googleVertex.anthropic` · Upstream package: `@ai-sdk/google-vertex`
+
 ## Package
 
-`@ai-sdk/google-vertex`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-google-vertex`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-google-vertex.git", from: "1.2.2"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIGoogleVertex", package: "swift-ai-google-vertex"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIGoogleVertex
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `GOOGLE_VERTEX_ACCESS_TOKEN` | OAuth access token sent as a bearer token. Required unless passed in settings. |
+| `GOOGLE_ACCESS_TOKEN` | Fallback for GOOGLE_VERTEX_ACCESS_TOKEN. |
+| `GOOGLE_VERTEX_PROJECT` | Google Cloud project ID. Required unless passed as project or baseURL is set. |
+| `GOOGLE_VERTEX_LOCATION` | Vertex location. Defaults to global. |
 
 ## Factories
 
@@ -12,31 +45,97 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-anthr
 
 ## Capabilities
 
-- Language
+- [Language](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/)
 
-## Request labels
+## Quick start
 
-Set `providerOptions["vertex"]["labels"]` to an object of string values to attach billing and usage labels to a Claude request. Generate and stream calls encode its UTF-8 JSON as a base64 `x-vertex-ai-labels` header. An explicit request or provider header takes precedence regardless of casing. Labels stay isolated to each call; they are omitted from the Anthropic request body. Invalid labels fail before network I/O.
+```swift
+import SwiftAISDK
 
-## Native structured output selection
+// Reads GOOGLE_VERTEX_PROJECT, GOOGLE_VERTEX_LOCATION and GOOGLE_VERTEX_ACCESS_TOKEN.
+let provider = try AIProviders.googleVertexAnthropic()
+let model = try provider.languageModel("claude-sonnet-4@20250514")
+let result = try await model.generateText("Explain Swift actors in two sentences.")
+print(result.text)
+```
 
-Ordinary automatic native schemas require explicit
-`GoogleVertexHostedProviderSettings.supportsNativeStructuredOutput = true`,
-a recognized Claude version of at least 4.5, and a Google Cloud organization
-policy permitting `structured_outputs`. The setting defaults to false; strict
-tool inputs remain disabled.
+With modular packages, `import SwiftAI` and `import SwiftAIGoogleVertex`, then call
+`AIProviders.googleVertexAnthropic(project:location:configuration:)` with a
+`GoogleVertexHostedProviderSettings`. The `configuration` argument is required. The
+same overload is also available from `import SwiftAISDK`.
 
-Shared Anthropic selection rules still apply: explicit `outputFormat` can
-request native output, and models rejecting forced JSON tools use the lossless
-native-schema fallback even when hosting defaults disable automatic selection.
-Schemas that cannot be preserved keep the JSON-tool path in automatic mode.
-The setting controls ordinary automatic selection; it is not a service-policy
-enforcement switch.
+## Authentication and endpoint
 
-## Notes
+This adapter sends an OAuth bearer token. It reads `apiKey` from the settings, then
+`GOOGLE_VERTEX_ACCESS_TOKEN`, then `GOOGLE_ACCESS_TOKEN`. Service-account
+environment variables and Express Mode keys are not used here. Get a token
+yourself, for example from `gcloud auth print-access-token` or your own token
+service.
 
-Vertex Anthropic mirrors upstream Google Vertex 5.0.141 and inherits the shared Anthropic 4.0.99 model recognition, system options, thinking behavior, citations, and beta headers. The 2026-10-18 pass: Validated labels are UTF-8 JSON/base64 encoded into x-vertex-ai-labels after final request-header merging, with explicit caller header precedence. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. Automatic native structured output requires host opt-in and a supported Claude4.5+ model; strict tool inputs remain disabled. Explicit outputFormat and lossless fallback for forced-tool-rejecting models retain the shared policy override. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied. The 2026-11-15 delta and native/platform distinctions are recorded in WeeklyUpstreamAudit20261115; no full-package or live-service parity is implied.
+The project comes from the `project` argument or `GOOGLE_VERTEX_PROJECT`. The
+location comes from `location` or `GOOGLE_VERTEX_LOCATION` and defaults to
+`global`. Requests go to
+`.../projects/PROJECT/locations/LOCATION/publishers/anthropic/models/MODEL:rawPredict`
+with `anthropic_version: vertex-2023-10-16`; the model ID is in the URL, not the
+body. Setting `baseURL` replaces the computed URL.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+To refresh tokens without recreating the provider, use the `configuration:` factory
+and set `GoogleVertexHostedProviderSettings.apiKeyProvider` to an async throwing
+closure that returns the current token. It runs before each request.
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+## Provider options
+
+Claude options use the shared [Anthropic](https://swiftaisdk.github.io/SwiftAISDK/providers/anthropic/) option set. They are read
+from `providerOptions["anthropic"]`, and then from `googleVertex` or `vertex`
+(whichever comes first), so thinking, cache control, citations and beta headers work
+as they do with Anthropic.
+
+### Request labels
+
+Set `providerOptions["vertex"]["labels"]` to an object with string values to attach
+billing labels:
+
+```swift
+let result = try await model.generateText(
+    "Hello",
+    options: LanguageGenerationOptions(
+        providerOptions: ["vertex": ["labels": ["team": "ios"]]]
+    )
+)
+```
+
+Labels are sent as base64 UTF-8 JSON in the `x-vertex-ai-labels` header and are
+not added to the request body. An explicit `x-vertex-ai-labels` header of any
+casing wins. Invalid labels throw before any network call.
+
+## Structured output
+
+With `AIProviders.googleVertexAnthropic(project:location:configuration:)`, automatic
+native JSON output is off by default. Turn it on with
+`supportsNativeStructuredOutput: true` on `GoogleVertexHostedProviderSettings`. It
+then applies only to Claude 4.5 and later, and only when your Google Cloud
+organization policy allows `structured_outputs`. Strict tool inputs are always
+off on this path.
+
+Shared Anthropic rules still apply. `structuredOutputMode: "outputFormat"` requests
+native output explicitly, and models that reject forced JSON tools fall back to a
+native schema. The umbrella `settings:` factory does not set this hosting default.
+It follows the model's own structured-output capability.
+
+## Provider tools
+
+`GoogleVertexAnthropicTools` exposes the Claude tools that Vertex supports: bash,
+computer, text editor, web search and tool search (regex and BM25).
+
+```swift
+let result = try await model.generateText(
+    "Find the latest Swift release.",
+    tools: LanguageToolOptions(rawTools: [
+        "search": GoogleVertexAnthropicTools.webSearch_20250305(maxUses: 2),
+    ])
+)
+```
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

@@ -1,22 +1,26 @@
-# SwiftAIVercel
+# Vercel v0 for Swift
 
-Swift-native port of `@ai-sdk/vercel`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
+`SwiftAIVercel` adds Vercel v0 to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/vercel` and supports text generation.
+
+Provider guide with models, options, streaming and errors:
+
+- [Vercel v0](https://swiftaisdk.github.io/SwiftAISDK/providers/vercel/)
+
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAIVercel` product from this package to your target, then create the provider:
 
 ```swift
+import SwiftAI
 import SwiftAIVercel
 
-let provider = try VercelProvider(configuration: .init(apiKey: "..."))
+let provider = try AIProviders.vercel(configuration: VercelProviderSettings())
 ```
 
-Settings accept a custom base URL, headers, query parameters and an injected
-`AITransport`. Models use the common SwiftAIProvider protocols. Existing upstream
-baselines, capabilities and documented gaps remain unchanged.
+By default the provider reads `VERCEL_API_KEY` from the environment; values set in `VercelProviderSettings` take precedence.
 
-Run the standalone suite from the canonical checkout:
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
 
-```sh
-swift test --package-path Packages/swift-ai-vercel
-```
+## Contributing
 
-The canonical repository owns all edits. Distribution manifests and repositories
-are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
+This package is exported from `Packages/swift-ai-vercel` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

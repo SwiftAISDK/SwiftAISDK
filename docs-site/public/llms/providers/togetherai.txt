@@ -1,10 +1,41 @@
-# "togetherai"
+# Together AI
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/togetherai/
 
+Open-weight chat, completion and embedding models, FLUX and other image models, and reranking through Together AI's OpenAI-compatible API. Streams include usage by default.
+
+Provider ID: `togetherai` · Upstream package: `@ai-sdk/togetherai`
+
 ## Package
 
-`@ai-sdk/togetherai`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-togetherai`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-togetherai.git", from: "1.1.3"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAITogetherAI", package: "swift-ai-togetherai"),
+```
+
+```swift
+import SwiftAI
+import SwiftAITogetherAI
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `TOGETHER_API_KEY` | API key. Required unless passed in settings. |
+| `TOGETHER_AI_API_KEY` | Deprecated fallback for TOGETHER_API_KEY. |
 
 ## Factories
 
@@ -12,34 +43,91 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/togetherai/
 
 ## Capabilities
 
-- Language
-- Completion
-- Embedding
-- Image
-- Reranking
+- [Language](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/)
+- [Completion](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/)
+- [Embedding](https://swiftaisdk.github.io/SwiftAISDK/core/embeddings/)
+- [Image](https://swiftaisdk.github.io/SwiftAISDK/core/generate-image/)
+- [Reranking](https://swiftaisdk.github.io/SwiftAISDK/core/rerank/)
 
-## Rotating API keys
+## Quick start
 
-`TogetherAIProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import SwiftAISDK
 
-## JSON Schema support
+let together = try AIProviders.togetherAI()
+let model = try together.languageModel("meta-llama/Llama-3.3-70B-Instruct-Turbo")
+let result = try await model.generateText("Explain Swift actors in two sentences.")
+print(result.text)
+```
 
-The current verified model IDs send `response_format.type = json_schema`:
+For the modular packages, use `import SwiftAI` and `import SwiftAITogetherAI`, then
+`try AIProviders.togetherAI(configuration: TogetherAIProviderSettings(...))`. The native
+factory requires a configuration argument; `TogetherAIProviderSettings()` reads the
+environment.
+
+Chat and completion models use Together AI's OpenAI-compatible API, and streams include
+usage by default. Use `completionModel(_:)` for the completions endpoint and
+`embeddingModel(_:)` for embeddings.
+
+## Structured output
+
+These model IDs send `response_format.type = json_schema` with your schema:
 `deepseek-ai/DeepSeek-V4-Flash-0731`, `deepseek-ai/DeepSeek-V4.1-Flash`,
 `deepseek-ai/DeepSeek-V4.1-Flash-1017`, `openai/gpt-oss-120b`, `zai-org/GLM-5.2`,
-`zai-org/GLM-5.3-Flash`, `moonshotai/Kimi-K3`, and
-`MiniMaxAI/MiniMax-M3.1-Flash`. Other IDs use `json_object` and omit the schema.
-The `supportsStructuredOutputs` setting is an explicit opt-in for additional
-models whose schema support you have verified.
+`zai-org/GLM-5.3-Flash`, `moonshotai/Kimi-K3` and `MiniMaxAI/MiniMax-M3.1-Flash`. Other
+IDs send `json_object` without the schema.
 
-## Notes
+The umbrella `AIProviders.togetherAI(settings:)` factory and the native provider use the
+same list. Set `supportsStructuredOutputs: true` in `ProviderSettings` or
+`TogetherAIProviderSettings` to opt in additional models whose schema support you have
+verified. See [Structured output](https://swiftaisdk.github.io/SwiftAISDK/core/structured-output/).
 
-TogetherAI mirrors upstream TogetherAI 3.0.94: `TOGETHER_API_KEY` with deprecated `TOGETHER_AI_API_KEY` fallback, versioned user-agent suffix, language/completion/embedding/image/reranking factories, chat and completion stream usage enabled by default, image `n` request mapping despite upstream `maxImagesPerCall = 1`, loose image provider options, reranking `rankFields`, and upstream-focused image/reranking response validation, and DeepSeek V4 Flash native JSON Schema structured-output routing without enabling it for unrelated models. ProviderV4, ESM-only packaging, Node 22 engines, and workflow serialization helpers are JS-only upstream concerns. The 2026-09-20 pass gives Gemini image models their exact omission and seed-warning behavior while preserving supported size/provider options. File/mask image capabilities are now exposed as async Bool? getters; unrecognized models remain unknown. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied. The 2026-11-15 delta and native/platform distinctions are recorded in WeeklyUpstreamAudit20261115; no full-package or live-service parity is implied.
+## Images
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+```swift
+let image = try together.imageModel("black-forest-labs/FLUX.1-schnell-Free")
+let result = try await image.generateImage(
+    "A cozy reading nook",
+    size: "1024x768",
+    providerOptions: ["togetherai": ["steps": 4]]
+)
+```
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+Images are requested as base64 and returned in `base64Images`. Use `size`
+(`WIDTHxHEIGHT`); `aspectRatio` is not sent. As in `@ai-sdk/togetherai`, a request with
+`size` also returns an `unsupported` warning whose feature is `aspectRatio`. `count`
+above one is sent as `n`. API errors expose the response's `error.message`.
+`providerOptions["togetherai"]` accepts `steps`, `guidance`, `negative_prompt` and
+`disable_safety_checker`; other keys are forwarded. `google/gemini-3-pro-image` drops
+those four options and warns on `seed`.
+
+Pass one reference image in `files` for FLUX Kontext, Canny, Depth, Redux and FLUX.2
+pro/flex models; additional files are ignored with a warning. Masks are rejected:
+use a Kontext model with a reference image and a descriptive prompt instead.
+`supportsFileInputs` reports `true` or `false` for known models and unknown otherwise.
+
+## Reranking
+
+```swift
+let reranker = try together.rerankingModel("Salesforce/Llama-Rank-v1")
+let ranked = try await reranker.rerank(
+    query: "Which document explains actors?",
+    documents: ["Actors isolate state.", "Structs are value types."],
+    topK: 1
+)
+```
+
+For object documents, `providerOptions["togetherai"]["rankFields"]` selects the fields
+to rank by. Documents are not echoed back (`return_documents: false`). See
+[Rerank](https://swiftaisdk.github.io/SwiftAISDK/core/rerank/).
+
+## Key fallback and rotating credentials
+
+The deprecated `TOGETHER_AI_API_KEY` is read only when `TOGETHER_API_KEY` is unset. The native
+`TogetherAIProviderSettings` accepts `apiKeyProvider`, an async throwing closure
+resolved before each authenticated request; a supplier failure stops the request before
+it is sent.
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

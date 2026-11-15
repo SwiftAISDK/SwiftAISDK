@@ -1,7 +1,64 @@
-## Rotating API keys
+## Quick start
 
-`RevAIProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import Foundation
+import SwiftAISDK
+
+let revAI = try AIProviders.revAI()
+let model = try revAI.transcriptionModel("machine")
+let audio = try Data(contentsOf: URL(fileURLWithPath: "meeting.wav"))
+let result = try await model.transcribe(audio: audio, fileName: "meeting.wav", mimeType: "audio/wav")
+print(result.text)
+```
+
+For the modular packages, use `import SwiftAI` and `import SwiftAIRevAI`, then
+`try AIProviders.revAI(configuration: RevAIProviderSettings(...))`. The native factory
+requires a configuration argument; `RevAIProviderSettings()` reads `REVAI_API_KEY`.
+
+The model ID is sent as Rev.ai's `transcriber`, for example `machine` or `fusion`.
+
+## Job lifecycle
+
+A transcription submits the audio as multipart `media` with a JSON `config` to
+`/speechtotext/v1/jobs`, polls the job once per second until it is `transcribed`, then
+downloads the transcript. Polling stops with an error after 60 seconds or when the job
+fails, and honors the request's abort signal. Results include text, segments with
+timings, the job language and a duration equal to the latest word end timestamp
+(`0` when no word has one).
+
+## Provider options
+
+Options under `providerOptions["revai"]` are validated and sent in the job `config`:
+
+| Option | Behavior |
+| --- | --- |
+| `language`, `metadata`, `custom_vocabulary_id` | Strings. |
+| `verbatim`, `rush`, `test_mode`, `strict_custom_vocabulary`, `forced_alignment` | Booleans. |
+| `skip_diarization`, `skip_postprocessing`, `skip_punctuation` | Booleans. |
+| `remove_disfluencies`, `remove_atmospherics`, `filter_profanity` | Booleans. |
+| `diarization_type` | `standard` or `premium`. |
+| `speakers_count`, `speaker_channels_count`, `delete_after_seconds` | Numbers. |
+| `segments_to_transcribe` | Array of `start`/`end` objects. |
+| `speaker_names` | Array of `display_name` objects. |
+| `custom_vocabularies` | Array of vocabulary objects. |
+| `notification_config` | `url` and optional `auth_headers.Authorization`. |
+| `summarization_config` | `model` (`standard`/`premium`), `type` (`paragraph`/`bullets`), optional `prompt`. |
+| `translation_config` | Required `target_languages` array of `language` objects; optional `model`. |
+
+When you pass `providerOptions["revai"]`, options you omit take Rev.ai's defaults
+(`false` for the Boolean flags, `diarization_type: "standard"` and `language: "en"`).
+If you omit `language` there, the call's `language` argument is sent instead of the
+`"en"` default; a `language` inside the provider options takes precedence over it.
+
+```swift
+let result = try await model.transcribe(
+    audio: audio,
+    providerOptions: ["revai": ["language": "es", "skip_diarization": true]]
+)
+```
+
+## Rotating credentials
+
+The native `RevAIProviderSettings` accepts `apiKeyProvider`, an async throwing closure
+resolved before each authenticated request. A supplier failure stops the request before
+it is sent.

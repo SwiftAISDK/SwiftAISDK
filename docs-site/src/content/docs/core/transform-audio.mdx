@@ -6,12 +6,76 @@ description: Transform existing audio through provider-native audio tools.
 import { Code } from '@astrojs/starlight/components';
 import transformAudioExample from '../../../../../Examples/Sources/TransformAudio/main.swift?raw';
 
-Use `transformAudio` when the provider takes existing media and returns changed audio.
+Use `AI.transformAudio` when you already have audio and want changed audio back:
+re-voice a recording with another speaker, or isolate a voice from background
+noise. To produce audio from text, use [Generate speech](../generate-speech/) or
+[Generate audio](../generate-audio/).
 
 <Code code={transformAudioExample} lang="swift" title="Examples/Sources/TransformAudio/main.swift" />
 
-`AudioTransformationRequest` carries the input audio bytes, file name, MIME type, optional target voice, output format, provider options, extra body, headers, and abort signal.
+The example first synthesizes a short clip, then transforms it twice. It needs
+`ELEVENLABS_API_KEY` and makes three provider requests.
 
-`AudioTransformationResult` returns transformed audio bytes plus content type and metadata.
+## Providers
 
-ElevenLabs exposes `provider.voiceChangerModel()` for `/v1/speech-to-speech/:voice_id` and `provider.voiceIsolatorModel()` for `/v1/audio-isolation`.
+[ElevenLabs](../../providers/elevenlabs/) is the provider that implements
+`AudioTransformationModel`:
+
+| Model factory | Default model ID | Endpoint |
+| --- | --- | --- |
+| `provider.voiceChangerModel()` / `voiceChanger()` | `eleven_multilingual_sts_v2` | `/v1/speech-to-speech/:voice_id` |
+| `provider.voiceIsolatorModel()` / `voiceIsolator()` | `audio-isolation` | `/v1/audio-isolation` |
+
+Calling these factories on a provider other than ElevenLabs throws
+`AIError.unsupportedModel` with the `.audioTransformation` capability.
+
+## Options
+
+`AI.transformAudio(audio:using:...)` builds an `AudioTransformationRequest`;
+you can also pass one to `AI.transformAudio(model:request:)`. Audio is uploaded
+as multipart form data.
+
+- `audio`: the input bytes.
+- `fileName` and `mimeType`: describe the upload. The convenience method
+  defaults to `audio.wav` and `audio/wav`; pass the real values for other
+  formats.
+- `voice`: target voice ID for the voice changer. Without it, the voice changer
+  uses `providerOptions.elevenlabs.voiceID` or a default ElevenLabs voice.
+- `format`: output format for the voice changer, with the same aliases as
+  [Generate audio](../generate-audio/#options). It defaults to `mp3_44100_128`.
+- `providerOptions`: provider controls under the `"elevenlabs"` key.
+- `extraBody`, `headers`, `abortSignal`, `retryPolicy` and `telemetry` follow the
+  shared facade behavior; see [Error handling](../error-handling/) and
+  [Telemetry](../telemetry/).
+
+ElevenLabs provider options:
+
+| Model | Keys |
+| --- | --- |
+| Voice changer | `voiceID`, `voiceSettings`, `seed`, `removeBackgroundNoise`, `fileFormat`, `enableLogging`, `optimizeStreamingLatency` (0–4) |
+| Voice isolator | `fileFormat`, `previewB64` |
+
+Set `fileFormat` to `"other"` for encoded audio such as MP3, as in the example
+above.
+
+## Result
+
+`AudioTransformationResult` contains:
+
+- `audio`: the transformed bytes.
+- `contentType`: the response media type.
+- `warnings` and `providerMetadata`.
+- `requestMetadata`: the multipart fields that were sent, with the file name,
+  MIME type and byte length instead of the audio bytes.
+- `responseMetadata`.
+
+## Errors and limitations
+
+- A provider option with the wrong type or outside its range throws
+  `AIError.invalidArgument` before the upload, naming the key.
+- `providerOptions.elevenlabs` must be an object. Keys that a model does not
+  support are dropped rather than sent.
+- Non-2xx responses throw `AIError.apiCall` with the status code, headers and
+  body.
+- A response with empty audio throws `AINoOutputError`.
+- The voice isolator ignores `voice` and `format`.

@@ -2,7 +2,8 @@
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/
 
-Add SwiftAISDK to your package manifest:
+Add SwiftAISDK to your package manifest. SwiftAISDK requires Swift 6.3 or later
+and macOS 12 or iOS 15 or later.
 
 ```swift
 // Package.swift
@@ -45,20 +46,25 @@ and `languageModel(_:)`, call `generateText`, `streamText`, `Output` and
 `AITool`, configure credentials and pin versions. It also points the agent at
 these docs as Markdown: [`/llms.txt`](https://swiftaisdk.github.io/SwiftAISDK/llms.txt)
 lists every page, and each page is available at its URL with `.md` in place of
-the trailing slash, for example `/core/tools.md`.
+the trailing slash, for example
+[`core/tools.md`](https://swiftaisdk.github.io/SwiftAISDK/core/tools.md).
 
 Pass `-a ` to install for one agent only, or `-g` to install globally.
 Run the command again to pick up a newer version of the skill.
 
 ## Credentials
 
-Provider factories read upstream-style environment variables by default:
+Provider factories read the provider's standard environment variables by default:
 
 | Provider | Default environment variable |
 | --- | --- |
 | OpenAI | `OPENAI_API_KEY` |
 | Anthropic | `ANTHROPIC_API_KEY` |
 | Google Generative AI | `GOOGLE_GENERATIVE_AI_API_KEY` or `GEMINI_API_KEY` |
+
+Every other provider documents its variables on its own page under
+[Providers](https://swiftaisdk.github.io/SwiftAISDK/providers/). A factory throws `AIError.missingAPIKey` when no
+key is configured; see [Troubleshooting](https://swiftaisdk.github.io/SwiftAISDK/troubleshooting/#missing-api-key).
 
 You can also pass credentials explicitly:
 
@@ -70,33 +76,44 @@ let provider = try AIProviders.openAI(
 
 Use explicit settings when you need custom headers, a custom base URL, a mock transport, or per-environment credentials.
 
-## Independent modular packages
+## Umbrella or modular packages
 
-All 55 independent packages are published: core, 52 provider adapters, MCP and UI.
-The 2026-11-15 set updates 36 units: 31 patch releases, additive core 1.5.0 and
-HeyGen 1.2.0, plus initial Tencent, Parallel and ScaleDown 1.0.0. Nineteen
-unchanged packages retain their existing versions. npm and Swift versions are
-independent. Select only the products your application needs, or use the complete
-3.4 umbrella above.
+The `SwiftAISDK` umbrella product includes every provider, MCP and the chat UI
+helpers behind one `import`. Choose it for applications and prototypes where
+binary size and dependency count are not a concern.
 
-The [package catalog](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/PackageCatalog.md)
-lists products and dependency requirements. Exact published versions and verified
-release refs are recorded in [release verification](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/ReleaseVerification20261115.json).
+Each provider is also published as an independent package, alongside core
+(`swift-ai-core`), MCP (`swift-ai-mcp`) and UI (`swift-ai-ui`). Choose modular
+packages when you want only the providers you use, or when you ship a library
+that should not pull in unrelated providers. Swift package versions are
+independent of npm versions.
+
+Each [provider page](https://swiftaisdk.github.io/SwiftAISDK/providers/) shows that provider's Swift package,
+product, and current version. The
+[package catalog](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/PackageCatalog.md)
+lists every product and its dependency requirements.
+
+The two styles differ only in how you construct a provider:
+
+| You import | Factory call |
+| --- | --- |
+| `import SwiftAISDK` (umbrella) | `AIProviders.openAI(settings: ProviderSettings(...))` |
+| `import SwiftAI` plus a provider module | `AIProviders.openAI(configuration: OpenAIProviderSettings(...))`, with the provider's own `<Provider>ProviderSettings` type |
 
 For a modular OpenAI client:
 
 ```swift
 // Package.swift
- dependencies: [
+dependencies: [
     .package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
     .package(url: "https://github.com/SwiftAISDK/swift-ai-openai.git", from: "1.3.1"),
- ],
- targets: [
+],
+targets: [
     .target(name: "YourApp", dependencies: [
         .product(name: "SwiftAI", package: "swift-ai-core"),
         .product(name: "SwiftAIOpenAI", package: "swift-ai-openai"),
     ]),
- ]
+]
 ```
 
 ```swift
@@ -115,32 +132,24 @@ let result = try await AI.generateText(
 
 Anthropic uses `SwiftAIAnthropic` and `AnthropicProviderSettings`. A generic
 compatible endpoint uses `SwiftAIOpenAICompatible` with
-`OpenAICompatibleProviderSettings(name:baseURL:...)`. Native factories accept
-`configuration:`; the 3.x compatibility API continues to accept `settings:`.
-Native clients pass model objects or use explicit registries; core does not
-initialize an implicit Gateway.
+`OpenAICompatibleProviderSettings(name:baseURL:...)`. Modular clients pass model
+objects or use explicit registries; core does not initialize an implicit Gateway.
 
 The canonical repository contains complete offline `AnthropicOnly`,
 `OpenAICompatibleOnly`, `OpenAIOnly` and `MixedProviders` examples. OpenAI shares
 chat/completion, embedding and image wire code with the compatible package;
 selecting it does not require unrelated providers, MCP or UI. See the
-[3.0 migration guide](/SwiftAISDK/getting-started/migrating-to-3/).
+[3.0 migration guide](https://swiftaisdk.github.io/SwiftAISDK/getting-started/migrating-to-3/).
+
+## Versions and compatibility
 
 Provider versions can be selected independently as long as their shared dependency
-requirements intersect. SwiftPM resolves one version per package identity. Swift
-release numbers do not track npm release numbers. Applications should commit their
-`Package.resolved`; reusable libraries should normally express compatible ranges.
+requirements intersect. SwiftPM resolves one version per package identity.
+Applications should commit their `Package.resolved`; reusable libraries should
+normally express compatible ranges.
 
-The 3.4 umbrella shares model and request types with the modular packages and
-preserves the ordinary `import SwiftAISDK` API. Existing 2.x tags remain usable,
-but their separately defined types cannot be mixed with modular values. Moving
-modules is not a binary compatibility guarantee; rebuild your application.
-The [tested 3.4 release set](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Releases/umbrella/3.4.0.json)
-records the complete dependency selection after actual-tag verification.
-
-This release adds Tencent TokenHub/VOD, Parallel decisions and ScaleDown
-decisions/extraction, HeyGen decisions, explicit-secret streaming tool-approval
-replay and per-output video URL/media-type descriptors. Core is at least 1.5.0
-and HeyGen at least 1.2.0 in the umbrella because its compatibility API exposes
-these additions. See the [weekly audit](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/WeeklyUpstreamAudit20261115.md)
-for every npm/Swift version, release ref, verification result and retained gap.
+The umbrella shares model and request types with the modular packages and keeps
+the ordinary `import SwiftAISDK` API, so umbrella and modular values can be
+mixed. 2.x tags remain usable, but their separately defined types cannot be
+mixed with modular values. Moving modules is not a binary compatibility
+guarantee; rebuild your application after upgrading.

@@ -3,29 +3,8 @@ title: MCP tools
 description: Discover MCP tools and pass them to a language model.
 ---
 
-Modern MCP `2026-07-28` tool calls can return `input_required`. Advertise
-`clientCapabilities: ["elicitation": ["form": [:]]]` and register
-`onElicitationRequest` to answer form requests. SwiftAISDK continues the original
-operation using a new RPC ID, exact opaque `requestState` and scoped
-`inputResponses`. This is protocol continuation, not a transport failure retry.
-The client permits eight rounds with sixteen inputs each; the original timeout
-and abort signal cover the entire exchange, including the form callback.
-Unsupported sampling, roots or URL input requests fail without continuation.
-
-## OAuth refresh storage
-
-Shared OAuth stores can implement
-`invalidateCredentials(_:context:)` and atomically compare the supplied
-`context.tokens` before deleting tokens. This preserves credentials installed
-by a concurrent successful refresh. Existing one-argument implementations
-continue to receive unconditional invalidation through the default adapter.
-
-Authorization-server metadata changes now throw
-`MCPOAuthAuthorizationServerMismatchError` with code
-`authorization_server_mismatch`. Catch this type when presenting a distinct
-reauthorization message; it does not trigger token invalidation or retry.
-
 Use MCP when tools live outside your process or are shared by multiple clients.
+Connect an `MCPClient`, discover its tools, and pass them to a tool loop:
 
 ```swift
 import SwiftAISDK
@@ -45,7 +24,12 @@ let answer = try await model.generateText(
 )
 
 print(answer.text)
+try await mcp.close()
 ```
+
+`tools()` returns a dictionary of dynamic `AITool` values keyed by name. Each
+call runs on the MCP server; the result goes back to the model like any other
+tool result. See [Tools](../../core/tools/) for loops, approvals and step limits.
 
 ## When to Use This Recipe
 
@@ -53,28 +37,40 @@ print(answer.text)
 - Your app should discover tool schemas at runtime.
 - You want the same tool catalog available to multiple Swift clients.
 
-For local processes, use `MCPStdioTransport`. For remote servers, use `MCPHTTPTransport`.
+Event subscriptions are described in the [MCP Events recipe](../mcp-events/).
 
-SwiftAISDK tracks `@ai-sdk/mcp@2.0.81`. The current client absorbs its
-protocol/HTTP transport and OAuth compatibility hardening behind the same
-`MCPClient.connect` workflow. Non-successful POST/SSE responses retain HTTP
-status, URL, and response-body diagnostics; existing tool-discovery code does
-not need a migration.
+## Transports
+
+For local processes, use `MCPStdioTransport`. For remote servers, use
+`MCPHTTPTransport` (Streamable HTTP). These are the supported transports; the
+deprecated legacy SSE transport is not available.
 
 For `MCPStdioTransport`, explicitly configured environment values win over the
 small inherited process allowlist. This includes intentionally replacing
 `PATH`, `HOME`, or another inherited key for the child process.
 
-OAuth retries reuse a stored authorization-server choice when discovery is
-temporarily unavailable, and concurrent requests that observe the same stale
-token coalesce behind one refresh before they retry.
+On macOS and Linux, `MCPStdioTransport` and `MCPStdioConfig`
+accept `shell: .disabled` (the default), `.system` (`/bin/sh`), or
+`.executable("/path/to/shell")`. Enabled shells interpret the command and joined
+arguments as shell syntax, including expansions; supply trusted command text.
+Direct execution preserves literal argument boundaries.
 
-OAuth providers with dynamically registered client credentials should override
-`isClientInformationDynamicallyRegistered()` to return `true` for those stored
-credentials. On `invalid_client` or `unauthorized_client`, SwiftAISDK discards
-and re-registers only dynamically registered clients; pre-registered client
-information is preserved. The MCP protocol-version discovery header is also
-removed when a redirect crosses origins.
+Non-successful HTTP POST and SSE responses throw with the HTTP status, URL, and
+response-body diagnostics.
+
+## Connection and protocol discovery
+
+HTTP protocol discovery waits for the response instead of using the one-second
+stdio probe. Set `initializationOptions: .init(timeoutMilliseconds: ...)` on
+`MCPClient.connect` to bound the complete operation; cancellation still applies.
+Custom transports opt in through `waitsForProtocolVersionDiscovery`.
+
+If discovery rejects the modern version and advertises a recognized legacy
+version, the client explains the mismatch, lists the server's versions and
+preserves the original error fields and cause. It does not silently downgrade.
+For a known legacy server, explicitly set `protocolVersionDiscovery: false`.
+
+## Tool definitions and results
 
 Each discovered definition retains its complete raw `annotations` value and
 offers typed `MCPToolAnnotations` access to `title`, `readOnlyHint`,
@@ -85,27 +81,98 @@ authorization boundary. Malformed values for a known annotation field make
 
 Servers may return `structuredContent` without a text `content` array. The
 client serializes that value into canonical JSON text for the dynamic tool's
-model-facing result while preserving the structured value. OAuth discovery
-also treats an origin-only issuer with or without its trailing slash as the
-same issuer; path-bearing issuer URLs remain exact.
+model-facing result while preserving the structured value.
+
+## Prompts
+
+Use `listPrompts` and `getPrompt`. `experimentalListPrompts` and
+`experimentalGetPrompt` are deprecated forwarding aliases.
+
+## Input-required requests
+
+Servers on the modern protocol (`2026-07-28`) can answer `callTool`,
+`readResource` or `getPrompt` with `input_required`. Advertise form elicitation
+and register a handler to answer those requests:
+
+```swift
+let mcp = try await MCPClient.connect(
+    transport: try MCPHTTPTransport(url: "https://mcp.example.com/rpc"),
+    clientCapabilities: ["elicitation": ["form": [:]]]
+)
+
+await mcp.onElicitationRequest { request in
+    print(request.message)
+    return MCPElicitResult(action: .accept, content: ["confirmed": true])
+}
+```
+
+SwiftAISDK then continues the original operation. This is protocol
+continuation, not a transport failure retry. Each continuation uses a fresh
+JSON-RPC ID and rebuilds parameters from the original request, adding only that
+round's `inputResponses` and the exact opaque `requestState`. Earlier answers
+and omitted state do not leak into later rounds. Empty state strings are
+preserved. State-only responses wait 250 ms before continuing.
+
+The client allows up to ten continuation rounds after the original request; a
+request that still requires input after that fails with `MCPClientError`.
+Only form elicitation is supported: URL elicitation, sampling and roots input
+requests fail with explicit diagnostics, without continuation.
+
+Per-round timeouts include handler work and backoff;
+`maxTotalTimeoutMilliseconds` bounds the whole exchange, including the form
+callback. Aborting, closing the client or timing out stops the request even
+while a handler is awaiting work; a late answer cannot resend it. Processing
+failures retain their underlying error in `MCPClientError.cause`.
+
+## MCP Apps metadata
+
+MCP Apps resources expose content-security-policy domain lists
+(`connectDomains`, `resourceDomains`, `frameDomains` and `baseUriDomains`).
+Non-string entries in these known lists are discarded; unknown fields remain
+available.
+
+## OAuth
+
+Pass an `MCPOAuthProvider` as `authProvider` to `MCPHTTPTransport`. The
+transport sends its `accessToken()` and, after an authorization failure, calls
+`authorize(resourceMetadataURL:scope:)` before retrying. Implement the full
+authorization-code flow, with discovery, PKCE and token storage, as an
+`MCPOAuthClientProvider` driven by `MCPOAuth.auth(provider:serverURL:...)`.
+
+### Refresh and token storage
+
+Concurrent requests that observe the same stale token coalesce behind one
+refresh before they retry. OAuth retries reuse a stored authorization-server
+choice when discovery is temporarily unavailable.
+
+Shared OAuth stores can implement `invalidateCredentials(_:context:)` and
+atomically compare the supplied `context.tokens` before deleting tokens. This
+preserves credentials installed by a concurrent successful refresh.
+Implementations of only the one-argument `invalidateCredentials(_:)` receive
+unconditional invalidation through the default adapter.
 
 An `invalid_grant` caused by a failed refresh invalidates only that captured
-refresh generation and retries authorization. An authorization-code
+refresh generation and restarts authorization. An authorization-code
 `invalid_grant` propagates without deleting unrelated stored tokens or retrying
-the same code. Event subscriptions are described in the [MCP Events recipe](../mcp-events/).
+the same code.
 
-## Discovery, shell execution, and credential binding
+OAuth providers with dynamically registered client credentials should override
+`isClientInformationDynamicallyRegistered()` to return `true` for those stored
+credentials. On `invalid_client` or `unauthorized_client`, SwiftAISDK discards
+and re-registers only dynamically registered clients; pre-registered client
+information is preserved.
 
-HTTP protocol discovery waits for the response instead of using the one-second
-stdio probe. Set `initializationOptions: .init(timeoutMilliseconds: ...)` on
-`MCPClient.connect` to bound the complete operation; cancellation still applies.
-Custom transports opt in through `waitsForProtocolVersionDiscovery`.
+### Discovery and issuer binding
 
-On macOS and Linux, `MCPStdioTransport` and `MCPStdioConfig`
-accept `shell: .disabled` (the default), `.system` (`/bin/sh`), or
-`.executable("/path/to/shell")`. Enabled shells interpret the command and joined
-arguments as shell syntax, including expansions; supply trusted command text.
-Direct execution preserves literal argument boundaries.
+OAuth discovery treats an origin-only issuer with or without its trailing slash
+as the same issuer; path-bearing issuer URLs remain exact. Discovery URLs with
+repeated slashes retain the original authorization-server origin. The MCP
+protocol-version discovery header is removed when a redirect crosses origins.
+
+Authorization-server metadata changes throw
+`MCPOAuthAuthorizationServerMismatchError` with code
+`authorization_server_mismatch`. Catch this type when presenting a distinct
+reauthorization message; it does not trigger token invalidation or retry.
 
 OAuth clients with an existing secret must configure the credentials' `issuer`
 or supply stored authorization-server information before starting authorization.
@@ -119,7 +186,7 @@ return `true` from `usesCustomClientAuthentication` and supply an issuer or stor
 binding. Swift protocols cannot infer whether this optional hook was overridden;
 the explicit capability flag is required to enforce the pre-redirect check.
 
-## Migrating pre-registered OAuth providers
+### Migrating pre-registered OAuth providers
 
 Set the issuer from the credential's original registration or trusted app
 configuration before calling `MCPOAuth.auth`. Do not copy an MCP server's newly
@@ -191,17 +258,3 @@ For a real app, use its secure credential store and authorization-session callba
 and supply real client authentication from a trusted configuration. The offline
 example proves the SDK flow and migration wiring; it does not verify a live server's
 registration, consent or token policy.
-
-## Input-required MCP requests
-
-For modern MCP servers, `callTool`, `readResource` and `getPrompt` process `input_required` results through the existing `onElicitationRequest` handler. Form elicitation is supported; URL elicitation and sampling requests fail with explicit diagnostics.
-
-Each continuation uses a fresh JSON-RPC ID and rebuilds parameters from the original request, adding only that round's answers and opaque `requestState`. Earlier answers and omitted state do not leak into later rounds. Empty state strings are preserved. State-only responses wait 250 ms before continuing, and the client allows ten continuation retries.
-
-Per-round timeouts include handler work and backoff; `maxTotalTimeoutMilliseconds` bounds the whole operation. Aborting, closing the client or timing out stops the request even while a handler is awaiting work; a late answer cannot resend it. Processing failures retain their underlying error in `MCPClientError.cause`.
-
-## Stable prompts and protocol diagnostics
-
-Use `listPrompts` and `getPrompt`. `experimentalListPrompts` and `experimentalGetPrompt` remain deprecated forwarding aliases. `MCPStdioTransport` remains the stable native transport name.
-
-If discovery rejects the modern version and advertises a recognized legacy version, the client explains the mismatch, lists the server's versions and preserves the original error fields and cause. It does not silently downgrade. For a known legacy server, explicitly set `protocolVersionDiscovery: false`.

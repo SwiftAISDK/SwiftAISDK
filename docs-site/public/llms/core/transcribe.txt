@@ -28,7 +28,7 @@ struct TranscribeAudioExample {
 }
 ```
 
-The lower-level request initializer is still available when you want to build the request separately.
+To build the request separately, create an `AudioTranscriptionRequest`:
 
 ```swift
 let request = AudioTranscriptionRequest(
@@ -114,17 +114,19 @@ client tokens on a trusted server. The underlying
 networking; stopping consumption, `result.cancel()`, or an `AIAbortSignal`
 closes the socket and the audio producer.
 
-Deepgram v1 Listen and Mistral Voxtral also implement the native streaming
+[Deepgram](https://swiftaisdk.github.io/SwiftAISDK/providers/deepgram/) v1 Listen and
+[Mistral](https://swiftaisdk.github.io/SwiftAISDK/providers/mistral/) Voxtral also implement the native streaming
 contract, including injected duplex transports, handshake/finalization and
 producer/socket cancellation. See their provider guides for raw formats and
-provider-specific options. Azure's OpenAI transcription route delegates to the
+provider-specific options. [Cartesia](https://swiftaisdk.github.io/SwiftAISDK/providers/cartesia/) and
+[Gateway](https://swiftaisdk.github.io/SwiftAISDK/providers/gateway/) document their token flows. Azure's OpenAI transcription route delegates to the
 configured native WebSocket transport.
 
 Streaming transcription is intentionally narrower than a full bidirectional
 speech session. For audio/text responses, function-call events, and session
-configuration, use [Realtime sessions](../realtime/). xAI is the first full
-Realtime V4 provider; ElevenLabs realtime STT and Google/OpenAI streaming
-translation remain deferred.
+configuration, use [Realtime sessions](https://swiftaisdk.github.io/SwiftAISDK/core/realtime/), which xAI, OpenAI Live,
+Google Gemini Live and Gateway support. ElevenLabs realtime transcription and
+Google/OpenAI streaming translation are not available.
 
 ## Vertex Gemini transcription
 
@@ -132,10 +134,28 @@ Vertex Gemini file models use generateContent and expose shared word timings.
 `GoogleVertexProvider.streamingTranscriptionModel` adds Gemini Live transcription
 with 16 kHz PCM, project/location and OAuth credentials. Express Mode keys do not
 authenticate that live route. Input waits for setup acknowledgment, interim text
-may be revised, and cancellation stops the producer/socket. See the Vertex guide
+may be revised, and cancellation stops the producer/socket. See the [Vertex guide](https://swiftaisdk.github.io/SwiftAISDK/providers/google-vertex/)
 for namespace precedence, timing warnings and quiet-grace finalization.
 
 ## Options
+
+- `fileName` and `mimeType` describe the submitted audio.
+- `language` hints the expected language when the provider supports it.
+- `prompt` gives the model context for names, vocabulary, or formatting.
+- `timestampGranularities` requests word or segment timings.
+- `providerOptions` carries provider-specific transcription settings.
+- `inputAudioFormat` declares the raw encoding and sample rate for streaming models.
+- `extraBody`, `headers`, `abortSignal`, `retryPolicy`, and `telemetry` follow the
+shared facade behavior; see [Error handling](https://swiftaisdk.github.io/SwiftAISDK/core/error-handling/).
+
+### OpenAI
+
+`chunkingStrategy` accepts `"auto"` or a `server_vad` object with an optional
+threshold and nonnegative prefix/silence padding. The
+`gpt-4o-transcribe-diarize` model defaults to automatic chunking and
+`diarized_json` output.
+
+### Azure MAI Transcribe
 
 Azure MAI Transcribe 1.5/2 file models use the Speech endpoint; they expose
 timed segments, duration, a language only for a single ISO-639-1 locale, and
@@ -162,38 +182,29 @@ let result = try await AI.streamTranscribe(
 ```
 
 `AzureOpenAIAudioSettings` configures separate `speechBaseURL`, `maiBaseURL`,
-and an injectable `webSocketTransport`. `ProviderSettings.baseURL` continues
-to configure the OpenAI endpoint. MAI file and streaming models have separate
-routes; `mai-transcribe-2-streaming` does not support file transcription.
-
-- `fileName` and `mimeType` describe the submitted audio.
-- `language` hints the expected language when the provider supports it.
-- `prompt` gives the model context for names, vocabulary, or formatting.
-- `providerOptions` carries provider-specific transcription settings.
-- OpenAI `chunkingStrategy` accepts `"auto"` or a `server_vad` object with an
-optional threshold and nonnegative prefix/silence padding. The
-`gpt-4o-transcribe-diarize` model defaults to automatic chunking and
-`diarized_json` output.
-- `inputAudioFormat` declares the raw encoding and sample rate for streaming models.
-- `extraBody`, `headers`, `abortSignal`, `retryPolicy`, and `telemetry` follow the shared facade behavior.
+and an injectable `webSocketTransport`. `ProviderSettings.baseURL` configures
+the OpenAI endpoint. MAI file and streaming models have separate routes;
+`mai-transcribe-2-streaming` does not support file transcription. See the
+[Azure guide](https://swiftaisdk.github.io/SwiftAISDK/providers/azure/).
 
 ## Results
 
 `TranscriptionResult` includes text plus optional timing and language metadata:
 
-`usage` preserves optional provider-native billing JSON, including tokens or
-seconds. `StreamingTranscriptionFinish.usage` preserves stream usage when the
-provider supplies it. `AI.streamTranscribe` records start and one terminal
-telemetry event; its byte length counts only audio consumed by the model.
-
 - `text`
-- `segments`
+- `words` and `segments`
 - `language`
 - `durationInSeconds`
+- `usage`
 - `warnings`
 - `providerMetadata`
 - `requestMetadata`
 - `responseMetadata`
+
+`usage` preserves optional provider-native billing JSON, including tokens or
+seconds. `StreamingTranscriptionFinish.usage` preserves stream usage when the
+provider supplies it. `AI.streamTranscribe` records start and one terminal
+telemetry event; its byte length counts only audio consumed by the model.
 
 For diarized OpenAI output, normalized text remains in the shared result while
 speaker-aware segments are retained under

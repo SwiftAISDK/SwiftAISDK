@@ -1,7 +1,65 @@
+## Quick start
+
+```swift
+import Foundation
+import SwiftAISDK
+
+let provider = try AIProviders.hume() // reads HUME_API_KEY
+let model = try provider.speechModel()
+let result = try await model.generateSpeech(
+    "Welcome back. Your order has shipped.",
+    instructions: "Warm, upbeat customer-support voice."
+)
+try result.audio.write(to: URL(fileURLWithPath: "welcome.mp3"))
+```
+
+With modular packages, `import SwiftAI` and `import SwiftAIHume`, then call
+`AIProviders.hume(configuration: HumeProviderSettings(...))`. The native factory
+requires the `configuration` argument; pass `HumeProviderSettings()` to read
+`HUME_API_KEY`.
+
+## Speech requests
+
+Hume has a single text-to-speech endpoint (`/v0/tts/file`), so `speechModel()`
+takes no model ID. `speechModel(_:)` ignores the ID it receives. The API key is
+sent in the `X-Hume-Api-Key` header.
+
+- `voice` is a Hume voice ID, sent with provider `HUME_AI`. When omitted, the
+  provider uses Hume's default voice `d8ab67c6-953d-4bd8-9370-8fa53a0f1453`.
+- `instructions` becomes the utterance `description` (acting directions), and
+  `speed` sets the utterance speed.
+- `format` accepts `mp3`, `pcm` and `wav`. Other values fall back to `mp3` with a
+  warning. The response is the raw audio bytes, and `contentType` comes from the
+  response header.
+- `language` is not supported; it is ignored with a warning.
+
+## Provider options
+
+`providerOptions["hume"]["context"]` continues the delivery of an earlier
+generation. Pass either a `generationId` or a list of previous `utterances`:
+
+```swift
+let result = try await model.generateSpeech(
+    "And here is the second line.",
+    providerOptions: [
+        "hume": [
+            "context": [
+                "utterances": [
+                    ["text": "Here is the first line.", "description": "calm", "speed": 1.0],
+                ],
+            ],
+        ],
+    ]
+)
+```
+
+Context utterances accept `text` (required), `description`, `speed`,
+`trailingSilence` and `voice` (an object with `id` or `name`, plus an optional
+`provider` of `HUME_AI` or `CUSTOM_VOICE`). Invalid context shapes throw
+`AIError.invalidArgument` before the request is sent.
+
 ## Rotating API keys
 
-`HumeProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+To rotate keys, set `HumeProviderSettings.apiKeyProvider` to an async throwing
+closure and pass it to `AIProviders.hume(configuration:)`. The closure runs before
+each request. If it throws, the request is not sent.

@@ -1,10 +1,40 @@
-# "hume"
+# Hume AI
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/hume/
 
+Expressive text-to-speech from Hume's TTS API. One speech model, no model ID required; acting directions come from instructions, and earlier generations can be passed as context.
+
+Provider ID: `hume` · Upstream package: `@ai-sdk/hume`
+
 ## Package
 
-`@ai-sdk/hume`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-hume`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-hume.git", from: "1.1.2"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIHume", package: "swift-ai-hume"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIHume
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `HUME_API_KEY` | API key sent as X-Hume-Api-Key. Required unless passed in settings. |
 
 ## Factories
 
@@ -12,20 +42,74 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/hume/
 
 ## Capabilities
 
-- Speech
+- [Speech](https://swiftaisdk.github.io/SwiftAISDK/core/generate-speech/)
+
+## Quick start
+
+```swift
+import Foundation
+import SwiftAISDK
+
+let provider = try AIProviders.hume() // reads HUME_API_KEY
+let model = try provider.speechModel()
+let result = try await model.generateSpeech(
+    "Welcome back. Your order has shipped.",
+    instructions: "Warm, upbeat customer-support voice."
+)
+try result.audio.write(to: URL(fileURLWithPath: "welcome.mp3"))
+```
+
+With modular packages, `import SwiftAI` and `import SwiftAIHume`, then call
+`AIProviders.hume(configuration: HumeProviderSettings(...))`. The native factory
+requires the `configuration` argument; pass `HumeProviderSettings()` to read
+`HUME_API_KEY`.
+
+## Speech requests
+
+Hume has a single text-to-speech endpoint (`/v0/tts/file`), so `speechModel()`
+takes no model ID. `speechModel(_:)` ignores the ID it receives. The API key is
+sent in the `X-Hume-Api-Key` header.
+
+- `voice` is a Hume voice ID, sent with provider `HUME_AI`. When omitted, the
+provider uses Hume's default voice `d8ab67c6-953d-4bd8-9370-8fa53a0f1453`.
+- `instructions` becomes the utterance `description` (acting directions), and
+`speed` sets the utterance speed.
+- `format` accepts `mp3`, `pcm` and `wav`. Other values fall back to `mp3` with a
+warning. The response is the raw audio bytes, and `contentType` comes from the
+response header.
+- `language` is not supported; it is ignored with a warning.
+
+## Provider options
+
+`providerOptions["hume"]["context"]` continues the delivery of an earlier
+generation. Pass either a `generationId` or a list of previous `utterances`:
+
+```swift
+let result = try await model.generateSpeech(
+    "And here is the second line.",
+    providerOptions: [
+        "hume": [
+            "context": [
+                "utterances": [
+                    ["text": "Here is the first line.", "description": "calm", "speed": 1.0],
+                ],
+            ],
+        ],
+    ]
+)
+```
+
+Context utterances accept `text` (required), `description`, `speed`,
+`trailingSilence` and `voice` (an object with `id` or `name`, plus an optional
+`provider` of `HUME_AI` or `CUSTOM_VOICE`). Invalid context shapes throw
+`AIError.invalidArgument` before the request is sent.
 
 ## Rotating API keys
 
-`HumeProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+To rotate keys, set `HumeProviderSettings.apiKeyProvider` to an async throwing
+closure and pass it to `AIProviders.hume(configuration:)`. The closure runs before
+each request. If it throws, the request is not sent.
 
-## Notes
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Hume speech mirrors upstream 3.0.81: `HUME_API_KEY`, `X-Hume-Api-Key` auth, custom headers, versioned user-agent suffix, no-argument `speech`/`speechModel` aliases, default voice ID, `/v0/tts/file`, binary audio responses, mp3/pcm/wav output formats, language warnings, `providerOptions.hume.context` schema mapping, response metadata, and unsupported language/embedding/image families. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied.
-
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
-
-Return to the [provider matrix](/SwiftAISDK/providers/).
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

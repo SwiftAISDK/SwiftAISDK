@@ -1,17 +1,78 @@
-## Rotating API keys
+## Quick start
 
-`TogetherAIProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import SwiftAISDK
 
-## JSON Schema support
+let together = try AIProviders.togetherAI()
+let model = try together.languageModel("meta-llama/Llama-3.3-70B-Instruct-Turbo")
+let result = try await model.generateText("Explain Swift actors in two sentences.")
+print(result.text)
+```
 
-The current verified model IDs send `response_format.type = json_schema`:
+For the modular packages, use `import SwiftAI` and `import SwiftAITogetherAI`, then
+`try AIProviders.togetherAI(configuration: TogetherAIProviderSettings(...))`. The native
+factory requires a configuration argument; `TogetherAIProviderSettings()` reads the
+environment.
+
+Chat and completion models use Together AI's OpenAI-compatible API, and streams include
+usage by default. Use `completionModel(_:)` for the completions endpoint and
+`embeddingModel(_:)` for embeddings.
+
+## Structured output
+
+These model IDs send `response_format.type = json_schema` with your schema:
 `deepseek-ai/DeepSeek-V4-Flash-0731`, `deepseek-ai/DeepSeek-V4.1-Flash`,
 `deepseek-ai/DeepSeek-V4.1-Flash-1017`, `openai/gpt-oss-120b`, `zai-org/GLM-5.2`,
-`zai-org/GLM-5.3-Flash`, `moonshotai/Kimi-K3`, and
-`MiniMaxAI/MiniMax-M3.1-Flash`. Other IDs use `json_object` and omit the schema.
-The `supportsStructuredOutputs` setting is an explicit opt-in for additional
-models whose schema support you have verified.
+`zai-org/GLM-5.3-Flash`, `moonshotai/Kimi-K3` and `MiniMaxAI/MiniMax-M3.1-Flash`. Other
+IDs send `json_object` without the schema.
+
+The umbrella `AIProviders.togetherAI(settings:)` factory and the native provider use the
+same list. Set `supportsStructuredOutputs: true` in `ProviderSettings` or
+`TogetherAIProviderSettings` to opt in additional models whose schema support you have
+verified. See [Structured output](../../core/structured-output/).
+
+## Images
+
+```swift
+let image = try together.imageModel("black-forest-labs/FLUX.1-schnell-Free")
+let result = try await image.generateImage(
+    "A cozy reading nook",
+    size: "1024x768",
+    providerOptions: ["togetherai": ["steps": 4]]
+)
+```
+
+Images are requested as base64 and returned in `base64Images`. Use `size`
+(`WIDTHxHEIGHT`); `aspectRatio` is not sent. As in `@ai-sdk/togetherai`, a request with
+`size` also returns an `unsupported` warning whose feature is `aspectRatio`. `count`
+above one is sent as `n`. API errors expose the response's `error.message`.
+`providerOptions["togetherai"]` accepts `steps`, `guidance`, `negative_prompt` and
+`disable_safety_checker`; other keys are forwarded. `google/gemini-3-pro-image` drops
+those four options and warns on `seed`.
+
+Pass one reference image in `files` for FLUX Kontext, Canny, Depth, Redux and FLUX.2
+pro/flex models; additional files are ignored with a warning. Masks are rejected:
+use a Kontext model with a reference image and a descriptive prompt instead.
+`supportsFileInputs` reports `true` or `false` for known models and unknown otherwise.
+
+## Reranking
+
+```swift
+let reranker = try together.rerankingModel("Salesforce/Llama-Rank-v1")
+let ranked = try await reranker.rerank(
+    query: "Which document explains actors?",
+    documents: ["Actors isolate state.", "Structs are value types."],
+    topK: 1
+)
+```
+
+For object documents, `providerOptions["togetherai"]["rankFields"]` selects the fields
+to rank by. Documents are not echoed back (`return_documents: false`). See
+[Rerank](../../core/rerank/).
+
+## Key fallback and rotating credentials
+
+The deprecated `TOGETHER_AI_API_KEY` is read only when `TOGETHER_API_KEY` is unset. The native
+`TogetherAIProviderSettings` accepts `apiKeyProvider`, an async throwing closure
+resolved before each authenticated request; a supplier failure stops the request before
+it is sent.

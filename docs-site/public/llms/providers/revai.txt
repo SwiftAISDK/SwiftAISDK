@@ -1,10 +1,40 @@
-# "revai"
+# Rev.ai
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/revai/
 
+Asynchronous speech-to-text with Rev.ai. Each transcription submits a job, polls until it completes and returns the transcript with timed segments.
+
+Provider ID: `revai` · Upstream package: `@ai-sdk/revai`
+
 ## Package
 
-`@ai-sdk/revai`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-revai`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-revai.git", from: "1.1.2"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIRevAI", package: "swift-ai-revai"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIRevAI
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `REVAI_API_KEY` | API key. Required unless passed in settings. |
 
 ## Factories
 
@@ -12,20 +42,73 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/revai/
 
 ## Capabilities
 
-- Transcription
+- [Transcription](https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/)
 
-## Rotating API keys
+## Quick start
 
-`RevAIProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import Foundation
+import SwiftAISDK
 
-## Notes
+let revAI = try AIProviders.revAI()
+let model = try revAI.transcriptionModel("machine")
+let audio = try Data(contentsOf: URL(fileURLWithPath: "meeting.wav"))
+let result = try await model.transcribe(audio: audio, fileName: "meeting.wav", mimeType: "audio/wav")
+print(result.text)
+```
 
-Rev.ai transcription mirrors upstream 3.0.81: `REVAI_API_KEY`, bearer auth, custom headers, versioned user-agent suffix, `transcription`/`transcriptionModel` aliases, `revai.transcription` provider IDs, `/speechtotext/v1/jobs` submit/poll/transcript flow, multipart `media` plus JSON `config`, providerOptions.revai schema/defaults, job/transcript response validation, Rev.ai error schema, text/segment/duration extraction, response metadata, and unsupported language/embedding/image families. ProviderV4, ESM-only packaging, Node 22 engines, experimental streaming transcription types, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-23 pass: Polling and status resource IDs are encoded as one path segment, including reserved characters and standalone dots. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied.
+For the modular packages, use `import SwiftAI` and `import SwiftAIRevAI`, then
+`try AIProviders.revAI(configuration: RevAIProviderSettings(...))`. The native factory
+requires a configuration argument; `RevAIProviderSettings()` reads `REVAI_API_KEY`.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+The model ID is sent as Rev.ai's `transcriber`, for example `machine` or `fusion`.
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+## Job lifecycle
+
+A transcription submits the audio as multipart `media` with a JSON `config` to
+`/speechtotext/v1/jobs`, polls the job once per second until it is `transcribed`, then
+downloads the transcript. Polling stops with an error after 60 seconds or when the job
+fails, and honors the request's abort signal. Results include text, segments with
+timings, the job language and a duration equal to the latest word end timestamp
+(`0` when no word has one).
+
+## Provider options
+
+Options under `providerOptions["revai"]` are validated and sent in the job `config`:
+
+| Option | Behavior |
+| --- | --- |
+| `language`, `metadata`, `custom_vocabulary_id` | Strings. |
+| `verbatim`, `rush`, `test_mode`, `strict_custom_vocabulary`, `forced_alignment` | Booleans. |
+| `skip_diarization`, `skip_postprocessing`, `skip_punctuation` | Booleans. |
+| `remove_disfluencies`, `remove_atmospherics`, `filter_profanity` | Booleans. |
+| `diarization_type` | `standard` or `premium`. |
+| `speakers_count`, `speaker_channels_count`, `delete_after_seconds` | Numbers. |
+| `segments_to_transcribe` | Array of `start`/`end` objects. |
+| `speaker_names` | Array of `display_name` objects. |
+| `custom_vocabularies` | Array of vocabulary objects. |
+| `notification_config` | `url` and optional `auth_headers.Authorization`. |
+| `summarization_config` | `model` (`standard`/`premium`), `type` (`paragraph`/`bullets`), optional `prompt`. |
+| `translation_config` | Required `target_languages` array of `language` objects; optional `model`. |
+
+When you pass `providerOptions["revai"]`, options you omit take Rev.ai's defaults
+(`false` for the Boolean flags, `diarization_type: "standard"` and `language: "en"`).
+If you omit `language` there, the call's `language` argument is sent instead of the
+`"en"` default; a `language` inside the provider options takes precedence over it.
+
+```swift
+let result = try await model.transcribe(
+    audio: audio,
+    providerOptions: ["revai": ["language": "es", "skip_diarization": true]]
+)
+```
+
+## Rotating credentials
+
+The native `RevAIProviderSettings` accepts `apiKeyProvider`, an async throwing closure
+resolved before each authenticated request. A supplier failure stops the request before
+it is sent.
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

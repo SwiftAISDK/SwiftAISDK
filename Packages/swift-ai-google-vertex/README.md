@@ -1,58 +1,29 @@
-# SwiftAIGoogleVertex
+# Google Vertex AI for Swift
 
-Swift-native port of Vercel AI SDK Google Vertex adapters. Canonical sources are exported as an independent Swift package. Dependencies share Google, Anthropic
-and compatible/OpenAI wire implementations rather than copying them.
+`SwiftAIGoogleVertex` adds Google Vertex AI, Google Vertex AI — Model Garden (MaaS), Google Vertex AI — xAI Grok and Google Vertex AI — Anthropic Claude to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/google-vertex` and supports text generation, embeddings, image generation, speech, transcription, video generation and text completion.
+
+Provider guides with models, options, streaming and errors:
+
+- [Google Vertex AI](https://swiftaisdk.github.io/SwiftAISDK/providers/google-vertex/)
+- [Google Vertex AI — Model Garden (MaaS)](https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-maas/)
+- [Google Vertex AI — xAI Grok](https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-xai/)
+- [Google Vertex AI — Anthropic Claude](https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-anthropic/)
+
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAIGoogleVertex` product from this package to your target, then create the provider:
 
 ```swift
+import SwiftAI
 import SwiftAIGoogleVertex
-let provider = try AIProviders.googleVertex(configuration: GoogleVertexProviderSettings(apiKey: "..."))
-let model = try provider.languageModel("gemini-3.6-flash")
+
+let provider = try AIProviders.googleVertex(configuration: GoogleVertexProviderSettings())
 ```
 
-The reviewed upstream baseline is `@ai-sdk/google-vertex` 5.0.140. Gemini
-transcription model IDs route to `generateContent`; Chirp and telephony models
-retain Cloud Speech routing. Shared word timing requests enable `wordTimestamp`
-unless the provider option explicitly disables it. Valid timings appear in
-`result.words` and the existing `segments`; segment-only timing requests and
-missing requested word timings produce warnings. Options use the first present
-`googleVertex`, `vertex`, then `google` namespace.
+By default the provider reads `GOOGLE_VERTEX_PROJECT`, `GOOGLE_VERTEX_LOCATION`, `GOOGLE_VERTEX_API_KEY`, `GOOGLE_VERTEX_ACCESS_TOKEN`, `GOOGLE_ACCESS_TOKEN`, `GOOGLE_CLIENT_EMAIL`, `GOOGLE_PRIVATE_KEY` and `GOOGLE_PRIVATE_KEY_ID` from the environment; values set in `GoogleVertexProviderSettings` take precedence.
 
-```swift
-let transcription = try provider.transcriptionModel("gemini-3.5-transcribe")
-let result = try await transcription.transcribe(.init(
-    audio: audioData,
-    timestampGranularities: [.word]
-))
-let live = try provider.streamingTranscriptionModel("gemini-3.5-transcribe-live")
-```
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
 
-Live transcription uses native authenticated WebSockets with 16 kHz PCM audio,
-project/location and OAuth credentials. Audio waits for `setupComplete`; interim
-text can be revised before final segments. Finish retains provider usage and
-language, and cancellation closes the socket and stops input. A quiet three-second
-grace window handles servers that omit a terminal signal after audio ends.
-`GoogleVertexProvider` accepts an injectable `webSocketTransport`.
+## Contributing
 
-Ordinary automatic Vertex-hosted Anthropic native structured output requires
-`GoogleVertexHostedProviderSettings.supportsNativeStructuredOutput = true`, a
-Claude 4.5+ versioned model ID and a Google Cloud organization policy allowing
-`structured_outputs`. It defaults to false and never enables strict tool inputs.
-The shared Anthropic explicit `outputFormat` mode and lossless native fallback
-for models rejecting forced JSON tools retain their precedence over this
-automatic-selection flag.
-Shared Google improvements also preserve signed text/function-call order, map
-speech language and enforce `toolChoice: none`. The four known Gemini image IDs,
-including `gemini-nano-banana-2.1`, declare file input support. Catalog metadata
-remains descriptive; it does not prove that a live account enables a feature.
-
-MaaS image downloads and redirects use the shared origin-scoped download policy;
-provider credentials are excluded from foreign image origins. Mock tests cover
-these contracts. No live account or browser media behavior has been verified.
-
-See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/google-vertex.md) for authentication, options and supported surfaces.
-
-## Current upstream review
-
-The reviewed baseline is `@ai-sdk/google-vertex` 5.0.140. Gemini 4 Carbon uses the shared Gemini request behavior, and Claude Fable 5.2 uses the existing Anthropic hosting policy. Model identifiers remain open strings.
-
-Tool-result files use the caller-configured download transport without Express Mode API keys. MaaS image downloads and every redirect are validated without cloud bearer tokens or provider headers. Abort signals reach downloads and prevent preaborted work before network I/O. Shared native transport tests cover these guarantees; JavaScript Node/edge browser fallback differences remain platform-specific. No browser or live-service parity is claimed.
+This package is exported from `Packages/swift-ai-google-vertex` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

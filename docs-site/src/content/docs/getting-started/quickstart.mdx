@@ -4,6 +4,8 @@ description: Generate text with a provider and model.
 ---
 
 Create a provider, choose a language model, and call `generateText` on the model.
+This assumes you have [installed the package](../install/) and exported
+`OPENAI_API_KEY`.
 
 ```swift
 import SwiftAISDK
@@ -23,12 +25,44 @@ let provider = try AIProviders.anthropic()
 let model = try provider.languageModel("claude-opus-5-5")
 ```
 
+If the factory throws `AIError.missingAPIKey`, the provider's environment
+variable is not set in the process that runs your code (for an Xcode scheme, set
+it under **Edit Scheme > Run > Environment Variables**), or pass the key
+explicitly with `ProviderSettings(apiKey:)`. See
+[Troubleshooting](../../troubleshooting/#missing-api-key).
+
 ## What Happens
 
 1. The provider factory loads credentials and provider defaults.
 2. `languageModel(_:)` resolves a concrete model implementation.
 3. The model convenience builds a provider-agnostic request.
 4. The provider maps the request to its API and normalizes the result.
+
+## Result fields worth knowing
+
+`generateText` returns a `TextGenerationResult`. Besides `text`, these are the
+fields most apps read first:
+
+| Field | What it holds |
+| --- | --- |
+| `finishReason` | Why the model stopped, for example `stop`, `length`, or `tool-calls`. |
+| `usage` | `TokenUsage` with `inputTokens`, `outputTokens`, and `totalTokens` when the provider reports them. |
+| `reasoning` | Reasoning text from models that expose it; empty otherwise. |
+| `warnings` | Non-fatal `AIWarning` values, such as an option the provider ignored. |
+| `responseMessages` | Assistant and tool messages to append to your conversation history. |
+| `providerMetadata` | Provider-specific values keyed by provider name. |
+
+```swift
+print(result.finishReason ?? "unknown")
+print(result.usage?.totalTokens ?? 0)
+for warning in result.warnings {
+    print("warning:", warning.message ?? warning.type)
+}
+```
+
+[Generate text](../../core/generate-text/#results) lists every field.
+
+## String model IDs
 
 When you need a string model ID, register providers once and call through the default provider registry.
 
@@ -45,3 +79,11 @@ let answer = try await AI.generateText(
     prompt: "Write a release checklist."
 )
 ```
+
+## Next steps
+
+- [Stream text](../../core/stream-text/) to render output as it arrives.
+- [Structured output](../../core/structured-output/) to decode a Swift type.
+- [Tools](../../core/tools/) to let the model call your Swift functions.
+- [Chat](../../core/chat/) to drive a SwiftUI chat view.
+- [Providers](../../providers/) for each provider's factories, models, and options.

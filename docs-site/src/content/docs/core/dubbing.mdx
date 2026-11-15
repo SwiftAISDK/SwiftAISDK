@@ -6,8 +6,87 @@ description: Create and inspect provider dubbing jobs.
 import { Code } from '@astrojs/starlight/components';
 import dubbingExample from '../../../../../Examples/Sources/Dubbing/main.swift?raw';
 
-Dubbing is a provider-native job lifecycle rather than a simple model call. ElevenLabs exposes it through `provider.dubbing()`.
+Use dubbing to translate the speech in an audio or video file into another
+language while keeping the original speakers' voices. Dubbing runs as a
+provider job: you create it, check its status, and download the result once it
+is ready. There is no `AI.*` facade call; you work with the provider's dubbing
+client directly.
 
 <Code code={dubbingExample} lang="swift" title="Examples/Sources/Dubbing/main.swift" />
 
-Use `DubbingCreateRequest` with either uploaded media bytes or `sourceURL`, plus a target language. `DubbingCreateResult` returns the `dubbingID` and expected duration. `DubbingStatusResult` reports the current state, and `dubbing.audio(dubbingID:languageCode:)` downloads the generated audio/video once the job is ready.
+The example synthesizes a short English clip, then starts a Spanish dub. It
+needs `ELEVENLABS_API_KEY` and makes billable provider requests.
+
+## Providers
+
+[ElevenLabs](../../providers/elevenlabs/) provides dubbing through
+`provider.dubbing()`, which returns an `ElevenLabsDubbingClient`. Calling
+`dubbing()` on another provider throws `AIError.unsupportedModel` with the
+`.dubbing` capability.
+
+## Job lifecycle
+
+```swift
+let dubbing = try AIProviders.elevenLabs().dubbing()
+
+let created = try await dubbing.create(DubbingCreateRequest(
+    sourceURL: "https://example.com/interview.mp4",
+    sourceLanguage: "en",
+    targetLanguage: "de"
+))
+
+let status = try await dubbing.get(created.dubbingID)
+if status.status == "dubbed" {
+    let dubbed = try await dubbing.audio(
+        dubbingID: created.dubbingID,
+        languageCode: "de"
+    )
+    print(dubbed.contentType ?? "unknown", dubbed.audio.count)
+}
+```
+
+| Call | Endpoint | Returns |
+| --- | --- | --- |
+| `create(_:)` | `POST /v1/dubbing` | `DubbingCreateResult` |
+| `get(_:headers:abortSignal:)` | `GET /v1/dubbing/:id` | `DubbingStatusResult` |
+| `audio(dubbingID:languageCode:headers:abortSignal:)` | `GET /v1/dubbing/:id/audio/:language` | `DubbingAudioResult` |
+
+The client does not poll for you. Store `dubbingID`, call `get` until the
+provider reports a finished state, and only then download the audio. The status
+string is the provider's own value, for example `dubbed` once ElevenLabs has
+finished, or `"unknown"` when the response omits it. A failed job reports its
+message in `error`.
+
+## Create options
+
+`DubbingCreateRequest` takes either uploaded bytes or a remote URL:
+
+- `file`, `fileName` and `mimeType`: media to upload. `fileName` defaults to
+  `media.mp3` and `mimeType` to `audio/mpeg`.
+- `sourceURL`: a URL the provider fetches itself, instead of `file`.
+- `targetLanguage` (required) and optional `sourceLanguage`.
+- `name`, `numSpeakers`, `watermark`, and `startTime`/`endTime` in seconds.
+- `providerOptions` under `"elevenlabs"` and `extraBody`: extra fields such as
+  `targetAccent`, `highestResolution`, `dropBackgroundAudio`,
+  `useProfanityFilter`, `dubbingStudio`, `disableVoiceCloning` and `csvFPS`.
+  Camel-case keys are sent as the matching snake-case form fields.
+- `headers` and `abortSignal`.
+
+## Results
+
+- `DubbingCreateResult`: `dubbingID`, `expectedDurationSeconds`, `rawValue`,
+  `requestMetadata` and `responseMetadata`. Request metadata records the file
+  name, MIME type and byte length rather than the uploaded bytes.
+- `DubbingStatusResult`: `dubbingID`, `name`, `status`, `sourceLanguage`,
+  `targetLanguages`, `error`, `rawValue` and `responseMetadata`.
+- `DubbingAudioResult`: `audio`, `contentType` and `responseMetadata`.
+
+## Errors and limitations
+
+- Non-2xx responses throw `AIError.apiCall` with the status code, headers and
+  body.
+- A create response without `dubbing_id` throws `AIError.invalidResponse`.
+- Dubbing calls are not retried and do not emit telemetry. Wrap them in your
+  own retry and polling logic.
+- The `sourceURL` is fetched by ElevenLabs, not by the SDK, so the SDK's
+  [download protections](../files/) do not apply to it.

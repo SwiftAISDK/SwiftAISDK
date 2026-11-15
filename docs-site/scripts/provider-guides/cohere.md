@@ -1,27 +1,90 @@
-## Embedding formats and usage
+## Quick start
 
-Cohere embeddings accept output dimensions 256, 512, 768, 1024, 1536 and 2048. `providerOptions.cohere.embeddingType` selects float (default), int8, uint8, binary or ubinary; the parser requires the matching response array. Packed binary values remain numeric bytes rather than being unpacked. Provider dimensions override generic request dimensions.
+```swift
+import SwiftAISDK
 
-Input cache-read usage is recorded separately and subtracted from uncached input tokens, while raw provider usage remains available in generation and streaming.
+let provider = try AIProviders.cohere()
+let model = try provider.languageModel("command-a-03-2025")
+let result = try await model.generateText("Write a one-line product tagline.")
+print(result.text)
+```
+
+With modular packages, `import SwiftAI` and `import SwiftAICohere`, then call
+`AIProviders.cohere(configuration: CohereProviderSettings(...))`; the native
+factory requires the configuration argument.
+
+Requests use Cohere's v2 API at `https://api.cohere.com/v2` (`/chat`, `/embed`,
+`/rerank`). `chatModel(...)` is an alias for `languageModel(...)`.
+
+## Reasoning
+
+```swift
+let reasoner = try provider.languageModel("command-a-reasoning-08-2025")
+let result = try await reasoner.generateText(
+    "Plan a database migration.",
+    options: LanguageGenerationOptions(
+        providerOptions: ["cohere": ["thinking": ["type": "enabled", "tokenBudget": 2_000]]]
+    )
+)
+print(result.reasoning)
+```
+
+`providerOptions["cohere"]["thinking"]` accepts `type` (`"enabled"` or
+`"disabled"`) and `tokenBudget`, and takes precedence over portable `reasoning`.
+Portable `reasoning` maps to a token budget out of 32,768 tokens; `"none"`
+disables thinking. If a level cannot be mapped to a budget, thinking is enabled
+without one and an unsupported-reasoning warning is returned.
+
+## Documents and citations
+
+Text (`text/*`) and `application/json` file parts are sent as Cohere documents,
+decoded from `Data` as UTF-8, with the file name as the title; document order is
+preserved. Images are sent inline as data URLs, and file URLs must be downloaded
+first. Other media types throw `AIError.invalidArgument`.
+
+Responses include document citations as sources in generated and streamed
+results. Citations that refer only to tool output stay in the raw response.
+
+Usage reports cached input tokens separately; billed units remain in the raw usage
+and are not used as token counts.
+
+## Embeddings
+
+```swift
+let embedder = try provider.embeddingModel("embed-v4.0")
+let result = try await embedder.embedMany(
+    ["first document", "second document"],
+    providerOptions: ["cohere": ["inputType": "search_document", "outputDimension": 1024]]
+)
+```
+
+- `inputType`: `search_document`, `search_query` (default), `classification` or
+  `clustering`.
+- `embeddingType`: `float` (default), `int8`, `uint8`, `binary` or `ubinary`.
+  Binary types return packed bytes as numbers.
+- `outputDimension`: 256, 512, 768, 1024, 1536 or 2048; overrides the shared
+  `dimensions` argument.
+- `truncate`: `NONE`, `START` or `END`.
+
+Up to 96 texts are sent per request. See [Embeddings](../../core/embeddings/).
+
+## Reranking
+
+```swift
+let reranker = try provider.rerankingModel("rerank-v3.5")
+let ranked = try await reranker.rerank(
+    query: "Which document explains provider options?",
+    documents: ["Provider options carry provider-specific settings.", "Swift is a language."],
+    topK: 1
+)
+```
+
+`topK` is sent as `top_n`. Options: `maxTokensPerDoc` and `priority`. Object
+documents are converted to JSON strings with a compatibility warning. See
+[Rerank](../../core/rerank/).
 
 ## Rotating credentials
 
-The native `CohereProviderSettings` accepts an optional
-`apiKeyProvider` asynchronous throwing closure. It is resolved for each
-authenticated request, so short-lived credentials can refresh without recreating
-the provider or model. Static `apiKey` settings remain supported. A supplier
-failure stops the request before it reaches the transport.
-
-
-## Text documents and reasoning
-
-Text documents use native `Data` bytes decoded as UTF-8. Decode base64 transport values into `Data` before constructing a file part; plain text that looks like base64 remains literal text. File titles, Unicode text and document order are retained. If portable reasoning cannot map to a token budget, the request still enables thinking without inventing a budget and returns the unsupported-reasoning warning.
-
-## Current request and response behavior
-
-Document citations are emitted for unary and streaming responses, including
-partial citations and a single citation in a `citation-start` event. Tool-output-only
-citations remain in the raw response and are not represented as document sources.
-The first source containing a document supplies its title; arbitrary document
-metadata is retained. Token usage comes only from `usage.tokens`; billed units
-remain in raw usage and are never substituted for token counts.
+`CohereProviderSettings` accepts an `apiKeyProvider` async throwing closure that
+is called before each authenticated request. A supplier error stops the request
+before it is sent.

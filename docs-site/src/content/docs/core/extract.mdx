@@ -3,18 +3,18 @@ title: Extract fields
 description: Extract typed fields from shared text or file evidence.
 ---
 
-`AI.experimentalExtract` reads one evidence state and returns named extraction
-answers. OpenAI, Anthropic and Google expose language-backed extraction adapters
-through their existing structured-generation models. The experimental contract is independent
-of structured text output and Decision questions.
+Use extraction to pull named, typed values (totals, dates, durations, lists)
+out of text or document evidence, with confidence and source offsets for each
+answer. `AI.experimentalExtract` reads one evidence state and a field map, and
+returns one validated answer per field. It is separate from
+[structured output](../structured-output/) and [decisions](../decide/).
 
 ```swift
-import SwiftAI
-import SwiftAIOpenAI
+import SwiftAISDK
 
-let provider = try OpenAIProvider(configuration: .init(apiKey: "..."))
+let provider = try AIProviders.openAI()
 let result = try await AI.experimentalExtract(
-    model: provider.extractionModel("gpt-5.5"),
+    model: try provider.extractionModel("gpt-5.5"),
     state: .text("Invoice total: 1200 yen. Issued on 2026-11-14."),
     fields: [
         "total": .init(type: .number, unit: "JPY", integer: true),
@@ -25,6 +25,24 @@ let result = try await AI.experimentalExtract(
 let total = result.answers["total"]?.value
 ```
 
+The state uses the same `AIDecisionState` values as decisions: `.text`, `.object`
+or ordered `.parts` with text, JSON and file evidence.
+
+## Providers
+
+| Provider | Factory | How extraction runs |
+| --- | --- | --- |
+| [OpenAI](../../providers/openai/) | `AIProviders.openAI()` | Language-model adapter with structured output. |
+| [Anthropic](../../providers/anthropic/) | `AIProviders.anthropic()` | Language-model adapter with structured output. |
+| [Google Generative AI](../../providers/google-generative-ai/) | `AIProviders.google()` | Language-model adapter with structured output. |
+| [ScaleDown](../../providers/scaledown/) | `AIProviders.scaleDown(configuration:)` | Native extraction model; text fields and lists of text only. |
+
+Each factory exposes `extractionModel(_:)`. The modular packages expose the same
+method on their native provider types, for example
+`OpenAIProvider(configuration:)` from `SwiftAIOpenAI`.
+
+## Fields and answers
+
 Fields support text, number, date, time, datetime, duration and lists of text,
 number or date items. Field instructions, units, integer/decimal constraints and
 an optional calendar reference date guide extraction. An absent value is `nil`,
@@ -32,14 +50,19 @@ with a separate `guess` where the model can supply one. Answers retain confidenc
 `pNull`, source evidence, usage and provider metadata. Text source offsets count
 UTF-16 code units. File sources identify the original evidence part.
 
+## Errors and limitations
+
 The facade validates input before model work and checks every returned answer.
 Unsupported field types, malformed/incomplete answers and refusals throw typed
-errors for the complete call. Retry settings and abort signals follow native
-provider conventions. URL evidence uses protected downloads; an explicit
-`download` function can supply an application-owned downloader.
+errors for the complete call. Retry settings and abort signals follow the
+shared conventions in [Error handling](../error-handling/). URL evidence uses
+protected downloads (see [Files](../files/)); an explicit `download` function
+can supply an application-owned downloader.
+
+## Registries and model strings
 
 Use `AIProviderRegistry.extractionModel("provider:model")` for a registered
-provider. With the compatibility umbrella, the string overload resolves through
-`AIDefaultProvider`. Its default Gateway provider currently has no extraction
-factory, so configure a capable provider or pass a model explicitly. ScaleDown
-is a discovered upstream provider and is not implemented by this release.
+provider. With the umbrella package, `AI.experimentalExtract(model: "…")`
+resolves the string through `AIDefaultProvider`. The default Gateway provider
+has no extraction factory, so configure a capable default provider or pass a
+model explicitly.

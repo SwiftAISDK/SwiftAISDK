@@ -1,10 +1,40 @@
-# "zai"
+# Z.AI
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/zai/
 
+Z.AI GLM chat models, such as `glm-5.3`, with thinking and reasoning controls over Z.AI's OpenAI-compatible endpoint. Only language models are available.
+
+Provider ID: `zai` · Upstream package: `@ai-sdk/zai`
+
 ## Package
 
-`@ai-sdk/zai`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-zai`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-zai.git", from: "1.1.3"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIZAI", package: "swift-ai-zai"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIZAI
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `ZAI_API_KEY` | API key. Required unless passed in settings; read when a request is made. |
 
 ## Factories
 
@@ -12,20 +42,75 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/zai/
 
 ## Capabilities
 
-- Language
+- [Language](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/)
 
-## Rotating API keys
+## Quick start
 
-`ZAIProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import SwiftAISDK
 
-## Notes
+let zai = AIProviders.zai()
+let model = try zai.languageModel("glm-5.3")
+let result = try await model.generateText("Write a haiku about Swift.")
+print(result.text)
+```
 
-Z.AI mirrors upstream 3.0.55: lazy `ZAI_API_KEY` bearer authentication, custom base URL and headers, callable/language/chat aliases plus the default `zai` provider, `zai.chat` provider IDs, versioned user-agent suffix, current and forward-compatible GLM model IDs, HTTP(S) image/video inputs, validated `providerOptions.zai` sampling/thinking/reasoning/tool-stream/request/user controls, published unsupported-option and tool-choice warnings, exact request transforms, ordered reasoning/text/tool content including null-content terminal responses, cache-aware usage, transformed request and provider metadata, raw streaming chunks, incremental tool arguments, special finish-reason mappings, abort propagation, and flat or nested Z.AI errors. Embedding and image-generation families are unsupported. ProviderV4 type names, ESM-only packaging, Node 22 engines, TypeScript inference, and workflow serialization helpers are JS-only upstream concerns. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied. The 2026-11-15 delta and native/platform distinctions are recorded in WeeklyUpstreamAudit20261115; no full-package or live-service parity is implied.
+For the modular packages, use `import SwiftAI` and `import SwiftAIZAI`, then
+`AIProviders.zai(configuration: ZAIProviderSettings(...))`. The native factory requires a
+configuration argument and does not throw; `zai` is a default provider instance.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+The API key is resolved when a request is made, so creating the provider never fails for
+a missing key. `ZAIProviderSettings(environment:)` supplies a custom environment map.
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+## GLM chat models
+
+Z.AI serves GLM models, such as `glm-5.3`, `glm-5.2` and `glm-4.7`, through its
+OpenAI-compatible Chat Completions endpoint at `https://api.z.ai/api/paas/v4`. Any model
+ID string is accepted. `languageModel(_:)`, `chatModel(_:)`, `chat(_:)` and calling the
+provider directly return the same model. Messages may include HTTP(S) image and video
+URLs. Responses keep reasoning, text and tool calls in order; streaming delivers tool
+arguments incrementally. Usage reports cached input tokens and reasoning tokens.
+
+Only language models are available; embedding and image factories throw.
+
+## Provider options
+
+Options under `providerOptions["zai"]` are validated before the request:
+
+| Option | Behavior |
+| --- | --- |
+| `doSample` | Boolean sampling switch. |
+| `thinking` | Object with `type` (`enabled` or `disabled`) and optional Boolean `clearThinking`. |
+| `reasoningEffort` | `none`, `minimal`, `low`, `medium`, `high`, `xhigh` or `max`. |
+| `toolStream` | Boolean; streams tool-call arguments. |
+| `requestId` | String of 6–64 characters. |
+| `userId` | String of 6–128 characters. |
+
+```swift
+let result = try await model.generateText(
+    "Plan a three-day trip to Kyoto.",
+    options: LanguageGenerationOptions(providerOptions: ["zai": [
+        "thinking": ["type": "enabled"]
+    ]])
+)
+```
+
+## Unsupported settings
+
+`topK`, `frequencyPenalty`, `presencePenalty` and `seed` are removed with warnings. A JSON
+response format with a schema warns because schemas are not enforced. Tool choice `none`
+removes the tools; any choice other than `auto` or `none` warns, because Z.AI only
+selects tools automatically.
+
+Z.AI finish reasons `sensitive`, `model_context_window_exceeded` and `network_error` map
+to `content-filter`, `length` and `error`.
+
+## Rotating credentials
+
+`ZAIProviderSettings.apiKeyProvider` accepts an async throwing closure resolved before
+each authenticated request; the umbrella `AIProviders.zai(settings:)` factory accepts the
+same settings type. A supplier failure stops the request before it is sent.
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

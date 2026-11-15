@@ -1,91 +1,143 @@
-## Conversations API
+## Quick start
 
 ```swift
-let mistral = try AIProviders.mistral()
-let model = try mistral.conversation("mistral-small-latest")
-let result = try await model.generate(.init(
-    messages: [.user("Find recent astronomy news.")],
-    tools: ["web_search": MistralTools.webSearch()]
-))
+import SwiftAISDK
+
+let provider = try AIProviders.mistral() // reads MISTRAL_API_KEY
+let model = try provider.languageModel("mistral-small-latest")
+let result = try await model.generateText("Explain Swift optionals in one paragraph.")
 print(result.text)
 ```
 
-`conversation(...)` uses `/conversations` with typed Mistral options, system instructions, file/image input, function and provider tools, sources, usage and streaming event conversion. `MistralTools.webSearchPremium()` exposes premium search. Every call is stateless (`store=false`) and replays the full prompt; conversation or agent continuation IDs are not exposed. Existing `languageModel(...)` and `chatModel(...)` retain Chat Completions.
+With modular packages, `import SwiftAI` and `import SwiftAIMistral`, then call
+`AIProviders.mistral(configuration: MistralProviderSettings(...))`. The native
+factory requires the `configuration` argument; pass `MistralProviderSettings()` to
+read `MISTRAL_API_KEY`.
 
-A schema plus application tools on Chat Completions uses the synthetic JSON tool; its arguments become output text without hiding real application calls. Generic embedding dimensions are forwarded unless provider-specific dimensions override them.
+Streaming transcription and managed voice sessions exist only on the native
+`MistralProvider`. To use them from the umbrella module, call
+`AIProviders.mistral(configuration:)`.
 
-## Reasoning configuration for future models
+## Chat models
 
-Unknown chat model IDs inherit support for top-level reasoning and the `mistral.reasoningEffort` override. The override keeps precedence. Known non-reasoning Codestral, Ministral, legacy Mistral Large and Voxtral IDs retain their previous unsupported behavior.
-
-## Voxtral 3 speech and transcription
-
-Speech IDs such as `voxtral-mini-tts-3-0` and `voxtral-mini-tts-3` accept
-`providerOptions.mistral.expressiveness` from 1 through 5 and `phonemeHints`, a
-dictionary mapping words to nonempty arrays of IPA phonemes. Inline delivery
-tags remain in the input text. Existing `refAudio` still takes precedence over
-`voice`.
+`languageModel(_:)` and `chatModel(_:)` use `/v1/chat/completions`. Provider
+options go under `providerOptions["mistral"]`:
 
 ```swift
-let speech = try mistral.speech("voxtral-mini-tts-3")
-let audio = try await speech.speak(.init(
-    text: "[emotion=happy] I like tomato soup.",
+let result = try await model.generateText(
+    "Solve 37 * 43 step by step.",
+    options: LanguageGenerationOptions(
+        reasoning: "high",
+        providerOptions: ["mistral": ["safePrompt": true, "promptCacheKey": "math-v1"]]
+    )
+)
+```
+
+Supported keys: `reasoningEffort`, `safePrompt`, `parallelToolCalls`,
+`structuredOutputs`, `strictJsonSchema`, `documentImageLimit`,
+`documentPageLimit` and `promptCacheKey`.
+
+- Portable `reasoning` maps to the nearest supported Mistral effort, preferring the
+  lower level. `mistral.reasoningEffort` (`none`, `low`, `high`, `max`) takes
+  precedence and is passed through unchanged.
+- Unknown and future model IDs are treated as reasoning-capable. Known
+  non-reasoning Codestral, Ministral, legacy Mistral Large and Voxtral IDs warn
+  instead.
+- `zai-glm-5`, `zai-glm-5-3`, `zai-glm-5-3-flash` and `zai-glm-latest` accept
+  `low`, `high` and `max`; portable `none` maps to `low` with a warning. Large 4
+  also accepts `medium`.
+- With `structuredOutputs: false`, the JSON schema is added to the prompt instead
+  of being sent as a response format. A schema plus application tools uses a
+  synthetic JSON tool, and its arguments become the output text.
+- User messages accept images and PDFs. Assistant thinking blocks are kept as
+  reasoning.
+
+## Conversations API
+
+`conversation(_:)` uses `/conversations` with Mistral's hosted tools:
+
+```swift
+let agent = try provider.conversation("mistral-small-latest")
+let result = try await agent.generateText(
+    "Find recent astronomy news.",
+    tools: LanguageToolOptions(rawTools: ["web_search": MistralTools.webSearch()])
+)
+print(result.text)
+```
+
+`MistralTools.webSearchPremium()` selects premium search. Each call is stateless
+(`store: false`) and replays the full prompt; conversation and agent continuation
+IDs are not exposed. Sources, usage and streaming events are converted to the
+standard result shape.
+
+## Embeddings
+
+```swift
+let embedder = try provider.embeddingModel("mistral-embed")
+let result = try await embedder.embedMany(["alpha", "beta"])
+```
+
+`dimensions` is forwarded. `providerOptions["mistral"]` accepts `outputDimension`,
+which overrides `dimensions`, and `outputDtype`.
+
+## Speech
+
+```swift
+let speech = try provider.speechModel("voxtral-mini-tts-3")
+let audio = try await speech.generateSpeech(
+    "[emotion=happy] I like tomato soup.",
     voice: "gb_jane_neutral",
     providerOptions: ["mistral": [
         "expressiveness": 1.5,
-        "phonemeHints": ["tomato": ["t", "ə", "m", "ɑ", "t", "oʊ"]]
+        "phonemeHints": ["tomato": ["t", "ə", "m", "ɑ", "t", "oʊ"]],
     ]]
-))
+)
 ```
 
-Voxtral 3 transcription supports `voxtral-mini-transcribe-3` and
-`voxtral-small-transcribe-3`, including their `-3-0` and `-latest` aliases.
-`returnLanguage: true` requests detected language and cannot be combined with
-a pinned `language`. Context bias accepts nonempty phrases and punctuation,
-including more than 100 entries. Language plus timestamps is rejected only for
-the known legacy `voxtral-mini-2507`, `voxtral-mini-2602` and
-`voxtral-mini-latest` IDs. Current, future and custom model IDs forward that
-combination. The API validates model-specific word timestamps and diarization
-requirements.
+Voxtral 3 speech (`voxtral-mini-tts-3`, `voxtral-mini-tts-3-0`) accepts
+`expressiveness` from 1 to 5 and `phonemeHints`, which maps words to nonempty arrays
+of IPA phonemes. Inline delivery tags stay in the text. `refAudio` (a nonempty
+string) clones a reference voice and takes precedence over `voice`. It is redacted
+from the result's request metadata.
 
-## Current reasoning efforts and rotating credentials
+## Transcription
 
-The `zai-glm-5`, `zai-glm-5-3`, `zai-glm-5-3-flash` and `zai-glm-latest`
-Chat models accept `low`, `high` and `max` reasoning. Shared reasoning selects the
-nearest supported effort, preferring a lower level; `none` maps to `low` with a
-compatibility warning. The explicit `mistral.reasoningEffort` provider option
-accepts `none`, `low`, `high` and `max` and passes through unchanged for
-configurable models. The Conversations API retains its own model support;
-Chat-only GLM 5.3 and unknown model IDs do not gain Conversations reasoning.
+`transcriptionModel("voxtral-mini-transcribe-3")` (also
+`voxtral-small-transcribe-3` and their `-3-0` and `-latest` aliases) uses
+`/v1/audio/transcriptions`. Options under `providerOptions["mistral"]`:
 
-`MistralProviderSettings.apiKeyProvider` accepts an async throwing supplier,
-resolved before each authenticated Chat, Conversations, embedding, speech or
-transcription request. Static keys and provider/request header overrides remain
-available. Supplier errors fail the operation before sending a request.
-## Streaming transcription and managed voice control
+- `returnLanguage: true` returns the detected language. It cannot be combined with
+  a pinned `language`.
+- `contextBias` takes nonempty phrases to bias recognition.
+- `diarize` and `timestampGranularities` control speaker and timing output.
+- Realtime-only options (`targetStreamingDelayMs`, `speakerReferences`,
+  `turnDetection`) produce warnings in file transcription.
 
-`MistralProvider.streamingTranscriptionModel(...)` (also
-`streamingTranscription`) supports Voxtral realtime transcription with PCM16 and
-a positive sample rate, defaulting to 16 kHz. It waits for the handshake, sends
-64 KiB frames with backpressure, and finalizes only on `transcription.done`.
-Cancellation, invalid events, errors and early close stop the producer/socket.
+Language plus timestamps is rejected only for the legacy `voxtral-mini-2507`,
+`voxtral-mini-2602` and `voxtral-mini-latest` IDs. Other IDs forward the
+combination and let the API validate it.
 
-Realtime options include `language`, `contextBias`, `diarize`,
-`targetStreamingDelayMs` (80...1200 or 2400), `speakerReferences` and
-`turnDetection`. Diarization/turn and speaker clip constraints are validated.
-Offline-only options warn in streams; realtime-only options warn in file calls.
-Untimed speaker segments remain in metadata without invented timestamps, and
-raw provider usage is retained. Settings support injected WebSocket transports
-and per-connection async credentials.
+### Streaming transcription
+
+`streamingTranscriptionModel("voxtral-mini-transcribe-realtime-3")` (alias
+`streamingTranscription`) streams PCM16 audio over a WebSocket at 16 kHz by
+default. It waits for the handshake, sends 64 KiB frames with backpressure, and
+finishes on `transcription.done`. Realtime options include `language`,
+`contextBias`, `diarize`, `targetStreamingDelayMs` (80–1200, or 2400),
+`speakerReferences` and `turnDetection`. Inject a transport with
+`MistralProviderSettings(webSocketTransport:)`. See
+[Transcribe](../../core/transcribe/).
+
+## Managed voice sessions
 
 `provider.voiceSessions.create(modelID:sessionConfiguration:)` and
-`close(sessionID:)` provide authenticated `/audio/sessions` server control.
-`buildSessionConfiguration(_:modelID:update:)` throws for unsupported normalized
-or strict Mistral settings. `MistralVoiceSessions.parseServerEvent` maps final
-transcripts, updates and errors while retaining raw/unknown events. Browser
-LiveKit room, microphone, playback, tool RPC and reconnect transport remain
-unimplemented; these APIs do not advertise a managed-voice server WebSocket.
+`close(sessionID:)` manage `/audio/sessions` from your server. The returned
+`MistralVoiceSession` has the `participantToken` and `serverURL` for a LiveKit
+client. The SDK does not include LiveKit media, microphone or playback; use a
+LiveKit client for that.
 
-Chat supports medium reasoning on Large 4 and specific function choice while
-retaining all tools. Conversations keeps its distinct tool-selection contract.
-Tool argument strings retain valid JSON verbatim and JSON-quote malformed text.
+## Rotating API keys
+
+To rotate keys, set `MistralProviderSettings.apiKeyProvider` to an async throwing
+closure and pass it to `AIProviders.mistral(configuration:)`. It runs before every
+chat, Conversations, embedding, speech, transcription and WebSocket request.

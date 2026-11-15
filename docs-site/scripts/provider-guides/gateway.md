@@ -1,102 +1,190 @@
-## Current reviewed behavior
-
-The reviewed baseline is `@ai-sdk/gateway` 4.0.145. `GatewayProviderOptions(headquarters: ["US", "DE"])` forwards country routing restrictions; prefix each code with `!` for exclusions. Other Gateway options remain available in `additionalOptions` and open JSON provider options.
-
-`GatewayTakoSearchConfig` adds developer-only `variableCost`, `maxVariableCostUSD` and `extraBody`. Set the cost cap to `.null` to remove it, or omit it to retain the server default. These settings remain camelCase tool factory arguments; model-input fields are separate. Tako results retain variable-cost usage, premium/redacted row metadata, total matches, relevance scores and placeholder cards without lossy decoding. Browserbase fetch calls preserve `allow_redirects` in tool input. The upstream switch to Zod Mini and JavaScript bundle/type changes do not alter Swift runtime schemas.
-
-## Decisions, embeddings, and bounded batches
-
-Use `decisionModel(...)` with [Decision](../../core/decide/); legacy Evaluation factories use the new `/decision-model` envelope while retaining Swift call signatures. Embedding calls forward generic dimensions. Provider/model catalogs accept decision entries as open strings.
-
-Decision calls forward optional `maxOutputTokens` and `reasoning` to the selected Gateway model. Leave them unset to retain provider defaults; values such as `provider-default`, `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max` pass through for the model to interpret.
-
-Both provider-owned and language-model batch result routes use `ProviderSettings.batchResultDownloads`, defaulting to a 64 MiB limit per UTF-8 row. Oversized rows fail with `AIDownloadError` and cancel the producer.
-
-When xAI/SpaceXAI diarization is requested but no nested raw speaker evidence is returned, transcription adds an unsupported-option warning. Existing provider metadata remains available for callers that receive speaker evidence.
-
-## Streaming speech
-
-`streamingSpeechModel("fish-audio/s2-pro")` or the existing `speechModel(...)`
-factory can feed `AI.experimentalStreamSpeech`. Incremental text, speaker
-boundaries, requested audio format, provider options and cancellation use the
-native speech contract described in [Stream speech](../../core/stream-speech/).
-
-On a trusted server, mint a speech-bound short-lived token:
+## Quick start
 
 ```swift
-let secret = try await gateway.experimentalSpeech.getToken(.init(
-    model: "fish-audio/s2-pro", expiresAfterSeconds: 60
-))
+import SwiftAISDK
+
+let gateway = try AIProviders.gateway()
+let model = try gateway.languageModel("openai/gpt-4.1-mini")
+let result = try await model.generateText("Give me three names for a coffee shop.")
+print(result.text)
 ```
 
-The result includes `token`, the speech WebSocket `url`, and optional `expiresAt`
-in epoch seconds. Give the token to a client configured with its own Gateway
-provider. Keep the server credential on the server. Speech connects with
-`ai-gateway-speech.v1` plus the shared auth/team subprotocols. Unknown envelope
-parts are ignored; typed server errors and premature close remain observable.
+`AIProviders.gateway(settings:teamIDOrSlug:)` returns the native `GatewayProvider`.
+For a smaller dependency graph, use `import SwiftAI` and `import SwiftAIGateway`
+with `AIProviders.gateway(configuration: GatewayProviderSettings())`. The native
+factory requires the configuration argument and accepts an optional
+`teamIDOrSlug`; rotating credentials need the native settings.
 
-## Parallel Search
+Model IDs are open `creator/model` strings, so models that Gateway adds later
+work without an SDK update.
 
-`GatewayTools.parallelSearch` accepts the current `turbo`, `fast`, `basic` and
-`advanced` modes, plus the legacy `one-shot` and `agentic` aliases. Omitted mode
-uses the server's `basic` default. `turbo` supports English and Japanese. Domain
-filters may include paths, for example `docs.python.org/3`.
+## Authentication and teams
+
+The provider uses, in order: an explicit `apiKey`, `AI_GATEWAY_API_KEY`, then
+`VERCEL_OIDC_TOKEN`. An empty key falls through to OIDC; a non-empty invalid key
+stays selected. The OIDC token is read again for each request, so a refreshed
+token is picked up automatically. Requests go to `https://ai-gateway.vercel.sh/v4/ai`
+unless you set `baseURL`.
+
+Pass `teamIDOrSlug` to scope requests to a team:
+
+```swift
+let gateway = try AIProviders.gateway(teamIDOrSlug: "my-team")
+```
+
+## Models
+
+| Factory | Use with |
+| --- | --- |
+| `languageModel(_:)` | [Generate text](../../core/generate-text/), [Stream text](../../core/stream-text/) |
+| `embeddingModel(_:)` | [Embeddings](../../core/embeddings/) |
+| `imageModel(_:)` | [Generate image](../../core/generate-image/) |
+| `videoModel(_:)` | [Generate video](../../core/generate-video/) |
+| `speechModel(_:)`, `streamingSpeechModel(_:)` | [Generate speech](../../core/generate-speech/), [Stream speech](../../core/stream-speech/) |
+| `transcriptionModel(_:)`, `streamingTranscriptionModel(_:)` | [Transcribe](../../core/transcribe/) |
+| `rerankingModel(_:)` | [Rerank](../../core/rerank/) |
+| `decisionModel(_:)`, `evaluationModel(_:)` | [Decide](../../core/decide/), [Evaluate](../../core/evaluate/) |
+| `realtimeModel(_:)` | [Realtime](../../core/realtime/) |
+| `experimentalBatch()` | [Batch text](../../core/batch-text/) |
+
+## Routing options
+
+Gateway options go under `providerOptions["gateway"]` and are forwarded as-is:
+
+```swift
+let result = try await model.generateText(
+    "Summarize this contract.",
+    options: LanguageGenerationOptions(providerOptions: [
+        "gateway": [
+            "order": ["openai", "anthropic"],
+            "models": ["anthropic/claude-opus-5-fast"],
+            "sort": "ttft",
+            "has": ["implicit-caching", "vision"],
+            "disallowPromptTraining": true,
+            "serviceTier": "flex",
+            "tags": ["contracts"],
+        ],
+    ])
+)
+```
+
+These cover provider order and fallback models, provider allow-lists, BYOK
+credentials, prompt-training restrictions, capability (`has`) filters, sort order,
+service tier, quota attribution and tags. `GatewayProviderOptions` builds
+headquarters restrictions with type safety; prefix a country code with `!` to
+exclude it:
+
+```swift
+let options = GatewayProviderOptions(
+    headquarters: ["US", "DE"],
+    additionalOptions: ["order": ["openai"]]
+).providerOptions
+```
+
+Structured Gateway errors keep their type, status, retryability, `retryAfter`
+and extra fields.
+
+## Gateway tools
+
+`GatewayTools` creates tools that Gateway executes on the server:
+`parallelSearch`, `perplexitySearch`, `takoSearch`, `browserbaseSearch`,
+`browserbaseFetch`, `deepseekSearch` and `deepseekFetch`. Pass them as provider
+tools in the request:
 
 ```swift
 let search = GatewayTools.parallelSearch(
     mode: "fast",
     includeDomains: ["docs.python.org/3"],
     maxCharsTotal: 8_000,
-    maxAgeSeconds: 600,
-    timeoutSeconds: 10,
-    disableCacheFallback: true,
-    location: "jp"
+    maxAgeSeconds: 600
+)
+let result = try await model.generate(LanguageModelRequest(
+    messages: [.user("What changed in the latest Python release?")],
+    tools: ["search": search]
+))
+```
+
+- Parallel Search modes: `turbo`, `fast`, `basic` (server default) and
+  `advanced`, plus the legacy `one-shot` and `agentic`. Domain filters may include
+  paths. `timeoutSeconds` and `disableCacheFallback` control fetch freshness; cache
+  ages below 600 seconds are raised to 600. Results keep the raw snake_case
+  fields (`search_id`, `results[].excerpts`, `session_id`).
+- `takoSearch(GatewayTakoSearchConfig(...))` accepts effort, data and web sources,
+  location and locale. The developer controls `variableCost`, `maxVariableCostUSD`
+  (`.null` removes the cap) and `extraBody` are set with
+  `GatewayTakoSearchConfig(variableCost:maxVariableCostUSD:extraBody:)`.
+
+## Speech and transcription
+
+Speech models can stream through `AI.experimentalStreamSpeech`:
+
+```swift
+let speech = try gateway.streamingSpeechModel("elevenlabs/eleven-flash-v2.5")
+```
+
+Transcription supports unary requests and a duplex WebSocket stream. The shared
+`timestampGranularities` option is not forwarded and produces a warning; word
+timings are returned separately when the model reports them.
+
+### Client tokens
+
+On a trusted server, mint a short-lived, model-bound token for a client instead of
+sharing your key. Lifetimes default to 60 seconds and are capped at 300.
+
+```swift
+let speechToken = try await gateway.experimentalSpeech.getToken(.init(
+    model: "elevenlabs/eleven-flash-v2.5",
+    expiresAfterSeconds: 60
+))
+let transcriptionToken = try await gateway.experimentalTranscription.getToken(.init(
+    model: "openai/gpt-realtime-whisper"
+))
+print(speechToken.token, speechToken.url, speechToken.expiresAt ?? 0)
+```
+
+`gateway.experimentalTranscription("openai/gpt-realtime-whisper")` also creates a
+streaming transcription model directly.
+
+## Video, images and batches
+
+- Video supports asynchronous start/status operations and callback registration
+  through the shared facade. Completed videos may be returned as `uploadedVideos`
+  without URLs or inline bytes.
+- Image results are buffered base64. The `experimental_streamingImageDecoding`
+  option is removed from the request, with a warning when it is `true`.
+- Batches accept text requests for one common model. Result rows are limited to
+  64 MiB each by default; change it with
+  `GatewayProviderSettings(batchResultDownloads: AIBatchResultDownloadSettings(maxLineBytes:))`.
+  Oversized rows fail with `AIDownloadError`.
+
+## Decisions
+
+```swift
+let result = try await AI.experimentalDecide(
+    model: try gateway.decisionModel("openai/gpt-6-luna"),
+    state: .text("The package arrived cracked."),
+    questions: ["damaged": .boolean(instructions: "Is the package damaged?")]
 )
 ```
 
-`maxCharsTotal` is sent at the top level. `timeoutSeconds` and
-`disableCacheFallback` configure fetch freshness; the service raises cache ages
-below 600 seconds to 600. Search results retain their raw GA fields:
-`search_id`, `results[].excerpts`, nullable titles/publication dates, optional
-warnings, usage and `session_id`. Consumers that decoded the old camelCase
-result fields should adopt the GA response names.
+Decision calls forward `maxOutputTokens` and `reasoning` only when you set them.
+Evaluation models use the same decision endpoint and report the model that
+actually answered.
+
+## Account APIs
+
+- `availableModels()` lists the model catalog.
+- `credits()` returns balance and total usage.
+- `getSpendReport(GatewaySpendReportParams(startDate:endDate:))` returns spend
+  rows, optionally grouped and filtered by model, provider, user or tags.
+- `getGenerationInfo(id:)` returns cost (including market, surcharge and gateway
+  cost), latency and token details for one generation.
 
 ## Rotating credentials and cancellation
 
-`GatewayProviderSettings.apiKeyProvider` accepts an async throwing supplier and
-resolves a fresh nonempty key before each authenticated request or streaming
-speech/transcription connection. Metadata failures use the credential already
-resolved for that request; error classification does not invoke the supplier
-again. Static API keys, OIDC fallback and caller header precedence remain
-available.
+`GatewayProviderSettings(apiKeyProvider:)` takes an async throwing closure that is
+called before each authenticated request and each streaming speech or transcription
+connection. It must return a non-empty key; if it throws, the request is not sent.
 
-Caller cancellation and timeout errors retain their native identity through
-HTTP, client-secret requests and duplex speech/transcription. An upstream text
-or audio input failure ends the output stream and closes its socket instead of
-becoming a retryable Gateway 500. Native `AIAbortError`, task cancellation and
-Foundation cancellation/timeout errors remain distinguishable from service
-failures. Model identifiers stay open strings, including newly published
-Gateway speech, transcription, realtime and language aliases.
-
-## Native realtime, costs and uploaded assets
-
-`GatewayProvider.realtimeModel("openai/gpt-realtime-2")` implements the normalized
-Gateway WebSocket protocol. It supports ephemeral client-secret/team protocols
-and trusted server connections with fresh headers via
-`AIRealtimeSession.connectServer`. Transcription intent rejects before I/O;
-streaming transcription retains its separate route. Usage remains in the raw
-event envelope and is exposed through `event.usage`.
-
-`GatewayTools.deepseekSearch` and `deepseekFetch` expose Gateway-executed tools.
-Structured tool errors preserve retryAfter, statusText and additive fields in
-generation and streams. Generation info adds optional marketCost, surchargeCost
-and gatewayCost, preserving zero. Transcription returns independent words; the
-shared timestampGranularities setting warns because the wire route cannot
-forward it. Completed video outputs retain uploadedVideos without requiring
-URLs or inline bytes.
-
-An empty configured key falls through to current Vercel OIDC credentials; a
-nonempty invalid key remains selected. The client-only
-`gateway.experimental_streamingImageDecoding` flag is removed from the wire and
-warns when true. Native image results remain buffered base64: the incremental
-JSON/binary parser and reduced-memory result contract remain unimplemented.
+Task cancellation, `AIAbortError` and timeouts surface as cancellation errors, not
+as retryable Gateway failures.

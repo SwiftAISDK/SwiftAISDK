@@ -1,26 +1,26 @@
-# SwiftAIBlackForestLabs
+# Black Forest Labs for Swift
 
-Swift-native port of `@ai-sdk/black-forest-labs`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
+`SwiftAIBlackForestLabs` adds Black Forest Labs to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/black-forest-labs` and supports image generation and video generation.
+
+Provider guide with models, options, streaming and errors:
+
+- [Black Forest Labs](https://swiftaisdk.github.io/SwiftAISDK/providers/black-forest-labs/)
+
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAIBlackForestLabs` product from this package to your target, then create the provider:
 
 ```swift
+import SwiftAI
 import SwiftAIBlackForestLabs
 
-let provider = try BlackForestLabsProvider(configuration: .init(apiKey: "..."))
+let provider = try AIProviders.blackForestLabs(configuration: BlackForestLabsProviderSettings())
 ```
 
-Settings accept a custom base URL, headers, query parameters and an injected
-`AITransport`. Models use the common SwiftAIProvider protocols.
+By default the provider reads `BFL_API_KEY` and `BLACK_FOREST_LABS_API_KEY` from the environment; values set in `BlackForestLabsProviderSettings` take precedence.
 
-Run the standalone suite from the canonical checkout:
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
 
-```sh
-swift test --package-path Packages/swift-ai-black-forest-labs
-```
+## Contributing
 
-The canonical repository owns all edits. Distribution manifests and repositories
-are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
-
-See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/black-forest-labs.md) for authentication, options and supported surfaces.
-## Behavior notes
-
-Image submissions without `polling_url` use the configured `/get_result?id=...` endpoint. Only that fallback retries registration delays reported as `Task not found`, for at most 20 attempts and within the polling timeout. Explicit polling URLs and unrelated HTTP 404 errors fail without those retries.
+This package is exported from `Packages/swift-ai-black-forest-labs` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

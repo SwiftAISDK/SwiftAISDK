@@ -1,10 +1,41 @@
-# "openai"
+# OpenAI
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/openai/
 
+OpenAI Responses and Chat Completions language models with hosted tools, plus embeddings, images, speech, transcription, Decisions, extraction, files, skills, batch and Live realtime sessions. languageModel uses the Responses API; use chatModel for Chat Completions.
+
+Provider ID: `openai` · Upstream package: `@ai-sdk/openai`
+
 ## Package
 
-`@ai-sdk/openai`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-openai`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-openai.git", from: "1.3.1"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIOpenAI", package: "swift-ai-openai"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIOpenAI
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `OPENAI_API_KEY` | API key sent as a bearer token. Required unless passed in settings. |
+| `OPENAI_BASE_URL` | Optional base URL override. Defaults to https://api.openai.com/v1. |
 
 ## Factories
 
@@ -12,101 +43,247 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/openai/
 
 ## Capabilities
 
-- Language
-- Completion
-- Embedding
-- Image
-- Transcription
-- Speech
-- Evaluation
-- Decision
-- Extraction
-- Files
-- Skills
+- [Language](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/)
+- [Completion](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/)
+- [Embedding](https://swiftaisdk.github.io/SwiftAISDK/core/embeddings/)
+- [Image](https://swiftaisdk.github.io/SwiftAISDK/core/generate-image/)
+- [Transcription](https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/)
+- [Speech](https://swiftaisdk.github.io/SwiftAISDK/core/generate-speech/)
+- [Evaluation](https://swiftaisdk.github.io/SwiftAISDK/core/evaluate/)
+- [Decision](https://swiftaisdk.github.io/SwiftAISDK/core/decide/)
+- [Extraction](https://swiftaisdk.github.io/SwiftAISDK/core/extract/)
+- [Files](https://swiftaisdk.github.io/SwiftAISDK/core/files/)
+- [Skills](https://swiftaisdk.github.io/SwiftAISDK/core/files/)
 
-## Current reviewed behavior
+## Quick start
 
-The provider exposes `extractionModel(_:)` for experimental typed nullable field extraction through Responses. `providerOptions.openai.textFormat` fixes the initial text format independently of Output parsing; empty system messages can replay `textFormatUpdate`, `reasoningEffortUpdate` and `additionalTools` at their original position. Format changes require GPT-6 or later with standard reasoning and no automatic compaction/truncation. Combine consecutive format and reasoning changes in one empty control message. Additional tools accept function, custom and namespace definitions; hosted adapters also read OpenAI tool-result options.
+```swift
+import SwiftAISDK
 
-Set `promptCacheOptions.comparisonResponseId` to request comparison diagnostics. `providerMetadata.openai.promptCacheDiagnostics` preserves their raw fields across unary, streaming and batch results. OpenAI tool credentials are removed from telemetry copies while request/response values returned to applications remain intact. Image file, mask and markup downloads use the configured raw transport, without Azure provider credentials.
+let provider = try AIProviders.openAI() // reads OPENAI_API_KEY
+let model = try provider.languageModel("gpt-6.1-sol")
+let result = try await model.generateText("Write one sentence about Swift concurrency.")
+print(result.text)
+```
 
-## Decisions and current Responses behavior
+With modular packages, `import SwiftAI` and `import SwiftAIOpenAI`, then call
+`AIProviders.openAI(configuration: OpenAIProviderSettings(...))`. The native
+`configuration` argument has a default, so `AIProviders.openAI()` also works there.
 
-Use `provider.decisionModel("gpt-6-luna")` with [`AI.experimentalDecide`](../../core/decide/). OpenAI Decisions send `/decisions`, named questions and inline image evidence; the experimental Evaluation entry points remain available through the same native implementation. Choice, score and boolean questions can omit instructions. Boolean criteria still become predicate instructions. The native Decisions endpoint ignores `maxOutputTokens` and `reasoning`, reporting an unsupported warning for each supplied setting.
+## Umbrella and native providers
 
-GPT-6-sol/luna sampling and logprobs follow the final effective reasoning effort, including configuration updates. Typed tool errors are wrapped as `{ "error": value }` in OpenAI requests. Failed/incomplete web-search results keep error/status metadata in generation, streaming and batch results. Stored assistant references retain structured-output schema breakpoints.
+| Factory | Returns | Settings |
+| --- | --- | --- |
+| `AIProviders.openAI(settings:)` (umbrella) | `OpenAICompatibleProvider` | `ProviderSettings` |
+| `AIProviders.openAI(configuration:)` (native) | `OpenAIProvider` | `OpenAIProviderSettings` |
 
-[`Batch downloads`](../../core/batch-text/) accept `ProviderSettings.batchResultDownloads` with a default 64 MiB UTF-8 row limit.
+Both read `OPENAI_API_KEY` and `OPENAI_BASE_URL`, accept `organization` and
+`project` (sent as `OpenAI-Organization` and `OpenAI-Project`), and expose the
+same language, completion, embedding, image, speech, transcription, decision,
+extraction, files, skills and batch surfaces. Only the native provider offers
+`apiKeyProvider`, `webSocketTransport` and `streamingTranscriptionModel(_:)`.
 
-## Citation and history parity
+## Language models
 
-Responses text content exposes `citations` independently of `result.sources`; streaming text-end parts carry the same citations. Citation sources use stable URL or file IDs and retain provider UTF-16 offsets. Retrieved web URLs and deduplicated file-search documents populate standalone sources, including uncited retrieved documents. Annotation sources remain a fallback when retrieval data is absent; `file_path` annotations remain standalone sources only.
+- `languageModel(_:)` and `responses(_:)` use the Responses API.
+- `chatModel(_:)` (alias `chat(_:)`) uses Chat Completions.
+- `completionModel(_:)` uses the legacy Completions API, for example with
+`gpt-3.5-turbo-instruct`.
 
-For tools loaded during a conversation, attach `providerMetadata: ["openai": ["additionalTools": [...]]]` to an ordinary `AIToolResult`. Each strict function definition requires `type: "function"`, a nonempty `name`, and object `parameters`, with optional `description` and `strict`. The request inserts a developer `additional_tools` item immediately after that result. Set a function tool's `providerOptions.openai.omitFromRequestTools` to `true` to retain local execution and validation while omitting its top-level definition. Such tools cannot be forced or allow-listed until they are available through history.
+Provider options go under `providerOptions["openai"]`:
 
-Stored reasoning-model assistant text replays its content when the preceding reasoning was pruned. With `store: false`, provider-executed web-search results replay search/open-page/find-in-page actions. Custom tool streaming declares `inputEncoding: .text`. `webSearchPreview` is deprecated; use `webSearch`.
+```swift
+let result = try await model.generateText(
+    "Summarize this design document.",
+    options: LanguageGenerationOptions(
+        reasoning: "high",
+        providerOptions: ["openai": [
+            "store": false,
+            "parallelToolCalls": false,
+            "textVerbosity": "low",
+        ]]
+    )
+)
+```
 
-## Prompt cache prewarming and shell controls
+Common Responses keys: `store`, `parallelToolCalls`, `reasoningEffort`,
+`reasoningSummary`, `previousResponseId`, `conversation`, `serviceTier`,
+`textVerbosity`, `include`, `maxToolCalls`, `promptCacheKey`,
+`promptCacheOptions`, `safetyIdentifier`, `user`, `allowedTools` and
+`strictJsonSchema`.
 
-Responses accepts `providerOptions.openai.promptCacheOptions` with `mode: "implicit"` or `"explicit"`, `ttl: "30m"` or `"12h"`, and optional `prewarm: true`. A prewarm response or stream may contain no text and zero output tokens. Cache-write totals remain available in `TokenUsage`; `rawValue.input_tokens_details.cache_write_tokens_details` preserves the 30-minute and 12-hour token breakdown. User text parts forward `providerMetadata.openai.promptCacheBreakpoint`, including `ttl: "12h"` with `mode: "explicit"`, to the corresponding input content entry.
+### Reasoning
 
-Shell calls are marked `providerExecuted` for container environments and remain client calls for local execution. Shell tool-call input preserves `action.timeoutMs` and `action.maxOutputLength` when OpenAI supplies them. Shell results expose `maxOutputLength`; replaying assistant history with `store: false` or sending a tool result keeps that output limit. Null controls are omitted in generated and streamed tool input/results.
+Portable `reasoning` maps to the nearest supported effort, rounding down, and never
+silently disables reasoning. An explicit `reasoningEffort` is sent unchanged. On
+reasoning models, `temperature` and `topP` are removed with warnings. Chat maps
+`max` to the highest supported effort; Responses sends `max` to models that
+support it.
 
-## Transcription languages
+### Structured output
 
-Transcription normalizes recognized English language names and lowercase two-letter codes. When `language` is absent or unrecognized, exactly one valid entry in the returned `languages` list supplies `result.language`; mixed-language responses leave it unset. `providerMetadata.openai.languages` preserves the detected list, including an empty list, alongside diarized `segments`. Unknown language names and locale strings such as `en-US` no longer appear as normalized language codes.
-## Final-answer JSON and incomplete streams
+JSON schemas are normalized for OpenAI's strict mode. Function tools default to
+`strict: false`. For JSON responses, the last `final_answer` message becomes
+`structuredOutputText`, while `text` keeps every message, drafts included.
 
-For JSON Responses, the last message marked `final_answer` is exposed as
-`TextGenerationResult.structuredOutputText` for structured parsing. Full `text`,
-`content`, citations and message metadata still include draft messages. A missing
-selection uses concatenated text; an empty selection stays explicit. Ordinary
-text requests retain their existing full-content behavior.
+### Prompt caching
 
-Chat, Completion and Responses streams that end without a provider completion
-signal finish as `interrupted`. Preserve the partial output and choose whether
-to retry; tool execution and automatic continuation stop for that response.
+`promptCacheOptions` accepts `mode` (`implicit` or `explicit`), `ttl` (`30m` or
+`12h`) and `prewarm: true`. A prewarm call can return no text and zero output
+tokens. Cache-write totals are reported in `TokenUsage`. A user text part can
+set a breakpoint through `providerMetadata["openai"]["promptCacheBreakpoint"]`.
 
-## Current model and credential behavior
+### Interrupted streams
 
-`OpenAIProviderSettings.apiKeyProvider` accepts an async throwing closure. It runs before each authenticated HTTP request and server WebSocket connection, including Files, Skills and Batch requests; explicit provider/request authorization headers retain precedence. Static `apiKey` remains supported. `getResolvedServerWebSocketConfig()` resolves rotating credentials for direct Live connections; the existing synchronous configuration method remains available for static credentials.
+A Chat, Completion or Responses stream that ends without a completion signal
+finishes with reason `interrupted`. Keep the partial output and decide whether to
+retry; tool execution and automatic continuation stop for that response.
 
-Portable `reasoning` is mapped to the nearest supported effort, preferring a lower effort and never silently disabling reasoning. Explicit `providerOptions.openai.reasoningEffort` is sent unchanged. GPT-5.6 Chat function tools select effort `none` unless provider options override it; use Responses when combining those tools with reasoning. GPT-6.1 Terra supports effort `none` and sampling in that mode. Chat maps `max` to its highest supported effort; Responses can send `max` to supporting models. GPT-5 retains prompt cache retention and Responses logprobs while reasoning.
+## Hosted tools
 
-Decisions accepts `providerOptions.openai.promptCacheKey`. Object JSON evidence and nonempty arrays of objects use native `input_json` within 32 container levels, 10,000 values and 256 KiB of UTF-8 JSON. Other values and larger evidence retain their JSON text representation. JSON Schema `propertyNames` without an explicit type is removed with a compatibility warning; an explicit non-string type is rejected. A web-search item still marked `searching` at completion is an error result.
+`OpenAITools` provides Responses tools, including `webSearch`, `fileSearch`,
+`codeInterpreter`, `imageGeneration`, `mcp`, `shell`, `localShell`,
+`applyPatch`, `computer`, `toolSearch` and `programmaticToolCalling`.
 
-`provider.streamingTranscriptionModel("gpt-transcribe")` exposes native incremental transcription. `gpt-live-transcribe` and the existing `gpt-realtime-whisper` alias also support streaming; dated snapshots are accepted. Supply `OpenAIProviderSettings.webSocketTransport` for a custom native connection. The new models send language hints as `languages`; `gpt-transcribe` ignores `streaming.delay` with a warning. The Live and realtime-whisper families require streaming. REST transcription leaves response format unset unless requested, except Whisper (`verbose_json`) and diarization (`diarized_json`); segment timestamps default only with `verbose_json`. Duration falls back to duration-billed usage, while token usage does not invent a duration.
+```swift
+let result = try await model.generateText(
+    "What changed in the latest Swift release?",
+    tools: LanguageToolOptions(rawTools: ["web_search": OpenAITools.webSearch()])
+)
+print(result.sources)
+```
 
-## Refusals, tools and image controls
+`webSearchPreview` is deprecated; use `webSearch`. Citations are available on
+the text content separately from `result.sources`. To limit which tools the model
+may call, set `allowedTools` in provider options.
 
-Chat and Responses retain refusal text, ordered content and log probabilities.
-A refusal with a normal stop maps to `contentFilter`; a client tool call retains
-its finish precedence. Responses streams and batch results preserve refusal
-content and item/phase metadata. Low-level request metadata records the actual
-endpoint; high-level results expose only its origin.
+## Embeddings, images, speech and transcription
 
-Set a message-level `providerMetadata.openai.name` for system/developer/user or
-assistant names. Tool messages warn and omit the name. Content-part metadata does
-not supply a message name. Secure MCP tools accept `tunnelID` as an exclusive
-target alternative; code interpreter supports memory limits and disabled/allowlist
-network policies, including domain secrets.
+```swift
+let embedder = try provider.embeddingModel("text-embedding-3-small")
+let vectors = try await embedder.embedMany(["alpha", "beta"])
 
-GPT Image 2.6 accepts complexity, safety identifiers and GIF frame-count/duration
-controls for generation. GIF edits and mask-plus-markup combinations reject before
-I/O. Edit markup can be supplied as a data URL or downloaded URL; download aborts
-propagate.
+let image = try provider.imageModel("gpt-image-1")
+let picture = try await image.generateImage("A lighthouse at dusk", size: "1024x1024")
 
-Shared transcription `timestampGranularities` supplies word/segment requests when
-provider-specific timestamps are absent. Only `verbose_json` sends timestamp
-controls; `diarized_json` retains its own segments. Results expose independent
-`words`, and unsupported or excluded timing requests warn. REST language/keyword
-hint arrays use `languages[]`/`keywords[]`; empty arrays are omitted. Streaming
-models warn for unsupported hints.
+let tts = try provider.speechModel("gpt-4o-mini-tts")
+let speech = try await tts.generateSpeech("Hello!", voice: "alloy")
+```
 
-## Notes
+- Image edits take `files` and an optional `mask`. Input URLs are downloaded
+through your transport.
+- Transcription models include `whisper-1`, `gpt-4o-transcribe` and
+`gpt-4o-transcribe-diarize`. Whisper defaults to `verbose_json`, and diarization
+to `diarized_json`. Shared `timestampGranularities` requests word and segment
+timings, which only `verbose_json` returns. `providerMetadata["openai"]["languages"]`
+lists the detected languages.
+- Native streaming transcription: `streamingTranscriptionModel("gpt-transcribe")`,
+also `gpt-live-transcribe` and `gpt-realtime-whisper`. See
+[Transcribe](https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/).
 
-OpenAI mirrors upstream 4.0.118 across Chat Completions, Responses language models, completions, embeddings, images, speech, transcription, files, skills, hosted Responses tools, provider tool helpers, organization/project headers, structured output, usage details, response/provider metadata, warnings, raw stream chunks, provider references, Responses allowedTools for built-in and provider-defined tools with validated allow-list mappings and warnings, tool-search/namespace handling including blocked-domain filters, server-side compaction items, retryable pre-output stream failures, and Chat file-part mapping for image/audio/PDF inputs. File uploads serialize expiry options as nested `expires_after[anchor]` and `expires_after[seconds]` multipart fields; Chat metadata ignores zero-valued Azure content-filter placeholder timestamps while generic compatible providers preserve explicit epoch timestamps. The latest pass JSON-encodes function outputs that declare output schemas, keeps streaming output-item identity stable across rotating IDs through `output_index`, supports `serviceTier: fast`, and adds Responses programmatic tool calling with caller controls, output schemas, streamed/generated program items, and multi-step continuation; preserves stored tool-search IDs; and applies reasoning, sampling, service-tier, and image defaults to recognizable future OpenAI model versions. The current pass also adds terminal compaction triggers, previous-response function/output pairing, storage-disabled shell replay, MCP approval reference deduplication, distinct `openai.computer` actions/safety-check parsing and screenshot replay, plus durable Responses Batch V4 file upload, status, and streamed result conversion. Chat reasoning models strip unsupported sampling and penalty fields with upstream warnings, while `topLogprobs` is always omitted even when GPT-5.1+ permits non-reasoning parameters at effort `none`. The 4.0.52 pass also adds Batch webhook warnings and reconciled results/counts, embedding byte budgets, typed and schema-invalid stream failures, non-object tool-argument replay, function-name-aware tool-search history, scalar cache breakpoints, and safe identifier encoding. Browser WebRTC, ProviderV4 type names, ESM-only packaging, Node 22 engines, and workflow serialization helpers remain JS-runtime/package-surface concerns. The 4.0.60 pass adds GPT-6 and `reasoningEffortUpdate`, image-generation actions, diarized transcription and chunking, complete Files V4 metadata/download/delete and streaming upload operations, and Batch tool content plus input-file and expiry provider metadata. The 2026-09-20 pass adds the Evaluation V4 adapter, current Responses assistant/reference conversion and media abort handling, plus the portable server-WebSocket OpenAI Live adapter over continuous realtime sessions; browser WebRTC remains deferred. The 2026-09-27 pass makes audio transcripts a fallback for nil or empty chat content, supports GPT-6 Sol and Luna none reasoning updates with positioned validation and deduplication, defaults function tools to strict false, and removes unsupported regex lookarounds recursively. The 2026-10-04 pass expands recursive singleton allOf references while preserving true intersections, reports image file/mask capabilities, and preserves transcription billing usage. The 2026-10-11 pass: Decision V4 uses native /decisions with image evidence and refusals. GPT-6-sol/luna reasoning gates, failed web-search results, stored assistant IDs, typed OpenAI error codes and line-bounded batch downloads follow published behavior. The 2026-10-18 pass: Attached citations are separate from retrieved URL/document sources. History-loaded additionalTools, omitted top-level function definitions, pruned-reasoning replay and storage-disabled web-search replay are supported. Custom-tool deltas declare text encoding and final string inputs remain JSON encoded. webSearchPreview is deprecated. The 2026-10-23 pass: Responses supports 12h cache TTL, prewarm, nested cache-write token metadata and shell timeout/max-output fields; transcription normalizes language and retains metadata. Decision omits absent Choice/Score instructions and reports unsupported shared controls. The 2026-10-25 pass: JSON Responses select the last final_answer through structuredOutputText while retaining drafts and all content. Chat, Completion and Responses cutoffs report interrupted. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied. The 2026-11-15 delta and native/platform distinctions are recorded in WeeklyUpstreamAudit20261115; no full-package or live-service parity is implied.
+## Decisions, extraction and realtime
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+- `decisionModel("gpt-6-luna")` uses the native `/decisions` endpoint with
+[`AI.experimentalDecide`](https://swiftaisdk.github.io/SwiftAISDK/core/decide/). It ignores `maxOutputTokens` and
+`reasoning`, with a warning.
+- `extractionModel(_:)` extracts typed fields through Responses; see
+[Extract](https://swiftaisdk.github.io/SwiftAISDK/core/extract/).
+- `experimentalRealtime("gpt-live-1")` opens an OpenAI Live server WebSocket
+session; see [Realtime](https://swiftaisdk.github.io/SwiftAISDK/core/realtime/). Other realtime model IDs throw.
+Browser WebRTC is not available.
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+## Files, skills and batch
+
+`files()` uploads, lists, downloads and deletes files; `skills()` manages skills
+for the shell tool. `experimentalBatch()` and `batchLanguageModel(_:)` run
+Responses Batch jobs. `batchResultDownloads` limits each downloaded result line
+to 64 MiB by default. See [Files](https://swiftaisdk.github.io/SwiftAISDK/core/files/) and
+[Batch text](https://swiftaisdk.github.io/SwiftAISDK/core/batch-text/).
+
+## Advanced features
+
+### Mid-conversation configuration updates
+
+`providerOptions["openai"]["textFormat"]` sets the initial Responses text format
+separately from output parsing. To change settings partway through the history,
+insert an empty system message whose `providerMetadata["openai"]` carries
+`reasoningEffortUpdate` (`none`, `low`, `medium`, `high`, `xhigh`, `max`),
+`textFormatUpdate` or `additionalTools`. It is sent at that position:
+
+```swift
+let update = AIMessage(
+    role: .system,
+    content: [],
+    providerMetadata: ["openai": ["reasoningEffortUpdate": "low"]]
+)
+```
+
+Format and effort updates need GPT-6 or later in standard reasoning mode, without
+automatic compaction or `truncation: "auto"`; otherwise they throw before sending.
+Updates cannot be in consecutive messages, so put a format change and an effort
+change in the same empty message. Non-empty system messages with these keys throw.
+
+### Tools loaded during a conversation
+
+`additionalTools` can also be attached to an ordinary `AIToolResult` through
+`providerMetadata: ["openai": ["additionalTools": [...]]]`. The tools are inserted
+right after that result. Each definition needs `type: "function"`, a nonempty
+`name` and object `parameters`, with optional `description`, `strict` and
+`defer_loading`. To keep a function tool local but leave it out of the top-level
+tool list, set its `providerOptions.openai.omitFromRequestTools` to `true`. Such a
+tool cannot be forced or allow-listed until it appears in history.
+
+### Prompt-cache diagnostics
+
+Set `promptCacheOptions.comparisonResponseId` to an earlier response ID to request
+cache comparison diagnostics. Unary, streaming and batch results return the raw
+fields in `providerMetadata["openai"]["promptCacheDiagnostics"]`.
+
+### Decision evidence limits
+
+Decisions send JSON objects, and nonempty arrays of objects, as native
+`input_json` when they nest at most 32 levels deep, contain at most 10,000 values
+and encode to at most 256 KiB of UTF-8. Larger or other values are sent as JSON
+text. Image evidence accepts PNG, JPEG, WebP and GIF. `promptCacheKey` is
+supported in Decisions provider options.
+
+### GPT Image controls
+
+Image provider options accept `complexity` (`low`, `medium`, `high`),
+`safetyIdentifier` (up to 128 characters), `outputFormat`, `outputCompression`,
+`inputFidelity` and, for edits, `markup`. Generation can output `gif`, with
+`frameCount` (2–64) and `frameDurationMs` (20–2000). Edits reject `gif` output and
+ignore frame settings. `markup` can be a base64 data URL or a URL that is
+downloaded; it cannot be combined with `mask`. Invalid values throw before the
+request is sent. Image files, masks and markup are downloaded through your transport.
+
+### MCP tunnels
+
+`OpenAITools.mcp(serverLabel:..., tunnelID:)` connects through a secure tunnel.
+Each MCP tool needs exactly one target: `serverURL`, `connectorID`, or `tunnelID`
+alone. Combining `tunnelID` with the others throws.
+
+### Shell output limits
+
+Shell tool calls keep `action.timeoutMs` and `action.maxOutputLength` when OpenAI
+returns them, and shell results expose `maxOutputLength`. Replaying history with
+`store: false`, or sending a tool result, keeps that limit. Shell calls in container
+environments are marked provider-executed; calls for local execution stay client calls.
+`OpenAITools.shellAllowlistNetworkPolicy(allowedDomains:domainSecrets:)` and
+`shellDisabledNetworkPolicy()` control container network access.
+
+### Telemetry redaction
+
+OpenAI tool credentials, such as MCP authorization, are removed from telemetry
+copies. The request and response values returned to your app are unchanged.
+
+## Rotating API keys
+
+To rotate keys, set `OpenAIProviderSettings.apiKeyProvider` to an async throwing
+closure and pass it to `AIProviders.openAI(configuration:)`. It runs before every
+authenticated request and WebSocket connection, including Files, Skills and Batch.
+Explicit authorization headers still take precedence.
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

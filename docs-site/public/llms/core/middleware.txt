@@ -1,0 +1,187 @@
+# Middleware
+
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/middleware/
+
+Middleware wraps a model so every call through it can share defaults, rewrite
+the request, or post-process the result, without changing call sites. A wrapped
+model is an ordinary `any LanguageModel`, so `generateText`, `streamText`, tools
+and agents work with it unchanged.
+
+```swift
+import SwiftAISDK
+
+let provider = try AIProviders.openAI()
+let base = try provider.languageModel("gpt-6.1-sol")
+
+let model = wrapLanguageModel(
+    base,
+    middleware: [
+        defaultSettingsMiddleware(settings: AIDefaultLanguageModelSettings(
+            temperature: 0.2,
+            maxOutputTokens: 512
+        )),
+        defaultInstructionsMiddleware(instructions: "Answer in one short paragraph."),
+    ]
+)
+
+let result = try await model.generateText("Explain Swift actors.")
+print(result.text)
+```
+
+## How wrapping works
+
+`wrapLanguageModel(_:middleware:modelID:providerID:)` accepts one
+`AILanguageModelMiddleware` or an array. The first middleware in the array is
+the outermost: its `transformRequest` runs first, and its `wrapGenerate` /
+`wrapStream` wraps all later ones. Pass `modelID` or `providerID` to change the
+identity the wrapped model reports, for example in telemetry.
+
+Middleware runs for every model call, including each step of a tool loop.
+
+To wrap every model a provider returns, use `wrapProvider`:
+
+```swift
+let wrappedProvider = wrapProvider(
+    try AIProviders.openAI(),
+    languageModelMiddleware: defaultSettingsMiddleware(
+        settings: AIDefaultLanguageModelSettings(temperature: 0.2)
+    )
+)
+let model = try wrappedProvider.languageModel("gpt-6.1-sol")
+```
+
+`wrapProvider` also takes `imageModelMiddleware` and `embeddingModelMiddleware`.
+
+## Built-in middleware
+
+| Function | What it does |
+| --- | --- |
+| `defaultSettingsMiddleware(settings:)` | Fills request settings the caller left unset from an `AIDefaultLanguageModelSettings` value. |
+| `defaultInstructionsMiddleware(instructions:)` | Prepends system instructions (a `String` or `[AIMessage]`) when the request has no system message. |
+| `extractReasoningMiddleware(tagName:separator:startWithReasoning:)` | Moves text inside a tag such as `think` into `reasoning`. |
+| `extractReasoningMiddleware(delimiters:separator:startWithReasoning:)` | The same with custom `AIReasoningDelimiters`; throws if a delimiter is empty. |
+| `extractJSONMiddleware(transform:)` | Strips Markdown code fences around JSON output, or applies your own `transform`. `extractJsonMiddleware` is an alias. |
+| `simulateStreamingMiddleware()` | Serves `stream` calls by running a single `generate` call and replaying its result as stream parts. |
+| `addToolInputExamplesMiddleware(prefix:remove:format:)` | Appends each tool's `inputExamples` to its description for providers without native input-example support. |
+| `defaultEmbeddingSettingsMiddleware(settings:)` | Fills embedding `providerOptions` and `headers` from `AIDefaultEmbeddingModelSettings`. |
+
+### Default settings
+
+`AIDefaultLanguageModelSettings` accepts `temperature`, `topP`, `topK`,
+`presencePenalty`, `frequencyPenalty`, `seed`, `maxOutputTokens`,
+`stopSequences`, `responseFormat`, `reasoning`, `tools`, `toolChoice`,
+`providerOptions`, `extraBody` and `headers`. Values set on the request always
+win. Scalar settings apply only when the request leaves them nil;
+`stopSequences` apply only when the request has none. `providerOptions`,
+`extraBody` and `tools` are deep-merged, with request keys taking precedence,
+and request headers override default headers with the same name.
+
+### Reasoning and JSON extraction
+
+Some models write their reasoning inline, for example inside `think` tags.
+`extractReasoningMiddleware` splits it out, both for generated results and for
+streams:
+
+```swift
+let model = wrapLanguageModel(
+    try provider.languageModel("your-reasoning-model"),
+    middleware: extractReasoningMiddleware(tagName: "think")
+)
+
+let result = try await model.generateText("What is 17 * 23?")
+print(result.reasoning) // text that was inside the tags
+print(result.text)      // the remaining answer
+```
+
+Set `startWithReasoning: true` when the model omits the opening tag. Both
+extraction middleware also transform `structuredOutputText`, so they compose
+with [structured output](https://swiftaisdk.github.io/SwiftAISDK/core/structured-output/).
+
+### Tool input examples
+
+Give a tool `inputExamples`, then add the middleware for providers that do not
+accept examples natively:
+
+```swift
+let weather = AITool(
+    name: "weather",
+    description: "Get the current weather in a city.",
+    parameters: [
+        "type": "object",
+        "properties": ["city": ["type": "string"]],
+        "required": ["city"],
+    ],
+    inputExamples: [["input": ["city": "Tokyo"]]]
+) { input in
+    ["forecast": "sunny"]
+}
+
+let model = wrapLanguageModel(base, middleware: addToolInputExamplesMiddleware())
+```
+
+Each example is rendered as compact JSON (its `input` value when present) under
+the `Input Examples:` prefix. With the default `remove: true` the
+`inputExamples` field is then dropped from the tool definition. Pass `format` to
+render examples yourself from an `AIToolInputExampleFormatContext`.
+
+## Writing your own middleware
+
+An `AILanguageModelMiddleware` has five optional hooks:
+
+- `transformRequest` receives an `AILanguageModelTransformContext` (`type` is
+`.generate` or `.stream`, plus `request` and `model`) and returns the request
+to send.
+- `wrapGenerate` receives an `AILanguageModelGenerateContext`; call
+`doGenerate()` to run the inner model and return a possibly modified result.
+- `wrapStream` receives an `AILanguageModelStreamContext`; call `doStream()`
+and return a possibly transformed stream.
+- `overrideProviderID` and `overrideModelID` change the reported identity.
+
+```swift
+import Foundation
+
+let logging = AILanguageModelMiddleware(
+    transformRequest: { context in
+        var request = context.request
+        request.headers["x-request-source"] = "ios-app"
+        return request
+    },
+    wrapGenerate: { context in
+        let started = Date()
+        let result = try await context.doGenerate()
+        let seconds = Date().timeIntervalSince(started)
+        print(context.model.modelID, result.usage?.totalTokens ?? 0, seconds)
+        return result
+    }
+)
+
+let model = wrapLanguageModel(base, middleware: logging)
+```
+
+A middleware that sets only `wrapGenerate` leaves streaming untouched. Set
+`wrapStream` as well when the behavior must apply to `streamText`.
+
+## Image and embedding models
+
+`wrapImageModel(_:middleware:)` takes `AIImageModelMiddleware`, with
+`transformRequest`, `wrapGenerate`, identity overrides, and
+`overrideSupportsFileInputs` / `overrideSupportsMaskInputs` for reported
+capabilities:
+
+```swift
+let imageModel = wrapImageModel(
+    try provider.imageModel("gpt-image-1"),
+    middleware: AIImageModelMiddleware(transformRequest: { context in
+        var request = context.request
+        request.size = request.size ?? "1024x1024"
+        return request
+    })
+)
+```
+
+`wrapEmbeddingModel(_:middleware:)` takes `AIEmbeddingModelMiddleware`, with
+`transformRequest`, `wrapEmbed` and identity overrides.
+
+## Reference
+
+[Middleware API](https://swiftaisdk.github.io/SwiftAISDK/components/middleware/) lists every type and function.

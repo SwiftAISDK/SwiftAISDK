@@ -1,7 +1,85 @@
-## Portable reasoning
+## Quick start
 
-QuiverAI supports `low`, `medium`, `high`, and `xhigh`. Portable `none` and `minimal` map to `low`; `max` maps to `xhigh`, with compatibility warnings in generation and stream-start metadata. Explicit canonical provider `reasoningEffort` retains precedence and bypasses portable mapping.
+```swift
+import Foundation
+import SwiftAISDK
 
-## Rotating credentials
+let quiver = try AIProviders.quiverAI()
+let model = try quiver.imageModel("arrow-2")
+let result = try await model.generateImage("A minimalist fox logo")
+let svg = Data(base64Encoded: result.base64Images[0]).map { String(decoding: $0, as: UTF8.self) }
+```
 
-`QuiverAIProviderSettings.apiKeyProvider` accepts an async throwing key supplier resolved before each authenticated language or image request. Static keys remain available; provider/request authorization headers keep their precedence, and supplier failures stop the request before I/O.
+For the modular packages, use `import SwiftAI` and `import SwiftAIQuiverAI`, then
+`try AIProviders.quiverAI(configuration: QuiverAIProviderSettings(...))`. The native
+factory requires a configuration argument; `QuiverAIProviderSettings()` reads the
+environment.
+
+Image models produce SVG documents. Each entry in `base64Images` is the base64-encoded
+SVG markup. Known models are `arrow-1`, `arrow-1.1`, `arrow-1.1-max`, `arrow-2` and
+`arrow-2-telos`; other IDs are forwarded unchanged.
+
+## SVG operations
+
+Select the operation with `providerOptions["quiverai"]["operation"]`:
+
+| Operation | Endpoint | Input |
+| --- | --- | --- |
+| `generate` (default) | `/svgs/generations` | Nonempty prompt; up to 16 reference images in `files` (4 for `arrow-1` and `arrow-1.1`); `count` up to 16. |
+| `vectorize` | `/svgs/vectorizations` | Exactly one raster image in `files`; one SVG per call. |
+| `animate` | `/svgs/animations` | `arrow-2` / `arrow-2-telos` only; one source SVG in `files`; optional prompt. |
+| `edit` | `/svgs/edits` | `arrow-2` / `arrow-2-telos` only; one source SVG and an instruction of at most 4000 characters. |
+
+```swift
+let vector = try await model.generateImage(
+    "",
+    files: [ImageInputFile(url: "https://example.com/logo.png")],
+    providerOptions: ["quiverai": ["operation": "vectorize", "autoCrop": true, "targetSize": 1024]]
+)
+```
+
+Other options under `providerOptions["quiverai"]`:
+
+| Option | Behavior |
+| --- | --- |
+| `instructions` | Nonempty extra instructions for `generate`. |
+| `reasoningEffort` | `low`, `medium`, `high` or `xhigh`. |
+| `temperature`, `topP`, `presencePenalty` | 0–2, 0–1 and −2–2. |
+| `maxOutputTokens` | 1–131072; at most 65536 for Arrow 2 models. |
+| `attributes` | `viewBox` object with finite `minX`/`minY` and positive `width`/`height`. |
+| `autoCrop`, `targetSize` | Vectorize only; Boolean and 128–4096. |
+| `referenceImages`, `maxReviewSteps` | Edit only; up to four `url`/`base64` references and 0–5 review steps. |
+| `orchestratorMaxOutputTokens`, `shallowMaxOutputTokens` | Edit only; 1–65536. |
+
+Options that an operation does not support fail before the request is sent.
+`prepareQuiverAIImageReference(_:)` validates a `URL`, `Data` or string into a
+`QuiverAIImageReference` for `referenceImages`. Reference images may be GIF, JPEG, PNG,
+SVG or WebP. `size`, `aspectRatio`, `seed` and masks are ignored with warnings.
+`providerMetadata["quiverai"]` lists per-image metadata and any reported `credits`.
+
+## Arrow language models
+
+```swift
+let arrow = try quiver.languageModel("arrow-2")
+let result = try await arrow.generate(LanguageModelRequest(
+    messages: [.user("Render a diagram.")],
+    tools: ["render": QuiverAITools.customTool(name: "render", format: QuiverAITools.textFormat())]
+))
+```
+
+Language models use the Responses API at `/responses`. Use `QuiverAITools.customTool`
+for Quiver custom tools. Structured output (JSON schema response format) is not
+supported and produces a warning. Language provider options go under
+`providerOptions["quiverai"]`.
+
+QuiverAI reasoning supports `low`, `medium`, `high` and `xhigh`. Portable `none` and
+`minimal` map to `low`, and `max` maps to `xhigh`, with compatibility warnings. An
+explicit `reasoningEffort` provider option takes precedence.
+
+## Base URL and rotating credentials
+
+`QUIVERAI_BASE_URL` overrides the default `https://api.quiver.ai/v1` when no `baseURL`
+setting is given. The native `QuiverAIProviderSettings.apiKeyProvider` accepts an async
+throwing closure resolved before each authenticated language or image request; explicit
+authorization headers take precedence, and a supplier failure stops the request before
+it is sent.

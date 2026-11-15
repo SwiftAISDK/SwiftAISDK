@@ -1,10 +1,40 @@
-# "huggingface"
+# Hugging Face
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/huggingface/
 
+Open models through the Hugging Face inference router's Responses API, with function tools, reasoning, structured output and image input. Only language models are available.
+
+Provider ID: `huggingface` · Upstream package: `@ai-sdk/huggingface`
+
 ## Package
 
-`@ai-sdk/huggingface`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-huggingface`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-huggingface.git", from: "1.1.0"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIHuggingFace", package: "swift-ai-huggingface"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIHuggingFace
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `HUGGINGFACE_API_KEY` | Hugging Face access token, sent as a bearer token. Required unless passed in settings. |
 
 ## Factories
 
@@ -12,29 +42,80 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/huggingface/
 
 ## Capabilities
 
-- Language
+- [Language](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/)
 
-Hugging Face language calls use its Responses endpoint. A tool choice of
-`["type": "none"]` is forwarded as `tool_choice: "none"` while preserving the
-supplied function definitions.
+## Quick start
 
-If the SSE body ends before a completion event, the terminal part reports
-`finishReason == "interrupted"`. Malformed JSON and provider errors remain
-observable error parts and finish with `"error"`. Received text, reasoning,
-usage and metadata remain available through the native stream parts.
+```swift
+import SwiftAISDK
+
+let provider = try AIProviders.huggingFace()
+let model = try provider.languageModel("deepseek-ai/DeepSeek-V3-0324")
+let result = try await model.generateText("Explain what a tokenizer does.")
+print(result.text)
+```
+
+For a smaller dependency graph, use `import SwiftAI` and `import SwiftAIHuggingFace`
+with the native factory `AIProviders.huggingFace(configuration: HuggingFaceProviderSettings())`.
+The native factory requires the configuration argument; `HuggingFaceProviderSettings()`
+reads `HUGGINGFACE_API_KEY` from the environment. Requests use bearer
+authentication.
+
+## Responses API
+
+All language calls go to the Hugging Face router's Responses endpoint
+(`https://router.huggingface.co/v1/responses`). `languageModel(_:)`,
+`responsesModel(_:)`, `responses(_:)` and calling the provider directly return the
+same model. Embedding and image models are not available.
+
+Options under `providerOptions["huggingface"]`:
+
+| Key | Values |
+| --- | --- |
+| `metadata` | String-to-string dictionary |
+| `instructions` | System-style instructions string |
+| `reasoningEffort` | Reasoning effort string, sent as `reasoning.effort` |
+| `strictJsonSchema` | Boolean, strict mode for JSON Schema output (default `false`) |
+
+```swift
+let result = try await model.generateText(
+    "Solve 17 × 23 step by step.",
+    options: LanguageGenerationOptions(providerOptions: [
+        "huggingface": ["reasoningEffort": "high"],
+    ])
+)
+print(result.reasoning)
+```
+
+Invalid values fail before the request. `topK`, `seed`, `presencePenalty`,
+`frequencyPenalty` and `stopSequences` are not supported and produce warnings.
+
+## Tools, structured output and input
+
+- Function tools and tool choice are supported. Tool choice `none` is sent as
+`tool_choice: "none"` while keeping the tool definitions. Provider-defined tools
+are dropped with a warning.
+- Reasoning, function calls and MCP calls in the response are parsed into the
+standard result and stream parts.
+- [Structured output](https://swiftaisdk.github.io/SwiftAISDK/core/structured-output/) uses the Responses text
+format.
+- Image inputs work as URLs or inline data (PNG, JPEG, GIF, WebP; a generic
+`image` type is resolved from the bytes). Provider file references are rejected.
+
+## Streaming
+
+If the stream ends before a completion event, the final part reports
+`finishReason == "interrupted"`; text, reasoning, usage and metadata received so
+far stay available. Malformed JSON and provider errors appear as error parts and
+finish with `"error"`, keeping the provider's error type, code, status and
+retryability. The response ID is in `providerMetadata["huggingface"]["responseId"]`.
 
 ## Rotating credentials
 
-The native `HuggingFaceProviderSettings` accepts an optional
-`apiKeyProvider` asynchronous throwing closure. It is resolved for each
-authenticated request, so short-lived credentials can refresh without recreating
-the provider or model. Static `apiKey` settings remain supported. A supplier
-failure stops the request before it reaches the transport.
+`HuggingFaceProviderSettings(apiKeyProvider:)` takes an async throwing closure that
+is called before every authenticated request, so short-lived keys refresh without
+recreating the provider. If the closure throws, the request is not sent.
 
-## Notes
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Hugging Face Responses language models mirror upstream Hugging Face 2.0.93: `HUGGINGFACE_API_KEY`, custom base URL and headers, versioned user-agent suffix, callable/language/responses aliases, `/v1/responses` request builder, providerOptions.huggingface metadata/instructions/strictJsonSchema/reasoningEffort schema, structured text formats, function tools/tool choice, reasoning and MCP/tool-call parsing, streaming lifecycle and metadata, image URL/data file parts including top-level `image` and `image/*` MIME resolution, explicit provider-reference file rejection, and unsupported embedding/image families. Streamed provider failures preserve normalized type, code, status, retryability, and raw metadata. ProviderV4 type names, ESM-only packaging, Node 22 engines, default export rename to `huggingFace`, optional JS headers config, TypeScript option export split, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-25 pass: Responses toolChoice none retains definitions for facade enforcement; missing completion signals report interrupted. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied. The 2026-11-15 delta and native/platform distinctions are recorded in WeeklyUpstreamAudit20261115; no full-package or live-service parity is implied.
-
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
-
-Return to the [provider matrix](/SwiftAISDK/providers/).
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

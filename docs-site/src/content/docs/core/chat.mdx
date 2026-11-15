@@ -1,0 +1,191 @@
+---
+title: Chat
+description: Drive a SwiftUI chat view with AIChatSession, chat transports, and streamed UI messages.
+---
+
+`AIChatSession` keeps a chat transcript, sends it through a transport, and
+publishes streamed assistant updates. It is a `@MainActor` `ObservableObject`,
+so a SwiftUI view can observe it directly.
+
+```swift
+import SwiftUI
+import SwiftAISDK
+
+struct ChatView: View {
+    @StateObject private var session: AIChatSession
+    @State private var draft = ""
+
+    init(model: any LanguageModel) {
+        _session = StateObject(wrappedValue: AIChatSession(
+            transport: DirectAIChatTransport(model: model)
+        ))
+    }
+
+    var body: some View {
+        VStack {
+            List(session.messages, id: \.id) { message in
+                Text(message.text)
+                    .frame(
+                        maxWidth: .infinity,
+                        alignment: message.role == .user ? .trailing : .leading
+                    )
+            }
+            if let error = session.error {
+                Text(String(describing: error)).foregroundStyle(.red)
+            }
+            HStack {
+                TextField("Message", text: $draft)
+                if session.isRunning {
+                    Button("Stop") { session.stop() }
+                } else {
+                    Button("Send") {
+                        session.sendMessage(draft)
+                        draft = ""
+                    }
+                    .disabled(draft.isEmpty)
+                }
+            }
+            .padding()
+        }
+    }
+}
+```
+
+Create the view with a model from any provider, for example
+`ChatView(model: try AIProviders.openAI().languageModel("gpt-6.1-sol"))`.
+
+`sendMessage(_:)` appends a user message and an empty assistant message, then
+fills the assistant message as parts stream in. It returns a `Task` you can
+await, for example in tests.
+
+## Session state
+
+| Property | Meaning |
+| --- | --- |
+| `messages` | The transcript as `[AIUIMessage]`, including the streaming assistant message. |
+| `status` | `.ready`, `.submitted` (request sent), `.streaming`, or `.error`. |
+| `isRunning` | `true` while `status` is `.submitted` or `.streaming`. |
+| `error` | The last failure, cleared by `clearError()` or the next send. |
+
+Other controls:
+
+- `stop()` cancels the current response; `await stopAndWait()` also waits for it
+  to settle.
+- `regenerate()` replaces the last assistant response; pass `messageID:` to
+  regenerate from a specific message.
+- `sendMessage(_:replacingMessageID:)` edits an earlier user message and
+  discards everything after it.
+- `setMessages(_:)` restores a saved transcript.
+- `await dispose()` stops work and closes the transport.
+- `onFinish` receives an `AIChatSessionFinishEvent` with the final message and
+  whether the response finished, was aborted, disconnected, or failed.
+
+## UI messages
+
+An `AIUIMessage` has an `id`, a `role`, `metadata`, and ordered `parts`. The
+`text` and `reasoning` properties join the matching parts. To render rich
+content, switch over `AIUIMessagePart`:
+
+```swift
+import SwiftAISDK
+import SwiftUI
+
+@ViewBuilder
+func partView(_ part: AIUIMessagePart) -> some View {
+    switch part {
+    case let .text(text):
+        Text(text.text)
+    case let .reasoning(reasoning):
+        Text(reasoning.text).foregroundStyle(.secondary)
+    case let .toolCall(call):
+        Label("Calling \(call.name)", systemImage: "wrench")
+    case let .toolResult(result):
+        Label(result.isError ? "Tool failed" : "Tool finished", systemImage: "checkmark")
+    case let .error(message, _):
+        Text(message).foregroundStyle(.red)
+    default:
+        EmptyView()
+    }
+}
+```
+
+Text and reasoning parts carry a `state` of `.streaming` or `.done`. Other
+cases include `.source`, `.file`, `.toolApprovalRequest`,
+`.toolApprovalResponse`, `.data`, and `.metadata`.
+
+## Tools and approvals
+
+`DirectAIChatTransport` runs the same tool loop as
+[`generateText`](../generate-text/) on the device. Pass tools and loop settings
+to its initializer:
+
+```swift
+let transport = DirectAIChatTransport(
+    model: model,
+    executableTools: [weather],
+    maxSteps: 5
+)
+```
+
+Its `maxSteps` defaults to `5`. It also accepts `stopWhen`, `prepareStep`,
+`toolApproval`, `requestOptions`, `retryPolicy`, `telemetry`, and
+`sendReasoning` / `sendSources` / `sendFinish` flags that control which parts
+reach the UI.
+
+When a tool needs approval (see [Approvals](../tools/#approvals)), the assistant
+message contains a `.toolApprovalRequest` part. Answer it, then continue:
+
+```swift
+session.addToolApprovalResponse(
+    AIToolApprovalResponse(id: request.id, approved: true)
+)
+session.sendMessage()
+```
+
+Instead of calling `sendMessage()` yourself, you can pass
+`sendAutomaticallyWhen:` to the session initializer; it receives the transcript
+and returns whether to continue automatically. Results for tools your app runs
+itself go in with `addToolOutput(_:)`.
+
+## Agents and custom transports
+
+`DirectAIChatTransport` calls the provider from the app, so the provider key
+must be available on the device. Do not ship provider keys inside a distributed
+app: route requests through your own server with a custom transport instead.
+
+A transport conforms to `AIChatTransport` and returns a stream of assistant
+message snapshots for each `AIChatTransportRequest`. To back a chat with an
+[agent](../agents/), wrap `createAgentUIStream`:
+
+```swift
+struct AgentChatTransport: AIChatTransport {
+    let agent: AIToolLoopAgent
+
+    func sendMessages(
+        _ request: AIChatTransportRequest
+    ) throws -> AsyncThrowingStream<AIUIMessage, Error> {
+        try createAgentUIStream(
+            agent: agent,
+            uiMessages: request.messages,
+            options: AIAgentCallOptions(abortSignal: request.abortSignal),
+            messageID: request.responseMessageID ?? UUID().uuidString
+        )
+    }
+}
+```
+
+The request also carries `chatID`, `trigger`, `headers`, `body`, and `metadata`
+from `AIChatSessionRequestOptions`, which a server-backed transport can forward.
+Implement `reconnectToStream(_:)` if your backend can resume an interrupted
+response; the default returns `nil`.
+
+On a server, `validateUIMessages(_:)` checks an incoming transcript and
+`convertToModelMessages(_:)` turns it into `[AIMessage]` for any model call.
+`AIUIMessageStreamReducer.snapshots(from:messageID:)` turns a
+`LanguageStreamPart` stream into UI message snapshots; see
+[Stream text](../stream-text/#files-and-ui-snapshots).
+
+## Reference
+
+[Chat and UI messages API](../../components/chat-and-ui-messages/) lists every
+session, transport, message, validation, and conversion type.

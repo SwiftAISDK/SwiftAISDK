@@ -1,7 +1,58 @@
-## Rotating API keys
+## Quick start
 
-`VoyageProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import SwiftAISDK
+
+let voyage = try AIProviders.voyage()
+let model = try voyage.embeddingModel("voyage-4")
+let result = try await model.embed(
+    "Swift makes API boundaries explicit.",
+    providerOptions: ["voyage": ["inputType": "document"]]
+)
+print(result.embeddings.first?.count ?? 0)
+```
+
+For the modular packages, use `import SwiftAI` and `import SwiftAIVoyage`, then
+`try AIProviders.voyage(configuration: VoyageProviderSettings(...))`. The native factory
+requires a configuration argument; `VoyageProviderSettings()` reads `VOYAGE_API_KEY`.
+
+## Embeddings
+
+Embedding model IDs include `voyage-4-large`, `voyage-4`, `voyage-4-lite`,
+`voyage-4-nano`, `voyage-3.5`, `voyage-3.5-lite`, `voyage-code-3` and domain models
+such as `voyage-finance-2` and `voyage-law-2`. A single call accepts up to 128 inputs;
+`embedMany` splits larger batches. Embeddings are returned in input order, and missing
+usage is reported as zero tokens.
+
+Options under `providerOptions["voyage"]`:
+
+| Option | Behavior |
+| --- | --- |
+| `inputType` | `query`, `document` or null. |
+| `truncation` | Boolean. |
+| `outputDimension` | Number; overrides the shared `dimensions` argument. |
+| `outputDtype` | `float`, `int8`, `uint8`, `binary` or `ubinary`. |
+
+See [Embeddings](../../core/embeddings/).
+
+## Reranking
+
+```swift
+let reranker = try voyage.rerankingModel("rerank-2.5")
+let ranked = try await reranker.rerank(
+    query: "Which document explains actors?",
+    documents: ["Actors isolate state.", "Structs are value types."],
+    topK: 1
+)
+```
+
+Rerank model IDs include `rerank-2.5`, `rerank-2.5-lite`, `rerank-2` and
+`rerank-2-lite`. `providerOptions["voyage"]` accepts the Booleans `returnDocuments` and
+`truncation`. Object documents are converted to JSON strings with a compatibility
+warning. See [Rerank](../../core/rerank/).
+
+## Rotating credentials
+
+The native `VoyageProviderSettings` accepts `apiKeyProvider`, an async throwing closure
+resolved before each authenticated request. A supplier failure stops the request before
+it is sent.

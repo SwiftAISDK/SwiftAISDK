@@ -1,13 +1,26 @@
-# SwiftAICerebras
+# Cerebras for Swift
 
-Swift-native port of `@ai-sdk/cerebras`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
+`SwiftAICerebras` adds Cerebras to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/cerebras` and supports text generation.
 
-The canonical repository owns all source edits. This package owns its provider
-configuration and wire behavior, using only the declared shared dependencies.
-Existing upstream baselines, capabilities and documented gaps remain unchanged.
-See `Porting/map.json` and the canonical provider guide.
-## Behavior notes
+Provider guide with models, options, streaming and errors:
 
-`providerOptions.cerebras.queueThreshold` accepts an integer from 50 to 20,000 and sets the `queue_threshold` header, overriding caller header casing. Other dynamic `cerebras` options retain upstream pass-through behavior, including future service tiers. Returned `service_tier` is exposed as `providerMetadata.cerebras.serviceTier`; streams retain the last non-null effective tier.
+- [Cerebras](https://swiftaisdk.github.io/SwiftAISDK/providers/cerebras/)
 
-Model request metadata includes the actual configured request URL in both unary and streaming calls. Refusal strings are surfaced as text and turn a stopped response into `content-filter`; ordinary tool-call and structured-output finish handling is retained.
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAICerebras` product from this package to your target, then create the provider:
+
+```swift
+import SwiftAI
+import SwiftAICerebras
+
+let provider = try AIProviders.cerebras(configuration: CerebrasProviderSettings())
+```
+
+By default the provider reads `CEREBRAS_API_KEY` from the environment; values set in `CerebrasProviderSettings` take precedence.
+
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
+
+## Contributing
+
+This package is exported from `Packages/swift-ai-cerebras` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

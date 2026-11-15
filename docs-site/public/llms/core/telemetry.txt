@@ -38,14 +38,11 @@ struct TelemetryExample {
 }
 ```
 
-## Integrations
+`ConsoleTelemetry` is not an SDK type: the example defines it as a minimal
+`Telemetry.Integration` that prints each event. Later snippets on this page
+reuse it, so copy it into your project or substitute your own integration.
 
-Audio calls expose native billing JSON in `Telemetry.Event.providerUsage`,
-separately from language/embedding `TokenUsage`. Unary speech/transcription
-results and streaming transcription finishes also expose `usage`.
-`AI.streamTranscribe` measures bytes as the provider consumes chunks and emits
-one terminal end/error/abort event. Speech output records length and content
-type without including generated audio bytes.
+## Integrations
 
 Implement `Telemetry.Integration` to receive `Telemetry.Event` values. The default `executeLanguageModelCall` and `executeTool` implementations simply run the underlying operation, so most integrations only need `record(_:)`.
 
@@ -101,30 +98,48 @@ Telemetry events carry the operation, provider, model, call ID, duration, usage,
 - `abort` when the caller aborts the operation.
 - `error` when an operation fails.
 - `stepStart` and `stepEnd` for multi-step tool loops.
-- `modelCallStart` and `modelCallEnd` around an evaluation model call.
+- `modelCallStart` and `modelCallEnd` around a decision or evaluation model call.
+- `stepError` when a text-generation step fails.
 - `toolStart`, `toolEnd`, and `toolError` for tool execution.
 
-Common operation IDs include:
+Operation IDs by call:
 
-- `ai.generateText`
-- `ai.streamText`
-- `ai.generateObject`
-- `ai.streamObject`
-- `ai.embed`
-- `ai.embedMany`
-- `ai.generateImage`
-- `ai.transcribe`
-- `ai.generateSpeech`
-- `ai.generateVideo`
-- `ai.rerank`
-- `ai.evaluate`
-- `ai.evaluate.doEvaluate`
+| Area | Operation IDs |
+| --- | --- |
+| Text and objects | `ai.generateText`, `ai.streamText`, `ai.generateObject`, `ai.streamObject` |
+| Embeddings and reranking | `ai.embed`, `ai.embedMany`, `ai.rerank` |
+| Images and video | `ai.generateImage`, `ai.generateVideo` |
+| Audio | `ai.generateSpeech`, `ai.transcribe`, `ai.streamTranscribe`, `ai.generateAudio`, `ai.transformAudio` |
+| Decisions and evaluation | `ai.decide`, `ai.decide.doDecide`, `ai.evaluate`, `ai.evaluate.doEvaluate` |
+| Provider files and skills | `ai.uploadFile`, `ai.getFileMetadata`, `ai.downloadFile`, `ai.deleteFile`, `ai.uploadSkill` |
 
-Tool loop events use suffixed operation IDs such as `ai.generateText.step` and `ai.generateText.tool`.
+Tool loop events use suffixed operation IDs such as `ai.generateText.step` and
+`ai.generateText.tool`. Decisions and evaluations report the inner provider
+call with `modelCallStart` and `modelCallEnd` under their `.doDecide` and
+`.doEvaluate` IDs.
+
+[Extraction](https://swiftaisdk.github.io/SwiftAISDK/core/extract/), [batches](https://swiftaisdk.github.io/SwiftAISDK/core/batch-text/),
+[streaming speech](https://swiftaisdk.github.io/SwiftAISDK/core/stream-speech/) and [dubbing](https://swiftaisdk.github.io/SwiftAISDK/core/dubbing/) do not emit
+telemetry events; instrument those calls in your own code.
+
+## Audio usage
+
+Audio calls expose native billing JSON in `Telemetry.Event.providerUsage`,
+separately from language/embedding `TokenUsage`. Unary speech/transcription
+results and streaming transcription finishes also expose `usage`.
+`AI.streamTranscribe` measures bytes as the provider consumes chunks and emits
+one terminal end/error/abort event. Speech output records length and content
+type without including generated audio bytes.
 
 ## Privacy
 
 Telemetry can include prompts, tool arguments, generated output, provider metadata, and response metadata. Turn off input or output recording when events leave your process or go to a third-party backend.
+
+Provider models can also supply a `telemetryRedactor`. It sanitizes only the
+SDK-owned metadata copies sent to telemetry integrations; prompts, tool results,
+application context and the values returned to your code are unchanged. If the
+redactor fails, the affected metadata is omitted. It is not a general secret
+detector, so keep input/output recording off for sensitive content.
 
 ```swift
 let telemetry = Telemetry.Options(
@@ -142,7 +157,7 @@ let result = try await model.generateText(
 
 `includesInput` and `includesOutput` are copied onto each event so downstream integrations can preserve the caller's redaction intent.
 
-Evaluation can also carry request-local runtime context. Callbacks receive the
+Decisions and evaluations can also carry request-local runtime context. Callbacks receive the
 complete dictionary, while telemetry receives only keys explicitly allowlisted
 with `includeRuntimeContext`:
 
@@ -156,7 +171,7 @@ let telemetry = Telemetry.Options(
 )
 ```
 
-If the allowlist is omitted, evaluation telemetry records no runtime-context
+If the allowlist is omitted, telemetry records no runtime-context
 keys. This keeps application-only callback context from leaking to an
 observability integration by default.
 
@@ -187,11 +202,10 @@ Execution wrappers compose in the order integrations are registered or passed on
 
 Streaming telemetry records the start event before the stream emits parts and records a terminal event when the stream ends, fails, or is aborted. Stream failures surface through the `AsyncThrowingStream`, so collect telemetry and consume the stream in the same task boundary when you need correlated logs.
 
-When `streamRetries` recovers a retryable in-band provider error after output
-has started, telemetry emits a `retry` event with the incremented attempt,
-configured stream-retry maximum, and zero delay. Attempts remain under the same
-logical call ID; the ordinary `retryPolicy` continues to describe setup retry
-delays separately.
+When [`streamRetries`](https://swiftaisdk.github.io/SwiftAISDK/core/stream-text/#retry-behavior) recovers a stream after
+output has started, telemetry emits a `retry` event with the incremented
+attempt, the configured stream-retry maximum and zero delay, under the same
+call ID. Setup retries from `retryPolicy` report their delays separately.
 
 ```swift
 do {
@@ -211,11 +225,15 @@ do {
 }
 ```
 
-## Emitting version and failed steps
+## Contract version and failed steps
 
-Events emitted by the telemetry dispatcher now contain `aiVersion`, the reviewed upstream `ai` contract version (`7.0.165`). Both language-model execution contexts and tool execution contexts expose the same optional field. The field is absent on manually constructed contexts unless assigned; dispatch adds it to a copy and preserves the caller's value.
+Events emitted by the telemetry dispatcher contain `aiVersion`, the version of
+the AI SDK telemetry contract the event follows. Language-model and tool
+execution contexts expose the same optional field. It is absent on manually
+constructed contexts unless assigned; dispatch adds it to a copy and preserves
+the caller's value.
 
-`Telemetry.Event.Kind.stepError` closes a failed text-generation step before the call's terminal error/abort event. Its input contains the step number when input recording is enabled. Streaming provider error chunks still complete their step; streaming aborts and timeouts emit abort events instead of failed-step events. Existing telemetry input/output and runtime-context inclusion settings remain applicable.
+`Telemetry.Event.Kind.stepError` closes a failed text-generation step before the call's terminal error/abort event. Its input contains the step number when input recording is enabled. Streaming provider error chunks still complete their step; streaming aborts and timeouts emit abort events instead of failed-step events. Input/output and runtime-context inclusion settings apply to these events too.
 
 ## Request origins and content capture
 

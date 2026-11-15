@@ -1,22 +1,26 @@
-# SwiftAIGMICloud
+# GMI Cloud for Swift
 
-Swift-native port of `@ai-sdk/gmicloud`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
+`SwiftAIGMICloud` adds GMI Cloud to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/gmicloud` and supports text generation.
+
+Provider guide with models, options, streaming and errors:
+
+- [GMI Cloud](https://swiftaisdk.github.io/SwiftAISDK/providers/gmicloud/)
+
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAIGMICloud` product from this package to your target, then create the provider:
 
 ```swift
+import SwiftAI
 import SwiftAIGMICloud
 
-let provider = try GMICloudProvider(configuration: .init(apiKey: "..."))
+let provider = try AIProviders.gmiCloud(configuration: GMICloudProviderSettings())
 ```
 
-Settings accept a custom base URL, headers, query parameters and an injected
-`AITransport`. Models use the common SwiftAIProvider protocols. Existing upstream
-baselines, capabilities and documented gaps remain unchanged.
+By default the provider reads `GMI_CLOUD_APIKEY` from the environment; values set in `GMICloudProviderSettings` take precedence.
 
-Run the standalone suite from the canonical checkout:
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
 
-```sh
-swift test --package-path Packages/swift-ai-gmicloud
-```
+## Contributing
 
-The canonical repository owns all edits. Distribution manifests and repositories
-are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
+This package is exported from `Packages/swift-ai-gmicloud` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

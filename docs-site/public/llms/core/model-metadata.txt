@@ -2,8 +2,79 @@
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/model-metadata/
 
-## Descriptive model metadata
+Use capability discovery to decide, before making a request, whether a provider
+or model can do what your app needs: for example, to hide a "dub this video"
+button when the configured provider has no dubbing, or to skip Box questions for
+a decision model that cannot answer them. SwiftAISDK exposes two levels of
+metadata:
 
-`SwiftAIProvider` exposes `AIModelCapabilities`, `AIModelEntry<RequestConfiguration>`, `AIProviderOptionDefinitions` and `AIModelProviderOptions` for provider-owned catalogs. The types describe language, embedding, image, transcription, speech translation, speech, realtime, video, reranking and decision capabilities without changing request validation.
+- **Provider capabilities**: which model families (language, speech, dubbing…)
+a provider package implements.
+- **Model entries**: descriptive feature and provider-option support for
+individual model IDs, published by providers that ship a model catalog.
 
-`AIModelFeatureSupport` distinguishes `.supported`, `.unsupported`, `.unknown` and `.conditional("condition")`. Missing sections and provider-option keys remain undeclared, distinct from explicit unsupported values. Conditions are documentation, not executable rules. Codable representations use upstream Boolean/`"unknown"`/condition objects, and provider-option maps encode section names as JSON object keys.
+Neither level changes request validation. A call that a provider does not
+support still fails or warns at request time as usual.
+
+```swift
+import SwiftAISDK
+
+// Provider level: the generated catalog and a configured provider instance.
+if let row = AIProviderCapabilities.row(providerID: "elevenlabs"),
+   row.supports(.dubbing) {
+    print("Factories:", row.factoryNames)
+}
+
+let openAI = try AIProviders.openAI()
+let canEmbed = openAI.supportedCapabilities.contains(.embedding)
+
+// Model level: a provider-published model entry.
+let entry = getParallelDecisionModelEntry("fast")
+if let decision = entry.capabilities.decision,
+   decision.questionTypes.box == .supported {
+    print("Box questions are available")
+}
+```
+
+## Provider capabilities
+
+`ModelCapability` lists the families: `language`, `completion`, `embedding`,
+`image`, `transcription`, `speech`, `audioGeneration`, `audioTransformation`,
+`dubbing`, `video`, `reranking`, `evaluation`, `decision` and `extraction`.
+
+- Every provider exposes `supportedCapabilities`, a `Set<ModelCapability>`.
+- With the umbrella package, `AIProviderCapabilities.all` lists one
+`AIProviderCapabilityRow` per provider, with `providerID`, `upstreamPackage`,
+`factoryNames`, `supportedCapabilities`, `supportsFileUpload` and
+`supportsSkillUpload`. Look rows up with `row(providerID:)` or
+`rows(upstreamPackage:)`.
+
+The same data is rendered as the table on the [Providers](https://swiftaisdk.github.io/SwiftAISDK/providers/) page.
+A factory for an unsupported family throws `AIError.unsupportedModel` with the
+matching capability.
+
+## Model entries
+
+`SwiftAIProvider` defines the descriptive types that provider catalogs use:
+
+- `AIModelEntry<RequestConfiguration>` holds `capabilities`, optional
+`providerOptions`, and an optional provider-defined `requestConfig`.
+- `AIModelCapabilities` has optional sections for language, embedding, image,
+video, reranking, decision, transcription, speech translation, speech and
+realtime. A missing section means the catalog makes no claim.
+- `AIProviderOptionDefinitions` documents each provider option by section;
+`AIModelProviderOptions` records whether a model supports each option.
+
+`AIModelFeatureSupport` distinguishes `.supported`, `.unsupported`, `.unknown`
+and `.conditional("condition")`. Missing sections and provider-option keys
+remain undeclared, distinct from explicit unsupported values. Conditions are
+human-readable descriptions, not executable rules.
+
+The types are `Codable`. Support values encode as `true`, `false`, `"unknown"`
+or a `{"condition": …}` object, and provider-option maps encode section names
+as JSON object keys, so catalogs can be stored or shared as JSON.
+
+Providers that publish entries include [Parallel](https://swiftaisdk.github.io/SwiftAISDK/providers/parallel/)
+(`parallelModelCatalog`, `getParallelDecisionModelEntry(_:)`,
+`parallelProviderOptions`) and [HeyGen](https://swiftaisdk.github.io/SwiftAISDK/providers/heygen/)
+(`getHeyGenDecisionModelEntry(_:)`). See each provider page for its catalog.

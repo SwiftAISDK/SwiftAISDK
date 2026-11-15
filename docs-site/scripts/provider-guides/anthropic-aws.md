@@ -1,11 +1,70 @@
-The current shared Messages behavior exposes normalized citations while retaining raw citation metadata, avoids duplicate web-search sources, preserves tool definitions for `toolChoice: none`, and falls back to automatic tool choice with a warning under manual thinking. Tool-result file references and tool-search error transcripts use the same conversion as the direct Anthropic provider. AWS authentication, signing, regional routing, and workspace headers retain their existing behavior.
+## Quick start
 
-## Refreshable API keys
+```swift
+import SwiftAISDK
 
-`AnthropicAWSProviderSettings.apiKeyProvider` accepts an asynchronous throwing closure and resolves it before each HTTP request. A callback must return a non-empty key; failures and blank values stop the request before network I/O. Nonblank values retain their original whitespace, matching upstream authentication. Callback authentication selects `x-api-key` instead of SigV4; static keys and the existing AWS `credentialProvider` continue to work. The shared Messages adapter also retains top-level schema definitions and final text when a JSON response tool is not called.
-## Message threads
+let provider = try AIProviders.anthropicAWS(settings: AnthropicAWSProviderSettings(
+    region: "us-east-1",
+    workspaceID: "your-workspace-id"
+))
+let model = try provider.languageModel("claude-sonnet-4-6")
+let result = try await model.generateText("Say hello from Claude Platform on AWS.")
+print(result.text)
+```
 
-Claude Platform on AWS enables the same `providerOptions.anthropic.thread`
-create/continue objects as Anthropic. Keep full conversation history for expiry
-recovery. AWS authentication and workspace headers remain in the hosting settings.
-Bedrock InvokeModel is a separate surface and does not enable message threads.
+`AIProviders.anthropicAWS()` with no arguments reads the region and workspace from
+the environment. With modular packages, `import SwiftAI` and
+`import SwiftAIAnthropicAWS`, then call
+`AIProviders.anthropicAWS(configuration: AnthropicAWSProviderSettings(...))`; the
+native factory requires the configuration argument.
+
+Requests go to `https://aws-external-anthropic.<region>.api.aws/v1` and carry an
+`anthropic-workspace-id` header. A workspace ID is always required; a region is
+required unless you set `baseURL`. The region must be a single DNS label.
+`messages(...)` is an alias for `languageModel(...)`.
+
+## Authentication
+
+The provider picks the first available method:
+
+1. `apiKeyProvider`: an async throwing closure called before each request. It must
+   return a non-empty key; errors and blank values stop the request before it is
+   sent.
+2. `apiKey`, or `ANTHROPIC_AWS_API_KEY`, sent as `x-api-key`.
+3. AWS SigV4 signing (service `aws-external-anthropic`) with `credentialProvider`,
+   or with `accessKeyID`/`secretAccessKey`/`sessionToken`, or with
+   `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN`.
+
+```swift
+let provider = try AIProviders.anthropicAWS(settings: AnthropicAWSProviderSettings(
+    region: "us-east-1",
+    workspaceID: "your-workspace-id",
+    credentialProvider: {
+        // Your own credential source, for example an STS AssumeRole call.
+        let credentials = try await loadTemporaryAWSCredentials()
+        return AnthropicAWSCredentials(
+            accessKeyID: credentials.accessKeyID,
+            secretAccessKey: credentials.secretAccessKey,
+            sessionToken: credentials.sessionToken
+        )
+    }
+))
+```
+
+The provider does not run the AWS SDK credential chain; supply credentials through
+settings, a `credentialProvider` closure, or the environment variables above.
+Header values with non-ASCII characters are sent but excluded from the signature.
+
+## Messages features
+
+The provider uses the same Messages adapter as [Anthropic](../anthropic/), so
+`providerOptions["anthropic"]` (thinking, effort, cache control, structured output
+mode and the rest), `AnthropicTools`, citations and streaming behave as described
+there.
+
+Message threads are enabled: pass `providerOptions["anthropic"]["thread"]` with
+`["type": "create"]` or `["type": "continue", "previousMessageId": "msg_..."]`,
+and keep the full history locally for recovery when a thread expires.
+
+`provider.files()` and `provider.skills()` return Files and Skills clients for the
+workspace. Message batches are only available on the direct Anthropic provider.

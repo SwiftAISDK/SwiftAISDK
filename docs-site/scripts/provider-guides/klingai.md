@@ -1,10 +1,97 @@
-## Rotating API keys
+## Quick start
 
-`KlingAIProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import SwiftAISDK
 
-Returned keys are trimmed. Blank callback results follow the existing environment
-or legacy key-pair fallback; legacy JWTs are generated for each request.
+let provider = try AIProviders.klingAI() // reads KLINGAI_API_KEY
+let model = try provider.videoModel("kling-v2.6-t2v")
+let result = try await model.generateVideo(
+    "A paper boat drifting down a rainy street, cinematic.",
+    aspectRatio: "16:9",
+    durationSeconds: 5
+)
+print(result.urls)
+```
+
+With modular packages, `import SwiftAI` and `import SwiftAIKlingAI`, then call
+`AIProviders.klingAI(configuration: KlingAIProviderSettings(...))`. The native
+factory requires the `configuration` argument. The umbrella factory takes the same
+`KlingAIProviderSettings` through `settings:`.
+
+## Authentication
+
+Credentials are resolved in this order. Values are trimmed, and blank values are
+skipped.
+
+1. `KlingAIProviderSettings.apiKey`, sent as a bearer token.
+2. `accessKey` and `secretKey` in settings, when both are set.
+3. `KLINGAI_API_KEY`.
+4. A legacy access/secret key pair from settings or `KLINGAI_ACCESS_KEY` and
+   `KLINGAI_SECRET_KEY`. The provider signs a short-lived HS256 JWT for each
+   request.
+
+If only one half of a key pair is found, creating the provider throws
+`AIError.missingAPIKey` that names the missing variable. Set `environment` in
+settings to read from a dictionary instead of the process environment. The
+default base URL is `https://api-singapore.klingai.com`.
+
+To rotate keys, set `apiKeyProvider` to an async throwing closure. It runs before
+each request; a blank result falls back to the environment or the legacy key pair.
+
+## Model IDs and modes
+
+The suffix of the model ID selects the endpoint:
+
+| Suffix | Endpoint | Example |
+| --- | --- | --- |
+| `-t2v` | Text to video | `kling-v2.6-t2v` |
+| `-i2v` | Image to video; multi-image when `inputReferences` is set | `kling-v2.6-i2v` |
+| `-motion-control` | Motion control | `kling-v2.6-motion-control` |
+
+Other IDs throw `AIError.unsupportedModel`. Each call produces one video, returned
+as `video/mp4` URLs.
+
+- Image to video takes the start frame from a `.firstFrame` entry in `frameImages`
+  or from `image`. A `.lastFrame` entry becomes `image_tail`. Video files are not
+  accepted as frames.
+- `inputReferences` on an `-i2v` model switches to multi-image reference video.
+  That mode does not take separate start or last frames, and references are
+  ignored when `frameImages` is set.
+- `generateAudio` becomes `sound` (`on` or `off`) and takes precedence over
+  `sound` in provider options.
+- Unsupported standard options (`resolution`, `seed`, `fps`, more than one video,
+  `aspectRatio` on image-to-video or motion control) return warnings.
+
+## Provider options
+
+Use `providerOptions["klingai"]` with camelCase keys. Known keys are validated and
+converted to the API's snake_case names; unknown keys pass through unchanged.
+
+```swift
+let result = try await model.generateVideo(
+    "A fox running through snow.",
+    providerOptions: [
+        "klingai": [
+            "mode": "pro",
+            "negativePrompt": "blurry, low quality",
+            "cfgScale": 0.5,
+            "pollTimeoutMs": 900_000,
+        ],
+    ]
+)
+```
+
+Useful keys: `mode` (`std` or `pro`), `negativePrompt`, `cfgScale`,
+`cameraControl`, `sound`, `multiShot`, `shotType`, `multiPrompt`, `elementList`,
+`voiceList`, `staticMask`, `dynamicMasks`, `watermarkEnabled`, and polling with
+`pollIntervalMs` (default 5 seconds) and `pollTimeoutMs` (default 10 minutes).
+
+Motion control requires `videoUrl`, `characterOrientation` (`image` or `video`)
+and `mode`, and accepts `keepOriginalSound` (`yes` or `no`).
+
+## Async operations
+
+`KlingAIVideoModel` also supports `startVideoGeneration` and
+`videoGenerationStatus`. A webhook URL is sent as `callback_url`. Status polling
+follows only validated redirects and never sends credentials to another origin.
+See [Generate video](../../core/generate-video/).

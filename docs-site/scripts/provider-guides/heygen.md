@@ -1,9 +1,4 @@
-## Generate a video
-
-The HeyGen adapter follows `@ai-sdk/heygen@3.0.25`. Set `HEYGEN_API_KEY` or pass
-`ProviderSettings(apiKey:)`; `baseURL`, custom headers and `transport` support
-proxies and testing. Swift resolves credentials when `AIProviders.heyGen()` is
-created. The JavaScript factory resolves them lazily at request time.
+## Quick start
 
 ```swift
 import SwiftAISDK
@@ -29,19 +24,62 @@ let video = try await AI.generateVideo(
 print(video.urls.first ?? "No video URL returned")
 ```
 
-`video(...)` and `videoModel(...)` are aliases. Future model IDs are forwarded
-unchanged. HeyGen uses asynchronous start/status operations, which
-`AI.generateVideo` selects automatically; its unary model call is unsupported.
-Each operation generates one MP4 with audio at 24 fps. `count` above one on the
-facade starts separate operations and merges results in order. `AI.startVideo`
-accepts one video per operation. Direct model starts warn for a count above one,
-non-24 `fps`, or `generateAudio: false` and omit those controls from the request.
+For a smaller dependency graph, use `import SwiftAI` and `import SwiftAIHeyGen`
+with the native factory `AIProviders.heyGen(configuration: HeyGenProviderSettings())`.
+The native factory requires the configuration argument. Requests authenticate
+with the `x-api-key` header.
 
-## First-frame image and reference video
+`AIProviders.heyGen()` reads `HEYGEN_API_KEY` when the provider is created and
+throws if it is missing. The native provider resolves the key when a request is
+made. Rotating credentials need the native settings.
 
-Use either `image` or one `.firstFrame` in `frameImages` for image-to-video.
-URL inputs must use HTTPS. Local `Data` is encoded once as base64; it needs an
-explicit `image/*` media type. HeyGen fetches asset URLs itself.
+A runnable example lives in `Examples/Sources/GenerateWithHeyGen/main.swift`:
+`swift run --package-path Examples GenerateWithHeyGen` prints usage without
+calling the API.
+
+## Video generation
+
+`video(_:)` and `videoModel(_:)` are aliases, and future model IDs are passed
+through unchanged. HeyGen jobs are asynchronous; `AI.generateVideo` starts the
+job and polls its status. Calling the model's unary generate method directly is
+not supported.
+
+- Each job produces one MP4 with audio at 24 fps. A facade `count` above one
+  starts separate jobs and merges the results in order; `AI.startVideo` accepts
+  one video per job. Direct model starts warn about a `count` above one, `fps`
+  other than 24, or `generateAudio: false`, and leave those controls out.
+- Prompts must be 1–32,000 UTF-16 code units. `durationSeconds` must be a
+  positive whole number and defaults to 5; longer clips are passed through and
+  the service enforces its limits. Seeds range from 0 to 4,294,967,295.
+- `promptEnhancement`: `.turbo`, `.quality`, `.ultraquality` or `.disabled`;
+  omit it to use HeyGen's default.
+- Provider rejections keep their status and message; the SDK does not clamp or
+  retry a direct start request.
+
+### Resolution and aspect ratio
+
+`HeyGenVideoModelOptions(resolution:)` selects `.p480`, `.p768` (default),
+`.p1080` or `.twoK`, and overrides the request `resolution`. Standard frame sizes
+map to a class and ratio:
+
+| Class | Frame sizes |
+| --- | --- |
+| 480p | `960x416`, `832x480`, `640x480`, `480x480`, `480x640`, `480x832` |
+| 768p | `1536x672`, `1344x768`, `1024x768`, `768x768`, `768x1024`, `768x1344` |
+| 1080p | `1890x1080`, `1080x1890` |
+| 2k | `2688x1536`, `1536x2688` |
+
+Text-to-video defaults to `16:9` and reference-to-video to `adaptive`. Supported
+ratios are `21:9`, `16:9`, `4:3`, `1:1`, `3:4` and `9:16`. At 1080p or 2k,
+text and reference generation require `16:9` or `9:16`, so set a ratio explicitly
+for references. Image-to-video uses the first frame's ratio, omits
+`aspect_ratio`, and warns if you supplied one.
+
+## First frames and references
+
+Use either `image` or a single `.firstFrame` in `frameImages` for image-to-video.
+URLs must use HTTPS, and HeyGen fetches them itself. Local `Data` is sent as
+base64 and needs an explicit `image/*` media type.
 
 ```swift
 let firstFrame = VideoGenerationRequest(
@@ -57,7 +95,7 @@ let references = VideoGenerationRequest(
     inputReferences: [
         ImageInputFile(url: "https://example.com/subject.png", mediaType: "image/png"),
         ImageInputFile(url: "https://example.com/motion.mp4", mediaType: "video/mp4"),
-        ImageInputFile(url: "https://example.com/sound.mp3", mediaType: "audio/mpeg")
+        ImageInputFile(url: "https://example.com/sound.mp3", mediaType: "audio/mpeg"),
     ],
     providerOptions: HeyGenVideoModelOptions(
         referenceImages: [.assetID("your-workspace-image-asset-id")]
@@ -65,118 +103,73 @@ let references = VideoGenerationRequest(
 )
 ```
 
-Reference inputs need an explicit `image/*`, `video/*`, or `audio/*` media type;
-they are grouped by kind, retaining order within each group. Provider-option
-references append to the corresponding standard-input group. Typed assets
-support `.url(...)`, `.assetID(...)`, and `.base64(data:mediaType:)` under
-`image`, `referenceImages`, `referenceVideos`, and `referenceAudio`. Existing
-base64 text is forwarded unchanged. Raw JSON options use `type: "asset_id"` with
-`assetId`, or `type: "base64"` with `mediaType` and `data`.
+- Reference inputs need an explicit `image/*`, `video/*` or `audio/*` media type.
+  They are grouped by kind, keeping order within each group; provider-option
+  references are appended to the matching group.
+- `HeyGenVideoAsset` supports `.url(_:)`, `.assetID(_:)` and
+  `.base64(data:mediaType:)` for `image`, `referenceImages`, `referenceVideos`
+  and `referenceAudio`.
+- The mode is inferred from the inputs, or set with `mode:` (`.textToVideo`,
+  `.imageToVideo`, `.referenceToVideo`). Conflicting modes, an image combined
+  with references, last frames and multiple first frames are rejected before the
+  request.
+- Reference-to-video needs at least one image or video. Limits: 9 images,
+  3 videos, 3 audio clips, 12 references in total.
 
-The mode is inferred from the inputs, or specified with `.textToVideo`,
-`.imageToVideo`, or `.referenceToVideo`. The SDK rejects conflicting modes,
-image plus references, standard plus provider-option first images, last frames,
-and multiple first frames before I/O. Reference-to-video requires at least one
-image or video; audio-only conditioning is invalid. Limits are 9 images,
-3 videos, 3 audio references, and 12 references total.
-
-## Output controls
-
-Prompts require 1–32,000 UTF-16 code units. Duration is a positive integer number of seconds and defaults to 5. Longer requests, including 30- and 60-second clips, pass through unchanged; the service enforces limits for the selected settings. Seeds range from 0 to 4,294,967,295.
-`promptEnhancement` accepts `.turbo`, `.quality`, `.ultraquality`, or `.disabled`; omission lets HeyGen apply its API default. A provider duration rejection retains the original status and message; the SDK does not clamp or automatically retry a direct start request.
-
-Typed `resolution` selects `.p480`, `.p768`, `.p1080`, or `.twoK` and overrides
-the standard `resolution` frame size. The default is 768p. These standard
-frame sizes map to a size class and aspect ratio:
-
-| Class | Frame sizes |
-| --- | --- |
-| 480p | `960x416`, `832x480`, `640x480`, `480x480`, `480x640`, `480x832` |
-| 768p | `1536x672`, `1344x768`, `1024x768`, `768x768`, `768x1024`, `768x1344` |
-| 1080p | `1890x1080`, `1080x1890` |
-| 2k | `2688x1536`, `1536x2688` |
-
-Text-to-video defaults to `16:9`; reference-to-video defaults to `adaptive`.
-Supported explicit ratios are `21:9`, `16:9`, `4:3`, `1:1`, `3:4`, and `9:16`.
-Text/reference generation at 1080p or 2k requires `16:9` or `9:16`; select a
-ratio explicitly when using the reference default. Image-to-video inherits the
-first frame ratio, omits `aspect_ratio` from the API request, and warns when a
-standard ratio or mapped frame size was supplied. Its resolution still applies.
-
-## Persist and resume an operation
+## Persist and resume a job
 
 ```swift
 import Foundation
 
 let started = try await AI.startVideo(model: model, request: firstFrame)
 let saved = try JSONEncoder().encode(started.operation)
-// Persist saved with application storage; it contains videoId, mode and resolution.
+// Store `saved`; it contains the video ID, mode and resolution.
+
 let restored = try JSONDecoder().decode(JSONValue.self, from: saved)
-let status = try await AI.getVideoStatus(model: model, operation: restored)
-switch status {
+switch try await AI.getVideoStatus(model: model, operation: restored) {
 case .pending: print("Check again later")
 case let .failed(message, _, _): print(message)
 case let .completed(result): print(result.urls)
 }
 ```
 
-Resume with a newly created HeyGen model using the same model ID and workspace
-credentials. Status maps `pending`/`processing` to `.pending` and
-`failed`/`cancelled` to `.failed` with HeyGen's message and failure code.
-Unexpected states or completion without a URL fail explicitly. HTTP errors
-preserve status, response headers/body, retryability, and structured code/param
-details. Start retries retain one idempotency key; a caller-supplied header wins.
+Resume with a model that has the same ID and workspace credentials. `pending` and
+`processing` map to `.pending`; `failed` and `cancelled` map to `.failed` with
+HeyGen's message and failure code. HTTP errors keep status, headers, body,
+retryability and structured code details. Start retries reuse one idempotency key
+unless you supply your own header. Credentials are removed when a status request
+redirects to another origin.
 
-Completion returns the signed MP4 URL without downloading the file. Check the
-operation again to refresh an expired URL. Reported duration, dimensions,
-aspect ratio, seed, inference timing and failure code are preserved under
-`providerMetadata["heygen"]?["videos"]?[0]` for completed videos; start/pending/
-failure metadata uses `providerMetadata["heygen"]`. Duration is the actual
-reported value, which can be fractional. The adapter reports no invented token
-or credit usage. Credentials are removed from status redirects to other origins.
+Completion returns a signed MP4 URL without downloading the file; check the job
+again to refresh an expired URL. Duration (possibly fractional), dimensions,
+aspect ratio, seed, timing and failure code are in
+`providerMetadata["heygen"]?["videos"]?[0]` for completed videos and in
+`providerMetadata["heygen"]` otherwise. No token or credit usage is reported.
 
-HeyGen's upstream package has no remote cancellation or video webhook adapter.
-Stopping polling aborts local waiting and leaves the operation resumable; it
-does not cancel the remote job. Supplying a webhook factory warns and falls
-back to polling without invoking it. Avatar, voice, translation APIs and
-JavaScript workflow/model serialization are outside this video provider.
+There is no remote cancellation or webhook support. Stopping polling only stops
+the local wait and leaves the job resumable. A webhook factory produces a warning
+and the SDK polls instead. Avatar, voice and translation APIs are not part of
+this provider.
 
-The compile-checked example is `Examples/Sources/GenerateWithHeyGen/main.swift`.
-Run `swift run --package-path Examples GenerateWithHeyGen` for usage without API
-calls. The `text`, `image`, `reference`, `start`, and `resume` commands call HeyGen.
+## Decisions
+
+```swift
+let result = try await AI.experimentalDecide(
+    model: try heyGen.decisionModel("heygen-decision-1"),
+    state: .text("Video export fails for everyone."),
+    questions: ["blocked": .boolean(instructions: "Is the customer unable to work?")]
+)
+print(result.answers)
+```
+
+Decisions use `/v3/models/decisions` with Boolean, Choice and Score questions:
+up to 400 questions, four images and one video. Probabilities keep full
+precision, and confidence, score legends, answer warnings, usage and response
+metadata are returned. Box questions and files other than images or video are
+rejected before the request.
 
 ## Rotating credentials
 
-The native `HeyGenProviderSettings` accepts an optional
-`apiKeyProvider` asynchronous throwing closure. It is resolved for each
-authenticated request, so short-lived credentials can refresh without recreating
-the provider or model. Static `apiKey` settings remain supported. A supplier
-failure stops the request before it reaches the transport.
-
-
-## Native decisions
-
-Use the native `HeyGenProvider` (or `AIProviders.heyGen(configuration:)`) for
-boolean, choice and score decisions through `/v3/models/decisions`:
-
-```swift
-import SwiftAIProvider
-import SwiftAIHeyGen
-
-let provider = try HeyGenProvider(configuration: .init()) // HEYGEN_API_KEY
-let model = try provider.decisionModel("heygen-decision-1")
-let result = try await model.doDecide(.init(
-    state: [.text("Video export fails for everyone.")],
-    questions: ["blocked": .boolean(instructions: "Is the customer unable to work?")]
-))
-```
-
-Keys resolve when a request is made. The native initializer keeps its existing
-throwing signature. A decision accepts up to 400 questions, four images and one
-video. It preserves full-precision probabilities, confidence, score legends,
-answer warnings, usage and response metadata. Box questions and non-image/video
-files are rejected before HTTP. Workflow symbol serialization and JavaScript
-file-union shapes are outside the Swift API.
-
-The compatibility `settings:` factory retains its existing credential timing
-and request identity; its Decision selector forwards to the native adapter.
+`HeyGenProviderSettings(apiKeyProvider:)` takes an async throwing closure that is
+called before every authenticated request, so short-lived keys refresh without
+recreating the provider. If the closure throws, the request is not sent.

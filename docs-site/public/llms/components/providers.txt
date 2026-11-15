@@ -17,7 +17,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Function | 53 |
 | Global Variable | 16 |
 | Initializer | 192 |
-| Instance Method | 691 |
+| Instance Method | 692 |
 | Instance Property | 842 |
 | Protocol | 1 |
 | Structure | 105 |
@@ -1041,6 +1041,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Instance Method | `SwiftAITogetherAI.completion(_:)` | `func completion(_ modelID: String) throws -> any LanguageModel` | [Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift) |
 | Instance Method | `SwiftAITogetherAI.completionModel(_:)` | `func completionModel(_ modelID: String) throws -> any LanguageModel` | [Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift) |
 | Instance Method | `SwiftAITogetherAI.embeddingModel(_:)` | `func embeddingModel(_ modelID: String) throws -> any EmbeddingModel` | [Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift) |
+| Instance Method | `SwiftAITogetherAI.httpStatusError(_:)` | `func httpStatusError(_ response: AIHTTPResponse) -> AIError` | [Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift) |
 | Instance Method | `SwiftAITogetherAI.imageModel(_:)` | `func imageModel(_ modelID: String) throws -> any ImageModel` | [Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift) |
 | Instance Method | `SwiftAITogetherAI.languageModel(_:)` | `func languageModel(_ modelID: String) throws -> any LanguageModel` | [Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift) |
 | Instance Method | `SwiftAITogetherAI.rerankingModel(_:)` | `func rerankingModel(_ modelID: String) throws -> any RerankingModel` | [Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift) |

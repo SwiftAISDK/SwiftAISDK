@@ -1,10 +1,40 @@
-# "voyage"
+# Voyage AI
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/voyage/
 
+Voyage AI text embeddings, including general, code and domain models, and document reranking. Embedding calls accept up to 128 inputs each.
+
+Provider ID: `voyage` · Upstream package: `@ai-sdk/voyage`
+
 ## Package
 
-`@ai-sdk/voyage`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-voyage`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-voyage.git", from: "1.1.3"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIVoyage", package: "swift-ai-voyage"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIVoyage
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `VOYAGE_API_KEY` | API key. Required unless passed in settings. |
 
 ## Factories
 
@@ -12,21 +42,68 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/voyage/
 
 ## Capabilities
 
-- Embedding
-- Reranking
+- [Embedding](https://swiftaisdk.github.io/SwiftAISDK/core/embeddings/)
+- [Reranking](https://swiftaisdk.github.io/SwiftAISDK/core/rerank/)
 
-## Rotating API keys
+## Quick start
 
-`VoyageProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import SwiftAISDK
 
-## Notes
+let voyage = try AIProviders.voyage()
+let model = try voyage.embeddingModel("voyage-4")
+let result = try await model.embed(
+    "Swift makes API boundaries explicit.",
+    providerOptions: ["voyage": ["inputType": "document"]]
+)
+print(result.embeddings.first?.count ?? 0)
+```
 
-Voyage embeddings and reranking mirror upstream Voyage 2.0.83: `VOYAGE_API_KEY`, custom base URL and headers, versioned user-agent suffix, `embedding`/`embeddingModel`/`textEmbedding`/`textEmbeddingModel` aliases, `reranking`/`rerankingModel` aliases, current Voyage 4/3.5/code and rerank model IDs, provider option schema mapping, 128-input embedding preflight, sorted embedding responses by index, nullish embedding usage as zero tokens, object-document reranking warnings, and v4 rerank response validation without required usage. The 2026-10-11 pass: Embedding output dimensions inherit the shared request and preserve provider override precedence. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied. The 2026-11-15 delta and native/platform distinctions are recorded in WeeklyUpstreamAudit20261115; no full-package or live-service parity is implied.
+For the modular packages, use `import SwiftAI` and `import SwiftAIVoyage`, then
+`try AIProviders.voyage(configuration: VoyageProviderSettings(...))`. The native factory
+requires a configuration argument; `VoyageProviderSettings()` reads `VOYAGE_API_KEY`.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+## Embeddings
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+Embedding model IDs include `voyage-4-large`, `voyage-4`, `voyage-4-lite`,
+`voyage-4-nano`, `voyage-3.5`, `voyage-3.5-lite`, `voyage-code-3` and domain models
+such as `voyage-finance-2` and `voyage-law-2`. A single call accepts up to 128 inputs;
+`embedMany` splits larger batches. Embeddings are returned in input order, and missing
+usage is reported as zero tokens.
+
+Options under `providerOptions["voyage"]`:
+
+| Option | Behavior |
+| --- | --- |
+| `inputType` | `query`, `document` or null. |
+| `truncation` | Boolean. |
+| `outputDimension` | Number; overrides the shared `dimensions` argument. |
+| `outputDtype` | `float`, `int8`, `uint8`, `binary` or `ubinary`. |
+
+See [Embeddings](https://swiftaisdk.github.io/SwiftAISDK/core/embeddings/).
+
+## Reranking
+
+```swift
+let reranker = try voyage.rerankingModel("rerank-2.5")
+let ranked = try await reranker.rerank(
+    query: "Which document explains actors?",
+    documents: ["Actors isolate state.", "Structs are value types."],
+    topK: 1
+)
+```
+
+Rerank model IDs include `rerank-2.5`, `rerank-2.5-lite`, `rerank-2` and
+`rerank-2-lite`. `providerOptions["voyage"]` accepts the Booleans `returnDocuments` and
+`truncation`. Object documents are converted to JSON strings with a compatibility
+warning. See [Rerank](https://swiftaisdk.github.io/SwiftAISDK/core/rerank/).
+
+## Rotating credentials
+
+The native `VoyageProviderSettings` accepts `apiKeyProvider`, an async throwing closure
+resolved before each authenticated request. A supplier failure stops the request before
+it is sent.
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

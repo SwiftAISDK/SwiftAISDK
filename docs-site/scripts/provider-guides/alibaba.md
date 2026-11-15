@@ -1,11 +1,112 @@
-## Forward-compatible Wan video routing
+## Quick start
 
-Wan video requests choose their protocol from the numeric model version. Known `wan2.6` and earlier IDs, including the older `wanx2.1` prefix, retain legacy size fields. Wan 2.7 and later 2.x models use the tiered reference protocol. Wan 3+, and unrecognized future IDs, inherit the latest all-in-one media protocol with media inputs, tiered resolution and ratio handling.
+```swift
+import SwiftAISDK
+
+let provider = try AIProviders.alibaba()
+let model = try provider.languageModel("qwen-plus")
+let result = try await model.generateText("Explain DashScope in one sentence.")
+print(result.text)
+```
+
+With modular packages, `import SwiftAI` and `import SwiftAIAlibaba`, then call
+`AIProviders.alibaba(configuration: AlibabaProviderSettings(...))`. The native
+factory requires the configuration argument; pass `AlibabaProviderSettings()` to
+use environment credentials.
+
+Requests go to the international DashScope OpenAI-compatible endpoint
+(`https://dashscope-intl.aliyuncs.com/compatible-mode/v1`) unless you set
+`baseURL`. `chatModel(...)` is an alias for `languageModel(...)`.
+
+## Thinking and reasoning
+
+Pass Alibaba options under `providerOptions["alibaba"]`:
+
+```swift
+let result = try await model.generateText(
+    "Plan a three-day trip to Hangzhou.",
+    options: LanguageGenerationOptions(
+        providerOptions: [
+            "alibaba": [
+                "enableThinking": true,
+                "thinkingBudget": 4096,
+                "parallelToolCalls": false,
+            ],
+        ]
+    )
+)
+```
+
+- `enableThinking` (Boolean) and `thinkingBudget` (positive number) are sent as
+  `enable_thinking` and `thinking_budget`. When set, they take precedence over the
+  portable `reasoning` option.
+- Portable `reasoning` maps to a thinking budget: `"none"` disables thinking;
+  `minimal`, `low`, `medium`, `high`, `xhigh` and `max` use 2, 10, 30, 60, 90 and
+  95 percent of a 16,384-token budget (minimum 1,024). Other values produce an
+  unsupported warning.
+- `preserveThinking` (Boolean) replays assistant reasoning from earlier turns.
+  It defaults to on for Qwen 3.6, 3.7 and 3.8 models such as `qwen3.8-flash`;
+  otherwise only reasoning after the last user message is sent, and
+  reasoning-only assistant turns are dropped.
+- Invalid option types throw `AIError.invalidArgument` before the request.
+
+Usage reports cache reads and writes from `prompt_tokens_details`.
+
+## Structured output
+
+`qwen3.7-plus`, `qwen3.7-flash`, `qwen3.7-max`, `qwen3.8-max`, `qwen3.8-flash`
+and their dated variants receive a native JSON Schema response format. Other
+models fall back to JSON Object mode: the schema is injected into the system
+message, validated locally, and a compatibility warning is returned. See
+[Structured output](../../core/structured-output/).
+
+## Embeddings
+
+```swift
+let embedder = try provider.embeddingModel("text-embedding-v4")
+let embedding = try await embedder.embed(
+    "Hello",
+    providerOptions: ["alibaba": ["textType": "query", "outputType": "dense&sparse"]]
+)
+```
+
+- `textType`: `"query"` or `"document"`.
+- `dimension`: positive number; overrides the shared `dimensions` argument.
+- `outputType`: `"dense"` or `"dense&sparse"`. Sparse vectors are returned in
+  `providerMetadata["alibaba"]["sparseEmbeddings"]`. `"sparse"` alone is rejected
+  because results must contain dense vectors.
+
+## Video generation
+
+```swift
+let video = try provider.videoModel("wan2.6-t2v")
+let result = try await video.generateVideo(
+    "A paper boat drifting down a rainy street",
+    resolution: "1280x720",
+    providerOptions: ["alibaba": ["promptExtend": true, "watermark": false]]
+)
+print(result.urls)
+```
+
+Video requests are submitted as tasks and polled until they finish. The request
+protocol is chosen from the Wan version in the model ID:
+
+- `wan2.6` and earlier (including `wanx2.1` IDs) use legacy size fields.
+  `aspectRatio` is unsupported; use `resolution`.
+- Later Wan 2.x models (for example `wan2.7-t2v`) use the tiered protocol and
+  accept `ratio`, except image-to-video.
+- Wan 3 and later (for example `wan3.0-video`), and unrecognized future IDs, use
+  the all-in-one media protocol with `media`, resolution, aspect ratio and audio.
+
+Video provider options: `negativePrompt`, `audioUrl`, `promptExtend`, `watermark`,
+`audio`, `shotType` (`"single"` or `"multi"`), `referenceUrls`, `media`, `ratio`
+(`adaptive`, `16:9`, `9:16`, `1:1`, `4:3`, `3:4`), `pollIntervalMs` (default
+5 seconds) and `pollTimeoutMs` (default 10 minutes). Custom `fps` and more than
+one video per call produce warnings. See [Generate video](../../core/generate-video/).
 
 ## Rotating credentials
 
-The native `AlibabaProviderSettings` accepts an optional
-`apiKeyProvider` asynchronous throwing closure. It is resolved for each
-authenticated request, so short-lived credentials can refresh without recreating
-the provider or model. Static `apiKey` settings remain supported. A supplier
-failure stops the request before it reaches the transport.
+`AlibabaProviderSettings` accepts an `apiKeyProvider` async throwing closure that
+is called before each authenticated request, so short-lived keys can refresh
+without recreating the provider. A supplier error stops the request before it is
+sent.

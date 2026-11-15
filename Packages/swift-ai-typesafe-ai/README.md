@@ -1,26 +1,26 @@
-# SwiftAITypeSafeAI
+# TypeSafe AI for Swift
 
-Swift-native port of `@ai-sdk/typesafe-ai`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
+`SwiftAITypeSafeAI` adds TypeSafe AI to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/typesafe-ai` and supports evaluation and decisions.
+
+Provider guide with models, options, streaming and errors:
+
+- [TypeSafe AI](https://swiftaisdk.github.io/SwiftAISDK/providers/typesafe/)
+
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAITypeSafeAI` product from this package to your target, then create the provider:
 
 ```swift
+import SwiftAI
 import SwiftAITypeSafeAI
 
-let provider = TypeSafeAIProvider(configuration: .init(apiKey: "..."))
+let provider = try AIProviders.typeSafeAI(configuration: TypeSafeAIProviderSettings())
 ```
 
-Settings accept a custom base URL, headers, an environment override and an injected
-`AITransport`. Models use the common SwiftAIProvider protocols.
+By default the provider reads `TYPESAFE_AI_API_KEY` from the environment; values set in `TypeSafeAIProviderSettings` take precedence.
 
-Run the standalone suite from the canonical checkout:
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
 
-```sh
-swift test --package-path Packages/swift-ai-typesafe-ai
-```
+## Contributing
 
-The canonical repository owns all edits. Distribution manifests and repositories
-are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
-
-See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/typesafe.md) for authentication, options and supported surfaces.
-## Behavior notes
-
-Decision state preserves a single JSON object, array or string; primitive JSON state becomes text. Choice questions require 1–255 options, and score questions require 1–10 non-null levels. Score legends are exposed under `providerMetadata.typesafe.legend`. A box question may omit instructions using `.box()` (sent as native JSON null) and enables the image feature header even without image assets.
+This package is exported from `Packages/swift-ai-typesafe-ai` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

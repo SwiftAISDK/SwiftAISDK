@@ -1,10 +1,76 @@
-## Rotating API keys
+## Quick start
 
-`OpenResponsesProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import Foundation
+import SwiftAISDK
 
-The optional `headersProvider` asynchronous closure also supplies fresh default
-headers for every generated or streamed response. Request headers take precedence.
+let apiKey = ProcessInfo.processInfo.environment["LOCAL_RESPONSES_KEY"]
+let provider = try AIProviders.openResponses(
+    name: "local",
+    url: "http://localhost:8080/v1/responses",
+    settings: ProviderSettings(apiKey: apiKey)
+)
+let model = try provider.languageModel("local-model")
+let result = try await model.generateText("Say hello in three languages.")
+print(result.text)
+```
+
+With modular packages, `import SwiftAI` and `import SwiftAIOpenResponses`, then call
+`AIProviders.openResponses(name:url:configuration:)` with an
+`OpenResponsesProviderSettings`. The `configuration` argument is required, and the
+same overload is also available from `import SwiftAISDK`.
+
+## Endpoint and naming
+
+Open Responses targets any server that implements the Open Responses
+specification, an open version of the OpenAI Responses API. You pass the full
+endpoint URL, and every request is sent to that exact URL.
+
+- `name` sets the provider ID (`<name>.responses`) and the provider-options
+  namespace.
+- No environment variable is read. If you pass an API key, it is sent as
+  `Authorization: Bearer ...`. Custom headers override it.
+- Use `languageModel(_:)` for the Responses model. On the native
+  `OpenResponsesProvider`, `chatModel(_:)`, `responses(_:)` and `responsesModel(_:)`
+  return the same model. Other model families are unsupported.
+
+## Provider options
+
+Options are read from `providerOptions[name]`, where `name` is the value you passed
+to the factory:
+
+```swift
+let result = try await model.generateText(
+    "Think it through.",
+    options: LanguageGenerationOptions(
+        reasoning: "medium",
+        providerOptions: ["local": ["reasoningSummary": "detailed"]]
+    )
+)
+```
+
+`reasoningEffort` (a string) overrides the portable `reasoning` setting.
+`reasoningSummary` accepts `concise`, `detailed` or `auto`, and summaries stream as
+reasoning parts.
+
+## Requests and tools
+
+- Input supports text, file URLs, inline files and images, and rich tool-result
+  content. Function tools default to `strict: false`.
+- Structured output uses `text.format`. Pass `structuredOutputs: false` to the
+  factory to turn it off.
+- `OpenResponsesTools.customTool(name:description:format:)` declares a custom
+  (free-form input) tool. `format` can be `OpenResponsesTools.textFormat()` or a
+  regex or Lark grammar. Change the tool ID with `customToolID`.
+- Unsupported provider tools produce a warning instead of failing.
+- `strictResponseInput: true` sends assistant history without item IDs as plain
+  input text. History with IDs is still sent as completed output items.
+
+## Headers, errors and credentials
+
+- `dynamicHeaders` is a synchronous closure that adds headers to every request.
+- `getResponseErrorMetadata` and `failedResponseHandler` customize how error bodies
+  become `AIError` values. `userAgentSuffix` replaces the default user-agent suffix.
+- On the native settings, `apiKeyProvider` is an async throwing closure that runs
+  before each request, and `headersProvider` is an async closure that supplies
+  fresh headers for every generate or stream call. Request headers take precedence.

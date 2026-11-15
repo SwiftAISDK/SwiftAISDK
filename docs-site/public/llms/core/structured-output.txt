@@ -3,6 +3,46 @@
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/structured-output/
 
 Use structured output when your app needs a Swift value rather than free-form prose.
+Pass an `Output` strategy to `generateText` or `streamText`; the result's
+`output` is the decoded value.
+
+```swift
+import SwiftAISDK
+
+struct Summary: Decodable, Sendable {
+    var title: String
+    var bullets: [String]
+}
+
+let schema = AIJSONSchema<Summary>(
+    [
+        "type": "object",
+        "properties": [
+            "title": ["type": "string"],
+            "bullets": ["type": "array", "items": ["type": "string"]],
+        ],
+        "required": ["title", "bullets"],
+    ],
+    name: "summary"
+)
+
+let provider = try AIProviders.openAI()
+let model = try provider.languageModel("gpt-6.1-sol")
+
+let result = try await model.generateText(
+    "Summarize the SwiftAISDK README.",
+    output: Output.object(schema: schema)
+)
+
+print(result.output.title)
+```
+
+`Output` covers text, object, array, choice and JSON strategies.
+
+## Object facades
+
+`generateObject` and `streamObject` remain callable and return the same decoded
+values:
 
 ```swift title="Examples/Sources/StructuredOutput/main.swift"
 import SwiftAISDK
@@ -33,39 +73,21 @@ struct StructuredOutputExample {
         let provider = try AIProviders.openAI()
         let model = try provider.languageModel("gpt-6.1-sol")
 
-        let result = try await model.generateObject(
+        let result = try await model.generateText(
             "Summarize the SwiftAISDK README.",
-            schema: schema
+            output: Output.object(schema: schema)
         )
 
-        print(result.object.title)
+        print(result.output.title)
     }
 }
 ```
 
-## Output Facade
-
-SwiftAISDK also mirrors the upstream-style `Output` entry point on `generateText` and `streamText`.
-
-```swift
-let result = try await model.generateText(
-    "Return a compact summary.",
-    output: Output.object(
-        schema: schema.jsonSchema,
-        name: schema.name,
-        as: Summary.self
-    )
-)
-
-print(result.output.bullets)
-```
-
-New code can use `Output` for text, object, array, choice and JSON strategies.
-`generateObject` and `streamObject` remain callable and now emit stable
-`AISDK_DEP_GENERATE_OBJECT` / `AISDK_DEP_STREAM_OBJECT` warnings.
-Unified Output calls suppress warnings from their internal object helper.
-The default console logger emits each deprecation code once; custom warning
-loggers still receive every warning.
+They emit the deprecation warnings `AISDK_DEP_GENERATE_OBJECT` and
+`AISDK_DEP_STREAM_OBJECT`; prefer `Output` in new code. `Output` calls do not
+emit these warnings even though they share the object machinery. The default
+console logger emits each deprecation code once; custom warning loggers still
+receive every warning.
 
 ## Output Strategies
 
@@ -74,7 +96,7 @@ loggers still receive every warning.
 - `Output.array(element:minItems:maxItems:as:)` expects an `elements` envelope,
 publishes optional array bounds in the generated JSON Schema, and rejects a
 final result outside those bounds.
-- `Output.choice(choices:)` constrains output to one of the provided strings.
+- `Output.choice(options:)` constrains output to one of the provided strings.
 - `Output.json()` returns schema-free `JSONValue`.
 
 All strategies preserve text, reasoning, usage, warnings, provider metadata, response metadata, and the underlying `TextGenerationResult`.
@@ -95,9 +117,8 @@ let labels = Output.array(
 )
 ```
 
-For source compatibility, the constructor remains nonthrowing. A negative bound
-or `minItems > maxItems` is rejected when generation or streaming begins, before
-the model performs work.
+The constructor does not throw. A negative bound or `minItems > maxItems` is
+rejected when generation or streaming begins, before the model performs work.
 
 ## Streaming Output
 
@@ -115,10 +136,7 @@ which the object facade may coalesce; one chunk can commit several elements
 together. The last element remains pending until its boundary is confirmed.
 
 Typed object and array streams accept the same `streamRetries` option as raw
-`streamText`. A retryable in-band provider error can restart the whole typed
-output pipeline with failed-attempt parsing state isolated. JSON/schema/decoding
-failure after a complete provider response is not a provider-stream retry and
-does not consume this budget.
+`streamText`; see [Retry behavior](https://swiftaisdk.github.io/SwiftAISDK/core/stream-text/#retry-behavior).
 
 ## Repair Hooks
 

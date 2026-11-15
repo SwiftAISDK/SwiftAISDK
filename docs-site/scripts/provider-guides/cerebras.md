@@ -1,21 +1,68 @@
-## Rotating API keys
+## Quick start
 
-`CerebrasProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import SwiftAISDK
 
-## Current request and response behavior
+let provider = try AIProviders.cerebras()
+let model = try provider.languageModel("gpt-oss-120b")
+let result = try await model.generateText("Why is fast inference useful for agents?")
+print(result.text)
+```
 
-Set `providerOptions.cerebras.queueThreshold` to an integer from 50 through
-20000 to request the maximum flex/auto queue time in milliseconds. The adapter
-sends `queue_threshold` as a header, overriding a case-insensitive per-call header,
-and omits the option from the JSON body. Returned `service_tier` is available as
-`providerMetadata.cerebras.serviceTier`, including the final stream metadata.
+With modular packages, `import SwiftAI` and `import SwiftAICerebras`, then call
+`AIProviders.cerebras(configuration: CerebrasProviderSettings(...))`; the native
+factory requires the configuration argument.
 
-Only `queueThreshold` is validated on the dynamic `cerebras` option path; other
-values retain upstream passthrough, including an explicit `reasoningEffort: null`.
-Unary and streaming responses retain refusal text, with client tool-call finish
-priority and ordered text/refusal delivery. Low-level request metadata exposes
-the actual configured endpoint; high-level results sanitize it to an origin.
+Requests use the Chat Completions endpoint at `https://api.cerebras.ai/v1`.
+`chatModel(...)` is an alias for `languageModel(...)`. `maxOutputTokens` is sent
+as `max_completion_tokens`.
+
+## Provider options
+
+Pass options under `providerOptions["cerebras"]`:
+
+```swift
+let result = try await model.generateText(
+    "Summarize this changelog.",
+    options: LanguageGenerationOptions(
+        providerOptions: [
+            "cerebras": [
+                "reasoningEffort": "low",
+                "serviceTier": "flex",
+                "queueThreshold": 2_000,
+            ],
+        ]
+    )
+)
+print(result.providerMetadata["cerebras"]?["serviceTier"]?.stringValue ?? "unknown")
+```
+
+- `reasoningEffort` (`none`, `low`, `medium`, `high`), `reasoningFormat`
+  (`none`, `parsed`, `text_parsed`, `raw`, `hidden`), `textVerbosity`.
+- `serviceTier` (`auto`, `default`, `flex`, `priority`). The tier that served the
+  request is returned in `providerMetadata["cerebras"]["serviceTier"]`, including
+  on the final stream part.
+- `queueThreshold`: an integer from 50 to 20000, the maximum flex/auto queue time
+  in milliseconds. It is sent as the `queue_threshold` header, replacing any
+  per-call header of the same name, and not in the JSON body.
+- `parallelToolCalls`, `strictJsonSchema`, `logprobs`, `topLogprobs` (0–20),
+  `logitBias`, `prediction`, `promptCacheKey` (up to 1024 characters), `user`.
+
+Under `"cerebras"`, only `queueThreshold` is validated; other keys are passed
+through as given. The same keys under `providerOptions["openaiCompatible"]` are
+validated and throw `AIError.invalidArgument` on invalid values.
+
+Portable `reasoning` is sent as `reasoning_effort` unless you set
+`reasoningEffort` explicitly; `"none"` is not sent.
+
+## Structured output and refusals
+
+JSON Schema response formats are sent natively (`strictJsonSchema` controls
+strict mode), and tool calls produced under structured output are normalized.
+Refusal text from the model is kept in both generated and streamed results.
+
+## Rotating credentials
+
+`CerebrasProviderSettings` accepts an `apiKeyProvider` async throwing closure that
+is called before each authenticated request. A supplier error stops the request
+before it is sent.

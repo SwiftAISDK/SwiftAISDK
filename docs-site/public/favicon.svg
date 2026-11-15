@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <style>
+    .tile { fill: #0a0a0a; }
+    .spark { fill: #ededed; }
+    @media (prefers-color-scheme: dark) {
+      .tile { fill: #ededed; }
+      .spark { fill: #0a0a0a; }
+    }
+  </style>
+  <rect class="tile" width="24" height="24" rx="6"/>
+  <path class="spark" d="M12 4.5c.5 3.9 3.6 7 7.5 7.5-3.9.5-7 3.6-7.5 7.5-.5-3.9-3.6-7-7.5-7.5 3.9-.5 7-3.6 7.5-7.5Z"/>
+</svg>

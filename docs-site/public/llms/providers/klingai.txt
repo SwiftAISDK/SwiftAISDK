@@ -1,10 +1,42 @@
-# "klingai"
+# Kling AI
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/klingai/
 
+Kling video generation: text-to-video, image-to-video, multi-image reference video and motion control, selected by the model ID suffix. Jobs are polled until the MP4 URL is ready.
+
+Provider ID: `klingai` · Upstream package: `@ai-sdk/klingai`
+
 ## Package
 
-`@ai-sdk/klingai`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-klingai`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-klingai.git", from: "1.1.3"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIKlingAI", package: "swift-ai-klingai"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIKlingAI
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `KLINGAI_API_KEY` | API key sent as a bearer token. Required unless passed in settings or a legacy key pair is used. |
+| `KLINGAI_ACCESS_KEY` | Legacy access key; used with KLINGAI_SECRET_KEY to sign a JWT when no API key is set. |
+| `KLINGAI_SECRET_KEY` | Legacy secret key paired with KLINGAI_ACCESS_KEY. |
 
 ## Factories
 
@@ -12,23 +44,106 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/klingai/
 
 ## Capabilities
 
-- Video
+- [Video](https://swiftaisdk.github.io/SwiftAISDK/core/generate-video/)
 
-## Rotating API keys
+## Quick start
 
-`KlingAIProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import SwiftAISDK
 
-Returned keys are trimmed. Blank callback results follow the existing environment
-or legacy key-pair fallback; legacy JWTs are generated for each request.
+let provider = try AIProviders.klingAI() // reads KLINGAI_API_KEY
+let model = try provider.videoModel("kling-v2.6-t2v")
+let result = try await model.generateVideo(
+    "A paper boat drifting down a rainy street, cinematic.",
+    aspectRatio: "16:9",
+    durationSeconds: 5
+)
+print(result.urls)
+```
 
-## Notes
+With modular packages, `import SwiftAI` and `import SwiftAIKlingAI`, then call
+`AIProviders.klingAI(configuration: KlingAIProviderSettings(...))`. The native
+factory requires the `configuration` argument. The umbrella factory takes the same
+`KlingAIProviderSettings` through `settings:`.
 
-KlingAI video models mirror upstream KlingAI 4.0.85: trimmed `KLINGAI_API_KEY` bearer auth or explicit/environment legacy access and secret keys with upstream precedence, custom base URL and headers, versioned user-agent suffix, `video`/`videoModel` aliases, text-to-video, image-to-video, reference-to-video multi-image, and motion-control endpoints, first/last `frameImages`, `inputReferences`, top-level `generateAudio` to `sound` mapping with provider-option override behavior, providerOptions.klingai schema and snake_case passthrough, polling, `video/mp4` media type, provider metadata, KlingAI error schema, and warnings for unsupported standard video options. ProviderV4 type names, ESM-only packaging, Node 22 engines, TypeScript option export split, optional JS headers config, and workflow serialization helpers are JS-only upstream concerns. Status polling now follows only validated redirects and never forwards credentials away from the configured origin. The 2026-10-23 pass: Polling and status resource IDs are encoded as one path segment, including reserved characters and standalone dots. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied. The 2026-11-15 delta and native/platform distinctions are recorded in WeeklyUpstreamAudit20261115; no full-package or live-service parity is implied.
+## Authentication
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Credentials are resolved in this order. Values are trimmed, and blank values are
+skipped.
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+1. `KlingAIProviderSettings.apiKey`, sent as a bearer token.
+2. `accessKey` and `secretKey` in settings, when both are set.
+3. `KLINGAI_API_KEY`.
+4. A legacy access/secret key pair from settings or `KLINGAI_ACCESS_KEY` and
+`KLINGAI_SECRET_KEY`. The provider signs a short-lived HS256 JWT for each
+request.
+
+If only one half of a key pair is found, creating the provider throws
+`AIError.missingAPIKey` that names the missing variable. Set `environment` in
+settings to read from a dictionary instead of the process environment. The
+default base URL is `https://api-singapore.klingai.com`.
+
+To rotate keys, set `apiKeyProvider` to an async throwing closure. It runs before
+each request; a blank result falls back to the environment or the legacy key pair.
+
+## Model IDs and modes
+
+The suffix of the model ID selects the endpoint:
+
+| Suffix | Endpoint | Example |
+| --- | --- | --- |
+| `-t2v` | Text to video | `kling-v2.6-t2v` |
+| `-i2v` | Image to video; multi-image when `inputReferences` is set | `kling-v2.6-i2v` |
+| `-motion-control` | Motion control | `kling-v2.6-motion-control` |
+
+Other IDs throw `AIError.unsupportedModel`. Each call produces one video, returned
+as `video/mp4` URLs.
+
+- Image to video takes the start frame from a `.firstFrame` entry in `frameImages`
+or from `image`. A `.lastFrame` entry becomes `image_tail`. Video files are not
+accepted as frames.
+- `inputReferences` on an `-i2v` model switches to multi-image reference video.
+That mode does not take separate start or last frames, and references are
+ignored when `frameImages` is set.
+- `generateAudio` becomes `sound` (`on` or `off`) and takes precedence over
+`sound` in provider options.
+- Unsupported standard options (`resolution`, `seed`, `fps`, more than one video,
+`aspectRatio` on image-to-video or motion control) return warnings.
+
+## Provider options
+
+Use `providerOptions["klingai"]` with camelCase keys. Known keys are validated and
+converted to the API's snake_case names; unknown keys pass through unchanged.
+
+```swift
+let result = try await model.generateVideo(
+    "A fox running through snow.",
+    providerOptions: [
+        "klingai": [
+            "mode": "pro",
+            "negativePrompt": "blurry, low quality",
+            "cfgScale": 0.5,
+            "pollTimeoutMs": 900_000,
+        ],
+    ]
+)
+```
+
+Useful keys: `mode` (`std` or `pro`), `negativePrompt`, `cfgScale`,
+`cameraControl`, `sound`, `multiShot`, `shotType`, `multiPrompt`, `elementList`,
+`voiceList`, `staticMask`, `dynamicMasks`, `watermarkEnabled`, and polling with
+`pollIntervalMs` (default 5 seconds) and `pollTimeoutMs` (default 10 minutes).
+
+Motion control requires `videoUrl`, `characterOrientation` (`image` or `video`)
+and `mode`, and accepts `keepOriginalSound` (`yes` or `no`).
+
+## Async operations
+
+`KlingAIVideoModel` also supports `startVideoGeneration` and
+`videoGenerationStatus`. A webhook URL is sent as `callback_url`. Status polling
+follows only validated redirects and never sends credentials to another origin.
+See [Generate video](https://swiftaisdk.github.io/SwiftAISDK/core/generate-video/).
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

@@ -21,22 +21,22 @@ let image = ImageInputFile(
 
 let result = try await model.generateVideo(
     "Animate the scene with a slow camera push.",
-    image: image,
-    durationSeconds: 5
+    durationSeconds: 5,
+    image: image
 )
 ```
 
 Some providers accept explicit frame images or reference images instead of a single starting image:
 
 ```swift
-let result = try await model.generateVideo(
-    "Animate the transition between these frames.",
+let result = try await model.generateVideo(VideoGenerationRequest(
+    prompt: "Animate the transition between these frames.",
     frameImages: [
         VideoFrameImage(image: firstFrame, frameType: .firstFrame),
         VideoFrameImage(image: lastFrame, frameType: .lastFrame),
     ],
     inputReferences: [styleReference]
-)
+))
 ```
 
 `frameImages` is used for providers that distinguish first and last frames. `inputReferences` is used for reference-to-video or style/reference-image workflows. Providers that do not support a combination return warnings or provider-specific errors rather than silently changing the request.
@@ -44,7 +44,7 @@ let result = try await model.generateVideo(
 ## Async Start And Status
 
 Models conforming to `AsyncVideoModel` expose serializable start/status
-operations in addition to the existing unary `VideoModel` call. Pass `poll` to
+operations in addition to the unary `VideoModel` call. Pass `poll` to
 the facade to select that flow. The facade creates one stable idempotency key
 per logical start and reuses it across transient start retries, so retrying a
 lost response does not intentionally create a second paid job:
@@ -61,7 +61,7 @@ let result = try await AI.generateVideo(
 ```
 
 A caller-supplied `Idempotency-Key` header wins. Black Forest Labs FLUX 3, Fal,
-ByteDance, Gateway, Topaz, and [HeyGen](/SwiftAISDK/providers/heygen/) are operation adapters. Callers can invoke
+ByteDance, Gateway, Topaz, and [HeyGen](../../providers/heygen/) are operation adapters. Callers can invoke
 `AI.startVideo` and `AI.getVideoStatus` (or the model-level
 `startVideoGeneration` and `videoGenerationStatus`) and persist the returned
 JSON operation across processes.
@@ -123,12 +123,12 @@ one-video limit, so multi-video requests use this split automatically.
 `VideoGenerationResult.uploadedVideos` describes outputs written directly to
 caller-owned storage. Each `UploadedVideo` contains its media type; no URL or
 inline bytes are required for that delivery mode. Handle these descriptors
-alongside the existing URL/base64 video arrays. The native result does not expose
-the JavaScript generated-file getter or automatically download every video.
+alongside the URL/base64 video arrays. The result does not download hosted
+videos for you; fetch `urls` yourself when you need the bytes.
 
 HeyGen supports text, first-frame image, and mixed image/video/audio reference
 generation through `AIProviders.heyGen().video("heygen-video-1")`. Its completed
 result contains a signed MP4 URL; the adapter does not download it. Persist the
 operation and check status again to refresh the URL. See the
-[HeyGen guide](/SwiftAISDK/providers/heygen/) for typed options, input validation,
+[HeyGen guide](../../providers/heygen/) for typed options, input validation,
 reported metadata, and a compile-checked example.

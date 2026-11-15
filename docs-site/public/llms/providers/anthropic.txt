@@ -1,10 +1,41 @@
-# "anthropic"
+# Anthropic
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/anthropic/
 
+Claude models through the Anthropic Messages API, with thinking, prompt caching, citations, Anthropic-hosted tools, message threads, files, skills and message batches. Decision, evaluation and extraction models run over Messages with structured output.
+
+Provider ID: `anthropic` · Upstream package: `@ai-sdk/anthropic`
+
 ## Package
 
-`@ai-sdk/anthropic`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-anthropic`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-anthropic.git", from: "1.4.1"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIAnthropic", package: "swift-ai-anthropic"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIAnthropic
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `ANTHROPIC_API_KEY` | API key, sent as `x-api-key`. Required unless `apiKey`, `authToken` or `authTokenProvider` is set in settings. |
+| `ANTHROPIC_BASE_URL` | Optional base URL override. Defaults to `https://api.anthropic.com/v1`. |
 
 ## Factories
 
@@ -12,86 +43,207 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/anthropic/
 
 ## Capabilities
 
-- Language
-- Evaluation
-- Decision
-- Extraction
-- Files
-- Skills
+- [Language](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/)
+- [Evaluation](https://swiftaisdk.github.io/SwiftAISDK/core/evaluate/)
+- [Decision](https://swiftaisdk.github.io/SwiftAISDK/core/decide/)
+- [Extraction](https://swiftaisdk.github.io/SwiftAISDK/core/extract/)
+- [Files](https://swiftaisdk.github.io/SwiftAISDK/core/files/)
+- [Skills](https://swiftaisdk.github.io/SwiftAISDK/core/files/)
 
-## Current reviewed behavior
+## Quick start
 
-Use `provider.extractionModel("claude-sonnet-5-5")` for experimental typed field extraction with nullable answers. The Messages adapter splits more than 16 fields into parallel requests under Anthropic's schema union limit and preserves shared cancellation. The `claude-fable-5-2` model uses the same adaptive thinking and forced-tool fallback policy as 5-1; disabled/budget thinking and sampling are removed with warnings where unsupported.
+```swift
+import SwiftAISDK
 
-## Message threads, inline tools and Files
+let provider = try AIProviders.anthropic()
+let model = try provider.languageModel("claude-sonnet-5-5")
+let result = try await model.generateText("Summarize the Messages API in one sentence.")
+print(result.text)
+```
 
-Message threads are opt-in through `providerOptions.anthropic.thread`:
-`["type": "create"]` starts a thread; `["type": "continue",
-"previousMessageId": "msg_..."]` sends the new turns. Keep full history locally
-for expiry recovery. Continuations omit leading system instructions and tool
-definitions from the wire; start a new thread to change them. Pin
-`anthropicBeta` content-specific headers on every turn. Threads reject batches
-and compaction/context edits except `clear_thinking_20251015` with `keep: "all"`.
+With modular packages, `import SwiftAI` and `import SwiftAIAnthropic`, then call
+`AIProviders.anthropic(configuration: AnthropicProviderSettings(...))`; the
+configuration argument defaults to environment credentials.
 
-Mid-conversation system `toolChanges` can add function/provider definitions using
-`tool`, or add/remove references using `toolName`. Inline tools preserve alias
-mapping and enable the required beta headers. Computer tools must be top-level
-definitions referenced by name. Unknown or disabled toolset members reject before
-execution; returned actions cannot be replaced by a spoofed input `action`.
+`languageModel(...)` and `messages(...)` both return a Messages model that also
+supports batches. The default base URL is `https://api.anthropic.com/v1`.
 
-`includePings: true` exposes keepalive `.ping` stream parts and defaults to false.
-It is never included in the request body. Applied admission is available as
-`providerMetadata.anthropic.serviceTier`; requests accept `auto` or `standard_only`
-and warn for known incompatible tiers. Automatic native structured output is used
-only when it preserves the schema; open maps and recursion retain JSON-tool
-fallback with the caller's selected tools.
+## Authentication
 
-Files support buffered upload, metadata lookup, streaming download and deletion,
-including lifecycle timestamps and size. Streaming upload remains unsupported.
-Errors with non-null `details` retain the raw body and a readable message,
-including `thread_not_found` recovery information.
+- **API key**: `apiKey`, or `ANTHROPIC_API_KEY`, sent as `x-api-key`.
+- **Bearer token**: `authToken`, sent as `Authorization: Bearer ...`. Setting both
+`apiKey` and `authToken` throws. No OAuth beta header is added automatically.
+- **Refreshing tokens**: `AnthropicProviderSettings.authTokenProvider` is an async
+throwing closure called before each Messages, Files, Skills and Batch request. It
+takes precedence over `authToken`; errors stop the request before it is sent.
 
-## Haiku 5.5, decisions, and stream metadata
+```swift
+import SwiftAI
+import SwiftAIAnthropic
 
-Haiku 5.5 supports adaptive thinking, xhigh effort and a 128k maximum output. Budget thinking is converted to adaptive with a compatibility warning; sampling is rejected. Explicit disabled thinking remains valid at supported effort levels. Unsupported models no longer warn for an explicit `strict: false` tool.
+let provider = try AIProviders.anthropic(configuration: AnthropicProviderSettings(
+    authTokenProvider: { try await tokenStore.currentToken() }
+))
+```
 
-Streaming consumers can inspect `.custom(kind: "anthropic.message_start", ...)` for initial provider usage and response identity. Replaying `anthropic.fallback` adds the required server-side fallback beta. `decisionModel(...)` uses the native structured-output adapter; see [Decision](../../core/decide/).
+## Provider options
 
-Set `ProviderSettings.batchResultDownloads` to bound downloaded JSONL rows. Unicode custom header values remain on Anthropic AWS/Bedrock requests but are excluded from canonical signed headers.
+Pass options under `providerOptions["anthropic"]`. Invalid values throw before
+any network request.
 
-Batch `providerOptions.anthropic.anthropicBeta` must be an array of strings. Omit it when no beta is needed; explicit null, a single string, or mixed-type arrays fail before network I/O. Cache control shares its four-breakpoint limit across prompt blocks and tool definitions. A part's cache marker takes precedence over a message marker on the same block and counts only once.
+```swift
+let result = try await model.generateText(
+    "Prove that there are infinitely many primes.",
+    options: LanguageGenerationOptions(
+        maxOutputTokens: 16_000,
+        providerOptions: [
+            "anthropic": [
+                "thinking": ["type": "enabled", "budgetTokens": 5_000],
+                "effort": "high",
+            ],
+        ]
+    )
+)
+print(result.reasoning)
+```
 
-## Citations and tool transcripts
+Commonly used keys:
 
-Generated text and streamed text-end parts expose normalized `AICitation` values for document pages, character ranges, content blocks, web-search results, and search-result locations. Read `TextGenerationResult.citations` for all cited text blocks. The complete original citation objects remain in the text part's provider metadata; document offsets describe the source document and do not become generated-text offsets. Batch results use available citation titles and file IDs with a plain-text document fallback because original prompt documents are unavailable.
+- `thinking`: `["type": "adaptive"]`, `["type": "enabled", "budgetTokens": N]` or
+`["type": "disabled"]`. Adaptive thinking also accepts `display`.
+- `effort`: output effort such as `"low"`, `"medium"`, `"high"`, `"xhigh"`, `"max"`.
+- `sendReasoning`: replay earlier reasoning (default `true`).
+- `disableParallelToolUse`, `toolStreaming`, `structuredOutputMode`.
+- `serviceTier`: `"auto"`, `"standard_only"`, `"standard"` or `"priority"`. The
+tier that was applied is returned in `providerMetadata["anthropic"]["serviceTier"]`.
+- `cacheControl`, `metadata`, `mcpServers`, `container`, `speed`, `inferenceGeo`,
+`taskBudget`, `fallbacks`, `compaction`, `contextManagement`, `anthropicBeta`
+(an array of beta header strings).
 
-Retrieved web-search results remain standalone sources. Citations do not add duplicate sources when search results are present; citation-only responses still expose fallback sources, emitted before the stream finishes.
+Portable `reasoning` is mapped per model: adaptive-thinking models receive
+adaptive thinking with summarized display, older models receive a token budget,
+and `xhigh` is lowered to `high` on models that do not support it.
 
-`toolChoice: ["type": "none"]` keeps tool definitions in the request. Manual `thinking: enabled` changes required or named tool choices to automatic with a warning; a named choice retains only its selected tool. Adaptive or disabled thinking retains supported forced choices. Tool transcripts can replay provider-referenced files in tool results and JSON/error-JSON tool-search failures.
-## Incomplete streams and the native response boundary
+### Model-specific limits
 
-Nonempty text, reasoning or tool input that ends before the provider's
-`message_stop` finishes as `interrupted`; partial content remains available.
-An explicit stop retains its mapped finish reason. The native API ends one
-logical response and cancels its HTTP body at the first `message_stop`, even
-if the server leaves the body open. Unlike the JavaScript codec, it does not
-consume additional Messages responses from the same body. A multi-message
-session would require a separate explicit lifecycle contract.
+The adapter knows the capabilities of current Claude families (Opus, Sonnet,
+Haiku and Fable generations up to 5.5) and adjusts requests instead of failing:
 
-## Refreshable authentication and JSON fallback
+- Models that reject sampling parameters drop `temperature`, `topP` and `topK`
+with a warning.
+- Models that cannot disable thinking, or that reject budget thinking, switch to
+their closest supported mode with a compatibility warning. Incompatible
+`xhigh` or `max` effort is lowered to `high`.
+- Manual (`enabled`) thinking turns a required or named tool choice into `auto`
+with a warning. `toolChoice` `none` keeps tool definitions in the request.
 
-`AnthropicProviderSettings.authTokenProvider` accepts an asynchronous throwing closure, resolved before each Messages, Batch, Files or Skills HTTP request. Model construction does not call it; supplier errors propagate before network I/O. The supplier takes precedence over `authToken`, and bearer authentication conflicts with an explicitly supplied API key. Authentication does not automatically add an OAuth beta. Existing static API keys and bearer tokens continue to work.
+## Prompt caching
 
-When a hosting adapter disables native structured output but the model rejects forced tool use, Sonnet 5.5, Opus 5.5 and Fable 5.1/5.2 use native JSON output only when the schema can be represented without loss. Recursive references, open maps and schemas with more than ten optional properties keep the JSON response tool with automatic tool choice. Definitions next to a top-level `$ref` are preserved. Required properties do not count toward the optional-property limit; referenced definitions count at every use.
+Mark a message or content part with `cacheControl` in its provider metadata:
 
-If the model answers directly instead of calling the JSON response tool, generation returns its final text. Streaming holds that text until the response ends, preserves its citations, and discards preamble before tool activity. A JSON-tool call replaces held text; a tool or pause handoff does not expose preamble as the JSON answer. The existing one-response native boundary still applies. Portable `xhigh` reasoning rounds down to `high` on models without `xhigh`; Sonnet 5.5 reports a compatibility warning when `none` selects its lowest `between_tools` mode.
+```swift
+let messages = [
+    AIMessage(
+        role: .system,
+        content: [.text(longInstructions)],
+        providerMetadata: ["anthropic": ["cacheControl": ["type": "ephemeral"]]]
+    ),
+    .user("Answer using the instructions above."),
+]
+let result = try await model.generateText(messages: messages)
+```
 
-Dated base Fable 5 aliases are matched separately from 5.1/5.2 aliases, preserving the base-model JSON-tool fallback on restricted hosts.
+Anthropic allows four cache breakpoints, shared across prompt blocks and tool
+definitions. A part-level marker wins over a message-level marker on the same
+block and is counted once.
 
-## Notes
+## Provider tools
 
-Anthropic mirrors upstream 4.0.105 across Messages, files, and skills: thinking, citations, cache control, hosted/provider-defined tools, streamed code-execution input subtypes, `fallbacks: default` beta routing, caller metadata replay for client/server tools and web-search results across generated and streamed responses, Claude Opus 5 and forward-compatible Claude capabilities, structured-output tool safeguards, reasoning-token usage details, and provider metadata. Advisor tools map per-inference `maxTokens` and replay `stopReason`; stream parsing rejects spliced message IDs while tolerating duplicate starts for the active message; code-execution transcripts retain their complete prompt-cache-compatible wire shape. Generic adaptive reasoning requests include `display: summarized`. Generated response blocks retain upstream order across reasoning, text, citations, sources, tool calls/results, and compaction; signed/redacted thinking and text citation metadata are preserved. Mid-conversation system-message `toolChanges` map to tool-addition/removal content blocks with automatic beta headers, while initial-system changes warn and are ignored; toolChanges-only empty text does not consume an invisible cache breakpoint. `thinking: disabled` is forwarded and incompatible `xhigh`/`max` effort is lowered with a warning. Files and skills clients add the required Anthropic beta headers. The language wrapper also implements durable Batch V4 start/status/result streaming with strict response validation, redirect-safe JSONL retrieval, per-item terminal failures, and programmatic deferred-result replay without leaking the internal discriminator. Current Batch parity forwards the full request setting/content surface, preserves native counts and raw status, isolates invalid or unknown result items, safely encodes returned skill identifiers, and warns because completion webhooks are unsupported. The 4.0.49 delta adds Fable 5.1 and Vertex Claude 4 recognition, mid-conversation `clearAt` and `effort`, updated adaptive display and binding-only thinking behavior, plus the context-management, structured-outputs, interleaved-thinking, and web-search beta headers. Streaming multipart file bodies remain JS-specific because the Swift file client accepts buffered `Data`. The 2026-09-20 pass adds the 20260318 web tools and deferred lifecycle, normalizes implicit code execution, preserves custom aliases, and exposes a Messages-backed Evaluation V4 adapter. The 2026-09-27 pass adds Claude Opus 5.5 and Fable 5.1 recognition, `computerToolset_20260801`, current structured-output safeguards, and compaction, toolset, and effort behavior. The 2026-10-04 pass adds Sonnet 5.5 between_tools thinking, replayable native fallback markers, historical missing-caller normalization, and lossless toolset action replay. The 2026-10-11 pass: Claude Haiku 5.5 adaptive thinking, sampling, structured output and effort behavior is recognized; message_start provider metadata is retained. Batch downloads accept a positive maxLineBytes limit, defaulting to 64 MiB. The 2026-10-18 pass: Text blocks and stream endings expose normalized citations while retaining complete raw provider citation metadata. Retrieved web results remain independent sources with citation fallback only when retrieval is absent. Manual thinking downgrades forced tools; none preserves tool definitions. Tool-result file references and tool-search error/cache replay follow the current Messages protocol. The 2026-10-23 pass: Compatible Messages configuration supports provider-specific media/cache/sampling behavior; batch beta options reject explicit null. The 2026-10-25 pass: Nonempty unfinished Messages output reports interrupted; explicit provider stops/errors retain their mapped semantics and metadata. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied. The 2026-11-15 delta and native/platform distinctions are recorded in WeeklyUpstreamAudit20261115; no full-package or live-service parity is implied.
+`AnthropicTools` builds Anthropic-hosted and client-executed tool definitions,
+including `webSearch_20250305`, `webSearch_20260318`, `webFetch_20250910`,
+`codeExecution_20250825`, `bash_20250124`, `textEditor_20250728`,
+`computer_20251124`, `computerToolset_20260801`, `memory_20250818`,
+`toolSearchRegex_20251119`, `toolSearchBm25_20251119` and `advisor_20260301`.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+```swift
+let result = try await model.generateText(
+    "What changed in Swift concurrency this year?",
+    tools: LanguageToolOptions(rawTools: [
+        "web_search": AnthropicTools.webSearch_20250305(maxUses: 3),
+    ])
+)
+print(result.sources)
+```
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+Required beta headers are added automatically. Retrieved web-search results are
+returned as sources without duplicates from citations. See [Tools](https://swiftaisdk.github.io/SwiftAISDK/core/tools/).
+
+## Structured output
+
+`structuredOutputMode` chooses how JSON output is produced: `"outputFormat"`
+(native JSON Schema output), `"jsonTool"` (a forced JSON response tool) or
+`"auto"` (default). In automatic mode, native output is used only on supported
+models and when the schema can be represented without loss; recursive schemas,
+open maps and other unsupported shapes use the JSON tool. If the model answers in
+text instead of calling the JSON tool, that text is returned as the answer. See
+[Structured output](https://swiftaisdk.github.io/SwiftAISDK/core/structured-output/).
+
+## Citations
+
+Text parts carry normalized `AICitation` values for document pages, character
+ranges, content blocks, web-search results and search-result locations. Read
+`result.citations` for all of them; the original citation objects stay in the
+text part's provider metadata. Document offsets refer to the source document,
+not the generated text.
+
+## Message threads
+
+Threads are opt-in through `providerOptions["anthropic"]["thread"]`:
+`["type": "create"]` starts one and
+`["type": "continue", "previousMessageId": "msg_..."]` sends only the new turns.
+Continuations omit leading system instructions and tool definitions, so start a
+new thread to change them, and pass the same `anthropicBeta` values on every turn.
+Keep the full history locally so you can recover when a thread expires
+(`thread_not_found`). Threads cannot be combined with batches or with compaction
+and context edits other than `clear_thinking_20251015` with `keep: "all"`.
+
+Mid-conversation system messages can carry `toolChanges` that add or remove
+tools; changes on the initial system message are ignored with a warning.
+
+## Streaming
+
+- `includePings: true` emits keepalive `.ping` stream parts; it defaults to false
+and is never sent in the request body.
+- A `.custom` part whose value has `"kind": "anthropic.message_start"` carries the
+initial usage, response ID and model in `providerMetadata["anthropic"]`.
+- A stream that ends with content but without `message_stop` finishes as
+`interrupted`, with the partial content kept.
+- One call reads exactly one Messages response and closes the HTTP body at the
+first `message_stop`.
+
+## Files, skills and batches
+
+- `provider.files()` uploads buffered `Data`, reads metadata, downloads and
+deletes files. Streaming uploads are not supported. See [Files](https://swiftaisdk.github.io/SwiftAISDK/core/files/).
+- `provider.skills()` manages Anthropic skills; required beta headers are added.
+- `provider.experimentalBatch()` runs Message Batches. Set
+`batchResultDownloads` in the settings to bound the size of downloaded result
+lines (64 MiB by default). Completion webhooks are not supported. See
+[Batch text](https://swiftaisdk.github.io/SwiftAISDK/core/batch-text/).
+
+## Decisions, evaluations and extraction
+
+`decisionModel(...)`, `evaluationModel(...)` and `extractionModel(...)` run over
+Messages with structured output. Extraction splits more than 16 fields into
+parallel requests. See [Decisions](https://swiftaisdk.github.io/SwiftAISDK/core/decide/),
+[Evaluate](https://swiftaisdk.github.io/SwiftAISDK/core/evaluate/) and [Extract](https://swiftaisdk.github.io/SwiftAISDK/core/extract/).
+
+## Related providers
+
+The same Messages adapter powers [Claude Platform on AWS](https://swiftaisdk.github.io/SwiftAISDK/providers/anthropic-aws/),
+[Amazon Bedrock (Anthropic models)](https://swiftaisdk.github.io/SwiftAISDK/providers/amazon-bedrock-anthropic/) and
+[Google Vertex AI (Anthropic models)](https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-anthropic/).
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

@@ -1,32 +1,78 @@
-## Images and Box decisions
+## Quick start
 
-Use [`AI.experimentalDecide`](../../core/decide/) with `decisionModel("jev-preview")`
-and `.box(instructions:)` to locate an object in PNG/JPEG evidence. Answers use
-`AIDecisionBox(top:bottom:left:right:)` with ordered finite edges in [0, 1].
+```swift
+import SwiftAISDK
 
-`TypeSafeAIFilePartProviderOptions` supplies nonempty unique references and optional
-`insertReference`. Images are uploaded as multipart files alongside `request.json`;
-text-only decisions remain JSON. The SDK adds the experimental images header for
-images or Box questions and enables the 262k-token long-context header only when
-`TypeSafeAIDecisionModelOptions(longContext: true)` is supplied. Unknown model
-options still warn; known options are validated before I/O. See the Decision guide
-for a complete typed example and reference insertion rules.
+let typeSafe = AIProviders.typeSafeAI()
+let result = try await AI.experimentalDecide(
+    model: try typeSafe.decisionModel("jev-latest"),
+    state: .text("The export crashes in Safari."),
+    questions: [
+        "bug": .boolean(instructions: "Does the user report broken functionality?"),
+        "severity": .score(criteria: ["Cosmetic", "Degraded", "Blocking"])
+    ]
+)
+print(result.answers)
+```
 
-## Rotating API keys
+For the modular packages, use `import SwiftAI` and `import SwiftAITypeSafeAI`, then
+`AIProviders.typeSafeAI(configuration: TypeSafeAIProviderSettings(...))`. The native
+factory requires a configuration argument and does not throw; `typeSafeAI` is a
+default provider instance.
 
-`TypeSafeAIProviderSettings.apiKeyProvider` resolves a fresh key before
-each authenticated request; static `apiKey` settings remain supported. Supplier
-errors stop the request before it reaches the transport.
+The API key is resolved when a request is made, not when the provider is created, so a
+key can be installed in the environment later. `TypeSafeAIProviderSettings(environment:)`
+supplies a custom environment map.
 
-## Current decision limits and state
+## Decisions
 
-Decision Choice questions require 1...255 options, and Score questions
-require 1...10 non-null levels. Structured score legends are retained in
-`providerMetadata.typesafe.legend` keyed by question ID. A single JSON string,
-object or array state is forwarded directly; null, Boolean and number states are
-serialized as text. The high-level legacy Evaluation API keeps its existing
-stricter question contract.
+Decisions call `/systemone` with Choice, Score, Boolean and Box questions. Choice
+questions take 1–255 options and Score questions 1–10 non-null levels. Answers are
+rounded to two decimals, which the result reports as its rounding. Confidence values
+and score legends (keyed by question ID) are under `providerMetadata.typesafe`.
+`maxOutputTokens`, `reasoning` and unknown provider options produce warnings; known
+options are validated before the request. See [Decisions](../../core/decide/).
 
-Decision `.box()` may omit instructions, represented as JSON null. Box questions
-enable the image feature header even without image assets. Missing/null score
-legends produce an empty root legend map; a non-object legend is invalid.
+A state made of a single JSON string, object or array is sent as-is. Other states,
+including JSON null, Boolean and number values, are joined into text.
+
+## Images and Box questions
+
+State may include PNG or JPEG images as inline data or base64. Images are uploaded as
+multipart parts next to `request.json`; text-only decisions stay JSON. A `.box`
+question locates an object and returns `AIDecisionBox` edges (`top`, `bottom`, `left`,
+`right`) in 0–1, with `left < right` and `top < bottom`. Box instructions may be
+omitted.
+
+```swift
+let result = try await AI.experimentalDecide(
+    model: try typeSafe.decisionModel("jev-latest"),
+    state: .parts([.file(
+        mediaType: "image/png", data: .data(imageBytes),
+        providerOptions: TypeSafeAIFilePartProviderOptions(reference: "[photo]").providerOptions
+    )]),
+    questions: ["object": .box(instructions: "The mug in [photo]")],
+    providerOptions: TypeSafeAIDecisionModelOptions(longContext: true).providerOptions
+)
+```
+
+`TypeSafeAIFilePartProviderOptions` sets each image's reference, which must be
+nonempty and unique. By default the SDK inserts the reference (or a generated one) into
+the state text unless the state already mentions it. `insertReference: false` requires
+an explicit reference that you use in instructions or criteria.
+
+Images or Box questions send TypeSafe's experimental image header.
+`TypeSafeAIDecisionModelOptions(longContext: true)` sends the separate 262k-token
+long-context header; TypeSafe documents this mode as slower and less accurate.
+
+## Evaluation API
+
+`evaluationModel(_:)` and `AI.experimentalEvaluate` remain available for existing code
+and use the same `/systemone` endpoint with the stricter Evaluation question contract.
+New code should use decisions.
+
+## Rotating credentials
+
+`TypeSafeAIProviderSettings.apiKeyProvider` accepts an async throwing closure resolved
+before each authenticated request. A supplier failure stops the request before it is
+sent.

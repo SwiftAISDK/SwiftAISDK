@@ -1,0 +1,153 @@
+---
+title: Agents
+description: Package a model, instructions, tools, and stop conditions into a reusable tool-loop agent.
+---
+
+An agent bundles a model, instructions, tools, and loop settings so you can run
+the same tool loop from several places. `AIToolLoopAgent` calls the model,
+executes the tools it asks for, feeds the results back, and repeats until the
+model answers without a tool call or a stop condition is met.
+
+```swift
+import SwiftAISDK
+
+let weather = AITool(
+    name: "weather",
+    description: "Get the current weather in a city.",
+    parameters: [
+        "type": "object",
+        "properties": ["city": ["type": "string"]],
+        "required": ["city"],
+    ]
+) { input in
+    ["city": input["city"] ?? .null, "forecast": "sunny", "temperatureCelsius": 24]
+}
+
+let provider = try AIProviders.openAI()
+let agent = AIToolLoopAgent(
+    model: try provider.languageModel("gpt-6.1-sol"),
+    instructions: "You are a concise travel assistant.",
+    executableTools: [weather],
+    stopWhen: [.isStepCount(5)]
+)
+
+let result = try await agent.generate(prompt: "What should I wear in Tokyo today?")
+print(result.text)
+```
+
+`generate` returns the same `TextGenerationResult` as
+[`generateText`](../generate-text/). Use `stream(prompt:)` or
+`stream(messages:)` for an `AsyncThrowingStream` of `LanguageStreamPart`
+values, handled exactly like [`streamText`](../stream-text/):
+
+```swift
+for try await part in agent.stream(prompt: "Plan a rainy day in Tokyo.") {
+    if case let .textDeltaPart(_, delta, _) = part {
+        print(delta, terminator: "")
+    }
+}
+```
+
+## Stop conditions and step limits
+
+A step is one model call plus the tool executions it requested. The loop ends
+when the model returns no tool calls, when any `stopWhen` condition is true after
+a step, or when `maxSteps` is reached.
+
+| Condition | Stops after a step when |
+| --- | --- |
+| `.isStepCount(n)` | `n` steps have completed. |
+| `.hasToolCall("name", ...)` | The last step called one of the named tools. |
+| `AIStopCondition { context in ... }` | Your async closure returns `true`; `context.steps` holds every completed `AIToolStep`. |
+
+`maxSteps` defaults to `20` and is always a hard limit. When you keep the
+default and pass no `stopWhen`, the agent stops at step 20 and logs a warning
+that the default limit was reached; pass `stopWhen` or a different `maxSteps`
+to choose the limit yourself.
+
+```swift
+let researcher = AIToolLoopAgent(
+    model: model,
+    executableTools: [search, finish],
+    maxSteps: 12,
+    stopWhen: [
+        .hasToolCall("finish"),
+        AIStopCondition { context in
+            let tokens = context.steps.compactMap { $0.usage?.totalTokens }.reduce(0, +)
+            return tokens > 50_000
+        },
+    ]
+)
+```
+
+## Inspecting steps
+
+`result.steps` contains one `AIToolStep` per model call, with its `index`,
+`text`, `reasoning`, `toolCalls`, `toolResults`, `finishReason`, `usage`,
+`warnings`, and response metadata. `result.finalStep` is the last step, and
+`result.responseMessages` holds the assistant and tool messages to store in
+your conversation history.
+
+```swift
+for step in result.steps {
+    print("step \(step.index):", step.toolCalls.map(\.name), step.finishReason ?? "")
+}
+```
+
+## Conversations and per-call options
+
+Pass a transcript with `generate(messages:)` or `stream(messages:)`. The agent
+inserts its `instructions` as the first system message. System messages inside
+`messages` are rejected with `AIError.invalidArgument` unless you create the
+agent with `allowSystemInMessages: true`.
+
+`requestOptions` on the agent (an `AIChatRequestOptions` with temperature,
+`maxOutputTokens`, `providerOptions`, headers, `toolChoice`,
+`toolCallConcurrency`, and more) is the default for every call. Pass
+`AIAgentCallOptions` to override it for one call; values set per call win, and
+dictionaries such as `providerOptions` and `headers` are merged.
+
+```swift
+let controller = AIAbortController()
+let reply = try await agent.generate(
+    messages: history,
+    options: AIAgentCallOptions(
+        requestOptions: AIChatRequestOptions(temperature: 0.8),
+        abortSignal: controller.signal,
+        retryPolicy: .none
+    )
+)
+```
+
+`AIAgentCallOptions` also accepts `timeoutNanoseconds`, `streamTimeout`,
+`telemetry`, and `experimentalSteering`.
+
+## Customizing the loop
+
+The initializer also accepts:
+
+- `prepareStep` to change the model, request, or active tools before each step
+  by returning an `AIPrepareStepResult`;
+- `toolApproval` to evaluate every tool call centrally and return
+  `.approved`, `.denied`, or `.userApproval`
+  (see [Approvals](../tools/#approvals));
+- `retryPolicy`, `timeoutNanoseconds`, `streamTimeout`, and `telemetry`
+  defaults;
+- `onStepError`, `onError`, and `onAbort` callbacks. `generate` calls `onError`
+  before rethrowing ordinary failures; aborts and timeouts are excluded.
+  `onAbort` applies to streaming.
+
+## Custom agents and UI streams
+
+`AIAgent` is a protocol with `generate` and `stream` requirements for prompts
+and message arrays. Conform your own type to plug a different loop into code
+that accepts `any AIAgent`.
+
+`createAgentUIStream(agent:uiMessages:)` validates UI messages, converts them to
+model messages, and streams `AIUIMessage` snapshots for a chat UI. See
+[Chat](../chat/).
+
+## Reference
+
+[Core runtime API](../../components/core-runtime/) and
+[Tools API](../../components/tools/) list the agent and stop-condition types.

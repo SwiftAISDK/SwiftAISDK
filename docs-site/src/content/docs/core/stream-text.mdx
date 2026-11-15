@@ -3,34 +3,41 @@ title: Stream text
 description: Consume language model output as an async sequence.
 ---
 
-import { Code } from '@astrojs/starlight/components';
-import streamTextExample from '../../../../../Examples/Sources/StreamText/main.swift?raw';
+Use `streamText` when the UI or caller should receive partial output as it is
+generated. It returns an `AsyncThrowingStream` of `LanguageStreamPart` values.
 
-Use `streamText` when the UI or caller should receive partial output as it is generated.
+```swift
+import SwiftAISDK
 
-Providers may finish with `interrupted` when the stream ends without its
-completion signal. Partial output remains available. The facade skips local
-tool execution and automatic continuation for that response; the caller decides
-whether to retry. Explicit provider/parse errors retain their error semantics.
+let provider = try AIProviders.openAI()
+let model = try provider.languageModel("gpt-6.1-sol")
 
-<Code code={streamTextExample} lang="swift" title="Examples/Sources/StreamText/main.swift" />
+for try await part in model.streamText("Write a short haiku about APIs.") {
+    switch part {
+    case let .textDeltaPart(_, delta, _):
+        print(delta, terminator: "")
+    case let .finishMetadata(reason, usage, _):
+        print("\nFinished: \(reason ?? "unknown")")
+        print("Tokens: \(usage?.totalTokens ?? 0)")
+    default:
+        break
+    }
+}
+```
+
+When you only need text, wrap the stream with `toTextStream(_:)`. It yields
+the text deltas, ignores every other part, and still propagates thrown failures:
+
+```swift
+for try await text in toTextStream(model.streamText("Summarize Swift actors.")) {
+    print(text, terminator: "")
+}
+```
 
 Streaming emits structured lifecycle parts, not just raw strings. That lets you render text, reasoning, tool input deltas, tool calls, tool approval requests and responses, tool results, source citations, files, raw chunks, response metadata, and finish metadata with one loop.
 
-Built-in HTTP language providers parse the response incrementally, so the first complete provider event can become a `LanguageStreamPart` while the HTTP response is still open. A provider end marker such as `[DONE]`, caller abort, or stopping iteration cancels the remaining response-body read instead of waiting for EOF.
-
-`URLSessionTransport` converts response bytes to `Data` only when the body
-consumer requests the next element. An unread or paused body no longer creates
-an unbounded queue of one-byte `Data` values. Abort signals, explicit
-`cancelBody()`, task cancellation during a read, and dropping the body release
-the underlying URLSession task. Response byte limits still apply.
-
-This bounds the SDK's byte-adapter queue only. Foundation can buffer network
-data, and higher-level parsers, tool loops, telemetry and application code can
-retain content. The SDK does not claim a whole-stream constant-memory bound.
-The offline macOS probe `python3 Scripts/measure-http-streaming-memory.py`
-measures an unread 1 MiB response in fresh processes; compare measurements on
-the same machine and toolchain.
+Breaking out of the loop, cancelling the enclosing task, or aborting the
+request's `abortSignal` cancels the remaining provider response.
 
 ## Canonical Stream Contract
 
@@ -39,13 +46,26 @@ Built-in language models emit one semantic family for generated content:
 - `textStart`, zero or more `textDeltaPart` values, then `textEnd` or `textEndWithCitations`;
 - `reasoningStart`, zero or more `reasoningDeltaPart` values, then `reasoningEnd`.
 
-The legacy `textDelta`, `reasoningDelta`, and `finish` enum cases remain available for source compatibility with custom models. Built-in providers never pair a legacy delta with a part-aware delta for the same provider token. The high-level facade normalizes legacy deltas into the canonical lifecycle and legacy `finish` into `finishMetadata`; a custom stream that mixes both delta families in one semantic channel is rejected because equal adjacent strings can be legitimate provider output and cannot be safely deduplicated by value.
+The `textDelta`, `reasoningDelta`, and `finish` enum cases exist for source compatibility with custom models. Built-in providers never pair one of these deltas with a part-aware delta for the same provider token. The high-level facade normalizes these deltas into the canonical lifecycle and `finish` into `finishMetadata`, so match `textDeltaPart` and `finishMetadata` when you consume `streamText`. A custom stream that mixes both delta families in one semantic channel is rejected because equal adjacent strings can be legitimate provider output and cannot be safely deduplicated by value.
 
 Each logical built-in model response emits exactly one terminal `finishMetadata` part after its open content and tool-input blocks have been closed and its final usage and provider metadata are known. A protocol that can carry multiple logical responses on one connection, such as OpenAI Responses, emits one terminal part for each response. A multi-step tool loop likewise has one terminal part per model step. Custom models should emit the same terminal; clean custom EOF without one is preserved rather than assigned a guessed finish reason.
 
-The full stream forwards repeatable provider `error` parts as in-band events. Setup, HTTP, framing, and network failures terminate by throwing. If an in-band error closes a provider stream without a terminal event, the facade completes that step with a single `finishMetadata` whose reason is `error`. By default an attempt is not replayed once it has exposed a public part. Callers can opt into the narrower post-start recovery described below.
+Providers may finish with `interrupted` when the stream ends without its
+completion signal. Partial output remains available. The facade skips local
+tool execution and automatic continuation for that response; the caller decides
+whether to retry. Explicit provider/parse errors retain their error semantics.
 
-Use `toTextStream()` when only text is needed. It emits canonical text deltas, ignores lifecycle, reasoning, tool, metadata, and in-band error parts, and still propagates thrown failures.
+The full stream forwards repeatable provider `error` parts as in-band events. Setup, HTTP, framing, and network failures terminate by throwing. If an in-band error closes a provider stream without a terminal event, the facade completes that step with a single `finishMetadata` whose reason is `error`. By default an attempt is not replayed once it has exposed a public part. Callers can opt into the narrower post-start recovery described in [Retry Behavior](#retry-behavior).
+
+Delivered steering messages emit `.steeringMessage(id:message:stepNumber:)`
+before that step's provider output. The stream also supports `.requestMetadata`
+and `.ping`. Keepalive pings pass through smoothing and retry buffering; they
+neither flush pending text nor reset the semantic-output timeout. Add these
+cases to exhaustive switches over `LanguageStreamPart`.
+
+## Tool input and approvals
+
+Tool input can arrive before the final tool call. Use `toolInputStart` / `toolInputStartText`, `toolInputDelta`, and `toolInputEnd` parts when you want to show streamed arguments in a UI, and handle `toolApprovalRequest` / `toolApprovalResponse` parts when a tool requires human or policy approval. See [Tools](../tools/) for tool loops and approvals.
 
 ## Citations attached to text
 
@@ -59,26 +79,13 @@ system when applying text transformations.
 `.citedText` when citations are present, while uncited output retains `.text`.
 Streams close cited blocks with `.textEndWithCitations`; its `citations` property
 also exposes the references without matching the case. UI snapshots retain them
-in `AIUITextPart.citations`. Existing `.text` and `.textEnd` constructors remain
+in `AIUITextPart.citations`. The `.text` and `.textEnd` constructors remain
 available. Exhaustive switches should handle the companion cases as well.
-
-The JavaScript `experimental_streamTextLowMemory` result facade and its replay/final-getter
-retention policy are not exposed by this native API. Swift returns async
-sequences without those JavaScript result getters; no equivalent memory bound
-or retention-performance guarantee is claimed.
-
-## Custom Transports
-
-Provider settings continue to accept `any AITransport`, which keeps unary `generate` calls source-compatible with send-only transports. A custom transport used by `stream` must also conform to `AIStreamingTransport` and return response headers plus an incremental `AsyncThrowingStream<Data, Error>` body. SwiftAISDK reports a non-retryable `AIError.invalidArgument` when streaming is requested with a send-only transport; it never falls back to buffering through `send`.
-
-Prodia language generation and the default protocol implementation remain intentionally simulated streams because their underlying operation is unary. Provider-backed SSE and Amazon EventStream language models use the incremental transport path.
-
-Tool input can arrive before the final tool call. Use `toolInputStart` / `toolInputStartText`, `toolInputDelta`, and `toolInputEnd` parts when you want to show streamed arguments in a UI, and handle `toolApprovalRequest` / `toolApprovalResponse` parts when a tool requires human or policy approval.
 
 ## Retry Behavior
 
 Facade calls retry transient setup failures according to `retryPolicy`. The default
-post-start behavior is still conservative: after the first public part, a stream
+post-start behavior is conservative: after the first public part, a stream
 failure ends that attempt.
 
 Set `streamRetries` to a positive count to recover from retryable in-band provider
@@ -104,6 +111,15 @@ for try await part in AI.streamText(
     // Render parts.
 }
 ```
+
+Typed `streamText(..., output:)` object and array streams accept the same
+`streamRetries` option. A retryable in-band provider error restarts the whole
+typed output pipeline with the failed attempt's parsing state discarded. A
+JSON, schema, or decoding failure after a complete provider response is not a
+provider-stream retry and does not consume this budget.
+
+[Error handling](../error-handling/#retries-and-timeouts) covers `retryPolicy`,
+backoff, and aborts for every call type.
 
 ## Semantic Stream Timeouts
 
@@ -134,8 +150,8 @@ A terminal model finish/error disarms first/inter-chunk timers before output
 postprocessing or tool work. Every replacement provider attempt starts a fresh
 first-output timer. Explicit aborts preserve their caller reason and reason name.
 First/inter-chunk failures throw `AIStreamTimeoutError` with `.firstChunk` or
-`.chunk`; step and total failures use `AIError.timeout`. The legacy flat
-`timeoutNanoseconds` remains available as the total deadline.
+`.chunk`; step and total failures use `AIError.timeout`. The flat
+`timeoutNanoseconds` parameter sets only the total deadline.
 
 Total and step budgets include time spent in retry backoff. A step deadline
 stays active after the model stream while client-side tools execute; when it
@@ -148,27 +164,49 @@ timeout: ...)` overloads use the same timeout lifecycle.
 Streamed file and reasoning-file parts use the same materialization policy as
 `generateText`: `data:` and HTTP(S) URLs become inline data before the part is
 emitted, while provider references stay opaque. Downloads honor aborts,
-redirect validation, private-host rejection, and byte limits. The default
-download transport pins the validated DNS addresses and preserves
-original-host TLS trust.
+redirect validation, private-host rejection, and byte limits; see
+[Files](../files/#download-transport-security).
 
 `AIUIMessageStreamReducer.snapshots` can continue an existing
 `originalMessage` instead of starting a new assistant message. Its async
 `onEnd` callback fires at most once with the final message and an outcome of
 `completed`, `aborted`, `failed`, or `unknown`. Consumer cancellation reports
 `unknown` with `isCancelled == true`; an `AIAbortError` reports `aborted` with
-`isAborted == true`.
+`isAborted == true`. [Chat](../chat/) shows the session API built on these
+snapshots.
 
 ## Steering and failed steps
 
-`AI.streamText` accepts `experimentalSteering`, `onStepError`, `onError` and `onAbort`, including the typed `AIOutput` overloads. Pass a fresh object from `AI.experimentalCreateSteering()` and set the desired `maxSteps`. Delivery receipts, `prepareStep.experimentalSteeringMessages` and completed-step steering metadata follow the same rules as `generateText`.
+`AI.streamText` accepts `experimentalSteering`, `onStepError`, `onError` and `onAbort`, including the typed `AIOutput` overloads. Pass a fresh object from `AI.experimentalCreateSteering()` and set the desired `maxSteps`. Delivery receipts, `prepareStep.experimentalSteeringMessages` and completed-step steering metadata follow the same rules as [`generateText`](../generate-text/#experimental-steering).
 
 `onStepError` fires once when a started model step fails before producing a result: a thrown provider/stream error or a stream ending without output or its terminal finish. It reports the actual continuation-step index and completed previous steps. A provider error chunk completes an errored step and invokes `onError`, without a failed-step callback. An abort or timeout invokes `onAbort`, without `onStepError` or `onError`.
 
 `AIStreamTextAbortEvent` contains completed steps and the available abort reason. `AIToolLoopAgent` forwards its constructor callbacks. Ordinary completion preserves the receipt's completion reason; cancelling the consumer settles pending steering as aborted.
 
-Delivered messages emit `.steeringMessage(id:message:stepNumber:)` before that
-step's provider output. The stream also supports `.requestMetadata` and `.ping`.
-Keepalive pings pass through smoothing and retry buffering; they neither flush
-pending text nor reset the semantic-output timeout. Add these cases to exhaustive
-switches over `LanguageStreamPart`.
+## Custom Transports
+
+Provider settings accept `any AITransport`, so unary `generate` calls work with send-only transports. A custom transport used by `stream` must also conform to `AIStreamingTransport` and return response headers plus an incremental `AsyncThrowingStream<Data, Error>` body. SwiftAISDK reports a non-retryable `AIError.invalidArgument` when streaming is requested with a send-only transport; it never falls back to buffering through `send`.
+
+Prodia language generation and the default protocol implementation are simulated streams because their underlying operation is unary. Provider-backed SSE and Amazon EventStream language models use the incremental transport path.
+
+## Advanced
+
+### Incremental HTTP parsing
+
+Built-in HTTP language providers parse the response incrementally, so the first
+complete provider event can become a `LanguageStreamPart` while the HTTP
+response is still open. A provider end marker such as `[DONE]`, caller abort, or
+stopping iteration cancels the remaining response-body read instead of waiting
+for EOF.
+
+### URLSession body buffering
+
+`URLSessionTransport` converts response bytes to `Data` only when the body
+consumer requests the next element, so an unread or paused body does not build
+an unbounded queue. Abort signals, explicit `cancelBody()`, task cancellation
+during a read, and dropping the body release the underlying URLSession task.
+Response byte limits still apply.
+
+This bounds the SDK's byte-adapter queue only. Foundation can buffer network
+data, and higher-level parsers, tool loops, telemetry and application code can
+retain content. The SDK does not guarantee constant memory for a whole stream.

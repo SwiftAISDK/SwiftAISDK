@@ -1,66 +1,26 @@
-# Swift AI OpenAI
+# OpenAI for Swift
 
-An independent Swift-native port of the provider-facing Vercel AI SDK package
-`@ai-sdk/openai`. Responses and chat, completions, embeddings, images, transcription/speech, decisions/evaluation, batches, files, skills and the existing OpenAI Live WebSocket adapter.
+`SwiftAIOpenAI` adds OpenAI to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/openai` and supports text generation, text completion, embeddings, image generation, transcription, speech, evaluation, decisions, extraction, provider files and skills.
 
-Swift 6.3 or newer; declared platforms macOS 12 and iOS 15. This source is
-maintained in the canonical SwiftAISDK repository and exported as an independently
-versioned Swift package. Swift versions are independent of the npm baselines.
+Provider guide with models, options, streaming and errors:
+
+- [OpenAI](https://swiftaisdk.github.io/SwiftAISDK/providers/openai/)
 
 ## Usage
 
-Depend on `.product(name: "SwiftAIOpenAI", package: "swift-ai-openai")`.
-For generation and explicit registries also add `swift-ai-core` and its `SwiftAI`
-product. The canonical [example](../../Examples/OpenAIOnly) contains a complete
-manifest for local development and runs offline with an injected transport.
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAIOpenAI` product from this package to your target, then create the provider:
 
 ```swift
 import SwiftAI
 import SwiftAIOpenAI
 
-let provider = try AIProviders.openAI(
-    configuration: OpenAIProviderSettings(apiKey: "your-api-key")
-)
-let model = try provider.languageModel("your-model-id")
-let result = try await AI.generateText(
-    model: model,
-    request: .init(messages: [.user("Hello")])
-)
+let provider = try AIProviders.openAI(configuration: OpenAIProviderSettings())
 ```
 
-Native factories use typed `configuration:` settings. The legacy `settings:`
-overloads belong to `SwiftAISDK`. When importing both facades, qualify `SwiftAI.AI`
-or `SwiftAISDK.AI` and the appropriate factory namespace. Core uses explicit model
-objects or registries; it does not initialize an implicit Gateway.
+By default the provider reads `OPENAI_API_KEY` and `OPENAI_BASE_URL` from the environment; values set in `OpenAIProviderSettings` take precedence.
 
-OpenAI depends on the generic compatible package for shared wire behavior; its
-runtime does not depend on Anthropic, the aggregate, MCP or UI. Provider-specific
-model catalogs, authentication/defaults, Responses and audio behavior are owned here.
-`OpenAIProvider` is the native concrete factory type; the legacy OpenAI factory's
-`SwiftAISDK.OpenAICompatibleProvider` return type remains unchanged.
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
 
-## Current provider behavior
+## Contributing
 
-The provider exposes `extractionModel(_:)` for experimental typed nullable field extraction through Responses. `providerOptions.openai.textFormat` fixes the initial text format independently of Output parsing; empty system messages can replay `textFormatUpdate`, `reasoningEffortUpdate` and `additionalTools` at their original position. Format changes require GPT-6 or later with standard reasoning and no automatic compaction/truncation. Combine consecutive format and reasoning changes in one empty control message. Additional tools accept function, custom and namespace definitions; hosted adapters also read OpenAI tool-result options.
-
-Set `promptCacheOptions.comparisonResponseId` to request comparison diagnostics. `providerMetadata.openai.promptCacheDiagnostics` preserves their raw fields across unary, streaming and batch results. OpenAI tool credentials are removed from telemetry copies while request/response values returned to applications remain intact. Image file, mask and markup downloads use the configured raw transport, without Azure provider credentials.
-
-## Porting and verification
-
-Run `swift test --package-path Packages/swift-ai-openai --no-parallel` from the
-canonical checkout. Full verification is `node Scripts/test-packages.mjs`, followed
-by `node Scripts/verify-provider-isolation.mjs` and
-`node Scripts/verify-provider-versions.mjs`. The latter uses synthetic local Git
-tags, not released version histories.
-
-`Porting/map.json` owns source/test/fixture relationships. Reviewed npm versions,
-archive evidence and test snapshot dispositions remain in the canonical
-`Porting/upstream-lock.json`. Extraction does not advance baselines or claim new
-upstream parity. Cross-package wire APIs support port adapters; prefer the typed
-provider factory for application code.
-
-Licensed under Apache-2.0; see LICENSE. Vercel names identify provenance, not
-affiliation. Contribute through the canonical SwiftAISDK repository. Distribution repositories are generated from it.
-
-Original public initializer and helper signatures remain available for typed
-function references, alongside the extended APIs. Their original defaults are preserved.
+This package is exported from `Packages/swift-ai-openai` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

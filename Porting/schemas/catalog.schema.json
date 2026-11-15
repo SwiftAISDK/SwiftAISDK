@@ -34,6 +34,31 @@
         },
         "notes": {
           "type": "string"
+        },
+        "displayName": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "credentials": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "env": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_]*$"
+              },
+              "description": {
+                "type": "string",
+                "pattern": "\\S"
+              }
+            },
+            "required": [
+              "env",
+              "description"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "required": [

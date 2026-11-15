@@ -1,10 +1,43 @@
-# "googleVertex.maas"
+# Google Vertex AI — Model Garden (MaaS)
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-maas/
 
+Open models from Vertex AI Model Garden, such as Llama, through Vertex's OpenAI-compatible endpoint for chat, completion, embedding and image models. Authenticates with an OAuth access token.
+
+Provider ID: `googleVertex.maas` · Upstream package: `@ai-sdk/google-vertex`
+
 ## Package
 
-`@ai-sdk/google-vertex`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-google-vertex`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-google-vertex.git", from: "1.2.2"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIGoogleVertex", package: "swift-ai-google-vertex"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIGoogleVertex
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `GOOGLE_VERTEX_ACCESS_TOKEN` | OAuth access token sent as a bearer token. Required unless passed in settings. |
+| `GOOGLE_ACCESS_TOKEN` | Fallback for GOOGLE_VERTEX_ACCESS_TOKEN. |
+| `GOOGLE_VERTEX_PROJECT` | Google Cloud project ID. Required unless passed as project or baseURL is set. |
+| `GOOGLE_VERTEX_LOCATION` | Vertex location. Defaults to global. |
 
 ## Factories
 
@@ -12,15 +45,70 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-maas/
 
 ## Capabilities
 
-- Language
-- Completion
-- Embedding
-- Image
+- [Language](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/)
+- [Completion](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/)
+- [Embedding](https://swiftaisdk.github.io/SwiftAISDK/core/embeddings/)
+- [Image](https://swiftaisdk.github.io/SwiftAISDK/core/generate-image/)
 
-## Notes
+## Quick start
 
-Vertex MaaS mirrors upstream 5.0.141 with OpenAI-compatible language, completion, embedding, and image factories. Maverick and Scout default `max_tokens` to 8192 while preserving an explicit caller value. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied. The 2026-11-15 delta and native/platform distinctions are recorded in WeeklyUpstreamAudit20261115; no full-package or live-service parity is implied.
+```swift
+import SwiftAISDK
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+// Reads GOOGLE_VERTEX_PROJECT, GOOGLE_VERTEX_LOCATION and GOOGLE_VERTEX_ACCESS_TOKEN.
+let provider = try AIProviders.googleVertexMaaS()
+let model = try provider.languageModel("meta/llama-4-maverick-17b-128e-instruct-maas")
+let result = try await model.generateText("List three uses for Swift on the server.")
+print(result.text)
+```
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+With modular packages, `import SwiftAI` and `import SwiftAIGoogleVertex`, then call
+`AIProviders.googleVertexMaaS(project:location:configuration:)` with a
+`GoogleVertexHostedProviderSettings`. The `configuration` argument is required.
+
+## Authentication and endpoint
+
+Model Garden MaaS models (open models such as Llama, served as managed APIs) use
+Vertex's OpenAI-compatible endpoint with an OAuth bearer token. The token comes from
+`apiKey` in the settings, then `GOOGLE_VERTEX_ACCESS_TOKEN`, then
+`GOOGLE_ACCESS_TOKEN`. Service-account variables and Express Mode keys are not
+used.
+
+The project comes from the `project` argument or `GOOGLE_VERTEX_PROJECT`, and is
+required unless you set `baseURL`. The location comes from `location` or
+`GOOGLE_VERTEX_LOCATION` and defaults to `global`. Requests go to
+`https://HOST/v1/projects/PROJECT/locations/LOCATION/endpoints/openapi/chat/completions`.
+For `global` the host is `aiplatform.googleapis.com`; for a region it is
+`LOCATION-aiplatform.googleapis.com`.
+
+```swift
+let provider = try AIProviders.googleVertexMaaS(
+    project: "my-project",
+    location: "us-central1",
+    settings: ProviderSettings(apiKey: accessToken)
+)
+```
+
+To refresh tokens before each request, use the `configuration:` factory and set
+`GoogleVertexHostedProviderSettings.apiKeyProvider` to an async throwing closure.
+
+## Models
+
+- `languageModel(_:)` and `chatModel(_:)` use Chat Completions. Model IDs include the
+publisher prefix, for example `meta/llama-3.1-405b-instruct-maas`.
+- `completionModel(_:)`, `embeddingModel(_:)` and `imageModel(_:)` use the matching
+OpenAI-compatible routes.
+
+`meta/llama-4-maverick-17b-128e-instruct-maas` and
+`meta/llama-4-scout-17b-16e-instruct-maas` default to `max_tokens: 8192`. Setting
+`maxOutputTokens` overrides this. The default is applied after your
+`transformRequestBody`.
+
+Request and response handling, including `includeUsage`,
+`supportsStructuredOutputs` and `transformRequestBody`, follows the
+[OpenAI-compatible provider](https://swiftaisdk.github.io/SwiftAISDK/providers/openai-compatible/). Image URLs in responses are
+downloaded without your Google Cloud token or provider headers.
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

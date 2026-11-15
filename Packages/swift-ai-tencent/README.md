@@ -1,56 +1,26 @@
-# SwiftAITencent
+# Tencent (TokenHub and Cloud VOD) for Swift
 
-Native Swift port of `@ai-sdk/tencent` **3.0.3**, exposing TokenHub Chat Completions and TokenHub Kling / Tencent Cloud VOD video generation. Requires Swift 6.3, macOS 12 or iOS 15.
+`SwiftAITencent` adds Tencent (TokenHub and Cloud VOD) to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/tencent` and supports text generation and video generation.
+
+Provider guide with models, options, streaming and errors:
+
+- [Tencent (TokenHub and Cloud VOD)](https://swiftaisdk.github.io/SwiftAISDK/providers/tencent/)
+
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAITencent` product from this package to your target, then create the provider:
 
 ```swift
-import SwiftAIProvider
+import SwiftAI
 import SwiftAITencent
 
-let provider = createTencent(configuration: .init(apiKey: "TOKENHUB_KEY"))
-let answer = try await provider.chat("hy4").generate(
-    LanguageModelRequest(messages: [.user("Hi")])
-)
-print(answer.text)
+let provider = try AIProviders.tencent(configuration: TencentProviderSettings())
 ```
 
-`TencentProvider`, `createTencent`, the default `tencent` instance and `AIProviders.tencent(configuration:)` share the same settings. `chat`, `chatModel` and `languageModel` route to the shared OpenAI-compatible model with provider identity `tencent.chat`. Chat tools, reasoning, usage, request/response metadata and streaming use that implementation; requests include `ai-sdk-tencent/3.0.3`. The language model is a native alias of `OpenAICompatibleChatModel`.
+By default the provider reads `TENCENT_TOKENHUB_API_KEY`, `TENCENTCLOUD_SECRET_ID`, `TENCENTCLOUD_SECRET_KEY`, `TENCENTCLOUD_VOD_SUB_APP_ID` and `TENCENTCLOUD_SESSION_TOKEN` from the environment; values set in `TencentProviderSettings` take precedence.
 
-TokenHub defaults to `https://tokenhub-intl.tencentcloudmaas.com/v1`. Supply `apiKey` or the `TENCENT_TOKENHUB_API_KEY` environment variable. `apiKeyProvider` asynchronously supplies a fresh key before each authenticated request. `baseURL`, `headers` and `transport` support custom endpoints and native HTTP middleware. Missing keys fail at the first request, so creating a video model does not require unused credentials.
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
 
-```swift
-let model = try provider.video("kling-video-v3")
-let started = try await model.startVideoGeneration(.init(
-    request: .init(prompt: "A cat walking on a beach",
-                   aspectRatio: "16:9", durationSeconds: 5,
-                   resolution: "1920x1080", generateAudio: true)
-))
-let status = try await model.videoGenerationStatus(.init(operation: started.operation))
-// Persist started.operation to resume polling later.
-```
+## Contributing
 
-TokenHub accepts `kling-video-*` IDs and routes standard, omni, and motion-control models to their respective endpoints. V4 IDs with references, voices or unframed elements use omni routing. Inputs include first/last frames, image/video references, native byte data and URLs. Audio references are ignored with a warning; use the `voices` option. Unsupported FPS, batch counts, seeds, model options and per-request webhooks produce warnings. Provider-level `resolution` overrides the common width-by-height resolution tier.
-
-```swift
-let vod = createTencent(configuration: .init(
-    secretId: "SECRET_ID", secretKey: "SECRET_KEY",
-    subAppId: "1500000000", region: "ap-singapore"
-))
-let video = try vod.video("vod/VS/2.0")
-var options = TencentVideoModelOptions()
-options.negativePrompt = "dogs"
-options.enhancePrompt = false
-options.assets = [.init(url: "asset://asset-1", usage: "FirstFrame")]
-let task = try await video.startVideoGeneration(.init(
-    request: .init(prompt: "A cat", providerOptions: try options.providerOptions)
-))
-```
-
-VOD uses `vod/<ModelName>/<ModelVersion>` IDs and defaults to `https://vod.intl.tencentcloudapi.com`. Settings fall back to `TENCENTCLOUD_SECRET_ID`, `TENCENTCLOUD_SECRET_KEY`, `TENCENTCLOUD_VOD_SUB_APP_ID` and `TENCENTCLOUD_SESSION_TOKEN`. The SubAppId must be a positive safe integer; Swift settings take its decimal string. `sessionToken`, `region` and `vodBaseURL` are optional. VOD credentials are loaded only for VOD requests; TokenHub credentials are independent.
-
-VOD requests use TC3-HMAC-SHA256 signatures and protect signed protocol headers from caller overrides. Native file inputs and `asset://` options retain their media categories and frame/reference roles. Output configuration includes resolution, aspect ratio, duration, audio, compliance, watermark, enhancement and off-peak settings. `TencentVideoModelOptions` validates the complete published schema, including element/voice IDs, asset categories and task priority. Raw options can also be supplied as `providerOptions["tencent"]`.
-
-Both backends expose start/status operations and pending/completed/failed states. Completed results contain video URLs, per-file `videoURLDescriptors` with individual media types, and `providerMetadata["tencent"]` with task/request IDs, duration, resolution, last-frame URL and billing usage when provided. VOD last-frame images are metadata, not video outputs. Enveloped Tencent Cloud failures receive the corresponding status and retryability while preserving the original body and headers. Requests, status checks and polling carry cancellation. Direct `generateVideo` polls at five-second intervals for up to ten minutes; higher-level SwiftAI orchestration provides configurable polling through the async video surface. Download or upload final URL outputs through the higher-level media flow.
-
-Embedding, image, transcription, speech and reranking models are unsupported. JavaScript workflow serialization and Zod module initialization/caching have no Swift surface. Swift's common video request requires a prompt string; an empty prompt represents the upstream absent-prompt scenario and is omitted from the Tencent body. `videoURLDescriptors` retains each VOD URL/MIME association, including mixed MOV, WebM and MP4 outputs; the legacy `mediaType` remains the first video's type. No live provider-service check is claimed.
-
-Matching-release provenance and every upstream test-file/scenario disposition are recorded in `Porting/upstream-tests.json`. The package tests preserve all portable release scenarios and fixtures, including Tencent's published canonical-request and TC3 signature reference values.
+This package is exported from `Packages/swift-ai-tencent` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

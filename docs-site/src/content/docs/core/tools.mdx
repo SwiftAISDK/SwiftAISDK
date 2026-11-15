@@ -3,26 +3,6 @@ title: Tools
 description: Let a language model call typed Swift tools.
 ---
 
-## Configurable tool discovery
-
-`toolSearch(maxResults:search:)` can rank deferred tools using an asynchronous
-callback. The callback sees eligible candidates; returned names are filtered
-against that set, deduplicated, and capped. Discovered tools become available
-on the next model step. A positive `maxResults` is required:
-
-```swift
-let search = try toolSearch(maxResults: 3) { query, candidates in
-    candidates.filter {
-        $0.name.localizedCaseInsensitiveContains(query)
-    }.map(\.name)
-}
-```
-
-Generic compatible servers may opt in to rich tool outputs through
-`AIProviders.openAICompatible(..., supportsMultiPartToolContent: true)` or
-`ProviderSettings.supportsMultiPartToolContent = true`. The default string
-representation is retained; opt in only when the server accepts content arrays.
-
 import { Code } from '@astrojs/starlight/components';
 import toolsExample from '../../../../../Examples/Sources/Tools/main.swift?raw';
 
@@ -45,12 +25,12 @@ An `AITool` has:
 `AIToolCall.toolMetadata` carries that definition's metadata to execution and
 approval callbacks. Restored approvals rebuild these values from the current
 tool registry before refinement and policy checks; persisted chat data cannot
-replace the current tool definition. Missing native tools still fail with
+replace the current tool definition. A call to a tool that is not registered fails with
 `AINoSuchToolError`.
 
-Use `maxSteps` to let the model call tools, receive results, and make a follow-up model call until it returns a final answer or the step limit is reached.
-
 ## Tool Loops
+
+Use `maxSteps` to let the model call tools, receive results, and make a follow-up model call until it returns a final answer or the step limit is reached. `stopWhen` conditions such as `.hasToolCall(...)` and `.isStepCount(...)` end the loop earlier. For a reusable tool-loop object, see [Agents](../agents/).
 
 Tool-enabled `generateText` and `streamText` can be customized with `LanguageToolOptions`:
 
@@ -71,6 +51,8 @@ let result = try await model.generateText(
 ```
 
 Each tool-loop result records `steps`, `toolCalls`, `toolResults`, approval parts, and `responseMessages` so you can inspect what happened or continue the conversation.
+
+### Tool choice
 
 Tool choice is enforced at the facade boundary. `toolChoice: none` rejects
 returned tool calls before repair, refinement or execution callbacks; streaming
@@ -98,13 +80,6 @@ let result = try await AI.generateText(
 )
 ```
 
-Approved history is scheduled in original model order even when approvals arrive
-out of order. An approval alone does not replace a local tool result in a direct
-model prompt; use the executable-tool facade to run approved calls first.
-
-For repeated or conflicting restored approval responses, the first response for
-each tool call wins, including different approval IDs referring to the same call.
-
 ## Approvals
 
 Use `needsApproval` on a tool when a specific tool call should pause for approval, or use a call-level approval policy when one central policy should evaluate every tool call.
@@ -119,7 +94,7 @@ let transfer = AITool(
         "required": ["amount"],
     ],
     needsApproval: { input, _ in
-        input["amount"]?.numberValue ?? 0 > 100
+        input["amount"]?.doubleValue ?? 0 > 100
     }
 ) { input in
     ["status": "queued", "amount": input["amount"] ?? .null]
@@ -130,7 +105,7 @@ Approval requests and responses are represented as typed result and stream parts
 
 An approval policy can return `context.userApproval(reason: "...")` to preserve
 a human-readable justification on `AIToolApprovalRequest.reason` and in
-telemetry. Returning `.userApproval` remains the reason-free shorthand.
+telemetry. Returning `.userApproval` is the reason-free shorthand.
 If an approved persisted call no longer validates against the current tool
 schema, SwiftAISDK does not execute it; the model receives a tool-error result
 and can continue the turn safely.
@@ -152,6 +127,13 @@ not as authorization evidence. A failed tool result's provider metadata is also
 restored onto its associated model-facing call when a provider needs a namespace
 or replay identifier.
 
+Approved history is scheduled in original model order even when approvals arrive
+out of order. An approval alone does not replace a local tool result in a direct
+model prompt; use the executable-tool facade to run approved calls first.
+
+For repeated or conflicting restored approval responses, the first response for
+each tool call wins, including different approval IDs referring to the same call.
+
 ## Streamed Tool Input
 
 Tools can observe streamed arguments before execution:
@@ -169,6 +151,12 @@ let search = AITool(
 ```
 
 Use `onInputStart`, `onInputDelta`, and `onInputAvailable` to update a UI as a model is still producing arguments. These callbacks receive the tool call ID, request messages, abort signal, and per-tool context.
+
+Text-encoded tool input uses `.toolInputStart(id:name:inputEncoding: .text)` and
+emits the `.toolInputStartText` companion case. The default is JSON. Native
+UI reducers concatenate raw text while keeping final `AIToolCall.arguments`
+JSON-encoded, including string inputs. `AIToolCall.inputEncoding` and
+`rawInputText` preserve unfinished text input across UI snapshot restoration.
 
 ## Model-Facing Output
 
@@ -188,6 +176,21 @@ let dynamicTool = AITool.dynamic(
 }
 ```
 
+## Tool search
+
+`toolSearch(maxResults:search:)` can rank deferred tools using an asynchronous
+callback. The callback sees eligible candidates; returned names are filtered
+against that set, deduplicated, and capped. Discovered tools become available
+on the next model step. A positive `maxResults` is required:
+
+```swift
+let search = try toolSearch(maxResults: 3) { query, candidates in
+    candidates.filter {
+        $0.name.localizedCaseInsensitiveContains(query)
+    }.map(\.name)
+}
+```
+
 ## Tool Callers
 
 `experimentalToolCaller` can route a tool through a local caller or provider
@@ -201,7 +204,7 @@ options before the request.
 
 ## OpenAI Responses Allow Lists
 
-OpenAI 4.0.43 `allowedTools` limits the tools that Responses may choose while
+OpenAI `allowedTools` limits the tools that Responses may choose while
 still sending the complete request tool set. Declare tool names in the OpenAI
 provider options (or the equivalent `extraBody` shape):
 
@@ -238,21 +241,24 @@ shape.
 action alongside background, fidelity, mask, model, output, quality, and size
 options.
 
-The generic Open Responses 2.0.54 provider does not inherit OpenAI's
+The generic Open Responses provider does not inherit OpenAI's
 `allowedTools` hosted-tool allow-list. It does support its own custom-tool
 surface through `OpenResponsesTools.customTool(...)` and
 `OpenResponsesTools.textFormat()`, including generated and streamed custom tool
 calls and results.
 
-Text-encoded tool input uses `.toolInputStart(id:name:inputEncoding: .text)` and
-emits the `.toolInputStartText` companion case. The default remains JSON. Native
-UI reducers concatenate raw text while keeping final `AIToolCall.arguments`
-JSON-encoded, including string inputs. `AIToolCall.inputEncoding` and
-`rawInputText` preserve unfinished text input across UI snapshot restoration.
+## Compatible servers and rich tool output
 
-## Provider option and alias resolution
+Generic compatible servers may opt in to rich tool outputs through
+`AIProviders.openAICompatible(..., supportsMultiPartToolContent: true)` or
+`ProviderSettings.supportsMultiPartToolContent = true`. Tool output is sent as a
+string by default; opt in only when the server accepts content arrays.
 
-Custom adapters can use `resolveProviderOptions` from SwiftAIProviderUtilities.
+## For provider authors
+
+These helpers are for code that implements a provider adapter, not for application code.
+
+`resolveProviderOptions` from SwiftAIProviderUtilities resolves provider-option namespaces.
 `.first` validates and selects the first non-null namespace as a whole, including
 an empty object. `.merge` validates each contributing namespace and lets later
 keys win. Duplicate namespace names are visited once, and the result reports

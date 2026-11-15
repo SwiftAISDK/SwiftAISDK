@@ -2,15 +2,31 @@
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/evaluate/
 
-`AI.experimentalEvaluate` remains a source-compatible facade for existing JSON-state callers. New code can use [Decision V4](../decide/) for ordered text/JSON/file evidence and refusal handling. TypeSafe uses `/systemone`, OpenAI uses native `/decisions`, Gateway uses `/decision-model`, and Anthropic/Google use language adapters. Custom endpoint emulators should update these experimental envelopes and the `decision` structured-schema name.
+:::note
+New code should use [Decisions](https://swiftaisdk.github.io/SwiftAISDK/core/decide/). `AI.experimentalEvaluate` is the
+older API, kept source compatible for existing callers. Decisions accept ordered
+text, JSON and file evidence, Box questions and typed refusal handling, and list
+every supported provider.
+:::
 
-It sends one shared JSON state and a keyed question map, validates provider
-support and every returned answer, retries transient failures, and preserves
-usage, warnings, rounding, provider metadata, and response metadata.
+`AI.experimentalEvaluate` sends one shared JSON state and a keyed question map,
+validates provider support and every returned answer, retries transient
+failures, and preserves usage, warnings, rounding, provider metadata, and
+response metadata. For ordered evidence, use the `stateParts:` overload, which
+takes the same `AIDecisionStatePart` values as decisions; a plain JSON-array
+`state` keeps its original meaning as one JSON value.
+
+Evaluation models run on the same wire contracts as decisions: OpenAI and
+Gateway call their native decision endpoints, TypeSafe AI calls `/systemone`,
+and Anthropic and Google use strict language-model adapters. Custom endpoint
+emulators must serve those decision envelopes and the `decision`
+structured-schema name.
 
 ## Evaluate with a language-model adapter
 
-Anthropic and Google keep strict language-adapter output. OpenAI uses native decisions while preserving its request options, aborts, headers and response metadata.
+Anthropic and Google return strict structured output through a language model.
+OpenAI's `evaluationModel(_:)` uses its native decision endpoint and preserves
+request options, aborts, headers and response metadata.
 
 ```swift
 let anthropic = try AIProviders.anthropic()
@@ -52,7 +68,7 @@ answers are `P(true)` in `0...1`; they are not thresholded into a `Bool`.
 
 ## Use a native Gateway evaluation model
 
-Gateway sends the Evaluation V4 wire contract directly:
+Gateway sends evaluations to its native `/decision-model` endpoint:
 
 ```swift
 let gateway = try AIProviders.gateway()
@@ -113,3 +129,7 @@ direct `AIEvaluationModelReference` values or fall back to another provider.
 Invalid question maps, unsupported question types, missing or extra answers,
 out-of-range values, and invalid provider versions fail before an unvalidated
 result reaches the application.
+
+Evaluation score rubrics need at least two levels, and instructions are
+validated as they always were; the relaxed rules described on the
+[Decisions](https://swiftaisdk.github.io/SwiftAISDK/core/decide/#output-budget-and-instructions) page do not apply here.

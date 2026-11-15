@@ -1,24 +1,26 @@
-# SwiftAIHuggingFace
+# Hugging Face for Swift
 
-Swift-native port of `@ai-sdk/huggingface`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
+`SwiftAIHuggingFace` adds Hugging Face to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/huggingface` and supports text generation.
+
+Provider guide with models, options, streaming and errors:
+
+- [Hugging Face](https://swiftaisdk.github.io/SwiftAISDK/providers/huggingface/)
+
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAIHuggingFace` product from this package to your target, then create the provider:
 
 ```swift
+import SwiftAI
 import SwiftAIHuggingFace
 
-let provider = try HuggingFaceProvider(configuration: .init(apiKey: "..."))
+let provider = try AIProviders.huggingFace(configuration: HuggingFaceProviderSettings())
 ```
 
-Settings accept a custom base URL, headers, query parameters and an injected
-`AITransport`. Models use the common SwiftAIProvider protocols. Existing upstream
-baselines, capabilities and documented gaps remain unchanged.
+By default the provider reads `HUGGINGFACE_API_KEY` from the environment; values set in `HuggingFaceProviderSettings` take precedence.
 
-Run the standalone suite from the canonical checkout:
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
 
-```sh
-swift test --package-path Packages/swift-ai-huggingface
-```
+## Contributing
 
-The canonical repository owns all edits. Distribution manifests and repositories
-are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
-
-See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/huggingface.md) for authentication, options and supported surfaces.
+This package is exported from `Packages/swift-ai-huggingface` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

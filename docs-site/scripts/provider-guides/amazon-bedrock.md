@@ -1,30 +1,195 @@
-## Reasoning, dimensions, and Haiku 5.5
+## Quick start
 
-Explicit disabled reasoning removes unused effort and budget fields. Explicit provider effort/budget overrides portable defaults; type/display-only settings still derive missing values. Portable `max` remains max for supported families and maps to high with a warning for Nova 2.
+```swift
+import SwiftAISDK
 
-Titan, Cohere and Nova embeddings accept top-level dimensions unless the provider-specific dimensions override them. Haiku 5.5 uses the JSON tool fallback where Bedrock native structured output is unsupported; explicit `strict: false` does not warn. SigV4 excludes non-ASCII header values from signed headers while retaining outgoing values.
+let provider = try AIProviders.amazonBedrock(settings: AmazonBedrockProviderSettings(
+    region: "us-east-1"
+))
+let model = try provider.languageModel("us.anthropic.claude-sonnet-5-5")
+let result = try await model.generateText("Explain the Bedrock Converse API in one sentence.")
+print(result.text)
+```
 
-## Claude structured-output compatibility
+`AIProviders.amazonBedrock()` with no arguments reads the region and credentials
+from the environment. With modular packages, `import SwiftAI` and
+`import SwiftAIAmazonBedrock`, then call
+`AIProviders.amazonBedrock(configuration: AmazonBedrockProviderSettings(...))`;
+the native factory requires the configuration argument.
 
-Bedrock only sends strict tool definitions and native structured-output fields to recognized supported Claude generations. Unknown future Claude IDs and unrecognized minor versions use JSON instructions in automatic structured-output mode, retaining ordinary application tools without adding an incompatible synthetic response tool. Explicit `jsonTool` selection keeps its existing model-specific behavior.
+Language models use the Bedrock Converse API. For Claude through the Anthropic
+Messages format use [Amazon Bedrock (Anthropic models)](../amazon-bedrock-anthropic/);
+for OpenAI-compatible Chat and Responses endpoints use
+[Amazon Bedrock Mantle](../bedrock-mantle/). All three share
+`AmazonBedrockProviderSettings` and the authentication rules below.
 
-Claude Sonnet 4.6 and Haiku 4.5 retain strict tools but use the JSON-tool fallback for unreliable native output. Non-Claude models and opaque inference-profile IDs keep their existing capability behavior. The Anthropic Messages adapter also inherits normalized citations, web-search source deduplication, manual-thinking tool-choice safeguards, and replayable file-reference/tool-search-error transcripts.
+## Authentication
 
-## Rotating bearer credentials and current thinking policies
+Credentials are resolved in this order; the first match wins:
 
-`AmazonBedrockProviderSettings.apiKeyProvider` accepts an asynchronous throwing closure for short-lived bearer credentials. It is resolved before each Converse, invoke-model, embedding, image, reranking or Mantle HTTP request. Returned values are trimmed and must be non-empty; an invalid callback result fails before sending and does not fall back to SigV4. Static bearer keys and the existing AWS `credentialProvider` remain available.
+1. `apiKeyProvider`: an async throwing closure called before every request,
+   returning a Bedrock API key used as a bearer token. The value is trimmed and must
+   be non-empty; a failure stops the request and does not fall back to SigV4.
+2. `apiKey`, or `AWS_BEARER_TOKEN_BEDROCK`: a static bearer token.
+3. `credentialProvider`: an async closure returning `AmazonBedrockCredentials`,
+   used for SigV4 signing on every request.
+4. `accessKeyID` and `secretAccessKey`, or `AWS_ACCESS_KEY_ID` and
+   `AWS_SECRET_ACCESS_KEY`, with an optional `sessionToken` or `AWS_SESSION_TOKEN`.
 
-Converse omits disabled thinking for Claude 3.5 and earlier, sends it for supported later models, and selects the lowest supported thinking mode with a warning when a model cannot disable thinking. Existing raw and typed effort settings survive that fallback; incompatible effort above `high` is lowered with a warning. Portable reasoning uses the closest supported effort, preferring a lower level. GPT-OSS accepts `low`/`medium`/`high`; other OpenAI-family efforts remain forward compatible.
+If `AWS_BEARER_TOKEN_BEDROCK` is set in the environment, it takes precedence over a
+`credentialProvider`. The provider does not run the AWS SDK credential chain
+(profiles, SSO, instance metadata); load those credentials yourself and return them
+from `credentialProvider`:
 
-Document names are unique across user messages and tool results in one request. Duplicate sanitized names receive deterministic ` (2)`, ` (3)` suffixes within Bedrock's 200-character limit, preserving prompt-cache stability. The Anthropic invoke adapter can use native JSON output for models that reject forced tools when the schema is representable; recursive or open schemas retain the JSON-tool fallback.
-## Current Claude schemas and tools
+```swift
+let provider = try AIProviders.amazonBedrock(settings: AmazonBedrockProviderSettings(
+    region: "eu-central-1",
+    credentialProvider: {
+        // Your own credential source, for example an STS AssumeRole call.
+        let credentials = try await loadTemporaryAWSCredentials()
+        return AmazonBedrockCredentials(
+            accessKeyID: credentials.accessKeyID,
+            secretAccessKey: credentials.secretAccessKey,
+            sessionToken: credentials.sessionToken
+        )
+    }
+))
+```
 
-Reviewed Claude 5/5.5 families support native schemas and strict tools where the
-catalog declares support. Automatic selection requires schema preservation;
-unknown future Claude aliases retain conservative handling. Explicit
-`structuredOutputMode` continues to choose output-format or JSON-tool behavior.
+With `accessKeyID` and `secretAccessKey` both set in settings, this provider does
+not read `AWS_SESSION_TOKEN`; pass `sessionToken` explicitly for temporary keys.
+Header values with non-ASCII characters are sent but excluded from the signature.
 
-Named choices on supported Anthropic models retain all function tools and disable
-parallel use by default; `disableParallelToolUse: false` opts out. Other model
-families receive only the selected tool. Image `seed: 0` is preserved, and empty
-foreign assistant signature text is filtered before final prefill trimming.
+### Region and endpoints
+
+The region comes from `region`, then `AWS_REGION`, then `AWS_DEFAULT_REGION`, and
+defaults to `us-east-1`. Endpoints use the partition's DNS suffix (for example
+`amazonaws.com.cn` for `cn-` regions). Override them with `baseURL`, or with
+`AWS_ENDPOINT_URL_BEDROCK_RUNTIME` (Converse, embeddings, images),
+`AWS_ENDPOINT_URL_BEDROCK_AGENT_RUNTIME` (reranking) or `AWS_ENDPOINT_URL` (both).
+
+## Provider options
+
+Pass Converse options under `providerOptions["amazonBedrock"]`; the key `"bedrock"`
+is also accepted.
+
+```swift
+let result = try await model.generateText(
+    "Draft a short product description.",
+    options: LanguageGenerationOptions(
+        providerOptions: [
+            "amazonBedrock": [
+                "reasoningConfig": ["type": "enabled", "budgetTokens": 2_048],
+                "guardrailConfig": [
+                    "guardrailIdentifier": "my-guardrail",
+                    "guardrailVersion": "1",
+                ],
+                "serviceTier": "priority",
+            ],
+        ]
+    )
+)
+```
+
+- `reasoningConfig`: `type` (`"enabled"`, `"adaptive"`, `"disabled"`),
+  `budgetTokens`, `maxReasoningEffort`.
+- `guardrailConfig`, `requestMetadata` (string values only), `serviceTier`
+  (a string is sent as `["type": value]`).
+- `additionalModelRequestFields`: model-specific fields passed through to Converse.
+- `citations`: `["enabled": true]` turns on citations for all documents in the
+  prompt; the same value in a document part's `amazonBedrock` provider metadata
+  enables them for that document only.
+- `structuredOutputMode`: `"auto"` (default), `"outputFormat"` or `"jsonTool"` for
+  Claude models.
+
+`frequencyPenalty`, `presencePenalty` and `seed` are not supported by Converse and
+produce warnings. `temperature` is clamped to the 0–1 range.
+
+### Reasoning
+
+Portable `reasoning` is translated per model family:
+
+- Claude models with adaptive thinking get `adaptive` thinking with a
+  `maxReasoningEffort`; older Claude models get an `enabled` budget. `"none"`
+  disables thinking, or selects the lowest supported mode with a warning on
+  models that cannot disable it. Effort above `high` is lowered where unsupported.
+- OpenAI models on Bedrock and Amazon Nova 2 Lite receive `maxReasoningEffort`;
+  GPT-OSS and Nova accept only `low`, `medium` and `high`; other levels map to the
+  closest supported level with a warning.
+- Other models ignore portable reasoning with a warning; use `reasoningConfig`.
+
+Explicit `reasoningConfig` values take precedence over the portable setting.
+
+### Structured output
+
+Recognized Claude generations that support it receive native JSON Schema output
+and strict tool definitions. Unknown Claude IDs use JSON instructions in automatic
+mode, and models that reject native output (such as Claude Sonnet 4.6 and Haiku
+4.5) use a JSON response tool. Your own tools are kept alongside the JSON tool.
+
+### Prompt caching and guarded content
+
+Add a cache point after a message or content part through its provider metadata:
+`["amazonBedrock": ["cachePoint": ["type": "default"]]]`. Text parts can be sent as
+guardrail-evaluated content with `["amazonBedrock": ["guardContent": true]]`, and
+optional `guardContentQualifiers` (`grounding_source`, `query`, `guard_content`).
+
+### Inputs
+
+Prompts can include images (including case-sensitive `s3://` sources), documents
+and video from inline data or S3. Document names are sanitized and made unique
+within a request.
+
+### Model settings
+
+Pass `AmazonBedrockChatModelSettings(modelFamily: .anthropic)` to
+`languageModel(_:settings:)` when you use an application inference profile ARN
+whose model family cannot be inferred from the ID. ARN model IDs are
+percent-encoded in request paths.
+
+## Embeddings
+
+```swift
+let embedder = try provider.embeddingModel("amazon.titan-embed-text-v2:0")
+let embedding = try await embedder.embed("Hello", dimensions: 512)
+```
+
+The family is inferred from the model ID (Titan, Cohere or Nova); pass
+`AmazonBedrockEmbeddingModelSettings(modelFamily:)` for ARN IDs. Options under
+`providerOptions["amazonBedrock"]`:
+
+- Titan: `dimensions` (256, 512, 1024), `normalize`. One value per call.
+- Cohere: `inputType` (default `search_query`), `truncate`, `outputDimension`
+  (256, 512, 1024, 1536). Up to 96 values per call.
+- Nova: `embeddingPurpose` (default `GENERIC_INDEX`), `embeddingDimension`
+  (256, 384, 1024 or 3072; default 1024), `truncate` (default `END`). One value per call.
+
+The shared `dimensions` argument is used when the family-specific option is absent.
+
+## Image generation
+
+```swift
+let images = try provider.imageModel("amazon.nova-canvas-v1:0")
+let result = try await images.generateImage("A lighthouse at dusk", size: "1024x1024")
+```
+
+Use `size` rather than `aspectRatio`. Options: `quality`, `cfgScale`, `seed`,
+`negativeText`, `style`. With input images, `taskType` selects `IMAGE_VARIATION`
+(default), `INPAINTING` (default when a mask or `maskPrompt` is given),
+`OUTPAINTING` (with `outPaintingMode`) or `BACKGROUND_REMOVAL`;
+`similarityStrength` tunes variations.
+
+## Reranking
+
+```swift
+let reranker = try provider.rerankingModel("cohere.rerank-v3-5:0")
+let ranked = try await reranker.rerank(
+    query: "How do I rotate credentials?",
+    documents: ["Use apiKeyProvider.", "Bedrock supports guardrails."],
+    topK: 1
+)
+```
+
+Reranking calls the Bedrock Agent Runtime `/rerank` endpoint. `topK` maps to
+`numberOfResults`; `additionalModelRequestFields` and `nextToken` are accepted as
+provider options.

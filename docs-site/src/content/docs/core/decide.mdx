@@ -1,15 +1,12 @@
 ---
-title: Decision
+title: Decisions
 description: Ask typed Choice, Score, Boolean, and image Box questions about ordered text, JSON, and file evidence.
 ---
 
-`AI.experimentalDecide` returns validated answers to a named question map.
-OpenAI uses `/decisions`, Perplexity uses `/v1/decisions`, Gateway uses `/decision-model`, TypeSafe AI uses
-`/systemone`, and Anthropic uses `DecisionLanguageModel` with structured output. Google uses
-its native `/decisions` endpoint for `gemini-decision-*` IDs and retains its prior
-language adapter for other IDs. Use `nativeDecisionModel` to opt custom IDs into
-the native endpoint. These providers expose `decisionModel(...)`; registries and custom
-providers route `AIDecisionModelReference` values.
+Use decisions to ask a model typed questions about evidence (a support reply, a
+document, an image) and get validated, probability-weighted answers instead of
+free text. `AI.experimentalDecide` takes ordered text, JSON and file evidence plus
+a named map of Choice, Score, Boolean and Box questions.
 
 ```swift
 import Foundation
@@ -32,10 +29,40 @@ let result = try await AI.experimentalDecide(
 print(result.answers)
 ```
 
+`result.answers` maps each question name to an `AIDecisionAnswer`:
+`.choice(choice:probabilities:)`, `.score(score:probabilities:)`,
+`.boolean(probability:)` or `.box(box:)`. The result also carries `usage`,
+`warnings`, `rounding`, `providerMetadata` and `response`.
+
+## Providers
+
+Every provider below exposes `decisionModel(_:)`. Registries and custom
+providers route `AIDecisionModelReference` values, so a `"provider:model"`
+string also works with a configured registry.
+
+| Provider | Factory | How decisions run |
+| --- | --- | --- |
+| [OpenAI](../../providers/openai/) | `AIProviders.openAI()` | Native `/decisions` endpoint. |
+| [Anthropic](../../providers/anthropic/) | `AIProviders.anthropic()` | `DecisionLanguageModel` over Messages with structured output. |
+| [Google Generative AI](../../providers/google-generative-ai/) | `AIProviders.google()` | Native `/decisions` endpoint for `gemini-decision-*` IDs; other IDs use the language-model adapter. `nativeDecisionModel(_:)` opts any ID into the native endpoint. |
+| [Gateway](../../providers/gateway/) | `AIProviders.gateway()` | `/decision-model` endpoint. |
+| [Perplexity](../../providers/perplexity/) | `AIProviders.perplexity()` | `/v1/decisions` endpoint. |
+| [TypeSafe AI](../../providers/typesafe/) | `AIProviders.typeSafeAI()` | `/systemone` endpoint; the only adapter that answers Box questions. |
+| [Parallel](../../providers/parallel/) | `AIProviders.parallel(configuration:)` | Web-grounded `/v1/decisions`; the model ID is forwarded as the service mode. |
+| [ScaleDown](../../providers/scaledown/) | `AIProviders.scaleDown(configuration:)` | `/v1/scaledown`. |
+| [HeyGen](../../providers/heygen/) | `AIProviders.heyGen(settings:)` or `AIProviders.heyGen(configuration:)` | `/v3/models/decisions`. |
+
+Provider pages document each adapter's model IDs, limits and metadata.
+
+## Evidence
+
 The facade resolves file URLs and data URLs before provider calls and preserves
 part order, filenames, and file provider options. `.json([…])` is one JSON
 value; `.parts([])` is an empty evidence list. `Data`, base64 strings, URLs,
-and provider references are distinct `AIDecisionFileData` cases.
+and provider references are distinct `AIDecisionFileData` cases. URL downloads
+use the protected download policy described in [Files](../files/).
+
+## Validation and refusals
 
 Choice distributions must cover every option and sum to one. Scores are
 weighted means of the indexed criteria. Boolean answers represent P(true).
@@ -53,17 +80,17 @@ answer map is reported as successful, and a refusal does not retry provider I/O.
 Use `maxOutputTokens` (an integer of at least one) and `reasoning` to control
 supported adapters. Language-model adapters forward both and default reasoning
 to `none`; Gateway forwards supplied values. OpenAI, Perplexity and TypeSafe
-native Decision endpoints warn when these shared controls are unsupported.
+native decision endpoints warn when these shared controls are unsupported.
 Both controls are included in start/end callbacks and recorded telemetry input.
 
-Choice, Score and Boolean instructions may be omitted (`.null` in the native
-representation) when criteria describe the judgment. A Score rubric may have
+Choice, Score and Boolean instructions may be omitted (they default to `.null`) when criteria describe the judgment. A Score rubric may have
 one level. Boolean questions without instructions need at least one non-null
-criterion. Box instructions may also be omitted in the shared Decision contract.
+criterion. Box instructions may also be omitted.
 Provider restrictions still apply:
 OpenAI omits absent Choice/Score instructions and composes Boolean criteria
-into the predicate text; Perplexity accepts one to ten non-null score levels. Legacy Evaluation validation stays
-unchanged.
+into the predicate text; Perplexity accepts one to ten non-null score levels.
+These relaxed rules apply only to decisions; `AI.experimentalEvaluate` keeps its
+own validation.
 
 ## Perplexity decisions
 
@@ -91,20 +118,21 @@ image blocks, is limited to eight images across the shared state.
 - TypeSafe AI accepts text/JSON and inline PNG/JPEG images. Box questions return finite normalized edges with `left < right` and `top < bottom`; other adapters reject Box before model I/O.
 - Native provider-file references are unsupported by these decision adapters.
 
-## Callbacks, telemetry, and compatibility
+## Callbacks and telemetry
 
 Async `onStart`/`onEnd` callbacks receive typed state/questions/answers and the
-complete `runtimeContext`. Existing `Telemetry.Integration.record` records
-`ai.decide` and `ai.decide.doDecide`; input/output controls and selected
+complete `runtimeContext`. A `Telemetry.Integration` records the
+`ai.decide` and `ai.decide.doDecide` operations; input/output controls and selected
 runtime-context keys determine the recorded payload. Response metadata keeps
 the actual resolved model and provider response ID when supplied.
 
-`AI.experimentalEvaluate`, Evaluation protocols, result types, and old factory
-signatures remain callable. Their JSON-array state retains its original meaning;
-use the new `stateParts:` overload for ordered Evaluation evidence. New code
-should use Decision names. Custom mocks for experimental OpenAI/Gateway
-Evaluation should now serve `/decisions` and `/decision-model` envelopes;
-language-backed mocks should use the schema name `decision`.
+## Evaluation compatibility
+
+`AI.experimentalEvaluate`, its protocols, result types and factory signatures
+remain callable; see [Evaluation](../evaluate/). New code should use the
+decision names. Custom mocks for experimental OpenAI or Gateway evaluation must
+serve the `/decisions` and `/decision-model` response envelopes, and
+language-backed mocks must use the schema name `decision`.
 
 ## TypeSafe image decisions
 
@@ -114,7 +142,7 @@ whether it is inserted into state. By default the SDK inserts a generated
 reference, or reuses an explicit reference already present in a state string
 (including nested JSON values). Object keys do not count as references.
 `insertReference: false` requires an explicit reference for use in instructions
-or criteria. Repeated references send repeated image context upstream.
+or criteria. Repeated references send the image context again for each reference.
 
 ```swift
 let provider = AIProviders.typeSafeAI()
@@ -131,5 +159,11 @@ let result = try await AI.experimentalDecide(
 
 Images or Box questions enable TypeSafe's experimental image header. The
 optional long-context setting enables its separate 262k-token context header;
-upstream documents this mode as slower and less accurate. Confidence metadata
+TypeSafe documents this mode as slower and less accurate. Confidence metadata
 and two-decimal rounding remain available.
+
+## Next steps
+
+- [Extraction](../extract/) pulls typed fields out of the same kind of evidence.
+- [Telemetry](../telemetry/) records decision spans.
+- [Error handling](../error-handling/) covers retries, aborts and API errors.

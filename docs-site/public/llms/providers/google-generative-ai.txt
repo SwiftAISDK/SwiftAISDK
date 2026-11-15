@@ -1,10 +1,42 @@
-# "google.generative-ai"
+# Google Generative AI (Gemini API)
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/google-generative-ai/
 
+Gemini models through the Gemini API (Google AI Studio): text with thinking, tools and Google Search grounding, embeddings, Gemini and Imagen images, TTS speech, Veo video, files, decisions, extraction, Gemini Live realtime and batches. For Gemini on Google Cloud, use the Google Vertex AI provider.
+
+Provider ID: `google.generative-ai` · Upstream package: `@ai-sdk/google`
+
 ## Package
 
-`@ai-sdk/google`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-google`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-google.git", from: "1.3.1"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIGoogle", package: "swift-ai-google"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIGoogle
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | Gemini API key, sent in the `x-goog-api-key` header. Required unless passed in settings. |
+| `GOOGLE_API_KEY` | Alternative API key variable, read when `GOOGLE_GENERATIVE_AI_API_KEY` is not set. |
+| `GEMINI_API_KEY` | Alternative API key variable, read when neither of the variables above is set. |
 
 ## Factories
 
@@ -12,118 +44,235 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/google-generative-
 
 ## Capabilities
 
-- Language
-- Embedding
-- Image
-- Speech
-- Video
-- Evaluation
-- Decision
-- Extraction
-- Files
+- [Language](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/)
+- [Embedding](https://swiftaisdk.github.io/SwiftAISDK/core/embeddings/)
+- [Image](https://swiftaisdk.github.io/SwiftAISDK/core/generate-image/)
+- [Speech](https://swiftaisdk.github.io/SwiftAISDK/core/generate-speech/)
+- [Video](https://swiftaisdk.github.io/SwiftAISDK/core/generate-video/)
+- [Evaluation](https://swiftaisdk.github.io/SwiftAISDK/core/evaluate/)
+- [Decision](https://swiftaisdk.github.io/SwiftAISDK/core/decide/)
+- [Extraction](https://swiftaisdk.github.io/SwiftAISDK/core/extract/)
+- [Files](https://swiftaisdk.github.io/SwiftAISDK/core/files/)
 
-## Current reviewed behavior
-
-The reviewed baseline is `@ai-sdk/google` 4.0.120. `decisionModel("gemini-decision-1")` uses the native `/decisions` endpoint for Choice, Score and Boolean questions. Safety-blocked input returns refusals. Ordered text, JSON, inline media and media URLs are preserved; Box and provider file references are rejected before HTTP.
-
-For source and behavior compatibility, existing non-`gemini-decision-*` IDs passed to `decisionModel` retain the Swift structured-generation adapter, including Box. Use `nativeDecisionModel("custom-decision-id")` to opt any custom or future ID into the native endpoint. This explicit routing differs from the current JavaScript factory, which routes all decision IDs natively. Existing `evaluationModel` semantics are also preserved.
-
-Typed extraction is a distinct contract:
+## Quick start
 
 ```swift
-let extraction = try provider.extractionModel("gemini-3.8-flash")
-let result = try await extraction.doExtract(.init(
-    state: [.text("The invoice total is 42 EUR.")],
-    fields: ["total": .init(type: .number, instructions: "Invoice total", unit: "EUR")]
-))
+import SwiftAISDK
+
+let google = try AIProviders.google()
+let model = try google.languageModel("gemini-2.5-flash")
+let result = try await model.generateText("Explain how rainbows form in two sentences.")
+print(result.text)
 ```
 
-Gemini 4 Hydrogen accepts portable and explicit `xhigh` thinking with a `low` minimum. Service-tier metadata falls back to `x-gemini-service-tier` when usage omits the value. Streaming document sources deduplicate by full resource URI, and File Search sources by store and title. Dotted array indexes obey the same contiguous bounds and string continuation as bracket indexes. Vertex shares these request/response algorithms.
+`AIProviders.google(settings:)` returns the native `GoogleGenerativeAIProvider`.
+For a smaller dependency graph, use `import SwiftAI` and `import SwiftAIGoogle`
+with `AIProviders.google(configuration: GoogleProviderSettings())`. The native
+factory requires the configuration argument; rotating credentials need the
+native settings.
 
-## Structured JSON with application tools
+The API key is read from `GOOGLE_GENERATIVE_AI_API_KEY`, then `GOOGLE_API_KEY`,
+then `GEMINI_API_KEY`, and sent in the `x-goog-api-key` header. Requests go to
+`https://generativelanguage.googleapis.com/v1beta` unless you set `baseURL`. For
+Gemini on Google Cloud, use [Google Vertex AI](https://swiftaisdk.github.io/SwiftAISDK/providers/google-vertex/).
 
-A request with `.json(schema: ...)` and function tools can return JSON while retaining real application tool calls. Pre-Gemini 3 and forced-tool cases use a collision-safe synthetic response tool. Its arguments become JSON text/stream deltas; its internal tool call and unrelated prose are omitted. Gemini 3 automatic selection uses native JSON output. Reasoning, signatures and application tool calls remain available.
+## Models
 
-Tool failures and denials use `functionResponse.error`. Generic embedding dimensions apply unless provider-specific output dimensions override them. `nano-banana-2.1` uses the generateContent image route; retrieved-context custom metadata stays in provider metadata.
+| Factory | Use with |
+| --- | --- |
+| `languageModel(_:)` | Gemini GenerateContent: [Generate text](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/), [Stream text](https://swiftaisdk.github.io/SwiftAISDK/core/stream-text/), [Structured output](https://swiftaisdk.github.io/SwiftAISDK/core/structured-output/), [Tools](https://swiftaisdk.github.io/SwiftAISDK/core/tools/) |
+| `interactionsModel(_:)`, `interactionsAgent(_:)` | Gemini Interactions API and hosted agents |
+| `embeddingModel(_:)` | [Embeddings](https://swiftaisdk.github.io/SwiftAISDK/core/embeddings/), for example `gemini-embedding-001` |
+| `imageModel(_:)` | [Generate image](https://swiftaisdk.github.io/SwiftAISDK/core/generate-image/) with Gemini image or Imagen models |
+| `speechModel(_:)` | [Generate speech](https://swiftaisdk.github.io/SwiftAISDK/core/generate-speech/) with Gemini TTS |
+| `videoModel(_:)` | [Generate video](https://swiftaisdk.github.io/SwiftAISDK/core/generate-video/) with Veo |
+| `decisionModel(_:)`, `extractionModel(_:)`, `evaluationModel(_:)` | [Decide](https://swiftaisdk.github.io/SwiftAISDK/core/decide/), [Extract](https://swiftaisdk.github.io/SwiftAISDK/core/extract/), [Evaluate](https://swiftaisdk.github.io/SwiftAISDK/core/evaluate/) |
+| `realtimeModel(_:)` | [Realtime](https://swiftaisdk.github.io/SwiftAISDK/core/realtime/) with Gemini Live |
+| `files()` | [Files](https://swiftaisdk.github.io/SwiftAISDK/core/files/) through the Gemini Files API |
+| `experimentalBatch()` | [Batch text](https://swiftaisdk.github.io/SwiftAISDK/core/batch-text/) |
 
-For non-`gemini-decision-*` IDs, `decisionModel(...)` retains `DecisionLanguageModel`; see [Decision](../../core/decide/). Batch downloads use the configurable per-row limit.
+Standalone transcription and reranking are not available and throw an
+unsupported-model error.
 
-Gemini image requests merge the typed aspect ratio with provider `imageConfig`; configuring output settings does not discard the caller’s ratio.
+## Provider options
 
-## Gemini 4 long decode
+GenerateContent reads these keys from `providerOptions["google"]`; other keys are
+ignored:
 
-GenerateContent automatically follows `CONTINUATION` responses for `gemini-4-argon` and other compatible model IDs. Each hop resends the original request with the returned token, keeps `maxOutputTokens` cumulative, and appends newly generated content. Streams retain one text lifecycle across hops. Usage totals and modality details sum all requests to match billing; `providerMetadata["google"]["initialPromptTokenCount"]` retains the first prompt's count for context-window checks.
+`responseModalities`, `thinkingConfig`, `cachedContent`, `structuredOutputs`,
+`safetySettings`, `threshold`, `audioTimestamp`, `labels`, `mediaResolution`,
+`imageConfig`, `retrievalConfig`, `serviceTier` and `continuationToken`.
 
-After automatic continuation, `providerMetadata["google"]["groundingMetadataPerRequest"]` contains one grounding payload per successful request, in order, with `null` where that request returned none. This preserves earlier search evidence even when the final response has no grounding. The existing `groundingMetadata` field contains the final response's payload for generation and the latest non-null payload for streaming. Single-request calls, including manual resume calls that do not continue automatically, omit the per-request array.
+```swift
+let result = try await model.generateText(
+    "Draft a product description for a hiking backpack.",
+    options: LanguageGenerationOptions(providerOptions: [
+        "google": [
+            "thinkingConfig": ["thinkingBudget": 1024],
+            "safetySettings": [
+                ["category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_ONLY_HIGH"],
+            ],
+        ],
+    ])
+)
+```
 
-A response ending with `MAX_TOKENS` exposes `providerMetadata["google"]["continuationToken"]`. Resume with the original prompt, a larger `maxOutputTokens`, and that token in `providerOptions["google"]["continuationToken"]`. Failed streaming continuation emits an error followed by finish metadata containing the resumable token. Cancellation propagates through every hop.
+- `responseModalities` accepts `TEXT`, `IMAGE` and `AUDIO`.
+- `streamFunctionCallArguments`, `sharedRequestType` and `requestType` are Vertex
+options; here they are ignored with a warning.
+- `serviceTier` is reported in provider metadata, falling back to the
+`x-gemini-service-tier` response header.
 
-`responseModalities` accepts `AUDIO` alongside `TEXT` and `IMAGE`. Explicit `thinkingConfig.thinkingBudget` or `thinkingConfig.thinkingLevel` takes precedence over the shared `reasoning` setting. Gemini 3+ Pro models normalize `none` and `minimal` reasoning to their supported `low` floor. Routed IDs such as `eu.gemini-2.5-flash` retain the correct model capabilities. Interactions model calls with `background: true` poll until terminal, including Gemini 4 long decode.
-## Continuation and streamed tool arguments
+### Thinking
 
-Each successful automatic continuation starts with a fresh completion state;
-an empty next response remains interrupted instead of inheriting the previous
-finish reason. A failed continuation retains the preceding response's state.
-Partial function arguments, including response tools, preserve nested empty
-arrays and objects and produce valid concatenated JSON deltas. Legacy tool-call
-snapshot parts remain available alongside the incremental tool-input lifecycle.
+An explicit `thinkingConfig.thinkingBudget` or `thinkingConfig.thinkingLevel`
+takes precedence over the portable `reasoning` option. Otherwise:
 
-## Per-request credentials and video preprocessing
+- Gemini 3 and newer map `reasoning` to a `thinkingLevel` (`low`, `medium`,
+`high`, and `minimal` or `xhigh` where the model supports them). Levels below a
+model's floor, such as `none` on models that cannot disable thinking, move up
+to the lowest supported level with a compatibility warning.
+- Gemini 2.5 maps `reasoning` to a `thinkingBudget`. `none` sends a budget of 0,
+except on Gemini 2.5 Pro, which uses its 128-token minimum.
 
-`GoogleProviderSettings.apiKeyProvider` accepts an async throwing key supplier.
-It is called before each authenticated HTTP request, including continued
-GenerateContent calls, batch operations, file-upload initiation and processing
-polls. Static `apiKey` settings remain supported. Custom provider and request
-headers retain precedence; unauthenticated upload URLs receive no API key.
+Reasoning text is returned in `result.reasoning`, and thought signatures are
+replayed from message history.
 
-User file parts accept `videoMetadata` under their `google` provider metadata.
-The typed `GoogleVideoMetadata` value exposes `startOffset`, `endOffset` and `fps`
-through `jsonValue`. Offsets are duration strings such as `"3.5s"`; frame rate
-must be greater than zero and at most 24. Set the value on inline files or
-hosted/provider references using
-`providerMetadata: ["google": ["videoMetadata": clip.jsonValue]]`.
-The `googleVertex` and `vertex` namespaces are accepted as fallbacks.
+## Structured output and tools
 
-Gemini 3 reasoning that cannot disable thinking maps `none` to its lowest
-supported effort with a compatibility warning. Gemini 2.5 Pro maps it to the
-minimum 128-token budget; models that support disabled thinking still send zero.
-Continued streamed function strings close on their final chunk, including an
-empty chunk or explicit terminator, so accumulated JSON becomes valid promptly.
+JSON Schema output is converted to Gemini's OpenAPI-style schema, including
+enums, constants, `minItems`/`maxItems` and local `$ref` expansion. A request can
+combine JSON output with your own function tools: Gemini 3 automatic tool choice
+uses native JSON output, and older models or forced tool choice use an internal
+response tool whose arguments become the JSON text. Your real tool calls are kept
+either way. Strict forced or named tools use `ANY` mode.
 
-## Native realtime and current request behavior
+`GoogleTools` creates Gemini built-in tools:
 
-`GoogleGenerativeAIProvider.realtimeModel("gemini-3.8-live")` implements native
-Gemini Live WebSockets with ephemeral client secrets or trusted server API-key
-headers. Use `AIRealtimeSession.connectServer` for lifecycle ownership and an
-injected duplex transport. Async credentials resolve before connecting;
-conversation intent is supported and transcription intent rejects before I/O.
-Each session has its own parser. `generationComplete` does not end a turn; late
-output transcripts retain its ID. `event.usage` preserves same-frame totals and
-known modality counts; unrelated snapshots are not summed or attached to later
-completions. Browser capture/playback and standalone Google transcription/speech
-translation remain separate native gaps.
+```swift
+let result = try await model.generate(LanguageModelRequest(
+    messages: [.user("What happened in tech news today?")],
+    tools: ["search": GoogleTools.googleSearch()]
+))
+print(result.sources)
+```
 
-GenerateContent retains ordered text/function calls, signed empty thought blocks
-and parsed tool input strings. Sparse/overflowing streamed array indexes are
-rejected without allocating holes. RPC status strings preserve raw errors and
-supply retryability. Provider tool NONE filtering precedes JSON fallback;
-Interactions maps string labels and current function/provider tools. Speech
-forwards explicit languageCode for single/multiple voices, omitting auto.
+Available tools: `googleSearch(searchTypes:timeRangeFilter:)`,
+`enterpriseWebSearch()`, `googleMaps()`, `urlContext()`,
+`fileSearch(fileSearchStoreNames:metadataFilter:topK:)`, `codeExecution()` and
+`vertexRagStore(ragCorpus:topK:)`. Grounding sources appear in `result.sources`
+and grounding details in `providerMetadata["google"]`. Tool failures and denials
+are sent back as `functionResponse.error`.
 
-## Interactions reasoning
+## Long outputs and continuation
 
-`interactionsModel(...)` maps the common `LanguageModelRequest.reasoning` effort
-to `generation_config.thinking_level`. Hydrogen supports `xhigh`; an unsupported
-level falls back to the nearest supported effort and returns a compatibility
-warning. Explicit `providerOptions.google.thinkingLevel` takes precedence.
-Agent calls omit generation controls and warn about every dropped field,
-including custom reasoning. Streaming emits `streamStart` even when its warnings
-are empty.
+For models that return a `CONTINUATION` finish reason, GenerateContent continues
+automatically: each request resends the prompt with the returned token, keeps
+`maxOutputTokens` as a total budget, and appends the new content to the same
+text (or stream). Usage sums every request; the first prompt's count is in
+`providerMetadata["google"]["initialPromptTokenCount"]`, and
+`groundingMetadataPerRequest` holds one grounding entry per request.
 
-## Notes
+A response that stops at `MAX_TOKENS` exposes
+`providerMetadata["google"]["continuationToken"]`. To resume, send the original
+prompt with a larger `maxOutputTokens` and the token in
+`providerOptions["google"]["continuationToken"]`. If a streamed continuation
+fails, the stream reports the error and then finishes with the resumable token.
 
-Google Generative AI's implemented Gemini language, embedding, image, TTS speech, Veo video, files, interactions, and agents surface was audited against upstream Google 4.0.121. The earlier audit added the published 100-input embedding preflight limit. Imagen factories remain locally available for source compatibility after their removal from the current upstream package. Gemini 3.7 Flash normalizes `none` and `minimal` reasoning to the supported `low` thinking floor. Primitive JSON Schema enum/const values and local `$ref` expansion, including boolean-schema references, map to Gemini's OpenAPI-compatible wire form, while strict forced/named tools use `ANY` and strict automatic tools retain `VALIDATED`. Interactions forwards topK and seed while warning for unsupported penalties and agent-dropped settings; Files resumable uploads leave payload length to the transport. Generate and stream results surface Gemini `responseId`; multiple code-execution results retain their originating call ID; parallel unsigned function calls reuse an earlier signed standard call; and unknown future Gemini IDs default to the newest supported tool, thinking, file-search, and multimodal response capabilities while known legacy families stay conservative. Speech maps Gemini TTS generateContent requests with WAV-wrapped PCM by default, raw PCM opt-in, multi-speaker provider options, response sample-rate metadata, and upstream warnings. Gemini 3.5 unary/live transcription, Files URL recognition, recursive-tool behavior, and Gemini 2.5 penalty warnings remain deferred to a dedicated provider pass. The separate speech-translation product, browser media ownership and JS ProviderV4 runtime helpers remain gaps; native Google realtime WebSocket lifecycle and usage are available. The 4.0.64 pass adds JSON Schema `minItems` and `maxItems`, preserves caller function aliases, forwards file headers and cancellation, supplies a durable Batch V4 adapter with tool content and input-file metadata, and supports Interactions video plus processing-call/result request, response, stream, warning, and metadata handling. Final integration also round-trips Interactions response history, function and built-in tool items, reasoning items, compaction state, provider references, `mediaResolution`, and `systemInstruction` precedence; Google Batch rejects empty result keys and preserves thought signatures even when their associated text is empty. The 2026-09-20 pass adds lossless schema conversion, corrected block reasons, accumulated stream metadata and usage, exact image-count behavior, custom provider names, and a Gemini-backed Evaluation V4 adapter. The 2026-09-27 pass adds embedding provider-option slicing, image metadata, video offsets, code-execution replay, JSON Schema `$ref` URIs, and current TTS behavior. The 2026-10-04 pass reports Gemini image file/mask capabilities and retains speech usageMetadata. Standalone Google transcription remains deferred; native Google Realtime is available. The 2026-10-11 pass adds collision-safe JSON response tools with application tools, incremental nested JSON parsing and real-tool/signature preservation, Gemini 3 native automatic selection, shared embedding dimensions and Decision V4. Batch downloads default to a configurable 64 MiB UTF-8 line limit. The 2026-10-18 pass: GenerateContent auto-continues long decodes with cumulative output budgets, summed per-hop usage and initialPromptTokenCount metadata. Checkpoint tokens support explicit resume. AUDIO output, explicit thinking precedence, dotted route IDs and background Interactions polling are supported. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied. The 2026-11-15 delta and native/platform distinctions are recorded in WeeklyUpstreamAudit20261115; no full-package or live-service parity is implied.
+## Files and media input
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Messages accept inline images, audio, video and PDFs, URLs, and references
+returned by `files()`, which uploads through the Gemini resumable upload API.
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+Trim or sample video with `GoogleVideoMetadata`:
+
+```swift
+let clip = GoogleVideoMetadata(startOffset: "3.5s", endOffset: "12s", fps: 2)
+let message = AIMessage(role: .user, content: [
+    .text("Describe this clip."),
+    .file(mimeType: "video/mp4", data: videoData,
+          providerMetadata: ["google": ["videoMetadata": clip.jsonValue]]),
+])
+```
+
+Offsets are duration strings; `fps` must be greater than 0 and at most 24.
+
+## Embeddings, images, speech and video
+
+- Embeddings: up to 100 values per call. Set `taskType` and `outputDimensionality`
+under `providerOptions["google"]`; the shared `dimensions` argument also works.
+- Images: Gemini image models (such as `gemini-2.5-flash-image`) use
+GenerateContent and accept input images; Imagen models (such as
+`imagen-3.0-generate-002`) use `:predict`. The request `aspectRatio` is merged
+with any `imageConfig` you pass.
+- Speech: `speechModel("gemini-2.5-flash-preview-tts")` returns WAV by default
+(Gemini's PCM wrapped in a WAV header); `format: "pcm"` returns raw 16-bit PCM
+with a warning. The default voice is `Kore`; custom voice IDs are rejected.
+Use `providerOptions["google"]["multiSpeakerVoiceConfig"]` for several
+speakers. The sample rate is in `providerMetadata["google"]["sampleRate"]`.
+- Video: `videoModel("veo-3.1-generate-preview")` starts a long-running operation
+and polls every 10 seconds for up to 10 minutes; change this with
+`pollIntervalMs` and `pollTimeoutMs` under `providerOptions["google"]`.
+
+## Interactions API
+
+`interactionsModel(_:)` uses the Interactions API, and `interactionsAgent(_:)`
+calls a hosted agent such as `deep-research`:
+
+```swift
+let agent = google.interactionsAgent("deep-research")
+let report = try await agent.generateText("Survey recent work on solid-state batteries.")
+```
+
+Interactions supports function and built-in tools, reasoning, response history,
+video input and streaming. The portable `reasoning` option maps to
+`thinking_level`; `providerOptions["google"]["thinkingLevel"]` takes precedence.
+Agent calls ignore generation controls and warn about each dropped setting.
+Requests with `background: true` are polled until they finish.
+
+## Decisions and extraction
+
+```swift
+let decision = try await AI.experimentalDecide(
+    model: try google.decisionModel("gemini-decision-1"),
+    state: .text("The package arrived cracked."),
+    questions: ["damaged": .boolean(instructions: "Is the package damaged?")]
+)
+
+let extraction = try await AI.experimentalExtract(
+    model: try google.extractionModel("gemini-3.8-flash"),
+    state: .text("The invoice total is 42 EUR."),
+    fields: ["total": .init(type: .number, unit: "EUR")]
+)
+```
+
+`gemini-decision-*` IDs use Google's native decisions endpoint (Choice, Score and
+Boolean questions; Box and provider file references are rejected). Other IDs
+passed to `decisionModel(_:)` use a Gemini structured-generation adapter, which
+also supports Box. Use `nativeDecisionModel(_:)` to send any other ID to the native
+endpoint.
+
+## Realtime
+
+`realtimeModel("gemini-3.8-live")` connects to Gemini Live over WebSockets. Use
+`AIRealtimeSession.connectServer(model:sessionConfiguration:)` on a trusted server,
+or an ephemeral client secret on devices. Conversation sessions are supported;
+transcription-only sessions are rejected before connecting. Usage is available
+from `event.usage`.
+
+## Batches
+
+`experimentalBatch()` runs Gemini batch jobs, including tool content and input
+file metadata. Result rows are limited to 64 MiB each by default; change it with
+`GoogleProviderSettings(batchResultDownloads: AIBatchResultDownloadSettings(maxLineBytes:))`.
+
+## Rotating credentials
+
+`GoogleProviderSettings(apiKeyProvider:)` takes an async throwing closure that is
+called before every authenticated request, including continuation requests, batch
+operations, file uploads and processing polls. Upload URLs that do not need a key
+receive none. If the closure throws, the request is not sent.
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

@@ -1,10 +1,43 @@
-# "googleVertex.xai"
+# Google Vertex AI — xAI Grok
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-xai/
 
+xAI Grok language models hosted on Vertex AI through its OpenAI-compatible Chat Completions endpoint. Authenticates with an OAuth access token; reasoning_effort is removed from requests.
+
+Provider ID: `googleVertex.xai` · Upstream package: `@ai-sdk/google-vertex`
+
 ## Package
 
-`@ai-sdk/google-vertex`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-google-vertex`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-google-vertex.git", from: "1.2.2"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIGoogleVertex", package: "swift-ai-google-vertex"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIGoogleVertex
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `GOOGLE_VERTEX_ACCESS_TOKEN` | OAuth access token sent as a bearer token. Required unless passed in settings. |
+| `GOOGLE_ACCESS_TOKEN` | Fallback for GOOGLE_VERTEX_ACCESS_TOKEN. |
+| `GOOGLE_VERTEX_PROJECT` | Google Cloud project ID. Required unless passed as project. |
+| `GOOGLE_VERTEX_LOCATION` | Vertex location. Defaults to global. |
 
 ## Factories
 
@@ -12,12 +45,56 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-xai/
 
 ## Capabilities
 
-- Language
+- [Language](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/)
 
-## Notes
+## Quick start
 
-Vertex xAI mirrors upstream Google Vertex 5.0.141 through the shared OpenAI-compatible request and response surface. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied. The 2026-11-15 delta and native/platform distinctions are recorded in WeeklyUpstreamAudit20261115; no full-package or live-service parity is implied.
+```swift
+import SwiftAISDK
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+// Reads GOOGLE_VERTEX_PROJECT, GOOGLE_VERTEX_LOCATION and GOOGLE_VERTEX_ACCESS_TOKEN.
+let provider = try AIProviders.googleVertexXAI()
+let model = try provider.languageModel("xai/grok-4.1-fast-reasoning")
+let result = try await model.generateText("Summarize the plot of Hamlet in one line.")
+print(result.text)
+```
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+With modular packages, `import SwiftAI` and `import SwiftAIGoogleVertex`, then call
+`AIProviders.googleVertexXAI(project:location:configuration:)` with a
+`GoogleVertexHostedProviderSettings`. The `configuration` argument is required.
+
+## Authentication and endpoint
+
+Grok models on Vertex use the OpenAI-compatible Chat Completions endpoint with an
+OAuth bearer token. The token comes from `apiKey` in the settings, then
+`GOOGLE_VERTEX_ACCESS_TOKEN`, then `GOOGLE_ACCESS_TOKEN`. Service-account
+variables and Express Mode keys are not used.
+
+The project (`project` argument or `GOOGLE_VERTEX_PROJECT`) is always required,
+even when you set `baseURL`. The location comes from `location` or
+`GOOGLE_VERTEX_LOCATION` and defaults to `global`. Requests go to
+`https://aiplatform.googleapis.com/v1/projects/PROJECT/locations/global/endpoints/openapi/chat/completions`
+for the global location.
+
+```swift
+let provider = try AIProviders.googleVertexXAI(
+    project: "my-project",
+    settings: ProviderSettings(apiKey: accessToken)
+)
+```
+
+To refresh tokens before each request, use the `configuration:` factory and set
+`GoogleVertexHostedProviderSettings.apiKeyProvider` to an async throwing closure.
+
+## Behavior
+
+- Only language models are available. Model IDs carry the `xai/` prefix.
+- `reasoning_effort` is removed from every request body, including values passed
+through `extraBody`, so portable reasoning settings are not sent to this endpoint.
+- Other request and response handling follows the
+[OpenAI-compatible provider](https://swiftaisdk.github.io/SwiftAISDK/providers/openai-compatible/). For xAI's own API features
+(Responses, images, video, voice), use the [xAI provider](https://swiftaisdk.github.io/SwiftAISDK/providers/xai/).
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

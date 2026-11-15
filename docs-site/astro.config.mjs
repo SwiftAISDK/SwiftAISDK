@@ -69,25 +69,54 @@ export default defineConfig({
           items: [
             { label: 'Introduction', slug: '' },
             { label: 'Install', slug: 'getting-started/install' },
-            { label: 'Migrate to 3.0', slug: 'getting-started/migrating-to-3' },
             { label: 'Quickstart', slug: 'getting-started/quickstart' },
+            { label: 'Migrate to 3.0', slug: 'getting-started/migrating-to-3' },
           ],
         },
         {
-          label: 'Core',
+          label: 'Text',
           items: [
             { label: 'Generate text', slug: 'core/generate-text' },
             { label: 'Stream text', slug: 'core/stream-text' },
-            { label: 'Batch text', slug: 'core/batch-text' },
+            { label: 'Batches', slug: 'core/batch-text' },
+            { label: 'Chat', slug: 'core/chat' },
+          ],
+        },
+        {
+          label: 'Structured data',
+          items: [
             { label: 'Structured output', slug: 'core/structured-output' },
-            { label: 'Decisions', slug: 'core/decide' },
             { label: 'Extract fields', slug: 'core/extract' },
-            { label: 'Evaluation compatibility', slug: 'core/evaluate' },
+            { label: 'Decisions', slug: 'core/decide' },
+            { label: 'Evaluation', slug: 'core/evaluate' },
+          ],
+        },
+        {
+          label: 'Tools and MCP',
+          items: [
             { label: 'Tools', slug: 'core/tools' },
-            { label: 'Model metadata', slug: 'core/model-metadata' },
-            { label: 'Files', slug: 'core/files' },
+            { label: 'Agents', slug: 'core/agents' },
+            { label: 'MCP tools', slug: 'cookbook/mcp-tools' },
+            { label: 'MCP events', slug: 'cookbook/mcp-events' },
+          ],
+        },
+        {
+          label: 'Search',
+          items: [
             { label: 'Embeddings', slug: 'core/embeddings' },
+            { label: 'Rerank', slug: 'core/rerank' },
+          ],
+        },
+        {
+          label: 'Images and video',
+          items: [
             { label: 'Generate image', slug: 'core/generate-image' },
+            { label: 'Generate video', slug: 'core/generate-video' },
+          ],
+        },
+        {
+          label: 'Audio',
+          items: [
             { label: 'Transcribe audio', slug: 'core/transcribe' },
             { label: 'Generate speech', slug: 'core/generate-speech' },
             { label: 'Stream speech', slug: 'core/stream-speech' },
@@ -95,40 +124,37 @@ export default defineConfig({
             { label: 'Generate audio', slug: 'core/generate-audio' },
             { label: 'Transform audio', slug: 'core/transform-audio' },
             { label: 'Dubbing', slug: 'core/dubbing' },
-            { label: 'Generate video', slug: 'core/generate-video' },
-            { label: 'Rerank', slug: 'core/rerank' },
+          ],
+        },
+        {
+          label: 'Runtime',
+          items: [
+            { label: 'Model metadata', slug: 'core/model-metadata' },
+            { label: 'Middleware', slug: 'core/middleware' },
+            { label: 'Files', slug: 'core/files' },
             { label: 'Error handling', slug: 'core/error-handling' },
             { label: 'Telemetry', slug: 'core/telemetry' },
+            { label: 'Troubleshooting', slug: 'troubleshooting' },
           ],
-        },
-        {
-          label: 'Cookbook',
-          items: [
-            { label: 'MCP tools', slug: 'cookbook/mcp-tools' },
-            { label: 'MCP Events', slug: 'cookbook/mcp-events' },
-          ],
-        },
-        {
-          label: 'Components',
-          items: [{ label: 'Components', slug: 'components' }],
         },
         {
           label: 'Providers',
-          items: [{ label: 'Provider matrix', slug: 'providers' }],
+          collapsed: true,
+          items: [{ autogenerate: { directory: 'providers' } }],
         },
         {
           label: 'Reference',
+          collapsed: true,
           items: [
             {
               label: 'Public symbols',
               slug: 'reference/generated/public-symbols',
             },
-          ],
-        },
-        {
-          label: 'Project',
-          items: [
-            { label: 'Troubleshooting', slug: 'troubleshooting' },
+            {
+              label: 'API by component',
+              collapsed: true,
+              items: [{ autogenerate: { directory: 'components' } }],
+            },
           ],
         },
       ],

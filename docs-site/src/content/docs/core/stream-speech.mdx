@@ -6,15 +6,12 @@ description: Synthesize audio incrementally from complete or streaming text.
 import { Code } from '@astrojs/starlight/components';
 import streamSpeechExample from '../../../../../Examples/Sources/StreamSpeech/StreamSpeechExample.swift?raw';
 
+Use streaming speech to start playback before the full text is ready, for
+example while a language model is still writing its answer.
 `AI.experimentalStreamSpeech` starts native streaming text-to-speech with
-ElevenLabs or AI Gateway. Text can be a complete string, a sequence of chunks,
+[ElevenLabs](../../providers/elevenlabs/) or [AI Gateway](../../providers/gateway/). Text can be a complete string, a sequence of chunks,
 or an `AIStreamingTextInput` backed by your producer. The provider consumes
 text while returning audio.
-
-Use SwiftAISDK **2.8.1 or later** with the minimum Swift 6.3 toolchain. Version
-2.8.0 contains a compiler-inference issue in the shared speech WebSocket close
-path that is fixed in 2.8.1. Swift 6.4 accepted that code, so its passing local
-checks did not establish compatibility with the older compiler.
 
 <Code code={streamSpeechExample} lang="swift" title="Examples/Sources/StreamSpeech/StreamSpeechExample.swift" />
 
@@ -35,7 +32,7 @@ For Gateway, use `gateway.streamingSpeechModel("fish-audio/s2-pro")`.
 `gateway.experimentalSpeech.getToken(...)` mints a speech-bound client secret
 on your trusted server. The client can use that token with a separately
 configured provider. Credentials, team routing, custom base URLs and WebSocket
-transports follow the existing Gateway setup.
+transports follow the usual [Gateway setup](../../providers/gateway/).
 
 ## Consumption and results
 
@@ -57,3 +54,6 @@ without audio throws `AINoSpeechGeneratedError`, retaining response metadata
 and an underlying cause when available. Audio followed by premature EOF still
 fails. Use `fullStream` to observe a provider error part before the terminal
 failure.
+
+For complete-text synthesis that returns one audio payload, see
+[Generate speech](../generate-speech/).

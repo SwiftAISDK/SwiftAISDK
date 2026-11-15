@@ -1,8 +1,26 @@
-# SwiftAIHume
+# Hume AI for Swift
 
-Swift-native port of `@ai-sdk/hume`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
+`SwiftAIHume` adds Hume AI to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/hume` and supports speech.
 
-The canonical repository owns all source edits. This package owns its provider
-configuration and wire behavior, using only the declared shared dependencies.
-Existing upstream baselines, capabilities and documented gaps remain unchanged.
-See `Porting/map.json` and the canonical provider guide.
+Provider guide with models, options, streaming and errors:
+
+- [Hume AI](https://swiftaisdk.github.io/SwiftAISDK/providers/hume/)
+
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAIHume` product from this package to your target, then create the provider:
+
+```swift
+import SwiftAI
+import SwiftAIHume
+
+let provider = try AIProviders.hume(configuration: HumeProviderSettings())
+```
+
+By default the provider reads `HUME_API_KEY` from the environment; values set in `HumeProviderSettings` take precedence.
+
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
+
+## Contributing
+
+This package is exported from `Packages/swift-ai-hume` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

@@ -1,26 +1,26 @@
-# SwiftAITogetherAI
+# Together AI for Swift
 
-Swift-native port of `@ai-sdk/togetherai`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
+`SwiftAITogetherAI` adds Together AI to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/togetherai` and supports text generation, text completion, embeddings, image generation and reranking.
+
+Provider guide with models, options, streaming and errors:
+
+- [Together AI](https://swiftaisdk.github.io/SwiftAISDK/providers/togetherai/)
+
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAITogetherAI` product from this package to your target, then create the provider:
 
 ```swift
+import SwiftAI
 import SwiftAITogetherAI
 
-let provider = try TogetherAIProvider(configuration: .init(apiKey: "..."))
+let provider = try AIProviders.togetherAI(configuration: TogetherAIProviderSettings())
 ```
 
-Settings accept a custom base URL, headers, query parameters and an injected
-`AITransport`. Models use the common SwiftAIProvider protocols.
+By default the provider reads `TOGETHER_API_KEY` and `TOGETHER_AI_API_KEY` from the environment; values set in `TogetherAIProviderSettings` take precedence.
 
-JSON Schema output is forwarded for the exact verified catalog IDs: DeepSeek
-V4 Flash 0731, V4.1 Flash and its 1017 snapshot, GPT OSS 120B, GLM 5.2 and
-5.3 Flash, Kimi K3, and MiniMax M3.1 Flash. Other model IDs retain the JSON-object
-fallback. Custom settings can explicitly opt additional models into schema output.
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
 
-Run the standalone suite from the canonical checkout:
+## Contributing
 
-```sh
-swift test --package-path Packages/swift-ai-togetherai
-```
-
-The canonical repository owns all edits. Distribution manifests and repositories
-are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
+This package is exported from `Packages/swift-ai-togetherai` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

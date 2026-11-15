@@ -6,6 +6,18 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/components/tools/
 These declarations follow the canonical repository's main branch. Match your installed versions to the published release documentation. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for published packages and version-compatible examples.
 :::
 
+## Signed approval replay
+
+The executable-tool `AI.streamText` overloads accept an explicit
+`toolApprovalSecret:` alongside `toolApproval:`. Use the same application secret
+that signed the original approval. Streaming checks signatures before executing
+historical approvals, including tampered-signature rejection. Existing overloads
+retain their previous unsigned behavior.
+
+Replay validates the saved schema input, applies refinement once, and verifies
+that it produces the approved operation. Execution uses that verified input;
+a mismatch becomes an error tool result and does not execute the tool.
+
 ## Symbol counts
 
 | Symbol kind | Count |
@@ -321,15 +333,3 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Type Method | `SwiftAI.hasToolCall(_:)` | `static func hasToolCall(_ toolNames: String...) -> AIStopCondition` | [Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift) |
 | Type Method | `SwiftAI.isLoopFinished()` | `static func isLoopFinished() -> AIStopCondition` | [Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift) |
 | Type Method | `SwiftAI.isStepCount(_:)` | `static func isStepCount(_ stepCount: Int) -> AIStopCondition` | [Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAI/CoreTools.swift) |
-
-## Signed approval replay
-
-The executable-tool `AI.streamText` overloads accept an explicit
-`toolApprovalSecret:` alongside `toolApproval:`. Use the same application secret
-that signed the original approval. Streaming checks signatures before executing
-historical approvals, including tampered-signature rejection. Existing overloads
-retain their previous unsigned behavior.
-
-Replay validates the saved schema input, applies refinement once, and verifies
-that it produces the approved operation. Execution uses that verified input;
-a mismatch becomes an error tool result and does not execute the tool.

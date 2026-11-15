@@ -1,17 +1,26 @@
-# SwiftAIGroq
+# Groq for Swift
 
-Swift-native port of `@ai-sdk/groq`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
+`SwiftAIGroq` adds Groq to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/groq` and supports text generation and transcription.
 
-The canonical repository owns all source edits. This package owns its provider
-configuration and wire behavior, using only the declared shared dependencies.
-Existing upstream baselines, capabilities and documented gaps remain unchanged.
-See `Porting/map.json` and the canonical provider guide.
+Provider guide with models, options, streaming and errors:
 
-See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/groq.md) for authentication, options and supported surfaces.
-## Behavior notes
+- [Groq](https://swiftaisdk.github.io/SwiftAISDK/providers/groq/)
 
-`transcribeFromURL` sends HTTP(S) audio URLs without userinfo directly to Groq and removes fragments. It returns nil only for Groq's HTTP 400 redirect-fetch limitation, allowing the facade to use its secure downloader; authentication and other media failures propagate. Plain-text transcription responses work for both URL and file input. Tool replay preserves valid JSON argument text and quotes malformed text.
+## Usage
 
-## Current upstream review
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAIGroq` product from this package to your target, then create the provider:
 
-The reviewed baseline is `@ai-sdk/groq` 4.0.83. Published runtime source, declarations and matching-release tests are unchanged from 4.0.78 apart from dependency/version propagation. The user-agent suffix now identifies the reviewed npm baseline. Existing URL transcription, timestamp and language behavior remain unchanged.
+```swift
+import SwiftAI
+import SwiftAIGroq
+
+let provider = try AIProviders.groq(configuration: GroqProviderSettings())
+```
+
+By default the provider reads `GROQ_API_KEY` from the environment; values set in `GroqProviderSettings` take precedence.
+
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
+
+## Contributing
+
+This package is exported from `Packages/swift-ai-groq` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

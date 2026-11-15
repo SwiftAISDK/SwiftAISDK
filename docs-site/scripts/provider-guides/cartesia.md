@@ -1,22 +1,79 @@
-Known `ink-whisper` and dated `ink-whisper-*` snapshots use REST batch
-transcription. Every other current or future ID uses the existing streaming
-protocol; select `streamingTranscriptionModel(...)` for those models.
+## Quick start
+
+```swift
+import SwiftAISDK
+
+let provider = try AIProviders.cartesia()
+let model = try provider.speechModel("sonic-3.5")
+let speech = try await model.generateSpeech(
+    "Hello from Cartesia.",
+    voice: "your-voice-id",
+    format: "mp3"
+)
+print(speech.audio.count)
+```
+
+With modular packages, `import SwiftAI` and `import SwiftAICartesia`, then call
+`AIProviders.cartesia(configuration: CartesiaProviderSettings(...))`; the native
+factory requires the configuration argument.
+
+Requests go to `https://api.cartesia.ai` with bearer authentication and the
+`Cartesia-Version` header (default `2026-03-01`, configurable through
+`CartesiaProviderSettings.version`).
+
+## Speech (Sonic)
+
+A `voice` (Cartesia voice ID) is required. `speed` must be between 0.6 and 1.5,
+otherwise it is ignored with a warning; `instructions` are not supported.
+`format` accepts `mp3`, `wav`, `pcm`/`raw`, `mulaw` and `alaw`; unknown formats
+fall back to MP3 with a warning.
+
+Provider options under `providerOptions["cartesia"]`:
+
+- Output: `container` (`raw`, `wav`, `mp3`), `encoding` (`pcm_f32le`,
+  `pcm_s16le`, `pcm_mulaw`, `pcm_alaw`), `sampleRate` (8000–48000 standard rates),
+  `bitRate` (MP3 only).
+- Voice: `volume` (0.5–2), `emotion`, `speed`.
+- Language: `locale`, `language`, `normalization`, `pronunciationDictionaryId`.
+  `locale` overrides the shared `language` argument with a warning and cannot be
+  combined with `providerOptions["cartesia"]["language"]`.
+
+See [Generate speech](../../core/generate-speech/).
+
+## Batch transcription
+
+```swift
+let transcriber = try provider.transcriptionModel("ink-whisper")
+let result = try await transcriber.transcribe(audio: audioData, fileName: "clip.wav", mimeType: "audio/wav")
+print(result.text)
+```
+
+Only `ink-whisper` and dated `ink-whisper-*` IDs use REST batch transcription
+(`/stt`). Options: `language` and `timestampGranularities`. Calling a batch model
+with any other ID, such as `ink-2`, throws before any request is sent.
+
+## Streaming transcription (Ink 2)
+
+Use `streamingTranscriptionModel("ink-2")` (alias `streamingTranscription`) for live
+audio. The provider obtains a short-lived access token, then streams PCM or G.711
+audio over a WebSocket and emits partial and final transcript events. Ink 2
+supports English only.
+
+Options under `providerOptions["cartesia"]["streaming"]`:
+
+- `encoding`: overrides the encoding inferred from the input audio format, with
+  a warning when they disagree.
+- `turnDetection` (default on): server-side turn detection; turn it off to
+  finalize explicitly.
+- `keyterms`: up to 100 terms to boost.
+- `turnStartThreshold`, `turnEagerEndThreshold`, `turnEndThreshold` and integer
+  `turnEndTimeoutMs`; ignored with warnings when turn detection is off.
+
+Inject a custom `webSocketTransport` in `CartesiaProviderSettings` for tests or
+proxies. See [Transcribe](../../core/transcribe/).
 
 ## Rotating credentials
 
-The native provider settings accept an optional `apiKeyProvider` asynchronous
-throwing closure. The provider resolves it for each authenticated request;
-static keys and explicit custom authentication headers remain supported.
-Supplier failures stop the request before it reaches the transport.
-
-## Current request and response behavior
-
-Sonic speech accepts `volume` (0.5...2), a declared `emotion`, `locale`,
-`normalization`, and `pronunciationDictionaryId` in `providerOptions.cartesia`.
-`locale` overrides the generic language with a warning, and cannot be combined
-with a provider-specific language. Speed, volume and emotion share one generation
-configuration. Ink 2 streaming accepts repeated `keyterms` (at most 100),
-`turnStartThreshold`, `turnEagerEndThreshold`, `turnEndThreshold` and integer
-`turnEndTimeoutMs`. Turn thresholds are omitted with warnings when turn detection
-is disabled. The documented 1200-character keyterm budget remains a service limit;
-the published schema validates the count.
+`CartesiaProviderSettings` accepts an `apiKeyProvider` async throwing closure that
+is called before each authenticated request, including access-token requests for
+streaming. A supplier error stops the request before it is sent.

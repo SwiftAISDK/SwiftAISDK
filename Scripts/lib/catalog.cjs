@@ -367,6 +367,8 @@ function docsRows(root = rootDefault) {
   const data = readCatalog(root);
   return data.rows.map((r) => ({
     providerID: r.providerID,
+    displayName: r.displayName ?? r.providerID,
+    credentials: r.credentials ?? [],
     upstreamPackage: r.upstreamPackage,
     factories: r.factoryNames.map((f) => "`" + f + "`").join(", "),
     ...Object.fromEntries(

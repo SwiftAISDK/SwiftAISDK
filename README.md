@@ -64,7 +64,7 @@ for configuration and supported capabilities.
 | Decode typed results | [Structured output](https://swiftaisdk.github.io/SwiftAISDK/core/structured-output/) |
 | Execute tools and connect MCP servers | [Tools](https://swiftaisdk.github.io/SwiftAISDK/core/tools/), [MCP](https://swiftaisdk.github.io/SwiftAISDK/cookbook/mcp-tools/) |
 | Work with embeddings and search | [Embeddings](https://swiftaisdk.github.io/SwiftAISDK/core/embeddings/), [reranking](https://swiftaisdk.github.io/SwiftAISDK/core/rerank/) |
-| Generate images, video, and audio | [Media workflows](https://swiftaisdk.github.io/SwiftAISDK/components/media/), [audio](https://swiftaisdk.github.io/SwiftAISDK/components/audio/) |
+| Generate images, video, and audio | [Images](https://swiftaisdk.github.io/SwiftAISDK/core/generate-image/), [video](https://swiftaisdk.github.io/SwiftAISDK/core/generate-video/), [speech](https://swiftaisdk.github.io/SwiftAISDK/core/generate-speech/), [transcription](https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/) |
 | Manage durable work and files | [Batches](https://swiftaisdk.github.io/SwiftAISDK/core/batch-text/), [files](https://swiftaisdk.github.io/SwiftAISDK/core/files/) |
 | Extract fields and answer typed questions | [Extraction](https://swiftaisdk.github.io/SwiftAISDK/core/extract/), [decisions](https://swiftaisdk.github.io/SwiftAISDK/core/decide/), [evaluation](https://swiftaisdk.github.io/SwiftAISDK/core/evaluate/) |
 | Connect realtime audio | [Realtime sessions](https://swiftaisdk.github.io/SwiftAISDK/core/realtime/) |

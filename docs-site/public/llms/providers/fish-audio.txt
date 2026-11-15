@@ -1,10 +1,40 @@
-# "fish-audio"
+# Fish Audio
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/fish-audio/
 
+Fish Audio text-to-speech with reference voices, latency and sampling controls, plus speech-to-text with timed segments.
+
+Provider ID: `fish-audio` · Upstream package: `@ai-sdk/fish-audio`
+
 ## Package
 
-`@ai-sdk/fish-audio`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-fish-audio`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-fish-audio.git", from: "1.1.2"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIFishAudio", package: "swift-ai-fish-audio"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIFishAudio
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `FISH_AUDIO_API_KEY` | API key, sent as a bearer token. Required unless passed in settings. |
 
 ## Factories
 
@@ -12,21 +42,93 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/fish-audio/
 
 ## Capabilities
 
-- Transcription
-- Speech
+- [Transcription](https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/)
+- [Speech](https://swiftaisdk.github.io/SwiftAISDK/core/generate-speech/)
 
-## Rotating API keys
+## Quick start
 
-`FishAudioProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import SwiftAISDK
 
-## Notes
+let provider = try AIProviders.fishAudio()
+let model = try provider.speechModel("s2-pro")
+let result = try await model.generateSpeech(
+    "Hello from Fish Audio.",
+    voice: "your-voice-reference-id",
+    format: "wav"
+)
+let wav = result.audio
+```
 
-Fish Audio mirrors upstream 3.0.59: `FISH_AUDIO_API_KEY`, bearer auth, custom base URL and headers, versioned user-agent suffix, binary `/v1/tts` speech generation with model headers, output formats, latency/normalization/sampling controls and warnings, plus multipart `/v1/asr` transcription with language, duration, and timed text segments. Request/response metadata, abort propagation, and Fish `{status,message}` error handling follow the published package. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied.
+For a smaller dependency graph, use `import SwiftAI` and `import SwiftAIFishAudio`
+with the native factory `AIProviders.fishAudio(configuration: FishAudioProviderSettings())`.
+The native factory requires the configuration argument; `FishAudioProviderSettings()`
+reads `FISH_AUDIO_API_KEY` from the environment (or from its `environment`
+dictionary when set). Requests use bearer authentication.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+## Speech
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+Speech calls `/v1/tts` and returns binary audio. The model ID (`s1`, `s2-pro`,
+`s2.1-pro`) is sent in the `model` header.
+
+- `voice` becomes `reference_id`; `providerOptions["fishAudio"]["referenceId"]`
+takes precedence and also accepts an array.
+- `format`: `mp3` (default), `wav`, `pcm` or `opus`. Other values fall back to
+`mp3` with a warning.
+- `speed` must be between 0.5 and 2; values outside the range are ignored with a
+warning.
+- `language` and `instructions` are not supported and produce warnings. Fish Audio
+infers the language from the text and voice.
+
+Options under `providerOptions["fishAudio"]`:
+
+| Key | Values |
+| --- | --- |
+| `latency` | `low`, `normal`, `balanced` |
+| `sampleRate`, `maxNewTokens` | Positive integers |
+| `mp3Bitrate` | 64, 128 or 192 |
+| `opusBitrate` | -1000, 24000, 32000, 48000 or 64000 |
+| `volume`, `normalizeLoudness` | Prosody controls; `normalizeLoudness` applies to the S2 family and is ignored on `s1` with a warning |
+| `temperature`, `topP`, `earlyStopThreshold` | 0–1 |
+| `repetitionPenalty` | Number |
+| `chunkLength` (100–300), `minChunkLength` (0–100) | Integers |
+| `normalize`, `conditionOnPreviousChunks` | Booleans |
+| `features` | Array of strings |
+
+Invalid values fail before the request is sent.
+
+## Transcription
+
+Fish Audio has a single ASR model. The model ID is a local label and defaults to
+`transcribe-1`.
+
+```swift
+let asr = try provider.transcription()
+let transcript = try await asr.transcribe(
+    audio: audioData,
+    fileName: "memo.m4a",
+    mimeType: "audio/mp4",
+    providerOptions: ["fishAudio": ["language": "en"]]
+)
+print(transcript.text, transcript.segments.count)
+```
+
+Audio is uploaded as multipart to `/v1/asr`. Set `ignoreTimestamps: true` to skip
+timed segments (the default is `false`). Results include text, language, duration
+and segments; the detected display language is in
+`providerMetadata["fishAudio"]["language"]`.
+
+## Errors
+
+Fish Audio `status`/`message` error bodies become typed API errors with the HTTP
+status and response headers.
+
+## Rotating credentials
+
+`FishAudioProviderSettings(apiKeyProvider:)` takes an async throwing closure that
+is called before every authenticated request, so short-lived keys refresh without
+recreating the provider. If the closure throws, the request is not sent.
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

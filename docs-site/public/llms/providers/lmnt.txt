@@ -1,10 +1,40 @@
-# "lmnt"
+# LMNT
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/lmnt/
 
+LMNT text-to-speech models such as aurora and blizzard, returning MP3, AAC, WAV, mu-law or raw audio. Speech models always need a model ID.
+
+Provider ID: `lmnt` · Upstream package: `@ai-sdk/lmnt`
+
 ## Package
 
-`@ai-sdk/lmnt`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-lmnt`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-lmnt.git", from: "1.0.0"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAILMNT", package: "swift-ai-lmnt"),
+```
+
+```swift
+import SwiftAI
+import SwiftAILMNT
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `LMNT_API_KEY` | API key sent as x-api-key. Required unless passed in settings. |
 
 ## Factories
 
@@ -12,12 +42,70 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/lmnt/
 
 ## Capabilities
 
-- Speech
+- [Speech](https://swiftaisdk.github.io/SwiftAISDK/core/generate-speech/)
 
-## Notes
+## Quick start
 
-LMNT speech mirrors upstream 3.0.36: `LMNT_API_KEY`, `x-api-key` auth, custom headers, versioned user-agent suffix, `speech`/`speechModel` aliases, default voice `ava`, `/v1/ai/speech/bytes`, binary audio responses, output format warnings/fallback, `providerOptions.lmnt` speech schema defaults, response metadata, and unsupported language/embedding/image families.
+```swift
+import Foundation
+import SwiftAISDK
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+let provider = try AIProviders.lmnt() // reads LMNT_API_KEY
+let model = try provider.speechModel("aurora")
+let result = try await model.generateSpeech("Hello from Swift!", voice: "ava")
+try result.audio.write(to: URL(fileURLWithPath: "hello.mp3"))
+```
 
-Return to the [provider matrix](/SwiftAISDK/providers/).
+With modular packages, `import SwiftAI` and `import SwiftAILMNT`, then call
+`AIProviders.lmnt(configuration: LMNTProviderSettings(...))`. The native factory
+requires the `configuration` argument; pass `LMNTProviderSettings()` to read
+`LMNT_API_KEY`.
+
+## Umbrella and native providers
+
+The two factories return different provider types:
+
+| Factory | Returns | Settings |
+| --- | --- | --- |
+| `AIProviders.lmnt(settings:)` (umbrella) | `OpenAICompatibleProvider` | `ProviderSettings` |
+| `AIProviders.lmnt(configuration:)` (native) | `LMNTProvider` | `LMNTProviderSettings` |
+
+Both create speech models with `speechModel(_:)`, and both need a model ID such as
+`aurora` or `blizzard`. On the umbrella provider, `speechModel()` with no argument
+throws because LMNT requires a model ID. Every other model family throws
+`AIError.unsupportedModel`. Both settings types accept `apiKey`, `baseURL`,
+`headers`, `queryParams` and `transport`. LMNT has no rotating-key closure.
+
+## Speech requests
+
+Requests go to `/v1/ai/speech/bytes` with the key in the `x-api-key` header, and
+the raw audio bytes are returned.
+
+- `voice` defaults to `ava`.
+- `format` accepts `mp3`, `aac`, `mulaw`, `raw` and `wav`. Other values fall back
+to `mp3` with a warning.
+- `speed` and `language` are forwarded.
+
+## Provider options
+
+`providerOptions["lmnt"]` accepts `sampleRate` (8000, 16000 or 24000), `speed`
+(0.25–2), `seed` (integer), `conversational`, `length` (up to 300), `topP` (0–1)
+and `temperature` (0 or higher). Invalid values throw `AIError.invalidArgument`
+before the request is sent.
+
+```swift
+let result = try await model.generateSpeech(
+    "Let's keep this casual.",
+    providerOptions: ["lmnt": ["conversational": true, "sampleRate": 16_000]]
+)
+```
+
+When you pass `providerOptions["lmnt"]`, any key you leave out uses its default:
+`sampleRate` 24000, `speed` 1, `conversational` false, `topP` 1 and
+`temperature` 1. A provider-options `speed` overrides the top-level `speed`.
+`model` and `format` are validated but not sent; use the model ID and the
+`format` argument instead.
+
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

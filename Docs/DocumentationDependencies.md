@@ -63,7 +63,7 @@ Run from the repository root:
 npm ci --prefix docs-site
 npm audit --prefix docs-site
 npm --prefix docs-site run check
-DOCS_BASE=/SwiftAISDK DOCS_SITE=https://ozio.github.io npm --prefix docs-site run build
+DOCS_BASE=/SwiftAISDK DOCS_SITE=https://swiftaisdk.github.io npm --prefix docs-site run build
 ```
 
 The check and build scripts regenerate public reference pages. Run them after

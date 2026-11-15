@@ -22,9 +22,9 @@ Common options map to provider-agnostic model settings:
 - `providerOptions`
 - `extraBody`
 - `abortSignal`
-- `retryPolicy`, `timeoutNanoseconds`, and `telemetry`
+- `retryPolicy` (including its `timeoutNanoseconds`) and `telemetry`
 
-Use `providerOptions` for documented provider-specific behavior. Use `extraBody` only as a low-level escape hatch when the provider has not yet grown a typed option.
+Use `providerOptions` for documented provider-specific behavior. Use `extraBody` only as a low-level escape hatch for request fields that have no typed option.
 
 ```swift
 let result = try await model.generateText(
@@ -70,18 +70,35 @@ downloads enforce the shared private-host, redirect, size, and abort checks;
 provider credentials are not forwarded to an unrelated origin. Provider file
 references remain references and are not downloaded.
 
-The URL checks do not yet pin a DNS answer to the connection address. If your
-application accepts provider-selected remote files in a hostile network
-environment, treat resolver-level DNS rebinding protection as a remaining
-transport gap.
+The default download transport pins the validated DNS addresses; see
+[Files](../files/) for the download security contract.
+
+## Multi-step results
+
+When you enable tools, `steps` records each model/tool loop step as an
+`AIToolStep`, and `finalStep` returns the last one. `responseMessages` contains
+the assistant and tool messages generated during the call; append them to the
+next request or store them in conversation history. See
+[Tools](../tools/#tool-loops) for step limits and stop conditions.
+
+```swift
+// `weather` is an AITool; see the Tools guide.
+var history: [AIMessage] = [.user("Plan my afternoon.")]
+let result = try await model.generateText(
+    messages: history,
+    tools: LanguageToolOptions([weather], maxSteps: 3)
+)
+for step in result.steps {
+    print(step.index, step.toolCalls.map(\.name), step.finishReason ?? "")
+}
+history += result.responseMessages
+```
 
 ## Message pruning
 
 `pruneMessages(..., reasoning: .all)` and `.beforeLastMessage` remove both
 textual `.reasoning` and `.reasoningFile` parts within the selected scope.
 Ordinary `.file` content is retained.
-
-When you enable tools, `steps` records each model/tool loop step and `responseMessages` contains the assistant/tool messages that can be appended to the next request or stored in conversation history.
 
 ## Experimental steering
 
@@ -103,7 +120,7 @@ Messages queued before the run start reach step zero. Messages queued during a s
 
 `prepareStep` receives the newly queued messages in `experimentalSteeringMessages`. Returning a replacement request can remove them; retaining equivalent user content counts as delivery. Each `AIToolStep.experimentalSteeringMessages` records only messages actually sent in that step. `initialRequest` remains the original request, and `responseMessages` contains generated assistant/tool messages, so steering messages remain separate when rebuilding conversation state. The final `text` is the final step's answer; prior step content and response messages remain available in the result.
 
-Set an explicit step limit for steering. Swift retains its existing prompt/tool-loop default of five steps and agent default of twenty; the single request overload permits one step. `AIOutput` overloads also accept steering.
+Set an explicit step limit for steering. The prompt/tool-loop default is five steps and the agent default is twenty; the single-request overload permits one step. `AIOutput` overloads also accept steering.
 
 Use `steering.queue("Next task", id: "task-2")` to wait until the current task
 finishes before starting another. Queued messages are promoted one at a time;

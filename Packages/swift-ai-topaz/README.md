@@ -1,24 +1,26 @@
-# SwiftAITopaz
+# Topaz Labs for Swift
 
-Swift-native port of `@ai-sdk/topaz`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
+`SwiftAITopaz` adds Topaz Labs to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/topaz` and supports image generation and video generation.
+
+Provider guide with models, options, streaming and errors:
+
+- [Topaz Labs](https://swiftaisdk.github.io/SwiftAISDK/providers/topaz/)
+
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAITopaz` product from this package to your target, then create the provider:
 
 ```swift
+import SwiftAI
 import SwiftAITopaz
 
-let provider = try TopazProvider(configuration: .init(apiKey: "..."))
+let provider = try AIProviders.topaz(configuration: TopazProviderSettings())
 ```
 
-Settings accept a custom base URL, headers, query parameters and an injected
-`AITransport`. Models use the common SwiftAIProvider protocols. Existing upstream
-baselines, capabilities and documented gaps remain unchanged.
+By default the provider reads `TOPAZ_API_KEY` from the environment; values set in `TopazProviderSettings` take precedence.
 
-Run the standalone suite from the canonical checkout:
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
 
-```sh
-swift test --package-path Packages/swift-ai-topaz
-```
+## Contributing
 
-The canonical repository owns all edits. Distribution manifests and repositories
-are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
-
-See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/topaz.md) for authentication, options and supported surfaces.
+This package is exported from `Packages/swift-ai-topaz` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

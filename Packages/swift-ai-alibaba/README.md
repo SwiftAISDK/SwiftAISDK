@@ -1,24 +1,26 @@
-# SwiftAIAlibaba
+# Alibaba Cloud Model Studio (DashScope) for Swift
 
-Swift-native port of `@ai-sdk/alibaba`. Maintained in the canonical SwiftAISDK repository and exported as an independent Swift package.
+`SwiftAIAlibaba` adds Alibaba Cloud Model Studio (DashScope) to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/alibaba` and supports text generation, embeddings and video generation.
+
+Provider guide with models, options, streaming and errors:
+
+- [Alibaba Cloud Model Studio (DashScope)](https://swiftaisdk.github.io/SwiftAISDK/providers/alibaba/)
+
+## Usage
+
+Add the `SwiftAI` product from `swift-ai-core` and the `SwiftAIAlibaba` product from this package to your target, then create the provider:
 
 ```swift
+import SwiftAI
 import SwiftAIAlibaba
 
-let provider = try AlibabaProvider(configuration: .init(apiKey: "..."))
+let provider = try AIProviders.alibaba(configuration: AlibabaProviderSettings())
 ```
 
-Settings accept a custom base URL, headers, query parameters and an injected
-`AITransport`. Models use the common SwiftAIProvider protocols. Existing upstream
-baselines, capabilities and documented gaps remain unchanged.
+By default the provider reads `ALIBABA_API_KEY` and `DASHSCOPE_API_KEY` from the environment; values set in `AlibabaProviderSettings` take precedence.
 
-Run the standalone suite from the canonical checkout:
+To use every provider through one dependency, add the complete [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) package instead; see [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/).
 
-```sh
-swift test --package-path Packages/swift-ai-alibaba
-```
+## Contributing
 
-The canonical repository owns all edits. Distribution manifests and repositories
-are generated from the catalog; see `Porting/map.json` and the canonical provider guide.
-
-See [provider usage and capabilities](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/docs-site/scripts/provider-guides/alibaba.md) for authentication, options and supported surfaces.
+This package is exported from `Packages/swift-ai-alibaba` in the canonical [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK) repository. Open issues and pull requests there.

@@ -4,10 +4,10 @@ description: Learn what SwiftAISDK is and where to start.
 template: splash
 hero:
   title: The AI toolkit for Swift
-  tagline: One Swift-native facade for text, streaming, tools, structured output, media and realtime across every provider package of the AI SDK.
+  tagline: One Swift-native API for text, streaming, tools, structured output, media and realtime sessions across many model providers.
 ---
 
-SwiftAISDK is a SwiftPM port of the provider-facing parts of Vercel AI SDK. It gives Swift apps one facade for text, durable batches, structured output, evaluation, embeddings, media, streaming audio, realtime sessions, reranking, files, skills, middleware, MCP tools, and typed tool execution.
+SwiftAISDK is a SwiftPM port of the provider-facing parts of Vercel AI SDK. It gives Swift apps one facade for text, durable batches, structured output, decisions, embeddings, media, streaming audio, realtime sessions, reranking, files, skills, middleware, MCP tools, and typed tool execution.
 
 <div class="hero-panel">
   Start with a provider, pick a model, and call Swift-native model methods such as `generateText`, `streamText`, and `generateObject`. Keep provider-specific behavior in provider settings and `providerOptions`; keep application behavior in Swift types, tools, and async sequences.
@@ -30,35 +30,42 @@ SwiftAISDK is a SwiftPM port of the provider-facing parts of Vercel AI SDK. It g
   </a>
   <a class="doc-tile" href="providers/">
     <strong>Providers</strong>
-    <p>See which upstream `@ai-sdk/*` providers and model families are covered.</p>
+    <p>See every supported provider, its Swift package, factories, and capabilities.</p>
   </a>
   <a class="doc-tile" href="cookbook/mcp-tools/">
     <strong>MCP</strong>
     <p>Discover remote tools and pass them into text generation.</p>
   </a>
-  <a class="doc-tile" href="core/evaluate/">
-    <strong>Evaluation</strong>
-    <p>Score shared state with typed Choice, Score, and Boolean questions.</p>
+  <a class="doc-tile" href="core/decide/">
+    <strong>Decisions</strong>
+    <p>Ask typed Choice, Score, and Boolean questions about text, JSON, and file evidence.</p>
   </a>
   <a class="doc-tile" href="core/realtime/">
     <strong>Realtime</strong>
-    <p>Run turn-based xAI or continuous OpenAI Live sessions through the provider-neutral Realtime V4 lifecycle.</p>
+    <p>Run bidirectional voice and text sessions with xAI, OpenAI Live, Google Gemini Live, or Gateway.</p>
+  </a>
+  <a class="doc-tile" href="core/chat/">
+    <strong>Chat</strong>
+    <p>Drive a SwiftUI chat view from an observable session with streamed UI messages.</p>
   </a>
 </div>
 
 ## How the Docs Are Organized
 
-- **Getting Started** explains installation, credentials, and the first request.
-- **Core** covers common app workflows: text, streaming, structured output, tools, and middleware.
-- **Cookbook** contains task-oriented recipes you can adapt into app code.
-- **Providers** is generated from the package capability matrix.
+- **Start** covers installation, credentials, the first request, and the 3.0 package migration.
+- **Text**, **Structured data**, **Tools and MCP**, **Search**, **Images and video**, and **Audio** are task guides for each model capability. Chat sessions sit under **Text**; agents sit under **Tools and MCP**.
+- **Runtime** covers model metadata, middleware, provider files, errors, telemetry, and troubleshooting.
+- **Providers** has one page per provider with its Swift package, factories, capabilities, and provider-specific behavior. The provider matrix compares them.
 - **Reference** is generated from Swift symbol graphs and is best used after a guide points you to a type.
+
+Every page is also available as Markdown for coding agents: see [`llms.txt`](llms.txt), or replace a page's trailing slash with `.md`.
 
 ## Current Scope
 
-SwiftAISDK tracks the provider-facing AI SDK surface. Realtime V4 includes a
-turn-based xAI adapter and a continuous OpenAI Live server-WebSocket adapter;
-browser WebRTC and other provider-specific realtime families remain explicit gaps.
-Web framework hooks and React Server Components are intentionally not the first
-thing you should look for here; SwiftUI-facing abstractions are expected to be
-Swift-native.
+SwiftAISDK ports the provider-facing AI SDK surface: model calls, tools, MCP,
+structured output, media, and provider adapters. Realtime sessions support
+xAI's turn-based adapter and continuous server-WebSocket sessions for OpenAI
+Live, Google Gemini Live, and Gateway; browser WebRTC flows and other
+provider-specific realtime families are not supported yet. Web framework hooks
+and React Server Components are out of scope. Apps use the Swift-native
+[chat session](core/chat/) and [agents](core/agents/) instead.

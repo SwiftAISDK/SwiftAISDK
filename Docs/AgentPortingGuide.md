@@ -164,7 +164,15 @@ Scripts/update-upstream-test-inventory.js
 ## Public Documentation Requirements
 
 Public docs are part of the port. Update the owning docs-site guide when a change
-affects:
+affects the items below. For a new provider, also fill the capability row's
+`displayName`, `credentials` and `notes`, write its provider guide with a Quick
+start, and write its package README (see
+[Provider pages and package READMEs](ProductDocumentation.md#provider-pages-and-package-readmes)).
+Provider, component, reference and migration pages are
+generated: edit their inputs (for example `docs-site/scripts/provider-guides/`)
+as listed in
+[ProductDocumentation.md](ProductDocumentation.md#generated-docs-site-pages).
+
 
 - public API names or overloads;
 - provider setup, env vars, base URLs, auth, aliases, or supported capabilities;
@@ -222,8 +230,8 @@ For docs-site changes:
 
 ```sh
 npm ci --prefix docs-site
-npm --prefix docs-site run check
-npm --prefix docs-site run build
+DOCS_BASE=/SwiftAISDK DOCS_SITE=https://swiftaisdk.github.io npm --prefix docs-site run check
+DOCS_BASE=/SwiftAISDK DOCS_SITE=https://swiftaisdk.github.io npm --prefix docs-site run build
 ```
 
 Optional live smoke (requires real credentials):

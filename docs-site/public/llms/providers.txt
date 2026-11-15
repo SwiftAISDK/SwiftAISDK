@@ -1,82 +1,86 @@
-# Provider matrix
+# Providers
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/
 
-This page is generated from the package catalog. Update [Porting/packages.json](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Porting/packages.json) and run `node Scripts/sdk.mjs generate` when provider coverage changes.
+Each provider page shows its Swift package, credentials, factories, capabilities and provider-specific behavior. Every provider is also included in the complete `SwiftAISDK` umbrella package.
 
-Language: 36
-Completion: 7
-Embedding: 17
-Image: 20
-Transcription: 15
-Speech: 14
-Audio generation: 1
-Audio transformation: 1
-Dubbing: 1
-Video: 15
-Reranking: 5
-Evaluation: 5
-Decision: 9
-Extraction: 4
-Files: 6
-Skills: 3
+| Capability | Providers |
+| --- | --- |
+| [Language](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/) | 36 |
+| [Completion](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/) | 7 |
+| [Embedding](https://swiftaisdk.github.io/SwiftAISDK/core/embeddings/) | 17 |
+| [Image](https://swiftaisdk.github.io/SwiftAISDK/core/generate-image/) | 20 |
+| [Transcription](https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/) | 15 |
+| [Speech](https://swiftaisdk.github.io/SwiftAISDK/core/generate-speech/) | 14 |
+| [Audio generation](https://swiftaisdk.github.io/SwiftAISDK/core/generate-audio/) | 1 |
+| [Audio transformation](https://swiftaisdk.github.io/SwiftAISDK/core/transform-audio/) | 1 |
+| [Dubbing](https://swiftaisdk.github.io/SwiftAISDK/core/dubbing/) | 1 |
+| [Video](https://swiftaisdk.github.io/SwiftAISDK/core/generate-video/) | 15 |
+| [Reranking](https://swiftaisdk.github.io/SwiftAISDK/core/rerank/) | 5 |
+| [Evaluation](https://swiftaisdk.github.io/SwiftAISDK/core/evaluate/) | 5 |
+| [Decision](https://swiftaisdk.github.io/SwiftAISDK/core/decide/) | 9 |
+| [Extraction](https://swiftaisdk.github.io/SwiftAISDK/core/extract/) | 4 |
+| [Files](https://swiftaisdk.github.io/SwiftAISDK/core/files/) | 6 |
+| [Skills](https://swiftaisdk.github.io/SwiftAISDK/core/files/) | 3 |
 
-| Provider | Upstream package | Swift factories | Language | Completion | Embedding | Image | Transcription | Speech | Audio generation | Audio transformation | Dubbing | Video | Reranking | Evaluation | Decision | Extraction | Files | Skills |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [`alibaba`](alibaba/) | `@ai-sdk/alibaba` | `AIProviders.alibaba` | ✅ |  | ✅ |  |  |  |  |  |  | ✅ |  |  |  |  |  |  |
-| [`amazon-bedrock`](amazon-bedrock/) | `@ai-sdk/amazon-bedrock` | `AIProviders.amazonBedrock` | ✅ |  | ✅ | ✅ |  |  |  |  |  |  | ✅ |  |  |  |  |  |
-| [`amazon-bedrock.anthropic`](amazon-bedrock-anthropic/) | `@ai-sdk/amazon-bedrock` | `AIProviders.amazonBedrockAnthropic` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`bedrock-mantle`](bedrock-mantle/) | `@ai-sdk/amazon-bedrock` | `AIProviders.bedrockMantle` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`anthropic`](anthropic/) | `@ai-sdk/anthropic` | `AIProviders.anthropic` | ✅ |  |  |  |  |  |  |  |  |  |  | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`anthropic-aws`](anthropic-aws/) | `@ai-sdk/anthropic-aws` | `AIProviders.anthropicAWS` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  | ✅ | ✅ |
-| [`assemblyai`](assemblyai/) | `@ai-sdk/assemblyai` | `AIProviders.assemblyAI` |  |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |
-| [`azure`](azure/) | `@ai-sdk/azure` | `AIProviders.azure` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |
-| [`baseten`](baseten/) | `@ai-sdk/baseten` | `AIProviders.baseten` | ✅ |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`black-forest-labs`](black-forest-labs/) | `@ai-sdk/black-forest-labs` | `AIProviders.blackForestLabs` |  |  |  | ✅ |  |  |  |  |  | ✅ |  |  |  |  |  |  |
-| [`bytedance`](bytedance/) | `@ai-sdk/bytedance` | `AIProviders.byteDance` |  |  |  |  |  |  |  |  |  | ✅ |  |  |  |  |  |  |
-| [`cartesia`](cartesia/) | `@ai-sdk/cartesia` | `AIProviders.cartesia` |  |  |  |  | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |
-| [`cerebras`](cerebras/) | `@ai-sdk/cerebras` | `AIProviders.cerebras` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`cohere`](cohere/) | `@ai-sdk/cohere` | `AIProviders.cohere` | ✅ |  | ✅ |  |  |  |  |  |  |  | ✅ |  |  |  |  |  |
-| [`deepgram`](deepgram/) | `@ai-sdk/deepgram` | `AIProviders.deepgram` |  |  |  |  | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |
-| [`deepinfra`](deepinfra/) | `@ai-sdk/deepinfra` | `AIProviders.deepInfra` | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`deepseek`](deepseek/) | `@ai-sdk/deepseek` | `AIProviders.deepSeek` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  | ✅ |  |
-| [`elevenlabs`](elevenlabs/) | `@ai-sdk/elevenlabs` | `AIProviders.elevenLabs` |  |  |  |  | ✅ | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  |  |  |
-| [`fal`](fal/) | `@ai-sdk/fal` | `AIProviders.fal` |  |  |  | ✅ | ✅ | ✅ |  |  |  | ✅ |  |  |  |  |  |  |
-| [`fish-audio`](fish-audio/) | `@ai-sdk/fish-audio` | `AIProviders.fishAudio` |  |  |  |  | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |
-| [`fireworks`](fireworks/) | `@ai-sdk/fireworks` | `AIProviders.fireworks` | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`gateway`](gateway/) | `@ai-sdk/gateway` | `AIProviders.gateway` | ✅ |  | ✅ | ✅ | ✅ | ✅ |  |  |  | ✅ | ✅ | ✅ | ✅ |  |  |  |
-| [`gmicloud`](gmicloud/) | `@ai-sdk/gmicloud` | `AIProviders.gmiCloud` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`gladia`](gladia/) | `@ai-sdk/gladia` | `AIProviders.gladia` |  |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |
-| [`google.generative-ai`](google-generative-ai/) | `@ai-sdk/google` | `AIProviders.google` | ✅ |  | ✅ | ✅ |  | ✅ |  |  |  | ✅ |  | ✅ | ✅ | ✅ | ✅ |  |
-| [`google.vertex`](google-vertex/) | `@ai-sdk/google-vertex` | `AIProviders.googleVertex` | ✅ |  | ✅ | ✅ | ✅ | ✅ |  |  |  | ✅ |  |  |  |  |  |  |
-| [`googleVertex.maas`](googlevertex-maas/) | `@ai-sdk/google-vertex` | `AIProviders.googleVertexMaaS` | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`googleVertex.xai`](googlevertex-xai/) | `@ai-sdk/google-vertex` | `AIProviders.googleVertexXAI` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`googleVertex.anthropic`](googlevertex-anthropic/) | `@ai-sdk/google-vertex` | `AIProviders.googleVertexAnthropic` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`groq`](groq/) | `@ai-sdk/groq` | `AIProviders.groq` | ✅ |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |
-| [`heygen`](heygen/) | `@ai-sdk/heygen` | `AIProviders.heyGen`, `createHeyGen`, `heygen` |  |  |  |  |  |  |  |  |  | ✅ |  |  | ✅ |  |  |  |
-| [`huggingface`](huggingface/) | `@ai-sdk/huggingface` | `AIProviders.huggingFace` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`hume`](hume/) | `@ai-sdk/hume` | `AIProviders.hume` |  |  |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |
-| [`klingai`](klingai/) | `@ai-sdk/klingai` | `AIProviders.klingAI` |  |  |  |  |  |  |  |  |  | ✅ |  |  |  |  |  |  |
-| [`lmnt`](lmnt/) | `@ai-sdk/lmnt` | `AIProviders.lmnt` |  |  |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |
-| [`luma`](luma/) | `@ai-sdk/luma` | `AIProviders.luma` |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`minimax`](minimax/) | `@ai-sdk/minimax` | `AIProviders.miniMax` | ✅ |  |  | ✅ |  |  |  |  |  | ✅ |  |  |  |  |  |  |
-| [`mistral`](mistral/) | `@ai-sdk/mistral` | `AIProviders.mistral` | ✅ |  | ✅ |  | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |
-| [`moonshotai`](moonshotai/) | `@ai-sdk/moonshotai` | `AIProviders.moonshotAI` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`open-responses.responses`](open-responses-responses/) | `@ai-sdk/open-responses` | `AIProviders.openResponses` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`openai`](openai/) | `@ai-sdk/openai` | `AIProviders.openAI` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`openai-compatible`](openai-compatible/) | `@ai-sdk/openai-compatible` | `AIProviders.openAICompatible` | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`perplexity`](perplexity/) | `@ai-sdk/perplexity` | `AIProviders.perplexity` | ✅ |  | ✅ |  |  |  |  |  |  |  |  |  | ✅ |  |  |  |
-| [`prodia`](prodia/) | `@ai-sdk/prodia` | `AIProviders.prodia` | ✅ |  |  | ✅ |  |  |  |  |  | ✅ |  |  |  |  |  |  |
-| [`quiverai`](quiverai/) | `@ai-sdk/quiverai` | `AIProviders.quiverAI` | ✅ |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`replicate`](replicate/) | `@ai-sdk/replicate` | `AIProviders.replicate` |  |  |  | ✅ |  |  |  |  |  | ✅ |  |  |  |  |  |  |
-| [`revai`](revai/) | `@ai-sdk/revai` | `AIProviders.revAI` |  |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |
-| [`togetherai`](togetherai/) | `@ai-sdk/togetherai` | `AIProviders.togetherAI` | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  |  | ✅ |  |  |  |  |  |
-| [`topaz`](topaz/) | `@ai-sdk/topaz` | `AIProviders.topaz` |  |  |  | ✅ |  |  |  |  |  | ✅ |  |  |  |  |  |  |
-| [`typesafe`](typesafe/) | `@ai-sdk/typesafe-ai` | `AIProviders.typeSafeAI` |  |  |  |  |  |  |  |  |  |  |  | ✅ | ✅ |  |  |  |
-| [`vercel`](vercel/) | `@ai-sdk/vercel` | `AIProviders.vercel` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`voyage`](voyage/) | `@ai-sdk/voyage` | `AIProviders.voyage` |  |  | ✅ |  |  |  |  |  |  |  | ✅ |  |  |  |  |  |
-| [`xai`](xai/) | `@ai-sdk/xai` | `AIProviders.xAI` | ✅ |  |  | ✅ | ✅ | ✅ |  |  |  | ✅ |  |  |  |  | ✅ |  |
-| [`zai`](zai/) | `@ai-sdk/zai` | `AIProviders.zai` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| [`parallel`](parallel/) | `@ai-sdk/parallel` | `AIProviders.parallel`, `createParallel`, `parallel` |  |  |  |  |  |  |  |  |  |  |  |  | ✅ |  |  |  |
-| [`scaledown`](scaledown/) | `@ai-sdk/scaledown` | `AIProviders.scaleDown` |  |  |  |  |  |  |  |  |  |  |  |  | ✅ | ✅ |  |  |
-| [`tencent`](tencent/) | `@ai-sdk/tencent` | `AIProviders.tencent` | ✅ |  |  |  |  |  |  |  |  | ✅ |  |  |  |  |  |  |
+| Provider | Provider ID | Swift factory | Capabilities |
+| --- | --- | --- | --- |
+| [Alibaba Cloud Model Studio (DashScope)](https://swiftaisdk.github.io/SwiftAISDK/providers/alibaba/) | `alibaba` | `AIProviders.alibaba` | Language, Embedding, Video |
+| [Amazon Bedrock](https://swiftaisdk.github.io/SwiftAISDK/providers/amazon-bedrock/) | `amazon-bedrock` | `AIProviders.amazonBedrock` | Language, Embedding, Image, Reranking |
+| [Amazon Bedrock (Anthropic models)](https://swiftaisdk.github.io/SwiftAISDK/providers/amazon-bedrock-anthropic/) | `amazon-bedrock.anthropic` | `AIProviders.amazonBedrockAnthropic` | Language |
+| [Amazon Bedrock Mantle](https://swiftaisdk.github.io/SwiftAISDK/providers/bedrock-mantle/) | `bedrock-mantle` | `AIProviders.bedrockMantle` | Language |
+| [Anthropic](https://swiftaisdk.github.io/SwiftAISDK/providers/anthropic/) | `anthropic` | `AIProviders.anthropic` | Language, Evaluation, Decision, Extraction, Files, Skills |
+| [Claude Platform on AWS](https://swiftaisdk.github.io/SwiftAISDK/providers/anthropic-aws/) | `anthropic-aws` | `AIProviders.anthropicAWS` | Language, Files, Skills |
+| [AssemblyAI](https://swiftaisdk.github.io/SwiftAISDK/providers/assemblyai/) | `assemblyai` | `AIProviders.assemblyAI` | Transcription |
+| [Azure OpenAI](https://swiftaisdk.github.io/SwiftAISDK/providers/azure/) | `azure` | `AIProviders.azure` | Language, Completion, Embedding, Image, Transcription, Speech |
+| [Baseten](https://swiftaisdk.github.io/SwiftAISDK/providers/baseten/) | `baseten` | `AIProviders.baseten` | Language, Embedding |
+| [Black Forest Labs](https://swiftaisdk.github.io/SwiftAISDK/providers/black-forest-labs/) | `black-forest-labs` | `AIProviders.blackForestLabs` | Image, Video |
+| [ByteDance (BytePlus ModelArk)](https://swiftaisdk.github.io/SwiftAISDK/providers/bytedance/) | `bytedance` | `AIProviders.byteDance` | Video |
+| [Cartesia](https://swiftaisdk.github.io/SwiftAISDK/providers/cartesia/) | `cartesia` | `AIProviders.cartesia` | Transcription, Speech |
+| [Cerebras](https://swiftaisdk.github.io/SwiftAISDK/providers/cerebras/) | `cerebras` | `AIProviders.cerebras` | Language |
+| [Cohere](https://swiftaisdk.github.io/SwiftAISDK/providers/cohere/) | `cohere` | `AIProviders.cohere` | Language, Embedding, Reranking |
+| [Deepgram](https://swiftaisdk.github.io/SwiftAISDK/providers/deepgram/) | `deepgram` | `AIProviders.deepgram` | Transcription, Speech |
+| [DeepInfra](https://swiftaisdk.github.io/SwiftAISDK/providers/deepinfra/) | `deepinfra` | `AIProviders.deepInfra` | Language, Completion, Embedding, Image |
+| [DeepSeek](https://swiftaisdk.github.io/SwiftAISDK/providers/deepseek/) | `deepseek` | `AIProviders.deepSeek` | Language, Files |
+| [ElevenLabs](https://swiftaisdk.github.io/SwiftAISDK/providers/elevenlabs/) | `elevenlabs` | `AIProviders.elevenLabs` | Transcription, Speech, Audio generation, Audio transformation, Dubbing |
+| [fal](https://swiftaisdk.github.io/SwiftAISDK/providers/fal/) | `fal` | `AIProviders.fal` | Image, Transcription, Speech, Video |
+| [Fish Audio](https://swiftaisdk.github.io/SwiftAISDK/providers/fish-audio/) | `fish-audio` | `AIProviders.fishAudio` | Transcription, Speech |
+| [Fireworks AI](https://swiftaisdk.github.io/SwiftAISDK/providers/fireworks/) | `fireworks` | `AIProviders.fireworks` | Language, Completion, Embedding, Image |
+| [Vercel AI Gateway](https://swiftaisdk.github.io/SwiftAISDK/providers/gateway/) | `gateway` | `AIProviders.gateway` | Language, Embedding, Image, Transcription, Speech, Video, Reranking, Evaluation, Decision |
+| [GMI Cloud](https://swiftaisdk.github.io/SwiftAISDK/providers/gmicloud/) | `gmicloud` | `AIProviders.gmiCloud` | Language |
+| [Gladia](https://swiftaisdk.github.io/SwiftAISDK/providers/gladia/) | `gladia` | `AIProviders.gladia` | Transcription |
+| [Google Generative AI (Gemini API)](https://swiftaisdk.github.io/SwiftAISDK/providers/google-generative-ai/) | `google.generative-ai` | `AIProviders.google` | Language, Embedding, Image, Speech, Video, Evaluation, Decision, Extraction, Files |
+| [Google Vertex AI](https://swiftaisdk.github.io/SwiftAISDK/providers/google-vertex/) | `google.vertex` | `AIProviders.googleVertex` | Language, Embedding, Image, Transcription, Speech, Video |
+| [Google Vertex AI — Model Garden (MaaS)](https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-maas/) | `googleVertex.maas` | `AIProviders.googleVertexMaaS` | Language, Completion, Embedding, Image |
+| [Google Vertex AI — xAI Grok](https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-xai/) | `googleVertex.xai` | `AIProviders.googleVertexXAI` | Language |
+| [Google Vertex AI — Anthropic Claude](https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-anthropic/) | `googleVertex.anthropic` | `AIProviders.googleVertexAnthropic` | Language |
+| [Groq](https://swiftaisdk.github.io/SwiftAISDK/providers/groq/) | `groq` | `AIProviders.groq` | Language, Transcription |
+| [HeyGen](https://swiftaisdk.github.io/SwiftAISDK/providers/heygen/) | `heygen` | `AIProviders.heyGen`, `createHeyGen`, `heygen` | Video, Decision |
+| [Hugging Face](https://swiftaisdk.github.io/SwiftAISDK/providers/huggingface/) | `huggingface` | `AIProviders.huggingFace` | Language |
+| [Hume AI](https://swiftaisdk.github.io/SwiftAISDK/providers/hume/) | `hume` | `AIProviders.hume` | Speech |
+| [Kling AI](https://swiftaisdk.github.io/SwiftAISDK/providers/klingai/) | `klingai` | `AIProviders.klingAI` | Video |
+| [LMNT](https://swiftaisdk.github.io/SwiftAISDK/providers/lmnt/) | `lmnt` | `AIProviders.lmnt` | Speech |
+| [Luma AI](https://swiftaisdk.github.io/SwiftAISDK/providers/luma/) | `luma` | `AIProviders.luma` | Image |
+| [MiniMax](https://swiftaisdk.github.io/SwiftAISDK/providers/minimax/) | `minimax` | `AIProviders.miniMax` | Language, Image, Video |
+| [Mistral AI](https://swiftaisdk.github.io/SwiftAISDK/providers/mistral/) | `mistral` | `AIProviders.mistral` | Language, Embedding, Transcription, Speech |
+| [Moonshot AI (Kimi)](https://swiftaisdk.github.io/SwiftAISDK/providers/moonshotai/) | `moonshotai` | `AIProviders.moonshotAI` | Language |
+| [Open Responses](https://swiftaisdk.github.io/SwiftAISDK/providers/open-responses-responses/) | `open-responses.responses` | `AIProviders.openResponses` | Language |
+| [OpenAI](https://swiftaisdk.github.io/SwiftAISDK/providers/openai/) | `openai` | `AIProviders.openAI` | Language, Completion, Embedding, Image, Transcription, Speech, Evaluation, Decision, Extraction, Files, Skills |
+| [OpenAI-compatible servers](https://swiftaisdk.github.io/SwiftAISDK/providers/openai-compatible/) | `openai-compatible` | `AIProviders.openAICompatible` | Language, Completion, Embedding, Image |
+| [Perplexity](https://swiftaisdk.github.io/SwiftAISDK/providers/perplexity/) | `perplexity` | `AIProviders.perplexity` | Language, Embedding, Decision |
+| [Prodia](https://swiftaisdk.github.io/SwiftAISDK/providers/prodia/) | `prodia` | `AIProviders.prodia` | Language, Image, Video |
+| [QuiverAI](https://swiftaisdk.github.io/SwiftAISDK/providers/quiverai/) | `quiverai` | `AIProviders.quiverAI` | Language, Image |
+| [Replicate](https://swiftaisdk.github.io/SwiftAISDK/providers/replicate/) | `replicate` | `AIProviders.replicate` | Image, Video |
+| [Rev.ai](https://swiftaisdk.github.io/SwiftAISDK/providers/revai/) | `revai` | `AIProviders.revAI` | Transcription |
+| [Together AI](https://swiftaisdk.github.io/SwiftAISDK/providers/togetherai/) | `togetherai` | `AIProviders.togetherAI` | Language, Completion, Embedding, Image, Reranking |
+| [Topaz Labs](https://swiftaisdk.github.io/SwiftAISDK/providers/topaz/) | `topaz` | `AIProviders.topaz` | Image, Video |
+| [TypeSafe AI](https://swiftaisdk.github.io/SwiftAISDK/providers/typesafe/) | `typesafe` | `AIProviders.typeSafeAI` | Evaluation, Decision |
+| [Vercel v0](https://swiftaisdk.github.io/SwiftAISDK/providers/vercel/) | `vercel` | `AIProviders.vercel` | Language |
+| [Voyage AI](https://swiftaisdk.github.io/SwiftAISDK/providers/voyage/) | `voyage` | `AIProviders.voyage` | Embedding, Reranking |
+| [xAI (Grok)](https://swiftaisdk.github.io/SwiftAISDK/providers/xai/) | `xai` | `AIProviders.xAI` | Language, Image, Transcription, Speech, Video, Files |
+| [Z.AI](https://swiftaisdk.github.io/SwiftAISDK/providers/zai/) | `zai` | `AIProviders.zai` | Language |
+| [Parallel](https://swiftaisdk.github.io/SwiftAISDK/providers/parallel/) | `parallel` | `AIProviders.parallel`, `createParallel`, `parallel` | Decision |
+| [ScaleDown](https://swiftaisdk.github.io/SwiftAISDK/providers/scaledown/) | `scaledown` | `AIProviders.scaleDown` | Decision, Extraction |
+| [Tencent (TokenHub and Cloud VOD)](https://swiftaisdk.github.io/SwiftAISDK/providers/tencent/) | `tencent` | `AIProviders.tencent` | Language, Video |
+
+This page is generated from [Porting/packages.json](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Porting/packages.json) by `npm --prefix docs-site run generate`.

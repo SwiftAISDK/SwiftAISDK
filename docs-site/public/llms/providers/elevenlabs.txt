@@ -1,10 +1,40 @@
-# "elevenlabs"
+# ElevenLabs
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/elevenlabs/
 
+ElevenLabs text-to-speech (including WebSocket streaming and multi-speaker dialogue) and Scribe speech-to-text. The provider also exposes music, sound effects, voice changer, voice isolator and dubbing.
+
+Provider ID: `elevenlabs` · Upstream package: `@ai-sdk/elevenlabs`
+
 ## Package
 
-`@ai-sdk/elevenlabs`
+The complete `SwiftAISDK` umbrella (`import SwiftAISDK`) already includes this provider.
+For a smaller dependency graph, add only core and `swift-ai-elevenlabs`:
+
+```swift
+// Package.swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-elevenlabs.git", from: "1.2.1"),
+
+// Target dependencies
+.product(name: "SwiftAI", package: "swift-ai-core"),
+.product(name: "SwiftAIElevenLabs", package: "swift-ai-elevenlabs"),
+```
+
+```swift
+import SwiftAI
+import SwiftAIElevenLabs
+```
+
+Versions shown are from the tested 3.4.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+
+## Credentials
+
+The default factory reads these environment variables. Explicit provider settings take precedence.
+
+| Variable | Purpose |
+| --- | --- |
+| `ELEVENLABS_API_KEY` | API key, sent in the `xi-api-key` header. Required unless passed in settings. |
 
 ## Factories
 
@@ -12,27 +42,101 @@ Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/elevenlabs/
 
 ## Capabilities
 
-- Transcription
-- Speech
-- Audio generation
-- Audio transformation
-- Dubbing
+- [Transcription](https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/)
+- [Speech](https://swiftaisdk.github.io/SwiftAISDK/core/generate-speech/)
+- [Audio generation](https://swiftaisdk.github.io/SwiftAISDK/core/generate-audio/)
+- [Audio transformation](https://swiftaisdk.github.io/SwiftAISDK/core/transform-audio/)
+- [Dubbing](https://swiftaisdk.github.io/SwiftAISDK/core/dubbing/)
 
-## Speaker evidence in batch transcription
-
-Scribe transcription defaults to diarization enabled and sends one explicit `diarize` multipart field. Set `providerOptions.elevenlabs.diarize` to false to disable it. Returned words, including speaker IDs, are preserved in `providerMetadata["elevenlabs"]["words"]` alongside normalized segments.
-
-`audio_duration_secs`, when reported by Scribe, is the authoritative audio duration. The last word's end time remains the fallback.
-
-## Incremental speech
-
-`streamingSpeechModel` creates a native duplex WebSocket speech model. The
-experimental facade accepts a complete string, finite text parts, or an
-`AIStreamingTextInput` backed by an asynchronous producer.
+## Quick start
 
 ```swift
-let elevenLabs = try AIProviders.elevenLabs()
-let model = try elevenLabs.streamingSpeechModel("eleven_flash_v2_5")
+import SwiftAISDK
+
+let provider = try AIProviders.elevenLabs()
+let model = try provider.speechModel("eleven_multilingual_v2")
+let result = try await model.generateSpeech(
+    "Welcome back! Your order is on its way.",
+    voice: "21m00Tcm4TlvDq8ikWAM",
+    format: "mp3"
+)
+let mp3 = result.audio
+```
+
+For a smaller dependency graph, use `import SwiftAI` and `import SwiftAIElevenLabs`
+with the native factory `AIProviders.elevenLabs(configuration: ElevenLabsProviderSettings())`.
+The native factory requires the configuration argument; `ElevenLabsProviderSettings()`
+reads `ELEVENLABS_API_KEY` from the environment. Requests authenticate with the
+`xi-api-key` header.
+
+## Speech
+
+`speechModel(_:)` calls `/v1/text-to-speech/{voice}`. Without a `voice`, the SDK
+uses `21m00Tcm4TlvDq8ikWAM`. `format` accepts `mp3` (sent as `mp3_44100_128`, the
+default), `mp3_32` to `mp3_192`, `pcm` (`pcm_44100`), `ulaw` (`ulaw_8000`) and
+`wav` (`wav_44100`); any other value, such as `pcm_24000`, is passed through as a
+native ElevenLabs output format.
+
+Options under `providerOptions["elevenlabs"]`:
+
+| Key | Purpose |
+| --- | --- |
+| `voiceSettings` | `stability`, `similarityBoost`, `style`, `useSpeakerBoost`, `speed` |
+| `languageCode` | Language hint (the request `language` takes precedence) |
+| `pronunciationDictionaryLocators` | Pronunciation dictionaries to apply |
+| `previousText`, `nextText`, `previousRequestIds`, `nextRequestIds` | Continuity context |
+| `applyTextNormalization`, `applyLanguageTextNormalization` | Normalization controls |
+| `enableLogging`, `seed` | Logging opt-out and deterministic sampling |
+| `withTimestamps` | Return character alignment (see below) |
+
+`instructions` is not supported and produces a warning.
+
+### Timestamps
+
+Set `withTimestamps: true` to get character alignment from Text to Speech or
+Text to Dialogue, or lyric word timings from music. Speech results still contain
+decoded audio, and `providerMetadata["elevenlabs"]` holds `alignment`,
+`normalizedAlignment` and `voiceSegments`. Music uses `/v1/music/detailed` and
+returns `wordTimestamps` with `word`, `startMs` and `endMs`.
+
+### Dialogue
+
+`eleven_v4` always uses Text to Dialogue with the supplied text and voice. For
+multiple speakers on `eleven_v3*` or `eleven_v4*`, pass
+`providerOptions["elevenlabs"]["inputs"]` as an array of objects with non-empty
+`text` and `voiceId`; it replaces the request text and voice. Dialogue maps
+stability and similarity settings and warns about ignored instructions, speed and
+unsupported voice settings.
+
+## Transcription
+
+```swift
+let scribe = try provider.transcriptionModel("scribe_v2")
+let transcript = try await scribe.transcribe(
+    audio: audioData,
+    fileName: "call.m4a",
+    mimeType: "audio/mp4",
+    providerOptions: ["elevenlabs": ["languageCode": "en", "tagAudioEvents": true]]
+)
+print(transcript.text)
+```
+
+Transcription calls `/v1/speech-to-text`. Diarization is on by default; set
+`diarize: false` to disable it. Other keys: `languageCode`, `tagAudioEvents`,
+`numSpeakers`, `timestampsGranularity` and `fileFormat`. Words, including speaker
+IDs and confidence, are kept in `providerMetadata["elevenlabs"]["words"]`.
+The reported `audio_duration_secs` is used as the duration when present.
+
+Set `sourceUrl` to let ElevenLabs fetch the audio itself. The request then omits
+the file; any non-empty local audio is ignored with a warning.
+
+## Streaming speech
+
+`streamingSpeechModel(_:)` opens a WebSocket session and accepts text
+incrementally. See [Stream speech](https://swiftaisdk.github.io/SwiftAISDK/core/stream-speech/) for the facade.
+
+```swift
+let model = try provider.streamingSpeechModel("eleven_flash_v2_5")
 let result = try AI.experimentalStreamSpeech(
     model: model,
     request: StreamingSpeechRequest(
@@ -41,106 +145,69 @@ let result = try AI.experimentalStreamSpeech(
         outputFormat: AIStreamingAudioFormat(mediaType: "audio/pcm", sampleRate: 24_000)
     )
 )
-for try await audio in try result.audioStream {
+for try await chunk in try result.audioStream {
     // Feed each chunk to an audio player that accepts the selected format.
-    _ = audio
+    _ = chunk
 }
-let usage = try await result.usage
 ```
 
-Audio chunks preserve generation order and may require concatenation or a
-streaming decoder. Choose exactly one owner: `audioStream`, `fullStream`, or
-awaited final metadata. Awaiting metadata first drains the stream. The facade
-keeps no replay buffer. `fullStream` exposes audio, raw chunks and nonfatal error
-parts; `audioStream` skips error parts and empty chunks. Both fail on an
-incomplete stream. A stream that produces no audio throws
-`AINoSpeechGeneratedError`, retaining the latest provider error as its cause.
-Cancel the result, abort its request, or leave an iterator early to release the
-input producer and socket. Pass `onConsumerCancel` when wrapping an external
-producer in `AIStreamingTextInput`.
-
-`providerOptions.elevenlabs.streaming` supports `autoMode`,
-`chunkLengthSchedule` (nonempty, each value 50–500), `enableSsmlParsing`,
-`inactivityTimeout` (integer 1–180 seconds), `syncAlignment`, and a native
-`outputFormat` override. Portable MIME formats include MP3, PCM, μ-law, A-law and
-Ogg Opus. Streaming pronunciation dictionary locators require `versionId`.
-The API key is carried in the first WebSocket message and is omitted from
-reported request metadata. Text deltas are held to word/CJK punctuation
-boundaries, with a 100-code-point bound for text without boundaries. Usage counts
-Unicode code points. Default sessions send idle keepalives; an explicit TTS
-inactivity timeout disables them.
-
-## Dialogue, music and sound effects
+- Consume exactly one of `audioStream`, `fullStream` or the awaited final
+metadata; awaiting metadata first drains the stream. There is no replay buffer.
+- A stream that produces no audio throws `AINoSpeechGeneratedError`.
+- Cancelling the result, aborting the request or leaving the loop early releases
+the input producer and socket.
+- Portable output formats include MP3, PCM, μ-law, A-law and Ogg Opus.
+- `providerOptions["elevenlabs"]["streaming"]` accepts `autoMode`,
+`chunkLengthSchedule` (each value 50–500), `enableSsmlParsing`,
+`inactivityTimeout` (1–180 seconds), `syncAlignment` and a native `outputFormat`.
+- Text is flushed at word or CJK punctuation boundaries. Usage counts Unicode
+code points. Idle keepalives are sent unless you set `inactivityTimeout`.
+- The API key travels in the first WebSocket message and is left out of request
+metadata. `withTimestamps` is unsupported here; use `syncAlignment`.
 
 Streaming `eleven_v3*` and `eleven_v4*` models require
-`providerOptions.elevenlabs.dialogue.voices` (1–10 voice IDs). Each
-`SpeechTextPart.voice` selects a listed speaker; a changed voice or
-`providerOptions.elevenlabs.newTurn = true` starts a new turn. V4 sends turns
-incrementally; V3 buffers the script into one final message.
-`eleven_v3_conversational` accepts exactly one voice. Dialogue alignment and
-end-of-turn markers are preserved in audio provider metadata, including empty
-audio parts carrying only a turn marker. Dialogue always sends idle keepalives
-and warns about TTS-only controls it cannot apply.
+`providerOptions["elevenlabs"]["dialogue"]["voices"]` (1–10 voice IDs). Each
+`SpeechTextPart.voice` selects a listed speaker; a changed voice or `newTurn: true`
+starts a new turn. `eleven_v3_conversational` accepts exactly one voice.
 
-Unary `speechModel` routes `providerOptions.elevenlabs.inputs` to
-`/v1/text-to-dialogue` for V3/V4. Each input contains nonempty `text` and `voiceId`;
-the array replaces the standard text and voice. Dialogue maps stability and
-similarity settings and warns about ignored instructions, speed and unsupported
-voice settings.
+## Music and sound effects
 
-`music_*` models use `/v1/music`, with `musicLengthMs` (3,000–600,000),
-`forceInstrumental`, `seed`, or a native snake_case `compositionPlan`. A plan
-replaces the prompt and cannot be combined with `musicLengthMs` or
-`forceInstrumental`. Music V1 section plans and V2+ generation/reference chunks
-are validated. `eleven_text_to_sound*` uses `/v1/sound-generation`, with
-`durationSeconds` (0.5–30), `promptInfluence` (0–1) and `loop`. Both return
-`providerMetadata.elevenlabs.outputFormat` and the known requested duration.
-Music and sound-effects models reject streaming speech before opening a socket.
-Existing dedicated music/sound-effect methods remain available.
+Use the dedicated models with [Generate audio](https://swiftaisdk.github.io/SwiftAISDK/core/generate-audio/):
+
+```swift
+let music = try provider.music("music_v1")
+let track = try await music.generateAudio("Upbeat lo-fi beat for studying", durationSeconds: 30)
+
+let effects = try provider.soundEffects("eleven_text_to_sound_v2")
+let whoosh = try await effects.generateAudio("A fast whoosh", durationSeconds: 2)
+```
+
+`music_*` and `eleven_text_to_sound*` IDs also work through `speechModel(_:)`.
+Music options: `musicLengthMs` (3,000–600,000), `forceInstrumental`, `seed`, or a
+snake_case `compositionPlan`, which replaces the prompt and cannot be combined with
+`musicLengthMs` or `forceInstrumental`. Sound effect options: `durationSeconds`
+(0.5–30), `promptInfluence` (0–1) and `loop`. These models reject streaming speech.
+
+## Voice changer, voice isolator and dubbing
+
+`voiceChanger(_:)` (default `eleven_multilingual_sts_v2`) and `voiceIsolator(_:)`
+(default `audio-isolation`) return audio transformation models; see
+[Transform audio](https://swiftaisdk.github.io/SwiftAISDK/core/transform-audio/). `dubbing()` returns an
+`ElevenLabsDubbingClient` for dubbing jobs; see [Dubbing](https://swiftaisdk.github.io/SwiftAISDK/core/dubbing/).
+
+## Errors
+
+API errors accept object, validation-array and string `detail` shapes as well as
+legacy `error` objects. Typed errors expose the provider message and code and keep
+the full body, status and response headers.
 
 ## Rotating credentials
 
-The native `ElevenLabsProviderSettings` accepts an optional
-`apiKeyProvider` asynchronous throwing closure. It is resolved for each
-authenticated request, so short-lived credentials can refresh without recreating
-the provider or model. Static `apiKey` settings remain supported. A supplier
-failure stops the request before it reaches the transport.
+`ElevenLabsProviderSettings(apiKeyProvider:)` takes an async throwing closure that
+is called before every authenticated HTTP request and WebSocket connection, so
+short-lived keys refresh without recreating the provider. If the closure throws,
+the request is not sent.
 
-## Timestamped HTTP speech and music
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Set `providerOptions.elevenlabs.withTimestamps` to `true` for character alignment
-from Text to Speech or Text to Dialogue, or lyric word timings from music.
-Speech results retain decoded audio and expose `alignment`,
-`normalizedAlignment` and `voiceSegments` under `providerMetadata["elevenlabs"]`.
-Music uses `/v1/music/detailed`; `wordTimestamps` contains `word`, `startMs` and
-`endMs`. Binary audio is preserved, including when multipart parts arrive in
-reverse order. Raw JSON metadata stays in `responseMetadata.body`. The native
-`music(...)` factory accepts the same timestamp option.
-
-`eleven_v4` automatically uses Text to Dialogue with the supplied text and voice;
-explicit `inputs` still select multiple voices. HTTP `wav` normalizes to
-`wav_44100`, while explicit native rates are retained. Streaming speech reports
-`withTimestamps` as unsupported; its existing WebSocket alignment remains
-available independently.
-
-`ElevenLabsProviderSettings.apiKeyProvider` resolves an async throwing key
-supplier before each authenticated HTTP request or WebSocket connection. Static
-keys and header overrides remain supported. API errors accept object, validation
-array and string `detail` shapes as well as legacy `error` objects. Typed API
-errors expose the provider message and code while retaining the full wire body,
-status and response headers.
-
-## Current request and response behavior
-
-Set `providerOptions.elevenlabs.sourceUrl` to let ElevenLabs fetch an audio
-file. The multipart request sends `source_url` and omits `file`. Supplying nonempty
-local audio alongside this option emits a warning that the audio was ignored.
-This provider option is distinct from the core native URL negotiation hook.
-
-## Notes
-
-ElevenLabs speech and transcription mirror upstream 3.0.86: `ELEVENLABS_API_KEY`, `xi-api-key` auth, custom headers, versioned user-agent suffix, camel-case Swift `AIProviders.elevenLabs` factory, `speech`/`speechModel` and `transcription`/`transcriptionModel` aliases, speech `/v1/text-to-speech/{voice}` request builder with output format aliases, voice settings, pronunciation dictionaries, normalization options and warnings, transcription `/v1/speech-to-text` multipart builder with `scribe_v2`, providerOptions.elevenlabs defaults and schema validation, response text/language/segments/duration, response metadata, ElevenLabs error schema, and unsupported language/embedding/image families. SwiftAISDK additionally exposes locally ported ElevenLabs music, sound effects, voice changer, voice isolator, and dubbing helpers. ProviderV4 type names, ESM-only packaging, Node 22 engines, optional JS headers config, TypeScript export split, and workflow serialization helpers are JS-only upstream concerns. The 2026-10-11 pass: Scribe response word metadata retains speaker and confidence evidence without altering the default diarize=true behavior. The 2026-10-25 pass: Native streaming speech accepts incremental text and v3/v4 dialogue with per-part voices/options, cancellation and typed failures. Unary speech routes dialogue, music and sound effects with validated native composition plans; reported transcription duration wins. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied.
-
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
-
-Return to the [provider matrix](/SwiftAISDK/providers/).
+Return to the [provider list](https://swiftaisdk.github.io/SwiftAISDK/providers/).

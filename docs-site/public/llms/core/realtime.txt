@@ -2,11 +2,22 @@
 
 Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/realtime/
 
-`AIRealtimeModelV4` is the provider-neutral model contract for ephemeral client
-secrets, direct WebSocket configuration, session options, normalized server
-events, and client events. `AIRealtimeSession` owns the connection lifecycle,
-starts each session according to the model's turn-based or continuous
-capability, and exposes events as an `AsyncSequence`.
+Use a realtime session for live voice or text conversations: stream microphone
+audio in, play audio and transcripts as they arrive, and answer tool calls
+mid-conversation. `AIRealtimeSession` owns the connection lifecycle, starts each
+session according to the model's turn-based or continuous capability, and
+exposes events as an `AsyncSequence`.
+
+Realtime models conform to the provider-neutral `AIRealtimeModelV4` contract,
+which covers ephemeral client secrets, direct WebSocket configuration, session
+options, normalized server events, and client events.
+
+| Provider | Factory | Session style |
+| --- | --- | --- |
+| [xAI](https://swiftaisdk.github.io/SwiftAISDK/providers/xai/) | `AIProviders.xAI().realtime(_:)` | Turn-based |
+| [OpenAI](https://swiftaisdk.github.io/SwiftAISDK/providers/openai/) | `AIProviders.openAI().experimentalRealtime("gpt-live-1")` | Continuous (OpenAI Live) |
+| [Google Generative AI](https://swiftaisdk.github.io/SwiftAISDK/providers/google-generative-ai/) | `AIProviders.google().realtimeModel(_:)` | Gemini Live |
+| [Gateway](https://swiftaisdk.github.io/SwiftAISDK/providers/gateway/) | `AIProviders.gateway().realtimeModel(_:)` | Normalized realtime route |
 
 xAI provides the turn-based adapter:
 
@@ -105,13 +116,13 @@ Google Gemini Live and Gateway's normalized realtime route also implement the
 native WebSocket contract:
 
 ```swift
-let google = try GoogleGenerativeAIProvider(settings: .init(apiKey: "..."))
+let google = try AIProviders.google()
 let session = try await AIRealtimeSession.connectServer(
     model: google.realtimeModel("gemini-3.8-live")
 )
 ```
 
-Gateway exposes `GatewayProvider.realtimeModel("openai/gpt-realtime-2")` through
+Gateway exposes `realtimeModel("openai/gpt-realtime-2")` through
 the same session runtime. Both support ephemeral client-secret and trusted
 server connections, resolve async credentials before a server connection, and
 reject transcription intent. Google parsers are per session; `generationComplete`
@@ -121,13 +132,18 @@ Unassociated usage snapshots remain separate from completion.
 ## Scope
 
 Realtime sessions are separate from `StreamingTranscriptionModel`, which only
-streams audio in and transcript events out. Cartesia Ink 2 and Gateway use that
-narrower transcription contract. Browser WebRTC/client-permission flows,
-provider-backed Responses delegation, non-Live OpenAI Realtime models and
-ElevenLabs realtime transcription remain deferred until their
-provider-specific semantics are translated onto the shared duplex contracts.
+streams audio in and transcript events out; see
+[streaming transcription](https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/#streaming-transcription). The
+following are not available as realtime sessions: browser WebRTC and
+client-permission flows, provider-backed Responses delegation, OpenAI Realtime
+API models other than `gpt-live-1` (`experimentalRealtime` throws for other
+IDs), and ElevenLabs realtime transcription.
 
-Async credential providers resolve at each server connection. `AIRealtimeSession.connectServer` awaits `getResolvedServerWebSocketConfig()`; existing models keep their synchronous configuration hook through the default implementation. OpenAI models with dynamic credentials require the async hook when obtaining configuration directly.
+Async credential providers resolve at each server connection:
+`AIRealtimeSession.connectServer` awaits `getResolvedServerWebSocketConfig()`.
+Models that only implement the synchronous configuration hook keep working
+through the default implementation. OpenAI models with dynamic credentials
+require the async hook when you obtain configuration directly.
 
 ## Intent and usage
 
@@ -139,5 +155,4 @@ server credentials and belongs on the server.
 `AIRealtimeServerEvent.usage` exposes an optional `AIRealtimeUsage` snapshot with
 gross input/output tokens, cached input counts, modality details and duration
 where available. Cached counts are included in gross input tokens. Raw provider
-events are retained, and snapshots are not summed automatically. Existing realtime
-event associated-value patterns remain valid.
+events are retained, and snapshots are not summed automatically.

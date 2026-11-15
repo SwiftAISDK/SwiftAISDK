@@ -1,30 +1,122 @@
-## Rotating API keys
+## Quick start
 
-`DeepgramProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
-## Native streaming transcription
+```swift
+import Foundation
+import SwiftAISDK
 
-`DeepgramProvider.streamingTranscriptionModel("nova-3")` (also
-`streamingTranscription`) uses the v1 `/listen` WebSocket protocol. Feed raw PCM16,
-μ-law (`audio/pcmu`) or A-law (`audio/pcma`) with an explicit positive sample rate
-through `StreamingTranscriptionRequest`. Flux uses a different v2 protocol and
-is rejected by this adapter.
+let provider = try AIProviders.deepgram()
+let model = try provider.transcriptionModel("nova-3")
 
-Options under `deepgram.streaming` include `interimResults`, nonnegative integer
-or false `endpointing`, `channels`, `multichannel`, `vadEvents` and
-`utteranceEndMs` of at least 1000. Shared supported options keep their normal
-namespace; unsupported active batch options warn. Batch transcription ignores
-the streaming object with a warning.
+let audio = try Data(contentsOf: URL(fileURLWithPath: "meeting.wav"))
+let result = try await model.transcribe(audio: audio, mimeType: "audio/wav")
+print(result.text)
+```
 
-Settings accept `webSocketTransport` injection. Credentials resolve once per
-connection, keepalive runs while audio input is open, and finishing the input
-sends `CloseStream`. Final text is ordered by time/channel; usage seconds come
-only from provider metadata. Consumer cancellation closes the socket and audio
-producer. `includeRawChunks` preserves unknown events.
+For a smaller dependency graph, use `import SwiftAI` and `import SwiftAIDeepgram`
+with the native factory `AIProviders.deepgram(configuration: DeepgramProviderSettings())`.
+The native factory requires the configuration argument; pass `DeepgramProviderSettings()`
+to read `DEEPGRAM_API_KEY` from the environment. Streaming transcription and
+rotating credentials are available only on the native provider.
 
-Speech `callback` now rejects before I/O because asynchronous acknowledgement is
-not an audio result. `callbackMethod` alone warns and is ignored. Use the REST
-API directly when an asynchronous callback is required.
+Requests authenticate with a `Token` authorization header.
+
+## Transcription options
+
+Audio is uploaded as a raw body to `/v1/listen`. Pass Deepgram features under
+`providerOptions["deepgram"]` with camelCase keys; they are sent as snake_case
+query parameters.
+
+```swift
+let result = try await model.transcribe(
+    audio: audio,
+    mimeType: "audio/wav",
+    providerOptions: ["deepgram": [
+        "smartFormat": true,
+        "diarize": true,
+        "detectLanguage": true,
+        "utterances": true,
+    ]]
+)
+```
+
+Supported keys: `language`, `detectLanguage`, `smartFormat`, `punctuate`,
+`paragraphs`, `summarize` (`"v2"` or `false`), `topics`, `intents`, `sentiment`,
+`detectEntities`, `redact` (string or array), `replace`, `search`, `keyterm`,
+`diarize`, `utterances`, `uttSplit` and `fillerWords`. Invalid values fail before
+the request is sent. Diarization is off unless you set `diarize: true`.
+
+Results include text, segments, detected language and duration. Usage is
+reported in audio seconds (`result.usage?["seconds"]`), not tokens.
+
+## Speech
+
+`speechModel(_:)` calls `/v1/speak`. Use a full Aura voice ID, or a voice family
+(`aura`, `aura-2`) together with `voice` and an optional `language`:
+
+```swift
+let speech = try provider.speechModel("aura-2")
+let audio = try await speech.generateSpeech(
+    "Your order has shipped.",
+    voice: "helena",
+    format: "wav",
+    language: "en"
+)
+```
+
+With a family ID, `voice` is required and the model becomes
+`<family>-<voice>-<language>` (language defaults to `en`; `auto` falls back to
+`en` with a warning). A full ID such as `aura-2-helena-en` is used as-is.
+
+- `format`: `mp3` (default), `wav`/`linear16`, `mulaw`, `alaw`, `opus`/`ogg`,
+  `flac`, `aac`, `pcm`, or a sample-rate suffix such as `wav_24000` or `ogg_48000`.
+  The SDK maps it to Deepgram's encoding, container and sample rate and drops
+  combinations Deepgram rejects.
+- `speed` is forwarded. `instructions` are not supported and produce a warning.
+- `providerOptions["deepgram"]` accepts `encoding`, `container`, `sampleRate`,
+  `bitRate`, `mipOptOut` and `tag`.
+- `callback` is rejected before the request, because a callback response contains
+  no audio. `callbackMethod` alone is ignored with a warning. Call the REST API
+  directly if you need asynchronous callbacks.
+
+Usage is reported in characters (`result.usage?["characters"]`).
+
+## Streaming transcription
+
+The native provider streams over the v1 `/listen` WebSocket. Send raw PCM16
+(`audio/pcm`), μ-law (`audio/pcmu`) or A-law (`audio/pcma`) with a positive sample
+rate. Flux models use a different protocol and are rejected.
+
+```swift
+import SwiftAI
+import SwiftAIDeepgram
+
+let deepgram = try AIProviders.deepgram(configuration: DeepgramProviderSettings())
+let model = try deepgram.streamingTranscriptionModel("nova-3")
+let audioPipe = AIStreamingAudioInput.makeStream()
+
+let result = try await model.stream(StreamingTranscriptionRequest(
+    audio: audioPipe.input,
+    inputAudioFormat: AIStreamingAudioFormat(mediaType: "audio/pcm", sampleRate: 16_000),
+    providerOptions: ["deepgram": ["streaming": [
+        "interimResults": true,
+        "endpointing": 300,
+    ]]]
+))
+```
+
+Feed audio through `audioPipe.writer` and read `result.stream` as shown in
+[Transcribe](../../core/transcribe/). Streaming options live under
+`deepgram.streaming`: `interimResults`, `endpointing` (non-negative integer or
+`false`), `channels`, `multichannel`, `vadEvents` and `utteranceEndMs` (at least
+1000). Batch transcription ignores `streaming` with a warning.
+
+Credentials resolve once per connection, keepalive runs while input is open, and
+finishing the input sends `CloseStream`. Cancelling the consumer closes the socket.
+Set `includeRawChunks` on the request to receive unrecognized events. Inject a
+custom socket with `DeepgramProviderSettings(webSocketTransport:)`.
+
+## Rotating credentials
+
+`DeepgramProviderSettings(apiKeyProvider:)` takes an async throwing closure that
+is called before every authenticated request, so short-lived keys refresh without
+recreating the provider. If the closure throws, the request is not sent.

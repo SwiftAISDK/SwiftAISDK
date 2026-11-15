@@ -1,16 +1,76 @@
-## Rotating API keys
+## Quick start
 
-`ReplicateProviderSettings` accepts an optional `apiKeyProvider`
-asynchronous throwing closure. It is resolved for every authenticated request,
-so credentials can refresh without recreating the provider or model. Static
-`apiKey` settings remain supported. Supplier failures stop the request before
-it reaches the transport.
+```swift
+import SwiftAISDK
 
-## Current request and response behavior
+let replicate = try AIProviders.replicate()
+let model = try replicate.imageModel("black-forest-labs/flux-schnell")
+let result = try await model.generateImage("A robot gardener", aspectRatio: "16:9")
+print(result.urls.first ?? "")
+```
 
-When image polling is aborted or exhausts its attempts, the adapter starts
-a best-effort cancellation at the configured provider origin. It encodes the
-prediction ID as one path segment, uses fresh provider credentials, excludes
-per-call headers and the generation's abort signal, and rejects redirects.
-Cancellation does not delay or replace the original generation error. Successful
-predictions are not cancelled.
+For the modular packages, use `import SwiftAI` and `import SwiftAIReplicate`, then
+`try AIProviders.replicate(configuration: ReplicateProviderSettings(...))`. The native
+factory requires a configuration argument; `ReplicateProviderSettings()` reads
+`REPLICATE_API_TOKEN`.
+
+## Model IDs and predictions
+
+Use `owner/model` to run the latest version through `/models/owner/model/predictions`,
+or `owner/model:version` to pin a version through `/predictions`. Requests send
+`prefer: wait`; set `providerOptions["replicate"]["maxWaitTimeInSeconds"]` to send
+`prefer: wait=N`.
+
+## Images
+
+`size`, `aspectRatio`, `seed` and `count` map to Replicate's `size`, `aspect_ratio`,
+`seed` and `num_outputs` inputs. Other keys under `providerOptions["replicate"]` are
+passed to the model's input; common ones are validated:
+
+| Option | Behavior |
+| --- | --- |
+| `guidance_scale`, `num_inference_steps` | Numbers. |
+| `negative_prompt` | String. |
+| `output_format`, `output_quality` | `png`, `jpg` or `webp`; quality 1–100. |
+| `strength` | 0–1, for image-to-image models. |
+| `pollIntervalMillis`, `maxPollAttempts` | Polling after the synchronous wait expires; defaults are 500 ms and 240 attempts. |
+
+Output images are downloaded into `base64Images` and their URLs kept in `urls`;
+credentials are not forwarded to the download host. If polling is cancelled or runs out
+of attempts, the SDK makes a best-effort request to cancel the prediction.
+
+### Image inputs
+
+Pass `files` and `mask` for editing. Most models receive the first file as `image`
+and the mask as `mask`; extra files are ignored with a warning. Models starting with
+`black-forest-labs/flux-2-` receive up to eight files as `input_image`,
+`input_image_2` … and ignore masks with a warning. `supportsFileInputs` is `true` for
+`black-forest-labs/flux-2-pro`, `flux-2-dev`, `flux-fill-pro` and `flux-fill-dev`;
+`supportsMaskInputs` is `true` for the two fill models. Other models report unknown.
+
+## Videos
+
+```swift
+let video = try replicate.videoModel("owner/video-model") // a Replicate video model
+let result = try await video.generateVideo(
+    "Waves rolling onto a beach",
+    aspectRatio: "16:9",
+    durationSeconds: 5
+)
+```
+
+`resolution` maps to `size`, and `fps`, `seed` and `image` are forwarded. You can also
+supply `image`, `imageUrl`, `resolution`, `fps` or `seed` under
+`providerOptions["replicate"]`, along with model inputs such as `guidance_scale`,
+`num_inference_steps`, `motion_bucket_id`, `cond_aug`, `decoding_t`, `video_length`,
+`sizing_strategy`, `frames_per_second` and `prompt_optimizer`. The SDK polls until the
+prediction finishes; `pollIntervalMs` (default 2000) and `pollTimeoutMs` (default
+300000) control polling. Results contain the video `urls` with media type
+`video/mp4`; `providerMetadata["replicate"]` holds `predictionId`, `metrics` and the
+video URL. Failed or canceled predictions throw.
+
+## Rotating credentials
+
+The native `ReplicateProviderSettings` accepts `apiKeyProvider`, an async throwing
+closure resolved before each authenticated request. A supplier failure stops the
+request before it is sent.
