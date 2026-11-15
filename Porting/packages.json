@@ -2642,6 +2642,9 @@
             "swift-ai-core/SwiftAIProviderUtilities",
             "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
           ],
+          "testResources": [
+            "Fixtures"
+          ],
           "testDependencies": [
             "swift-ai-core/SwiftAI"
           ]

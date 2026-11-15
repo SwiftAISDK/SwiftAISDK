@@ -25,10 +25,13 @@
       "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests/TestSupport.swift",
       "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests/TogetherAIProviderTests.swift",
+      "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests/TogetherAIUpstreamParityTests.swift",
       "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests/Weekly20261101CredentialsTests.swift",
       "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests/Weekly20261114StructuredOutputTests.swift"
     ],
-    "resources": []
+    "resources": [
+      "Packages/swift-ai-togetherai/Tests/SwiftAITogetherAITests/Fixtures/togetherai-reranking.1.json"
+    ]
   },
   "differences": [
     {

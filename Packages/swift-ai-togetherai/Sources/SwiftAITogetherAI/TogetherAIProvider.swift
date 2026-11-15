@@ -141,3 +141,17 @@ public struct TogetherAIModelConfiguration: AIProviderHTTPConfiguration {
         self.transformRequestBodyWithWarnings = transformRequestBodyWithWarnings
     }
 }
+
+public extension TogetherAIModelConfiguration {
+    /// Mirrors upstream `togetheraiErrorSchema`: `error.message` becomes the
+    /// error message while the raw response body is retained.
+    func httpStatusError(_ response: AIHTTPResponse) -> AIError {
+        let error = apiCallError(provider: providerID, response: response)
+        guard case var .apiCall(callError) = error,
+              let message = (try? decodeJSONBody(response.body))?["error"]?["message"]?.stringValue else {
+            return error
+        }
+        callError.message = message
+        return .apiCall(callError)
+    }
+}

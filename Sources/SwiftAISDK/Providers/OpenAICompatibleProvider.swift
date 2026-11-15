@@ -180,7 +180,7 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
             return OpenAICompatibleChatModel(
                 modelID: modelID,
                 config: modelConfig(surface: "chat").withSupportsStructuredOutputs(
-                    config.supportsStructuredOutputs || modelID == "deepseek-ai/DeepSeek-V4-Flash-0731"
+                    config.supportsStructuredOutputs || togetherAIJSONSchemaModelIDs.contains(modelID)
                 )
             )
         }

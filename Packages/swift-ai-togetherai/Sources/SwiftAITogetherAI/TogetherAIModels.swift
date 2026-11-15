@@ -15,6 +15,13 @@ public final class TogetherAIImageModel: ImageModel, @unchecked Sendable {
     }
 
     public func generateImage(_ request: ImageGenerationRequest) async throws -> ImageGenerationResult {
+        // Upstream rejects masks before parsing provider options.
+        if request.mask != nil {
+            throw AIError.invalidResponse(
+                provider: providerID,
+                message: "Together AI does not support mask-based image editing. Use FLUX Kontext models (e.g., black-forest-labs/FLUX.1-kontext-pro) with a reference image and descriptive prompt instead."
+            )
+        }
         var options = try togetherAIProviderOptions(from: request)
         var warnings: [AIWarning] = []
         let isGeminiImageModel = modelID == "google/gemini-3-pro-image"
@@ -26,23 +33,12 @@ public final class TogetherAIImageModel: ImageModel, @unchecked Sendable {
             options.removeValue(forKey: "disable_safety_checker")
             options.removeValue(forKey: "disableSafetyChecker")
         }
-        if request.mask != nil {
-            throw AIError.invalidResponse(
-                provider: providerID,
-                message: "Together AI does not support mask-based image editing. Use FLUX Kontext models (e.g., black-forest-labs/FLUX.1-kontext-pro) with a reference image and descriptive prompt instead."
-            )
-        }
+        // Upstream 3.0.94 reports `size` under the `aspectRatio` feature name.
         if request.size != nil {
             warnings.append(AIWarning(
                 type: "unsupported",
                 feature: "aspectRatio",
                 message: "This model does not support the `aspectRatio` option. Use `size` instead."
-            ))
-        }
-        if request.files.count > 1 {
-            warnings.append(AIWarning(
-                type: "other",
-                message: "Together AI only supports a single input image. Additional images are ignored."
             ))
         }
         var body: [String: JSONValue] = [
@@ -59,7 +55,13 @@ public final class TogetherAIImageModel: ImageModel, @unchecked Sendable {
             warnings.append(AIWarning(
                 type: "unsupported",
                 feature: "seed",
-                message: "The google/gemini-3-pro-image model does not support the `seed` option."
+                message: "The \(modelID) model does not support the `seed` option."
+            ))
+        }
+        if request.files.count > 1 {
+            warnings.append(AIWarning(
+                type: "other",
+                message: "Together AI only supports a single input image. Additional images are ignored."
             ))
         }
         if let size = request.size {
@@ -87,7 +89,9 @@ public final class TogetherAIImageModel: ImageModel, @unchecked Sendable {
             rawValue: raw,
             warnings: warnings,
             requestMetadata: imageGenerationRequestMetadata(request, body: .object(body)),
-            responseMetadata: aiResponseMetadata(from: raw, response: response.response, modelID: modelID)
+            // Upstream reports the requested model ID and the call time, not
+            // response-body `model`/`created` values.
+            responseMetadata: AIResponseMetadata(timestamp: Date(), modelID: modelID, headers: response.response.headers, body: raw)
         )
     }
 }

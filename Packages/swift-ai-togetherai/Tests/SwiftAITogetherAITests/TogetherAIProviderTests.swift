@@ -40,7 +40,7 @@ import Testing
     #expect(completionBody["stream_options"]?["include_usage"]?.boolValue == true)
 }
 
-@Test func togetherAIForwardsJSONSchemaOnlyForDeepSeekV4FlashLikeUpstream() async throws {
+@Test func togetherAIForwardsJSONSchemaForCatalogModelAndFallsBackOtherwise() async throws {
     let supportedTransport = RecordingTransport(response: jsonResponse(
         #"{"choices":[{"message":{"content":"{\"value\":\"ok\"}"},"finish_reason":"stop"}],"usage":{"total_tokens":3}}"#
     ))

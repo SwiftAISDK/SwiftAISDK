@@ -15,7 +15,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "SwiftAITogetherAI", dependencies: [.product(name: "SwiftAIProvider", package: "swift-ai-core"), .product(name: "SwiftAITransport", package: "swift-ai-core"), .product(name: "SwiftAIProviderUtilities", package: "swift-ai-core"), .product(name: "SwiftAIOpenAICompatible", package: "swift-ai-openai-compatible")]),
-        .testTarget(name: "SwiftAITogetherAITests", dependencies: ["SwiftAITogetherAI", .product(name: "SwiftAIProvider", package: "swift-ai-core"), .product(name: "SwiftAITransport", package: "swift-ai-core"), .product(name: "SwiftAIProviderUtilities", package: "swift-ai-core"), .product(name: "SwiftAIOpenAICompatible", package: "swift-ai-openai-compatible"), .product(name: "SwiftAI", package: "swift-ai-core")])
+        .testTarget(name: "SwiftAITogetherAITests", dependencies: ["SwiftAITogetherAI", .product(name: "SwiftAIProvider", package: "swift-ai-core"), .product(name: "SwiftAITransport", package: "swift-ai-core"), .product(name: "SwiftAIProviderUtilities", package: "swift-ai-core"), .product(name: "SwiftAIOpenAICompatible", package: "swift-ai-openai-compatible"), .product(name: "SwiftAI", package: "swift-ai-core")], resources: [.process("Fixtures")])
     ],
     swiftLanguageModes: [.v6]
 )

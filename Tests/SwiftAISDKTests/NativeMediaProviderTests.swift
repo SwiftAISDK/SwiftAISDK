@@ -50,3 +50,40 @@ import Testing
     #expect(try together.imageModel("image").providerID == "togetherai.image")
     #expect(try together.rerankingModel("rerank").providerID == "togetherai.reranking")
 }
+
+// Upstream togetherai-provider.test.ts `structuredOutputSupportCases`: the umbrella
+// factory and the native provider must both follow the catalog's JSON-schema IDs.
+@Test(arguments: [
+    ("deepseek-ai/DeepSeek-V4-Flash-0731", true),
+    ("deepseek-ai/DeepSeek-V4.1-Flash", true),
+    ("deepseek-ai/DeepSeek-V4.1-Flash-1017", true),
+    ("openai/gpt-oss-120b", true),
+    ("zai-org/GLM-5.2", true),
+    ("zai-org/GLM-5.3-Flash", true),
+    ("moonshotai/Kimi-K3", true),
+    ("MiniMaxAI/MiniMax-M3.1-Flash", true),
+    ("zai-org/GLM-5.3", false),
+    ("custom-model-id", false)
+])
+func togetherAIUmbrellaAndNativeStructuredOutputSupportMatchUpstream(_ fixture: (String, Bool)) async throws {
+    let raw = #"{"choices":[{"message":{"content":"{}"},"finish_reason":"stop"}]}"#
+    let request = LanguageModelRequest(messages: [.user("Return JSON")], extraBody: [
+        "responseFormat": [
+            "type": "json", "name": "answer",
+            "schema": ["type": "object", "properties": ["value": ["type": "string", "enum": ["schema-only-value"]]]]
+        ]
+    ])
+    let umbrellaTransport = RecordingTransport(response: jsonResponse(raw))
+    let umbrella = try AIProviders.togetherAI(settings: ProviderSettings(apiKey: "together-key", transport: umbrellaTransport))
+    _ = try await umbrella.chatModel(fixture.0).generate(request)
+    let nativeTransport = RecordingTransport(response: jsonResponse(raw))
+    let native = try TogetherAIProvider(configuration: TogetherAIProviderSettings(apiKey: "together-key", transport: nativeTransport))
+    _ = try await native.chatModel(fixture.0).generate(request)
+
+    let expected = JSONValue.string(fixture.1 ? "json_schema" : "json_object")
+    for transport in [umbrellaTransport, nativeTransport] {
+        let body = try decodeJSONBody(try #require(await transport.requests().first?.body))
+        #expect(body["response_format"]?["type"] == expected)
+        #expect((body["response_format"]?["json_schema"] != nil) == fixture.1)
+    }
+}
