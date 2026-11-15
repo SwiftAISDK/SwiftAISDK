@@ -8,9 +8,9 @@ struct StreamTextExample {
 
         for try await part in model.streamText("Write a short haiku about APIs.") {
             switch part {
-            case .textDelta(let text):
-                print(text, terminator: "")
-            case .finish(let reason, let usage):
+            case let .textDeltaPart(_, delta, _):
+                print(delta, terminator: "")
+            case let .finishMetadata(reason, usage, _):
                 print("\nFinished: \(reason ?? "unknown")")
                 print("Tokens: \(usage?.totalTokens ?? 0)")
             default:

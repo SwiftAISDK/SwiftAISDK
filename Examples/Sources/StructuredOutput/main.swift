@@ -26,11 +26,11 @@ struct StructuredOutputExample {
         let provider = try AIProviders.openAI()
         let model = try provider.languageModel("gpt-6.1-sol")
 
-        let result = try await model.generateObject(
+        let result = try await model.generateText(
             "Summarize the SwiftAISDK README.",
-            schema: schema
+            output: Output.object(schema: schema)
         )
 
-        print(result.object.title)
+        print(result.output.title)
     }
 }
