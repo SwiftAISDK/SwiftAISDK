@@ -88,6 +88,15 @@ release(umbrella): Prepare SwiftAISDK 3.3.0
   `Sources/SwiftAISDK/Providers/ProviderCapabilityMatrix.swift` for provider
   coverage.
 - Use `Docs/UpstreamTestInventory.md` before porting tests from upstream.
+- During an upstream porting pass, implement newly discovered provider packages
+  and provider components immediately, without additional user confirmation.
+  Complete runtime, tests, catalog/capabilities, public docs and release metadata
+  in the same pass; discovery or scaffolding alone is not a completed port.
+- For new providers and all other ported packages, acceptance is driven first by
+  their matching-release upstream tests translated into Swift. Preserve scenarios,
+  fixtures, expected results and assertions; local tests supplement this evidence.
+  Port every test covering the Swift surface and document genuine platform-only
+  exclusions. Missing release evidence or failing required tests remain open gates.
 
 Every porting pass must update:
 
