@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "release-publication-verified",
+  "status": "complete",
   "runtimeSourceCommit": "8d33f9e59076f954ee5aef7c6efc265b8d3cbe7c",
   "ciAttemptHistory": {
     "initial": {
@@ -4146,34 +4146,125 @@
   "hostedDocumentation": {
     "schemaVersion": 1,
     "status": "passed",
-    "checkedAt": "2026-11-15T04:54:59.029Z",
-    "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
-    "method": "Actual rendered page readback through the user's running main Zen browser MCP",
+    "sourceCommit": "8f691f7fb7e935f3455e91c5142919fc63f4fe46",
+    "checkedAt": "2026-11-15T05:28:51.767Z",
+    "ciRun": 43680561085,
+    "method": "Actual rendered main-document text in the user's running main Zen browser",
     "browser": {
       "instanceId": "9f82338c-1569-481c-b58e-da206c167293",
       "windowId": "window-148d0f63-db82-46f0-b2a1-5c5d733238dc",
-      "temporaryTab": "tab-dc9685d7-82a2-45ae-90a7-99c92e5b1c94",
-      "temporaryTabClosed": true,
-      "originalActiveTabRestored": true
+      "temporaryTab": "tab-a6b89ac3-4ab8-412d-9c25-a4769413d713",
+      "originalActiveTabId": "tab-490be03a-74b4-4c13-9cb1-60a11451d827",
+      "finalActiveTabId": "tab-490be03a-74b4-4c13-9cb1-60a11451d827"
     },
+    "temporaryTabClosed": true,
+    "originalActiveTabRestored": true,
     "deployment": {
-      "id": 7798347000,
-      "state": "success",
-      "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
-      "run": 43674303677,
+      "id": 7799009024,
+      "status": "success",
+      "sourceCommit": "8f691f7fb7e935f3455e91c5142919fc63f4fe46",
+      "createdAt": "2026-11-15T05:22:18Z",
       "url": "https://swiftaisdk.github.io/SwiftAISDK/",
-      "statusCreatedAt": "2026-11-15T04:12:08Z"
+      "ciRun": 43680561085
     },
     "pages": [
       {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/",
+        "title": "Install | SwiftAISDK",
+        "documentId": "1073741824001",
+        "frameId": "617",
+        "truncated": false,
+        "checkedAt": "2026-11-15T05:26:08.623Z",
+        "checks": [
+          {
+            "text": "SwiftAISDK 3.4.0",
+            "present": true
+          },
+          {
+            "text": "3.4.0",
+            "present": true
+          },
+          {
+            "text": "All 55 independent packages",
+            "present": true
+          },
+          {
+            "text": "1.5.0",
+            "present": true
+          },
+          {
+            "text": "1.3.1",
+            "present": true
+          }
+        ],
+        "excerpt": "Install\nSwiftAISDK 3.4.0\nCopy page\nView as Markdown\nAdd SwiftAISDK to your package manifest:\nPackage.swift\ndependencies\n:\n[\n.\npackage\n(\nurl\n:\n\"https://github.com/SwiftAISDK/SwiftAISDK.git\"\n,\nfrom\n:\n\"3.4.0\"\n),\n],\ntargets\n:\n[\n.\ntarget\n(\nname\n:\n\"YourApp\"\n,\ndependencies\n: [\n.\nproduct\n(\nname\n:\n\"SwiftAISDK\"\n,\npackage\n:\n\"SwiftAISDK\"\n),\n]\n),\n]\nAn applicati"
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/scaledown/",
+        "title": "scaledown | SwiftAISDK",
+        "documentId": "1073741824002",
+        "frameId": "621",
+        "truncated": false,
+        "checkedAt": "2026-11-15T05:26:34.192Z",
+        "checks": [
+          {
+            "text": "SwiftAISDK 3.4.0",
+            "present": true
+          },
+          {
+            "text": "Decision\nExtraction\n",
+            "present": true
+          },
+          {
+            "text": "3.0.1",
+            "present": true
+          },
+          {
+            "text": "UTF-16",
+            "present": true
+          }
+        ],
+        "excerpt": "scaledown\nSwiftAISDK 3.4.0\nCopy page\nView as Markdown\nPackage\nSection titled “Package”\n@ai-sdk/scaledown\nFactories\nSection titled “Factories”\nAIProviders.scaleDown\nCapabilities\nSection titled “Capabilities”\nDecision\nExtraction\nNative Swift port of\n@ai-sdk/scaledown\n3.0.1\n. It provides experimental Decision V4 and Extraction V4 models. Requires Swift 6.3, macOS 12 or iOS 15, and SwiftAI core 1.4.0 or later.\nAdd\nhttps://github.com/SwiftAISDK/swift-ai-scaledown.git\nto Swift Package Manager and select\nSwiftAIScaleDown\n(version 1.0.0).\nimport\nSwiftA"
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/heygen/",
+        "title": "heygen | SwiftAISDK",
+        "documentId": "1073741824003",
+        "frameId": "622",
+        "truncated": false,
+        "checkedAt": "2026-11-15T05:26:49.338Z",
+        "checks": [
+          {
+            "text": "SwiftAISDK 3.4.0",
+            "present": true
+          },
+          {
+            "text": "@ai-sdk/heygen@3.0.25",
+            "present": true
+          },
+          {
+            "text": "Native decisions",
+            "present": true
+          },
+          {
+            "text": "/v3/models/decisions",
+            "present": true
+          }
+        ],
+        "excerpt": "heygen\nSwiftAISDK 3.4.0\nCopy page\nView as Markdown\nPackage\nSection titled “Package”\n@ai-sdk/heygen\nFactories\nSection titled “Factories”\nAIProviders.heyGen\n,\ncreateHeyGen\n,\nheygen\nCapabilities\nSection titled “Capabilities”\nVideo\nDecision\nGenerate a video\nSection titled “Generate a video”\nThe HeyGen adapter follows\n@ai-sdk/heygen@3.0.25\n. Set\nHEYGEN_API_KEY\nor pass\nProviderSettings(apiKey:)\n;\nbaseURL\n, custom headers and\ntransport\nsupport proxies and testing. Swift resolves credentials when\nAIProv"
+      },
+      {
         "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/tencent/",
         "title": "tencent | SwiftAISDK",
-        "documentId": "1063004405761",
-        "frameId": "605",
-        "checkedAt": "2026-11-15T04:52:00.676Z",
+        "documentId": "1073741824004",
+        "frameId": "623",
         "truncated": false,
-        "textCharacters": 6238,
+        "checkedAt": "2026-11-15T05:27:04.119Z",
         "checks": [
+          {
+            "text": "SwiftAISDK 3.4.0",
+            "present": true
+          },
           {
             "text": "TokenHub",
             "present": true
@@ -4186,143 +4277,13 @@
             "text": "videoURLDescriptors",
             "present": true
           }
-        ]
-      },
-      {
-        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/parallel/",
-        "title": "parallel | SwiftAISDK",
-        "documentId": "1063004405762",
-        "frameId": "609",
-        "checkedAt": "2026-11-15T04:52:15.317Z",
-        "truncated": false,
-        "textCharacters": 5876,
-        "checks": [
-          {
-            "text": "3.0.9",
-            "present": true
-          },
-          {
-            "text": "Decision V4",
-            "present": true
-          },
-          {
-            "text": "x-api-key",
-            "present": true
-          }
-        ]
-      },
-      {
-        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/scaledown/",
-        "title": "scaledown | SwiftAISDK",
-        "documentId": "1063004405763",
-        "frameId": "610",
-        "checkedAt": "2026-11-15T04:52:47.002Z",
-        "truncated": false,
-        "textCharacters": 5782,
-        "checks": [
-          {
-            "text": "3.0.1",
-            "present": true
-          },
-          {
-            "text": "Extraction V4",
-            "present": true
-          },
-          {
-            "text": "UTF-16",
-            "present": true
-          }
-        ]
-      },
-      {
-        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/heygen/",
-        "title": "heygen | SwiftAISDK",
-        "documentId": "1063004405764",
-        "frameId": "611",
-        "checkedAt": "2026-11-15T04:53:09.670Z",
-        "truncated": false,
-        "textCharacters": 9563,
-        "checks": [
-          {
-            "text": "Native decisions",
-            "present": true
-          },
-          {
-            "text": "/v3/models/decisions",
-            "present": true
-          },
-          {
-            "text": "3.0.25",
-            "present": true
-          }
-        ]
-      },
-      {
-        "url": "https://swiftaisdk.github.io/SwiftAISDK/components/video-and-reranking/",
-        "title": "Video and reranking | SwiftAISDK",
-        "documentId": "1063004405766",
-        "frameId": "613",
-        "checkedAt": "2026-11-15T04:53:55.847Z",
-        "truncated": false,
-        "textCharacters": 24886,
-        "checks": [
-          {
-            "text": "VideoURLDescriptor",
-            "present": true
-          },
-          {
-            "text": "videoURLDescriptors",
-            "present": true
-          }
-        ]
-      },
-      {
-        "url": "https://swiftaisdk.github.io/SwiftAISDK/components/tools/",
-        "title": "Tools | SwiftAISDK",
-        "documentId": "1063004405767",
-        "frameId": "614",
-        "checkedAt": "2026-11-15T04:54:11.579Z",
-        "truncated": false,
-        "textCharacters": 55048,
-        "checks": [
-          {
-            "text": "Signed approval replay",
-            "present": true
-          },
-          {
-            "text": "toolApprovalSecret:",
-            "present": true
-          },
-          {
-            "text": "applies refinement once",
-            "present": true
-          }
-        ]
-      },
-      {
-        "url": "https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/",
-        "title": "Install | SwiftAISDK",
-        "documentId": "1063004405768",
-        "frameId": "615",
-        "checkedAt": "2026-11-15T04:54:27.075Z",
-        "truncated": false,
-        "textCharacters": 4290,
-        "checks": [
-          {
-            "text": "Install",
-            "present": true
-          },
-          {
-            "text": "SwiftAISDK",
-            "present": true
-          }
-        ]
+        ],
+        "excerpt": "tencent\nSwiftAISDK 3.4.0\nCopy page\nView as Markdown\nPackage\nSection titled “Package”\n@ai-sdk/tencent\nFactories\nSection titled “Factories”\nAIProviders.tencent\nCapabilities\nSection titled “Capabilities”\nLanguage\nVideo\nNative Swift port of\n@ai-sdk/tencent\n3.0.3\n, exposing TokenHub Chat Completions and TokenHub Kling / Tencent Cloud VOD video generation. Requires Swift 6.3, macOS 12 or iOS 15.\nimport\nSwiftAIProvider\nimport\nSwiftAITencent\nlet\nprovider\n=\ncreateTencent\n(\nconfiguration\n: .\ninit\n(\napiKey"
       }
     ],
-    "viewportScreenshotInspected": "Tencent provider, 2245x1393 viewport at device scale2",
-    "limits": [
-      "This source deployment precedes the separate umbrella3.4.0 install/version update; final install readback will be recorded separately.",
-      "Rendered ScaleDown capability heading omits Extraction although the guide and canonical catalog include it; fix the docs generator during final public docs reconciliation."
+    "resolvedInitialLimitations": [
+      "Rendered ScaleDown capability list now includes Extraction.",
+      "Install and page headers display3.4.0; HeyGen guide names reviewed3.0.25."
     ]
   },
   "umbrella": {
@@ -4616,5 +4577,390 @@
     "toolingTests": 55,
     "queueGraceSeconds": 90,
     "actualOfflineProof": "Native runner_probe on hosted replacement; full hosted SDK suite also passed at implementation source1e54."
-  }
+  },
+  "completedAt": "2026-11-15T05:28:52.116970+00:00",
+  "initialSourceDocumentation": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "checkedAt": "2026-11-15T04:54:59.029Z",
+    "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+    "method": "Actual rendered page readback through the user's running main Zen browser MCP",
+    "browser": {
+      "instanceId": "9f82338c-1569-481c-b58e-da206c167293",
+      "windowId": "window-148d0f63-db82-46f0-b2a1-5c5d733238dc",
+      "temporaryTab": "tab-dc9685d7-82a2-45ae-90a7-99c92e5b1c94",
+      "temporaryTabClosed": true,
+      "originalActiveTabRestored": true
+    },
+    "deployment": {
+      "id": 7798347000,
+      "state": "success",
+      "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+      "run": 43674303677,
+      "url": "https://swiftaisdk.github.io/SwiftAISDK/",
+      "statusCreatedAt": "2026-11-15T04:12:08Z"
+    },
+    "pages": [
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/tencent/",
+        "title": "tencent | SwiftAISDK",
+        "documentId": "1063004405761",
+        "frameId": "605",
+        "checkedAt": "2026-11-15T04:52:00.676Z",
+        "truncated": false,
+        "textCharacters": 6238,
+        "checks": [
+          {
+            "text": "TokenHub",
+            "present": true
+          },
+          {
+            "text": "TC3-HMAC-SHA256",
+            "present": true
+          },
+          {
+            "text": "videoURLDescriptors",
+            "present": true
+          }
+        ]
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/parallel/",
+        "title": "parallel | SwiftAISDK",
+        "documentId": "1063004405762",
+        "frameId": "609",
+        "checkedAt": "2026-11-15T04:52:15.317Z",
+        "truncated": false,
+        "textCharacters": 5876,
+        "checks": [
+          {
+            "text": "3.0.9",
+            "present": true
+          },
+          {
+            "text": "Decision V4",
+            "present": true
+          },
+          {
+            "text": "x-api-key",
+            "present": true
+          }
+        ]
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/scaledown/",
+        "title": "scaledown | SwiftAISDK",
+        "documentId": "1063004405763",
+        "frameId": "610",
+        "checkedAt": "2026-11-15T04:52:47.002Z",
+        "truncated": false,
+        "textCharacters": 5782,
+        "checks": [
+          {
+            "text": "3.0.1",
+            "present": true
+          },
+          {
+            "text": "Extraction V4",
+            "present": true
+          },
+          {
+            "text": "UTF-16",
+            "present": true
+          }
+        ]
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/heygen/",
+        "title": "heygen | SwiftAISDK",
+        "documentId": "1063004405764",
+        "frameId": "611",
+        "checkedAt": "2026-11-15T04:53:09.670Z",
+        "truncated": false,
+        "textCharacters": 9563,
+        "checks": [
+          {
+            "text": "Native decisions",
+            "present": true
+          },
+          {
+            "text": "/v3/models/decisions",
+            "present": true
+          },
+          {
+            "text": "3.0.25",
+            "present": true
+          }
+        ]
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/components/video-and-reranking/",
+        "title": "Video and reranking | SwiftAISDK",
+        "documentId": "1063004405766",
+        "frameId": "613",
+        "checkedAt": "2026-11-15T04:53:55.847Z",
+        "truncated": false,
+        "textCharacters": 24886,
+        "checks": [
+          {
+            "text": "VideoURLDescriptor",
+            "present": true
+          },
+          {
+            "text": "videoURLDescriptors",
+            "present": true
+          }
+        ]
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/components/tools/",
+        "title": "Tools | SwiftAISDK",
+        "documentId": "1063004405767",
+        "frameId": "614",
+        "checkedAt": "2026-11-15T04:54:11.579Z",
+        "truncated": false,
+        "textCharacters": 55048,
+        "checks": [
+          {
+            "text": "Signed approval replay",
+            "present": true
+          },
+          {
+            "text": "toolApprovalSecret:",
+            "present": true
+          },
+          {
+            "text": "applies refinement once",
+            "present": true
+          }
+        ]
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/",
+        "title": "Install | SwiftAISDK",
+        "documentId": "1063004405768",
+        "frameId": "615",
+        "checkedAt": "2026-11-15T04:54:27.075Z",
+        "truncated": false,
+        "textCharacters": 4290,
+        "checks": [
+          {
+            "text": "Install",
+            "present": true
+          },
+          {
+            "text": "SwiftAISDK",
+            "present": true
+          }
+        ]
+      }
+    ],
+    "viewportScreenshotInspected": "Tencent provider, 2245x1393 viewport at device scale2",
+    "limits": [
+      "This source deployment precedes the separate umbrella3.4.0 install/version update; final install readback will be recorded separately.",
+      "Rendered ScaleDown capability heading omits Extraction although the guide and canonical catalog include it; fix the docs generator during final public docs reconciliation."
+    ]
+  },
+  "metadataCI": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "checkedAt": "2026-11-15T05:22:36.758Z",
+    "sourceCommit": "8f691f7fb7e935f3455e91c5142919fc63f4fe46",
+    "canonicalCI": {
+      "id": 43680561085,
+      "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43680561085",
+      "sourceCommit": "8f691f7fb7e935f3455e91c5142919fc63f4fe46"
+    },
+    "jobs": [
+      {
+        "name": "changes",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Select checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Select Swift runner",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "docs",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run npm ci --prefix docs-site",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Generate documentation",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check and build documentation",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload documentation",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "tooling",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check catalog and tooling",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "m3_watchdog",
+        "status": "completed",
+        "conclusion": "skipped",
+        "steps": []
+      },
+      {
+        "name": "runner_probe",
+        "status": "completed",
+        "conclusion": "skipped",
+        "steps": []
+      },
+      {
+        "name": "test",
+        "status": "completed",
+        "conclusion": "skipped",
+        "steps": []
+      },
+      {
+        "name": "deploy",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Deploy to GitHub Pages",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "requiredSwiftJobExecuted": false,
+    "allowSkipped": true
+  },
+  "finalProofScope": "Only verification records change after this deployed metadata source; SDK runtime, tests, manifests, release selections and documentation deployment inputs are unchanged."
 }

@@ -181,3 +181,9 @@ passed 4,187 reported tests, iOS compilation and examples. A separate controlled
 outage verified the 90-second queued-job handoff to hosted macOS; the dedicated
 service was restored and Viscacha remained unchanged. See
 [M3RunnerVerification20261115.json](M3RunnerVerification20261115.json).
+
+Final documentation/tooling/deployment [CI](https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43680561085) passed at
+`8f691f7fb7e935f3455e91c5142919fc63f4fe46`. Main Zen readback verified 3.4.0 installation
+and current Tencent, ScaleDown and HeyGen guides, including the Extraction
+capability label. Temporary verification tabs were closed. Subsequent proof-only
+commits change no SDK, manifest, release selection or deployed site input.
