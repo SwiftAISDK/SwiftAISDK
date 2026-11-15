@@ -15,6 +15,21 @@ differs from the TypeScript AI SDK.
 | `docs-site/src/content/docs/reference/generated` | Generated symbol/reference docs. | Public Swift symbols change and docs generation is run. |
 | `Examples` | Runnable examples that prove guide code. | A documented workflow needs compile-checked sample code. |
 
+## README Boundaries
+
+Keep the root README within 150 lines. It is the entry point for a new user:
+overview, requirements, install, one quick-start example, a compact guide index,
+development links, and license. Update it when onboarding, installation, package
+selection, or top-level navigation changes.
+
+New features and providers belong in their owning docs-site guides and runnable
+examples. Link to those guides from an existing navigation row when needed;
+do not add a README section for every addition. Keep detailed API contracts,
+provider options, troubleshooting, and extra snippets in docs-site. Keep package
+inventories, upstream baselines, parity evidence, audit history, and release notes
+in the owning Docs or Releases records. When shortening README, preserve unique
+guidance in its owning page and verify the replacement links.
+
 ## What Belongs In Public Docs
 
 Good product docs include:
@@ -50,7 +65,8 @@ The package docs should cover these product areas:
 
 A change that affects public behavior is complete only when:
 
-1. README still points users to the right docs.
+1. README remains within its entry-point scope and still points users to the
+   right docs; most feature changes do not need a README edit.
 2. docs-site has a guide, provider page, cookbook entry, or troubleshooting note
    for the changed user-facing behavior.
 3. Result shapes, stream parts, warnings, metadata, and known limitations are

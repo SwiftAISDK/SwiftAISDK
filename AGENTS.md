@@ -25,6 +25,60 @@ in sync in the same change.
   A provider-only release does not require a new umbrella tag. Distribution
   repositories must never receive hand-edited implementation fixes.
 
+## Commit Messages
+
+Use `<type>(<scope>): <summary>` for new commits. Write the subject in English,
+use the imperative mood, omit a trailing period, and aim for 72 characters or
+fewer. Name the concrete change and its affected surface; avoid generic subjects
+such as `Update AI SDK upstream port`, `Fix bugs`, or `Update docs`.
+
+- Types: `feat` for added behavior, `fix` for corrections, `docs` for documentation,
+  `refactor` for restructuring without behavior changes, `perf` for performance,
+  `test` for tests, `build` for dependencies/tooling, `ci` for CI, `chore` for
+  maintenance, `release` for release preparation/records, and `revert` for rollbacks.
+- Scope: use the affected provider (`openai`, `anthropic`), shared surface (`core`,
+  `mcp`, `ui`), or area (`readme`, `docs-site`, `porting`, `release`). For a coherent
+  multi-provider sync, use `upstream` and summarize the main behavior in the subject.
+- Choose the type from the primary outcome. A feature commit includes its tests
+  and docs under `feat`; split unrelated changes into separate commits. Mark a
+  breaking change with `!` before `:` and explain the migration in the body.
+- For a substantial port, use the body to record package/baseline changes,
+  compatibility limits, and actual validation results. Keep detailed version
+  inventories and evidence in the linked audit/release records.
+- Release subjects name the unit/version and action. Say `prepare`, `publish`, or
+  `record` according to what the commit actually establishes; claim publication
+  or verification only when the corresponding evidence exists. Commit types do
+  not replace the version/bump decisions in `Releases/README.md`.
+
+Examples:
+
+```text
+feat(openai): Add Responses tool allow-lists
+fix(core): Preserve tool result order under concurrency
+docs(readme): Shorten onboarding and link feature guides
+chore(upstream): Refresh provider baselines and test inventory
+release(umbrella): Prepare SwiftAISDK 3.3.0
+```
+
+## Documentation Structure
+
+- Keep root `README.md` a short entry point: overview, requirements, installation,
+  one quick-start example, a compact guide index, development links, and license.
+  Keep it within 150 lines. Improve existing sections before adding new ones.
+- A new feature or provider normally updates its owning docs-site guide and
+  example, not README. Change README only when onboarding, installation, package
+  selection, or a top-level navigation link changes.
+- Put API options, stream/error contracts, provider details, limitations, and
+  additional examples in `docs-site/src/content/docs`. Keep version/baseline
+  tables, parity evidence, audit history, and release notes in the owning `Docs/`
+  or `Releases/` records. Do not append feature announcements or audit summaries
+  to README or duplicate full provider/version lists there.
+- Link to the authoritative guide instead of copying it. When trimming README,
+  preserve useful guidance in its owning document and check the replacement link.
+- Follow `Docs/ProductDocumentation.md` for ownership and verification. Review
+  README's length and links whenever editing it; a public behavior change does
+  not by itself require a README edit.
+
 ## Porting Requirements
 
 - Use `Docs/AgentPortingGuide.md` as the operational playbook.

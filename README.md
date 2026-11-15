@@ -1,917 +1,100 @@
 # SwiftAISDK
 
-SwiftAISDK is a SwiftPM port of the provider-facing parts of Vercel AI SDK.
-It provides provider factories plus an `AI` facade for text, durable batches,
-structured output, decisions, extraction, evaluation, embeddings, media, streaming and realtime audio, reranking,
-file operations, middleware, MCP tools, and typed tool execution.
+A SwiftPM port of the provider-facing [Vercel AI SDK](https://github.com/vercel/ai).
+Use provider factories and the `AI` facade for text and streaming, structured
+output, tools, embeddings, media, realtime audio, and MCP.
 
-Experimental [streaming speech](https://swiftaisdk.github.io/SwiftAISDK/core/stream-speech/)
-accepts incremental text and produces ordered audio through ElevenLabs or AI Gateway.
-See the compile-checked `StreamSpeech` example for input, cancellation and usage.
+**[Documentation](https://swiftaisdk.github.io/SwiftAISDK/)** ·
+[Providers](https://swiftaisdk.github.io/SwiftAISDK/providers/) ·
+[Examples](Examples) ·
+[Releases](https://github.com/SwiftAISDK/SwiftAISDK/releases)
 
-Licensed under the [Apache License 2.0](LICENSE). SwiftAISDK is an independent
-Swift port; references to Vercel AI SDK describe compatibility and provenance,
-not affiliation or endorsement.
+Requires Swift 6.3+, macOS 12+ or iOS 15+. Provider-specific availability and
+limitations are described in the documentation.
 
 ## Install
 
-Add the package to `Package.swift`:
+Add the complete `SwiftAISDK` package to `Package.swift`:
 
 ```swift
 .package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "3.2.0")
 ```
 
-Applications can pin the validated umbrella release with SwiftPM's `exact:`
-requirement. Commit `Package.resolved` to preserve the complete provider/core
-graph: an exact umbrella version alone does not pin its dependencies. Avoid
-depending on the moving `main` branch in production.
-
-Then depend on the library product:
+Add its product to your target's dependencies:
 
 ```swift
 .product(name: "SwiftAISDK", package: "SwiftAISDK")
 ```
 
-## Modular packages
+For a smaller dependency graph, select core and just the providers you need
+from the [package catalog](Docs/PackageCatalog.md). The
+[installation guide](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/)
+covers native imports and credentials; the [migration guide](Docs/Migration.md)
+explains the 3.x compatibility umbrella and the 2.x boundary.
 
-The [SwiftAISDK organization](https://github.com/SwiftAISDK) contains 55 independent
-SwiftPM units: core, 52 provider adapters, MCP and UI. The complete
-[catalog](Docs/PackageCatalog.md) lists their repositories, modules and dependencies.
+Applications should commit `Package.resolved` to preserve the complete dependency
+graph. An exact umbrella version alone does not pin its dependencies. Swift
+package versions are independent of upstream npm versions; verified selections
+are recorded in [release sets](Releases/sets).
 
-Published version selections and immutable verification evidence are recorded in
-[Releases/sets](Releases/sets). The current source adds Tencent, Parallel and
-ScaleDown, HeyGen Decision V4, signed streaming approval verification and
-per-video media types. See the [2026-11-15 audit](Docs/WeeklyUpstreamAudit20261115.md)
-for package versions, compatibility and release gates.
+## Quick start
 
-For an OpenAI application, add these dependencies:
-
-```swift
-.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.3.0"),
-.package(url: "https://github.com/SwiftAISDK/swift-ai-openai.git", from: "1.2.0"),
-```
-
-Select `.product(name: "SwiftAI", package: "swift-ai-core")` and
-`.product(name: "SwiftAIOpenAI", package: "swift-ai-openai")`. Import `SwiftAI` and
-`SwiftAIOpenAI`, then use `AIProviders.openAI(configuration: OpenAIProviderSettings(...))`.
-Anthropic uses `SwiftAIAnthropic` and `AnthropicProviderSettings`. Core has no
-built-in providers; applications supply model objects or an explicit registry.
-OpenAI brings the compatible wire package transitively, without unrelated providers,
-MCP or UI. Add those packages only when your application needs them.
-
-Swift package versions are independent of npm versions. Providers can be updated
-separately when their shared core requirements intersect; SwiftPM selects one
-version of each package identity. Commit `Package.resolved` in applications for
-reproducible builds. The [tested release set](Releases/umbrella/3.2.0.json) records the verified
-versions and revisions.
-
-The 3.2 umbrella above provides the complete provider/MCP/UI surface, existing
-`settings:` factories and `import SwiftAISDK`. It shares the modular core types.
-Existing 2.x tags remain available, but their separately defined model/request
-values cannot be mixed with modular values. See the
-[3.0 migration guide](Docs/Migration.md) for the compatibility boundary and
-native package examples.
-
-Development happens in this canonical repository. Distribution repositories are
-generated from it; edit their owning `Packages/*` sources here. Use
-`node Scripts/sdk.mjs dev build` for the local workspace and
-`node Scripts/test-packages.mjs` for all package and compatibility tests.
-See the [porting guide](Docs/AgentPortingGuide.md) and [release workflow](Releases/README.md).
-Canonical [examples](Examples/MixedProviders) use local paths for development;
-the migration guide shows the corresponding public dependencies.
-
-## Quick Start
+Set `OPENAI_API_KEY` in your environment, then generate text:
 
 ```swift
 import SwiftAISDK
 
 let provider = try AIProviders.openAI()
 let model = try provider.languageModel("gpt-4.1")
-
 let result = try await model.generateText("Write one sentence about Swift.")
 
 print(result.text)
 ```
 
-Provider factories read their upstream-style environment variables by default,
-for example `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY`,
-`GEMINI_API_KEY`, `TYPESAFE_AI_API_KEY`, `ZAI_API_KEY`, and `HEYGEN_API_KEY`. Provider-specific defaults live in the corresponding
-factory in `Sources/SwiftAISDK/Providers/ProviderRegistry.swift`. You can also
-pass credentials explicitly:
-
-```swift
-let provider = try AIProviders.openAI(
-    settings: ProviderSettings(apiKey: "your-api-key")
-)
-```
-
-## Core Facade
-
-The `AI` facade mirrors the high-level shape of `ai` while using Swift
-protocols for each model family:
-
-```swift
-let text = try await model.generateText("Hello")
-
-let embeddings = try await AI.embedMany(
-    model: try provider.embeddingModel("text-embedding-3-small"),
-    values: ["alpha", "beta"],
-    chunkSize: 100
-)
-
-let image = try await AI.generateImage(
-    model: try provider.imageModel("gpt-image-1"),
-    prompt: "A small watercolor robot"
-)
-```
-
-Streaming text is exposed as an async sequence:
-
-```swift
-for try await part in model.streamText("Stream this") {
-    print(part)
-}
-```
-
-Built-in HTTP language providers deliver parts incrementally as response bytes
-arrive; they do not wait for the HTTP body to finish. If you inject a custom
-transport, streaming requires the transport to conform to
-`AIStreamingTransport`. A send-only `AITransport` remains valid for unary
-generation, but `stream` fails with a non-retryable transport argument error
-instead of buffering through `send`.
-
-Built-in model streams use one canonical semantic lifecycle for each content
-block: `textStart` → `textDeltaPart` → `textEnd`, with the corresponding
-reasoning parts for reasoning blocks. The older `textDelta`, `reasoningDelta`,
-and `finish` cases remain source-compatible for custom models; facade calls
-normalize them to the part-aware lifecycle and `finishMetadata`. Built-in
-providers do not emit the legacy cases alongside canonical events. This keeps text,
-reasoning, UI snapshots, structured output, and tool-loop accumulation from
-counting the same provider delta twice.
-
-Each logical built-in model response has one terminal `finishMetadata` part.
-Custom models should follow the same contract; clean custom EOF without a
-terminal is preserved rather than assigned a guessed outcome. Provider error
-events remain visible as repeatable in-band `error` parts on the full stream;
-`part.streamProviderError` exposes normalized type, code, HTTP-equivalent
-status, retryability, and raw payload through `AIStreamProviderError`. Setup,
-HTTP, framing, and network failures throw. `toTextStream()`
-intentionally emits only canonical text deltas and ignores in-band error parts,
-while still propagating thrown stream failures.
-
-Facade calls retry transient failures by default with `maxRetries: 2`.
-Streaming keeps the conservative default: setup failures may retry, but an
-attempt is not replayed after its first public part unless `streamRetries` is
-set. A positive `streamRetries` value additionally retries retryable in-band
-provider errors after streaming has started. Tool-call, finish, usage, and
-provider-metadata state from the failed attempt is isolated from the next
-attempt, and a recovered provider-error part is not exposed. Text already
-yielded to the caller cannot be retracted and the replacement attempt may emit
-the same prefix again. Stopping iteration or aborting the request cancels the
-upstream response body. Pass `retryPolicy: .none` or a custom `AIRetryPolicy`
-to tune setup retries and backoff:
-
-```swift
-for try await part in AI.streamText(
-    model: model,
-    prompt: "Stream this.",
-    streamRetries: 1
-) {
-    print(part)
-}
-```
-
-For streaming stalls, `AIStreamTimeoutConfiguration` distinguishes the total
-operation deadline, each model-call step, the first semantic output, and the
-gap between semantic output parts. Total and step budgets include retry
-backoff, step budgets stay active through client-side tool execution, and a
-timeout aborts the provider/tool signal with a `TimeoutError` reason. The same
-configuration works with typed `Output` streams. Step/first/inter-chunk timers
-restart for every model-call step; metadata, raw keep-alives, lifecycle
-markers, and empty deltas do not reset the semantic timers:
-
-```swift
-for try await part in AI.streamText(
-    model: model,
-    prompt: "Stream this.",
-    timeout: AIStreamTimeoutConfiguration(
-        totalNanoseconds: 60_000_000_000,
-        stepNanoseconds: 30_000_000_000,
-        firstChunkNanoseconds: 10_000_000_000,
-        chunkNanoseconds: 15_000_000_000
-    )
-) {
-    print(part)
-}
-```
-
-Embedding calls validate that each provider response contains one vector per
-requested value before results are merged. Image no-output failures expose the
-same per-call diagnostics as successful `ImageGenerationResult.calls` through
-`AINoOutputError.calls`.
-
-`AIChatSession.sendMessage(_:replacingMessageID:)` uses the supplied ID only to
-locate the old message; an explicit ID on the replacement becomes the new
-transcript ID. UI tool approvals retain their provider descriptor, and failed
-tool-result metadata is restored onto the associated model-facing tool call.
-
-## Structured Output
-
-`AI.generateObject` requests JSON output, validates it when a JSON Schema is
-supplied, and decodes the result into a Swift `Decodable` type:
-
-```swift
-struct Summary: Decodable, Sendable {
-    var title: String
-    var bullets: [String]
-}
-
-let schema = AIJSONSchema<Summary>(
-    [
-        "type": "object",
-        "properties": [
-            "title": ["type": "string"],
-            "bullets": ["type": "array", "items": ["type": "string"]]
-        ],
-        "required": ["title", "bullets"]
-    ],
-    name: "summary"
-)
-
-let result = try await model.generateObject(
-    "Summarize this changelog.",
-    schema: schema
-)
-
-print(result.object.title)
-```
-
-The upstream-style `Output` entry point is available on `generateText` and
-`streamText` when you want one facade for text, object, array, choice, and
-schema-free JSON output:
-
-```swift
-let result = try await model.generateText(
-    "Summarize this changelog.",
-    output: Output.object(schema: schema)
-)
-
-print(result.output.title)
-```
-
-Array output can publish the same bounds in its JSON Schema and enforce them
-when the final value is decoded:
-
-```swift
-let result = try await model.generateText(
-    "Return two or three labels.",
-    output: Output.array(
-        element: ["type": "string"],
-        minItems: 2,
-        maxItems: 3,
-        as: String.self
-    )
-)
-```
-
-For source compatibility, invalid bound combinations are reported when the
-strategy executes, before model work begins, rather than by the nonthrowing
-`Output.array` constructor itself.
-
-Streaming and JSON strategies are also available through `streamObject`,
-`generateObjectArray`, `streamObjectArray`, `generateEnum`, `streamEnum`,
-`generateJSON`, and `streamJSON`.
-
-## Tools
-
-`generateText` and `streamText` can execute typed Swift tools and continue
-the conversation until the model returns a final answer or `maxSteps` is
-reached:
-
-```swift
-let weather = AITool(
-    name: "weather",
-    description: "Get the current weather.",
-    parameters: [
-        "type": "object",
-        "properties": ["city": ["type": "string"]],
-        "required": ["city"]
-    ]
-) { arguments in
-    ["forecast": "sunny in \(arguments["city"]?.stringValue ?? "unknown")"]
-}
-
-let answer = try await model.generateText(
-    "What should I wear in Tokyo?",
-    tools: LanguageToolOptions([weather], maxSteps: 3)
-)
-```
-
-Tools support argument refinement, JSON Schema validation, dynamic MCP-backed
-tools, approval hooks, and provider-defined helpers such as `OpenAITools`,
-`AnthropicTools`, `XAITools`, `GoogleTools`, and `GatewayTools`.
-When tool choice is `required` or names a specific tool, a response that does
-not contain the required call throws `AIToolChoiceViolationError` instead of
-being accepted as a successful text-only result. Approval requests can carry an
-opaque provider `descriptor` for presentation; treat it as untrusted display
-metadata.
-For OpenAI Responses, `OpenAITools.programmaticToolCalling(...)` enables
-programmatic tool orchestration; function schemas accept OpenAI
-`allowedCallers` and `outputSchema` provider options.
-OpenAI 4.0.43 parity also includes `OpenAITools.computer()` and
-`allowedTools`: the Responses request builder resolves declared function,
-built-in, MCP, and custom tools into `tool_choice.allowed_tools`, warns when an
-entry cannot be allow-listed, and rejects an allow-list that becomes empty.
-The older `computerUse(...)` helper remains available for the separate
-`computer_use` wire tool.
-For xAI Responses, `XAITools.imageGeneration(action:)` exposes the hosted image
-tool with generated/streamed prompt and failure results. Gateway failures retain
-their normalized `AIAPICallError` through `GatewayError.cause`.
-`OpenAITools.imageGeneration(action:)` and
-`AzureOpenAITools.imageGeneration(action:)` expose the matching OpenAI action
-field.
-
-## Durable Batch And Video Operations
-
-Batch V4 is provider-owned: each request carries its model ID and modality,
-while the returned provider reference can be persisted and resumed in another
-process. Anthropic Messages Batch, OpenAI Responses Batch, xAI Responses Batch,
-Google Generative AI Batch, and Gateway Batch V4 implement the shared surface:
-
-```swift
-let anthropic = try AIProviders.anthropic()
-let batch = anthropic.experimentalBatch()
-let started = try await AI.startBatch(
-    provider: batch,
-    requests: [.text(TextBatchRequest(
-        id: "summary-1",
-        modelID: "claude-opus-5-5",
-        request: LanguageModelRequest(messages: [.user("Summarize this.")])
-    ))]
-)
-
-let status = try await AI.getBatchStatus(
-    provider: batch,
-    batch: started.batch.reference
-)
-
-for try await item in try AI.getBatchResults(
-    provider: batch,
-    batch: started.batch.reference
-) {
-    // Each text or image request reaches an independent terminal result.
-    print(item)
-}
-```
-
-xAI and Google also accept `.image(ImageBatchRequest(...))`; xAI may mix models
-and modalities in one batch, while Google requires a common model endpoint.
-Anthropic accepts text requests with per-request model IDs. OpenAI and Gateway
-accept text only and require one common model. Inspect the batch provider's
-`supportedURLs` before deciding whether an input URL can be forwarded directly.
-
-Gateway and Google forward `webhookURL` through their native callback fields.
-Direct Anthropic, OpenAI, and xAI batch adapters return an unsupported warning,
-so callers can poll without silently assuming webhook delivery. Starting a
-batch is not retried automatically because it may create billable work; status,
-listing, and result setup use the normal retry policy. The older model-owned
-`AI.startTextBatch(model:requests:)` API remains source compatible.
-
-Async Video V4 keeps unary `generateVideo` source compatible while adding
-serializable start/status operations, core-owned polling/webhook waiting, and a
-stable logical-start idempotency key. Black Forest Labs FLUX 3, Fal, ByteDance,
-Gateway, Topaz, and HeyGen expose operation adapters; select the managed flow with
-`poll: VideoGenerationPollOptions(...)` or a webhook registration. Fal and
-Gateway forward native webhook URLs, while providers without native webhooks
-fall back to polling with a warning. Requests above a model's
-`maxVideosPerCall` are split into independent starts and merged in input order.
-
-Use `AI.startVideo` and `AI.getVideoStatus` when the operation must outlive the
-current process or be polled by another worker:
-
-```swift
-let model = try AIProviders.gateway().videoModel("bytedance/seedance-1-5-pro")
-let started = try await AI.startVideo(
-    model: model,
-    request: VideoGenerationRequest(prompt: "A lantern floating over Tokyo")
-)
-
-let status = try await AI.getVideoStatus(
-    model: model,
-    operation: started.operation
-)
-```
-
-## Providers
-
-Provider factories live under `AIProviders`, including OpenAI, Azure,
-Anthropic, Google, Google Vertex, Gateway, xAI, Mistral, Groq, Cohere, Voyage,
-MiniMax, Bedrock, Replicate, fal, Fish Audio, GMI Cloud, Deepgram, ElevenLabs,
-Cartesia, Topaz, HeyGen, and other official `@ai-sdk/*` provider packages.
-
-`AIProviders.heyGen()` reads `HEYGEN_API_KEY` and provides `video("heygen-video-1")`
-for text-to-video, first-frame image-to-video, and mixed image/video/audio
-reference conditioning. `AI.generateVideo` polls automatically; `AI.startVideo`
-and `AI.getVideoStatus` let applications persist and resume an operation.
-`HeyGenVideoModelOptions` and `HeyGenVideoAsset` expose typed resolution,
-prompt enhancement, URLs, workspace assets, and inline references. Completion
-returns a signed MP4 URL without downloading. See the
-[HeyGen guide](https://swiftaisdk.github.io/SwiftAISDK/providers/heygen/) for examples,
-validation limits, metadata, and URL refresh.
-
-`AIProviders.topaz()` reads `TOPAZ_API_KEY` and enhances existing media:
-`image("wonder-3.5")` accepts an image file or URL; `video("proteus")` and
-`video("starlight-precise-2.6")` expose resumable start/status operations and
-work with `AI.generateVideo`. See the [Topaz guide](https://swiftaisdk.github.io/SwiftAISDK/providers/topaz/)
-for output dimensions, source metadata, filters, polling and credits.
-
-MiniMax uses its Anthropic-compatible Messages endpoint and reads
-`MINIMAX_API_KEY` by default. Adaptive thinking is selected through the
-`minimax` provider-options namespace:
-
-```swift
-let miniMax = try AIProviders.miniMax()
-let model = try miniMax("minimax-m3")
-let result = try await model.generateText(
-    "How many r letters are in strawberry?",
-    options: LanguageGenerationOptions(
-        providerOptions: [
-            "minimax": ["thinking": ["type": "adaptive"]]
-        ]
-    )
-)
-
-print(result.reasoning)
-print(result.text)
-```
-
-MiniMax-H3 video generation uses the same API key and a dedicated video API
-root. Text-to-video, first/last frames, and reference inputs are supported:
-
-```swift
-let videoModel = try miniMax.video("MiniMax-H3")
-let video = try await videoModel.generateVideo(VideoGenerationRequest(
-    prompt: "A white kitten chases a butterfly across a sunlit garden.",
-    aspectRatio: "16:9",
-    durationSeconds: 5
-))
-
-print(video.urls)
-```
-
-Use `customProvider(...)` and `createProviderRegistry(...)` for upstream-style
-provider composition and combined model IDs:
-
-```swift
-let registry = createProviderRegistry([
-    "openai": try AIProviders.openAI(),
-    "anthropic": try AIProviders.anthropic()
-])
-
-AIDefaultProvider.set(registry)
-
-let result = try await AI.generateText(
-    model: "openai:gpt-6.1-sol",
-    prompt: "Write a launch checklist."
-)
-```
-
-Provider-specific options can be passed through request types or facade
-overloads via `providerOptions`, `extraBody`, `headers`, and `ProviderSettings`.
-DeepSeek V4 Flash Vision accepts image data, URLs, and uploaded DeepSeek file
-references; `try AIProviders.deepSeek().files()` exposes its `user_data` upload
-route. OpenAI-compatible chat accepts hosted video input through
-`AIContentPart.videoURL(...)` and preserves Gemini thought signatures under a
-custom provider namespace.
-
-### Files V4
-
-`AIFileClient` advertises `supportedFileOperations` and may implement upload,
-metadata lookup, streamed download, and deletion. OpenAI and xAI implement the
-complete contract; providers that remain upload-only reject unsupported
-operations before I/O.
-
-```swift
-let files = try AIProviders.openAI().files()
-let uploaded = try await AI.uploadFile(
-    client: files,
-    request: FileUploadRequest(
-        data: documentData,
-        mediaType: "application/pdf",
-        filename: "report.pdf",
-        purpose: "assistants"
-    )
-)
-
-let metadata = try await AI.getFileMetadata(
-    client: files,
-    request: FileMetadataRequest(file: uploaded.providerReference)
-)
-let download = try await AI.downloadFile(
-    client: files,
-    request: FileDownloadRequest(file: uploaded.providerReference)
-)
-let deleted = try await AI.deleteFile(
-    client: files,
-    request: FileDeleteRequest(file: uploaded.providerReference)
-)
-```
-
-`FileUploadRequest(stream:...)` avoids buffering a large upload. Its byte
-stream is single-use, is cancelled on failure, and disables automatic retry;
-buffered `Data` uploads keep the normal retry policy. Upload/metadata results
-expose byte size and creation/expiry timestamps when supplied by the provider.
-Download content is an `AsyncThrowingStream<Data, Error>`.
-
-Open Responses callers can set `ProviderSettings.strictResponseInput` so
-ID-less assistant history uses the provider's strict easy-input form. OpenAI
-also recognizes GPT-6 reasoning-update options, the `ultrafast` service tier,
-and `gpt-4o-transcribe-diarize` chunking/segment metadata through the existing
-provider-options surface.
-
-Google Interactions preserves assistant reasoning, built-in and function tool
-history, stateful compaction, provider file references, media resolution, and
-system-instruction precedence across generated and streamed calls. Video input
-and output plus processing calls/results retain their provider metadata. Google
-Batch validates every result key and preserves thought signatures even when the
-associated text delta is empty.
-
-Cartesia has dedicated speech and batch-transcription models:
-
-```swift
-let cartesia = try AIProviders.cartesia()
-
-let speech = try cartesia.speech("sonic-3.5")
-let audio = try await speech.speak(SpeechRequest(
-    text: "Hello from SwiftAISDK.",
-    voice: "694f9389-aac1-45b6-b726-9d9369183238",
-    providerOptions: [
-        "cartesia": [
-            "container": "mp3",
-            "sampleRate": 44_100,
-            "language": "en"
-        ]
-    ]
-))
-
-let transcription = try cartesia.transcription("ink-whisper")
-let transcript = try await transcription.transcribe(AudioTranscriptionRequest(
-    audio: audio.audio,
-    mimeType: audio.contentType ?? "audio/mpeg",
-    providerOptions: [
-        "cartesia": [
-            "language": "en",
-            "timestampGranularities": ["word"]
-        ]
-    ]
-))
-```
-
-Cartesia Ink 2 also exposes duplex streaming transcription through the reusable
-`AIDuplexWebSocketTransport` and `AIStreamingAudioInput` lifecycle:
-
-```swift
-let streaming = try cartesia.streamingTranscription("ink-2")
-let pipe = AIStreamingAudioInput.makeStream()
-let session = try await streaming.stream(StreamingTranscriptionRequest(
-    audio: pipe.input,
-    inputAudioFormat: AIStreamingAudioFormat(
-        mediaType: "audio/pcm",
-        sampleRate: 16_000
-    )
-))
-```
-
-The transport is injectable, access tokens are removed from request metadata,
-and stopping either side cancels the socket/audio producer. This
-transcription-only lifecycle is separate from a full realtime response session.
-
-Gateway exposes the same streaming-transcription protocol and can mint a
-short-lived, model-bound client token on a trusted server:
-
-```swift
-let gateway = try AIProviders.gateway()
-let credential = try await gateway.experimentalTranscription.getToken(.init(
-    model: "openai/gpt-realtime-whisper",
-    expiresAfterSeconds: 120
-))
-
-let gatewayStreaming = gateway.experimentalTranscription(
-    "openai/gpt-realtime-whisper"
-)
-```
-
-`gateway.streamingTranscription(_:)` is the direct model alias. The injectable
-duplex transport preserves Gateway auth/team subprotocols, splits large audio
-frames safely, and maps provider stream metadata and errors into the shared
-Swift lifecycle.
-
-Generated and streamed text retain attached `AICitation` values separately from
-retrieved sources, including through typed text output and native UI. See the
-[citation guide](https://swiftaisdk.github.io/SwiftAISDK/core/stream-text/).
-`LanguageModelRequest.toolCallConcurrency` bounds local tool execution; 1 is
-sequential and nil is unlimited, while returned results retain model order.
-
-## Extraction V4
-
-`AI.experimentalExtract` returns validated nullable fields from ordered shared
-text/file evidence, with guesses, confidence and source metadata. OpenAI,
-Anthropic and Google expose `extractionModel(_:)`; Anthropic splits requests
-at 16 fields. Registries, custom fallbacks and the compatibility default-provider
-resolver route the new contract. See the [Extraction guide](https://swiftaisdk.github.io/SwiftAISDK/core/extract/)
-for typed fields, complete-call failures, downloads, retries and cancellation.
-
-## Decision V4
-
-`AI.experimentalDecide` answers typed Choice, Score, Boolean and TypeSafe Box
-questions over ordered text, JSON and file evidence. OpenAI, Anthropic, Google, Gateway,
-Perplexity and TypeSafe AI expose `decisionModel(_:)`; registry and custom-provider routing
-support the same model reference.
-
-```swift
-let openAI = try AIProviders.openAI()
-let result = try await AI.experimentalDecide(
-    model: try openAI.decisionModel("gpt-6-luna"),
-    state: .parts([
-        .text("Assess this package."),
-        .json(["product": "glass vase"])
-    ]),
-    questions: ["damaged": .boolean(instructions: "Is there visible damage?")]
-)
-```
-
-Use optional `maxOutputTokens` and `reasoning` controls with supported adapters;
-unsupported native endpoints return warnings. Non-Box questions may omit
-instructions when their criteria define the judgment.
-
-URL evidence is downloaded and normalized before adapter execution. File
-support depends on the adapter: OpenAI supports image files, generic language
-adapters support images, and TypeSafe supports text/JSON plus PNG/JPEG evidence
-with normalized Box answers and typed reference/long-context options. Refusals throw
-`AIDecisionRefusalError`. See the [Decision guide](https://swiftaisdk.github.io/SwiftAISDK/core/decide/).
-
-## Evaluation V4
-
-`AI.experimentalEvaluate` evaluates Choice, Score, and Boolean questions over
-one shared JSON state and remains source compatible. New code can use Decision
-V4. Anthropic and Google adapt language models; OpenAI now uses `/decisions`,
-Gateway `/decision-model`, and TypeSafe `/systemone`. Custom endpoint mocks
-should update these experimental envelopes and the `decision` schema name.
-
-```swift
-let anthropic = try AIProviders.anthropic()
-let evaluator = try anthropic.evaluationModel("claude-sonnet-4-6")
-
-let result = try await AI.experimentalEvaluate(
-    model: evaluator,
-    state: [
-        "answer": "Paris",
-        "reference": "Paris"
-    ],
-    questions: [
-        "correct": .boolean(
-            instructions: "Does the answer match the reference?"
-        ),
-        "quality": .score(
-            instructions: "Rate answer quality.",
-            criteria: ["Incorrect", "Partially correct", "Fully correct"]
-        ),
-        "tone": .choice(
-            instructions: "Classify the tone.",
-            criteria: [
-                "neutral": "Plain and factual.",
-                "promotional": "Persuasive or sales-oriented."
-            ]
-        )
-    ]
-)
-```
-
-Answers keep the caller's question IDs and preserve provider usage, warnings,
-metadata, response headers/body, and declared rounding. Model IDs can also be
-resolved through `AIProviderRegistry` or `customProvider`.
-
-TypeSafe AI uses its native System One evaluator:
-
-```swift
-let typeSafe = AIProviders.typeSafeAI()
-let evaluator = try typeSafe.evaluationModel("jev-latest")
-```
-
-Z.AI exposes its GLM chat surface through `AIProviders.zai()` with
-`providerOptions.zai` controls for sampling, thinking, reasoning effort, tool
-streaming, and request/user identifiers.
-
-## Realtime Sessions
-
-`AIRealtimeModelV4` and `AIRealtimeSession` provide a provider-neutral duplex
-session for turn-based or continuous text/audio conversations, tool calls,
-normalized server events, aborts, and explicit close/cancel behavior. xAI
-provides the turn-based adapter: it creates an ephemeral client secret,
-negotiates the WebSocket subprotocol, maps session/audio/text/tool events, and
-keeps provider-specific events available as custom events.
-
-```swift
-let xai = try AIProviders.xAI()
-let realtimeModel = try xai.realtime("grok-voice-latest")
-let session = try await AIRealtimeSession.connect(
-    model: realtimeModel,
-    sessionConfiguration: AIRealtimeSessionConfiguration(
-        instructions: "Answer briefly.",
-        voice: "Ara",
-        outputModalities: [.audio],
-        inputAudioFormat: AIRealtimeAudioFormat(
-            type: "audio/pcm",
-            rate: 24_000
-        )
-    )
-)
-
-try await session.appendAudio(pcmChunk)
-try await session.commitAudio()
-try await session.createResponse()
-
-for try await event in session {
-    if case let .server(.audioDelta(_, _, base64Audio, _)) = event {
-        // Decode or enqueue base64Audio for playback.
-    }
-}
-```
-
-OpenAI Live uses the same session lifecycle in continuous mode over an
-authenticated server WebSocket. Audio is consumed continuously, so callers do
-not send `commitAudio()` or `createResponse()`:
-
-```swift
-let openAI = try AIProviders.openAI()
-let liveModel = try openAI.experimentalRealtime("gpt-live-1")
-let live = try await AIRealtimeSession.connect(
-    model: liveModel,
-    sessionConfiguration: .init(
-        instructions: "Answer briefly.",
-        inputAudioFormat: .init(type: "audio/pcm", rate: 24_000),
-        outputAudioFormat: .init(type: "audio/pcm", rate: 24_000)
-    )
-)
-
-try await live.appendAudio(pcmChunk)
-try await live.muteInput()
-try await live.unmuteInput()
-
-for try await event in live {
-    if case let .server(.audioChunk(delta, _)) = event {
-        // Decode or enqueue the base64 audio delta.
-    }
-}
-```
-
-OpenAI Live confirms `session.start` readiness and `session.close`
-finalization, and exposes continuous usage, transcript, audio, delegation,
-acknowledgement, and correlated error events. Browser WebRTC, provider-backed
-Responses delegation, non-Live OpenAI Realtime models, Google realtime, and
-ElevenLabs realtime transcription remain deferred.
-
-## Middleware
-
-Models and registries can be wrapped with middleware, mirroring upstream
-`wrapLanguageModel`, `wrapImageModel`, `wrapEmbeddingModel`, `wrapProvider`,
-specialized text transforms, and default settings helpers:
-
-```swift
-let tunedModel = wrapLanguageModel(
-    model,
-    middleware: defaultSettingsMiddleware(settings: AIDefaultLanguageModelSettings(
-        temperature: 0.3,
-        providerOptions: ["openai": ["parallelToolCalls": false]]
-    ))
-)
-
-let instructedModel = wrapLanguageModel(
-    model,
-    middleware: defaultInstructionsMiddleware(
-        instructions: "Answer concisely and cite uncertainty."
-    )
-)
-
-let jsonReady = wrapLanguageModel(model, middleware: extractJsonMiddleware())
-let simulatedStream = wrapLanguageModel(model, middleware: simulateStreamingMiddleware())
-```
-
-## MCP
-
-Modern MCP `2026-07-28` supports bounded multi round-trip `input_required`
-continuations on tool calls, resource reads and prompt retrieval. Register
-`onElicitationRequest` and advertise form elicitation in `clientCapabilities`.
-Each continuation receives a fresh RPC ID and echoes only that request's opaque
-state. Up to eight input rounds and sixteen inputs per round are allowed; one
-request deadline/abort covers network traffic and user input. Sampling, roots
-and URL elicitation remain unsupported and fail without replay. These Swift
-extensions go beyond the currently published upstream MCP client. See the
-[MCP MRTR specification](https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/mrtr).
-
-`MCPClient` mirrors the core of official `@ai-sdk/mcp@2.0.81`: initialize handshake,
-tool discovery, dynamic `AITool` conversion, resources, prompts, elicitation,
-HTTP/SSE transport, stdio transport, and OAuth helpers.
-OAuth providers can implement `authorize(resourceMetadataURL:scope:)` to receive
-the scope advertised by `WWW-Authenticate` or Protected Resource Metadata; the
-existing `authorize(resourceMetadataURL:)` requirement remains source-compatible.
-The 2.0.54 behavior is absorbed in the protocol/HTTP transport and OAuth layers:
-stored authorization-server information survives a discovery failure, and
-concurrent stale-token 401 responses share one authorization refresh instead
-of racing or clearing a newly saved token. Earlier behavior remains available
-without changing the high-level `MCPClient` workflow. `MCPToolAnnotations`
-provides typed access to standard title/read-only/destructive/idempotent/open-
-world hints while the raw annotation object remains available; these are
-untrusted server hints, not authorization policy. Structured-only tool results
-are normalized into model-visible JSON text, malformed known annotations fail
-tool discovery, and origin-only OAuth issuer URLs normalize a trailing slash.
-Non-successful POST/SSE responses preserve HTTP status, URL, and body details;
-upstream Windows command-shim handling has no Swift process-transport analogue.
-
-```swift
-let mcp = try await MCPClient.connect(
-    transport: try MCPHTTPTransport(url: "https://mcp.example.com/rpc")
-)
-
-let tools = try await mcp.tools()
-let answer = try await model.generateText(
-    "Search the docs.",
-    tools: LanguageToolOptions(Array(tools.values))
-)
-```
-
-Experimental MCP Events adds typed catalog/subscriptions, direct durable stores
-or managed adapters, HMAC-verified callback handling, identity-preserving refresh
-and atomic cursor patches. Persist callback work before cursor commit; application
-deduplication is the caller's responsibility. See the [MCP Events guide](https://swiftaisdk.github.io/SwiftAISDK/cookbook/mcp-events/).
-
-HTTP discovery waits for its response within the caller's initialization deadline.
-Stdio keeps direct execution by default; `MCPStdioShell.system` or
-`.executable("/bin/sh")` explicitly enables shell syntax. OAuth clients with a
-secret must supply an issuer or stored authorization-server binding. Custom
-`authenticateTokenRequest` implementations must also declare
-`usesCustomClientAuthentication = true` and provide that binding.
-
-Focused examples live in `Tests/SwiftAISDKTests/MCP*Tests.swift`.
-
-Run `swift run --package-path Examples MCPOAuthMigration` for a fully offline
-example of issuer-bound secret credentials and explicit custom authentication.
-It uses dummy tokens, validates the code callback, and makes no network calls.
-
-## Tests And Docs
-
-Run the mock-backed suite:
+Choose another provider by changing the factory and model ID. See the
+[quickstart](https://swiftaisdk.github.io/SwiftAISDK/getting-started/quickstart/)
+and [provider guides](https://swiftaisdk.github.io/SwiftAISDK/providers/)
+for configuration and supported capabilities.
+
+## Guides
+
+| Goal | Documentation |
+| --- | --- |
+| Generate and stream text | [Text](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/), [streaming](https://swiftaisdk.github.io/SwiftAISDK/core/stream-text/) |
+| Decode typed results | [Structured output](https://swiftaisdk.github.io/SwiftAISDK/core/structured-output/) |
+| Execute tools and connect MCP servers | [Tools](https://swiftaisdk.github.io/SwiftAISDK/core/tools/), [MCP](https://swiftaisdk.github.io/SwiftAISDK/cookbook/mcp-tools/) |
+| Work with embeddings and search | [Embeddings](https://swiftaisdk.github.io/SwiftAISDK/core/embeddings/), [reranking](https://swiftaisdk.github.io/SwiftAISDK/core/rerank/) |
+| Generate images, video, and audio | [Media workflows](https://swiftaisdk.github.io/SwiftAISDK/components/media/), [audio](https://swiftaisdk.github.io/SwiftAISDK/components/audio/) |
+| Manage durable work and files | [Batches](https://swiftaisdk.github.io/SwiftAISDK/core/batch-text/), [files](https://swiftaisdk.github.io/SwiftAISDK/core/files/) |
+| Extract fields and answer typed questions | [Extraction](https://swiftaisdk.github.io/SwiftAISDK/core/extract/), [decisions](https://swiftaisdk.github.io/SwiftAISDK/core/decide/), [evaluation](https://swiftaisdk.github.io/SwiftAISDK/core/evaluate/) |
+| Connect realtime audio | [Realtime sessions](https://swiftaisdk.github.io/SwiftAISDK/core/realtime/) |
+| Customize runtime behavior and chat state | [Middleware](https://swiftaisdk.github.io/SwiftAISDK/components/middleware/), [chat and UI messages](https://swiftaisdk.github.io/SwiftAISDK/components/chat-and-ui-messages/) |
+| Diagnose failures | [Errors](https://swiftaisdk.github.io/SwiftAISDK/core/error-handling/), [troubleshooting](https://swiftaisdk.github.io/SwiftAISDK/troubleshooting/) |
+
+Capability support varies by provider. Consult the
+[capability matrix](Docs/ProviderCapabilityMatrix.md) and
+[porting status](Docs/PortingStatus.md) for coverage and known gaps.
+
+## Development
+
+Edit this canonical repository; distribution repositories are generated from
+`Packages/*`. Build local sources and run all package and compatibility tests:
 
 ```sh
+node Scripts/sdk.mjs dev build
 node Scripts/test-packages.mjs
 ```
 
-Optional live smoke tests are available with real keys:
+Runnable samples live in [Examples](Examples). Optional live checks require
+`LIVE_AI_TESTS=1`; see the [porting guide](Docs/AgentPortingGuide.md).
 
-```sh
-node Scripts/run-live-smoke.mjs --plan
-LIVE_AI_TESTS=1 node Scripts/run-live-smoke.mjs --run
-```
+Before contributing, read [AGENTS.md](AGENTS.md) for commit naming and documentation
+rules. The [documentation map](Docs/README.md),
+[porting guide](Docs/AgentPortingGuide.md), and
+[release workflow](Releases/README.md) cover maintenance and verification.
 
-The representative runner makes one short request for each configured OpenAI,
-Anthropic, and Google transport family, with no retries and output limits of
-24, 24, and 64 tokens. It reports missing credential variable names without
-printing their values. `--plan` never makes API calls; `--run` requires the
-explicit environment flag and at least one configured key. Disabled live tests
-are reported as skipped by Swift Testing, rather than counted as passed.
+## License
 
-The broader suite includes media generation and can incur higher charges:
-
-```sh
-LIVE_AI_TESTS=1 node Scripts/sdk.mjs dev test --filter LiveProviderSmoke
-```
-
-Cartesia live checks read `CARTESIA_API_KEY` and optionally
-`LIVE_CARTESIA_SPEECH_MODEL`, `LIVE_CARTESIA_TRANSCRIPTION_MODEL`, and
-`LIVE_CARTESIA_VOICE`.
-
-Useful project docs:
-
-- [Docs/README.md](Docs/README.md): documentation map and ownership.
-- [Docs/ProductDocumentation.md](Docs/ProductDocumentation.md): public documentation contract and verification gates.
-- [Docs/PortingStatus.md](Docs/PortingStatus.md): current porting status, active gaps, and release-readiness checklist.
-- [Docs/AgentPortingGuide.md](Docs/AgentPortingGuide.md): workflow for porting upstream code, tests, and docs.
-- [Docs/ProviderCapabilityMatrix.md](Docs/ProviderCapabilityMatrix.md): generated provider/capability table.
-- [Docs/ProviderVersionLedger.md](Docs/ProviderVersionLedger.md): tracked npm package baselines and evidence files.
-- [Docs/DownloadSecurity.md](Docs/DownloadSecurity.md): DNS-pinned downloads and custom transport migration.
-- [Docs/DocumentationDependencies.md](Docs/DocumentationDependencies.md): documentation runtime and security baseline.
-
-Future coding agents should also read [AGENTS.md](AGENTS.md) before making
-porting changes.
-
-The user-facing documentation site lives in `docs-site` and is generated before
-build:
-
-```sh
-npm ci --prefix docs-site
-npm --prefix docs-site run check
-npm --prefix docs-site run build
-```
-
-The Docs workflow uploads the built site only for deployments from `main`,
-with one-day artifact retention. Pull request checks do not upload artifacts.
+[Apache License 2.0](LICENSE). SwiftAISDK is an independent Swift port;
+references to Vercel AI SDK describe compatibility and provenance, not
+affiliation or endorsement.

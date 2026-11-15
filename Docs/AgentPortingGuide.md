@@ -157,7 +157,8 @@ Scripts/update-upstream-test-inventory.js
 
 ## Public Documentation Requirements
 
-Public docs are part of the port. Update README/docs-site when a change affects:
+Public docs are part of the port. Update the owning docs-site guide when a change
+affects:
 
 - public API names or overloads;
 - provider setup, env vars, base URLs, auth, aliases, or supported capabilities;
@@ -166,8 +167,11 @@ Public docs are part of the port. Update README/docs-site when a change affects:
 - examples users are likely to copy;
 - known limitations, Swift-specific differences, or troubleshooting steps.
 
-Use `Docs/ProductDocumentation.md` for the docs quality bar and verification
-commands.
+Keep README as the short entry point defined in `Docs/ProductDocumentation.md`;
+change it only when onboarding, installation, package selection, or top-level
+navigation changes. New features and provider details belong in their owning
+guides. Use that documentation contract for the quality bar and verification
+commands, and `AGENTS.md` for commit naming.
 
 ## Verification
 
@@ -216,11 +220,28 @@ npm --prefix docs-site run check
 npm --prefix docs-site run build
 ```
 
-Optional live smoke:
+Optional live smoke (requires real credentials):
+
+```sh
+node Scripts/run-live-smoke.mjs --plan
+LIVE_AI_TESTS=1 node Scripts/run-live-smoke.mjs --run
+```
+
+The representative runner makes one short request per configured OpenAI,
+Anthropic, and Google transport family, with no retries and output limits of
+24, 24, and 64 tokens. `--plan` makes no API calls. `--run` requires the explicit
+environment flag and at least one configured key; missing credentials are
+reported by variable name without their values.
+
+The broader suite includes media generation and can incur higher charges:
 
 ```sh
 LIVE_AI_TESTS=1 node Scripts/sdk.mjs dev test --filter LiveProviderSmoke
 ```
+
+Cartesia checks read `CARTESIA_API_KEY` and optionally
+`LIVE_CARTESIA_SPEECH_MODEL`, `LIVE_CARTESIA_TRANSCRIPTION_MODEL`, and
+`LIVE_CARTESIA_VOICE`. Disabled live tests are reported as skipped, not passed.
 
 ## Completion Summary
 
