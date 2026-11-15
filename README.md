@@ -88,8 +88,8 @@ node Scripts/test-packages.mjs
 Runnable samples live in [Examples](Examples). Optional live checks require
 `LIVE_AI_TESTS=1`; see the [porting guide](Docs/AgentPortingGuide.md).
 
-Before contributing, read [AGENTS.md](AGENTS.md) for commit naming and documentation
-rules. The [documentation map](Docs/README.md),
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, validation, and review expectations,
+and [AGENTS.md](AGENTS.md) for agent rules. The [documentation map](Docs/README.md),
 [porting guide](Docs/AgentPortingGuide.md), and
 [release workflow](Releases/README.md) cover maintenance and verification.
 

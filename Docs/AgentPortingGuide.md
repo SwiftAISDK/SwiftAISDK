@@ -4,6 +4,12 @@ This is the operational guide for agents porting Vercel AI SDK behavior into
 SwiftAISDK. The rule is simple: update runtime behavior, tests, public docs, and
 status docs together.
 
+For a complete weekly pass, follow [WeeklyUpstreamUpdate.md](WeeklyUpstreamUpdate.md)
+from discovery through publication and reporting. Contributor setup and review
+expectations are in [CONTRIBUTING.md](../CONTRIBUTING.md). Use the configured
+human Git identity and omit AI authorship/coauthor trailers as required by
+[AGENTS.md](../AGENTS.md#commit-messages).
+
 ## Sources Of Truth
 
 | Artifact | Role |

@@ -8,6 +8,8 @@ SwiftAISDK. User-facing guides live in `README.md` and `docs-site`.
 | Need | Read |
 | --- | --- |
 | Use the package | `README.md`, then `docs-site/src/content/docs/getting-started/quickstart.mdx` |
+| Contribute code, tests, or documentation | [CONTRIBUTING.md](../CONTRIBUTING.md) |
+| Run the complete weekly upstream update | [WeeklyUpstreamUpdate.md](WeeklyUpstreamUpdate.md) |
 | Understand public docs ownership | `Docs/ProductDocumentation.md` |
 | Check current porting status | `Docs/PortingStatus.md` |
 | Port upstream code or tests | `Docs/AgentPortingGuide.md` |
@@ -31,6 +33,8 @@ SwiftAISDK. User-facing guides live in `README.md` and `docs-site`.
   baselines, provider coverage, live verification, and reopen rules.
 - `AgentPortingGuide.md` is the exact process for future agents. It includes the
   required test-porting and public-documentation steps.
+- `WeeklyUpstreamUpdate.md` consolidates the scheduled maintainer workflow from
+  fresh registry discovery through verified modular publication and reporting.
 - `Migration.md` explains the 3.0 compatibility boundary and package selection.
 - `ProviderCapabilityMatrix.md` and the compiled `AIProviderCapabilities` rows
   are generated from `Porting/packages.json`; registry tests verify real coverage.

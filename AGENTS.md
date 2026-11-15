@@ -27,6 +27,18 @@ in sync in the same change.
 
 ## Commit Messages
 
+Use the configured human Git author and committer identity. In the maintainer's
+checkout this is `Nikolay Solovyov <i@mr-ozio.ru>`; outside contributors keep
+their own human identity. Check `git var GIT_AUTHOR_IDENT` and
+`git var GIT_COMMITTER_IDENT` before committing. Do not replace either identity
+with an agent/model identity, pass an AI `--author`, or inject AI author/committer
+environment variables.
+
+Do not append AI `Co-authored-by`, `Signed-off-by`, generated-by footers, session
+links, or similar tool attribution to commits or PRs. Preserve genuine human
+coauthors and upstream legal notices. Follow the project attribution settings in
+`.claude/settings.json`; apply this rule to every agent, not just Claude.
+
 Use `<type>(<scope>): <summary>` for new commits. Write the subject in English,
 use the imperative mood, omit a trailing period, and aim for 72 characters or
 fewer. Name the concrete change and its affected surface; avoid generic subjects
@@ -81,6 +93,9 @@ release(umbrella): Prepare SwiftAISDK 3.3.0
 
 ## Porting Requirements
 
+- Read `CONTRIBUTING.md` for contributor setup and review expectations. Weekly
+  updates must follow the complete `Docs/WeeklyUpstreamUpdate.md` playbook as well
+  as this file; keep the scheduled task's prompt aligned with these instructions.
 - Use `Docs/AgentPortingGuide.md` as the operational playbook.
 - Use `Docs/PortingStatus.md` for the current product and porting state.
 - Use `Docs/ProviderVersionLedger.md` for npm package baselines.
