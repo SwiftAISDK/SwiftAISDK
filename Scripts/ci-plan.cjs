@@ -4,6 +4,7 @@ const {execFileSync} = require('node:child_process');
 const {readCatalog} = require('./lib/catalog.cjs');
 
 function plan(files, data, scope = '') {
+  if (scope === 'runner') return {swift:false, docs:false, tools:false, packages:''};
   const selected = new Set();
   let swift = scope === 'all', docs = Boolean(scope), tools = scope === 'all';
   const all = () => data.catalog.packages.filter(p => p.state === 'extracted').forEach(p => selected.add(p.id));

@@ -30,6 +30,7 @@ test('core contracts select all packages; facade tests select only the facade', 
 test('workflow changes and explicit docs runs do not trigger SDK tests', () => {
   assert.deepEqual(plan(['.github/workflows/docs.yml'], data), {swift:false, docs:true, tools:true, packages:''});
   assert.deepEqual(plan([], data, 'docs'), {swift:false, docs:true, tools:false, packages:''});
+  assert.deepEqual(plan([], data, 'runner'), {swift:false, docs:false, tools:false, packages:''});
   assert.deepEqual(plan([], data, 'all').packages.split(',').sort(), extractedPackageIDs);
 });
 test('publication rejects a green docs-only run and accepts actual exact-source tests', () => {
@@ -37,6 +38,7 @@ test('publication rejects a green docs-only run and accepts actual exact-source 
   const run = {head_sha:'a', conclusion:'success', status:'completed', path:'.github/workflows/docs.yml', event:'push'};
   const passed = [{name:'test', status:'completed', conclusion:'success'}];
   assert.throws(() => verifyHostedCI(run, [{name:'test',status:'completed',conclusion:'skipped'}], 'a'));
+  assert.throws(() => verifyHostedCI(run, [{name:'runner_probe',status:'completed',conclusion:'success'}], 'a'));
   assert.throws(() => verifyHostedCI(run, passed, 'b'));
   assert.throws(() => verifyHostedCI({...run,conclusion:'cancelled'}, passed, 'a'));
   assert.equal(verifyHostedCI(run, passed, 'a').sourceCommit, 'a');

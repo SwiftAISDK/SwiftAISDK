@@ -1,4 +1,5 @@
 name: CI
+run-name: ${{ inputs.fallback_from && format('CI hosted fallback from {0}', inputs.fallback_from) || github.workflow }}
 on:
   push:
     branches: [main]
@@ -8,8 +9,17 @@ on:
       scope:
         description: Checks to run
         type: choice
-        options: [all, docs]
+        options: [all, docs, runner]
         default: all
+      runner:
+        description: Prefer M3 or explicitly use GitHub-hosted macOS
+        type: choice
+        options: [auto, github]
+        default: auto
+      fallback_from:
+        description: Original run ID for automatic hosted fallback
+        type: string
+        default: ''
 permissions:
   contents: read
 concurrency:
@@ -24,6 +34,9 @@ jobs:
       docs: ${{ steps.plan.outputs.docs }}
       packages: ${{ steps.plan.outputs.packages }}
       tools: ${{ steps.plan.outputs.tools }}
+      swift_runner: ${{ steps.runner.outputs.labels }}
+      swift_runner_kind: ${{ steps.runner.outputs.kind }}
+      runner_probe: ${{ github.event_name == 'workflow_dispatch' && inputs.scope == 'runner' }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -34,6 +47,34 @@ jobs:
       - name: Select checks
         id: plan
         run: node Scripts/ci-plan.cjs
+      - name: Select Swift runner
+        id: runner
+        run: node Scripts/m3-runner.cjs select
+        env:
+          RUNNER_PREFERENCE: ${{ inputs.runner || 'auto' }}
+  m3_watchdog:
+    needs: changes
+    if: >-
+      needs.changes.outputs.swift_runner_kind == 'm3' &&
+      (needs.changes.outputs.swift == 'true' || needs.changes.outputs.runner_probe == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Fall back when M3 cannot start
+        run: node Scripts/m3-runner.cjs watch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUNNER_PREFERENCE: ${{ inputs.runner || 'auto' }}
+          WATCH_JOB_NAME: ${{ needs.changes.outputs.runner_probe == 'true' && 'runner_probe' || 'test' }}
   tooling:
     needs: changes
     if: needs.changes.outputs.tools == 'true'
@@ -53,15 +94,19 @@ jobs:
   test:
     needs: changes
     if: needs.changes.outputs.swift == 'true'
-    runs-on: macos-26
+    runs-on: ${{ fromJSON(needs.changes.outputs.swift_runner) }}
     timeout-minutes: 30
     env:
-      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+      DEVELOPER_DIR: ${{ needs.changes.outputs.swift_runner_kind == 'm3' && '/Applications/Xcode.app/Contents/Developer' || '/Applications/Xcode_26.6.app/Contents/Developer' }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
+      - name: Prepare pinned Swift toolchain
+        run: node Scripts/m3-runner.cjs prepare
       - name: Check Swift version
         run: swift --version | grep 'Swift version 6.3.3'
       - name: Test affected packages and compatibility facade once
@@ -72,6 +117,26 @@ jobs:
         run: node Scripts/sdk.mjs dev build --triple arm64-apple-ios15.0-simulator --sdk "$(xcrun --sdk iphonesimulator --show-sdk-path)" --scratch-path .build/ios-verification
       - name: Build examples
         run: node Scripts/sdk.mjs dev examples build
+  runner_probe:
+    needs: changes
+    if: needs.changes.outputs.runner_probe == 'true'
+    runs-on: ${{ fromJSON(needs.changes.outputs.swift_runner) }}
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: ${{ needs.changes.outputs.swift_runner_kind == 'm3' && '/Applications/Xcode.app/Contents/Developer' || '/Applications/Xcode_26.6.app/Contents/Developer' }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Prepare pinned Swift toolchain
+        run: node Scripts/m3-runner.cjs prepare
+      - name: Check Swift version
+        run: swift --version | grep 'Swift version 6.3.3'
+      - name: Compile and run native Swift probe
+        run: swift -e 'import Foundation; import CryptoKit; print("SWIFT_RUNNER_PROBE_OK")'
   docs:
     needs: changes
     if: needs.changes.outputs.docs == 'true'
