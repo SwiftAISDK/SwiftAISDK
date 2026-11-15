@@ -31,6 +31,26 @@ Then import the library:
 import SwiftAISDK
 ```
 
+## Agent skill
+
+Coding agents such as Claude Code, Codex and Cursor can install the SwiftAISDK
+skill from this repository with the open [`skills`](https://github.com/vercel-labs/skills) CLI:
+
+```sh
+npx skills add SwiftAISDK/SwiftAISDK
+```
+
+The skill lives at [`skills/swiftaisdk/SKILL.md`](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/skills/swiftaisdk/SKILL.md).
+It tells the agent how to add the package, pick a provider with `AIProviders`
+and `languageModel(_:)`, call `generateText`, `streamText`, `Output` and
+`AITool`, configure credentials and pin versions. It also points the agent at
+these docs as Markdown: [`/llms.txt`](https://swiftaisdk.github.io/SwiftAISDK/llms.txt)
+lists every page, and each page is available at its URL with `.md` in place of
+the trailing slash, for example `/core/tools.md`.
+
+Pass `-a <agent>` to install for one agent only, or `-g` to install globally.
+Run the command again to pick up a newer version of the skill.
+
 ## Credentials
 
 Provider factories read upstream-style environment variables by default:

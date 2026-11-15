@@ -1,11 +1,24 @@
 ---
 import { Code } from '@astrojs/starlight/components';
-import { releaseUrl, sdkVersion, withBase } from '../lib/site';
+import { releaseUrl, sdkVersion, skillInstallCommand, withBase } from '../lib/site';
 
 const { data } = Astro.locals.starlightRoute.entry;
 const { title = data.title, tagline } = data.hero ?? {};
 
-const installSnippet = `.package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "${sdkVersion}")`;
+const installOptions = [
+  {
+    id: 'package',
+    label: 'Swift Package',
+    code: `.package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "${sdkVersion}")`,
+    copyLabel: 'Copy package dependency',
+  },
+  {
+    id: 'skill',
+    label: 'Agent skill',
+    code: skillInstallCommand,
+    copyLabel: 'Copy agent skill install command',
+  },
+];
 
 type OutputLine = { kind: 'call' | 'result' | 'text' | 'meta'; text: string };
 
@@ -106,19 +119,39 @@ let answer = try await AI.generateText(
     <div class="sdk-hero-actions">
       <a class="sdk-button primary" href={withBase('/getting-started/quickstart/')}>Get started</a>
     </div>
-    <div class="sdk-install">
+    <div class="sdk-install" data-install>
       <div class="sdk-install-tabs" role="tablist" aria-label="Install">
-        <button type="button" role="tab" aria-selected="true">Swift Package</button>
-        <button type="button" role="tab" aria-selected="false" aria-disabled="true" title="Coming soon">
-          Agent skill <span class="soon">soon</span>
-        </button>
+        {
+          installOptions.map((option, index) => (
+            <button
+              type="button"
+              role="tab"
+              id={`sdk-install-tab-${option.id}`}
+              aria-controls={`sdk-install-${option.id}`}
+              aria-selected={index === 0 ? 'true' : 'false'}
+              tabindex={index === 0 ? 0 : -1}
+            >
+              {option.label}
+            </button>
+          ))
+        }
       </div>
-      <div class="sdk-install-row" role="tabpanel">
-        <code>{installSnippet}</code>
-        <button type="button" data-copy={installSnippet} aria-label="Copy package dependency">
-          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="2"></rect><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"></path></svg>
-        </button>
-      </div>
+      {
+        installOptions.map((option, index) => (
+          <div
+            class="sdk-install-row"
+            role="tabpanel"
+            id={`sdk-install-${option.id}`}
+            aria-labelledby={`sdk-install-tab-${option.id}`}
+            hidden={index !== 0}
+          >
+            <code>{option.code}</code>
+            <button type="button" data-copy={option.code} aria-label={option.copyLabel}>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="2"></rect><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"></path></svg>
+            </button>
+          </div>
+        ))
+      }
     </div>
   </div>
 
@@ -183,6 +216,35 @@ let answer = try await AI.generateText(
       await navigator.clipboard.writeText(button.dataset.copy ?? '');
       button.dataset.copied = '';
       setTimeout(() => delete button.dataset.copied, 1400);
+    });
+  }
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-install]')) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    const select = (index: number, focus = false) => {
+      const next = (index + tabs.length) % tabs.length;
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-selected', String(i === next));
+        tab.tabIndex = i === next ? 0 : -1;
+      });
+      panels.forEach((panel, i) => (panel.hidden = i !== next));
+      if (focus) tabs[next]?.focus();
+    };
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(index));
+      tab.addEventListener('keydown', (event) => {
+        const current = tabs.indexOf(tab);
+        const target =
+          event.key === 'ArrowRight' ? current + 1
+          : event.key === 'ArrowLeft' ? current - 1
+          : event.key === 'Home' ? 0
+          : event.key === 'End' ? tabs.length - 1
+          : undefined;
+        if (target === undefined) return;
+        event.preventDefault();
+        select(target, true);
+      });
     });
   }
 
@@ -407,22 +469,24 @@ let answer = try await AI.generateText(
     color: var(--sl-color-gray-3);
     font: 500 0.8125rem/1.4 var(--sl-font);
   }
+  .sdk-install-tabs button {
+    cursor: pointer;
+    transition: color 150ms, border-color 150ms;
+  }
+  .sdk-install-tabs button:hover {
+    color: var(--sl-color-white);
+  }
   .sdk-install-tabs button[aria-selected='true'] {
     border-bottom-color: var(--sl-color-white);
     color: var(--sl-color-white);
   }
-  /* The agent skill is not published yet. */
-  .sdk-install-tabs button[aria-disabled='true'] {
-    color: var(--sl-color-gray-4);
-    cursor: not-allowed;
+  .sdk-install-tabs button:focus-visible {
+    outline: 2px solid var(--sl-color-white);
+    outline-offset: 2px;
+    border-radius: 2px;
   }
-  .sdk-install-tabs .soon {
-    padding: 0 0.35rem;
-    border: 1px solid var(--sl-color-hairline-light);
-    border-radius: 999px;
-    font-family: var(--sl-font-mono);
-    font-size: 0.625rem;
-    line-height: 1.5;
+  .sdk-install-row[hidden] {
+    display: none;
   }
   .sdk-install-row {
     display: flex;

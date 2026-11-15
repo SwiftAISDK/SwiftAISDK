@@ -13,3 +13,6 @@ export function llmsPathForRoute(id: string): string {
   const slug = id.replace(/(^|\/)index$/, '').replace(/^\/|\/$/g, '');
   return slug ? `/llms/${slug}.txt` : '/llms/index.txt';
 }
+
+/** Installs `skills/swiftaisdk/SKILL.md` from the canonical repository with the open `skills` CLI. */
+export const skillInstallCommand = 'npx skills add SwiftAISDK/SwiftAISDK';
