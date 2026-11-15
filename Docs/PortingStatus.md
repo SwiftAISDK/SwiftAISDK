@@ -17,8 +17,8 @@ them only when investigating an earlier pass.
 
 - 57 tracked npm packages map to 55 independent Swift packages: core, 52
   provider adapters, MCP and UI. All are published.
-- SwiftAISDK 3.4.0 is the current optional compatibility umbrella. Its tested
-  dependency selection is `Releases/umbrella/3.4.0.json`.
+- SwiftAISDK 3.5.0 is the current optional compatibility umbrella. Its tested
+  dependency selection is `Releases/umbrella/3.5.0.json`.
 - The latest weekly pass is recorded in
   [WeeklyUpstreamAudit20261115.md](Archive/WeeklyUpstreamAudit20261115.md), with
   release evidence in
