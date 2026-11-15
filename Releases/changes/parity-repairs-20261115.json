@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "parity-repairs-20261115",
+  "status": "reviewed",
+  "summary": "Reviewed parity repairs for Prodia, Rev.ai and Together AI against their unchanged reviewed npm baselines (@ai-sdk/prodia 2.0.84, @ai-sdk/revai 3.0.81, @ai-sdk/togetherai 3.0.94), with every Swift-reachable upstream test case for the affected models translated. Validation passed: node Scripts/test-packages.mjs (3905 tests including 1737 compatibility tests, zero failures), generation, catalog and tooling checks, provider isolation/version checks and the documentation build. Publication is gated by exact-source Swift 6.3.3 hosted CI. Paid/live-service checks were not run.",
+  "packages": [
+    {
+      "package": "swift-ai-prodia",
+      "bump": "minor",
+      "notes": "Send the Prodia job JSON as the request body (`{type, config}`) for image and text-to-video jobs instead of the internal `{content, values}` wrapper, so those requests match the API. Return generated videos as `base64Videos` with the multipart media type (default `video/mp4`), so video generation no longer fails with no output. Validate the multipart `job` part against the upstream schema and let the last matching part win. Language results now include generated image files in unary results, take text only from `text/*` or `.txt` output parts and build the prompt from the last system message. Omit empty `loras`, apply provider query parameters to image-to-video and language requests, and expose `maxImagesPerCall` and `maxVideosPerCall` (additive). All 57 Swift-reachable upstream image, language, video and provider test cases are translated.",
+      "compatibility": "Additive public properties; existing selectors and initializers remain. Wire bodies and result shapes change to match the reviewed upstream package; applications that read the video from `rawValue` can use `base64Videos`. Dependency minimums are unchanged."
+    },
+    {
+      "package": "swift-ai-revai",
+      "bump": "minor",
+      "notes": "Keep the call's `language` when `providerOptions[\"revai\"]` does not set one, instead of replacing it with the schema default `en`; an explicit option still wins and calls without a language still send `en`. Compute duration from the latest text element end across all monologues, record the response timestamp at call start, and use the Rev.ai error message only for the upstream `{error: {message, code: number}}` shape. All Swift-reachable upstream transcription and error test cases are translated with the original fixtures.",
+      "compatibility": "Source-compatible; the public initializer remains. Transcription language, duration and error messages change to match the reviewed upstream package. Dependency minimums are unchanged."
+    },
+    {
+      "package": "swift-ai-togetherai",
+      "bump": "minor",
+      "notes": "Image results report the requested model ID and call time, image and reranking API errors expose the Together AI error message, warnings follow the upstream order, masks are rejected before option parsing and the seed warning names the model. All Swift-reachable upstream image, provider and reranking test cases are translated, including the reranking fixture.",
+      "compatibility": "Source-compatible. Response metadata, warning order and error messages change to match the reviewed upstream package. Dependency minimums are unchanged."
+    }
+  ]
+}
