@@ -5,13 +5,15 @@ import SwiftAIProviderUtilities
 
 
 
-func revAITranscriptionSegments(from raw: JSONValue) -> [TranscriptionSegment] {
+/// Mirrors upstream: the duration is the latest text `end_ts` across all monologues (not the
+/// latest segment end), and a trailing open segment ends at that running duration.
+func revAITranscriptionSegmentsAndDuration(from raw: JSONValue) -> (segments: [TranscriptionSegment], durationInSeconds: Double) {
     var segments: [TranscriptionSegment] = []
+    var duration = 0.0
     for monologue in raw["monologues"]?.arrayValue ?? [] {
         var currentText = ""
         var segmentStart = 0.0
         var hasStartedSegment = false
-        var duration = 0.0
         for element in monologue["elements"]?.arrayValue ?? [] {
             currentText += element["value"]?.stringValue ?? ""
             guard element["type"]?.stringValue == "text" else { continue }
@@ -37,5 +39,5 @@ func revAITranscriptionSegments(from raw: JSONValue) -> [TranscriptionSegment] {
             segments.append(TranscriptionSegment(text: trimmed, startSecond: segmentStart, endSecond: end))
         }
     }
-    return segments
+    return (segments, duration)
 }

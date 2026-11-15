@@ -2482,6 +2482,9 @@
             "swift-ai-core/SwiftAITransport",
             "swift-ai-core/SwiftAIProviderUtilities"
           ],
+          "testResources": [
+            "Fixtures"
+          ],
           "testDependencies": [
             "swift-ai-core/SwiftAI"
           ]

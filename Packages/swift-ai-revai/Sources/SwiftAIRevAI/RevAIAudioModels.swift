@@ -8,14 +8,22 @@ public final class RevAITranscriptionModel: TranscriptionModel, @unchecked Senda
     public let providerID: String
     public let modelID: String
     private let config: RevAIModelConfiguration
+    /// Mirrors upstream `_internal.currentDate`; the response timestamp is taken when the call starts.
+    private let currentDate: @Sendable () -> Date
 
-    public init(modelID: String, config: RevAIModelConfiguration) {
+    public convenience init(modelID: String, config: RevAIModelConfiguration) {
+        self.init(modelID: modelID, config: config, currentDate: { Date() })
+    }
+
+    init(modelID: String, config: RevAIModelConfiguration, currentDate: @escaping @Sendable () -> Date) {
         self.providerID = "revai.transcription"
         self.modelID = modelID
         self.config = config
+        self.currentDate = currentDate
     }
 
     public func transcribe(_ request: AudioTranscriptionRequest) async throws -> TranscriptionResult {
+        let timestamp = currentDate()
         let options = try revAIProviderOptions(from: request)
         var form = MultipartFormData()
         form.appendFile(name: "media", fileName: "audio.\(mediaTypeToExtension(request.mimeType))", mimeType: request.mimeType, data: request.audio)
@@ -33,7 +41,7 @@ public final class RevAITranscriptionModel: TranscriptionModel, @unchecked Senda
             abortSignal: request.abortSignal
         ))
         guard (200..<300).contains(submitResponse.statusCode) else {
-            throw audioProviderHTTPStatusError(provider: providerID, response: submitResponse)
+            throw revAIHTTPStatusError(provider: providerID, response: submitResponse)
         }
         var job = try submitResponse.jsonValue()
         try validateRevAIJobResponse(job, providerID: providerID)
@@ -51,18 +59,23 @@ public final class RevAITranscriptionModel: TranscriptionModel, @unchecked Senda
             abortSignal: request.abortSignal
         ))
         guard (200..<300).contains(transcriptResponse.statusCode) else {
-            throw audioProviderHTTPStatusError(provider: providerID, response: transcriptResponse)
+            throw revAIHTTPStatusError(provider: providerID, response: transcriptResponse)
         }
         let raw = try transcriptResponse.jsonValue()
         try validateRevAITranscriptResponse(raw, providerID: providerID)
-        let segments = revAITranscriptionSegments(from: raw)
+        let (segments, durationInSeconds) = revAITranscriptionSegmentsAndDuration(from: raw)
         return TranscriptionResult(
             text: revAITranscriptText(from: raw),
             rawValue: raw,
             segments: segments,
             language: submissionLanguage,
-            durationInSeconds: transcriptionDuration(from: segments) ?? 0,
-            responseMetadata: aiResponseMetadata(from: raw, response: transcriptResponse, modelID: modelID)
+            durationInSeconds: durationInSeconds,
+            responseMetadata: AIResponseMetadata(
+                timestamp: timestamp,
+                modelID: modelID,
+                headers: transcriptResponse.headers,
+                body: raw
+            )
         )
     }
 
@@ -79,7 +92,7 @@ public final class RevAITranscriptionModel: TranscriptionModel, @unchecked Senda
                 abortSignal: request.abortSignal
             ))
             guard (200..<300).contains(response.statusCode) else {
-                throw audioProviderHTTPStatusError(provider: providerID, response: response)
+                throw revAIHTTPStatusError(provider: providerID, response: response)
             }
             job = try response.jsonValue()
             try validateRevAIJobResponse(job, providerID: providerID)
@@ -101,6 +114,29 @@ public final class RevAITranscriptionModel: TranscriptionModel, @unchecked Senda
             abortSignal: abortSignal
         )
     }
+}
+
+/// Mirrors upstream `revaiFailedResponseHandler`: the message is used only when the body
+/// matches `{ error: { message: string, code: number } }`; otherwise the raw body is kept.
+private func revAIHTTPStatusError(provider: String, response: AIHTTPResponse) -> AIError {
+    apiCallError(
+        provider: provider,
+        statusCode: response.statusCode,
+        body: revAIErrorMessage(from: response.body) ?? response.bodyText,
+        headers: response.headers
+    )
+}
+
+func revAIErrorMessage(from data: Data) -> String? {
+    guard
+        let raw = try? JSONDecoder().decode(JSONValue.self, from: data),
+        let error = raw["error"]?.objectValue,
+        let message = error["message"]?.stringValue,
+        error["code"]?.doubleValue != nil
+    else {
+        return nil
+    }
+    return message
 }
 
 private func validateRevAIJobResponse(_ raw: JSONValue, providerID: String) throws {
@@ -168,7 +204,7 @@ private func revAIProviderOptions(from request: AudioTranscriptionRequest) throw
         for key in revAITranscriptionProviderOptionKeys {
             output.removeValue(forKey: key)
         }
-        output.merge(try revAIValidateTranscriptionProviderOptions(nested)) { _, providerValue in providerValue }
+        output.merge(try revAIValidateTranscriptionProviderOptions(nested, callLanguage: request.language)) { _, providerValue in providerValue }
     }
     return output
 }
@@ -214,8 +250,14 @@ private let revAITranscriptionProviderOptionDefaults: [String: JSONValue] = [
     "forced_alignment": .bool(false)
 ]
 
-private func revAIValidateTranscriptionProviderOptions(_ options: [String: JSONValue]) throws -> [String: JSONValue] {
+/// Upstream's schema defaults `language` to "en" when the provider options omit it. Upstream
+/// transcription call options have no `language`; Swift's call-level `language` fills that
+/// omission instead of being replaced by the default. An explicit provider option still wins.
+private func revAIValidateTranscriptionProviderOptions(_ options: [String: JSONValue], callLanguage: String?) throws -> [String: JSONValue] {
     var output = revAITranscriptionProviderOptionDefaults
+    if callLanguage != nil {
+        output.removeValue(forKey: "language")
+    }
     for (key, value) in options where revAITranscriptionProviderOptionKeys.contains(key) {
         if value == .null {
             guard revAINullishTranscriptionProviderOptionKeys.contains(key) else {

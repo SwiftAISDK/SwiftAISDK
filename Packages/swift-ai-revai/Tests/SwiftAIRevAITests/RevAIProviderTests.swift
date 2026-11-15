@@ -584,3 +584,259 @@ import Testing
         ))
     }
 }
+
+// MARK: - Upstream packages/revai/src/revai-transcription-model.test.ts (3.0.81)
+
+/// Upstream `src/__fixtures__/*.json` and `src/transcript-test.mp3`, copied verbatim into
+/// `Fixtures/` (registered in Porting/map.json).
+private func revAIUpstreamFixture(_ name: String, extension fileExtension: String = "json") throws -> Data {
+    let url = try #require(
+        Bundle.module.url(forResource: name, withExtension: fileExtension, subdirectory: "Fixtures")
+            ?? Bundle.module.url(forResource: name, withExtension: fileExtension)
+    )
+    return try Data(contentsOf: url)
+}
+
+private func revAIUpstreamFixtureResponse(_ name: String, headers: [String: String] = [:]) throws -> AIHTTPResponse {
+    AIHTTPResponse(statusCode: 200, headers: ["content-type": "application/json"].mergingHeaders(headers), body: try revAIUpstreamFixture(name))
+}
+
+/// `const audioData = await readFile('transcript-test.mp3')`.
+private func revAIUpstreamAudioData() throws -> Data {
+    try revAIUpstreamFixture("transcript-test", extension: "mp3")
+}
+
+/// `prepareJsonFixtureResponse(headers)`: submit (in progress), status poll (transcribed), transcript.
+private func revAIUpstreamFixtureResponses(headers: [String: String] = [:]) throws -> [AIHTTPResponse] {
+    [
+        try revAIUpstreamFixtureResponse("revai-job-submit", headers: headers),
+        try revAIUpstreamFixtureResponse("revai-job-status", headers: headers),
+        try revAIUpstreamFixtureResponse("revai-transcript", headers: headers)
+    ]
+}
+
+/// Reads a text field from a multipart body that may also carry binary file bytes.
+private func revAIMultipartPart(_ body: Data?, name: String) -> String? {
+    guard let body else { return nil }
+    let marker = Data("Content-Disposition: form-data; name=\"\(name)\"\r\n\r\n".utf8)
+    guard let start = body.range(of: marker)?.upperBound,
+          let end = body.range(of: Data("\r\n--".utf8), in: start..<body.endIndex)?.lowerBound else { return nil }
+    return String(data: body[start..<end], encoding: .utf8)
+}
+
+/// Mirrors the upstream `new RevaiTranscriptionModel('machine', { provider: 'test-provider',
+/// url, headers: () => ({}), _internal: { currentDate } })` construction.
+private func revAIUpstreamCustomModel(transport: any AITransport, currentDate: @escaping @Sendable () -> Date) -> RevAITranscriptionModel {
+    let http = AIProviderHTTPClient(providerID: "test-provider", transport: transport, url: { _, path in
+        try requireURL("https://api.rev.ai\(path)")
+    })
+    return RevAITranscriptionModel(
+        modelID: "machine",
+        config: RevAIModelConfiguration(http: http, baseURL: "https://api.rev.ai"),
+        currentDate: currentDate
+    )
+}
+
+@Test func revAIUpstreamEncodesJobIDAsSinglePathSegmentInPollAndTranscriptURLs() async throws {
+    let jobID = "abc/../../internal"
+    let transport = RecordingTransport(responses: [
+        jsonResponse(#"{"id":"abc/../../internal","created_on":"2026-02-12T23:26:22.276Z","name":"audio.mp3","status":"in_progress","type":"async","language":"en"}"#),
+        jsonResponse(#"{"id":"abc/../../internal","created_on":"2026-02-12T23:26:22.276Z","completed_on":"2026-02-12T23:26:26.971Z","name":"audio.mp3","status":"transcribed","duration_seconds":2.51,"type":"async","language":"en"}"#),
+        try revAIUpstreamFixtureResponse("revai-transcript")
+    ])
+    let model = try AIProviders.revAI(configuration: RevAIProviderSettings(apiKey: "test-api-key", transport: transport)).transcription("machine")
+
+    _ = try await model.transcribe(AudioTranscriptionRequest(audio: try revAIUpstreamAudioData(), mimeType: "audio/mp3"))
+
+    let encodedJobID = try #require(jobID.addingPercentEncoding(withAllowedCharacters: .alphanumerics.union(CharacterSet(charactersIn: "-_.!~*'()"))))
+    #expect(encodedJobID == "abc%2F..%2F..%2Finternal")
+    let requests = await transport.requests()
+    #expect(requests[1].url.absoluteString == "https://api.rev.ai/speechtotext/v1/jobs/\(encodedJobID)")
+    #expect(requests[2].url.absoluteString == "https://api.rev.ai/speechtotext/v1/jobs/\(encodedJobID)/transcript")
+}
+
+@Test func revAIUpstreamPassesTheModel() async throws {
+    let transport = RecordingTransport(responses: try revAIUpstreamFixtureResponses())
+    let model = try AIProviders.revAI(configuration: RevAIProviderSettings(apiKey: "test-api-key", transport: transport)).transcription("machine")
+
+    _ = try await model.transcribe(AudioTranscriptionRequest(audio: try revAIUpstreamAudioData(), mimeType: "audio/wav"))
+
+    let body = try #require((await transport.requests())[0].body)
+    let mediaHeader = Data("Content-Disposition: form-data; name=\"media\"; filename=\"audio.wav\"\r\nContent-Type: audio/wav\r\n\r\n".utf8)
+    #expect(body.range(of: mediaHeader + (try revAIUpstreamAudioData())) != nil)
+    #expect(revAIMultipartPart(body, name: "config") == #"{"transcriber":"machine"}"#)
+}
+
+@Test func revAIUpstreamPassesHeaders() async throws {
+    let transport = RecordingTransport(responses: try revAIUpstreamFixtureResponses())
+    let provider = try AIProviders.revAI(configuration: RevAIProviderSettings(
+        apiKey: "test-api-key",
+        headers: ["Custom-Provider-Header": "provider-header-value"],
+        transport: transport
+    ))
+
+    _ = try await provider.transcription("machine").transcribe(AudioTranscriptionRequest(
+        audio: try revAIUpstreamAudioData(),
+        mimeType: "audio/wav",
+        headers: ["Custom-Request-Header": "request-header-value"]
+    ))
+
+    let headers = normalizeHeaders((await transport.requests())[0].headers)
+    #expect(headers["authorization"] == "Bearer test-api-key")
+    #expect(headers["content-type"]?.hasPrefix("multipart/form-data; boundary=") == true)
+    #expect(headers["custom-provider-header"] == "provider-header-value")
+    #expect(headers["custom-request-header"] == "request-header-value")
+    #expect(headers["user-agent"]?.contains("ai-sdk-revai/3.0.81") == true)
+}
+
+@Test func revAIUpstreamExtractsTheTranscriptionText() async throws {
+    let transport = RecordingTransport(responses: try revAIUpstreamFixtureResponses())
+    let model = try AIProviders.revAI(configuration: RevAIProviderSettings(apiKey: "test-api-key", transport: transport)).transcription("machine")
+
+    let result = try await model.transcribe(AudioTranscriptionRequest(audio: try revAIUpstreamAudioData(), mimeType: "audio/wav"))
+
+    #expect(result.text == "Hello from the Sal, A-I-S-D-K.")
+}
+
+@Test func revAIUpstreamIncludesResponseDataWithTimestampModelIDAndHeaders() async throws {
+    let transcript = try revAIUpstreamFixture("revai-transcript")
+    // The upstream test server adds `content-length` itself (596 for its compact re-encoding
+    // of the fixture); here the fixture bytes are served verbatim with their own length.
+    let transport = RecordingTransport(responses: try revAIUpstreamFixtureResponses(headers: [
+        "x-request-id": "test-request-id",
+        "x-ratelimit-remaining": "123",
+        "content-length": String(transcript.count)
+    ]))
+    let testDate = Date(timeIntervalSince1970: 0)
+    let model = revAIUpstreamCustomModel(transport: transport, currentDate: { testDate })
+
+    let result = try await model.transcribe(AudioTranscriptionRequest(audio: try revAIUpstreamAudioData(), mimeType: "audio/wav"))
+
+    // Upstream snapshot: { body, headers, modelId, timestamp }.
+    #expect(result.responseMetadata.body == (try JSONDecoder().decode(JSONValue.self, from: transcript)))
+    #expect(result.responseMetadata.headers == [
+        "content-length": String(transcript.count),
+        "content-type": "application/json",
+        "x-ratelimit-remaining": "123",
+        "x-request-id": "test-request-id"
+    ])
+    #expect(result.responseMetadata.modelID == "machine")
+    #expect(result.responseMetadata.timestamp == testDate)
+    #expect(result.responseMetadata.id == nil)
+}
+
+@Test func revAIUpstreamUsesCustomDateProviderForResponseMetadata() async throws {
+    let transport = RecordingTransport(responses: try revAIUpstreamFixtureResponses())
+    let testDate = Date(timeIntervalSince1970: 0)
+    let model = revAIUpstreamCustomModel(transport: transport, currentDate: { testDate })
+
+    let result = try await model.transcribe(AudioTranscriptionRequest(audio: try revAIUpstreamAudioData(), mimeType: "audio/wav"))
+
+    #expect(result.responseMetadata.timestamp?.timeIntervalSince1970 == testDate.timeIntervalSince1970)
+    #expect(result.responseMetadata.modelID == "machine")
+}
+
+// MARK: - Upstream packages/revai/src/revai-error.test.ts (3.0.81)
+
+@Test func revAIUpstreamParsesResourceExhaustedError() async throws {
+    let error = """
+
+    {"error":{"message":"{\\n  \\"error\\": {\\n    \\"code\\": 429,\\n    \\"message\\": \\"Resource has been exhausted (e.g. check quota).\\",\\n    \\"status\\": \\"RESOURCE_EXHAUSTED\\"\\n  }\\n}\\n","code":429}}
+
+    """
+    let expectedMessage = "{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Resource has been exhausted (e.g. check quota).\",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+
+    #expect(revAIErrorMessage(from: Data(error.utf8)) == expectedMessage)
+
+    // The failed-response handler built from the schema surfaces that message.
+    let headers = ["content-type": "application/json"]
+    let provider = try AIProviders.revAI(configuration: RevAIProviderSettings(
+        apiKey: "test-api-key",
+        transport: RecordingTransport(response: AIHTTPResponse(statusCode: 429, headers: headers, body: Data(error.utf8)))
+    ))
+    await #expect(throws: AIError.apiCall(provider: "revai.transcription", statusCode: 429, body: expectedMessage, headers: headers)) {
+        _ = try await provider.transcription("machine").transcribe(AudioTranscriptionRequest(audio: try revAIUpstreamAudioData(), mimeType: "audio/wav"))
+    }
+}
+
+@Test func revAIErrorSchemaRequiresNumericCodeLikeUpstream() async throws {
+    let body = #"{"error":{"message":"no code"}}"#
+    #expect(revAIErrorMessage(from: Data(body.utf8)) == nil)
+    #expect(revAIErrorMessage(from: Data(#"{"error":{"message":"bad code","code":"429"}}"#.utf8)) == nil)
+
+    let headers = ["content-type": "application/json"]
+    let provider = try AIProviders.revAI(configuration: RevAIProviderSettings(
+        apiKey: "test-api-key",
+        transport: RecordingTransport(response: AIHTTPResponse(statusCode: 400, headers: headers, body: Data(body.utf8)))
+    ))
+    await #expect(throws: AIError.apiCall(provider: "revai.transcription", statusCode: 400, body: body, headers: headers)) {
+        _ = try await provider.transcription("machine").transcribe(AudioTranscriptionRequest(audio: try revAIUpstreamAudioData(), mimeType: "audio/wav"))
+    }
+}
+
+// MARK: - Swift call-level language and upstream duration semantics
+
+@Test func revAITranscriptionCallLanguageFillsOmittedProviderOptionLanguage() async throws {
+    let transport = RecordingTransport(responses: [
+        jsonResponse(#"{"id":"job-1","status":"transcribed","language":"es"}"#),
+        jsonResponse(#"{"monologues":[]}"#),
+        jsonResponse(#"{"id":"job-2","status":"transcribed","language":"ja"}"#),
+        jsonResponse(#"{"monologues":[]}"#),
+        jsonResponse(#"{"id":"job-3","status":"transcribed","language":"es"}"#),
+        jsonResponse(#"{"monologues":[]}"#)
+    ])
+    let model = try AIProviders.revAI(configuration: RevAIProviderSettings(apiKey: "rev-key", transport: transport)).transcription("machine")
+
+    // Provider options without `language`: the call's language is kept instead of the "en" default.
+    _ = try await model.transcribe(AudioTranscriptionRequest(
+        audio: Data("audio".utf8),
+        language: "es",
+        providerOptions: ["revai": ["skip_diarization": true]]
+    ))
+    // An explicit provider-option language still wins.
+    _ = try await model.transcribe(AudioTranscriptionRequest(
+        audio: Data("audio".utf8),
+        language: "es",
+        providerOptions: ["revai": ["language": "ja"]]
+    ))
+    // An explicit null provider-option language leaves the call's language in place.
+    _ = try await model.transcribe(AudioTranscriptionRequest(
+        audio: Data("audio".utf8),
+        language: "es",
+        providerOptions: ["revai": ["language": .null]]
+    ))
+
+    let requests = await transport.requests()
+    let first = try #require(revAIMultipartPart(requests[0].body, name: "config"))
+    #expect(first.contains(#""language":"es""#))
+    #expect(first.contains(#""skip_diarization":true"#))
+    #expect(first.contains(#""rush":false"#))
+    #expect(!first.contains(#""language":"en""#))
+    let second = try #require(revAIMultipartPart(requests[2].body, name: "config"))
+    #expect(second.contains(#""language":"ja""#))
+    #expect(!second.contains(#""language":"es""#))
+    let third = try #require(revAIMultipartPart(requests[4].body, name: "config"))
+    #expect(third.contains(#""language":"es""#))
+}
+
+@Test func revAITranscriptionDurationUsesLatestTextEndTimestampLikeUpstream() async throws {
+    let transport = RecordingTransport(responses: [
+        jsonResponse(#"{"id":"job-1","status":"transcribed","language":"en"}"#),
+        // No end timestamp: the open segment ends at ts + 1, but upstream duration stays 0.
+        jsonResponse(#"{"monologues":[{"elements":[{"type":"text","value":"open","ts":2}]}]}"#),
+        jsonResponse(#"{"id":"job-2","status":"transcribed","language":"en"}"#),
+        // The running duration spans monologues and closes a later open segment.
+        jsonResponse(#"{"monologues":[{"elements":[{"type":"text","value":"first","ts":0,"end_ts":3},{"type":"text","value":"loose","end_ts":4}]},{"elements":[{"type":"text","value":"second","ts":1}]}]}"#)
+    ])
+    let model = try AIProviders.revAI(configuration: RevAIProviderSettings(apiKey: "rev-key", transport: transport)).transcription("machine")
+
+    let open = try await model.transcribe(AudioTranscriptionRequest(audio: Data("audio".utf8)))
+    #expect(open.segments.map(\.endSecond) == [3])
+    #expect(open.durationInSeconds == 0)
+
+    let spanning = try await model.transcribe(AudioTranscriptionRequest(audio: Data("audio".utf8)))
+    #expect(spanning.segments.map(\.text) == ["first", "second"])
+    #expect(spanning.segments.map(\.endSecond) == [3, 4])
+    #expect(spanning.durationInSeconds == 4)
+    #expect(spanning.text == "firstloose second")
+}
