@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "parity-repairs-20261115",
+  "status": "published",
+  "sourceCommit": "1cd591bdd6b7150a3e51dd5a9f613163d7788b9c",
+  "changeIDs": [
+    "parity-repairs-20261115"
+  ],
+  "packages": [
+    {
+      "package": "swift-ai-prodia",
+      "version": "1.2.0",
+      "exportSHA256": "ab2e2fe65199b9ebcbc78e8f0deba568b2fafd0bcdbd755035820b67abbda040",
+      "sourceCommit": "1cd591bdd6b7150a3e51dd5a9f613163d7788b9c",
+      "exportCommit": "d7032a7e49a5266de7c4378a997aea37c601b852",
+      "tagObject": "7015984c69dbfcb51c6381d260e91763125737f7",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.2.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-revai",
+      "version": "1.2.0",
+      "exportSHA256": "f1b7f2a435947ec523df9c713dbe5a8867dd3bd2e45376190b18c700c57f2c54",
+      "sourceCommit": "1cd591bdd6b7150a3e51dd5a9f613163d7788b9c",
+      "exportCommit": "97ed5d38179d60f3c5c3074dfb1f800196cb6118",
+      "tagObject": "e00d85739afa4958ec567857c44d26400154bb50",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.2.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-togetherai",
+      "version": "1.2.0",
+      "exportSHA256": "25d69bbe2e9a8db56c3ef17ff98c9f78e20a02e827f9c0a385591de295c3544c",
+      "sourceCommit": "1cd591bdd6b7150a3e51dd5a9f613163d7788b9c",
+      "exportCommit": "6e3bfb03164e456c8b048ff8919a8a589cde764d",
+      "tagObject": "85e297c6278476096b420148f54f863cbc216081",
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.2.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.2.0"
+        }
+      ]
+    }
+  ],
+  "consumerVerificationSHA256": "fc1778a063716f5439fa0d3eafa57168a9b9f682a573f7786da8969f91aa5048"
+}

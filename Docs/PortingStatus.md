@@ -19,10 +19,14 @@ them only when investigating an earlier pass.
   provider adapters, MCP and UI. All are published.
 - SwiftAISDK 3.4.0 is the current optional compatibility umbrella. Its tested
   dependency selection is `Releases/umbrella/3.4.0.json`.
-- The latest pass is recorded in
+- The latest weekly pass is recorded in
   [WeeklyUpstreamAudit20261115.md](Archive/WeeklyUpstreamAudit20261115.md), with
   release evidence in
   [ReleaseVerification20261115.json](Archive/ReleaseVerification20261115.json).
+- The later `parity-repairs-20261115` set (`Releases/sets/parity-repairs-20261115.json`)
+  publishes Prodia, Rev.ai and Together AI 1.2.0 with their reviewed upstream
+  tests translated; its public consumer evidence is
+  [PublicConsumerVerificationParityRepairs20261115.json](Archive/PublicConsumerVerificationParityRepairs20261115.json).
 - Paid/live provider checks remain disabled by default.
 
 ## Current Shape

@@ -35,7 +35,7 @@ investigating what an earlier pass decided, verified or published.
 | Status history | `PortingStatusHistory.md` |
 | Core parity deltas and package diff notes | `CoreParityHistory.md` |
 | Weekly upstream audits | `WeeklyUpstreamAudit<date>.md` and `.json` |
-| Release and consumer verification | `ReleaseVerification<date>.json`, `PublicConsumerVerification<date>.json`, `UmbrellaConsumerVerification<date>.json`, `WeeklyUpstreamVerification<date>.json`, `M3RunnerVerification<date>.json` |
+| Release and consumer verification | `ReleaseVerification<date>.json`, `PublicConsumerVerification<date>.json` (`PublicConsumerVerification<ReleaseName><date>.json` for an extra release on the same day), `UmbrellaConsumerVerification<date>.json`, `WeeklyUpstreamVerification<date>.json`, `M3RunnerVerification<date>.json` |
 | Upstream archive integrity (2026-10-25) | `UpstreamPackageIntegrity.json` |
 | Package disposition snapshot (2026-10-25) | `UpstreamPackageDiffAudit.md` |
 | Upstream test diff snapshot (2026-11-01) | `FreshUpstreamTestDiffAudit.md` |

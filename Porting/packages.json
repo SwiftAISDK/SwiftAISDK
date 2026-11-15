@@ -2889,7 +2889,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/prodia.md"
       ],
-      "umbrellaFrom": "1.1.2"
+      "umbrellaFrom": "1.2.0"
     },
     {
       "id": "swift-ai-quiverai",
@@ -3071,7 +3071,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/revai.md"
       ],
-      "umbrellaFrom": "1.1.2"
+      "umbrellaFrom": "1.2.0"
     },
     {
       "id": "swift-ai-scaledown",
@@ -3280,7 +3280,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/togetherai.md"
       ],
-      "umbrellaFrom": "1.1.2"
+      "umbrellaFrom": "1.2.0"
     },
     {
       "id": "swift-ai-topaz",
