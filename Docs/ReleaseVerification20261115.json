@@ -1,0 +1,4351 @@
+{
+  "schemaVersion": 1,
+  "status": "modular-releases-verified-umbrella-pending",
+  "runtimeSourceCommit": "8d33f9e59076f954ee5aef7c6efc265b8d3cbe7c",
+  "ciAttemptHistory": {
+    "initial": {
+      "sourceCommit": "8d33f9e59076f954ee5aef7c6efc265b8d3cbe7c",
+      "id": 43672379885,
+      "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43672379885",
+      "conclusion": "cancelled",
+      "cause": "20-minute job deadline during examples; package/facade tests and iOS compilation passed."
+    },
+    "repair": {
+      "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+      "change": "Increase only the canonical test job deadline from 20 to 30 minutes after measured cancellation during examples.",
+      "sdkRuntimeTestsAndManifestsUnchanged": true
+    },
+    "accepted": {
+      "id": 43674303677,
+      "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43674303677",
+      "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed"
+    }
+  },
+  "checkedAt": "2026-11-15T04:58:15.262Z",
+  "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+  "canonicalCI": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "checkedAt": "2026-11-15T04:12:32.591Z",
+    "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+    "canonicalCI": {
+      "id": 43674303677,
+      "url": "https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43674303677",
+      "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed"
+    },
+    "jobs": [
+      {
+        "name": "changes",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Select checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "docs",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run npm ci --prefix docs-site",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Generate documentation",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check and build documentation",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload documentation",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "test",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check Swift version",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Test affected packages and compatibility facade once",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Compile for iOS",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Build examples",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "tooling",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check catalog and tooling",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "deploy",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Deploy to GitHub Pages",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "requiredSwiftJobExecuted": true,
+    "allowSkipped": false
+  },
+  "swiftReleases": {
+    "selected": [
+      {
+        "package": "swift-ai-core",
+        "oldVersion": "1.4.0",
+        "version": "1.5.0",
+        "bump": "minor",
+        "sourceFiles": [
+          "Packages/swift-ai-core/Sources/SwiftAI/AIFacadeBatch.swift",
+          "Packages/swift-ai-core/Sources/SwiftAI/AIFacadeDecision.swift",
+          "Packages/swift-ai-core/Sources/SwiftAI/AIFacadeEvaluation.swift",
+          "Packages/swift-ai-core/Sources/SwiftAI/AIFacadeExtraction.swift",
+          "Packages/swift-ai-core/Sources/SwiftAI/AIFacadeStreamText.swift",
+          "Packages/swift-ai-core/Sources/SwiftAI/AIFacadeStreamingSpeech.swift",
+          "Packages/swift-ai-core/Sources/SwiftAI/AITelemetryRuntime.swift",
+          "Packages/swift-ai-core/Sources/SwiftAI/AIToolExecution.swift",
+          "Packages/swift-ai-core/Sources/SwiftAI/VideoGenerationOperations.swift",
+          "Packages/swift-ai-core/Sources/SwiftAIProvider/CoreVideoRerankingResults.swift"
+        ],
+        "semverRationale": "Additive minor release: three explicit-secret streaming overloads, VideoURLDescriptor and videoURLDescriptors. Existing selectors/initializers remain. A signed replay whose refinement changes the approved operation is rejected. No new enum cases or forced migration.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [],
+        "exportSHA256": "859c51790dc4c809bff356b97486c45dc71d852e28c3f2cfd451b8b293b6f2dc",
+        "exportCommit": "e4212a956a947071ed8c45161c70b3a0216147a1",
+        "annotatedTag": "bf3b6e3f1c8c7eb00a2090565ed4fd0ae38c775d",
+        "peeledTag": "e4212a956a947071ed8c45161c70b3a0216147a1",
+        "remoteBranch": "e4212a956a947071ed8c45161c70b3a0216147a1",
+        "release": {
+          "id": 445808079,
+          "url": "https://github.com/SwiftAISDK/swift-ai-core/releases/tag/1.5.0",
+          "target": "e4212a956a947071ed8c45161c70b3a0216147a1"
+        },
+        "releaseNotesSHA256": "8b1ba3f458930bd5736d1738e8143c7c19a85ed9593679e804f6f3b9a4777c41",
+        "standaloneCI": {
+          "id": 43676747859,
+          "url": "https://github.com/SwiftAISDK/swift-ai-core/actions/runs/43676747859",
+          "headSHA": "e4212a956a947071ed8c45161c70b3a0216147a1",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-alibaba",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-alibaba/Sources/SwiftAIAlibaba/AlibabaProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "14e2238654c9ca29e899fbf319502a93f2bb055deb4f90264293b101bd25310f",
+        "exportCommit": "aa37dafb06b8f5547edbc4d4d91794a7bad41f7f",
+        "annotatedTag": "f319d2f0a1e4825cd0d9fdcc2dfa0943f1e500e0",
+        "peeledTag": "aa37dafb06b8f5547edbc4d4d91794a7bad41f7f",
+        "remoteBranch": "aa37dafb06b8f5547edbc4d4d91794a7bad41f7f",
+        "release": {
+          "id": 445808277,
+          "url": "https://github.com/SwiftAISDK/swift-ai-alibaba/releases/tag/1.1.3",
+          "target": "aa37dafb06b8f5547edbc4d4d91794a7bad41f7f"
+        },
+        "releaseNotesSHA256": "18d91267d865ee191338d584d30c189f83b54dd15c311c79448ce57511f073fd",
+        "standaloneCI": {
+          "id": 43676781470,
+          "url": "https://github.com/SwiftAISDK/swift-ai-alibaba/actions/runs/43676781470",
+          "headSHA": "aa37dafb06b8f5547edbc4d4d91794a7bad41f7f",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-anthropic",
+        "oldVersion": "1.4.0",
+        "version": "1.4.1",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-anthropic/Sources/SwiftAIAnthropic/AnthropicProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.4.0"
+          }
+        ],
+        "exportSHA256": "da8bf6074d100ffc73dbf6e484ae05e536a7a63787c9b0a4976d769d576128a4",
+        "exportCommit": "d399ba498f4a0abb03d3dbf5221aea8507889563",
+        "annotatedTag": "7d5623a6af73a1127e2a5dac9aab7a94b4ffefb4",
+        "peeledTag": "d399ba498f4a0abb03d3dbf5221aea8507889563",
+        "remoteBranch": "d399ba498f4a0abb03d3dbf5221aea8507889563",
+        "release": {
+          "id": 445808459,
+          "url": "https://github.com/SwiftAISDK/swift-ai-anthropic/releases/tag/1.4.1",
+          "target": "d399ba498f4a0abb03d3dbf5221aea8507889563"
+        },
+        "releaseNotesSHA256": "8e489893ff14a7ad239814817c06b25f12ac841e32bbc2d7358360b4504c48e3",
+        "standaloneCI": {
+          "id": 43676811881,
+          "url": "https://github.com/SwiftAISDK/swift-ai-anthropic/actions/runs/43676811881",
+          "headSHA": "d399ba498f4a0abb03d3dbf5221aea8507889563",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-openai",
+        "oldVersion": "1.3.0",
+        "version": "1.3.1",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.4.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.3.0"
+          }
+        ],
+        "exportSHA256": "6d13825a4f66a9460ea3e5c2fd7bafc34bdba49f13c076d286376ff9423d79ce",
+        "exportCommit": "f738f488e39508aa0b8087f7305bc1be5d713eba",
+        "annotatedTag": "5b487ddfe69ef99eb77ae5d0529b2056f5cab281",
+        "peeledTag": "f738f488e39508aa0b8087f7305bc1be5d713eba",
+        "remoteBranch": "f738f488e39508aa0b8087f7305bc1be5d713eba",
+        "release": {
+          "id": 445808726,
+          "url": "https://github.com/SwiftAISDK/swift-ai-openai/releases/tag/1.3.1",
+          "target": "f738f488e39508aa0b8087f7305bc1be5d713eba"
+        },
+        "releaseNotesSHA256": "634f395da7d4ffedf4559aa58451f2d57ffd06d6aa9c7f3284ed9edc314d05ac",
+        "standaloneCI": {
+          "id": 43676859479,
+          "url": "https://github.com/SwiftAISDK/swift-ai-openai/actions/runs/43676859479",
+          "headSHA": "f738f488e39508aa0b8087f7305bc1be5d713eba",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-amazon-bedrock",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AmazonBedrockAnthropicLanguageModel.swift",
+          "Packages/swift-ai-amazon-bedrock/Sources/SwiftAIAmazonBedrock/AmazonBedrockProvider.swift"
+        ],
+        "semverRationale": "Compatible wire-behavior correction. Existing provider and helper selectors remain; no dependency minimum change.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.3.0"
+          },
+          {
+            "package": "swift-ai-anthropic",
+            "from": "1.4.0"
+          },
+          {
+            "package": "swift-ai-openai",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "8b02bfe8676715fed8f0347bd7a60945bd222d1501b167fbf4e6a22c8a472398",
+        "exportCommit": "38815ed07b711ac6d51f0307310a49bdba9cb21c",
+        "annotatedTag": "a5944acb76098b1f30b7a03c656a0388fcdd816e",
+        "peeledTag": "38815ed07b711ac6d51f0307310a49bdba9cb21c",
+        "remoteBranch": "38815ed07b711ac6d51f0307310a49bdba9cb21c",
+        "release": {
+          "id": 445808958,
+          "url": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock/releases/tag/1.1.3",
+          "target": "38815ed07b711ac6d51f0307310a49bdba9cb21c"
+        },
+        "releaseNotesSHA256": "a92af01d08c0744b38a46c292f57959db4fd3cdf5ca99cafc96cfe9ce676dbdd",
+        "standaloneCI": {
+          "id": 43676902620,
+          "url": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock/actions/runs/43676902620",
+          "headSHA": "38815ed07b711ac6d51f0307310a49bdba9cb21c",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-anthropic-aws",
+        "oldVersion": "1.2.1",
+        "version": "1.2.2",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-anthropic-aws/Sources/SwiftAIAnthropicAWS/AnthropicAWSProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-anthropic",
+            "from": "1.4.0"
+          }
+        ],
+        "exportSHA256": "fc34a39e05e6f9e0cdaf99a5463aced7b0d44379c9f8dfed0f77c4a0b8f4520e",
+        "exportCommit": "f1af6aa61fb9bacd657f95944437c51aa6c73b96",
+        "annotatedTag": "6bd8ea0bce62d27e65569f6576d9bb58e9a25380",
+        "peeledTag": "f1af6aa61fb9bacd657f95944437c51aa6c73b96",
+        "remoteBranch": "f1af6aa61fb9bacd657f95944437c51aa6c73b96",
+        "release": {
+          "id": 445809215,
+          "url": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws/releases/tag/1.2.2",
+          "target": "f1af6aa61fb9bacd657f95944437c51aa6c73b96"
+        },
+        "releaseNotesSHA256": "b36e3c213f687c0c14f16f0bff1d3752d7a2ea8d6285d66d8a6856cf5a4191ef",
+        "standaloneCI": {
+          "id": 43676943594,
+          "url": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws/actions/runs/43676943594",
+          "headSHA": "f1af6aa61fb9bacd657f95944437c51aa6c73b96",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-deepseek",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-deepseek/Sources/SwiftAIDeepSeek/DeepSeekProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.3.0"
+          }
+        ],
+        "exportSHA256": "fb40c060ec72bd2b14573dfa8fd1a32576807b1a0beb02c1b41a0f55f78e59d0",
+        "exportCommit": "e80a42569b329132b8baa9f46af4bd1d7089eb72",
+        "annotatedTag": "310105c15deea85e8329c6331891298af1268ee8",
+        "peeledTag": "e80a42569b329132b8baa9f46af4bd1d7089eb72",
+        "remoteBranch": "e80a42569b329132b8baa9f46af4bd1d7089eb72",
+        "release": {
+          "id": 445809371,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepseek/releases/tag/1.2.1",
+          "target": "e80a42569b329132b8baa9f46af4bd1d7089eb72"
+        },
+        "releaseNotesSHA256": "86c245f8595315c80fac9d7a0c41be0306015911c7156ddb70a7801aa44a0dd7",
+        "standaloneCI": {
+          "id": 43676971541,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepseek/actions/runs/43676971541",
+          "headSHA": "e80a42569b329132b8baa9f46af4bd1d7089eb72",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-azure",
+        "oldVersion": "1.2.1",
+        "version": "1.2.2",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-azure/Sources/SwiftAIAzure/AzureAudioModels.swift",
+          "Packages/swift-ai-azure/Sources/SwiftAIAzure/AzureOpenAIProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.3.0"
+          },
+          {
+            "package": "swift-ai-openai",
+            "from": "1.3.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-deepseek",
+            "from": "1.1.1"
+          }
+        ],
+        "exportSHA256": "bbdfd1a26b91c3d81e1c2eaf849ba6f689a9f8b82de8887e73c8c1cbb82767dc",
+        "exportCommit": "5e92127ec1cb89796ba8cca49025bb8bcc7c2de8",
+        "annotatedTag": "ff7e0e3092f46d02d0f5008c5ee9047a786ad9b7",
+        "peeledTag": "5e92127ec1cb89796ba8cca49025bb8bcc7c2de8",
+        "remoteBranch": "5e92127ec1cb89796ba8cca49025bb8bcc7c2de8",
+        "release": {
+          "id": 445809603,
+          "url": "https://github.com/SwiftAISDK/swift-ai-azure/releases/tag/1.2.2",
+          "target": "5e92127ec1cb89796ba8cca49025bb8bcc7c2de8"
+        },
+        "releaseNotesSHA256": "eb5b167d1bfe119b7bdedbe388c7590501f76bd98202793810a24017cfd095c6",
+        "standaloneCI": {
+          "id": 43677010798,
+          "url": "https://github.com/SwiftAISDK/swift-ai-azure/actions/runs/43677010798",
+          "headSHA": "5e92127ec1cb89796ba8cca49025bb8bcc7c2de8",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-baseten",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-baseten/Sources/SwiftAIBaseten/BasetenProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "07a4c1c6b5d1227885848be508ca001f6721c579e12b6e66f4cedfe0d919721e",
+        "exportCommit": "4f2574e6da2b9e4f3348ff936aeed03ad5113e2b",
+        "annotatedTag": "f1a8a29d664c04bc86911b388eeea54af5c829a8",
+        "peeledTag": "4f2574e6da2b9e4f3348ff936aeed03ad5113e2b",
+        "remoteBranch": "4f2574e6da2b9e4f3348ff936aeed03ad5113e2b",
+        "release": {
+          "id": 445809807,
+          "url": "https://github.com/SwiftAISDK/swift-ai-baseten/releases/tag/1.1.3",
+          "target": "4f2574e6da2b9e4f3348ff936aeed03ad5113e2b"
+        },
+        "releaseNotesSHA256": "091f4b76611d69cb89c7a89fd03996f132f12896b18108fbdf0d21098f8f07f7",
+        "standaloneCI": {
+          "id": 43677042871,
+          "url": "https://github.com/SwiftAISDK/swift-ai-baseten/actions/runs/43677042871",
+          "headSHA": "4f2574e6da2b9e4f3348ff936aeed03ad5113e2b",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-black-forest-labs",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-black-forest-labs/Sources/SwiftAIBlackForestLabs/BlackForestLabsProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "363321459d8a82ae5241919cf8346a0ea5e60cca554fe8dbf369897b3a25542b",
+        "exportCommit": "8c12e148fe7d77720a2bca4216ae495f017bd713",
+        "annotatedTag": "f197b3097fadca071d8050fda876e724ebdab45f",
+        "peeledTag": "8c12e148fe7d77720a2bca4216ae495f017bd713",
+        "remoteBranch": "8c12e148fe7d77720a2bca4216ae495f017bd713",
+        "release": {
+          "id": 445810014,
+          "url": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs/releases/tag/1.1.3",
+          "target": "8c12e148fe7d77720a2bca4216ae495f017bd713"
+        },
+        "releaseNotesSHA256": "4b6fc6e0c8d9e9836d7bbf1388bfec04903c501c7b70f9b391118b2ed1ed34d1",
+        "standaloneCI": {
+          "id": 43677078454,
+          "url": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs/actions/runs/43677078454",
+          "headSHA": "8c12e148fe7d77720a2bca4216ae495f017bd713",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-cerebras",
+        "oldVersion": "1.2.1",
+        "version": "1.2.2",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-cerebras/Sources/SwiftAICerebras/CerebrasProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.3.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "2f3663f2d42b05bc7e410d0055457b38941307aa201aa64c560c578c7b01afd5",
+        "exportCommit": "5a8e98d385ee0b9210f60d5e64c4b0264a4e006d",
+        "annotatedTag": "57fed115bb3fada72d3b6fc78418662ae6769daa",
+        "peeledTag": "5a8e98d385ee0b9210f60d5e64c4b0264a4e006d",
+        "remoteBranch": "5a8e98d385ee0b9210f60d5e64c4b0264a4e006d",
+        "release": {
+          "id": 445810192,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cerebras/releases/tag/1.2.2",
+          "target": "5a8e98d385ee0b9210f60d5e64c4b0264a4e006d"
+        },
+        "releaseNotesSHA256": "435afe0e21ecfd7b9d1fecb40a99e3dc31bdc25dc48876522129b84ca96c9e9c",
+        "standaloneCI": {
+          "id": 43677116157,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cerebras/actions/runs/43677116157",
+          "headSHA": "5a8e98d385ee0b9210f60d5e64c4b0264a4e006d",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-cohere",
+        "oldVersion": "1.2.1",
+        "version": "1.2.2",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-cohere/Sources/SwiftAICohere/CohereProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "f899758681b92310e62bead83caee3a0a9d7ef05b561d009712db573f4f91a7b",
+        "exportCommit": "71b3ec2ad4f9ace43a4aa4184e85704cffec2d21",
+        "annotatedTag": "d715ccbb124cfb7d65683aed5e8061a6d8f6f24e",
+        "peeledTag": "71b3ec2ad4f9ace43a4aa4184e85704cffec2d21",
+        "remoteBranch": "71b3ec2ad4f9ace43a4aa4184e85704cffec2d21",
+        "release": {
+          "id": 445810329,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cohere/releases/tag/1.2.2",
+          "target": "71b3ec2ad4f9ace43a4aa4184e85704cffec2d21"
+        },
+        "releaseNotesSHA256": "be88b2a0844c390f34c2cce447a0525cceba7994d0e2c3b9de84df3a1acbe81c",
+        "standaloneCI": {
+          "id": 43677142386,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cohere/actions/runs/43677142386",
+          "headSHA": "71b3ec2ad4f9ace43a4aa4184e85704cffec2d21",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-deepinfra",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-deepinfra/Sources/SwiftAIDeepInfra/DeepInfraProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "52b91e1df9749922c7d2a973bb30c72a97e1d89ee656ee9358f535a34b84864d",
+        "exportCommit": "146f789cab1ee0c6a7a2499a63f2530bc64a8f65",
+        "annotatedTag": "b44c59007c1f7b98832a023bc40c80fbec78daad",
+        "peeledTag": "146f789cab1ee0c6a7a2499a63f2530bc64a8f65",
+        "remoteBranch": "146f789cab1ee0c6a7a2499a63f2530bc64a8f65",
+        "release": {
+          "id": 445810525,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepinfra/releases/tag/1.1.3",
+          "target": "146f789cab1ee0c6a7a2499a63f2530bc64a8f65"
+        },
+        "releaseNotesSHA256": "995f6361a401af09a06662f7985a167235eef29319d19e60046276545f6153ce",
+        "standaloneCI": {
+          "id": 43677175683,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepinfra/actions/runs/43677175683",
+          "headSHA": "146f789cab1ee0c6a7a2499a63f2530bc64a8f65",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-fal",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-fal/Sources/SwiftAIFal/FalProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "fedd9db6eeb07440c1aff278a26870cb4816335491488f5bf4741a6a880a8db2",
+        "exportCommit": "1682c696506d962354467e60cff615595745bb4e",
+        "annotatedTag": "baf2fddd8efe1cda13370153b64bd73705e20b52",
+        "peeledTag": "1682c696506d962354467e60cff615595745bb4e",
+        "remoteBranch": "1682c696506d962354467e60cff615595745bb4e",
+        "release": {
+          "id": 445810676,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fal/releases/tag/1.1.3",
+          "target": "1682c696506d962354467e60cff615595745bb4e"
+        },
+        "releaseNotesSHA256": "8ca5dceb3fd15fb78669f68f97dab4553fd5730d7e65ad1a75ae049a6e1b2b2e",
+        "standaloneCI": {
+          "id": 43677211596,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fal/actions/runs/43677211596",
+          "headSHA": "1682c696506d962354467e60cff615595745bb4e",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-fireworks",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-fireworks/Sources/SwiftAIFireworks/FireworksProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.3.0"
+          }
+        ],
+        "exportSHA256": "50ede9531cb8ac614c4e2a64b206fdc2d9adb4f1742a15d59ff4cbcd1e00a86e",
+        "exportCommit": "e1f18e53459567c4a78718a70e67293f1058aa92",
+        "annotatedTag": "a802321c2753971005e485e6ee4bd70024b6de43",
+        "peeledTag": "e1f18e53459567c4a78718a70e67293f1058aa92",
+        "remoteBranch": "e1f18e53459567c4a78718a70e67293f1058aa92",
+        "release": {
+          "id": 445810865,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fireworks/releases/tag/1.1.3",
+          "target": "e1f18e53459567c4a78718a70e67293f1058aa92"
+        },
+        "releaseNotesSHA256": "7326dfb0a9a71666631830c499df51fd1f527ae94d5ee862b7a3b0a437dba304",
+        "standaloneCI": {
+          "id": 43677245386,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fireworks/actions/runs/43677245386",
+          "headSHA": "e1f18e53459567c4a78718a70e67293f1058aa92",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-gateway",
+        "oldVersion": "1.3.0",
+        "version": "1.3.1",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-gateway/Sources/SwiftAIGateway/GatewayProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.3.0"
+          }
+        ],
+        "exportSHA256": "e3d297cc782566b004a534ddcd1bfacf62cb1b26c6689a05538f6a8c3402a81d",
+        "exportCommit": "56a1620535c54be94e444b0f91a29ecc003ec2ff",
+        "annotatedTag": "9d95036e828a97c01502baf457e996490a4f0271",
+        "peeledTag": "56a1620535c54be94e444b0f91a29ecc003ec2ff",
+        "remoteBranch": "56a1620535c54be94e444b0f91a29ecc003ec2ff",
+        "release": {
+          "id": 445811046,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gateway/releases/tag/1.3.1",
+          "target": "56a1620535c54be94e444b0f91a29ecc003ec2ff"
+        },
+        "releaseNotesSHA256": "1cc55ce0539edb2857aa22acd7dbc4e67bb2514afead6ff2c8554eebf7da9ee0",
+        "standaloneCI": {
+          "id": 43677281451,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gateway/actions/runs/43677281451",
+          "headSHA": "56a1620535c54be94e444b0f91a29ecc003ec2ff",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-gmicloud",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-gmicloud/Sources/SwiftAIGMICloud/GMICloudProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "1114d1373141ab2bf3503cb993e86322fe9e4205c7456794c07686f197231994",
+        "exportCommit": "8495004d1c3c743b7e411df26e10a34935fba0c4",
+        "annotatedTag": "ac9dca8452ae70d58e12090d394028f074bb64e6",
+        "peeledTag": "8495004d1c3c743b7e411df26e10a34935fba0c4",
+        "remoteBranch": "8495004d1c3c743b7e411df26e10a34935fba0c4",
+        "release": {
+          "id": 445811224,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gmicloud/releases/tag/1.1.3",
+          "target": "8495004d1c3c743b7e411df26e10a34935fba0c4"
+        },
+        "releaseNotesSHA256": "37cdb81908f5612c99b994876b055953009a530f3b15f6197333583cf66beec7",
+        "standaloneCI": {
+          "id": 43677314701,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gmicloud/actions/runs/43677314701",
+          "headSHA": "8495004d1c3c743b7e411df26e10a34935fba0c4",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-google",
+        "oldVersion": "1.3.0",
+        "version": "1.3.1",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleGenerationOptions.swift",
+          "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleGenerativeAIProvider.swift",
+          "Packages/swift-ai-google/Sources/SwiftAIGoogle/GoogleInteractionsRequest.swift"
+        ],
+        "semverRationale": "Compatible request/stream/header corrections. Existing public selectors remain. Use explicit request headers for any caller-selected API revision.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.4.0"
+          }
+        ],
+        "exportSHA256": "22f219aa3184bab8310146adbe8d5af29e0ede28e624ef179889ad3eff03eb9c",
+        "exportCommit": "3c1b3d9177bc28402bdc044c8a900b8d914da5e6",
+        "annotatedTag": "027a3133251d4c23906bafee6ada305ccaa5ae94",
+        "peeledTag": "3c1b3d9177bc28402bdc044c8a900b8d914da5e6",
+        "remoteBranch": "3c1b3d9177bc28402bdc044c8a900b8d914da5e6",
+        "release": {
+          "id": 445811370,
+          "url": "https://github.com/SwiftAISDK/swift-ai-google/releases/tag/1.3.1",
+          "target": "3c1b3d9177bc28402bdc044c8a900b8d914da5e6"
+        },
+        "releaseNotesSHA256": "5177af12769aad3778c16fa7f74d9c25073979490bba2a1ca361853c3fe13717",
+        "standaloneCI": {
+          "id": 43677340625,
+          "url": "https://github.com/SwiftAISDK/swift-ai-google/actions/runs/43677340625",
+          "headSHA": "3c1b3d9177bc28402bdc044c8a900b8d914da5e6",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-google-vertex",
+        "oldVersion": "1.2.1",
+        "version": "1.2.2",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-google-vertex/Sources/SwiftAIGoogleVertex/GoogleVertexProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.4.0"
+          },
+          {
+            "package": "swift-ai-google",
+            "from": "1.3.0"
+          },
+          {
+            "package": "swift-ai-anthropic",
+            "from": "1.4.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-openai",
+            "from": "1.0.0"
+          }
+        ],
+        "exportSHA256": "0222d87c0f0c2028b41ecb24cb49a010eead12ca238fef3da429ae76c97cd160",
+        "exportCommit": "c5c3c98f6389477ae8477463a8ed3fe58cec3f72",
+        "annotatedTag": "cd51f26cad488db26b3a976bb199c282cb203acb",
+        "peeledTag": "c5c3c98f6389477ae8477463a8ed3fe58cec3f72",
+        "remoteBranch": "c5c3c98f6389477ae8477463a8ed3fe58cec3f72",
+        "release": {
+          "id": 445811594,
+          "url": "https://github.com/SwiftAISDK/swift-ai-google-vertex/releases/tag/1.2.2",
+          "target": "c5c3c98f6389477ae8477463a8ed3fe58cec3f72"
+        },
+        "releaseNotesSHA256": "ca8e5c8e412489ed5b4d75ff9e56ebebb121361d97ee93eeaead6352ca5e631d",
+        "standaloneCI": {
+          "id": 43677384301,
+          "url": "https://github.com/SwiftAISDK/swift-ai-google-vertex/actions/runs/43677384301",
+          "headSHA": "c5c3c98f6389477ae8477463a8ed3fe58cec3f72",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-groq",
+        "oldVersion": "1.2.1",
+        "version": "1.2.2",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-groq/Sources/SwiftAIGroq/GroqProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.3.0"
+          }
+        ],
+        "exportSHA256": "7d23bf8dc5531dca3d5d0156134a554a45601c99253f908b08a8e257da12834c",
+        "exportCommit": "a02f34f24e7c2ee2f07880c34ac3b820267fa42c",
+        "annotatedTag": "1b3cccca2c49ce791b203f365aab93d98f5c5c90",
+        "peeledTag": "a02f34f24e7c2ee2f07880c34ac3b820267fa42c",
+        "remoteBranch": "a02f34f24e7c2ee2f07880c34ac3b820267fa42c",
+        "release": {
+          "id": 445811746,
+          "url": "https://github.com/SwiftAISDK/swift-ai-groq/releases/tag/1.2.2",
+          "target": "a02f34f24e7c2ee2f07880c34ac3b820267fa42c"
+        },
+        "releaseNotesSHA256": "317a4066c22a2aa993f0b8d07b498a53c47f5a277f129b46dd09e19a2aa43d8c",
+        "standaloneCI": {
+          "id": 43677416832,
+          "url": "https://github.com/SwiftAISDK/swift-ai-groq/actions/runs/43677416832",
+          "headSHA": "a02f34f24e7c2ee2f07880c34ac3b820267fa42c",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-heygen",
+        "oldVersion": "1.1.2",
+        "version": "1.2.0",
+        "bump": "minor",
+        "sourceFiles": [
+          "Packages/swift-ai-heygen/Sources/SwiftAIHeyGen/DecisionHeyGenModel.swift",
+          "Packages/swift-ai-heygen/Sources/SwiftAIHeyGen/HeyGenDecisionInput.swift",
+          "Packages/swift-ai-heygen/Sources/SwiftAIHeyGen/HeyGenDecisionOptions.swift",
+          "Packages/swift-ai-heygen/Sources/SwiftAIHeyGen/HeyGenDecisionResponse.swift",
+          "Packages/swift-ai-heygen/Sources/SwiftAIHeyGen/HeyGenProvider.swift",
+          "Packages/swift-ai-heygen/Sources/SwiftAIHeyGen/HeyGenVideoModel.swift"
+        ],
+        "semverRationale": "Additive Decision APIs/capability. Missing credentials are reported on a request rather than factory initialization, aligning published upstream timing; existing throwing initializer signatures retained. Native core minimum is 1.4.0. The compatibility settings factory retains its previous credential timing and request identity.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.4.0"
+          }
+        ],
+        "exportSHA256": "90bc83ce6d0f5f2e01c34901363658c6f13a916aadaf4db52bb7074d96c1e655",
+        "exportCommit": "22207bfbe1c7ff26c8715a3231b0ed401b55748b",
+        "annotatedTag": "9f511010a1cfed5c7601ec02e33920e0f643ac84",
+        "peeledTag": "22207bfbe1c7ff26c8715a3231b0ed401b55748b",
+        "remoteBranch": "22207bfbe1c7ff26c8715a3231b0ed401b55748b",
+        "release": {
+          "id": 445811913,
+          "url": "https://github.com/SwiftAISDK/swift-ai-heygen/releases/tag/1.2.0",
+          "target": "22207bfbe1c7ff26c8715a3231b0ed401b55748b"
+        },
+        "releaseNotesSHA256": "72975988c0eaacc166cfc917f9b67e43f9794ee2c0ac029f36c53f730f68bbc1",
+        "standaloneCI": {
+          "id": 43677447462,
+          "url": "https://github.com/SwiftAISDK/swift-ai-heygen/actions/runs/43677447462",
+          "headSHA": "22207bfbe1c7ff26c8715a3231b0ed401b55748b",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-klingai",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-klingai/Sources/SwiftAIKlingAI/KlingAIProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "dec23213e174d0f54c50b4935705d0d201ff8e2ad757be9a32d6acc454919204",
+        "exportCommit": "ec7da7e5f5763d7372c953f4ae5c2cc091de47aa",
+        "annotatedTag": "5e9c81b1538978b8cf6054b3e344887fa4bd3821",
+        "peeledTag": "ec7da7e5f5763d7372c953f4ae5c2cc091de47aa",
+        "remoteBranch": "ec7da7e5f5763d7372c953f4ae5c2cc091de47aa",
+        "release": {
+          "id": 445812090,
+          "url": "https://github.com/SwiftAISDK/swift-ai-klingai/releases/tag/1.1.3",
+          "target": "ec7da7e5f5763d7372c953f4ae5c2cc091de47aa"
+        },
+        "releaseNotesSHA256": "ec3681c28ecca0808a740bc38fcb4379db3ce656106e45f4468ad62ec73c92d7",
+        "standaloneCI": {
+          "id": 43677477875,
+          "url": "https://github.com/SwiftAISDK/swift-ai-klingai/actions/runs/43677477875",
+          "headSHA": "ec7da7e5f5763d7372c953f4ae5c2cc091de47aa",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-luma",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-luma/Sources/SwiftAILuma/LumaProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "22b579cedd01c5e7b0c68b28fc54b4c4a6ded2555c7c3d9debffcfa473bbe1d1",
+        "exportCommit": "2d05ad4f964c5546e8fdf803c724e2a30c348ee4",
+        "annotatedTag": "a96fa85de3f1151215014d3d1c125645dadbd052",
+        "peeledTag": "2d05ad4f964c5546e8fdf803c724e2a30c348ee4",
+        "remoteBranch": "2d05ad4f964c5546e8fdf803c724e2a30c348ee4",
+        "release": {
+          "id": 445812235,
+          "url": "https://github.com/SwiftAISDK/swift-ai-luma/releases/tag/1.1.3",
+          "target": "2d05ad4f964c5546e8fdf803c724e2a30c348ee4"
+        },
+        "releaseNotesSHA256": "3d91f0d79a62308f769462613ed0c0b2d5c046c194f1c51cec164a5b082846f6",
+        "standaloneCI": {
+          "id": 43677507150,
+          "url": "https://github.com/SwiftAISDK/swift-ai-luma/actions/runs/43677507150",
+          "headSHA": "2d05ad4f964c5546e8fdf803c724e2a30c348ee4",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-minimax",
+        "oldVersion": "1.3.0",
+        "version": "1.3.1",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-minimax/Sources/SwiftAIMiniMax/MiniMaxProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-anthropic",
+            "from": "1.3.0"
+          }
+        ],
+        "exportSHA256": "8a061933a0ecfe47348376af87b0c5d715899904457bc2a90ec8dbdbe5dc33b0",
+        "exportCommit": "018b05679967e5c9a6c3201b30b14ec991cf8369",
+        "annotatedTag": "646faff93085c4f4338551ae836612e0e2f8f577",
+        "peeledTag": "018b05679967e5c9a6c3201b30b14ec991cf8369",
+        "remoteBranch": "018b05679967e5c9a6c3201b30b14ec991cf8369",
+        "release": {
+          "id": 445812387,
+          "url": "https://github.com/SwiftAISDK/swift-ai-minimax/releases/tag/1.3.1",
+          "target": "018b05679967e5c9a6c3201b30b14ec991cf8369"
+        },
+        "releaseNotesSHA256": "7ad5f56d9e7fbc1491db0f5f29b6ffba4c770f9517a1a6294ec62009258282a7",
+        "standaloneCI": {
+          "id": 43677535050,
+          "url": "https://github.com/SwiftAISDK/swift-ai-minimax/actions/runs/43677535050",
+          "headSHA": "018b05679967e5c9a6c3201b30b14ec991cf8369",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-mistral",
+        "oldVersion": "1.2.1",
+        "version": "1.2.2",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-mistral/Sources/SwiftAIMistral/MistralProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.3.0"
+          }
+        ],
+        "exportSHA256": "ff5f1718e9aa8a6e672f5d536d54271d108703f64edc4f9fa6b3757ce8d94279",
+        "exportCommit": "246512dcf7234780b842ba22a9fd66cd19c5c3bd",
+        "annotatedTag": "eaa797e1fb0f73b3ae86c58ea84df390025f0860",
+        "peeledTag": "246512dcf7234780b842ba22a9fd66cd19c5c3bd",
+        "remoteBranch": "246512dcf7234780b842ba22a9fd66cd19c5c3bd",
+        "release": {
+          "id": 445812535,
+          "url": "https://github.com/SwiftAISDK/swift-ai-mistral/releases/tag/1.2.2",
+          "target": "246512dcf7234780b842ba22a9fd66cd19c5c3bd"
+        },
+        "releaseNotesSHA256": "d721edfb3990b4590e7c4f9707325975ce072638e2607d0d353a137e71dced54",
+        "standaloneCI": {
+          "id": 43677561999,
+          "url": "https://github.com/SwiftAISDK/swift-ai-mistral/actions/runs/43677561999",
+          "headSHA": "246512dcf7234780b842ba22a9fd66cd19c5c3bd",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-moonshotai",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-moonshotai/Sources/SwiftAIMoonshotAI/MoonshotAIProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.0.0"
+          }
+        ],
+        "exportSHA256": "3bc242c7e663af3021c582a95117691279b41f23c7df1be3f0b6df1bc01652ac",
+        "exportCommit": "161315d829c3688f2e7abb142c0c3c25b903ce6f",
+        "annotatedTag": "80143c952ae97d6403ca4bbf3c687a4f1c8a281f",
+        "peeledTag": "161315d829c3688f2e7abb142c0c3c25b903ce6f",
+        "remoteBranch": "161315d829c3688f2e7abb142c0c3c25b903ce6f",
+        "release": {
+          "id": 445812730,
+          "url": "https://github.com/SwiftAISDK/swift-ai-moonshotai/releases/tag/1.1.3",
+          "target": "161315d829c3688f2e7abb142c0c3c25b903ce6f"
+        },
+        "releaseNotesSHA256": "de44ab36767f1c715cd57b1b3f44717054ca07871a93d75ad08d320af29333df",
+        "standaloneCI": {
+          "id": 43677590488,
+          "url": "https://github.com/SwiftAISDK/swift-ai-moonshotai/actions/runs/43677590488",
+          "headSHA": "161315d829c3688f2e7abb142c0c3c25b903ce6f",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-parallel",
+        "oldVersion": null,
+        "version": "1.0.0",
+        "bump": "initial",
+        "sourceFiles": [
+          "Packages/swift-ai-parallel/Sources/SwiftAIParallel/DecisionParallelModel.swift",
+          "Packages/swift-ai-parallel/Sources/SwiftAIParallel/ParallelOptions.swift",
+          "Packages/swift-ai-parallel/Sources/SwiftAIParallel/ParallelProvider.swift",
+          "Packages/swift-ai-parallel/Sources/SwiftAIParallel/ParallelResponse.swift"
+        ],
+        "semverRationale": "Initial independent SwiftPM package 1.0.0. Requires swift-ai-core 1.4.0. Existing package selectors remain unchanged. JavaScript workflow/lifecycle-only exclusions and native representation differences are documented.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.4.0"
+          }
+        ],
+        "exportSHA256": "71b0d8ff9d872eb804b289779b49502594235e393478cf138ffb82af84aef149",
+        "exportCommit": "927c6634c04ee98ec989235f0c48cabf586cc455",
+        "annotatedTag": "9228d93567a21a36b01e46d0ae593eb3d3fcfdc6",
+        "peeledTag": "927c6634c04ee98ec989235f0c48cabf586cc455",
+        "remoteBranch": "927c6634c04ee98ec989235f0c48cabf586cc455",
+        "release": {
+          "id": 445812861,
+          "url": "https://github.com/SwiftAISDK/swift-ai-parallel/releases/tag/1.0.0",
+          "target": "927c6634c04ee98ec989235f0c48cabf586cc455"
+        },
+        "releaseNotesSHA256": "46a97162590cdd8248891f4450a8c55293f64e9c8b7377485b70fd74abeda202",
+        "standaloneCI": {
+          "id": 43677616216,
+          "url": "https://github.com/SwiftAISDK/swift-ai-parallel/actions/runs/43677616216",
+          "headSHA": "927c6634c04ee98ec989235f0c48cabf586cc455",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-perplexity",
+        "oldVersion": "1.2.0",
+        "version": "1.2.1",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-perplexity/Sources/SwiftAIPerplexity/PerplexityProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "f139995f843b37b126d6b75822589ffd1f1d71d2dba77a02d43ab10d1cbf9868",
+        "exportCommit": "fa11737de2d10db90c2bcc175f1a83fc55ae7272",
+        "annotatedTag": "e7bfb71fb65e94079aeb553da3bd75fe693d28cc",
+        "peeledTag": "fa11737de2d10db90c2bcc175f1a83fc55ae7272",
+        "remoteBranch": "fa11737de2d10db90c2bcc175f1a83fc55ae7272",
+        "release": {
+          "id": 445813054,
+          "url": "https://github.com/SwiftAISDK/swift-ai-perplexity/releases/tag/1.2.1",
+          "target": "fa11737de2d10db90c2bcc175f1a83fc55ae7272"
+        },
+        "releaseNotesSHA256": "4c0807668b07cc243b22c4da9e18813f255c815b2ba097cee9a42c85a9c553f5",
+        "standaloneCI": {
+          "id": 43677642506,
+          "url": "https://github.com/SwiftAISDK/swift-ai-perplexity/actions/runs/43677642506",
+          "headSHA": "fa11737de2d10db90c2bcc175f1a83fc55ae7272",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-prodia",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-prodia/Sources/SwiftAIProdia/ProdiaProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "fd5686b8b01a458b6b6e478ecabfcc91a31a3641c04c43e5642d5a35cb92664d",
+        "exportCommit": "8ea56385ca98cc099ed0163a511bd0d65752d36a",
+        "annotatedTag": "2b433e6b20cadf5dfc58524d74f564c80fe8c5fb",
+        "peeledTag": "8ea56385ca98cc099ed0163a511bd0d65752d36a",
+        "remoteBranch": "8ea56385ca98cc099ed0163a511bd0d65752d36a",
+        "release": {
+          "id": 445813222,
+          "url": "https://github.com/SwiftAISDK/swift-ai-prodia/releases/tag/1.1.3",
+          "target": "8ea56385ca98cc099ed0163a511bd0d65752d36a"
+        },
+        "releaseNotesSHA256": "a1af3fe2f15e6909ed4178ea73e27f990deb9fdd5512f78501c607a54f74e0ea",
+        "standaloneCI": {
+          "id": 43677668054,
+          "url": "https://github.com/SwiftAISDK/swift-ai-prodia/actions/runs/43677668054",
+          "headSHA": "8ea56385ca98cc099ed0163a511bd0d65752d36a",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-replicate",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-replicate/Sources/SwiftAIReplicate/ReplicateProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "293fc4f51cd5ce89cd2ab6b472bd205d47b765dae35567543aac1f2de0efc1b4",
+        "exportCommit": "05f7ce03b83ac9b108d67ce69aa5bb231b2cfe1b",
+        "annotatedTag": "5ab618b6339610a142045708a69e653608de04c3",
+        "peeledTag": "05f7ce03b83ac9b108d67ce69aa5bb231b2cfe1b",
+        "remoteBranch": "05f7ce03b83ac9b108d67ce69aa5bb231b2cfe1b",
+        "release": {
+          "id": 445813420,
+          "url": "https://github.com/SwiftAISDK/swift-ai-replicate/releases/tag/1.1.3",
+          "target": "05f7ce03b83ac9b108d67ce69aa5bb231b2cfe1b"
+        },
+        "releaseNotesSHA256": "fb00ba4e6959f15aa0843ceb70a766514f5ba35ad7e3a08adfcac2c5cc56c8be",
+        "standaloneCI": {
+          "id": 43677697008,
+          "url": "https://github.com/SwiftAISDK/swift-ai-replicate/actions/runs/43677697008",
+          "headSHA": "05f7ce03b83ac9b108d67ce69aa5bb231b2cfe1b",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-scaledown",
+        "oldVersion": null,
+        "version": "1.0.0",
+        "bump": "initial",
+        "sourceFiles": [
+          "Packages/swift-ai-scaledown/Sources/SwiftAIScaleDown/ScaleDownDecisionModel.swift",
+          "Packages/swift-ai-scaledown/Sources/SwiftAIScaleDown/ScaleDownExtractionModel.swift",
+          "Packages/swift-ai-scaledown/Sources/SwiftAIScaleDown/ScaleDownProvider.swift",
+          "Packages/swift-ai-scaledown/Sources/SwiftAIScaleDown/ScaleDownState.swift",
+          "Packages/swift-ai-scaledown/Sources/SwiftAIScaleDown/ScaleDownValidation.swift"
+        ],
+        "semverRationale": "Initial independent SwiftPM package 1.0.0. Requires swift-ai-core 1.4.0. Existing package selectors remain unchanged. JavaScript workflow/lifecycle-only exclusions and native representation differences are documented.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.4.0"
+          }
+        ],
+        "exportSHA256": "f8c158a2ef3cdfba047b3f57835a4c3a04555ddc0954e3041d1cfdbb85bc8dd6",
+        "exportCommit": "2d0772f2e57be40fd45e1412c98869d011a1ea2d",
+        "annotatedTag": "e610d67a4716219f77e10daaf283135672c309fa",
+        "peeledTag": "2d0772f2e57be40fd45e1412c98869d011a1ea2d",
+        "remoteBranch": "2d0772f2e57be40fd45e1412c98869d011a1ea2d",
+        "release": {
+          "id": 445813561,
+          "url": "https://github.com/SwiftAISDK/swift-ai-scaledown/releases/tag/1.0.0",
+          "target": "2d0772f2e57be40fd45e1412c98869d011a1ea2d"
+        },
+        "releaseNotesSHA256": "49eedc4e4c8c466d49fa6f7d26319308471f9b53f36aeaa58081daea5b88f046",
+        "standaloneCI": {
+          "id": 43677723482,
+          "url": "https://github.com/SwiftAISDK/swift-ai-scaledown/actions/runs/43677723482",
+          "headSHA": "2d0772f2e57be40fd45e1412c98869d011a1ea2d",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-tencent",
+        "oldVersion": null,
+        "version": "1.0.0",
+        "bump": "initial",
+        "sourceFiles": [
+          "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentCloudAPI.swift",
+          "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentProvider.swift",
+          "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentResponseValidation.swift",
+          "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentTokenHubVideo.swift",
+          "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentVideoModel.swift",
+          "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentVideoOptions.swift",
+          "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentVodVideo.swift"
+        ],
+        "semverRationale": "Initial independent SwiftPM package 1.0.0. Requires swift-ai-core 1.5.0, swift-ai-openai-compatible 1.2.1. Existing package selectors remain unchanged. JavaScript workflow/lifecycle-only exclusions and native representation differences are documented.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.5.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.2.1"
+          }
+        ],
+        "exportSHA256": "af14a6fd953deae88c2b8b9dd83f6da6f2531d178669dafcbdeee252a3b0abe3",
+        "exportCommit": "2eeec06c1ecaabbc2f42a774c11d503039810a91",
+        "annotatedTag": "16e63d33baad4f997970727e5d2610f296a1bfc5",
+        "peeledTag": "2eeec06c1ecaabbc2f42a774c11d503039810a91",
+        "remoteBranch": "2eeec06c1ecaabbc2f42a774c11d503039810a91",
+        "release": {
+          "id": 445813720,
+          "url": "https://github.com/SwiftAISDK/swift-ai-tencent/releases/tag/1.0.0",
+          "target": "2eeec06c1ecaabbc2f42a774c11d503039810a91"
+        },
+        "releaseNotesSHA256": "81da97fdca0738427a25156d8fec62734871e31214e9f57638eba4b68db1f848",
+        "standaloneCI": {
+          "id": 43677751103,
+          "url": "https://github.com/SwiftAISDK/swift-ai-tencent/actions/runs/43677751103",
+          "headSHA": "2eeec06c1ecaabbc2f42a774c11d503039810a91",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-togetherai",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-togetherai/Sources/SwiftAITogetherAI/TogetherAIProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "710f0bdd429301e63fe52c8eddb0e95f0d9079721a1787db453d22b813c645c3",
+        "exportCommit": "28f894a32d9e63eb2858ca5408dcfcb2d83ecf02",
+        "annotatedTag": "ed9b950d2b6419442b2789033057b878d3dfc088",
+        "peeledTag": "28f894a32d9e63eb2858ca5408dcfcb2d83ecf02",
+        "remoteBranch": "28f894a32d9e63eb2858ca5408dcfcb2d83ecf02",
+        "release": {
+          "id": 445813926,
+          "url": "https://github.com/SwiftAISDK/swift-ai-togetherai/releases/tag/1.1.3",
+          "target": "28f894a32d9e63eb2858ca5408dcfcb2d83ecf02"
+        },
+        "releaseNotesSHA256": "99621d2e9549bc0fabed98728c5eca865e4f8dc2d7c2e924e93647188a42d588",
+        "standaloneCI": {
+          "id": 43677781461,
+          "url": "https://github.com/SwiftAISDK/swift-ai-togetherai/actions/runs/43677781461",
+          "headSHA": "28f894a32d9e63eb2858ca5408dcfcb2d83ecf02",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-voyage",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-voyage/Sources/SwiftAIVoyage/VoyageProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "652e4e12de5fe35bb73f6fd43fe5ac1d7f715a548a8aff71293fcd906d284d50",
+        "exportCommit": "6053f7817d468f739e1a567be735a68e9416f5c5",
+        "annotatedTag": "6400a9248970848ef804c4b1b003bda477e1cc29",
+        "peeledTag": "6053f7817d468f739e1a567be735a68e9416f5c5",
+        "remoteBranch": "6053f7817d468f739e1a567be735a68e9416f5c5",
+        "release": {
+          "id": 445814116,
+          "url": "https://github.com/SwiftAISDK/swift-ai-voyage/releases/tag/1.1.3",
+          "target": "6053f7817d468f739e1a567be735a68e9416f5c5"
+        },
+        "releaseNotesSHA256": "92117933efa56af938b2a26d1bae3eddd0af276923de1fbeb323bcca8b6ca123",
+        "standaloneCI": {
+          "id": 43677813016,
+          "url": "https://github.com/SwiftAISDK/swift-ai-voyage/actions/runs/43677813016",
+          "headSHA": "6053f7817d468f739e1a567be735a68e9416f5c5",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-xai",
+        "oldVersion": "1.2.1",
+        "version": "1.2.2",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-xai/Sources/SwiftAIXAI/XAIProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.3.0"
+          },
+          {
+            "package": "swift-ai-openai",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "360d48f899aa7a82b1f4ddc3742c7561694a414e2efd31a4d0198abb3d6805fd",
+        "exportCommit": "316d181aaa30356f4f314a704b9f79c35281687d",
+        "annotatedTag": "664403250bab7a2ab64bc094d07c49bdda6de33b",
+        "peeledTag": "316d181aaa30356f4f314a704b9f79c35281687d",
+        "remoteBranch": "316d181aaa30356f4f314a704b9f79c35281687d",
+        "release": {
+          "id": 445814333,
+          "url": "https://github.com/SwiftAISDK/swift-ai-xai/releases/tag/1.2.2",
+          "target": "316d181aaa30356f4f314a704b9f79c35281687d"
+        },
+        "releaseNotesSHA256": "819041b7a24b38b073c6c48f894beb0140df65b83a2446fd26ef0dd26fa8bc21",
+        "standaloneCI": {
+          "id": 43677847690,
+          "url": "https://github.com/SwiftAISDK/swift-ai-xai/actions/runs/43677847690",
+          "headSHA": "316d181aaa30356f4f314a704b9f79c35281687d",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      },
+      {
+        "package": "swift-ai-zai",
+        "oldVersion": "1.1.2",
+        "version": "1.1.3",
+        "bump": "patch",
+        "sourceFiles": [
+          "Packages/swift-ai-zai/Sources/SwiftAIZAI/ZAIProvider.swift"
+        ],
+        "semverRationale": "Compatible versioned request identity correction; existing public selectors and dependency minimums remain. npm baselines and Swift SemVer are independent.",
+        "canonicalSourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+        "dependencies": [
+          {
+            "package": "swift-ai-core",
+            "from": "1.2.0"
+          },
+          {
+            "package": "swift-ai-openai-compatible",
+            "from": "1.2.0"
+          }
+        ],
+        "exportSHA256": "d681c40d0f10056af97312ff2873951193bba897e24ae301b12e031b147a6ab3",
+        "exportCommit": "ce0463ec0ef7bfea9187ab5a3fb5496eef5e2cb8",
+        "annotatedTag": "23e6a9fe879053a656ed2a853e2125f529412fa0",
+        "peeledTag": "ce0463ec0ef7bfea9187ab5a3fb5496eef5e2cb8",
+        "remoteBranch": "ce0463ec0ef7bfea9187ab5a3fb5496eef5e2cb8",
+        "release": {
+          "id": 445814526,
+          "url": "https://github.com/SwiftAISDK/swift-ai-zai/releases/tag/1.1.3",
+          "target": "ce0463ec0ef7bfea9187ab5a3fb5496eef5e2cb8"
+        },
+        "releaseNotesSHA256": "b25844c9162a2ce43b95ed6b3087165776d7a9c3465f4ab1d3855f419a8b3860",
+        "standaloneCI": {
+          "id": 43677878649,
+          "url": "https://github.com/SwiftAISDK/swift-ai-zai/actions/runs/43677878649",
+          "headSHA": "ce0463ec0ef7bfea9187ab5a3fb5496eef5e2cb8",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      }
+    ],
+    "retained": [
+      {
+        "package": "swift-ai-assemblyai",
+        "version": "1.1.2",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-bytedance",
+        "version": "1.0.0",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-cartesia",
+        "version": "1.2.1",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-deepgram",
+        "version": "1.2.1",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-elevenlabs",
+        "version": "1.2.1",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-fish-audio",
+        "version": "1.1.2",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-gladia",
+        "version": "1.2.1",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-huggingface",
+        "version": "1.1.0",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-hume",
+        "version": "1.1.2",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-lmnt",
+        "version": "1.0.0",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-mcp",
+        "version": "1.2.0",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-open-responses",
+        "version": "1.1.2",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-openai-compatible",
+        "version": "1.3.0",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-quiverai",
+        "version": "1.1.2",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-revai",
+        "version": "1.1.2",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-topaz",
+        "version": "1.1.2",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-typesafe-ai",
+        "version": "1.2.1",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-ui",
+        "version": "1.2.0",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      },
+      {
+        "package": "swift-ai-vercel",
+        "version": "1.0.0",
+        "reason": "Owning runtime sources unchanged; no release selected."
+      }
+    ],
+    "counts": {
+      "patch": 31,
+      "minor": 2,
+      "initial": 3
+    }
+  },
+  "localChecks": {
+    "owningPackages": 55,
+    "owningTests": 2451,
+    "compatibilityTests": 1736,
+    "toolingTests": 27,
+    "docsPages": 104,
+    "checks": [
+      {
+        "name": "all-packages-green",
+        "exitCode": 0,
+        "logSHA256": "a3e5bc0cba8f2307415c62e56a0a887dd9ec1d4091713649f5a78fad432f2a0a"
+      },
+      {
+        "name": "catalog-description-focused",
+        "exitCode": 0,
+        "logSHA256": "864072075089a2f6277b0cb0c4868f5c09c62b29f222bd207dff351cde52ddfb"
+      },
+      {
+        "name": "docs-npm-ci",
+        "exitCode": 0,
+        "logSHA256": "ef99a8aaac4c1774d9cfccad0905d5058faa3401a8bf505e11be1a4619ca1ab4"
+      },
+      {
+        "name": "docs-check",
+        "exitCode": 0,
+        "logSHA256": "2e0eae8b91db42e393a6245bd4866bec0f1614764220338008e352a0d4c86ea6"
+      },
+      {
+        "name": "docs-build-final",
+        "exitCode": 0,
+        "logSHA256": "8e089c713728d958b47a7988d1f5861ec5b59457c82d6484aa77f0af6b54791f"
+      },
+      {
+        "name": "tooling-current-inputs",
+        "exitCode": 0,
+        "logSHA256": "73195f4b0e7713f86fa3c50851e40b26dedcbfce9b4fbc6be5a20535b3d55fb6"
+      },
+      {
+        "name": "final-registry-versions",
+        "exitCode": 0,
+        "logSHA256": "e4b384f8ca64f3c2f7a68b9092ec3468c57b8fdcb1b6a4f21dbdbb5add32365c"
+      },
+      {
+        "name": "minimum-supplements",
+        "exitCode": 0,
+        "logSHA256": "452e75508ccd6a8fecd10770b6a61e038c4ccbe6ad1340851eda5ecbd1870ffd"
+      },
+      {
+        "name": "umbrella-minimum",
+        "exitCode": 0,
+        "logSHA256": "a95f32e57b8f307e2a6a9e86251fead62b39337baa42f4e76a26e6ae293003e6"
+      }
+    ],
+    "sourceFilesSHA256": "7d4963a6f91aa4b03c5ece5217ace6ad07c1532d201f3fc7047defc80182a409",
+    "rootManifestSHA256": "dfce06eb600183e0c6a66fe4cf069b07f3ac10879de2153bbdb7818741348ab4"
+  },
+  "deterministicExports": {
+    "status": "passed",
+    "checkedAt": "2026-11-15T04:17:32.688Z",
+    "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+    "packages": 36,
+    "files": 1143,
+    "identical": true,
+    "publication": true,
+    "bundleSHA256": "93840fcd8340d8302c9bbd97c00dae139d685ce0d7b1cb31d41e5b1f679ba1e8"
+  },
+  "committedSourceRehearsal": {
+    "status": "passed",
+    "checkedAt": "2026-11-15T03:56:07.027975+00:00",
+    "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+    "deterministicExports": {
+      "status": "passed",
+      "checkedAt": "2026-11-15T03:55:33.411Z",
+      "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+      "packages": 36,
+      "files": 1143,
+      "identical": true,
+      "publication": false,
+      "bundleSHA256": "7a2ee47d97922b4145b0da8d82f4e69f2d8624c8924ecfbc3dd3f977a2b65498"
+    },
+    "rehearsal": {
+      "status": "local-tags-ready",
+      "packages": 36,
+      "baseline": [
+        {
+          "package": "swift-ai-openai-compatible",
+          "version": "1.3.0",
+          "exportCommit": "59affa91d12b5d25c756e443450b975310b1e543",
+          "tagObject": "64cdf34371fe062197e9fa989cde56a4cb862d28"
+        }
+      ],
+      "journalSHA256": "a4bc5343e9d12d06015fa7d1af76e1ac8167daabdf5c25ddd77305715a057314"
+    },
+    "priorSourceRehearsalPreserved": true
+  },
+  "versionSpecificMinima": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "checkedAt": "2026-11-15T03:23:22.343Z",
+    "classification": "Local synthetic export verification; real public refs are checked separately after publication.",
+    "unitCount": 55,
+    "genericExportCount": 55,
+    "genericConsumerCount": 112,
+    "exactVersionSpecificSupplementCount": 8,
+    "affectedUnits": [
+      "swift-ai-amazon-bedrock",
+      "swift-ai-google-vertex",
+      "swift-ai-minimax",
+      "swift-ai-moonshotai",
+      "swift-ai-open-responses",
+      "swift-ai-quiverai",
+      "swift-ai-vercel",
+      "swift-ai-xai"
+    ],
+    "allTrueMinimumGraphsCovered": true,
+    "commandHashes": 1656,
+    "inputs": [
+      {
+        "file": "distributions-verified.json",
+        "sha256": "70235b5818a2d69aeefa05078750dc6f394d23133f1801559ca1e49b11123312"
+      },
+      {
+        "file": "true-minimum-analysis.json",
+        "sha256": "84cc6d251d9a9727cc0bb2c64881944fab794fac06cbefa7559493e0d169a371"
+      },
+      {
+        "file": "version-specific-minimums.json",
+        "sha256": "bdc635fd01f503129a3af1eae691ba01fc62c41cbbc49448d5e47aa6c34fe3d3"
+      }
+    ],
+    "umbrellaMinimum": {
+      "status": "passed",
+      "dependencyCount": 55,
+      "consumerCount": 1,
+      "reportSHA256": "9a3c823e05e1469111a207826d48a59ab3abf959d6bd621baea827616e52736d",
+      "manifestSHA256": "dfce06eb600183e0c6a66fe4cf069b07f3ac10879de2153bbdb7818741348ab4"
+    }
+  },
+  "publishedReferences": {
+    "checkedAt": "2026-11-15T04:42:39.631Z",
+    "status": "passed",
+    "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+    "packages": [
+      {
+        "package": "swift-ai-alibaba",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "aa37dafb06b8f5547edbc4d4d91794a7bad41f7f",
+        "annotatedTag": "f319d2f0a1e4825cd0d9fdcc2dfa0943f1e500e0",
+        "peeledTag": "aa37dafb06b8f5547edbc4d4d91794a7bad41f7f",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445808277,
+          "url": "https://github.com/SwiftAISDK/swift-ai-alibaba/releases/tag/1.1.3",
+          "target": "aa37dafb06b8f5547edbc4d4d91794a7bad41f7f"
+        },
+        "exportSHA256": "14e2238654c9ca29e899fbf319502a93f2bb055deb4f90264293b101bd25310f"
+      },
+      {
+        "package": "swift-ai-amazon-bedrock",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "38815ed07b711ac6d51f0307310a49bdba9cb21c",
+        "annotatedTag": "a5944acb76098b1f30b7a03c656a0388fcdd816e",
+        "peeledTag": "38815ed07b711ac6d51f0307310a49bdba9cb21c",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445808958,
+          "url": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock/releases/tag/1.1.3",
+          "target": "38815ed07b711ac6d51f0307310a49bdba9cb21c"
+        },
+        "exportSHA256": "8b02bfe8676715fed8f0347bd7a60945bd222d1501b167fbf4e6a22c8a472398"
+      },
+      {
+        "package": "swift-ai-anthropic",
+        "version": "1.4.1",
+        "status": "passed",
+        "branchSHA": "d399ba498f4a0abb03d3dbf5221aea8507889563",
+        "annotatedTag": "7d5623a6af73a1127e2a5dac9aab7a94b4ffefb4",
+        "peeledTag": "d399ba498f4a0abb03d3dbf5221aea8507889563",
+        "existingTagRefsPreserved": 10,
+        "release": {
+          "id": 445808459,
+          "url": "https://github.com/SwiftAISDK/swift-ai-anthropic/releases/tag/1.4.1",
+          "target": "d399ba498f4a0abb03d3dbf5221aea8507889563"
+        },
+        "exportSHA256": "da8bf6074d100ffc73dbf6e484ae05e536a7a63787c9b0a4976d769d576128a4"
+      },
+      {
+        "package": "swift-ai-anthropic-aws",
+        "version": "1.2.2",
+        "status": "passed",
+        "branchSHA": "f1af6aa61fb9bacd657f95944437c51aa6c73b96",
+        "annotatedTag": "6bd8ea0bce62d27e65569f6576d9bb58e9a25380",
+        "peeledTag": "f1af6aa61fb9bacd657f95944437c51aa6c73b96",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445809215,
+          "url": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws/releases/tag/1.2.2",
+          "target": "f1af6aa61fb9bacd657f95944437c51aa6c73b96"
+        },
+        "exportSHA256": "fc34a39e05e6f9e0cdaf99a5463aced7b0d44379c9f8dfed0f77c4a0b8f4520e"
+      },
+      {
+        "package": "swift-ai-azure",
+        "version": "1.2.2",
+        "status": "passed",
+        "branchSHA": "5e92127ec1cb89796ba8cca49025bb8bcc7c2de8",
+        "annotatedTag": "ff7e0e3092f46d02d0f5008c5ee9047a786ad9b7",
+        "peeledTag": "5e92127ec1cb89796ba8cca49025bb8bcc7c2de8",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445809603,
+          "url": "https://github.com/SwiftAISDK/swift-ai-azure/releases/tag/1.2.2",
+          "target": "5e92127ec1cb89796ba8cca49025bb8bcc7c2de8"
+        },
+        "exportSHA256": "bbdfd1a26b91c3d81e1c2eaf849ba6f689a9f8b82de8887e73c8c1cbb82767dc"
+      },
+      {
+        "package": "swift-ai-baseten",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "4f2574e6da2b9e4f3348ff936aeed03ad5113e2b",
+        "annotatedTag": "f1a8a29d664c04bc86911b388eeea54af5c829a8",
+        "peeledTag": "4f2574e6da2b9e4f3348ff936aeed03ad5113e2b",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445809807,
+          "url": "https://github.com/SwiftAISDK/swift-ai-baseten/releases/tag/1.1.3",
+          "target": "4f2574e6da2b9e4f3348ff936aeed03ad5113e2b"
+        },
+        "exportSHA256": "07a4c1c6b5d1227885848be508ca001f6721c579e12b6e66f4cedfe0d919721e"
+      },
+      {
+        "package": "swift-ai-black-forest-labs",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "8c12e148fe7d77720a2bca4216ae495f017bd713",
+        "annotatedTag": "f197b3097fadca071d8050fda876e724ebdab45f",
+        "peeledTag": "8c12e148fe7d77720a2bca4216ae495f017bd713",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445810014,
+          "url": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs/releases/tag/1.1.3",
+          "target": "8c12e148fe7d77720a2bca4216ae495f017bd713"
+        },
+        "exportSHA256": "363321459d8a82ae5241919cf8346a0ea5e60cca554fe8dbf369897b3a25542b"
+      },
+      {
+        "package": "swift-ai-cerebras",
+        "version": "1.2.2",
+        "status": "passed",
+        "branchSHA": "5a8e98d385ee0b9210f60d5e64c4b0264a4e006d",
+        "annotatedTag": "57fed115bb3fada72d3b6fc78418662ae6769daa",
+        "peeledTag": "5a8e98d385ee0b9210f60d5e64c4b0264a4e006d",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445810192,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cerebras/releases/tag/1.2.2",
+          "target": "5a8e98d385ee0b9210f60d5e64c4b0264a4e006d"
+        },
+        "exportSHA256": "2f3663f2d42b05bc7e410d0055457b38941307aa201aa64c560c578c7b01afd5"
+      },
+      {
+        "package": "swift-ai-cohere",
+        "version": "1.2.2",
+        "status": "passed",
+        "branchSHA": "71b3ec2ad4f9ace43a4aa4184e85704cffec2d21",
+        "annotatedTag": "d715ccbb124cfb7d65683aed5e8061a6d8f6f24e",
+        "peeledTag": "71b3ec2ad4f9ace43a4aa4184e85704cffec2d21",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445810329,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cohere/releases/tag/1.2.2",
+          "target": "71b3ec2ad4f9ace43a4aa4184e85704cffec2d21"
+        },
+        "exportSHA256": "f899758681b92310e62bead83caee3a0a9d7ef05b561d009712db573f4f91a7b"
+      },
+      {
+        "package": "swift-ai-core",
+        "version": "1.5.0",
+        "status": "passed",
+        "branchSHA": "e4212a956a947071ed8c45161c70b3a0216147a1",
+        "annotatedTag": "bf3b6e3f1c8c7eb00a2090565ed4fd0ae38c775d",
+        "peeledTag": "e4212a956a947071ed8c45161c70b3a0216147a1",
+        "existingTagRefsPreserved": 10,
+        "release": {
+          "id": 445808079,
+          "url": "https://github.com/SwiftAISDK/swift-ai-core/releases/tag/1.5.0",
+          "target": "e4212a956a947071ed8c45161c70b3a0216147a1"
+        },
+        "exportSHA256": "859c51790dc4c809bff356b97486c45dc71d852e28c3f2cfd451b8b293b6f2dc"
+      },
+      {
+        "package": "swift-ai-deepinfra",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "146f789cab1ee0c6a7a2499a63f2530bc64a8f65",
+        "annotatedTag": "b44c59007c1f7b98832a023bc40c80fbec78daad",
+        "peeledTag": "146f789cab1ee0c6a7a2499a63f2530bc64a8f65",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445810525,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepinfra/releases/tag/1.1.3",
+          "target": "146f789cab1ee0c6a7a2499a63f2530bc64a8f65"
+        },
+        "exportSHA256": "52b91e1df9749922c7d2a973bb30c72a97e1d89ee656ee9358f535a34b84864d"
+      },
+      {
+        "package": "swift-ai-deepseek",
+        "version": "1.2.1",
+        "status": "passed",
+        "branchSHA": "e80a42569b329132b8baa9f46af4bd1d7089eb72",
+        "annotatedTag": "310105c15deea85e8329c6331891298af1268ee8",
+        "peeledTag": "e80a42569b329132b8baa9f46af4bd1d7089eb72",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445809371,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepseek/releases/tag/1.2.1",
+          "target": "e80a42569b329132b8baa9f46af4bd1d7089eb72"
+        },
+        "exportSHA256": "fb40c060ec72bd2b14573dfa8fd1a32576807b1a0beb02c1b41a0f55f78e59d0"
+      },
+      {
+        "package": "swift-ai-fal",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "1682c696506d962354467e60cff615595745bb4e",
+        "annotatedTag": "baf2fddd8efe1cda13370153b64bd73705e20b52",
+        "peeledTag": "1682c696506d962354467e60cff615595745bb4e",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445810676,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fal/releases/tag/1.1.3",
+          "target": "1682c696506d962354467e60cff615595745bb4e"
+        },
+        "exportSHA256": "fedd9db6eeb07440c1aff278a26870cb4816335491488f5bf4741a6a880a8db2"
+      },
+      {
+        "package": "swift-ai-fireworks",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "e1f18e53459567c4a78718a70e67293f1058aa92",
+        "annotatedTag": "a802321c2753971005e485e6ee4bd70024b6de43",
+        "peeledTag": "e1f18e53459567c4a78718a70e67293f1058aa92",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445810865,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fireworks/releases/tag/1.1.3",
+          "target": "e1f18e53459567c4a78718a70e67293f1058aa92"
+        },
+        "exportSHA256": "50ede9531cb8ac614c4e2a64b206fdc2d9adb4f1742a15d59ff4cbcd1e00a86e"
+      },
+      {
+        "package": "swift-ai-gateway",
+        "version": "1.3.1",
+        "status": "passed",
+        "branchSHA": "56a1620535c54be94e444b0f91a29ecc003ec2ff",
+        "annotatedTag": "9d95036e828a97c01502baf457e996490a4f0271",
+        "peeledTag": "56a1620535c54be94e444b0f91a29ecc003ec2ff",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445811046,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gateway/releases/tag/1.3.1",
+          "target": "56a1620535c54be94e444b0f91a29ecc003ec2ff"
+        },
+        "exportSHA256": "e3d297cc782566b004a534ddcd1bfacf62cb1b26c6689a05538f6a8c3402a81d"
+      },
+      {
+        "package": "swift-ai-gmicloud",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "8495004d1c3c743b7e411df26e10a34935fba0c4",
+        "annotatedTag": "ac9dca8452ae70d58e12090d394028f074bb64e6",
+        "peeledTag": "8495004d1c3c743b7e411df26e10a34935fba0c4",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445811224,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gmicloud/releases/tag/1.1.3",
+          "target": "8495004d1c3c743b7e411df26e10a34935fba0c4"
+        },
+        "exportSHA256": "1114d1373141ab2bf3503cb993e86322fe9e4205c7456794c07686f197231994"
+      },
+      {
+        "package": "swift-ai-google",
+        "version": "1.3.1",
+        "status": "passed",
+        "branchSHA": "3c1b3d9177bc28402bdc044c8a900b8d914da5e6",
+        "annotatedTag": "027a3133251d4c23906bafee6ada305ccaa5ae94",
+        "peeledTag": "3c1b3d9177bc28402bdc044c8a900b8d914da5e6",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445811370,
+          "url": "https://github.com/SwiftAISDK/swift-ai-google/releases/tag/1.3.1",
+          "target": "3c1b3d9177bc28402bdc044c8a900b8d914da5e6"
+        },
+        "exportSHA256": "22f219aa3184bab8310146adbe8d5af29e0ede28e624ef179889ad3eff03eb9c"
+      },
+      {
+        "package": "swift-ai-google-vertex",
+        "version": "1.2.2",
+        "status": "passed",
+        "branchSHA": "c5c3c98f6389477ae8477463a8ed3fe58cec3f72",
+        "annotatedTag": "cd51f26cad488db26b3a976bb199c282cb203acb",
+        "peeledTag": "c5c3c98f6389477ae8477463a8ed3fe58cec3f72",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445811594,
+          "url": "https://github.com/SwiftAISDK/swift-ai-google-vertex/releases/tag/1.2.2",
+          "target": "c5c3c98f6389477ae8477463a8ed3fe58cec3f72"
+        },
+        "exportSHA256": "0222d87c0f0c2028b41ecb24cb49a010eead12ca238fef3da429ae76c97cd160"
+      },
+      {
+        "package": "swift-ai-groq",
+        "version": "1.2.2",
+        "status": "passed",
+        "branchSHA": "a02f34f24e7c2ee2f07880c34ac3b820267fa42c",
+        "annotatedTag": "1b3cccca2c49ce791b203f365aab93d98f5c5c90",
+        "peeledTag": "a02f34f24e7c2ee2f07880c34ac3b820267fa42c",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445811746,
+          "url": "https://github.com/SwiftAISDK/swift-ai-groq/releases/tag/1.2.2",
+          "target": "a02f34f24e7c2ee2f07880c34ac3b820267fa42c"
+        },
+        "exportSHA256": "7d23bf8dc5531dca3d5d0156134a554a45601c99253f908b08a8e257da12834c"
+      },
+      {
+        "package": "swift-ai-heygen",
+        "version": "1.2.0",
+        "status": "passed",
+        "branchSHA": "22207bfbe1c7ff26c8715a3231b0ed401b55748b",
+        "annotatedTag": "9f511010a1cfed5c7601ec02e33920e0f643ac84",
+        "peeledTag": "22207bfbe1c7ff26c8715a3231b0ed401b55748b",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445811913,
+          "url": "https://github.com/SwiftAISDK/swift-ai-heygen/releases/tag/1.2.0",
+          "target": "22207bfbe1c7ff26c8715a3231b0ed401b55748b"
+        },
+        "exportSHA256": "90bc83ce6d0f5f2e01c34901363658c6f13a916aadaf4db52bb7074d96c1e655"
+      },
+      {
+        "package": "swift-ai-klingai",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "ec7da7e5f5763d7372c953f4ae5c2cc091de47aa",
+        "annotatedTag": "5e9c81b1538978b8cf6054b3e344887fa4bd3821",
+        "peeledTag": "ec7da7e5f5763d7372c953f4ae5c2cc091de47aa",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445812090,
+          "url": "https://github.com/SwiftAISDK/swift-ai-klingai/releases/tag/1.1.3",
+          "target": "ec7da7e5f5763d7372c953f4ae5c2cc091de47aa"
+        },
+        "exportSHA256": "dec23213e174d0f54c50b4935705d0d201ff8e2ad757be9a32d6acc454919204"
+      },
+      {
+        "package": "swift-ai-luma",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "2d05ad4f964c5546e8fdf803c724e2a30c348ee4",
+        "annotatedTag": "a96fa85de3f1151215014d3d1c125645dadbd052",
+        "peeledTag": "2d05ad4f964c5546e8fdf803c724e2a30c348ee4",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445812235,
+          "url": "https://github.com/SwiftAISDK/swift-ai-luma/releases/tag/1.1.3",
+          "target": "2d05ad4f964c5546e8fdf803c724e2a30c348ee4"
+        },
+        "exportSHA256": "22b579cedd01c5e7b0c68b28fc54b4c4a6ded2555c7c3d9debffcfa473bbe1d1"
+      },
+      {
+        "package": "swift-ai-minimax",
+        "version": "1.3.1",
+        "status": "passed",
+        "branchSHA": "018b05679967e5c9a6c3201b30b14ec991cf8369",
+        "annotatedTag": "646faff93085c4f4338551ae836612e0e2f8f577",
+        "peeledTag": "018b05679967e5c9a6c3201b30b14ec991cf8369",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445812387,
+          "url": "https://github.com/SwiftAISDK/swift-ai-minimax/releases/tag/1.3.1",
+          "target": "018b05679967e5c9a6c3201b30b14ec991cf8369"
+        },
+        "exportSHA256": "8a061933a0ecfe47348376af87b0c5d715899904457bc2a90ec8dbdbe5dc33b0"
+      },
+      {
+        "package": "swift-ai-mistral",
+        "version": "1.2.2",
+        "status": "passed",
+        "branchSHA": "246512dcf7234780b842ba22a9fd66cd19c5c3bd",
+        "annotatedTag": "eaa797e1fb0f73b3ae86c58ea84df390025f0860",
+        "peeledTag": "246512dcf7234780b842ba22a9fd66cd19c5c3bd",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445812535,
+          "url": "https://github.com/SwiftAISDK/swift-ai-mistral/releases/tag/1.2.2",
+          "target": "246512dcf7234780b842ba22a9fd66cd19c5c3bd"
+        },
+        "exportSHA256": "ff5f1718e9aa8a6e672f5d536d54271d108703f64edc4f9fa6b3757ce8d94279"
+      },
+      {
+        "package": "swift-ai-moonshotai",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "161315d829c3688f2e7abb142c0c3c25b903ce6f",
+        "annotatedTag": "80143c952ae97d6403ca4bbf3c687a4f1c8a281f",
+        "peeledTag": "161315d829c3688f2e7abb142c0c3c25b903ce6f",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445812730,
+          "url": "https://github.com/SwiftAISDK/swift-ai-moonshotai/releases/tag/1.1.3",
+          "target": "161315d829c3688f2e7abb142c0c3c25b903ce6f"
+        },
+        "exportSHA256": "3bc242c7e663af3021c582a95117691279b41f23c7df1be3f0b6df1bc01652ac"
+      },
+      {
+        "package": "swift-ai-openai",
+        "version": "1.3.1",
+        "status": "passed",
+        "branchSHA": "f738f488e39508aa0b8087f7305bc1be5d713eba",
+        "annotatedTag": "5b487ddfe69ef99eb77ae5d0529b2056f5cab281",
+        "peeledTag": "f738f488e39508aa0b8087f7305bc1be5d713eba",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445808726,
+          "url": "https://github.com/SwiftAISDK/swift-ai-openai/releases/tag/1.3.1",
+          "target": "f738f488e39508aa0b8087f7305bc1be5d713eba"
+        },
+        "exportSHA256": "6d13825a4f66a9460ea3e5c2fd7bafc34bdba49f13c076d286376ff9423d79ce"
+      },
+      {
+        "package": "swift-ai-parallel",
+        "version": "1.0.0",
+        "status": "passed",
+        "branchSHA": "927c6634c04ee98ec989235f0c48cabf586cc455",
+        "annotatedTag": "9228d93567a21a36b01e46d0ae593eb3d3fcfdc6",
+        "peeledTag": "927c6634c04ee98ec989235f0c48cabf586cc455",
+        "existingTagRefsPreserved": 0,
+        "release": {
+          "id": 445812861,
+          "url": "https://github.com/SwiftAISDK/swift-ai-parallel/releases/tag/1.0.0",
+          "target": "927c6634c04ee98ec989235f0c48cabf586cc455"
+        },
+        "exportSHA256": "71b0d8ff9d872eb804b289779b49502594235e393478cf138ffb82af84aef149"
+      },
+      {
+        "package": "swift-ai-perplexity",
+        "version": "1.2.1",
+        "status": "passed",
+        "branchSHA": "fa11737de2d10db90c2bcc175f1a83fc55ae7272",
+        "annotatedTag": "e7bfb71fb65e94079aeb553da3bd75fe693d28cc",
+        "peeledTag": "fa11737de2d10db90c2bcc175f1a83fc55ae7272",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445813054,
+          "url": "https://github.com/SwiftAISDK/swift-ai-perplexity/releases/tag/1.2.1",
+          "target": "fa11737de2d10db90c2bcc175f1a83fc55ae7272"
+        },
+        "exportSHA256": "f139995f843b37b126d6b75822589ffd1f1d71d2dba77a02d43ab10d1cbf9868"
+      },
+      {
+        "package": "swift-ai-prodia",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "8ea56385ca98cc099ed0163a511bd0d65752d36a",
+        "annotatedTag": "2b433e6b20cadf5dfc58524d74f564c80fe8c5fb",
+        "peeledTag": "8ea56385ca98cc099ed0163a511bd0d65752d36a",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445813222,
+          "url": "https://github.com/SwiftAISDK/swift-ai-prodia/releases/tag/1.1.3",
+          "target": "8ea56385ca98cc099ed0163a511bd0d65752d36a"
+        },
+        "exportSHA256": "fd5686b8b01a458b6b6e478ecabfcc91a31a3641c04c43e5642d5a35cb92664d"
+      },
+      {
+        "package": "swift-ai-replicate",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "05f7ce03b83ac9b108d67ce69aa5bb231b2cfe1b",
+        "annotatedTag": "5ab618b6339610a142045708a69e653608de04c3",
+        "peeledTag": "05f7ce03b83ac9b108d67ce69aa5bb231b2cfe1b",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445813420,
+          "url": "https://github.com/SwiftAISDK/swift-ai-replicate/releases/tag/1.1.3",
+          "target": "05f7ce03b83ac9b108d67ce69aa5bb231b2cfe1b"
+        },
+        "exportSHA256": "293fc4f51cd5ce89cd2ab6b472bd205d47b765dae35567543aac1f2de0efc1b4"
+      },
+      {
+        "package": "swift-ai-scaledown",
+        "version": "1.0.0",
+        "status": "passed",
+        "branchSHA": "2d0772f2e57be40fd45e1412c98869d011a1ea2d",
+        "annotatedTag": "e610d67a4716219f77e10daaf283135672c309fa",
+        "peeledTag": "2d0772f2e57be40fd45e1412c98869d011a1ea2d",
+        "existingTagRefsPreserved": 0,
+        "release": {
+          "id": 445813561,
+          "url": "https://github.com/SwiftAISDK/swift-ai-scaledown/releases/tag/1.0.0",
+          "target": "2d0772f2e57be40fd45e1412c98869d011a1ea2d"
+        },
+        "exportSHA256": "f8c158a2ef3cdfba047b3f57835a4c3a04555ddc0954e3041d1cfdbb85bc8dd6"
+      },
+      {
+        "package": "swift-ai-tencent",
+        "version": "1.0.0",
+        "status": "passed",
+        "branchSHA": "2eeec06c1ecaabbc2f42a774c11d503039810a91",
+        "annotatedTag": "16e63d33baad4f997970727e5d2610f296a1bfc5",
+        "peeledTag": "2eeec06c1ecaabbc2f42a774c11d503039810a91",
+        "existingTagRefsPreserved": 0,
+        "release": {
+          "id": 445813720,
+          "url": "https://github.com/SwiftAISDK/swift-ai-tencent/releases/tag/1.0.0",
+          "target": "2eeec06c1ecaabbc2f42a774c11d503039810a91"
+        },
+        "exportSHA256": "af14a6fd953deae88c2b8b9dd83f6da6f2531d178669dafcbdeee252a3b0abe3"
+      },
+      {
+        "package": "swift-ai-togetherai",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "28f894a32d9e63eb2858ca5408dcfcb2d83ecf02",
+        "annotatedTag": "ed9b950d2b6419442b2789033057b878d3dfc088",
+        "peeledTag": "28f894a32d9e63eb2858ca5408dcfcb2d83ecf02",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445813926,
+          "url": "https://github.com/SwiftAISDK/swift-ai-togetherai/releases/tag/1.1.3",
+          "target": "28f894a32d9e63eb2858ca5408dcfcb2d83ecf02"
+        },
+        "exportSHA256": "710f0bdd429301e63fe52c8eddb0e95f0d9079721a1787db453d22b813c645c3"
+      },
+      {
+        "package": "swift-ai-voyage",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "6053f7817d468f739e1a567be735a68e9416f5c5",
+        "annotatedTag": "6400a9248970848ef804c4b1b003bda477e1cc29",
+        "peeledTag": "6053f7817d468f739e1a567be735a68e9416f5c5",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445814116,
+          "url": "https://github.com/SwiftAISDK/swift-ai-voyage/releases/tag/1.1.3",
+          "target": "6053f7817d468f739e1a567be735a68e9416f5c5"
+        },
+        "exportSHA256": "652e4e12de5fe35bb73f6fd43fe5ac1d7f715a548a8aff71293fcd906d284d50"
+      },
+      {
+        "package": "swift-ai-xai",
+        "version": "1.2.2",
+        "status": "passed",
+        "branchSHA": "316d181aaa30356f4f314a704b9f79c35281687d",
+        "annotatedTag": "664403250bab7a2ab64bc094d07c49bdda6de33b",
+        "peeledTag": "316d181aaa30356f4f314a704b9f79c35281687d",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445814333,
+          "url": "https://github.com/SwiftAISDK/swift-ai-xai/releases/tag/1.2.2",
+          "target": "316d181aaa30356f4f314a704b9f79c35281687d"
+        },
+        "exportSHA256": "360d48f899aa7a82b1f4ddc3742c7561694a414e2efd31a4d0198abb3d6805fd"
+      },
+      {
+        "package": "swift-ai-zai",
+        "version": "1.1.3",
+        "status": "passed",
+        "branchSHA": "ce0463ec0ef7bfea9187ab5a3fb5496eef5e2cb8",
+        "annotatedTag": "23e6a9fe879053a656ed2a853e2125f529412fa0",
+        "peeledTag": "ce0463ec0ef7bfea9187ab5a3fb5496eef5e2cb8",
+        "existingTagRefsPreserved": 8,
+        "release": {
+          "id": 445814526,
+          "url": "https://github.com/SwiftAISDK/swift-ai-zai/releases/tag/1.1.3",
+          "target": "ce0463ec0ef7bfea9187ab5a3fb5496eef5e2cb8"
+        },
+        "exportSHA256": "d681c40d0f10056af97312ff2873951193bba897e24ae301b12e031b147a6ab3"
+      }
+    ]
+  },
+  "standaloneCI": {
+    "schemaVersion": 1,
+    "checkedAt": "2026-11-15T04:44:53.835Z",
+    "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+    "status": "passed",
+    "packages": [
+      {
+        "package": "swift-ai-alibaba",
+        "version": "1.1.3",
+        "exportCommit": "aa37dafb06b8f5547edbc4d4d91794a7bad41f7f",
+        "status": "passed",
+        "run": {
+          "id": 43676781470,
+          "url": "https://github.com/SwiftAISDK/swift-ai-alibaba/actions/runs/43676781470",
+          "headSHA": "aa37dafb06b8f5547edbc4d4d91794a7bad41f7f",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-amazon-bedrock",
+        "version": "1.1.3",
+        "exportCommit": "38815ed07b711ac6d51f0307310a49bdba9cb21c",
+        "status": "passed",
+        "run": {
+          "id": 43676902620,
+          "url": "https://github.com/SwiftAISDK/swift-ai-amazon-bedrock/actions/runs/43676902620",
+          "headSHA": "38815ed07b711ac6d51f0307310a49bdba9cb21c",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-anthropic",
+        "version": "1.4.1",
+        "exportCommit": "d399ba498f4a0abb03d3dbf5221aea8507889563",
+        "status": "passed",
+        "run": {
+          "id": 43676811881,
+          "url": "https://github.com/SwiftAISDK/swift-ai-anthropic/actions/runs/43676811881",
+          "headSHA": "d399ba498f4a0abb03d3dbf5221aea8507889563",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-anthropic-aws",
+        "version": "1.2.2",
+        "exportCommit": "f1af6aa61fb9bacd657f95944437c51aa6c73b96",
+        "status": "passed",
+        "run": {
+          "id": 43676943594,
+          "url": "https://github.com/SwiftAISDK/swift-ai-anthropic-aws/actions/runs/43676943594",
+          "headSHA": "f1af6aa61fb9bacd657f95944437c51aa6c73b96",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-azure",
+        "version": "1.2.2",
+        "exportCommit": "5e92127ec1cb89796ba8cca49025bb8bcc7c2de8",
+        "status": "passed",
+        "run": {
+          "id": 43677010798,
+          "url": "https://github.com/SwiftAISDK/swift-ai-azure/actions/runs/43677010798",
+          "headSHA": "5e92127ec1cb89796ba8cca49025bb8bcc7c2de8",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-baseten",
+        "version": "1.1.3",
+        "exportCommit": "4f2574e6da2b9e4f3348ff936aeed03ad5113e2b",
+        "status": "passed",
+        "run": {
+          "id": 43677042871,
+          "url": "https://github.com/SwiftAISDK/swift-ai-baseten/actions/runs/43677042871",
+          "headSHA": "4f2574e6da2b9e4f3348ff936aeed03ad5113e2b",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-black-forest-labs",
+        "version": "1.1.3",
+        "exportCommit": "8c12e148fe7d77720a2bca4216ae495f017bd713",
+        "status": "passed",
+        "run": {
+          "id": 43677078454,
+          "url": "https://github.com/SwiftAISDK/swift-ai-black-forest-labs/actions/runs/43677078454",
+          "headSHA": "8c12e148fe7d77720a2bca4216ae495f017bd713",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-cerebras",
+        "version": "1.2.2",
+        "exportCommit": "5a8e98d385ee0b9210f60d5e64c4b0264a4e006d",
+        "status": "passed",
+        "run": {
+          "id": 43677116157,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cerebras/actions/runs/43677116157",
+          "headSHA": "5a8e98d385ee0b9210f60d5e64c4b0264a4e006d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-cohere",
+        "version": "1.2.2",
+        "exportCommit": "71b3ec2ad4f9ace43a4aa4184e85704cffec2d21",
+        "status": "passed",
+        "run": {
+          "id": 43677142386,
+          "url": "https://github.com/SwiftAISDK/swift-ai-cohere/actions/runs/43677142386",
+          "headSHA": "71b3ec2ad4f9ace43a4aa4184e85704cffec2d21",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-core",
+        "version": "1.5.0",
+        "exportCommit": "e4212a956a947071ed8c45161c70b3a0216147a1",
+        "status": "passed",
+        "run": {
+          "id": 43676747859,
+          "url": "https://github.com/SwiftAISDK/swift-ai-core/actions/runs/43676747859",
+          "headSHA": "e4212a956a947071ed8c45161c70b3a0216147a1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-deepinfra",
+        "version": "1.1.3",
+        "exportCommit": "146f789cab1ee0c6a7a2499a63f2530bc64a8f65",
+        "status": "passed",
+        "run": {
+          "id": 43677175683,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepinfra/actions/runs/43677175683",
+          "headSHA": "146f789cab1ee0c6a7a2499a63f2530bc64a8f65",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-deepseek",
+        "version": "1.2.1",
+        "exportCommit": "e80a42569b329132b8baa9f46af4bd1d7089eb72",
+        "status": "passed",
+        "run": {
+          "id": 43676971541,
+          "url": "https://github.com/SwiftAISDK/swift-ai-deepseek/actions/runs/43676971541",
+          "headSHA": "e80a42569b329132b8baa9f46af4bd1d7089eb72",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-fal",
+        "version": "1.1.3",
+        "exportCommit": "1682c696506d962354467e60cff615595745bb4e",
+        "status": "passed",
+        "run": {
+          "id": 43677211596,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fal/actions/runs/43677211596",
+          "headSHA": "1682c696506d962354467e60cff615595745bb4e",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-fireworks",
+        "version": "1.1.3",
+        "exportCommit": "e1f18e53459567c4a78718a70e67293f1058aa92",
+        "status": "passed",
+        "run": {
+          "id": 43677245386,
+          "url": "https://github.com/SwiftAISDK/swift-ai-fireworks/actions/runs/43677245386",
+          "headSHA": "e1f18e53459567c4a78718a70e67293f1058aa92",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-gateway",
+        "version": "1.3.1",
+        "exportCommit": "56a1620535c54be94e444b0f91a29ecc003ec2ff",
+        "status": "passed",
+        "run": {
+          "id": 43677281451,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gateway/actions/runs/43677281451",
+          "headSHA": "56a1620535c54be94e444b0f91a29ecc003ec2ff",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-gmicloud",
+        "version": "1.1.3",
+        "exportCommit": "8495004d1c3c743b7e411df26e10a34935fba0c4",
+        "status": "passed",
+        "run": {
+          "id": 43677314701,
+          "url": "https://github.com/SwiftAISDK/swift-ai-gmicloud/actions/runs/43677314701",
+          "headSHA": "8495004d1c3c743b7e411df26e10a34935fba0c4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-google",
+        "version": "1.3.1",
+        "exportCommit": "3c1b3d9177bc28402bdc044c8a900b8d914da5e6",
+        "status": "passed",
+        "run": {
+          "id": 43677340625,
+          "url": "https://github.com/SwiftAISDK/swift-ai-google/actions/runs/43677340625",
+          "headSHA": "3c1b3d9177bc28402bdc044c8a900b8d914da5e6",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-google-vertex",
+        "version": "1.2.2",
+        "exportCommit": "c5c3c98f6389477ae8477463a8ed3fe58cec3f72",
+        "status": "passed",
+        "run": {
+          "id": 43677384301,
+          "url": "https://github.com/SwiftAISDK/swift-ai-google-vertex/actions/runs/43677384301",
+          "headSHA": "c5c3c98f6389477ae8477463a8ed3fe58cec3f72",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-groq",
+        "version": "1.2.2",
+        "exportCommit": "a02f34f24e7c2ee2f07880c34ac3b820267fa42c",
+        "status": "passed",
+        "run": {
+          "id": 43677416832,
+          "url": "https://github.com/SwiftAISDK/swift-ai-groq/actions/runs/43677416832",
+          "headSHA": "a02f34f24e7c2ee2f07880c34ac3b820267fa42c",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-heygen",
+        "version": "1.2.0",
+        "exportCommit": "22207bfbe1c7ff26c8715a3231b0ed401b55748b",
+        "status": "passed",
+        "run": {
+          "id": 43677447462,
+          "url": "https://github.com/SwiftAISDK/swift-ai-heygen/actions/runs/43677447462",
+          "headSHA": "22207bfbe1c7ff26c8715a3231b0ed401b55748b",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-klingai",
+        "version": "1.1.3",
+        "exportCommit": "ec7da7e5f5763d7372c953f4ae5c2cc091de47aa",
+        "status": "passed",
+        "run": {
+          "id": 43677477875,
+          "url": "https://github.com/SwiftAISDK/swift-ai-klingai/actions/runs/43677477875",
+          "headSHA": "ec7da7e5f5763d7372c953f4ae5c2cc091de47aa",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-luma",
+        "version": "1.1.3",
+        "exportCommit": "2d05ad4f964c5546e8fdf803c724e2a30c348ee4",
+        "status": "passed",
+        "run": {
+          "id": 43677507150,
+          "url": "https://github.com/SwiftAISDK/swift-ai-luma/actions/runs/43677507150",
+          "headSHA": "2d05ad4f964c5546e8fdf803c724e2a30c348ee4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-minimax",
+        "version": "1.3.1",
+        "exportCommit": "018b05679967e5c9a6c3201b30b14ec991cf8369",
+        "status": "passed",
+        "run": {
+          "id": 43677535050,
+          "url": "https://github.com/SwiftAISDK/swift-ai-minimax/actions/runs/43677535050",
+          "headSHA": "018b05679967e5c9a6c3201b30b14ec991cf8369",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-mistral",
+        "version": "1.2.2",
+        "exportCommit": "246512dcf7234780b842ba22a9fd66cd19c5c3bd",
+        "status": "passed",
+        "run": {
+          "id": 43677561999,
+          "url": "https://github.com/SwiftAISDK/swift-ai-mistral/actions/runs/43677561999",
+          "headSHA": "246512dcf7234780b842ba22a9fd66cd19c5c3bd",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-moonshotai",
+        "version": "1.1.3",
+        "exportCommit": "161315d829c3688f2e7abb142c0c3c25b903ce6f",
+        "status": "passed",
+        "run": {
+          "id": 43677590488,
+          "url": "https://github.com/SwiftAISDK/swift-ai-moonshotai/actions/runs/43677590488",
+          "headSHA": "161315d829c3688f2e7abb142c0c3c25b903ce6f",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-openai",
+        "version": "1.3.1",
+        "exportCommit": "f738f488e39508aa0b8087f7305bc1be5d713eba",
+        "status": "passed",
+        "run": {
+          "id": 43676859479,
+          "url": "https://github.com/SwiftAISDK/swift-ai-openai/actions/runs/43676859479",
+          "headSHA": "f738f488e39508aa0b8087f7305bc1be5d713eba",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-parallel",
+        "version": "1.0.0",
+        "exportCommit": "927c6634c04ee98ec989235f0c48cabf586cc455",
+        "status": "passed",
+        "run": {
+          "id": 43677616216,
+          "url": "https://github.com/SwiftAISDK/swift-ai-parallel/actions/runs/43677616216",
+          "headSHA": "927c6634c04ee98ec989235f0c48cabf586cc455",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-perplexity",
+        "version": "1.2.1",
+        "exportCommit": "fa11737de2d10db90c2bcc175f1a83fc55ae7272",
+        "status": "passed",
+        "run": {
+          "id": 43677642506,
+          "url": "https://github.com/SwiftAISDK/swift-ai-perplexity/actions/runs/43677642506",
+          "headSHA": "fa11737de2d10db90c2bcc175f1a83fc55ae7272",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-prodia",
+        "version": "1.1.3",
+        "exportCommit": "8ea56385ca98cc099ed0163a511bd0d65752d36a",
+        "status": "passed",
+        "run": {
+          "id": 43677668054,
+          "url": "https://github.com/SwiftAISDK/swift-ai-prodia/actions/runs/43677668054",
+          "headSHA": "8ea56385ca98cc099ed0163a511bd0d65752d36a",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-replicate",
+        "version": "1.1.3",
+        "exportCommit": "05f7ce03b83ac9b108d67ce69aa5bb231b2cfe1b",
+        "status": "passed",
+        "run": {
+          "id": 43677697008,
+          "url": "https://github.com/SwiftAISDK/swift-ai-replicate/actions/runs/43677697008",
+          "headSHA": "05f7ce03b83ac9b108d67ce69aa5bb231b2cfe1b",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-scaledown",
+        "version": "1.0.0",
+        "exportCommit": "2d0772f2e57be40fd45e1412c98869d011a1ea2d",
+        "status": "passed",
+        "run": {
+          "id": 43677723482,
+          "url": "https://github.com/SwiftAISDK/swift-ai-scaledown/actions/runs/43677723482",
+          "headSHA": "2d0772f2e57be40fd45e1412c98869d011a1ea2d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-tencent",
+        "version": "1.0.0",
+        "exportCommit": "2eeec06c1ecaabbc2f42a774c11d503039810a91",
+        "status": "passed",
+        "run": {
+          "id": 43677751103,
+          "url": "https://github.com/SwiftAISDK/swift-ai-tencent/actions/runs/43677751103",
+          "headSHA": "2eeec06c1ecaabbc2f42a774c11d503039810a91",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-togetherai",
+        "version": "1.1.3",
+        "exportCommit": "28f894a32d9e63eb2858ca5408dcfcb2d83ecf02",
+        "status": "passed",
+        "run": {
+          "id": 43677781461,
+          "url": "https://github.com/SwiftAISDK/swift-ai-togetherai/actions/runs/43677781461",
+          "headSHA": "28f894a32d9e63eb2858ca5408dcfcb2d83ecf02",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-voyage",
+        "version": "1.1.3",
+        "exportCommit": "6053f7817d468f739e1a567be735a68e9416f5c5",
+        "status": "passed",
+        "run": {
+          "id": 43677813016,
+          "url": "https://github.com/SwiftAISDK/swift-ai-voyage/actions/runs/43677813016",
+          "headSHA": "6053f7817d468f739e1a567be735a68e9416f5c5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-xai",
+        "version": "1.2.2",
+        "exportCommit": "316d181aaa30356f4f314a704b9f79c35281687d",
+        "status": "passed",
+        "run": {
+          "id": 43677847690,
+          "url": "https://github.com/SwiftAISDK/swift-ai-xai/actions/runs/43677847690",
+          "headSHA": "316d181aaa30356f4f314a704b9f79c35281687d",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "package": "swift-ai-zai",
+        "version": "1.1.3",
+        "exportCommit": "ce0463ec0ef7bfea9187ab5a3fb5496eef5e2cb8",
+        "status": "passed",
+        "run": {
+          "id": 43677878649,
+          "url": "https://github.com/SwiftAISDK/swift-ai-zai/actions/runs/43677878649",
+          "headSHA": "ce0463ec0ef7bfea9187ab5a3fb5496eef5e2cb8",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        "jobs": [
+          {
+            "name": "package / test",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test package",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "publicConsumers": {
+    "status": "passed",
+    "consumerCount": 62,
+    "packageCount": 55,
+    "mirrors": false,
+    "localDependencies": false,
+    "report": "Docs/PublicConsumerVerification20261115.json",
+    "reportSHA256": "b038d16c87632402dbdff3f52c7b480a1579419bed1b7f26511bb6df1bab84e4",
+    "rawVerifierOutputSHA256": "9e1724a83473f2283bab3436edd23028fbc66545f018ebbe5cd17162a2e5e152"
+  },
+  "hostedDocumentation": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "checkedAt": "2026-11-15T04:54:59.029Z",
+    "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+    "method": "Actual rendered page readback through the user's running main Zen browser MCP",
+    "browser": {
+      "instanceId": "9f82338c-1569-481c-b58e-da206c167293",
+      "windowId": "window-148d0f63-db82-46f0-b2a1-5c5d733238dc",
+      "temporaryTab": "tab-dc9685d7-82a2-45ae-90a7-99c92e5b1c94",
+      "temporaryTabClosed": true,
+      "originalActiveTabRestored": true
+    },
+    "deployment": {
+      "id": 7798347000,
+      "state": "success",
+      "sourceCommit": "1e543b35e0259a5bda888665dacf2d4a7f1bb0ed",
+      "run": 43674303677,
+      "url": "https://swiftaisdk.github.io/SwiftAISDK/",
+      "statusCreatedAt": "2026-11-15T04:12:08Z"
+    },
+    "pages": [
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/tencent/",
+        "title": "tencent | SwiftAISDK",
+        "documentId": "1063004405761",
+        "frameId": "605",
+        "checkedAt": "2026-11-15T04:52:00.676Z",
+        "truncated": false,
+        "textCharacters": 6238,
+        "checks": [
+          {
+            "text": "TokenHub",
+            "present": true
+          },
+          {
+            "text": "TC3-HMAC-SHA256",
+            "present": true
+          },
+          {
+            "text": "videoURLDescriptors",
+            "present": true
+          }
+        ]
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/parallel/",
+        "title": "parallel | SwiftAISDK",
+        "documentId": "1063004405762",
+        "frameId": "609",
+        "checkedAt": "2026-11-15T04:52:15.317Z",
+        "truncated": false,
+        "textCharacters": 5876,
+        "checks": [
+          {
+            "text": "3.0.9",
+            "present": true
+          },
+          {
+            "text": "Decision V4",
+            "present": true
+          },
+          {
+            "text": "x-api-key",
+            "present": true
+          }
+        ]
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/scaledown/",
+        "title": "scaledown | SwiftAISDK",
+        "documentId": "1063004405763",
+        "frameId": "610",
+        "checkedAt": "2026-11-15T04:52:47.002Z",
+        "truncated": false,
+        "textCharacters": 5782,
+        "checks": [
+          {
+            "text": "3.0.1",
+            "present": true
+          },
+          {
+            "text": "Extraction V4",
+            "present": true
+          },
+          {
+            "text": "UTF-16",
+            "present": true
+          }
+        ]
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/providers/heygen/",
+        "title": "heygen | SwiftAISDK",
+        "documentId": "1063004405764",
+        "frameId": "611",
+        "checkedAt": "2026-11-15T04:53:09.670Z",
+        "truncated": false,
+        "textCharacters": 9563,
+        "checks": [
+          {
+            "text": "Native decisions",
+            "present": true
+          },
+          {
+            "text": "/v3/models/decisions",
+            "present": true
+          },
+          {
+            "text": "3.0.25",
+            "present": true
+          }
+        ]
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/components/video-and-reranking/",
+        "title": "Video and reranking | SwiftAISDK",
+        "documentId": "1063004405766",
+        "frameId": "613",
+        "checkedAt": "2026-11-15T04:53:55.847Z",
+        "truncated": false,
+        "textCharacters": 24886,
+        "checks": [
+          {
+            "text": "VideoURLDescriptor",
+            "present": true
+          },
+          {
+            "text": "videoURLDescriptors",
+            "present": true
+          }
+        ]
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/components/tools/",
+        "title": "Tools | SwiftAISDK",
+        "documentId": "1063004405767",
+        "frameId": "614",
+        "checkedAt": "2026-11-15T04:54:11.579Z",
+        "truncated": false,
+        "textCharacters": 55048,
+        "checks": [
+          {
+            "text": "Signed approval replay",
+            "present": true
+          },
+          {
+            "text": "toolApprovalSecret:",
+            "present": true
+          },
+          {
+            "text": "applies refinement once",
+            "present": true
+          }
+        ]
+      },
+      {
+        "url": "https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/",
+        "title": "Install | SwiftAISDK",
+        "documentId": "1063004405768",
+        "frameId": "615",
+        "checkedAt": "2026-11-15T04:54:27.075Z",
+        "truncated": false,
+        "textCharacters": 4290,
+        "checks": [
+          {
+            "text": "Install",
+            "present": true
+          },
+          {
+            "text": "SwiftAISDK",
+            "present": true
+          }
+        ]
+      }
+    ],
+    "viewportScreenshotInspected": "Tencent provider, 2245x1393 viewport at device scale2",
+    "limits": [
+      "This source deployment precedes the separate umbrella3.4.0 install/version update; final install readback will be recorded separately.",
+      "Rendered ScaleDown capability heading omits Extraction although the guide and canonical catalog include it; fix the docs generator during final public docs reconciliation."
+    ]
+  },
+  "umbrella": {
+    "status": "pending",
+    "candidate": "3.4.0",
+    "reason": "New provider factories/reexports, signed streaming API and per-file video descriptors; required core1.5.0 and HeyGen1.2.0 installation minima."
+  },
+  "retainedGaps": [
+    "Paid/live provider checks were not run.",
+    "Browser media/WebRTC/iframes and JS framework/workflow/harness lifecycles remain outside the native surface.",
+    "Separate Google audio surfaces, Gateway incremental binary-image decoding and Open Responses extension codecs remain documented gaps.",
+    "Inception, SpaceXAI, specification and tools 0.0.0 are implementation-free seeds."
+  ],
+  "evidenceSHA256": {
+    "publication-attempt/attempt.json": "0adf9b834f26a3a87707b761d8993fa333f737f30d6c0a56477bf1d655d6a178",
+    "published-refs.json": "1f75b0ccdba2fb9c1a3fbcd0c2b3e1fc77b632d2e5d216e9678e36a94199da85",
+    "canonical-ci-verified.json": "f2ac52130d276abeb9b743921dcbf386626ee85c2bb1d059219b4ba8897c2fd2",
+    "standalone-ci.json": "0c223ef1bf97a769608e12b8a63261d8eb055a2798494437cb6f5700c7190049",
+    "public-consumers.json": "9e1724a83473f2283bab3436edd23028fbc66545f018ebbe5cd17162a2e5e152",
+    "true-minimum-coverage.json": "30b180c38da4ec47079e7db856b2fff064efc0ace2f0989c6a44ac7ccea585ce",
+    "local-gates.json": "60041c04f749c72e0844e0af3ceb57030a6486d25c7723a775f792c3f429e858",
+    "source-plan.json": "940c1c8e0c04275a14392ae62a894e4ad6cef6fc3b3c0c06ebff07928008b62a",
+    "swift-release-decisions.json": "0243bedd447e527482a6027064b15ff2433e52cd074bf19f1fe1b3ea654aa038",
+    "hosted-docs-source.json": "2fd9efa876a539321016a96afcf39c35f9ef80ca136c35667bc150601c706ca9",
+    "export-comparison.json": "dd599e9fe3930c7e4b7a3abf2986be7d40b360471e55fb49599b668212db94d8",
+    "candidate-source-verification.json": "401ab18d19057a65eb753beeed331ead1a24d8f6da3a82b6c984e184d8f0a35f"
+  }
+}

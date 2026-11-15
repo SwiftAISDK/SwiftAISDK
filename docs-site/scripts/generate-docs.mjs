@@ -144,6 +144,7 @@ function generateProviders() {
     ['reranking', 'Reranking'],
     ['evaluation', 'Evaluation'],
     ['decision', 'Decision'],
+    ['extraction', 'Extraction'],
     ['files', 'Files'],
     ['skills', 'Skills'],
   ];
@@ -158,13 +159,13 @@ function generateProviders() {
   const table = rows
     .map(
       (row) =>
-        `| [\`${row.providerID}\`](${providerSlug(row.providerID)}/) | \`${row.upstreamPackage}\` | ${row.factories} | ${marker(row.language)} | ${marker(row.completion)} | ${marker(row.embedding)} | ${marker(row.image)} | ${marker(row.transcription)} | ${marker(row.speech)} | ${marker(row.audioGeneration)} | ${marker(row.audioTransformation)} | ${marker(row.dubbing)} | ${marker(row.video)} | ${marker(row.reranking)} | ${marker(row.evaluation)} | ${marker(row.decision)} | ${marker(row.files)} | ${marker(row.skills)} |`,
+        `| [\`${row.providerID}\`](${providerSlug(row.providerID)}/) | \`${row.upstreamPackage}\` | ${row.factories} | ${marker(row.language)} | ${marker(row.completion)} | ${marker(row.embedding)} | ${marker(row.image)} | ${marker(row.transcription)} | ${marker(row.speech)} | ${marker(row.audioGeneration)} | ${marker(row.audioTransformation)} | ${marker(row.dubbing)} | ${marker(row.video)} | ${marker(row.reranking)} | ${marker(row.evaluation)} | ${marker(row.decision)} | ${marker(row.extraction)} | ${marker(row.files)} | ${marker(row.skills)} |`,
     )
     .join('\n');
 
   writeGenerated(
     join(contentRoot, 'providers/index.mdx'),
-    `---\ntitle: Provider matrix\ndescription: Generated provider capability overview for SwiftAISDK.\n---\n\nThis page is generated from the package catalog. Update [Porting/packages.json](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Porting/packages.json) and run \`node Scripts/sdk.mjs generate\` when provider coverage changes.\n\n<div class="capability-grid">\n${capabilityList}\n</div>\n\n| Provider | Upstream package | Swift factories | Language | Completion | Embedding | Image | Transcription | Speech | Audio generation | Audio transformation | Dubbing | Video | Reranking | Evaluation | Decision | Files | Skills |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n${table}\n`,
+    `---\ntitle: Provider matrix\ndescription: Generated provider capability overview for SwiftAISDK.\n---\n\nThis page is generated from the package catalog. Update [Porting/packages.json](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Porting/packages.json) and run \`node Scripts/sdk.mjs generate\` when provider coverage changes.\n\n<div class="capability-grid">\n${capabilityList}\n</div>\n\n| Provider | Upstream package | Swift factories | Language | Completion | Embedding | Image | Transcription | Speech | Audio generation | Audio transformation | Dubbing | Video | Reranking | Evaluation | Decision | Extraction | Files | Skills |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n${table}\n`,
   );
 
   for (const row of rows) {
@@ -182,6 +183,7 @@ function generateProviders() {
       ['Reranking', row.reranking],
       ['Evaluation', row.evaluation],
       ['Decision', row.decision],
+      ['Extraction', row.extraction],
       ['Files', row.files],
       ['Skills', row.skills],
     ].filter(([, supported]) => supported);

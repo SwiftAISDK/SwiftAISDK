@@ -22,29 +22,23 @@ complete Tencent, Parallel and ScaleDown ports, plus HeyGen Decision V4.
 Core signed streaming approvals and per-video MIME descriptors are additive;
 all previous selectors/initializers remain. All required local checks passed:
 55 owning packages, 1,736 facade tests, tooling, 55 deterministic exports and
-exact minimum-dependency consumers. Publication awaits exact-source hosted CI;
-published release records remain authoritative.
+exact minimum-dependency consumers. All 36 independent releases are published and verified; the separate
+compatibility umbrella follows after its final public-tag checks.
 
 ## Modular packages
 
-All 52 independent distributions are published. The 2026-11-14 set updates
-48 units (11 minor, 37 patch), retaining ByteDance, Hugging Face, LMNT and
-Vercel. Core and Anthropic are 1.4.0; exact old/new versions and immutable
-refs for every changed unit are in ReleaseVerification20261114.json.
+All 55 independent distributions are published: core, 52 provider adapters, MCP and UI.
+The 2026-11-15 set updates 36 units: 31 patch, two additive minor and three initial
+releases. Tencent, Parallel and ScaleDown are 1.0.0; core is 1.5.0 and HeyGen is
+1.2.0. Nineteen unchanged units retain their published versions. Exact versions,
+compatibility rationale and immutable refs are in [ReleaseVerification20261115.json](ReleaseVerification20261115.json).
 
-SwiftAISDK 3.3.0 is published as the complete optional umbrella. Its tested
-52-package selection adds compatibility extraction routing and raises installation
-minimums only to actual verified dependency tags. Original
-selectors remain available; ModelCapability.extraction requires updates to
-exhaustive switches under the project's additive minor convention. This is a
-source migration caveat, not a binary compatibility guarantee.
-
-All 48 exported commits passed standalone hosted CI and 59 clean consumers of
-real public tags. Actual SwiftAISDK 3.3.0 and preserved 2.8.1 complete-umbrella
-consumers also passed, with a separate immutable two-client report. Eight version-specific historical dependency clients supplement
-the catalog-wide minimum checks. One unchanged MCP discovery timeout fixture
-needed a bounded same-SHA CI rerun; the initial failure and timing debt are
-retained in the verification report. Paid/live checks remain disabled.
+All 36 exported commits passed standalone CI and 62 clean public-tag consumers.
+Local verification covers 55 owning packages, 2,451 owning tests, 1,736 facade
+tests, 55 deterministic exports, 112 generic consumers, eight exact historical
+graphs and one complete least-version umbrella graph. Paid/live checks remain disabled.
+SwiftAISDK 3.3.0 remains the published optional umbrella while the separate 3.4.0
+compatibility release is prepared.
 
 ## Initial 3.0 migration evidence
 

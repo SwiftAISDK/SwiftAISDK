@@ -19,6 +19,7 @@ Source URL: /providers/google-generative-ai/
 - Video
 - Evaluation
 - Decision
+- Extraction
 - Files
 
 ## Current reviewed behavior

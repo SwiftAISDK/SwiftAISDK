@@ -8,7 +8,7 @@ Add SwiftAISDK to your package manifest:
 ```swift
 // Package.swift
 dependencies: [
-    .package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "3.2.0"),
+    .package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "3.4.0"),
 ],
 targets: [
     .target(
@@ -53,21 +53,24 @@ Use explicit settings when you need custom headers, a custom base URL, a mock tr
 
 ## Independent modular packages
 
-All 52 independent packages are published: core, 49 provider adapters, MCP and UI.
-Core and Anthropic are at `1.3.0`; 18 other feature units are at `1.2.0`,
-UI is at `1.1.0`, and 27 corrected providers/MCP are at `1.1.1`.
-Hugging Face retains `1.1.0`; ByteDance, LMNT and Vercel retain `1.0.0`.
-Choose packages from the [catalog](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/PackageCatalog.md),
-or use the complete 3.2 umbrella above. See the [3.0 migration guide](https://swiftaisdk.github.io/SwiftAISDK/getting-started/migrating-to-3/)
-for native imports, configuration and compatibility details.
+All 55 independent packages are published: core, 52 provider adapters, MCP and UI.
+The 2026-11-15 set updates 36 units: 31 patch releases, additive core 1.5.0 and
+HeyGen 1.2.0, plus initial Tencent, Parallel and ScaleDown 1.0.0. Nineteen
+unchanged packages retain their existing versions. npm and Swift versions are
+independent. Select only the products your application needs, or use the complete
+3.4 umbrella above.
+
+The [package catalog](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/PackageCatalog.md)
+lists products and dependency requirements. Exact published versions and verified
+release refs are recorded in [release verification](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/ReleaseVerification20261115.json).
 
 For a modular OpenAI client:
 
 ```swift
 // Package.swift
  dependencies: [
-    .package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.3.0"),
-    .package(url: "https://github.com/SwiftAISDK/swift-ai-openai.git", from: "1.2.0"),
+    .package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+    .package(url: "https://github.com/SwiftAISDK/swift-ai-openai.git", from: "1.3.1"),
  ],
  targets: [
     .target(name: "YourApp", dependencies: [
@@ -111,16 +114,16 @@ release numbers do not track npm release numbers. Applications should commit the
 `Package.resolved`; reusable libraries should normally express compatible ranges.
 
 
-The 3.2 umbrella shares model and request types with the modular packages and
+The 3.4 umbrella shares model and request types with the modular packages and
 preserves the ordinary `import SwiftAISDK` API. Existing 2.x tags remain usable,
 but their separately defined types cannot be mixed with modular values. Moving
 modules is not a binary compatibility guarantee; rebuild your application.
-The [tested 3.2 release set](https://github.com/SwiftAISDK/SwiftAISDK/blob/3.2.0/Releases/umbrella/3.2.0.json)
-records the complete dependency selection.
+The [tested 3.4 release set](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Releases/umbrella/3.4.0.json)
+records the complete dependency selection after actual-tag verification.
 
-
-The 3.2 release adds queued steering and ordered UI replay, native URL transcription
-and word timings, uploaded-video descriptors, request-origin privacy and provider
-request/stream fixes. Existing exhaustive switches must handle the new documented
-enum cases. See the [weekly audit](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/WeeklyUpstreamAudit20261108.md)
-for every npm/Swift version, verified release ref and retained gap.
+This release adds Tencent TokenHub/VOD, Parallel decisions and ScaleDown
+decisions/extraction, HeyGen decisions, explicit-secret streaming tool-approval
+replay and per-output video URL/media-type descriptors. Core is at least 1.5.0
+and HeyGen at least 1.2.0 in the umbrella because its compatibility API exposes
+these additions. See the [weekly audit](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/WeeklyUpstreamAudit20261115.md)
+for every npm/Swift version, release ref, verification result and retained gap.

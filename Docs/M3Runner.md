@@ -111,3 +111,19 @@ Focused tests run without network requests, real delays or Swift processes:
 ```sh
 node --test Scripts/tests/m3-runner.test.cjs
 ```
+
+## Verified operation, 2026-11-15
+
+The dedicated `oz-m3-swiftaisdk` service is installed and online. These actual
+Actions runs verify its routing and pinned compiler:
+
+| Check | Observed result |
+| --- | --- |
+| [Online native probe](https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43678530171) | Passed on the M3 runner. |
+| [Controlled offline handoff](https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43678650419) | M3 probe remained queued; the watchdog dispatched one hosted replacement after the grace period. |
+| [Hosted replacement](https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43678783361) | Native Swift 6.3.3 probe passed on `macos-26`; original queued run was cancelled. |
+| [Complete SDK verification](https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43678851385) | All package/facade tests, iOS compilation and examples passed on M3. |
+
+The dedicated service was restarted after the controlled outage. Viscacha's
+existing service remained unchanged. The offline exercise used the explicitly
+separate `runner_probe`; it does not replace the complete SDK verification.

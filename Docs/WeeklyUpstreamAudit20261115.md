@@ -1,7 +1,8 @@
 # Weekly upstream audit — 2026-11-15
 
 Runtime, matching-release delta review and all required local checks are complete.
-Publication remains gated by exact-source hosted CI and public-reference checks. This is a delta review with retained
+The 36 independent releases passed exact-source hosted CI and public-reference checks.
+The separate compatibility umbrella is the remaining release phase. This is a delta review with retained
 native/platform gaps; it does not certify full-package or live-service parity.
 
 Fresh npm registry: 54 previously tracked packages, 36 changed versions; three
@@ -123,3 +124,46 @@ graphs supplement the generic resolver, and one additional complete umbrella
 consumer verifies the least permitted 55-dependency graph. The umbrella requires
 Core 1.5.0 and HeyGen 1.2.0 for the added compatibility APIs. These local synthetic
 refs are rehearsal evidence; actual public-tag checks follow publication.
+
+## Verified independent releases
+
+Canonical source: `1e543b35e0259a5bda888665dacf2d4a7f1bb0ed`; [Swift 6.3.3/iOS/examples/docs CI](https://github.com/SwiftAISDK/SwiftAISDK/actions/runs/43674303677). All 36 standalone CI runs and 62 clean actual-public-tag consumers passed. The complete refs and SemVer rationale are in [ReleaseVerification20261115.json](ReleaseVerification20261115.json). No unchanged Swift unit was released.
+
+| Swift unit | Previous | Published | Change |
+| --- | --- | --- | --- |
+| swift-ai-core | 1.4.0 | [1.5.0](https://github.com/SwiftAISDK/swift-ai-core/releases/tag/1.5.0) | minor |
+| swift-ai-alibaba | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-alibaba/releases/tag/1.1.3) | patch |
+| swift-ai-anthropic | 1.4.0 | [1.4.1](https://github.com/SwiftAISDK/swift-ai-anthropic/releases/tag/1.4.1) | patch |
+| swift-ai-openai | 1.3.0 | [1.3.1](https://github.com/SwiftAISDK/swift-ai-openai/releases/tag/1.3.1) | patch |
+| swift-ai-amazon-bedrock | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-amazon-bedrock/releases/tag/1.1.3) | patch |
+| swift-ai-anthropic-aws | 1.2.1 | [1.2.2](https://github.com/SwiftAISDK/swift-ai-anthropic-aws/releases/tag/1.2.2) | patch |
+| swift-ai-deepseek | 1.2.0 | [1.2.1](https://github.com/SwiftAISDK/swift-ai-deepseek/releases/tag/1.2.1) | patch |
+| swift-ai-azure | 1.2.1 | [1.2.2](https://github.com/SwiftAISDK/swift-ai-azure/releases/tag/1.2.2) | patch |
+| swift-ai-baseten | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-baseten/releases/tag/1.1.3) | patch |
+| swift-ai-black-forest-labs | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-black-forest-labs/releases/tag/1.1.3) | patch |
+| swift-ai-cerebras | 1.2.1 | [1.2.2](https://github.com/SwiftAISDK/swift-ai-cerebras/releases/tag/1.2.2) | patch |
+| swift-ai-cohere | 1.2.1 | [1.2.2](https://github.com/SwiftAISDK/swift-ai-cohere/releases/tag/1.2.2) | patch |
+| swift-ai-deepinfra | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-deepinfra/releases/tag/1.1.3) | patch |
+| swift-ai-fal | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-fal/releases/tag/1.1.3) | patch |
+| swift-ai-fireworks | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-fireworks/releases/tag/1.1.3) | patch |
+| swift-ai-gateway | 1.3.0 | [1.3.1](https://github.com/SwiftAISDK/swift-ai-gateway/releases/tag/1.3.1) | patch |
+| swift-ai-gmicloud | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-gmicloud/releases/tag/1.1.3) | patch |
+| swift-ai-google | 1.3.0 | [1.3.1](https://github.com/SwiftAISDK/swift-ai-google/releases/tag/1.3.1) | patch |
+| swift-ai-google-vertex | 1.2.1 | [1.2.2](https://github.com/SwiftAISDK/swift-ai-google-vertex/releases/tag/1.2.2) | patch |
+| swift-ai-groq | 1.2.1 | [1.2.2](https://github.com/SwiftAISDK/swift-ai-groq/releases/tag/1.2.2) | patch |
+| swift-ai-heygen | 1.1.2 | [1.2.0](https://github.com/SwiftAISDK/swift-ai-heygen/releases/tag/1.2.0) | minor |
+| swift-ai-klingai | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-klingai/releases/tag/1.1.3) | patch |
+| swift-ai-luma | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-luma/releases/tag/1.1.3) | patch |
+| swift-ai-minimax | 1.3.0 | [1.3.1](https://github.com/SwiftAISDK/swift-ai-minimax/releases/tag/1.3.1) | patch |
+| swift-ai-mistral | 1.2.1 | [1.2.2](https://github.com/SwiftAISDK/swift-ai-mistral/releases/tag/1.2.2) | patch |
+| swift-ai-moonshotai | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-moonshotai/releases/tag/1.1.3) | patch |
+| swift-ai-parallel | initial | [1.0.0](https://github.com/SwiftAISDK/swift-ai-parallel/releases/tag/1.0.0) | initial |
+| swift-ai-perplexity | 1.2.0 | [1.2.1](https://github.com/SwiftAISDK/swift-ai-perplexity/releases/tag/1.2.1) | patch |
+| swift-ai-prodia | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-prodia/releases/tag/1.1.3) | patch |
+| swift-ai-replicate | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-replicate/releases/tag/1.1.3) | patch |
+| swift-ai-scaledown | initial | [1.0.0](https://github.com/SwiftAISDK/swift-ai-scaledown/releases/tag/1.0.0) | initial |
+| swift-ai-tencent | initial | [1.0.0](https://github.com/SwiftAISDK/swift-ai-tencent/releases/tag/1.0.0) | initial |
+| swift-ai-togetherai | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-togetherai/releases/tag/1.1.3) | patch |
+| swift-ai-voyage | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-voyage/releases/tag/1.1.3) | patch |
+| swift-ai-xai | 1.2.1 | [1.2.2](https://github.com/SwiftAISDK/swift-ai-xai/releases/tag/1.2.2) | patch |
+| swift-ai-zai | 1.1.2 | [1.1.3](https://github.com/SwiftAISDK/swift-ai-zai/releases/tag/1.1.3) | patch |

@@ -1,6 +1,6 @@
 ## Generate a video
 
-The HeyGen adapter follows `@ai-sdk/heygen@3.0.0`. Set `HEYGEN_API_KEY` or pass
+The HeyGen adapter follows `@ai-sdk/heygen@3.0.25`. Set `HEYGEN_API_KEY` or pass
 `ProviderSettings(apiKey:)`; `baseURL`, custom headers and `transport` support
 proxies and testing. Swift resolves credentials when `AIProviders.heyGen()` is
 created. The JavaScript factory resolves them lazily at request time.

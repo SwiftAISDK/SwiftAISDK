@@ -15,6 +15,7 @@ Source URL: /providers/anthropic/
 - Language
 - Evaluation
 - Decision
+- Extraction
 - Files
 - Skills
 

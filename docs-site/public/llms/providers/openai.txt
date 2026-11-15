@@ -20,6 +20,7 @@ Source URL: /providers/openai/
 - Speech
 - Evaluation
 - Decision
+- Extraction
 - Files
 - Skills
 

@@ -1,7 +1,7 @@
 # Swift package release records
 
 Release records describe Swift versions. npm baselines remain independent in
-`Porting/upstream-lock.json`. All 52 packages are published.
+`Porting/upstream-lock.json`. All 55 packages are published.
 `sets/modular-pilot.json` preserves the four initial releases;
 `sets/modular-3.json` records 48 initial packages plus core/Anthropic 1.1.0.
 `umbrella/3.0.0.json` records the complete tested selection without imposing an
@@ -159,3 +159,10 @@ provider/shared-parser repairs, downstream selection and changed-unit-only local
 releases. It also registers an unimplemented fixture provider and verifies that
 changing its state alone cannot bypass release review. No production baselines,
 capabilities, remote releases or provider calls change during this rehearsal.
+
+The 2026-11-15 set is in `sets/weekly-upstream-20261115.json`: 36 changed
+units (31 patch, two minor, three initial), retaining 19 unchanged units. All
+36 standalone CIs and 62 clean actual-public-tag consumers passed. Eight
+version-specific historical graphs and one exact least-version umbrella graph
+supplement 112 generic local clients. The separate compatibility umbrella follows
+after its own actual-tag verification.

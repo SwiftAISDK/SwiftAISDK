@@ -13,10 +13,11 @@ Source URL: /providers/scaledown/
 ## Capabilities
 
 - Decision
+- Extraction
 
 Native Swift port of [`@ai-sdk/scaledown` 3.0.1](https://www.npmjs.com/package/@ai-sdk/scaledown/v/3.0.1). It provides experimental Decision V4 and Extraction V4 models. Requires Swift 6.3, macOS 12 or iOS 15, and SwiftAI core 1.4.0 or later.
 
-Add `https://github.com/SwiftAISDK/swift-ai-scaledown.git` to Swift Package Manager and select `SwiftAIScaleDown` (initial version 1.0.0). Use the canonical workspace before that tag is published; a source port does not itself establish release availability.
+Add `https://github.com/SwiftAISDK/swift-ai-scaledown.git` to Swift Package Manager and select `SwiftAIScaleDown` (version 1.0.0).
 
 ```swift
 import SwiftAIScaleDown
