@@ -1,6 +1,6 @@
 # "tencent"
 
-Source URL: /providers/tencent/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/tencent/
 
 ## Package
 
@@ -74,6 +74,6 @@ Matching-release provenance and every upstream test-file/scenario disposition ar
 
 Tencent 3.0.3 TokenHub Chat Completions and Kling video, and TC3-signed Tencent Cloud VOD start/status operations. Native options, lazy independent credentials, media inputs, warnings, errors and billing metadata preserve release-matched scenarios. JavaScript workflows and Zod module lifecycle are excluded; native required prompt adaptation is documented. Each output exposes its own URL/MIME descriptor, including mixed-format VOD results.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Return to the [provider matrix](/providers/).
+Return to the [provider matrix](/SwiftAISDK/providers/).

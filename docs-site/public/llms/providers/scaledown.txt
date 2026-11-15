@@ -1,6 +1,6 @@
 # "scaledown"
 
-Source URL: /providers/scaledown/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/scaledown/
 
 ## Package
 
@@ -66,6 +66,6 @@ swift test --package-path Packages/swift-ai-scaledown --no-parallel
 
 ScaleDown 3.0.1: native Decision V4 choice, boolean and score, plus Extraction V4 text and lists of text. x-api-key and SCALEDOWN_API_KEY, lazy async credentials, custom base URL/headers, PDF/JPEG/PNG/TIFF evidence, confidence/legend/cost metadata, strict response validation, UTF-8 byte offsets converted to verified UTF-16 sources and OCR file citations. Other extraction fields and model families are explicitly rejected; JS workflow serialization is outside Swift.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Return to the [provider matrix](/providers/).
+Return to the [provider matrix](/SwiftAISDK/providers/).

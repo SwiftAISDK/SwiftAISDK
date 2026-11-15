@@ -1,6 +1,6 @@
 # "googleVertex.anthropic"
 
-Source URL: /providers/googlevertex-anthropic/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/googlevertex-anthropic/
 
 ## Package
 
@@ -37,6 +37,6 @@ enforcement switch.
 
 Vertex Anthropic mirrors upstream Google Vertex 5.0.141 and inherits the shared Anthropic 4.0.99 model recognition, system options, thinking behavior, citations, and beta headers. The 2026-10-18 pass: Validated labels are UTF-8 JSON/base64 encoded into x-vertex-ai-labels after final request-header merging, with explicit caller header precedence. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. Automatic native structured output requires host opt-in and a supported Claude4.5+ model; strict tool inputs remain disabled. Explicit outputFormat and lossless fallback for forced-tool-rejecting models retain the shared policy override. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied. The 2026-11-15 delta and native/platform distinctions are recorded in WeeklyUpstreamAudit20261115; no full-package or live-service parity is implied.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Return to the [provider matrix](/providers/).
+Return to the [provider matrix](/SwiftAISDK/providers/).

@@ -1,6 +1,6 @@
 # Extract fields
 
-Source URL: /core/extract/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/extract/
 
 `AI.experimentalExtract` reads one evidence state and returns named extraction
 answers. OpenAI, Anthropic and Google expose language-backed extraction adapters

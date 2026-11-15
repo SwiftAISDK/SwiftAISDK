@@ -1,6 +1,6 @@
 # Introduction
 
-Source URL: /
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/
 
 SwiftAISDK is a SwiftPM port of the provider-facing parts of Vercel AI SDK. It gives Swift apps one facade for text, durable batches, structured output, evaluation, embeddings, media, streaming audio, realtime sessions, reranking, files, skills, middleware, MCP tools, and typed tool execution.
 

@@ -1,6 +1,6 @@
 # Migrate to 3.0
 
-Source URL: /getting-started/migrating-to-3/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/getting-started/migrating-to-3/
 
 SwiftAISDK 3.0 makes the existing Swift-native port independently installable.
 The optional `SwiftAISDK` product keeps the complete provider, MCP and UI surface.

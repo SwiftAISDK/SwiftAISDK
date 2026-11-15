@@ -1,6 +1,6 @@
 # Model metadata
 
-Source URL: /core/model-metadata/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/core/model-metadata/
 
 ## Descriptive model metadata
 

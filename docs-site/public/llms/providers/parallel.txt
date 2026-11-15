@@ -1,6 +1,6 @@
 # "parallel"
 
-Source URL: /providers/parallel/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/parallel/
 
 ## Package
 
@@ -126,6 +126,6 @@ embedding, video or audio generation surface in this provider.
 
 Parallel 3.0.9 native web-grounded Decision V4: boolean/choice/score, full-precision answers, refusal, shared citations/excerpts, confidence/legends/usage, configurable mode/base URL, lazy x-api-key auth and structured errors. Files/box and JavaScript Workflow symbol serialization are unsupported.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Return to the [provider matrix](/providers/).
+Return to the [provider matrix](/SwiftAISDK/providers/).

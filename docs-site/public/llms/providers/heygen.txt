@@ -1,6 +1,6 @@
 # "heygen"
 
-Source URL: /providers/heygen/
+Source URL: https://swiftaisdk.github.io/SwiftAISDK/providers/heygen/
 
 ## Package
 
@@ -201,6 +201,6 @@ and request identity; its Decision selector forwards to the native adapter.
 
 HeyGen 3.0.25 native asynchronous video plus multimodal Decision V4: boolean/choice/score, 400 questions, 4images/1video, URL/base64/native assets, lazy auth, exact response validation/confidence/JSON legends/answer warnings/usage. Existing video operation selectors preserved; JS serialization and unrepresentable invalid file-union shapes excluded.
 
-Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
+Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 
-Return to the [provider matrix](/providers/).
+Return to the [provider matrix](/SwiftAISDK/providers/).
