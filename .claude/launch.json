@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "docs-preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "docs-site", "run", "preview", "--", "--port", "4321"],
+      "env": { "DOCS_BASE": "/SwiftAISDK" },
+      "port": 4321
+    }
+  ]
+}
