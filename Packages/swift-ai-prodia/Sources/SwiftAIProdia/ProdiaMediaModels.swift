@@ -66,37 +66,29 @@ public final class ProdiaLanguageModel: LanguageModel, @unchecked Sendable {
             form.appendFile(name: "input", fileName: "input\(mediaExtension(input.mimeType))", mimeType: input.mimeType, data: input.data)
         }
         let payload = form.finalize()
-        var headers = request.headers.mergingHeaders([
-            "Accept": "multipart/form-data",
-            "Content-Type": "multipart/form-data; boundary=\(form.boundary)"
-        ])
-        headers = config.headers.mergingHeaders(headers)
-        let response = try await config.transport.send(AIHTTPRequest(
-            method: "POST",
-            url: try requireURL("\(withoutTrailingSlash(config.baseURL))/job?price=true"),
-            headers: headers,
+        let response = try await config.transport.send(config.rawRequest(
+            path: "/job?price=true",
+            modelID: modelID,
             body: payload,
+            contentType: "multipart/form-data; boundary=\(form.boundary)",
+            headers: request.headers.mergingHeaders(["Accept": "multipart/form-data"]),
             abortSignal: request.abortSignal
         ))
         guard (200..<300).contains(response.statusCode) else {
             throw prodiaHTTPStatusError(provider: providerID, response: response)
         }
         let multipart = try parseMultipartResponse(response)
-        guard multipart.contains(where: { $0.name == "job" }) else {
-            throw AIError.invalidResponse(provider: providerID, message: "Prodia multipart response missing job part")
-        }
-        let text = multipart.first {
-            ($0.name == "output" && ($0.contentType?.hasPrefix("text/") == true || $0.fileName?.hasSuffix(".txt") == true))
-                || $0.contentType?.hasPrefix("text/") == true
-        }.flatMap { String(data: $0.body, encoding: .utf8) } ?? ""
-        let job = prodiaJobResult(from: multipart)
-        let files = prodiaLanguageFiles(from: multipart)
+        let job = try prodiaValidatedJobResult(from: multipart, provider: providerID)
+        let output = prodiaLanguageOutput(from: multipart)
+        let text = output.text ?? ""
+        let files = output.files
         let rawValue = multipartRawValue(multipart)
         return ProdiaLanguageGeneration(
             result: TextGenerationResult(
                 text: text,
                 finishReason: "stop",
                 usage: TokenUsage(),
+                files: files,
                 providerMetadata: ["prodia": prodiaProviderMetadata(from: job)],
                 rawValue: rawValue,
                 warnings: warnings,
@@ -110,6 +102,8 @@ public final class ProdiaLanguageModel: LanguageModel, @unchecked Sendable {
 public final class ProdiaImageModel: ImageModel, @unchecked Sendable {
     public let providerID = "prodia.image"
     public let modelID: String
+    /// Upstream `ProdiaImageModel.maxImagesPerCall`: each job yields one image.
+    public let maxImagesPerCall = 1
     private let config: ProdiaModelConfiguration
 
     public init(modelID: String, config: ProdiaModelConfiguration) {
@@ -145,7 +139,7 @@ public final class ProdiaImageModel: ImageModel, @unchecked Sendable {
         let response = try await config.transport.send(config.request(
             path: "/job?price=true",
             modelID: modelID,
-            body: try prodiaJSONJobRequestBody(body),
+            body: body,
             headers: request.headers.mergingHeaders(["Accept": "multipart/form-data; image/png"]),
             abortSignal: request.abortSignal
         ))
@@ -153,14 +147,12 @@ public final class ProdiaImageModel: ImageModel, @unchecked Sendable {
             throw prodiaHTTPStatusError(provider: providerID, response: response)
         }
         let multipart = try parseMultipartResponse(response)
-        guard multipart.contains(where: { $0.name == "job" }) else {
-            throw AIError.invalidResponse(provider: providerID, message: "Prodia multipart response missing job part")
-        }
-        let output = multipart.first { $0.name == "output" || $0.contentType?.hasPrefix("image/") == true }
+        let job = try prodiaValidatedJobResult(from: multipart, provider: providerID)
+        // Upstream createMultipartResponseHandler: a later matching part wins.
+        let output = multipart.last { $0.name != "job" && ($0.name == "output" || $0.contentType?.hasPrefix("image/") == true) }
         guard let output else {
             throw AIError.invalidResponse(provider: providerID, message: "Prodia multipart response missing output image")
         }
-        let job = prodiaJobResult(from: multipart)
         return ImageGenerationResult(
             urls: [],
             base64Images: [output.body.base64EncodedString()],
@@ -176,6 +168,8 @@ public final class ProdiaImageModel: ImageModel, @unchecked Sendable {
 public final class ProdiaVideoModel: VideoModel, @unchecked Sendable {
     public let providerID = "prodia.video"
     public let modelID: String
+    /// Upstream `ProdiaVideoModel.maxVideosPerCall`: each job yields one video.
+    public let maxVideosPerCall = 1
     private let config: ProdiaModelConfiguration
 
     public init(modelID: String, config: ProdiaModelConfiguration) {
@@ -203,22 +197,19 @@ public final class ProdiaVideoModel: VideoModel, @unchecked Sendable {
             form.appendFile(name: "job", fileName: "job.json", mimeType: "application/json", data: try encodeJSONBody(body))
             form.appendFile(name: "input", fileName: "input\(mediaExtension(input.mimeType))", mimeType: input.mimeType, data: input.data)
             let payload = form.finalize()
-            let headers = config.headers.mergingHeaders(request.headers).mergingHeaders([
-                "Accept": "multipart/form-data; video/mp4",
-                "Content-Type": "multipart/form-data; boundary=\(form.boundary)"
-            ])
-            response = try await config.transport.send(AIHTTPRequest(
-                method: "POST",
-                url: try requireURL("\(withoutTrailingSlash(config.baseURL))/job?price=true"),
-                headers: headers,
+            response = try await config.transport.send(config.rawRequest(
+                path: "/job?price=true",
+                modelID: modelID,
                 body: payload,
+                contentType: "multipart/form-data; boundary=\(form.boundary)",
+                headers: request.headers.mergingHeaders(["Accept": "multipart/form-data; video/mp4"]),
                 abortSignal: request.abortSignal
             ))
         } else {
             response = try await config.transport.send(config.request(
                 path: "/job?price=true",
                 modelID: modelID,
-                body: try prodiaJSONJobRequestBody(body),
+                body: body,
                 headers: request.headers.mergingHeaders(["Accept": "multipart/form-data; video/mp4"]),
                 abortSignal: request.abortSignal
             ))
@@ -227,17 +218,32 @@ public final class ProdiaVideoModel: VideoModel, @unchecked Sendable {
             throw prodiaHTTPStatusError(provider: providerID, response: response)
         }
         let multipart = try parseMultipartResponse(response)
-        guard multipart.contains(where: { $0.name == "job" }) else {
-            throw AIError.invalidResponse(provider: providerID, message: "Prodia multipart response missing job part")
+        let job = try prodiaValidatedJobResult(from: multipart, provider: providerID)
+        // Mirrors upstream createVideoMultipartResponseHandler: a later matching
+        // part replaces an earlier one, and a named `output` part keeps the
+        // previous media type (default `video/mp4`) unless it declares `video/*`.
+        var videoBytes: Data?
+        var videoMediaType = "video/mp4"
+        for part in multipart where part.name != "job" {
+            let partContentType = part.contentType ?? ""
+            if part.name == "output" {
+                videoBytes = part.body
+                if partContentType.hasPrefix("video/") {
+                    videoMediaType = partContentType
+                }
+            } else if partContentType.hasPrefix("video/") {
+                videoBytes = part.body
+                videoMediaType = partContentType
+            }
         }
-        let output = multipart.first { $0.name == "output" || $0.contentType?.hasPrefix("video/") == true }
-        guard output != nil else {
+        guard let videoBytes else {
             throw AIError.invalidResponse(provider: providerID, message: "Prodia multipart response missing output video")
         }
-        let job = prodiaJobResult(from: multipart)
         return VideoGenerationResult(
             urls: [],
-            operationID: job?["id"]?.stringValue,
+            base64Videos: [videoBytes.base64EncodedString()],
+            operationID: job["id"]?.stringValue,
+            mediaType: videoMediaType,
             rawValue: multipartRawValue(multipart),
             providerMetadata: ["prodia": .object(["videos": .array([prodiaProviderMetadata(from: job)])])],
             requestMetadata: videoGenerationRequestMetadata(request, body: body),

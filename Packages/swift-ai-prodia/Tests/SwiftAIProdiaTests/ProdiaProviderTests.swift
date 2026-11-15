@@ -42,7 +42,7 @@ import Testing
     #expect(request.headers["authorization"] == "Bearer prodia-token")
     #expect(request.headers["user-agent"] == "ai-sdk-prodia/2.0.84")
     #expect(request.headers["Accept"] == "multipart/form-data")
-    #expect(request.headers["Content-Type"]?.hasPrefix("multipart/form-data; boundary=SwiftAISDK-") == true)
+    #expect(request.headers["content-type"]?.hasPrefix("multipart/form-data; boundary=SwiftAISDK-") == true)
     let bodyText = String(decoding: try #require(request.body), as: UTF8.self)
     #expect(bodyText.contains(#""type":"inference.nano-banana.img2img.v2""#))
     #expect(bodyText.contains(#""prompt":"Use short captions.\nDescribe this""#))
@@ -254,12 +254,13 @@ import Testing
     #expect(request.headers["user-agent"] == "ai-sdk-prodia/2.0.84")
     #expect(request.headers["Accept"] == "multipart/form-data; image/png")
     let body = try decodeJSONBody(try #require(request.body))
-    #expect(body["values"]?["type"]?.stringValue == "sdxl")
-    #expect(body["values"]?["config"]?["prompt"]?.stringValue == "cat")
-    #expect(body["values"]?["config"]?["width"]?.intValue == 1024)
-    #expect(body["values"]?["config"]?["height"]?.intValue == 768)
-    #expect(body["values"]?["config"]?["seed"]?.intValue == 123)
-    #expect(body["content"]?.stringValue?.contains(#""type":"sdxl""#) == true)
+    #expect(body["type"]?.stringValue == "sdxl")
+    #expect(body["config"]?["prompt"]?.stringValue == "cat")
+    #expect(body["config"]?["width"]?.intValue == 1024)
+    #expect(body["config"]?["height"]?.intValue == 768)
+    #expect(body["config"]?["seed"]?.intValue == 123)
+    #expect(body["values"] == nil)
+    #expect(body["content"] == nil)
 }
 
 @Test func prodiaImageMapsProviderOptionsAndWarnsForInvalidSize() async throws {
@@ -292,17 +293,17 @@ import Testing
         AIWarning(type: "unsupported", feature: "size", message: "Invalid size format: invalid. Expected format: WIDTHxHEIGHT (e.g., 1024x1024)")
     ])
     let body = try decodeJSONBody(try #require((await transport.requests()).first?.body))
-    #expect(body["values"]?["config"]?["width"]?.intValue == 512)
-    #expect(body["values"]?["config"]?["height"]?.intValue == 512)
-    #expect(body["values"]?["config"]?["steps"]?.intValue == 4)
-    #expect(body["values"]?["config"]?["style_preset"]?.stringValue == "cinematic")
-    #expect(body["values"]?["config"]?["loras"]?[0]?.stringValue == "detail")
-    #expect(body["values"]?["config"]?["progressive"]?.boolValue == true)
-    #expect(body["values"]?["config"]?["seed"] == nil)
-    #expect(body["values"]?["config"]?["stylePreset"] == nil)
-    #expect(body["values"]?["config"]?["prodia"] == nil)
-    #expect(body["values"]?["config"]?["ignored"] == nil)
-    #expect(body["values"]?["config"]?["ignoredProviderOption"] == nil)
+    #expect(body["config"]?["width"]?.intValue == 512)
+    #expect(body["config"]?["height"]?.intValue == 512)
+    #expect(body["config"]?["steps"]?.intValue == 4)
+    #expect(body["config"]?["style_preset"]?.stringValue == "cinematic")
+    #expect(body["config"]?["loras"]?[0]?.stringValue == "detail")
+    #expect(body["config"]?["progressive"]?.boolValue == true)
+    #expect(body["config"]?["seed"] == nil)
+    #expect(body["config"]?["stylePreset"] == nil)
+    #expect(body["config"]?["prodia"] == nil)
+    #expect(body["config"]?["ignored"] == nil)
+    #expect(body["config"]?["ignoredProviderOption"] == nil)
 }
 
 @Test func prodiaImageProviderOptionsValidateAndStripLikeUpstreamSchema() async throws {
@@ -351,13 +352,13 @@ import Testing
     ))
 
     let body = try decodeJSONBody(try #require((await transport.requests()).first?.body))
-    #expect(body["values"]?["config"]?["steps"]?.intValue == 4)
-    #expect(body["values"]?["config"]?["width"]?.intValue == 512)
-    #expect(body["values"]?["config"]?["height"]?.intValue == 768)
-    #expect(body["values"]?["config"]?["style_preset"]?.stringValue == "anime")
-    #expect(body["values"]?["config"]?["loras"]?[0]?.stringValue == "detail")
-    #expect(body["values"]?["config"]?["progressive"]?.boolValue == false)
-    #expect(body["values"]?["config"]?["unknown"] == nil)
+    #expect(body["config"]?["steps"]?.intValue == 4)
+    #expect(body["config"]?["width"]?.intValue == 512)
+    #expect(body["config"]?["height"]?.intValue == 768)
+    #expect(body["config"]?["style_preset"]?.stringValue == "anime")
+    #expect(body["config"]?["loras"]?[0]?.stringValue == "detail")
+    #expect(body["config"]?["progressive"]?.boolValue == false)
+    #expect(body["config"]?["unknown"] == nil)
 }
 
 @Test func prodiaImageUsesUpstreamMultipartValidationMessages() async throws {
@@ -413,11 +414,12 @@ import Testing
     #expect(request.headers["user-agent"] == "ai-sdk-prodia/2.0.84")
     #expect(request.headers["Accept"] == "multipart/form-data; video/mp4")
     let body = try decodeJSONBody(try #require(request.body))
-    #expect(body["values"]?["type"]?.stringValue == "veo")
-    #expect(body["values"]?["config"]?["prompt"]?.stringValue == "cat running")
-    #expect(body["values"]?["config"]?["seed"]?.intValue == 42)
-    #expect(body["values"]?["config"]?["resolution"]?.stringValue == "720p")
-    #expect(body["content"]?.stringValue?.contains(#""type":"veo""#) == true)
+    #expect(body["type"]?.stringValue == "veo")
+    #expect(body["config"]?["prompt"]?.stringValue == "cat running")
+    #expect(body["config"]?["seed"]?.intValue == 42)
+    #expect(body["config"]?["resolution"]?.stringValue == "720p")
+    #expect(body["values"] == nil)
+    #expect(body["content"] == nil)
 }
 
 @Test func prodiaVideoUsesMultipartForImageInputAndMergesProviderOptions() async throws {
@@ -437,7 +439,7 @@ import Testing
     ))
 
     let request = try #require(await transport.requests().first)
-    #expect(request.headers["Content-Type"]?.hasPrefix("multipart/form-data; boundary=SwiftAISDK-") == true)
+    #expect(request.headers["content-type"]?.hasPrefix("multipart/form-data; boundary=SwiftAISDK-") == true)
     let bodyText = String(decoding: try #require(request.body), as: UTF8.self)
     #expect(bodyText.contains("name=\"input\"; filename=\"input.png\""))
     #expect(bodyText.contains("Content-Type: image/png"))
@@ -489,8 +491,8 @@ import Testing
     ))
 
     let body = try decodeJSONBody(try #require((await transport.requests()).first?.body))
-    #expect(body["values"]?["config"]?["resolution"]?.stringValue == "720p")
-    #expect(body["values"]?["config"]?["unknown"] == nil)
+    #expect(body["config"]?["resolution"]?.stringValue == "720p")
+    #expect(body["config"]?["unknown"] == nil)
 }
 
 @Test func prodiaVideoUsesUpstreamMultipartValidationMessages() async throws {

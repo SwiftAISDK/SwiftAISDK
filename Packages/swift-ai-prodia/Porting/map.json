@@ -29,7 +29,12 @@
     ],
     "tests": [
       "Packages/swift-ai-prodia/Tests/SwiftAIProdiaTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-prodia/Tests/SwiftAIProdiaTests/ProdiaImageModelUpstreamTests.swift",
+      "Packages/swift-ai-prodia/Tests/SwiftAIProdiaTests/ProdiaLanguageModelUpstreamTests.swift",
       "Packages/swift-ai-prodia/Tests/SwiftAIProdiaTests/ProdiaProviderTests.swift",
+      "Packages/swift-ai-prodia/Tests/SwiftAIProdiaTests/ProdiaProviderUpstreamTests.swift",
+      "Packages/swift-ai-prodia/Tests/SwiftAIProdiaTests/ProdiaUpstreamFixtures.swift",
+      "Packages/swift-ai-prodia/Tests/SwiftAIProdiaTests/ProdiaVideoModelUpstreamTests.swift",
       "Packages/swift-ai-prodia/Tests/SwiftAIProdiaTests/TestSupport.swift",
       "Packages/swift-ai-prodia/Tests/SwiftAIProdiaTests/Weekly20261101CredentialsTests.swift",
       "Packages/swift-ai-prodia/Tests/SwiftAIProdiaTests/Weekly20261114DownloadTests.swift"

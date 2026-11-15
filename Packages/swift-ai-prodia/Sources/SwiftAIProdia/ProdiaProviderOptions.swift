@@ -187,7 +187,8 @@ func prodiaImageOptions(from options: [String: JSONValue]) -> [String: JSONValue
     if let seed = options["seed"] { output["seed"] = seed }
     if let steps = options["steps"] { output["steps"] = steps }
     if let stylePreset = options["stylePreset"] ?? options["style_preset"] { output["style_preset"] = stylePreset }
-    if let loras = options["loras"] { output["loras"] = loras }
+    // Upstream sends `loras` only when the list is non-empty.
+    if let loras = options["loras"], loras.arrayValue?.isEmpty != true { output["loras"] = loras }
     if let progressive = options["progressive"] { output["progressive"] = progressive }
     return output
 }

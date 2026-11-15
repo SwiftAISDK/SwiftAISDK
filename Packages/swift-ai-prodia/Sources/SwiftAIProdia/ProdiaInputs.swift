@@ -4,11 +4,13 @@ import SwiftAITransport
 import SwiftAIProviderUtilities
 
 
+/// Mirrors upstream: the last system message, then the text parts of the last
+/// user message joined by newlines; a non-empty system message is prepended
+/// with a newline separator.
 func prodiaPrompt(from messages: [AIMessage]) -> String {
-    let system = messages.first(where: { $0.role == .system })?.combinedText ?? ""
-    let user = messages.reversed().first(where: { $0.role == .user })?.combinedText ?? ""
+    let system = messages.last(where: { $0.role == .system })?.combinedText ?? ""
+    let user = messages.last(where: { $0.role == .user })?.combinedText ?? ""
     if system.isEmpty { return user }
-    if user.isEmpty { return system }
     return "\(system)\n\(user)"
 }
 
