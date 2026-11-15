@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "package": "@ai-sdk/scaledown",
+  "version": "3.0.1",
+  "archiveIntegrity": "sha512-EUK7RMN8b3yuJeH5E0uOKk1Hv2Tm2wH+xj1Vf0ESAJ9hrB5a38lt8Hzur019+1U3nroKv4MUxVICJ/tDV+pgSw==",
+  "archiveSHA256": "3473bd66b8661c76a722a230ada1dd92995cd117958bf3318d3f6521d14dc875",
+  "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
+  "testRefRelationship": "matching-release",
+  "files": [
+    {
+      "path": "packages/scaledown/src/scaledown-decision-model.test.ts",
+      "sha256": "ccedec4a75be32ef9231a5527240e871335c6071adde898affd8d2aa9f0ebe15",
+      "disposition": "ported",
+      "swiftFiles": [
+        "Packages/swift-ai-scaledown/Tests/SwiftAIScaleDownTests/ScaleDownDecisionUpstreamTests.swift"
+      ],
+      "scenarios": [
+        {
+          "upstreamScenario": "maps all three question types, native results, usage, and metadata",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownDecisionUpstreamTests.mapsQuestionsNativeAnswersUsageAndMetadata"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "preserves JSON state, structured rubrics, and boolean criteria as text",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownDecisionUpstreamTests.preservesJSONStructuredRubricsAndBooleanCriteriaAsText"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "encodes document input alongside text",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownDecisionUpstreamTests.encodesDocumentAlongsideText"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "passes custom settings, call headers, abort signal, and model ID",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownDecisionUpstreamTests.customAsyncCredentialsURLHeadersAbortSignalAndModelID"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "restores workflow configuration and falls back to environment authentication",
+          "disposition": "ported-with-platform-only-exclusion",
+          "swiftTests": [
+            "ScaleDownDecisionUpstreamTests.environmentAuthenticationAliasesAndSupportedTypes"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks.",
+          "exclusion": "JavaScript WORKFLOW_SERIALIZE/WORKFLOW_DESERIALIZE symbols and serializing fetch/functions have no Swift workflow runtime. Authentication, aliases and supported types are translated."
+        },
+        {
+          "upstreamScenario": "warns about unsupported generation settings and provider options",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownDecisionUpstreamTests.unsupportedSettingsAndProviderOptionWarnings"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "rejects unsupported score criteria %j before sending a request",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownDecisionUpstreamTests.rejectsUnsupportedScoreCriteriaBeforeIO"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "rejects unsupported questions and files before sending a request",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownDecisionUpstreamTests.unsupportedQuestionsFilesAndFactoriesFailBeforeIO"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "surfaces API errors: %j",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownDecisionUpstreamTests.surfacesAPIErrorDetails"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "rejects a malformed successful response",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownDecisionUpstreamTests.rejectsMalformedSuccessfulResponseAsAPICallError"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        }
+      ]
+    },
+    {
+      "path": "packages/scaledown/src/scaledown-extraction-model.test.ts",
+      "sha256": "83f2d75e75859263c4dc0348f5d0da701c5a7d45ae7a1cae1cbefd7eee6953b1",
+      "disposition": "ported",
+      "swiftFiles": [
+        "Packages/swift-ai-scaledown/Tests/SwiftAIScaleDownTests/ScaleDownExtractionUpstreamTests.swift"
+      ],
+      "scenarios": [
+        {
+          "upstreamScenario": "maps text and lists, missing values, confidence, sources, and usage",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownExtractionUpstreamTests.textListsNullValuesConfidenceSourcesAndUsage"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "preserves field IDs with spaces, camelCase, Unicode, and distinct casing",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownExtractionUpstreamTests.fieldIDsPreserveSpacesCamelCaseUnicodeAndDistinctCasing"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks.",
+          "nativeDifference": "Swift Dictionary is unordered; checks exact key set with unchanged casing/Unicode rather than JavaScript insertion order."
+        },
+        {
+          "upstreamScenario": "converts UTF-8 offsets across JSON and Unicode text parts without inventing sources",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownExtractionUpstreamTests.convertsUTF8OffsetsAcrossJSONAndUnicodeWithoutInventingSources"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "sends a base64 document and returns file sources and OCR text",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownExtractionUpstreamTests.base64DocumentFileSourcesOCRAndFallbackUsage"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "rejects unsupported fields and files before sending a request",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownExtractionUpstreamTests.rejectsUnsupportedFieldsAndFilesBeforeIO"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "passes custom configuration and warns about unsupported settings",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownExtractionUpstreamTests.customConfigurationHeadersAbortAndUnsupportedSettings"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        },
+        {
+          "upstreamScenario": "restores workflow configuration and environment authentication",
+          "disposition": "ported-with-platform-only-exclusion",
+          "swiftTests": [
+            "ScaleDownExtractionUpstreamTests.environmentAuthenticationAndSupportedFieldTypes"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks.",
+          "exclusion": "JavaScript WORKFLOW_SERIALIZE/WORKFLOW_DESERIALIZE symbols and serializing fetch/functions have no Swift workflow runtime. Authentication, aliases and supported types are translated."
+        },
+        {
+          "upstreamScenario": "rejects malformed inner JSON and surfaces API errors",
+          "disposition": "ported",
+          "swiftTests": [
+            "ScaleDownExtractionUpstreamTests.malformedInnerJSONRetainsDataAndAPIErrorsSurface"
+          ],
+          "assertions": "Preserves published scenarios, exact fixture values, request/result/error expectations and zero-I/O rejection checks."
+        }
+      ]
+    }
+  ],
+  "supplementalTests": [
+    "ScaleDownNativeTests"
+  ],
+  "verification": {
+    "status": "passed",
+    "command": "swift test --package-path Packages/swift-ai-scaledown --no-parallel",
+    "exitCode": 0,
+    "tests": 23,
+    "suites": 3,
+    "logSHA256": "85a2d60870e65cc10021cedaebcdf7ecec0e06408c7b1f017db5273d9afc5f99",
+    "verifiedAt": "2026-11-15T01:20:47.954704+00:00",
+    "note": "First compile and run passed. All parameter rows in translated score/error tests ran. No live provider calls."
+  }
+}

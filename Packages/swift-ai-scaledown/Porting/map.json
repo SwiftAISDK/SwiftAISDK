@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-scaledown",
+  "status": "reviewed",
+  "upstream": [
+    {
+      "name": "@ai-sdk/scaledown",
+      "implementation": [
+        "packages/scaledown/src"
+      ],
+      "tests": [
+        "packages/scaledown/src/scaledown-decision-model.test.ts",
+        "packages/scaledown/src/scaledown-extraction-model.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Packages/swift-ai-scaledown/Sources/SwiftAIScaleDown/ScaleDownDecisionModel.swift",
+      "Packages/swift-ai-scaledown/Sources/SwiftAIScaleDown/ScaleDownExtractionModel.swift",
+      "Packages/swift-ai-scaledown/Sources/SwiftAIScaleDown/ScaleDownProvider.swift",
+      "Packages/swift-ai-scaledown/Sources/SwiftAIScaleDown/ScaleDownState.swift",
+      "Packages/swift-ai-scaledown/Sources/SwiftAIScaleDown/ScaleDownValidation.swift"
+    ],
+    "tests": [
+      "Packages/swift-ai-scaledown/Tests/SwiftAIScaleDownTests/ScaleDownDecisionUpstreamTests.swift",
+      "Packages/swift-ai-scaledown/Tests/SwiftAIScaleDownTests/ScaleDownExtractionUpstreamTests.swift",
+      "Packages/swift-ai-scaledown/Tests/SwiftAIScaleDownTests/ScaleDownNativeTests.swift",
+      "Packages/swift-ai-scaledown/Tests/SwiftAIScaleDownTests/ScaleDownTestSupport.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Swift async/await, Sendable, Foundation AITransport and typed native errors replace fetch/JS errors. ScaleDownInvalidExtractionContentError retains exact inner data; API errors retain raw body and separate message."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "JS workflow serialization symbols and closure/fetch serialization are outside the Swift product surface; environment/default aliases and auth assertions in those tests are translated."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "Swift dictionaries are unordered and key assertions compare exact sets; compact JSON uses native deterministic key ordering. Native usage contracts use integral token counts."
+    }
+  ],
+  "reviewNote": "Published @ai-sdk/scaledown@3.0.1 integrity verified; exact release tests at 8bc7652cdb13fc84722666eb93f45acd0d131eee inspected before implementation. Both complete test files and parameter rows translated. Porting/upstream-tests.json records all scenarios and platform exclusions; no full live-service parity claim. Package validation recorded after tests."
+}

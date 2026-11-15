@@ -1,0 +1,109 @@
+# SwiftAIParallel
+
+Native Swift port of `@ai-sdk/parallel` **3.0.9**, exposing Parallel's web-grounded
+Decision V4 API. It supports boolean, choice and score questions, full-precision
+answers, refusals, shared evidence citations, confidence, score legends and usage.
+
+## Install
+
+Add the provider package and the core product when using the decision API.
+Swift 6.3, macOS 12 and iOS 15 or later are required.
+
+```swift
+.package(url: "https://github.com/SwiftAISDK/swift-ai-parallel.git", from: "1.0.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.4.0")
+```
+
+```swift
+.product(name: "SwiftAIParallel", package: "swift-ai-parallel"),
+.product(name: "SwiftAI", package: "swift-ai-core")
+```
+
+## Make a decision
+
+Set `PARALLEL_API_KEY`, or supply `ParallelProviderSettings(apiKey:)`. The key is
+resolved when a request runs. Requests use `x-api-key`, with no generated bearer
+Authorization header, and the versioned `ai-sdk-parallel/3.0.9` user agent.
+
+```swift
+import SwiftAI
+import SwiftAIParallel
+
+let provider = createParallel()
+let model = try provider.decisionModel("fast")
+let result = try await model.doDecide(.init(
+    state: [.json(["company": "Parallel", "website": "https://parallel.ai"])],
+    questions: [
+        "hasSearch": .boolean(instructions: "Does it offer web search?"),
+        "availability": .choice(
+            instructions: "Is the API available?",
+            criteria: ["available": "Publicly available", "unknown": "Insufficient evidence"]
+        ),
+        "fit": .score(
+            instructions: "How well does it fit?",
+            criteria: ["No fit", "Partial fit", "Full fit"]
+        )
+    ],
+    providerOptions: ParallelDecisionModelOptions(includeExcerpts: false).providerOptions
+))
+
+let evidence = result.providerMetadata["parallel"]?["citations"]
+```
+
+`parallel` is the default provider. `AIProviders.parallel(configuration:)` and
+`provider.decision(_:)` are equivalent native factories. Any nonempty model string
+is forwarded as the service's `mode`, so new modes do not require a package update.
+The default endpoint is `https://api.parallel.ai/v1/decisions`; `baseURL` replaces
+the prefix before `/decisions`.
+
+Settings accept custom headers, an injectable `AITransport`, a deterministic
+environment map, or an async `apiKeyProvider` that supplies a fresh key before
+each authenticated request. Call headers override provider headers. Pass
+`abortSignal` in call options to propagate cancellation through the request.
+
+## Inputs and results
+
+State may contain ordered text and JSON parts. A single part is sent directly;
+zero or multiple parts are sent as a JSON array. Files and box questions are
+rejected before network I/O. Requests require 1–100 questions with ASCII letters,
+digits, underscores or hyphens in their names. Choice questions require 2–255
+criteria; score questions require 2–10 levels.
+
+`includeExcerpts` is an optional Boolean. Omitting it leaves the service default
+unchanged. Unsupported provider options, `maxOutputTokens` and `reasoning` produce
+warnings. The adapter requires exactly one response answer for each question and
+validates probability ranges, citations and usage. It preserves refusal answers
+alongside successful answers; the core decision API applies its own refusal
+policy when used to normalize these provider results.
+
+Results preserve full numeric precision without declaring rounding. Metadata at
+`providerMetadata["parallel"]` contains `citations`, `confidence`, `legend`,
+`decisionId` and `mode`. Citations are shared across the request, without a
+per-answer mapping; empty excerpts and explicit null titles are retained.
+`ParallelDecisionProviderMetadata` provides a typed Codable view. Response metadata
+includes the decision ID, requested model ID, headers and unmodified JSON body.
+HTTP errors retain status, retry headers and the wire body in `AIAPICallError`.
+
+`parallelModelCatalog`, `getParallelDecisionModelEntry(_:)` and
+`parallelProviderOptions` describe known `fast` support and unknown future-mode
+option support. These declarations do not change request validation.
+
+## Verification and platform differences
+
+The exact 3.0.9 release test file is translated into Swift with its original
+illustrative JSON fixture: native request/auth/header/options behavior, precision,
+citations/refusals, five state forms, seven invalid question forms, malformed
+responses, five HTTP statuses, cancellation, warnings, environment defaults,
+unsupported models and future modes. JavaScript Workflow-symbol serialization is
+excluded because Swift does not expose that JS runtime surface. Native tests add
+typed metadata/catalog checks, header precedence, credential suppliers, aborted
+calls and response schema edge cases.
+
+```sh
+swift test --package-path Packages/swift-ai-parallel --no-parallel
+```
+
+Source, fixture hashes and per-scenario dispositions are recorded in
+`Porting/map.json` and `Porting/integration.json`. Fixture-backed tests do not
+constitute paid or live-service verification. There is no streaming, text, image,
+embedding, video or audio generation surface in this provider.

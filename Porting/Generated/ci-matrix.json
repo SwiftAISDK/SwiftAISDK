@@ -394,6 +394,16 @@
       ]
     },
     {
+      "package": "swift-ai-parallel",
+      "directory": "Packages/swift-ai-parallel",
+      "state": "extracted",
+      "independentBuildReady": true,
+      "command": "swift test --package-path Packages/swift-ai-parallel",
+      "upstream": [
+        "@ai-sdk/parallel"
+      ]
+    },
+    {
       "package": "swift-ai-perplexity",
       "directory": "Packages/swift-ai-perplexity",
       "state": "extracted",
@@ -441,6 +451,26 @@
       "command": "swift test --package-path Packages/swift-ai-revai",
       "upstream": [
         "@ai-sdk/revai"
+      ]
+    },
+    {
+      "package": "swift-ai-scaledown",
+      "directory": "Packages/swift-ai-scaledown",
+      "state": "extracted",
+      "independentBuildReady": true,
+      "command": "swift test --package-path Packages/swift-ai-scaledown",
+      "upstream": [
+        "@ai-sdk/scaledown"
+      ]
+    },
+    {
+      "package": "swift-ai-tencent",
+      "directory": "Packages/swift-ai-tencent",
+      "state": "extracted",
+      "independentBuildReady": true,
+      "command": "swift test --package-path Packages/swift-ai-tencent",
+      "upstream": [
+        "@ai-sdk/tencent"
       ]
     },
     {

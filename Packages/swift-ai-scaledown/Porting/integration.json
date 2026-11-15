@@ -1,0 +1,66 @@
+{
+  "catalog": {
+    "state": "extracted",
+    "dependencies": [
+      {
+        "package": "swift-ai-core",
+        "from": "1.4.0"
+      }
+    ],
+    "umbrellaFrom": "1.0.0",
+    "capabilityRows": [
+      {
+        "providerID": "scaledown",
+        "upstreamPackage": "@ai-sdk/scaledown",
+        "factoryNames": [
+          "AIProviders.scaleDown"
+        ],
+        "capabilities": [
+          "decision",
+          "extraction"
+        ],
+        "files": false,
+        "skills": false,
+        "notes": "ScaleDown 3.0.1: native Decision V4 choice, boolean and score, plus Extraction V4 text/list<text>. x-api-key and SCALEDOWN_API_KEY, lazy async credentials, custom base URL/headers, PDF/JPEG/PNG/TIFF evidence, confidence/legend/cost metadata, strict response validation, UTF-8 byte offsets converted to verified UTF-16 sources and OCR file citations. Other extraction fields and model families are explicitly rejected; JS workflow serialization is outside Swift."
+      }
+    ],
+    "guides": [
+      "Packages/swift-ai-scaledown/README.md"
+    ]
+  },
+  "lock": {
+    "name": "@ai-sdk/scaledown",
+    "reviewedVersion": "3.0.1",
+    "ledgerKind": "provider",
+    "evidence": "Packages/swift-ai-scaledown/Porting/upstream-tests.json; ScaleDownDecisionUpstreamTests.swift; ScaleDownExtractionUpstreamTests.swift; ScaleDownNativeTests.swift",
+    "reviewStatus": "reviewed",
+    "archiveIntegrity": "sha512-EUK7RMN8b3yuJeH5E0uOKk1Hv2Tm2wH+xj1Vf0ESAJ9hrB5a38lt8Hzur019+1U3nroKv4MUxVICJ/tDV+pgSw==",
+    "sourceRef": "npm:@ai-sdk/scaledown@3.0.1",
+    "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
+    "testRefRelationship": "matching-release",
+    "contractFamilies": [
+      "DecisionModelV4",
+      "ExtractionModelV4",
+      "ProviderV4"
+    ],
+    "contractReview": "All published portable Decision and Extraction provider runtime, request/response schemas and exact-release upstream scenarios reviewed and translated. JavaScript workflow serialization is excluded; Swift dictionary order and integral usage counts follow native contracts. No live-service verification."
+  },
+  "release": {
+    "package": "swift-ai-scaledown",
+    "bump": "initial",
+    "version": "1.0.0",
+    "notes": "Add ScaleDown Decision and Extraction V4 APIs. Classify choices, booleans and scores; extract nullable text/list fields with confidence, UTF-16 source offsets and OCR file references. Supports lazy static/async/environment API keys, custom endpoints/headers, document inputs, upstream warnings and structured errors. All portable matching-release 3.0.1 upstream scenarios translated; JavaScript workflow serialization excluded. No paid/live checks.",
+    "compatibility": "Initial independent SwiftPM unit. Requires core 1.4.0; no changes to existing selectors. Provider-only release does not require umbrella release."
+  },
+  "testReport": "Packages/swift-ai-scaledown/Porting/upstream-tests.json",
+  "verification": {
+    "status": "passed",
+    "command": "swift test --package-path Packages/swift-ai-scaledown --no-parallel",
+    "exitCode": 0,
+    "tests": 23,
+    "suites": 3,
+    "logSHA256": "85a2d60870e65cc10021cedaebcdf7ecec0e06408c7b1f017db5273d9afc5f99",
+    "verifiedAt": "2026-11-15T01:20:47.954704+00:00",
+    "note": "First compile and run passed. All parameter rows in translated score/error tests ran. No live provider calls."
+  }
+}

@@ -1,0 +1,553 @@
+{
+  "schemaVersion": 1,
+  "package": "@ai-sdk/tencent",
+  "version": "3.0.3",
+  "sourceRef": "npm:@ai-sdk/tencent@3.0.3",
+  "archiveIntegrity": "sha512-qDD3ZPVnw8EAnVq+foU7afbfplpBO1n8XbUTpu7dwl5dG2AWhsdyXcpaSNqo0fyFPldyt5cMNRvVmFKy24IdDw==",
+  "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
+  "testRefRelationship": "matching-release",
+  "files": [
+    {
+      "upstreamFile": "packages/tencent/src/lazy-schemas.test.ts",
+      "sha256": "d6214e07ee633bac6e669436f3a376fc93dc8a776f093aec3c8c12c080608cc5",
+      "disposition": "out-of-scope",
+      "scenarios": [
+        {
+          "name": "lazy schema initialization / defers schema construction until first use and caches the validator",
+          "line": 48,
+          "disposition": "out-of-scope",
+          "reason": "JavaScript Zod lazy module construction and identity caching; Swift uses native validation without Zod module evaluation."
+        }
+      ]
+    },
+    {
+      "upstreamFile": "packages/tencent/src/tencent-cloud-api.test.ts",
+      "sha256": "1c84bf0c3c4f931af4b69053c321b59058a405639d7374014cf3342f523dfd1a",
+      "disposition": "ported",
+      "scenarios": [
+        {
+          "name": "buildTc3CanonicalRequest / hashes the payload as documented",
+          "line": 19,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentCloudUpstreamTests.documentedPayloadHash"
+          ]
+        },
+        {
+          "name": "buildTc3CanonicalRequest / produces the documented canonical request hash",
+          "line": 25,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentCloudUpstreamTests.documentedCanonicalHash"
+          ]
+        },
+        {
+          "name": "createTc3Authorization / signs a VOD request",
+          "line": 42,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentCloudUpstreamTests.referenceVodSignature"
+          ]
+        },
+        {
+          "name": "getTencentCloudErrorStatusCode / maps %s to %i",
+          "line": 67,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentCloudUpstreamTests.errorFamilyMapping"
+          ],
+          "parameters": [
+            [
+              "AuthFailure.SignatureFailure",
+              401
+            ],
+            [
+              "AuthFailure.SecretIdNotFound",
+              401
+            ],
+            [
+              "UnauthorizedOperation",
+              403
+            ],
+            [
+              "FailedOperation.InvalidVodUser",
+              403
+            ],
+            [
+              "ResourceNotFound",
+              404
+            ],
+            [
+              "InvalidParameterValue.SubAppId",
+              400
+            ],
+            [
+              "MissingParameter",
+              400
+            ],
+            [
+              "RequestLimitExceeded",
+              429
+            ],
+            [
+              "LimitExceeded",
+              429
+            ],
+            [
+              "ResourceUnavailable",
+              503
+            ],
+            [
+              "InternalError",
+              500
+            ],
+            [
+              "FailedOperation",
+              500
+            ],
+            [
+              "SomethingNew",
+              500
+            ]
+          ]
+        },
+        {
+          "name": "postTencentCloudApi / sends the signed payload and protocol headers",
+          "line": 112,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentCloudUpstreamTests.protocolHeadersAndExactSignature"
+          ]
+        },
+        {
+          "name": "postTencentCloudApi / sends region and session token headers when provided",
+          "line": 150,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentCloudUpstreamTests.regionAndSessionHeaders"
+          ]
+        },
+        {
+          "name": "postTencentCloudApi / throws an APICallError for a Response.Error returned with HTTP 200",
+          "line": 171,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentCloudUpstreamTests.envelopedErrors"
+          ]
+        },
+        {
+          "name": "postTencentCloudApi / marks rate limit errors as retryable",
+          "line": 202,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentCloudUpstreamTests.envelopedErrors"
+          ]
+        }
+      ]
+    },
+    {
+      "upstreamFile": "packages/tencent/src/tencent-provider.test.ts",
+      "sha256": "21f6687a5f25eb7fe6a192266d1ac5007261758fc0677b98ee7bcc37b45001b8",
+      "disposition": "ported-with-platform-exclusions",
+      "scenarios": [
+        {
+          "name": "createTencent / language models / creates TokenHub chat models",
+          "line": 99,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentProviderUpstreamTests.chatFactoryAliases"
+          ]
+        },
+        {
+          "name": "createTencent / language models / calls TokenHub chat completions with the API key and usage",
+          "line": 113,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentProviderUpstreamTests.tokenHubChatKeyOptionsUsage"
+          ]
+        },
+        {
+          "name": "createTencent / language models / reads the API key from TENCENT_TOKENHUB_API_KEY",
+          "line": 136,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentProviderUpstreamTests.environmentTokenHubKey"
+          ]
+        },
+        {
+          "name": "createTencent / language models / throws when the API key is missing",
+          "line": 146,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentProviderUpstreamTests.missingTokenHubKeyFailsAtRequest"
+          ]
+        },
+        {
+          "name": "createTencent / language models / keeps the TokenHub endpoint after workflow serialization",
+          "line": 154,
+          "disposition": "out-of-scope",
+          "reason": "JavaScript symbol-based workflow serialization/deserialization has no Swift product surface."
+        },
+        {
+          "name": "createTencent / language models / respects a custom baseURL and headers",
+          "line": 177,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentProviderUpstreamTests.customTokenHubURLAndHeaders"
+          ]
+        },
+        {
+          "name": "createTencent / video models / creates video models",
+          "line": 192,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentProviderUpstreamTests.videoFactoriesAndLazyCredentials"
+          ]
+        },
+        {
+          "name": "createTencent / video models / throws NoSuchModelError for unsupported video model IDs",
+          "line": 204,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentProviderUpstreamTests.videoFactoriesAndLazyCredentials"
+          ]
+        },
+        {
+          "name": "createTencent / video models / signs VOD requests with configured credentials",
+          "line": 210,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentProviderUpstreamTests.configuredVodSigningHeaders"
+          ]
+        },
+        {
+          "name": "createTencent / video models / reads VOD credentials from the environment",
+          "line": 233,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentProviderUpstreamTests.environmentVodCredentials"
+          ]
+        },
+        {
+          "name": "createTencent / video models / rejects an invalid SubAppId",
+          "line": 248,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentProviderUpstreamTests.invalidSubAppId"
+          ]
+        },
+        {
+          "name": "createTencent / video models / does not need VOD credentials for TokenHub video models",
+          "line": 260,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentProviderUpstreamTests.videoFactoriesAndLazyCredentials"
+          ]
+        },
+        {
+          "name": "createTencent / throws NoSuchModelError for embedding and image models",
+          "line": 267,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentProviderUpstreamTests.unsupportedModelFamilies"
+          ]
+        }
+      ]
+    },
+    {
+      "upstreamFile": "packages/tencent/src/tencent-video-model.test.ts",
+      "sha256": "6238f963baba48bf8bd27334a7f693dbfb83a6c71426cb148cb15df7c0d3aa9b",
+      "disposition": "ported",
+      "scenarios": [
+        {
+          "name": "TencentVideoModel / constructor / exposes provider and model information",
+          "line": 105,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / constructor / rejects the unsupported model ID %s",
+          "line": 113,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.rejectsUnsupportedIDs"
+          ],
+          "parameters": [
+            "unknown-model",
+            "vod/VS",
+            "vod//2.0",
+            "vod/VS/"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / text-to-video / sends prompt and settings",
+          "line": 123,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / text-to-video / sends multi-shot, watermark and external task ID",
+          "line": 157,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / text-to-video / omits audio and multi-shot for models that do not support them",
+          "line": 181,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / text-to-video / warns on unsupported options",
+          "line": 200,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / image-to-video / sends first and last frames as contents",
+          "line": 239,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / image-to-video / uses the legacy image option as the first frame",
+          "line": 281,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / image-to-video / ignores references on models without omni support",
+          "line": 296,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / omni / sends reference images and videos to the omni endpoint",
+          "line": 314,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / omni / routes kling-video-v4 with references and voices to the omni endpoint",
+          "line": 345,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / omni / routes kling-video-v4 with elements and no first frame to the omni endpoint",
+          "line": 375,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / motion control / sends the character image and motion video",
+          "line": 398,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / motion control / uses the first image reference as the character image",
+          "line": 439,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / errors / throws when the response has a non-zero code",
+          "line": 466,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / errors / surfaces HTTP error messages",
+          "line": 482,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / errors / throws when no task ID is returned",
+          "line": 501,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / doStatus / returns videos and usage for a succeeded task",
+          "line": 514,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / doStatus / accepts a single task object in data",
+          "line": 555,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / doStatus / returns pending for a processing task",
+          "line": 577,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / TokenHub Kling / doStatus / returns an error for a failed task",
+          "line": 592,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / VOD / submits a signed CreateAigcVideoTask request",
+          "line": 616,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / VOD / warns about TokenHub-only options",
+          "line": 707,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / VOD / sends assets as URL file inputs",
+          "line": 725,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / VOD / ignores asset frames when that frame is already set",
+          "line": 761,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / VOD / throws an APICallError for Response.Error",
+          "line": 798,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / VOD / doStatus / returns videos and usage for a finished task",
+          "line": 824,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / VOD / doStatus / returns the last-frame image as metadata instead of a video",
+          "line": 931,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / VOD / doStatus / skips file entries with an empty URL",
+          "line": 989,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / VOD / doStatus / omits an empty resolution and empty specification usages",
+          "line": 1024,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / VOD / doStatus / returns pending for status %s",
+          "line": 1064,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.vodPending"
+          ],
+          "parameters": [
+            "WAITING",
+            "PROCESSING"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / VOD / doStatus / returns an error for a failed task",
+          "line": 1080,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        },
+        {
+          "name": "TencentVideoModel / VOD / doStatus / returns an error for an aborted task",
+          "line": 1107,
+          "disposition": "ported",
+          "swiftTests": [
+            "TencentVideoUpstreamTests.upstreamScenario"
+          ]
+        }
+      ]
+    }
+  ],
+  "translationNotes": [
+    "Published fixtures, request bodies, warning ordering, state lifecycle, usage and TC3 reference signatures are retained.",
+    "JavaScript byte arrays and base64 string file data become Foundation Data; response headers are compared through the native metadata wrapper.",
+    "Native VideoGenerationRequest requires a prompt string. Empty string represents upstream absent prompt and is omitted in Tencent builders.",
+    "Each TokenHub/VOD output has a VideoURLDescriptor preserving its URL/MIME association; the native mixed-format supplement verifies MOV,WebM,MP4 fallback and last-frame exclusion without changing raw/metadata results."
+  ],
+  "validation": {
+    "status": "passed",
+    "command": "swift test --package-path Packages/swift-ai-tencent --no-parallel",
+    "declaredTests": 25,
+    "suites": 4,
+    "logSHA256": "a0818b8819facf1491299c92daf2f80988fed5e95e5c19c1c09e89ec558eb2dd",
+    "liveServiceTests": "not run"
+  }
+}

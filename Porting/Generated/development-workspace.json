@@ -198,6 +198,11 @@
       "remote": "https://github.com/SwiftAISDK/swift-ai-openai-compatible.git"
     },
     {
+      "identity": "swift-ai-parallel",
+      "path": "Packages/swift-ai-parallel",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-parallel.git"
+    },
+    {
       "identity": "swift-ai-perplexity",
       "path": "Packages/swift-ai-perplexity",
       "remote": "https://github.com/SwiftAISDK/swift-ai-perplexity.git"
@@ -221,6 +226,16 @@
       "identity": "swift-ai-revai",
       "path": "Packages/swift-ai-revai",
       "remote": "https://github.com/SwiftAISDK/swift-ai-revai.git"
+    },
+    {
+      "identity": "swift-ai-scaledown",
+      "path": "Packages/swift-ai-scaledown",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-scaledown.git"
+    },
+    {
+      "identity": "swift-ai-tencent",
+      "path": "Packages/swift-ai-tencent",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-tencent.git"
     },
     {
       "identity": "swift-ai-togetherai",
@@ -303,11 +318,14 @@
     "swift-ai-mistral",
     "swift-ai-moonshotai",
     "swift-ai-open-responses",
+    "swift-ai-parallel",
     "swift-ai-perplexity",
     "swift-ai-prodia",
     "swift-ai-quiverai",
     "swift-ai-replicate",
     "swift-ai-revai",
+    "swift-ai-scaledown",
+    "swift-ai-tencent",
     "swift-ai-togetherai",
     "swift-ai-topaz",
     "swift-ai-typesafe-ai",

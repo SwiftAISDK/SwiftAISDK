@@ -4,6 +4,7 @@ const {execFileSync} = require('node:child_process');
 const {readCatalog} = require('../lib/catalog.cjs');
 const {plan} = require('../ci-plan.cjs');
 const data = readCatalog();
+const extractedPackageIDs = data.catalog.packages.filter(p => p.state === 'extracted').map(p => p.id).sort();
 
 test('prose and site changes never run Swift tests', () => {
   for (const file of ['README.md', 'Docs/PortingStatus.md', 'Docs/Migration.md', 'docs-site/src/content/docs/index.mdx'])
@@ -21,7 +22,7 @@ test('provider changes select dependents and the facade, not unrelated providers
   assert.deepEqual(commands.map(c => c.package), [...result.packages.split(','), 'SwiftAISDK']);
 });
 test('core contracts select all packages; facade tests select only the facade', () => {
-  assert.equal(plan(['Packages/swift-ai-core/Sources/SwiftAI/AI.swift'], data).packages.split(',').length, 52);
+  assert.deepEqual(plan(['Packages/swift-ai-core/Sources/SwiftAI/AI.swift'], data).packages.split(',').sort(), extractedPackageIDs);
   const result = plan(['Tests/SwiftAISDKTests/Integration.swift'], data);
   assert.equal(result.swift, true);
   assert.equal(result.packages, '');
@@ -29,7 +30,7 @@ test('core contracts select all packages; facade tests select only the facade', 
 test('workflow changes and explicit docs runs do not trigger SDK tests', () => {
   assert.deepEqual(plan(['.github/workflows/docs.yml'], data), {swift:false, docs:true, tools:true, packages:''});
   assert.deepEqual(plan([], data, 'docs'), {swift:false, docs:true, tools:false, packages:''});
-  assert.equal(plan([], data, 'all').packages.split(',').length, 52);
+  assert.deepEqual(plan([], data, 'all').packages.split(',').sort(), extractedPackageIDs);
 });
 test('publication rejects a green docs-only run and accepts actual exact-source tests', () => {
   const {verifyHostedCI} = require('../lib/publish.cjs');

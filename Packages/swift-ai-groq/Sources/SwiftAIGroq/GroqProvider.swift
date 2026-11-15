@@ -38,7 +38,7 @@ public final class GroqProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-groq/4.0.83")
+        headers = withUserAgentSuffix(headers, "ai-sdk-groq/4.0.84")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.groq.com/openai/v1")
         http = AIProviderHTTPClient(providerID: "groq", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

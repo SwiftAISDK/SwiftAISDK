@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-heygen",
+  "upstream": "@ai-sdk/heygen",
+  "version": "3.0.25",
+  "catalogChanges": {
+    "dependencies": [
+      {
+        "package": "swift-ai-core",
+        "from": "1.4.0"
+      }
+    ],
+    "capabilityRows": [
+      {
+        "providerID": "heygen",
+        "upstreamPackage": "@ai-sdk/heygen",
+        "factoryNames": [
+          "AIProviders.heyGen",
+          "createHeyGen",
+          "heygen"
+        ],
+        "capabilities": [
+          "video",
+          "decision"
+        ],
+        "files": false,
+        "skills": false,
+        "notes": "HeyGen 3.0.25 native asynchronous video plus multimodal Decision V4: boolean/choice/score, 400 questions, 4images/1video, URL/base64/native assets, lazy auth, exact response validation/confidence/JSON legends/answer warnings/usage. Existing video operation selectors preserved; JS serialization and unrepresentable invalid file-union shapes excluded."
+      }
+    ],
+    "guides": [
+      "docs-site/scripts/provider-guides/heygen.md",
+      "Packages/swift-ai-heygen/README.md"
+    ]
+  },
+  "upstreamLock": {
+    "name": "@ai-sdk/heygen",
+    "reviewedVersion": "3.0.25",
+    "ledgerKind": "provider",
+    "evidence": "`AIProviders.heyGen`, `HeyGenVideoModel`, `HeyGenVideoModelOptions`, `HeyGenVideoAsset`, `HeyGen*Tests.swift`; 2026-11-01 delta: Docs/WeeklyUpstreamAudit20261101.json; 2026-11-08 delta: Docs/WeeklyUpstreamAudit20261108.json; 2026-11-14 delta: Docs/WeeklyUpstreamAudit20261114.json",
+    "reviewStatus": "imported-reviewed-with-gaps",
+    "archiveIntegrity": "sha512-PLeYc5RrokMkQZjiHqkL0YNnXPfXIZu/gBkWT/P4BxDfgX7txyf5DJumRNr9B8EBRxfn9LXTlnzNKnK3d9r9Ow==",
+    "sourceRef": "npm:@ai-sdk/heygen@3.0.25",
+    "testRef": "0e8e0543aeda7d4dd4ce6eade0d5b7d5a43644c1",
+    "testRefRelationship": "matching-release",
+    "contractFamilies": [
+      "DecisionModelV4",
+      "ProviderV4",
+      "VideoModelV4"
+    ],
+    "contractReview": "2026-11-15: newly published native Decision V4 runtime, image/video assets, questions, limits, response and lazy auth ported with all portable exact-release test scenarios. Preserved existing video surface; JS-only workflow/file-union exclusions and native token counter adaptation documented in package integration metadata."
+  },
+  "testDispositions": [
+    {
+      "path": "packages/heygen/src/heygen-decision-model.test.ts",
+      "testRef": "0e8e0543aeda7d4dd4ce6eade0d5b7d5a43644c1",
+      "sha256": "9df4b06e0356f03e22961e7ea595753a0f53708cee90d56ef9826da4660e42d1",
+      "disposition": "ported-with-platform-exclusions",
+      "scenarios": [
+        {
+          "upstreamScenario": "sends one native request with all question types and configured headers",
+          "swiftTest": "HeyGenDecisionRequestUpstreamTests.sendsOneNativeRequestWithAllQuestionTypesAndConfiguredHeaders",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "maps answers and preserves confidence, legends, warnings, usage and response metadata",
+          "swiftTest": "HeyGenDecisionResponseUpstreamTests.mapsAnswersAndPreservesConfidenceLegendsWarningsUsageAndMetadata",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "tolerates absent ancillary response fields",
+          "swiftTest": "HeyGenDecisionResponseUpstreamTests.toleratesAbsentAncillaryResponseFields",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "sends file parts as ordered image and video assets and keeps text and JSON in state",
+          "swiftTest": "HeyGenDecisionRequestUpstreamTests.sendsOrderedImageVideoAssetsAndKeepsTextAndJSONInState",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "rejects %s before HTTP",
+          "swiftTest": "HeyGenDecisionRequestUpstreamTests.rejectsInvalidMediaBeforeHTTP",
+          "expandedCases": 5,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "rejects invalid provider limits before HTTP",
+          "swiftTest": "HeyGenDecisionRequestUpstreamTests.rejectsInvalidProviderLimitsBeforeHTTP",
+          "expandedCases": 11,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "accepts the maximum question count and a single-level score",
+          "swiftTest": "HeyGenDecisionRequestUpstreamTests.acceptsMaximumQuestionCountAndSingleLevelScore",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "rejects box questions",
+          "swiftTest": "HeyGenDecisionRequestUpstreamTests.rejectsBoxQuestionsBeforeHTTP",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "warns about unsupported settings without adding fields to the request",
+          "swiftTest": "HeyGenDecisionRequestUpstreamTests.warnsUnsupportedSettingsWithoutSendingFields",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "rejects missing and unexpected answers",
+          "swiftTest": "HeyGenDecisionResponseUpstreamTests.rejectsMissingAndUnexpectedAnswers",
+          "expandedCases": 3,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "rejects malformed native responses",
+          "swiftTest": "HeyGenDecisionResponseUpstreamTests.rejectsMalformedNativeResponsesAsAPICallErrors",
+          "expandedCases": 3,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "preserves HeyGen error codes and parameters",
+          "swiftTest": "HeyGenDecisionResponseUpstreamTests.preservesHeyGenErrorCodesAndParameters",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "loads environment authentication lazily and uses the default endpoint",
+          "swiftTest": "HeyGenDecisionResponseUpstreamTests.loadsEnvironmentAuthenticationLazilyAndUsesDefaultEndpoint",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "rejects inline text files before HTTP",
+          "disposition": "out-of-scope",
+          "reason": "Swift AIDecisionFileData has no inline text-file case; this invalid JS-only union shape cannot compile. Regular state text remains supported and exact file/media rejection tests are ported."
+        },
+        {
+          "upstreamScenario": "rejects references without a HeyGen asset before HTTP",
+          "disposition": "out-of-scope",
+          "reason": "Swift AIDecisionFileData.reference takes the current provider-native String, not a namespaced map; other-provider-map shape cannot compile. Valid asset String behavior is tested for both images and video."
+        },
+        {
+          "upstreamScenario": "restores the endpoint and authentication across workflow serialization",
+          "disposition": "out-of-scope",
+          "reason": "JavaScript Workflow serialization symbols/fetch restoration have no Swift runtime surface."
+        }
+      ]
+    },
+    {
+      "path": "packages/heygen/src/heygen-provider.test.ts",
+      "disposition": "ported",
+      "swiftTests": [
+        "HeyGenProviderTests.factoriesAliasesAndUnsupportedCapabilities",
+        "HeyGenProviderTests.explicitAndEnvironmentCredentialsCustomEndpointHeaders",
+        "HeyGenProviderTests.nativeFactoryReportsMissingCredentialsLazily"
+      ],
+      "note": "Preserve existing video aliases, explicit/environment auth, custom endpoints/headers, unsupported families. Refresh exact lazy missing-credential video-status scenario and add provider specificationVersion assertion."
+    },
+    {
+      "path": "packages/heygen/src/lazy-schemas.test.ts",
+      "disposition": "out-of-scope",
+      "reason": "JavaScript Zod constructor laziness and module-import instrumentation do not exist in Swift runtime; native validation performs no JS schema construction."
+    },
+    {
+      "path": "packages/heygen/src/heygen-video-model.test.ts",
+      "disposition": "covered-by-existing-platform-test",
+      "swiftTests": [
+        "HeyGenVideoOperationTests",
+        "HeyGenVideoRequestTests",
+        "HeyGenVideoValidationTests",
+        "Weekly20261101BehaviorTests",
+        "Weekly20261101CredentialsTests"
+      ],
+      "note": "No video-body or response behavior changed by 3.0.25 Decision addition; retain every existing translated video scenario and rerun full owning suite. Shared lazy headers are tested on actual video status and rotating start requests."
+    }
+  ],
+  "portableScenarioCount": 31,
+  "platformExcludedScenarioCount": 3,
+  "tests": {
+    "status": "passed",
+    "command": "swift test --package-path Packages/swift-ai-heygen --no-parallel",
+    "exitCode": 0,
+    "testDeclarations": 59,
+    "suiteCount": 9,
+    "newDecisionDeclarations": 17,
+    "portableUpstreamExpandedCases": 31,
+    "nativeSupplementDeclarations": 4,
+    "logSHA256": "6f6150b7e09612f0e927141ed4e1ec38f416f6639aba02bfea11b181418a0269",
+    "completedAt": "2026-11-15T01:37:22.758071+00:00"
+  },
+  "release": {
+    "bump": "minor",
+    "notes": "Add HeyGen multimodal Decision V4 with boolean/choice/score questions, ordered image/video assets, limits, confidence/JSON score legends/answer warnings and usage. Credential loading now occurs at request time for Decision and video; preserve the existing throwing initializer and video selectors. Published 3.0.25 test scenarios are translated; JS workflow and impossible invalid file-union shapes excluded explicitly. No paid/live-service claim.",
+    "compatibility": "Additive Decision APIs/capability. Missing credentials are reported on a request rather than factory initialization, aligning published upstream timing; existing throwing initializer signatures retained."
+  }
+}

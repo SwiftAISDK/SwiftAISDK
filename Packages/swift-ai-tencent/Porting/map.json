@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-tencent",
+  "status": "reviewed",
+  "upstream": [
+    {
+      "name": "@ai-sdk/tencent",
+      "implementation": [
+        "packages/tencent/src"
+      ],
+      "tests": [
+        "packages/tencent/src/lazy-schemas.test.ts",
+        "packages/tencent/src/tencent-cloud-api.test.ts",
+        "packages/tencent/src/tencent-provider.test.ts",
+        "packages/tencent/src/tencent-video-model.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentCloudAPI.swift",
+      "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentProvider.swift",
+      "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentResponseValidation.swift",
+      "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentTokenHubVideo.swift",
+      "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentVideoModel.swift",
+      "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentVideoOptions.swift",
+      "Packages/swift-ai-tencent/Sources/SwiftAITencent/TencentVodVideo.swift"
+    ],
+    "tests": [
+      "Packages/swift-ai-tencent/Tests/SwiftAITencentTests/TencentCloudUpstreamTests.swift",
+      "Packages/swift-ai-tencent/Tests/SwiftAITencentTests/TencentNativeIntegrationTests.swift",
+      "Packages/swift-ai-tencent/Tests/SwiftAITencentTests/TencentProviderUpstreamTests.swift",
+      "Packages/swift-ai-tencent/Tests/SwiftAITencentTests/TencentTestSupport.swift",
+      "Packages/swift-ai-tencent/Tests/SwiftAITencentTests/TencentVideoFixtures.swift",
+      "Packages/swift-ai-tencent/Tests/SwiftAITencentTests/TencentVideoUpstreamTests.swift"
+    ],
+    "resources": []
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Foundation Data/AITransport/Sendable replace Fetch/Uint8Array. Typed AIError preserves status, retryability, raw body and headers. JavaScript workflow serialization and Zod lazy-schema module construction/caching have no Swift surface."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "VideoGenerationRequest has a required prompt string; empty prompt maps to the absent upstream prompt. Per-file video MIME associations are preserved in videoURLDescriptors; the original urls/common mediaType selectors remain compatible."
+    }
+  ],
+  "reviewNote": "Initial complete portable @ai-sdk/tencent 3.0.3 port. Published archive integrity and exact matching-release tests verified at 8bc7652cdb13fc84722666eb93f45acd0d131eee. Per-file/per-scenario translated tests and genuine platform exclusions: Packages/swift-ai-tencent/Porting/upstream-tests.json. Full package checks and canonical integration remain required. Narrow owning suite passes25 tests in4 suites; TokenHub streaming, rotating keys, cancellation/options validation and mixed-MIME VOD associations have native supplements."
+}

@@ -1,0 +1,46 @@
+Native Swift port of [`@ai-sdk/scaledown` 3.0.1](https://www.npmjs.com/package/@ai-sdk/scaledown/v/3.0.1). It provides experimental Decision V4 and Extraction V4 models. Requires Swift 6.3, macOS 12 or iOS 15, and SwiftAI core 1.4.0 or later.
+
+Add `https://github.com/SwiftAISDK/swift-ai-scaledown.git` to Swift Package Manager and select `SwiftAIScaleDown` (initial version 1.0.0). Use the canonical workspace before that tag is published; a source port does not itself establish release availability.
+
+```swift
+import SwiftAIScaleDown
+import SwiftAIProvider
+
+let provider = createScaleDown(configuration: .init(apiKey: "your-api-key"))
+let model = try provider.decisionModel("classify-1")
+let decision = try await model.doDecide(.init(
+    state: [.text("The export crashes in Safari.")],
+    questions: [
+        "category": .choice(criteria: ["bug": "Broken functionality", "feedback": nil]),
+        "workaround": .boolean(instructions: "Is there a workaround?"),
+        "severity": .score(criteria: ["Cosmetic", "Degraded", "Blocking"])
+    ]
+))
+```
+
+The default `scaledown` and `scaleDown` constants refer to the same provider. `AIProviders.scaleDown(configuration:)` is the native factory. Credentials are loaded when a request is made: `apiKeyProvider` supplies a fresh asynchronous key, then an explicit `apiKey`, then `SCALEDOWN_API_KEY`. Pass `environment: [:]` for an isolated environment. The default base URL is `https://api.scaledown.xyz`; `baseURL`, `headers` and `transport` are configurable. Each request carries `x-api-key` and `ai-sdk-scaledown/3.0.1` in its user agent. Call headers override provider headers case-insensitively, and abort signals flow to transport requests.
+
+Decision uses `/v1/scaledown`. `classify` and `classify-1` are upstream aliases; custom model IDs are accepted. Choice criteria with null descriptions use the choice ID as the description. Structured instructions and criteria are encoded as compact JSON text. Boolean criteria become explicit yes/no instructions. Score rubrics require 2–10 non-null levels. Box questions are rejected before network I/O. Results preserve probabilities, token usage, response body/headers/model ID, and `providerMetadata["scaledown"]` confidence, score legend and optional request cost. Unsupported `maxOutputTokens`, `reasoning` and scoped decision provider options produce warnings.
+
+```swift
+let extraction = try await provider.extractionModel("extract-1").doExtract(.init(
+    state: [.text("Acme Corp. Contacts: Ana, Bo.")],
+    fields: [
+        "vendor": .init(type: .text, instructions: "Company name"),
+        "contacts": .init(type: .list, instructions: "Contact names", items: .text)
+    ],
+    providerOptions: ScaleDownExtractionModelOptions(threshold: 0.5).providerOptions
+))
+```
+
+Extraction uses `/v1/chat/completions`; `extract`, `extract-1` and custom IDs are accepted. It supports text fields and lists of text. Number, date, time, datetime, duration and non-text lists are rejected before a request. `threshold` must be between 0 and 1. Scalar fields select the highest-confidence entity, retaining the first on ties; lists preserve entity order. Empty or missing values become `nil`, and missing lists have no item metadata. UTF-8 byte spans are accepted as sources only when they match the exact original text and valid character boundaries, then converted to UTF-16 offsets. JSON evidence is retained in the input but never cited as a text source. OCR matches can cite the file part and expose `providerMetadata["scaledown"]["ocrText"]`. Reference dates and generation settings emit unsupported warnings.
+
+Both models accept ordered text/JSON parts and at most one inline JPEG, PNG, TIFF or PDF document. Use `.file(mediaType: "application/pdf", data: .data(bytes))` or `.base64(value)`. Provider file references and URLs are rejected at the direct provider boundary; a higher-level core API can download URLs before invoking the provider. File-only extraction supplies the upstream default user message. No batching or streaming API is exposed by this upstream package.
+
+HTTP errors retain status, raw body, response headers and retryability through `AIError.apiCall`; a native `detail` string or validation-detail array provides `AIAPICallError.message`. Invalid outer success envelopes fail as non-retryable API errors. `ScaleDownInvalidExtractionContentError` retains the exact inner string in `data` when extraction content is malformed.
+
+The two matching-release upstream test files are translated with their fixture values, request/result expectations, warnings and rejection cases; the per-scenario record is in `Porting/upstream-tests.json`. JavaScript workflow serialization symbols have no Swift workflow equivalent. Swift dictionaries use key equality rather than JavaScript insertion-order assertions, and Swift token counts are integral. Live/paid provider calls are not part of this verification.
+
+```sh
+swift test --package-path Packages/swift-ai-scaledown --no-parallel
+```

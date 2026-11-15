@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-parallel",
+  "status": "reviewed",
+  "upstream": [
+    {
+      "name": "@ai-sdk/parallel",
+      "implementation": [
+        "packages/parallel/src"
+      ],
+      "tests": [
+        "packages/parallel/src/parallel-decision-model.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Packages/swift-ai-parallel/Sources/SwiftAIParallel/DecisionParallelModel.swift",
+      "Packages/swift-ai-parallel/Sources/SwiftAIParallel/ParallelOptions.swift",
+      "Packages/swift-ai-parallel/Sources/SwiftAIParallel/ParallelProvider.swift",
+      "Packages/swift-ai-parallel/Sources/SwiftAIParallel/ParallelResponse.swift"
+    ],
+    "tests": [
+      "Packages/swift-ai-parallel/Tests/SwiftAIParallelTests/ParallelNativeTests.swift",
+      "Packages/swift-ai-parallel/Tests/SwiftAIParallelTests/ParallelRequestUpstreamTests.swift",
+      "Packages/swift-ai-parallel/Tests/SwiftAIParallelTests/ParallelResponseUpstreamTests.swift",
+      "Packages/swift-ai-parallel/Tests/SwiftAIParallelTests/ParallelTestSupport.swift"
+    ],
+    "resources": [
+      "Packages/swift-ai-parallel/Tests/SwiftAIParallelTests/Fixtures/decisions.json"
+    ]
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Foundation AITransport and Sendable async/await replace fetch; typed AIError retains HTTP details. Environment injection and per-request async credential supply are native conveniences."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "JavaScript Workflow symbol serialization is not exposed by Swift. The remaining matching-release test scenarios retain fixtures and assertions."
+    }
+  ],
+  "reviewNote": "Initial full native provider port from integrity-verified @ai-sdk/parallel@3.0.9 with exact matching-release tests at 8bc7652cdb13fc84722666eb93f45acd0d131eee. Complete file and scenario dispositions in Porting/integration.json. This is fixture-backed parity, not live-service verification."
+}

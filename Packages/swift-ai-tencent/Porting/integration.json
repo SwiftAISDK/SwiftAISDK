@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-tencent",
+  "upstream": "@ai-sdk/tencent",
+  "version": "3.0.3",
+  "archiveIntegrity": "sha512-qDD3ZPVnw8EAnVq+foU7afbfplpBO1n8XbUTpu7dwl5dG2AWhsdyXcpaSNqo0fyFPldyt5cMNRvVmFKy24IdDw==",
+  "sourceRef": "npm:@ai-sdk/tencent@3.0.3",
+  "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
+  "testRefRelationship": "matching-release",
+  "contractFamilies": [
+    "ProviderV4",
+    "LanguageModelV4",
+    "VideoModelV4"
+  ],
+  "factoryNames": [
+    "createTencent",
+    "tencent",
+    "AIProviders.tencent"
+  ],
+  "capabilities": [
+    "language",
+    "video"
+  ],
+  "state": "extracted",
+  "dependencies": [
+    {
+      "package": "swift-ai-core",
+      "from": "1.5.0"
+    },
+    {
+      "package": "swift-ai-openai-compatible",
+      "from": "1.2.1"
+    }
+  ],
+  "moduleDependencies": [
+    "swift-ai-core/SwiftAIProvider",
+    "swift-ai-core/SwiftAITransport",
+    "swift-ai-core/SwiftAIProviderUtilities",
+    "swift-ai-openai-compatible/SwiftAIOpenAICompatible"
+  ],
+  "testDependencies": [
+    "swift-ai-core/SwiftAI"
+  ],
+  "guides": [
+    "Packages/swift-ai-tencent/README.md"
+  ],
+  "capabilityRows": [
+    {
+      "providerID": "tencent",
+      "upstreamPackage": "@ai-sdk/tencent",
+      "factoryNames": [
+        "AIProviders.tencent"
+      ],
+      "capabilities": [
+        "language",
+        "video"
+      ],
+      "files": false,
+      "skills": false,
+      "notes": "Tencent 3.0.3 TokenHub Chat Completions and Kling video, and TC3-signed Tencent Cloud VOD start/status operations. Native options, lazy independent credentials, media inputs, warnings, errors and billing metadata preserve release-matched scenarios. JavaScript workflows and Zod module lifecycle are excluded; native required prompt adaptation is documented. Each output exposes its own URL/MIME descriptor, including mixed-format VOD results."
+    }
+  ],
+  "release": {
+    "bump": "initial",
+    "version": "1.0.0",
+    "rationale": "New optional SwiftPM provider with complete native language/video surfaces. No preexisting public selectors change. Requires core1.5.0 for per-video URL/MIME descriptors; descriptorless legacy selectors remain unchanged."
+  },
+  "testEvidence": {
+    "status": "passed",
+    "command": "swift test --package-path Packages/swift-ai-tencent --no-parallel",
+    "declaredTests": 25,
+    "suites": 4,
+    "logSHA256": "a0818b8819facf1491299c92daf2f80988fed5e95e5c19c1c09e89ec558eb2dd",
+    "liveServiceTests": "not run"
+  },
+  "knownGaps": [
+    "JavaScript workflow serialization and lazy Zod module lifecycle are outside the Swift product scope.",
+    "Native required prompt uses empty string as omitted upstream prompt."
+  ],
+  "dispositions": "Packages/swift-ai-tencent/Porting/upstream-tests.json"
+}

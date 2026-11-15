@@ -81,7 +81,7 @@ import Testing
     let heyGen = try AIProviders.heyGen(settings: ProviderSettings(apiKey: "heygen-key"))
     let heyGenRow = try #require(AIProviderCapabilities.row(providerID: "heygen"))
     #expect(heyGenRow.supportedCapabilities == heyGen.supportedCapabilities)
-    #expect(heyGenRow.supportedCapabilities == [.video])
+    #expect(heyGenRow.supportedCapabilities == [.video, .decision])
 
     let voyage = try AIProviders.voyage(settings: ProviderSettings(apiKey: "voyage-key"))
     let voyageRow = try #require(AIProviderCapabilities.row(providerID: "voyage"))

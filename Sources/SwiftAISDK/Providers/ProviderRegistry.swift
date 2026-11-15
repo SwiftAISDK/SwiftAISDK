@@ -16,7 +16,7 @@ extension AIProviders {
         if let project = settings.project {
             settings.headers["OpenAI-Project"] = settings.headers["OpenAI-Project"] ?? project
         }
-        return try OpenAICompatibleProvider(providerID: providerID, defaultBaseURL: "https://api.openai.com/v1", authorization: .bearer(environmentVariables: ["OPENAI_API_KEY"]), supportedCapabilities: [.language, .completion, .embedding, .image, .transcription, .speech], settings: settings, routesLikeOpenAI: true, userAgentSuffix: "ai-sdk-openai/4.0.117", supportsProviderOwnedBatch: true)
+        return try OpenAICompatibleProvider(providerID: providerID, defaultBaseURL: "https://api.openai.com/v1", authorization: .bearer(environmentVariables: ["OPENAI_API_KEY"]), supportedCapabilities: [.language, .completion, .embedding, .image, .transcription, .speech], settings: settings, routesLikeOpenAI: true, userAgentSuffix: "ai-sdk-openai/4.0.118", supportsProviderOwnedBatch: true)
     }
 
     public static func anthropic(settings: ProviderSettings = ProviderSettings()) throws -> AnthropicProvider {
@@ -393,7 +393,7 @@ extension AIProviders {
         return try OpenAICompatibleProvider(
             providerID: "heygen", defaultBaseURL: "https://api.heygen.com",
             authorization: .apiKeyHeader(name: "x-api-key", environmentVariables: ["HEYGEN_API_KEY"]),
-            supportedCapabilities: [.video], settings: settings, userAgentSuffix: "ai-sdk-heygen/3.0.14"
+            supportedCapabilities: [.video, .decision], settings: settings, userAgentSuffix: "ai-sdk-heygen/3.0.14"
         )
     }
 

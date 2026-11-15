@@ -85,3 +85,14 @@ rejected without allocating holes. RPC status strings preserve raw errors and
 supply retryability. Provider tool NONE filtering precedes JSON fallback;
 Interactions maps string labels and current function/provider tools. Speech
 forwards explicit languageCode for single/multiple voices, omitting auto.
+
+
+## Interactions reasoning
+
+`interactionsModel(...)` maps the common `LanguageModelRequest.reasoning` effort
+to `generation_config.thinking_level`. Hydrogen supports `xhigh`; an unsupported
+level falls back to the nearest supported effort and returns a compatibility
+warning. Explicit `providerOptions.google.thinkingLevel` takes precedence.
+Agent calls omit generation controls and warn about every dropped field,
+including custom reasoning. Streaming emits `streamStart` even when its warnings
+are empty.

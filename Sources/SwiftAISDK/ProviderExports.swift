@@ -41,11 +41,14 @@
 @_exported import SwiftAIOpenResponses
 @_exported import SwiftAIOpenAI
 @_exported import SwiftAIOpenAICompatible
+@_exported import SwiftAIParallel
 @_exported import SwiftAIPerplexity
 @_exported import SwiftAIProdia
 @_exported import SwiftAIQuiverAI
 @_exported import SwiftAIReplicate
 @_exported import SwiftAIRevAI
+@_exported import SwiftAIScaleDown
+@_exported import SwiftAITencent
 @_exported import SwiftAITogetherAI
 @_exported import SwiftAITopaz
 @_exported import SwiftAITypeSafeAI

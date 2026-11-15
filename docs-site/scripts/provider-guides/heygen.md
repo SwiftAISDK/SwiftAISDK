@@ -152,3 +152,31 @@ The native `HeyGenProviderSettings` accepts an optional
 authenticated request, so short-lived credentials can refresh without recreating
 the provider or model. Static `apiKey` settings remain supported. A supplier
 failure stops the request before it reaches the transport.
+
+
+## Native decisions
+
+Use the native `HeyGenProvider` (or `AIProviders.heyGen(configuration:)`) for
+boolean, choice and score decisions through `/v3/models/decisions`:
+
+```swift
+import SwiftAIProvider
+import SwiftAIHeyGen
+
+let provider = try HeyGenProvider(configuration: .init()) // HEYGEN_API_KEY
+let model = try provider.decisionModel("heygen-decision-1")
+let result = try await model.doDecide(.init(
+    state: [.text("Video export fails for everyone.")],
+    questions: ["blocked": .boolean(instructions: "Is the customer unable to work?")]
+))
+```
+
+Keys resolve when a request is made. The native initializer keeps its existing
+throwing signature. A decision accepts up to 400 questions, four images and one
+video. It preserves full-precision probabilities, confidence, score legends,
+answer warnings, usage and response metadata. Box questions and non-image/video
+files are rejected before HTTP. Workflow symbol serialization and JavaScript
+file-union shapes are outside the Swift API.
+
+The compatibility `settings:` factory retains its existing credential timing
+and request identity; its Decision selector forwards to the native adapter.

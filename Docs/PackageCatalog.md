@@ -30,7 +30,7 @@ Generated from `Porting/packages.json`. All package states are explicit; planned
 | [swift-ai-google](https://github.com/SwiftAISDK/swift-ai-google) | extracted | `SwiftAIGoogle` | `@ai-sdk/google` | `swift-ai-core` from `1.4.0` |
 | [swift-ai-google-vertex](https://github.com/SwiftAISDK/swift-ai-google-vertex) | extracted | `SwiftAIGoogleVertex` | `@ai-sdk/google-vertex` | `swift-ai-core` from `1.4.0`, `swift-ai-google` from `1.3.0`, `swift-ai-anthropic` from `1.4.0`, `swift-ai-openai-compatible` from `1.2.0`, `swift-ai-openai` from `1.0.0` |
 | [swift-ai-groq](https://github.com/SwiftAISDK/swift-ai-groq) | extracted | `SwiftAIGroq` | `@ai-sdk/groq` | `swift-ai-core` from `1.3.0` |
-| [swift-ai-heygen](https://github.com/SwiftAISDK/swift-ai-heygen) | extracted | `SwiftAIHeyGen` | `@ai-sdk/heygen` | `swift-ai-core` from `1.2.0` |
+| [swift-ai-heygen](https://github.com/SwiftAISDK/swift-ai-heygen) | extracted | `SwiftAIHeyGen` | `@ai-sdk/heygen` | `swift-ai-core` from `1.4.0` |
 | [swift-ai-huggingface](https://github.com/SwiftAISDK/swift-ai-huggingface) | extracted | `SwiftAIHuggingFace` | `@ai-sdk/huggingface` | `swift-ai-core` from `1.2.0` |
 | [swift-ai-hume](https://github.com/SwiftAISDK/swift-ai-hume) | extracted | `SwiftAIHume` | `@ai-sdk/hume` | `swift-ai-core` from `1.2.0` |
 | [swift-ai-klingai](https://github.com/SwiftAISDK/swift-ai-klingai) | extracted | `SwiftAIKlingAI` | `@ai-sdk/klingai` | `swift-ai-core` from `1.2.0` |
@@ -43,11 +43,14 @@ Generated from `Porting/packages.json`. All package states are explicit; planned
 | [swift-ai-open-responses](https://github.com/SwiftAISDK/swift-ai-open-responses) | extracted | `SwiftAIOpenResponses` | `@ai-sdk/open-responses` | `swift-ai-core` from `1.2.0`, `swift-ai-openai` from `1.1.0` |
 | [swift-ai-openai](https://github.com/SwiftAISDK/swift-ai-openai) | extracted | `SwiftAIOpenAI` | `@ai-sdk/openai` | `swift-ai-core` from `1.4.0`, `swift-ai-openai-compatible` from `1.3.0` |
 | [swift-ai-openai-compatible](https://github.com/SwiftAISDK/swift-ai-openai-compatible) | extracted | `SwiftAIOpenAICompatible` | `@ai-sdk/openai-compatible` | `swift-ai-core` from `1.3.0` |
+| [swift-ai-parallel](https://github.com/SwiftAISDK/swift-ai-parallel) | extracted | `SwiftAIParallel` | `@ai-sdk/parallel` | `swift-ai-core` from `1.4.0` |
 | [swift-ai-perplexity](https://github.com/SwiftAISDK/swift-ai-perplexity) | extracted | `SwiftAIPerplexity` | `@ai-sdk/perplexity` | `swift-ai-core` from `1.2.0` |
 | [swift-ai-prodia](https://github.com/SwiftAISDK/swift-ai-prodia) | extracted | `SwiftAIProdia` | `@ai-sdk/prodia` | `swift-ai-core` from `1.2.0` |
 | [swift-ai-quiverai](https://github.com/SwiftAISDK/swift-ai-quiverai) | extracted | `SwiftAIQuiverAI` | `@ai-sdk/quiverai` | `swift-ai-core` from `1.2.0`, `swift-ai-open-responses` from `1.1.0` |
 | [swift-ai-replicate](https://github.com/SwiftAISDK/swift-ai-replicate) | extracted | `SwiftAIReplicate` | `@ai-sdk/replicate` | `swift-ai-core` from `1.2.0` |
 | [swift-ai-revai](https://github.com/SwiftAISDK/swift-ai-revai) | extracted | `SwiftAIRevAI` | `@ai-sdk/revai` | `swift-ai-core` from `1.2.0` |
+| [swift-ai-scaledown](https://github.com/SwiftAISDK/swift-ai-scaledown) | extracted | `SwiftAIScaleDown` | `@ai-sdk/scaledown` | `swift-ai-core` from `1.4.0` |
+| [swift-ai-tencent](https://github.com/SwiftAISDK/swift-ai-tencent) | extracted | `SwiftAITencent` | `@ai-sdk/tencent` | `swift-ai-core` from `1.5.0`, `swift-ai-openai-compatible` from `1.2.1` |
 | [swift-ai-togetherai](https://github.com/SwiftAISDK/swift-ai-togetherai) | extracted | `SwiftAITogetherAI` | `@ai-sdk/togetherai` | `swift-ai-core` from `1.2.0`, `swift-ai-openai-compatible` from `1.2.0` |
 | [swift-ai-topaz](https://github.com/SwiftAISDK/swift-ai-topaz) | extracted | `SwiftAITopaz` | `@ai-sdk/topaz` | `swift-ai-core` from `1.2.0` |
 | [swift-ai-typesafe-ai](https://github.com/SwiftAISDK/swift-ai-typesafe-ai) | extracted | `SwiftAITypeSafeAI` | `@ai-sdk/typesafe-ai` | `swift-ai-core` from `1.3.0` |

@@ -34,21 +34,15 @@ Then depend on the library product:
 
 ## Modular packages
 
-The [SwiftAISDK organization](https://github.com/SwiftAISDK) publishes 52 independent
-SwiftPM packages: core, 49 provider adapters, MCP and UI. The complete
+The [SwiftAISDK organization](https://github.com/SwiftAISDK) contains 55 independent
+SwiftPM units: core, 52 provider adapters, MCP and UI. The complete
 [catalog](Docs/PackageCatalog.md) lists their repositories, modules and dependencies.
 
-| Package | Current Swift version | Products |
-| --- | --- | --- |
-| [swift-ai-core](https://github.com/SwiftAISDK/swift-ai-core) | 1.3.0 | SwiftAI, SwiftAIProvider, SwiftAITransport, SwiftAIProviderUtilities |
-| [swift-ai-anthropic](https://github.com/SwiftAISDK/swift-ai-anthropic) | 1.3.0 | SwiftAIAnthropic |
-| [swift-ai-openai-compatible](https://github.com/SwiftAISDK/swift-ai-openai-compatible) | 1.2.0 | SwiftAIOpenAICompatible |
-| [swift-ai-openai](https://github.com/SwiftAISDK/swift-ai-openai) | 1.2.0 | SwiftAIOpenAI |
-| [swift-ai-ui](https://github.com/SwiftAISDK/swift-ai-ui) | 1.1.0 | SwiftAIUI |
-| 16 other feature adapters | 1.2.0 | See the catalog |
-| 27 patched providers and MCP | 1.1.1 | See the catalog |
-| Hugging Face | 1.1.0 | Unchanged release |
-| ByteDance, LMNT and Vercel | 1.0.0 | Unchanged releases |
+Published version selections and immutable verification evidence are recorded in
+[Releases/sets](Releases/sets). The current source adds Tencent, Parallel and
+ScaleDown, HeyGen Decision V4, signed streaming approval verification and
+per-video media types. See the [2026-11-15 audit](Docs/WeeklyUpstreamAudit20261115.md)
+for package versions, compatibility and release gates.
 
 For an OpenAI application, add these dependencies:
 

@@ -8,11 +8,12 @@ Source URL: /providers/heygen/
 
 ## Factories
 
-`AIProviders.heyGen`
+`AIProviders.heyGen`, `createHeyGen`, `heygen`
 
 ## Capabilities
 
 - Video
+- Decision
 
 ## Generate a video
 
@@ -169,9 +170,36 @@ authenticated request, so short-lived credentials can refresh without recreating
 the provider or model. Static `apiKey` settings remain supported. A supplier
 failure stops the request before it reaches the transport.
 
+## Native decisions
+
+Use the native `HeyGenProvider` (or `AIProviders.heyGen(configuration:)`) for
+boolean, choice and score decisions through `/v3/models/decisions`:
+
+```swift
+import SwiftAIProvider
+import SwiftAIHeyGen
+
+let provider = try HeyGenProvider(configuration: .init()) // HEYGEN_API_KEY
+let model = try provider.decisionModel("heygen-decision-1")
+let result = try await model.doDecide(.init(
+    state: [.text("Video export fails for everyone.")],
+    questions: ["blocked": .boolean(instructions: "Is the customer unable to work?")]
+))
+```
+
+Keys resolve when a request is made. The native initializer keeps its existing
+throwing signature. A decision accepts up to 400 questions, four images and one
+video. It preserves full-precision probabilities, confidence, score legends,
+answer warnings, usage and response metadata. Box questions and non-image/video
+files are rejected before HTTP. Workflow symbol serialization and JavaScript
+file-union shapes are outside the Swift API.
+
+The compatibility `settings:` factory retains its existing credential timing
+and request identity; its Decision selector forwards to the native adapter.
+
 ## Notes
 
-HeyGen mirrors @ai-sdk/heygen 3.0.24: HEYGEN_API_KEY / x-api-key authentication, custom base URL/headers/transport and ai-sdk-heygen/3.0.10 user-agent; video/videoModel aliases and open model IDs; heygen-video-1 text-to-video, first-frame image-to-video and grouped image/video/audio reference conditioning. Typed HeyGenVideoModelOptions and HeyGenVideoAsset validate HTTPS URL/asset/base64 inputs, mode conflicts, 9 image/3 video/3 audio/12 total reference limits, prompt/duration/seed bounds, all documented frame sizes and size-class/aspect-ratio constraints before I/O. AsyncVideoModel start/status operations retain videoId/mode/resolution, support durable JSON persistence and shared polling/idempotent retries, and return refreshed signed MP4 URLs without downloading. Reported output duration/dimensions/seed/inference timing and failure codes are preserved without inventing token or credit usage. Native credentials resolve at factory creation. Unary generation, remote cancellation, webhooks, avatar/voice/translation APIs and JavaScript model/workflow serialization are absent from this provider surface; unsupported fps/audio/count settings warn. The 2026-11-01 reviewed delta adds native per-request async credentials and current portable request/stream fixes where applicable; see WeeklyUpstreamAudit20261101 for exact package dispositions and retained gaps. The 2026-11-08 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261108; no full-package or live-service parity is implied. The 2026-11-14 reviewed delta and retained gaps are documented in WeeklyUpstreamAudit20261114; no full-package or live-service parity is implied.
+HeyGen 3.0.25 native asynchronous video plus multimodal Decision V4: boolean/choice/score, 400 questions, 4images/1video, URL/base64/native assets, lazy auth, exact response validation/confidence/JSON legends/answer warnings/usage. Existing video operation selectors preserved; JS serialization and unrepresentable invalid file-union shapes excluded.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

@@ -320,6 +320,26 @@ import Testing
     #expect(result.operationID == nil)
 }
 
+@Test func videoOperationsPreserveMixedPerFileMediaTypesWhenMerging() async throws {
+    var mixed = VideoGenerationResult(urls: ["https://example.com/one.mov", "https://example.com/two.webm"], mediaType: "video/quicktime", rawValue: [:])
+    mixed.videoURLDescriptors = [
+        .init(url: "https://example.com/one.mov", mediaType: "video/quicktime"),
+        .init(url: "https://example.com/two.webm", mediaType: "video/webm")
+    ]
+    let legacy = VideoGenerationResult(urls: ["https://example.com/unknown"], rawValue: [:])
+    let state = VideoOperationTestState(statuses: [.completed(mixed), .completed(legacy)])
+    let result = try await AI.generateVideo(
+        model: VideoOperationTestModel(state: state),
+        request: VideoGenerationRequest(prompt: "mixed files", count: 2), retryPolicy: .none,
+        poll: VideoGenerationPollOptions(intervalMilliseconds: 0, delay: { _, _ in })
+    )
+    #expect(result.videoURLDescriptors.map(\.url) == result.urls)
+    #expect(result.videoURLDescriptors.count == 3)
+    #expect(result.videoURLDescriptors.contains(.init(url: "https://example.com/one.mov", mediaType: "video/quicktime")))
+    #expect(result.videoURLDescriptors.contains(.init(url: "https://example.com/two.webm", mediaType: "video/webm")))
+    #expect(result.videoURLDescriptors.contains(.init(url: "https://example.com/unknown", mediaType: nil)))
+}
+
 @Test func videoFacadeSelectsStartStatusForAsyncOnlyModelsWithoutPollOptions() async throws {
     let controller = AIAbortController()
     let state = AsyncOnlyVideoOperationState()

@@ -1372,6 +1372,31 @@ public static func streamObject<Object: Decodable & Sendable>(
 
     public static func streamText(
         model: any LanguageModel,
+        request: LanguageModelRequest,
+        executableTools: [AITool],
+        maxSteps: Int = 5,
+        stopWhen: [AIStopCondition] = [],
+        prepareStep: AIPrepareStep? = nil,
+        toolCallers: AIToolCallerRouting = [:],
+        toolApproval: AIToolApproval? = nil,
+        toolApprovalSecret: String?,
+        repairToolCall: AIToolCallRepair? = nil,
+        timeoutNanoseconds: UInt64? = nil,
+        timeout: AIStreamTimeoutConfiguration? = nil,
+        retryPolicy: AIRetryPolicy = .default,
+        streamRetries: Int? = nil,
+        telemetry: Telemetry.Options? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil,
+        onError: AIGenerationOnError? = nil,
+        onAbort: AIStreamTextOnAbort? = nil
+    ) -> AsyncThrowingStream<LanguageStreamPart, Error> {
+        return SwiftAI.AI.streamText(model: model, request: request, executableTools: executableTools, maxSteps: maxSteps, stopWhen: stopWhen, prepareStep: prepareStep, toolCallers: toolCallers, toolApproval: toolApproval, toolApprovalSecret: toolApprovalSecret, repairToolCall: repairToolCall, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, experimentalSteering: experimentalSteering, onStepError: onStepError, onError: onError, onAbort: onAbort)
+    }
+
+
+    public static func streamText(
+        model: any LanguageModel,
         prompt: String,
         temperature: Double? = nil,
         topP: Double? = nil,
@@ -1408,6 +1433,48 @@ public static func streamObject<Object: Decodable & Sendable>(
         onAbort: AIStreamTextOnAbort? = nil
     ) -> AsyncThrowingStream<LanguageStreamPart, Error> {
         return SwiftAI.AI.streamText(model: model, prompt: prompt, temperature: temperature, topP: topP, topK: topK, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, seed: seed, maxOutputTokens: maxOutputTokens, stopSequences: stopSequences, responseFormat: responseFormat, reasoning: reasoning, tools: tools, executableTools: executableTools, maxSteps: maxSteps, stopWhen: stopWhen, prepareStep: prepareStep, toolCallers: toolCallers, toolApproval: toolApproval, repairToolCall: repairToolCall, toolChoice: toolChoice, includeRawChunks: includeRawChunks, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, experimentalSteering: experimentalSteering, onStepError: onStepError, onError: onError, onAbort: onAbort)
+    }
+
+
+    public static func streamText(
+        model: any LanguageModel,
+        prompt: String,
+        temperature: Double? = nil,
+        topP: Double? = nil,
+        topK: Int? = nil,
+        presencePenalty: Double? = nil,
+        frequencyPenalty: Double? = nil,
+        seed: Int? = nil,
+        maxOutputTokens: Int? = nil,
+        stopSequences: [String] = [],
+        responseFormat: AIResponseFormat? = nil,
+        reasoning: String? = nil,
+        tools: [String: JSONValue] = [:],
+        executableTools: [AITool] = [],
+        maxSteps: Int = 5,
+        stopWhen: [AIStopCondition] = [],
+        prepareStep: AIPrepareStep? = nil,
+        toolCallers: AIToolCallerRouting = [:],
+        toolApproval: AIToolApproval? = nil,
+        toolApprovalSecret: String?,
+        repairToolCall: AIToolCallRepair? = nil,
+        toolChoice: JSONValue? = nil,
+        includeRawChunks: Bool = false,
+        providerOptions: [String: JSONValue] = [:],
+        extraBody: [String: JSONValue] = [:],
+        headers: [String: String] = [:],
+        abortSignal: AIAbortSignal? = nil,
+        timeoutNanoseconds: UInt64? = nil,
+        timeout: AIStreamTimeoutConfiguration? = nil,
+        retryPolicy: AIRetryPolicy = .default,
+        streamRetries: Int? = nil,
+        telemetry: Telemetry.Options? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil,
+        onError: AIGenerationOnError? = nil,
+        onAbort: AIStreamTextOnAbort? = nil
+    ) -> AsyncThrowingStream<LanguageStreamPart, Error> {
+        return SwiftAI.AI.streamText(model: model, prompt: prompt, temperature: temperature, topP: topP, topK: topK, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, seed: seed, maxOutputTokens: maxOutputTokens, stopSequences: stopSequences, responseFormat: responseFormat, reasoning: reasoning, tools: tools, executableTools: executableTools, maxSteps: maxSteps, stopWhen: stopWhen, prepareStep: prepareStep, toolCallers: toolCallers, toolApproval: toolApproval, toolApprovalSecret: toolApprovalSecret, repairToolCall: repairToolCall, toolChoice: toolChoice, includeRawChunks: includeRawChunks, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, experimentalSteering: experimentalSteering, onStepError: onStepError, onError: onError, onAbort: onAbort)
     }
 
 
@@ -1455,6 +1522,34 @@ public static func streamObject<Object: Decodable & Sendable>(
         onAbort: AIStreamTextOnAbort? = nil
     ) -> AsyncThrowingStream<AIOutputStreamPart<FinalOutput, PartialOutput>, Error> {
         return SwiftAI.AI.streamText(model: model, request: request, output: output, executableTools: executableTools, maxSteps: maxSteps, stopWhen: stopWhen, prepareStep: prepareStep, toolCallers: toolCallers, toolApproval: toolApproval, repairToolCall: repairToolCall, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText, experimentalSteering: experimentalSteering, onStepError: onStepError, onError: onError, onAbort: onAbort)
+    }
+
+
+    public static func streamText<FinalOutput: Sendable, PartialOutput: Sendable>(
+        model: any LanguageModel,
+        request: LanguageModelRequest,
+        output: AIOutput<FinalOutput, PartialOutput>,
+        executableTools: [AITool],
+        maxSteps: Int = 5,
+        stopWhen: [AIStopCondition] = [],
+        prepareStep: AIPrepareStep? = nil,
+        toolCallers: AIToolCallerRouting = [:],
+        toolApproval: AIToolApproval? = nil,
+        toolApprovalSecret: String?,
+        repairToolCall: AIToolCallRepair? = nil,
+        timeoutNanoseconds: UInt64? = nil,
+        timeout: AIStreamTimeoutConfiguration? = nil,
+        retryPolicy: AIRetryPolicy = .default,
+        streamRetries: Int? = nil,
+        telemetry: Telemetry.Options? = nil,
+        jsonInstruction: AIJSONInstruction? = nil,
+        repairText: (@Sendable (AIObjectRepairContext) async throws -> String?)? = nil,
+        experimentalSteering: AISteering? = nil,
+        onStepError: AIGenerateTextOnStepError? = nil,
+        onError: AIGenerationOnError? = nil,
+        onAbort: AIStreamTextOnAbort? = nil
+    ) -> AsyncThrowingStream<AIOutputStreamPart<FinalOutput, PartialOutput>, Error> {
+        return SwiftAI.AI.streamText(model: model, request: request, output: output, executableTools: executableTools, maxSteps: maxSteps, stopWhen: stopWhen, prepareStep: prepareStep, toolCallers: toolCallers, toolApproval: toolApproval, toolApprovalSecret: toolApprovalSecret, repairToolCall: repairToolCall, timeoutNanoseconds: timeoutNanoseconds, timeout: timeout, retryPolicy: retryPolicy, streamRetries: streamRetries, telemetry: telemetry, jsonInstruction: jsonInstruction, repairText: repairText, experimentalSteering: experimentalSteering, onStepError: onStepError, onError: onError, onAbort: onAbort)
     }
 
 

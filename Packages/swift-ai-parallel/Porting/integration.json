@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-parallel",
+  "upstream": "@ai-sdk/parallel",
+  "version": "3.0.9",
+  "catalogChanges": {
+    "state": "extracted",
+    "dependencies": [
+      {
+        "package": "swift-ai-core",
+        "from": "1.4.0"
+      }
+    ],
+    "umbrellaFrom": "1.0.0",
+    "modules": [
+      {
+        "name": "SwiftAIParallel",
+        "dependencies": [
+          "swift-ai-core/SwiftAIProvider",
+          "swift-ai-core/SwiftAITransport",
+          "swift-ai-core/SwiftAIProviderUtilities"
+        ],
+        "testResources": [
+          "Fixtures"
+        ],
+        "testDependencies": [
+          "swift-ai-core/SwiftAI"
+        ]
+      }
+    ],
+    "capabilityRows": [
+      {
+        "order": 62,
+        "providerID": "parallel",
+        "upstreamPackage": "@ai-sdk/parallel",
+        "factoryNames": [
+          "AIProviders.parallel",
+          "createParallel",
+          "parallel"
+        ],
+        "capabilities": [
+          "decision"
+        ],
+        "files": false,
+        "skills": false,
+        "notes": "Parallel 3.0.9 native web-grounded Decision V4: boolean/choice/score, full-precision answers, refusal, shared citations/excerpts, confidence/legends/usage, configurable mode/base URL, lazy x-api-key auth and structured errors. Files/box and JavaScript Workflow symbol serialization are unsupported."
+      }
+    ],
+    "guides": [
+      "Packages/swift-ai-parallel/README.md"
+    ]
+  },
+  "upstreamLock": {
+    "name": "@ai-sdk/parallel",
+    "reviewedVersion": "3.0.9",
+    "ledgerKind": "provider",
+    "evidence": "Packages/swift-ai-parallel/Porting/map.json; Packages/swift-ai-parallel/Porting/integration.json; ParallelRequestUpstreamTests.swift; ParallelResponseUpstreamTests.swift",
+    "reviewStatus": "reviewed",
+    "archiveIntegrity": "sha512-d+L5kJ3qme2MbzeKkpdyvugfXnnQBvZBt7wUo/q9emF3wdq+vI53WzHmW8vkq10qqOryOZGJurodyzvuqtn/lw==",
+    "sourceRef": "npm:@ai-sdk/parallel@3.0.9",
+    "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
+    "testRefRelationship": "matching-release",
+    "contractFamilies": [
+      "DecisionModelV4",
+      "ProviderV4"
+    ],
+    "contractReview": "2026-11-15: full published Decision/Provider V4 surface reviewed; exact release tests translated with original verified fixture. JavaScript Workflow symbol serialization excluded explicitly; no live-service claim."
+  },
+  "testDispositions": [
+    {
+      "path": "packages/parallel/src/parallel-decision-model.test.ts",
+      "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
+      "sha256": "8c76264c361d474227c46b0408a5a1f1a1fc4315badc492bf71d66423ee8a256",
+      "disposition": "ported-with-platform-exclusion",
+      "scenarios": [
+        {
+          "upstreamScenario": "sends the native contract with configured auth, options and request headers",
+          "swiftTest": "ParallelRequestUpstreamTests.sendsNativeContractWithConfiguredAuthenticationOptionsAndHeaders",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "preserves full precision, citations, confidence, legends and usage",
+          "swiftTest": "ParallelResponseUpstreamTests.preservesFullPrecisionCitationsConfidenceLegendsAndUsage",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "preserves refusal answers alongside successful answers",
+          "swiftTest": "ParallelResponseUpstreamTests.preservesRefusalAlongsideSuccessfulAnswers",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "preserves empty evidence fields: %j",
+          "swiftTest": "ParallelResponseUpstreamTests.preservesEmptyEvidenceFields",
+          "expandedCases": 2,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "preserves JSON and text state: %j",
+          "swiftTest": "ParallelRequestUpstreamTests.preservesJSONAndTextState",
+          "expandedCases": 5,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "rejects unsupported inputs and invalid options before provider I/O",
+          "swiftTest": "ParallelRequestUpstreamTests.rejectsUnsupportedInputsAndInvalidOptionsBeforeIO",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "rejects invalid questions before I/O: %j",
+          "swiftTest": "ParallelRequestUpstreamTests.rejectsInvalidQuestionsBeforeIO",
+          "expandedCases": 7,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "rejects malformed provider responses",
+          "swiftTest": "ParallelResponseUpstreamTests.rejectsMalformedProviderResponses",
+          "expandedCases": 4,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "preserves provider errors and retry headers (%i)",
+          "swiftTest": "ParallelResponseUpstreamTests.preservesProviderErrorsAndRetryHeaders",
+          "expandedCases": 5,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "passes abort signals through unchanged",
+          "swiftTest": "ParallelRequestUpstreamTests.passesAbortSignalThroughUnchanged",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "warns about unsupported generation and provider options",
+          "swiftTest": "ParallelRequestUpstreamTests.warnsAboutUnsupportedGenerationAndProviderOptions",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "uses environment auth, the default endpoint, and exported provider",
+          "swiftTest": "ParallelRequestUpstreamTests.usesEnvironmentAuthenticationAndDefaultEndpoint",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "rejects unsupported model families",
+          "swiftTest": "ParallelRequestUpstreamTests.rejectsUnsupportedModelFamilies",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "forwards future mode strings without a package update",
+          "swiftTest": "ParallelResponseUpstreamTests.forwardsFutureModeStringsWithoutPackageUpdate",
+          "expandedCases": 1,
+          "disposition": "ported"
+        },
+        {
+          "upstreamScenario": "serializes model configuration and restores the request contract",
+          "disposition": "out-of-scope",
+          "reason": "JavaScript WORKFLOW_SERIALIZE/WORKFLOW_DESERIALIZE symbols and cross-process fetch restoration have no Swift product surface."
+        }
+      ]
+    }
+  ],
+  "portableScenarioCount": 32,
+  "platformExcludedScenarioCount": 1,
+  "fixture": {
+    "upstreamPath": "packages/parallel/src/__fixtures__/decisions.json",
+    "testRef": "8bc7652cdb13fc84722666eb93f45acd0d131eee",
+    "gitBlob": "8a86e2d0af6fb2ba245634faac695b6fdc9b31d8",
+    "swiftPath": "Packages/swift-ai-parallel/Tests/SwiftAIParallelTests/Fixtures/decisions.json",
+    "sha256": "afdeb0ca7d893253db772392b5d9e79941079636e706db251dc96d1bf712b3a5",
+    "note": "Illustrative upstream contract fixture; not a live capture. Fetched from exact release ref through GitHub contents API and Git blob checked."
+  },
+  "tests": {
+    "status": "passed",
+    "command": "swift test --package-path Packages/swift-ai-parallel --no-parallel",
+    "exitCode": 0,
+    "testDeclarations": 19,
+    "suiteCount": 3,
+    "portableUpstreamExpandedCases": 32,
+    "nativeSupplementDeclarations": 5,
+    "logSHA256": "5b09f65cdad343134f6760896bf9175cccf80cb7feb6de91ecccda1eff6bd5fa",
+    "completedAt": "2026-11-15T01:18:09.566095+00:00"
+  },
+  "release": {
+    "bump": "initial",
+    "version": "1.0.0",
+    "notes": "Add the Parallel provider for native web-grounded Decision V4 calls using fast or future modes. Preserve typed boolean/choice/score/refusal answers, full precision, shared citations and excerpts, confidence, score legends, decision IDs and usage. Supports configurable endpoint/headers, PARALLEL_API_KEY or explicit/per-request keys, cancellation and structured HTTP errors. Exact 3.0.9 upstream fixture scenarios are translated; JavaScript Workflow serialization is excluded. No existing Swift API changes or paid/live verification."
+  }
+}

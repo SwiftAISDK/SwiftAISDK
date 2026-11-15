@@ -1,6 +1,6 @@
 # Porting Status
 
-Snapshot date: 2026-11-14
+Snapshot date: 2026-11-15
 
 SwiftAISDK currently ports the provider-facing parts of Vercel AI SDK into a
 SwiftPM library. The package has a broad Swift-native facade, provider registry,
@@ -13,6 +13,17 @@ root `LICENSE` file.
 This file is the readable status page. It replaces the older provider-progress
 journals and product-gap checklist. Use the ledgers and generated inventories
 for exact evidence.
+
+## 2026-11-15 upstream review
+
+The current checkout tracks 57 npm packages across 55 Swift units. The
+[package audit](WeeklyUpstreamAudit20261115.md) records 36 new npm baselines and
+complete Tencent, Parallel and ScaleDown ports, plus HeyGen Decision V4.
+Core signed streaming approvals and per-video MIME descriptors are additive;
+all previous selectors/initializers remain. All required local checks passed:
+55 owning packages, 1,736 facade tests, tooling, 55 deterministic exports and
+exact minimum-dependency consumers. Publication awaits exact-source hosted CI;
+published release records remain authoritative.
 
 ## Modular packages
 

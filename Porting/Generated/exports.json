@@ -630,7 +630,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.2.0"
+          "from": "1.4.0"
         }
       ]
     },
@@ -903,6 +903,27 @@
       ]
     },
     {
+      "package": "swift-ai-parallel",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-parallel.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-parallel/Package.swift",
+        "Packages/swift-ai-parallel/Sources/SwiftAIParallel",
+        "Packages/swift-ai-parallel/Tests/SwiftAIParallelTests",
+        "Packages/swift-ai-parallel/README.md",
+        "Packages/swift-ai-parallel/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.4.0"
+        }
+      ]
+    },
+    {
       "package": "swift-ai-perplexity",
       "repository": "https://github.com/SwiftAISDK/swift-ai-perplexity.git",
       "releaseReady": false,
@@ -1008,6 +1029,52 @@
         {
           "package": "swift-ai-core",
           "from": "1.2.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-scaledown",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-scaledown.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-scaledown/Package.swift",
+        "Packages/swift-ai-scaledown/Sources/SwiftAIScaleDown",
+        "Packages/swift-ai-scaledown/Tests/SwiftAIScaleDownTests",
+        "Packages/swift-ai-scaledown/README.md",
+        "Packages/swift-ai-scaledown/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.4.0"
+        }
+      ]
+    },
+    {
+      "package": "swift-ai-tencent",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-tencent.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-tencent/Package.swift",
+        "Packages/swift-ai-tencent/Sources/SwiftAITencent",
+        "Packages/swift-ai-tencent/Tests/SwiftAITencentTests",
+        "Packages/swift-ai-tencent/README.md",
+        "Packages/swift-ai-tencent/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.5.0"
+        },
+        {
+          "package": "swift-ai-openai-compatible",
+          "from": "1.2.1"
         }
       ]
     },

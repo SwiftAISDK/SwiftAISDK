@@ -40,6 +40,10 @@
     {
       "kind": "native-adaptation",
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "2026-11-15: reviewed @ai-sdk/prodia 2.0.83 -> 2.0.84 with integrity-verified archives and exact matching-release tests. Source, declarations, changed scenarios and explicit remaining gaps are recorded in Docs/WeeklyUpstreamAudit20261115.json; no full-package or paid/live-service parity claim."
     }
   ],
   "reviewNote": "M6: provider runtime, configuration and focused tests extracted. Existing upstream baseline, capability boundaries and gaps retained. 2026-11-14: each changed published source/declaration and exact-release test delta is reviewed separately in Docs/WeeklyUpstreamAudit20261114.json; native catalog policies retained where equivalent, headers synchronized and TogetherAI schema routing extended. Existing gaps remain."

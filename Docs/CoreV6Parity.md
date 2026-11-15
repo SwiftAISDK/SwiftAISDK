@@ -1,6 +1,6 @@
 # Core V7 Parity
 
-Snapshot date: 2026-11-14
+Snapshot date: 2026-11-15
 
 This document tracks SwiftAISDK against the current AI SDK Core and Errors
 reference. It is intentionally high-level: product status belongs in
@@ -9,7 +9,7 @@ and provider behavior belongs in focused tests.
 The current snapshot versions below are generated from `Porting/upstream-lock.json`;
 parity explanations remain hand-authored.
 Implementation-sensitive UI/chat items are also checked against npm source
-snapshots, currently `ai@7.0.172`, `@ai-sdk/provider@4.0.38`, `@ai-sdk/provider-utils@5.0.81`, and `@ai-sdk/react@4.0.176`.
+snapshots, currently `ai@7.0.173`, `@ai-sdk/provider@4.0.38`, `@ai-sdk/provider-utils@5.0.81`, and `@ai-sdk/react@4.0.177`.
 
 References:
 
@@ -25,6 +25,25 @@ semantics or a whole-facade retention bound. The offline OAuth migration example
 exercises the existing published MCP 2.0.81 binding contract. See
 `PostReleaseRepairAudit.md` and `DownloadSecurity.md` for current evidence and
 compatibility details; older dated audit sections retain their historical state.
+
+## 2026-11-15 Native delta
+
+Signed historical approvals now execute the validated approved input without a
+second refinement. Three explicit `toolApprovalSecret:` streaming overloads
+verify signatures while preserving every earlier selector and unsigned behavior.
+The original matching-release counter fixture exposed execution of 3 after
+approval of 2; unary and streaming tests now check accepted/rejected replay,
+execution counts, tampered signatures and unchanged history.
+
+`VideoURLDescriptor` and `VideoGenerationResult.videoURLDescriptors` preserve
+per-file MIME associations, including async video fan-out. Existing result
+initializers and common media-type fields remain available. Tencent uses these
+for TokenHub and VOD outputs. The typed native bounded-UI validation scenarios
+retain the upstream limits/first-index assertions; JS getters, reference mutation
+and invalid TS union shapes are recorded as platform-only distinctions.
+
+The [weekly audit](WeeklyUpstreamAudit20261115.md) includes every reviewed package,
+full new-provider test dispositions and the separate local/hosted/release gates.
 
 ## 2026-11-08 Native delta
 
