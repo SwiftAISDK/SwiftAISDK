@@ -22,7 +22,7 @@ struct Weekly20261101CredentialsTests {
     @Test func resolvesFreshCredentialOnlyWhenRequestIsSent() async throws {
         let sequence = WeeklyCredentialSequence()
         let transport = WeeklyCredentialProbe()
-        let provider = try ZAIProvider(configuration: ZAIProviderSettings(apiKeyProvider: { await sequence.next() }, transport: transport))
+        let provider = ZAIProvider(configuration: ZAIProviderSettings(apiKeyProvider: { await sequence.next() }, transport: transport))
         let model = try provider.languageModel("glm-5.2")
         #expect(await sequence.count == 0)
         for _ in 0..<2 { _ = try? await model.generate(LanguageModelRequest(messages: [.user("Hello")])) }

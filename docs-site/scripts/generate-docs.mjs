@@ -57,10 +57,6 @@ function readProviderRows() {
   return catalogTools.docsRows(repoRoot);
 }
 
-function marker(value) {
-  return value ? '✅' : '';
-}
-
 function slugify(value) {
   return value
     .toLowerCase()
@@ -487,7 +483,7 @@ function expandRawCodeImports(source, pagePath) {
  * directory route, so page-relative links must become absolute.
  */
 function absolutizeRelativeMarkdownLinksForLLM(line, slug) {
-  return line.replace(/\]\((?![a-z][a-z0-9+.-]*:|\/|#)([^)\s]+)([^)]*)\)/gi, (match, path, suffix) => {
+  return line.replace(/\]\((?![a-z][a-z0-9+.-]*:|\/|#)([^)\s]+)([^)]*)\)/gi, (_match, path, suffix) => {
     const resolved = new URL(path, `https://docs.invalid${normalizedDocsBase()}${slug}`);
     const url = `${resolved.pathname}${resolved.search}${resolved.hash}`;
     return `](${docsSite ? `${docsSite.replace(/\/$/g, '')}${url}` : url}${suffix})`;
@@ -587,7 +583,7 @@ if (!providersOnly) {
   const migration = readFileSync(join(repoRoot, 'Docs/Migration.md'), 'utf8')
     .replace('# Migrating to SwiftAISDK 3.0\n', '')
     // Relative repository links do not exist on the docs site.
-    .replace(/\]\((?![a-z]+:|#)([^)]+)\)/g, (all, target) =>
+    .replace(/\]\((?![a-z]+:|#)([^)]+)\)/g, (_all, target) =>
       `](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Docs/${target})`);
   writeGenerated(join(contentRoot, 'getting-started/migrating-to-3.mdx'),
     '---\ntitle: Migrate to 3.0\ndescription: Choose independent Swift packages or keep the complete compatibility API.\n---\n' + migration);

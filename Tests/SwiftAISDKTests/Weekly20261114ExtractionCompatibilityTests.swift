@@ -28,7 +28,7 @@ private struct CompatibilityExtractionProvider: AIProvider, AIExtractionProvider
     @Test func legacyOpenAISettingsFactoryResolvesExtractionAndGenericProviderRejectsIt() async throws {
         let provider = try AIProviders.openAI(settings: ProviderSettings(apiKey: "fixture", environment: [:]))
         #expect(provider.supportedCapabilities.contains(.extraction))
-        let model = try await AIDefaultProvider.withProvider(provider) {
+        let model = try AIDefaultProvider.withProvider(provider) {
             try AIDefaultProvider.resolveExtractionModel("gpt-6-sol")
         }
         #expect(model.providerID == "openai.extraction")

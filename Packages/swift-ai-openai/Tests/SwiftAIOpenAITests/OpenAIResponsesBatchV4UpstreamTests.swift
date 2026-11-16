@@ -22,7 +22,7 @@ import Testing
         headers: ["Provider-Header": "provider"],
         transport: transport
     ))
-    let model = try provider.batchLanguageModel("gpt-5.6")
+    let model = provider.batchLanguageModel("gpt-5.6")
     let abortController = AIAbortController()
     let result = try await model.startBatch(AIBatchStartOptions(
         requests: [
@@ -117,7 +117,7 @@ import Testing
             apiKey: "test-api-key",
             transport: transport
         ))
-        let model = try provider.batchLanguageModel("gpt-5.6")
+        let model = provider.batchLanguageModel("gpt-5.6")
         let status = try await model.getBatchStatus(AIBatchOperationOptions(batchID: "batch_123"))
         #expect(status.status == expected)
         #expect(status.rawStatus == rawStatus)
@@ -216,7 +216,7 @@ import Testing
         ]
     )
     let provider = try AIProviders.openAI(configuration: OpenAIProviderSettings(apiKey: "test-api-key", transport: transport))
-    let model = try provider.batchLanguageModel("gpt-5.6")
+    let model = provider.batchLanguageModel("gpt-5.6")
     let stream = try await model.getBatchResults(AIBatchOperationOptions(
         batchID: "batch_123",
         headers: ["Operation-Header": "operation"]
@@ -645,9 +645,10 @@ import Testing
     ))
     #expect(try provider("gpt-5.6") is any BatchLanguageModel)
     #expect(try provider.languageModel("gpt-5.6") is any BatchLanguageModel)
-    #expect(try provider.responses("gpt-5.6") is any BatchLanguageModel)
-    #expect(!(try provider.chat("gpt-5.6") is any BatchLanguageModel))
-    #expect(!(try provider.completion("gpt-3.5-turbo-instruct") is any BatchLanguageModel))
+    let responses: any BatchLanguageModel = provider.responses("gpt-5.6")
+    #expect(responses.modelID == "gpt-5.6")
+    #expect(!(provider.chat("gpt-5.6") is any BatchLanguageModel))
+    #expect(!(provider.completion("gpt-3.5-turbo-instruct") is any BatchLanguageModel))
     #expect(!(try provider.image("gpt-image-1") is any BatchLanguageModel))
 }
 

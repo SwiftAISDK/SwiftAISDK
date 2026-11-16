@@ -348,7 +348,7 @@ private actor TokenStore {
                 ],
                 searchContextSize: "low"
             ),
-            "web_search_preview": AzureOpenAITools.webSearchPreview(searchContextSize: "medium"),
+            "web_search_preview": legacyWebSearchPreview(AzureOpenAITools.self, searchContextSize: "medium"),
             "file_search": AzureOpenAITools.fileSearch(vectorStoreIDs: ["vs_azure"], maxNumResults: 2),
             "code_interpreter": AzureOpenAITools.codeInterpreter(),
             "image_generation": AzureOpenAITools.imageGeneration(size: "1024x1024")
@@ -445,4 +445,14 @@ private actor TokenStore {
     #expect(body["response_format"]?.stringValue == "b64_json")
     #expect(body["openai"] == nil)
     #expect(body["outputFormat"] == nil)
+}
+
+/// Calls the deprecated `webSearchPreview` factory without a deprecation warning;
+/// the preview tool must still serialize like upstream.
+private protocol AzureLegacyWebSearchPreview {
+    static func webSearchPreview(searchContextSize: String?, userLocation: JSONValue?) -> JSONValue
+}
+extension AzureOpenAITools: AzureLegacyWebSearchPreview {}
+private func legacyWebSearchPreview<Tools: AzureLegacyWebSearchPreview>(_: Tools.Type, searchContextSize: String?) -> JSONValue {
+    Tools.webSearchPreview(searchContextSize: searchContextSize, userLocation: nil)
 }

@@ -350,6 +350,7 @@ struct TogetherAIImageModelUpstreamTests {
 
 // MARK: - togetherai-provider.test.ts
 
+@discardableResult
 private func withTogetherAIEnvironment<T>(_ updates: [String: String?], operation: () async throws -> T) async rethrows -> T {
     var previous: [String: String] = [:]
     for key in updates.keys {
@@ -377,7 +378,7 @@ private let upstreamChatResponse = #"{"choices":[{"message":{"content":"ok"},"fi
 @Suite("TogetherAI provider upstream parity", .serialized)
 struct TogetherAIProviderUpstreamTests {
     @Test func createsProviderWithDefaultOptions() async throws {
-        try await withTogetherAIEnvironment(["TOGETHER_API_KEY": nil, "TOGETHER_AI_API_KEY": nil]) {
+        await withTogetherAIEnvironment(["TOGETHER_API_KEY": nil, "TOGETHER_AI_API_KEY": nil]) {
             #expect(throws: AIError.missingAPIKey(provider: "togetherai", environmentVariables: ["TOGETHER_API_KEY", "TOGETHER_AI_API_KEY"])) {
                 _ = try TogetherAIProvider(configuration: TogetherAIProviderSettings(transport: RecordingTransport(response: jsonResponse(upstreamChatResponse))))
             }

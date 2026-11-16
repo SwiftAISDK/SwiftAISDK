@@ -22,7 +22,7 @@ struct Weekly20261101CredentialsTests {
     @Test func resolvesFreshCredentialOnlyWhenRequestIsSent() async throws {
         let sequence = WeeklyCredentialSequence()
         let transport = WeeklyCredentialProbe()
-        let provider = try TypeSafeAIProvider(configuration: TypeSafeAIProviderSettings(apiKeyProvider: { await sequence.next() }, transport: transport))
+        let provider = TypeSafeAIProvider(configuration: TypeSafeAIProviderSettings(apiKeyProvider: { await sequence.next() }, transport: transport))
         let model = try provider.evaluationModel("jev-latest")
         #expect(await sequence.count == 0)
         for _ in 0..<2 { _ = try? await model.doEvaluate(AIEvaluationModelV4CallOptions(state: .string("hello"), questions: ["q": .boolean(instructions: "yes?")])) }
