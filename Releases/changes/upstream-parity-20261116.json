@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "id": "upstream-parity-20261116",
+  "status": "reviewed",
+  "summary": "Upstream behavior parity audit against the unchanged reviewed npm baselines in Porting/upstream-lock.json, with Swift-reachable upstream tests translated for every corrected path. Validation: per-package suites, the complete root compatibility suite, generation, catalog and tooling checks; see Docs/Archive/UpstreamParityAudit20261116.md. Publication is gated by exact-source Swift 6.3.3 hosted CI. Paid/live-service checks were not run.",
+  "packages": [
+    {
+      "package": "swift-ai-core",
+      "bump": "minor",
+      "notes": "Upstream parity audit of `ai` and `@ai-sdk/provider-utils`. `AI.generateImage` now splits `count` above the model's `maxImagesPerCall` (new `ImageModel` requirement, default 1, plus a call-level `maxImagesPerCall:` and `AIImageModelMiddleware.overrideMaxImagesPerCall`) into concurrent calls with per-call retries. Retries report `maxRetriesExceeded` after the budget and parse `retry-after(-ms)` like upstream; embedMany merges provider metadata across chunks and reports `ai.embedMany`; rerank skips empty documents and fills response metadata; empty-text reasoning with provider metadata is replayed between steps and kept by UI conversion. `isURLSupported` matches media types exactly, JSON parsing follows `JSON.parse`, `withoutTrailingSlash` removes one slash, caller `Content-Type`/`User-Agent` override defaults case-insensitively and streamed tool-call IDs use upstream's 16-character form. New helpers `aiFunctionToolInputSchema` (and related accessors) and `validateBaseURL`.",
+      "compatibility": "Additive public API (protocol requirement with a default, new parameters with defaults, new helpers). Custom `ImageModel` conformers without a limit now receive one image per call, as upstream; declare `maxImagesPerCall` to keep larger calls."
+    },
+    {
+      "package": "swift-ai-ui",
+      "bump": "minor",
+      "notes": "`convertToModelMessages` keeps empty-text reasoning that carries provider metadata, converts assistant reasoning-file parts and inlines non-image `data:` URL files instead of throwing.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-openai",
+      "bump": "minor",
+      "notes": "Chat sends `json_schema` for schema output and leaves the schema unchanged; unsupported `flex`/`priority` service tiers are removed with upstream warnings; search-preview models drop `temperature`; `reasoningSummary` no longer leaks into chat bodies. Responses applies and strips `systemMessageMode`, `passThroughUnsupportedFiles` and `includeWebSearchSources`, keeps prompt-cache breakpoints, image detail and filenames, and orders GPT-6 warnings like upstream. Function tools send only their input schema as parameters.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-azure",
+      "bump": "minor",
+      "notes": "Azure chat inherits the OpenAI chat fixes (json_schema, service tiers, reasoningSummary warning). The provider can be created with only `speechBaseURL` or `maiBaseURL`; Azure OpenAI calls then fail lazily.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-openai-compatible",
+      "bump": "minor",
+      "notes": "Provider-namespaced options pass through unchanged; `openaiCompatible` options are limited to upstream's keys and validated. Function tools send only their input schema; streamed tool calls whose name arrives later are buffered, missing IDs are generated, empty deltas no longer open parts and `created: 0` no longer becomes a 1970 timestamp. Missing usage counts are 0, completions map finish reasons and metadata like upstream, embeddings forward only `dimensions` and `user`, and image edit errors use the provider message. `OpenAICompatibleImageModel.maxImagesPerCall` is public.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-anthropic",
+      "bump": "minor",
+      "notes": "Thinking without `maxOutputTokens` sends the model maximum plus the budget instead of 1024 plus the budget. Redacted reasoning is replayed as `redacted_thinking`, unsigned reasoning is dropped with a warning, citations are replayed and empty blocks are no longer produced. Warnings follow upstream order and number formatting; skill provider references resolve to `skill_id`; streams report message ID and model; empty credentials count as absent.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-anthropic-aws",
+      "bump": "minor",
+      "notes": "Empty API keys fall back to SigV4, credential-provider errors are wrapped like upstream and option namespaces follow upstream precedence.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-amazon-bedrock",
+      "bump": "minor",
+      "notes": "Usage includes cache tokens like upstream, provider and response metadata arrive on the finish part, `stopSequence` paths, `anthropicBeta` forwarding, message grouping, blank text blocks and the stream state machine match upstream. Function tools send only their input schema; `maxImagesPerCall` is public (Nova Canvas 5, others 1).",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-google",
+      "bump": "minor",
+      "notes": "Tool results are sent as `functionResponse.response {name, content}`; each system message is its own `systemInstruction` part; thought text and signatures are separate reasoning parts; empty candidates return empty content; server tools no longer turn the finish reason into `tool-calls`; absent metadata fields are `null`. `tunedModels/` and `endpoints/` IDs are used as-is, Gemini 2.5 penalties and Vertex-only image config warn, YouTube/Files API/https URLs pass through, the `ai-sdk-google` user agent is always added, video provider options override call parameters and function tools send only their input schema.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-google-vertex",
+      "bump": "minor",
+      "notes": "Gemini metadata is written under `googleVertex` and `vertex` instead of `google`, thought signatures are read from those keys first, `http(s)` and `gs://` URLs pass through, provider references throw and an explicit `baseURL` is kept for tuned endpoints. Vertex shares Google's request builder.",
+      "compatibility": "Applications reading Vertex Gemini metadata under `google` must read `googleVertex` (or `vertex`), as upstream. Otherwise source-compatible."
+    },
+    {
+      "package": "swift-ai-gateway",
+      "bump": "minor",
+      "notes": "Language requests use the V4 call-option shape Gateway reads; results parse usage, finish reason and response metadata; streams forward error, file, custom, approval and response-metadata parts without duplicate tool calls. Authentication, malformed-body and network errors match upstream, observability headers are sent on Vercel, `availableModels()` caches for five minutes (`metadataCacheRefreshMillis`), a custom team header wins and `GatewayTools.exaSearch` and `GatewayRealtimeAuth` are added. Image, video and speech bodies and media errors match upstream; `maxImagesPerCall` is unlimited.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-mcp",
+      "bump": "minor",
+      "notes": "Tool `title` and metadata, schema `additionalProperties`, `getPrompt` arguments, error and elicitation messages, retry backoff, Streamable HTTP start, redirects and reconnects, and the OAuth token request body match upstream; tools keep their client alive and the legacy SSE transport is added.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-xai",
+      "bump": "minor",
+      "notes": "Reasoning with item IDs or encrypted content and assistant item IDs are replayed; `content` tool outputs become `input_text`/`input_image` arrays; image detail is honoured; warning texts and media metadata match upstream; function tools send only their input schema; `maxImagesPerCall` is 3.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-mistral",
+      "bump": "minor",
+      "notes": "Thinking streams before text within a chunk, approval-only tool messages and quoted string results are fixed, tools are kept when all are filtered, `usage: null` gives no usage and function tools send only their input schema.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-groq",
+      "bump": "minor",
+      "notes": "Tool results send only their value, assistant reasoning is kept in history, partial image types and `tools: []` match upstream, streamed usage reads `x_groq.usage` and function tools send only their input schema.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-cohere",
+      "bump": "minor",
+      "notes": "PDF and other files are sent as documents, image types and `detail` match upstream, tool messages and approval handling match upstream, streamed tool arguments are validated and function tools send only their input schema.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-deepseek",
+      "bump": "minor",
+      "notes": "Chat and Responses match upstream request conversion and stream parsing; function tools send only their input schema.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-alibaba",
+      "bump": "minor",
+      "notes": "Chat request conversion and reasoning IDs match upstream; new provider settings are available.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-moonshotai",
+      "bump": "minor",
+      "notes": "Adds the native `MoonshotAIChatLanguageModel` matching upstream request and stream behavior.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-perplexity",
+      "bump": "minor",
+      "notes": "HTTP errors use upstream message extraction; sources and text ends flush in insertion order; function tools send only their input schema.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-baseten",
+      "bump": "minor",
+      "notes": "Chat, completion and embedding requests follow the upstream OpenAI-compatible behavior, including the DeepSeek JSON transform.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-cerebras",
+      "bump": "minor",
+      "notes": "Request conversion matches upstream; function tools send only their input schema.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-deepinfra",
+      "bump": "minor",
+      "notes": "Chat and image requests follow the upstream OpenAI-compatible behavior.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-fireworks",
+      "bump": "minor",
+      "notes": "`promptCacheKey` and `serviceTier` are renamed like upstream; chat and image requests follow upstream.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-gmicloud",
+      "bump": "minor",
+      "notes": "Chat requests follow the upstream OpenAI-compatible behavior.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-huggingface",
+      "bump": "minor",
+      "notes": "Responses requests match upstream conversion.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-zai",
+      "bump": "minor",
+      "notes": "The duplicate `responseFormat` warning is removed.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-vercel",
+      "bump": "minor",
+      "notes": "Chat requests follow the upstream OpenAI-compatible behavior.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-elevenlabs",
+      "bump": "minor",
+      "notes": "Diarization defaults to true, realtime models are rejected before HTTP, query and form order and dialogue stream framing match upstream, and warning and error texts match upstream.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-deepgram",
+      "bump": "minor",
+      "notes": "Duration is no longer guessed from words; warning, error texts and option order match upstream.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-cartesia",
+      "bump": "minor",
+      "notes": "Adds the realtime model; option order and format parsing match upstream.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-hume",
+      "bump": "minor",
+      "notes": "A settings `X-Hume-Api-Key` header overrides the key and an empty output format no longer warns.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-lmnt",
+      "bump": "minor",
+      "notes": "Empty language is omitted, an empty format no longer warns and a settings `X-Api-Key` header overrides the key.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-voyage",
+      "bump": "minor",
+      "notes": "Error messages come from `detail` and rerank object documents no longer escape `/`.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-typesafe-ai",
+      "bump": "minor",
+      "notes": "`null` assets and instructions are no longer sent; warning order, error messages and raw bodies match upstream; `TYPESAFE_AI_BASE_URL` is honoured and the evaluation model reports `typesafe.decision`.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-gladia",
+      "bump": "minor",
+      "notes": "Empty-text segments are kept and response metadata no longer carries the job ID.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-assemblyai",
+      "bump": "minor",
+      "notes": "Empty-text segments are kept, response metadata no longer carries the job ID and duration falls back to the last word's end.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-minimax",
+      "bump": "minor",
+      "notes": "Image errors expose `error.message`.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-fal",
+      "bump": "minor",
+      "notes": "Image and video provider metadata, `num_images`, validation and failure messages, transcription segments and speech endpoint match upstream.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-replicate",
+      "bump": "minor",
+      "notes": "Video no longer sends the `prefer` header and supports async start/status with webhooks; `num_outputs` is always sent; `maxImagesPerCall` is 8 for Flux-2 and 1 otherwise.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-bytedance",
+      "bump": "minor",
+      "notes": "Adds the Seedream `ByteDanceImageModel`; video references are routed by media type; the stale user-agent suffix is removed.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-black-forest-labs",
+      "bump": "minor",
+      "notes": "Warning texts match upstream.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-topaz",
+      "bump": "minor",
+      "notes": "Warning texts match upstream.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    },
+    {
+      "package": "swift-ai-quiverai",
+      "bump": "minor",
+      "notes": "`maxImagesPerCall` is 16, as upstream.",
+      "compatibility": "Source-compatible; changes are additive. Request bodies, results, warnings and errors change to match the reviewed upstream package."
+    }
+  ]
+}
