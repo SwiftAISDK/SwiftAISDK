@@ -1,6 +1,6 @@
 # Porting Status
 
-Snapshot date: 2026-11-15
+Snapshot date: 2026-11-16
 
 SwiftAISDK ports the provider-facing parts of Vercel AI SDK into SwiftPM
 packages: a Swift-native facade, provider registry, provider implementations,
@@ -17,8 +17,8 @@ them only when investigating an earlier pass.
 
 - 57 tracked npm packages map to 55 independent Swift packages: core, 52
   provider adapters, MCP and UI. All are published.
-- SwiftAISDK 3.5.0 is the current optional compatibility umbrella. Its tested
-  dependency selection is `Releases/umbrella/3.5.0.json`.
+- SwiftAISDK 3.6.0 is the current optional compatibility umbrella. Its tested
+  dependency selection is `Releases/umbrella/3.6.0.json`.
 - The latest weekly pass is recorded in
   [WeeklyUpstreamAudit20261115.md](Archive/WeeklyUpstreamAudit20261115.md), with
   release evidence in

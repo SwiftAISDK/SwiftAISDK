@@ -2,7 +2,7 @@
 
 SwiftAISDK is a SwiftPM port of the provider-facing Vercel AI SDK.
 
-Current release: 3.5.0
+Current release: 3.6.0
 
 Every page is also available as Markdown: replace the trailing slash of a page URL with `.md` (for example https://swiftaisdk.github.io/SwiftAISDK/core/tools.md).
 

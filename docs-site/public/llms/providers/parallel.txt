@@ -13,7 +13,7 @@ For a smaller dependency graph, add only core and `swift-ai-parallel`:
 
 ```swift
 // Package.swift
-.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.5.0"),
+.package(url: "https://github.com/SwiftAISDK/swift-ai-core.git", from: "1.6.0"),
 .package(url: "https://github.com/SwiftAISDK/swift-ai-parallel.git", from: "1.0.0"),
 
 // Target dependencies
@@ -26,7 +26,7 @@ import SwiftAI
 import SwiftAIParallel
 ```
 
-Versions shown are from the tested 3.5.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
+Versions shown are from the tested 3.6.0 release set. See [Install](https://swiftaisdk.github.io/SwiftAISDK/getting-started/install/) for credentials and native factory settings.
 
 ## Credentials
 
