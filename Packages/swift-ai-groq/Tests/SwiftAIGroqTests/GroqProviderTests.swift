@@ -256,7 +256,7 @@ import Testing
         AIMessage(role: .user, content: [
             .text("Look"),
             .imageURL("https://example.com/image.png"),
-            .data(mimeType: "image/*", data: Data([0, 1, 2]))
+            .data(mimeType: "image/*", data: Data([0xFF, 0xD8, 0xFF, 0xE0]))
         ]),
         .assistant(
             text: "Prior answer",
@@ -271,7 +271,7 @@ import Testing
     #expect(userContent[0]["type"]?.stringValue == "text")
     #expect(userContent[0]["text"]?.stringValue == "Look")
     #expect(userContent[1]["image_url"]?["url"]?.stringValue == "https://example.com/image.png")
-    #expect(userContent[2]["image_url"]?["url"]?.stringValue == "data:image/jpeg;base64,AAEC")
+    #expect(userContent[2]["image_url"]?["url"]?.stringValue == "data:image/jpeg;base64,/9j/4A==")
     #expect(messages[1]["role"]?.stringValue == "assistant")
     #expect(messages[1]["content"]?.stringValue == "Prior answer")
     #expect(messages[1]["reasoning"]?.stringValue == "Prior reasoning")

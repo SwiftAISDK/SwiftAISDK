@@ -7,7 +7,7 @@ import Foundation
 import Testing
 
 @Test func alibabaOmitsHistoricalReasoningAndReasoningOnlyAssistantTurnsLikeUpstream() throws {
-    let prepared = alibabaMessages([
+    let prepared = try alibabaMessages([
         .user("Think before answering."),
         AIMessage(role: .assistant, content: [
             .reasoning("Hidden reasoning."),
@@ -384,26 +384,36 @@ import Testing
     let provider = try AIProviders.alibaba(configuration: AlibabaProviderSettings(apiKey: "dashscope-key", transport: transport))
     let model = try provider.languageModel("qwen-plus")
 
-    let result = try await model.generate(LanguageModelRequest(
-        messages: [
+    // Upstream convertToAlibabaChatMessages throws UnsupportedFunctionalityError for non-image files.
+    await #expect(throws: AIError.invalidArgument(argument: "messages", message: "'Only image file parts are supported' functionality not supported.")) {
+        _ = try await model.generate(LanguageModelRequest(messages: [
             AIMessage(role: .user, content: [
                 .text("Read this."),
                 .data(mimeType: "text/plain", data: Data("not-image".utf8))
             ])
-        ],
+        ]))
+    }
+    // Upstream prepareTools throws for an unrecognized tool choice type.
+    await #expect(throws: AIError.invalidArgument(argument: "toolChoice", message: "'tool choice type: provider' functionality not supported.")) {
+        _ = try await model.generate(LanguageModelRequest(
+            messages: [.user("Hi")],
+            tools: ["alibaba.search": ["type": "provider", "id": "alibaba.search"]],
+            toolChoice: ["type": "provider"]
+        ))
+    }
+
+    let result = try await model.generate(LanguageModelRequest(
+        messages: [.user("Read this.")],
         tools: ["alibaba.search": ["type": "provider", "id": "alibaba.search"]],
-        toolChoice: ["type": "provider"]
+        toolChoice: "auto"
     ))
 
     #expect(result.warnings == [
-        AIWarning(type: "unsupported", feature: "user message part type: file"),
-        AIWarning(type: "unsupported", feature: "provider-defined tool alibaba.search"),
-        AIWarning(type: "unsupported", feature: "tool choice type: provider")
+        AIWarning(type: "unsupported", feature: "provider-defined tool alibaba.search")
     ])
     let body = try decodeJSONBody(try #require((await transport.requests()).first?.body))
-    #expect(body["messages"]?[0]?["content"]?.arrayValue?.count == 1)
-    #expect(body["tools"] == nil)
-    #expect(body["tool_choice"] == nil)
+    #expect(body["tools"] == .array([]))
+    #expect(body["tool_choice"]?.stringValue == "auto")
 }
 @Test func alibabaLanguageMapsStandardResponseFormatToolsAndToolHistory() async throws {
     let transport = RecordingTransport(response: jsonResponse(#"{"choices":[{"message":{"role":"assistant","content":"ok"},"finish_reason":"stop"}],"usage":{"prompt_tokens":2,"completion_tokens":3,"total_tokens":5}}"#))
@@ -515,10 +525,12 @@ import Testing
     #expect(streamStartWarnings == [AIWarning(type: "unsupported", feature: "frequencyPenalty")])
     #expect(responseMetadata?.id == "chatcmpl-alibaba-stream")
     #expect(responseMetadata?.modelID == "qwen3-max")
+    let reasoningID = try #require(reasoningLifecycle.first?.dropFirst("start:".count))
+    #expect(!reasoningID.isEmpty)
     #expect(reasoningLifecycle == [
-        "start:reasoning-0",
-        "delta:reasoning-0:think",
-        "end:reasoning-0"
+        "start:\(reasoningID)",
+        "delta:\(reasoningID):think",
+        "end:\(reasoningID)"
     ])
     #expect(textLifecycle == [
         "start:0",

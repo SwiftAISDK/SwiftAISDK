@@ -83,17 +83,7 @@ public final class MistralLanguageModel: LanguageModel, @unchecked Sendable {
                             emittedResponseMetadata = true
                             continuation.yield(.responseMetadata(mistralResponseMetadata(from: raw, response: responseHead, modelID: modelID)))
                         }
-                        if let delta = mistralText(from: raw["choices"]?[0]?["delta"]?["content"]), !delta.isEmpty {
-                            if let reasoningID = activeReasoningID {
-                                continuation.yield(.reasoningEnd(id: reasoningID))
-                                activeReasoningID = nil
-                            }
-                            if !activeText {
-                                continuation.yield(.textStart(id: "0"))
-                                activeText = true
-                            }
-                            continuation.yield(.textDeltaPart(id: "0", delta: delta))
-                        }
+                        // Upstream handles thinking parts before text in each chunk.
                         if let reasoning = mistralReasoning(from: raw["choices"]?[0]?["delta"]?["content"]), !reasoning.isEmpty {
                             if activeText {
                                 continuation.yield(.textEnd(id: "0"))
@@ -105,6 +95,17 @@ public final class MistralLanguageModel: LanguageModel, @unchecked Sendable {
                                 continuation.yield(.reasoningStart(id: id))
                             }
                             continuation.yield(.reasoningDeltaPart(id: id, delta: reasoning))
+                        }
+                        if let delta = mistralText(from: raw["choices"]?[0]?["delta"]?["content"]), !delta.isEmpty {
+                            if let reasoningID = activeReasoningID {
+                                continuation.yield(.reasoningEnd(id: reasoningID))
+                                activeReasoningID = nil
+                            }
+                            if !activeText {
+                                continuation.yield(.textStart(id: "0"))
+                                activeText = true
+                            }
+                            continuation.yield(.textDeltaPart(id: "0", delta: delta))
                         }
                         for toolCallDelta in raw["choices"]?[0]?["delta"]?["tool_calls"]?.arrayValue ?? [] {
                             for part in toolCalls.apply(delta: toolCallDelta) {
@@ -164,7 +165,9 @@ public final class MistralLanguageModel: LanguageModel, @unchecked Sendable {
         let toolChoiceInput = request.toolChoice ?? options["toolChoice"]
         let toolChoice = mistralToolChoice(from: toolChoiceInput)
         let preparedTools = mistralTools(from: request.tools)
-        if !preparedTools.tools.isEmpty {
+        // Upstream sends the tools array (possibly empty after dropping provider tools)
+        // whenever tools were provided.
+        if !request.tools.isEmpty {
             body["tools"] = .array(preparedTools.tools)
             if let toolChoice {
                 body["tool_choice"] = toolChoice
@@ -185,7 +188,7 @@ public final class MistralLanguageModel: LanguageModel, @unchecked Sendable {
             case "promptCacheKey":
                 body["prompt_cache_key"] = value
             case "parallelToolCalls":
-                if !preparedTools.tools.isEmpty { body["parallel_tool_calls"] = value }
+                if !request.tools.isEmpty { body["parallel_tool_calls"] = value }
             case "responseFormat", "structuredOutputs", "strictJsonSchema":
                 continue
             case "toolChoice":

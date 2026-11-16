@@ -32,6 +32,7 @@
       "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/GroqProviderTests.swift",
       "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/GroqStreamingAndTranscriptionTests.swift",
+      "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/GroqUpstreamParityTests.swift",
       "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/TestSupport.swift",
       "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/Weekly20261101BehaviorTests.swift",
       "Packages/swift-ai-groq/Tests/SwiftAIGroqTests/Weekly20261101CredentialsTests.swift",

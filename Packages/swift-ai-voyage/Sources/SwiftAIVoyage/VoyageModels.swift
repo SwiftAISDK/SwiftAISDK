@@ -271,6 +271,7 @@ func voyageRerankingDocuments(from request: RerankingRequest) -> VoyageReranking
 }
 
 func voyageJSONString(_ value: JSONValue) -> String? {
-    guard let data = try? JSONEncoder().encode(value) else { return nil }
-    return String(data: data, encoding: .utf8)
+    // Match `JSON.stringify`: no `\/` escapes. Keys are sorted because Swift
+    // dictionaries do not keep JavaScript insertion order.
+    try? decisionJSONText(value)
 }

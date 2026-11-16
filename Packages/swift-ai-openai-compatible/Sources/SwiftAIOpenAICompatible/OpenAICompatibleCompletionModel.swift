@@ -27,15 +27,18 @@ public final class OpenAICompatibleCompletionModel: LanguageModel, @unchecked Se
         guard let text = raw["choices"]?[0]?["text"]?.stringValue else {
             throw AIError.invalidResponse(provider: providerID, message: "No text found in completion response.")
         }
+        let upstream = followsUpstreamCompatibleCompletion
+        let rawFinishReason = raw["choices"]?[0]?["finish_reason"]?.stringValue
         return TextGenerationResult(
             text: text,
-            finishReason: raw["choices"]?[0]?["finish_reason"]?.stringValue,
-            usage: tokenUsage(from: raw),
+            // Upstream maps the finish reason (`content_filter` -> `content-filter`, unknown -> `other`).
+            finishReason: upstream ? openAICompatibleFinishReason(rawFinishReason) : rawFinishReason,
+            usage: upstream ? openAICompatibleUpstreamCompletionUsage(raw["usage"]) : tokenUsage(from: raw),
             providerMetadata: openAICompatibleCompletionProviderMetadata(from: raw["choices"]?[0], providerID: providerID, namespace: metadataNamespace),
             rawValue: raw,
             warnings: prepared.warnings,
             requestMetadata: AIRequestMetadata(body: .object(body), headers: request.headers, url: httpRequest.url.absoluteString),
-            responseMetadata: openAICompatibleResponseMetadata(from: raw, response: response.response, modelID: modelID)
+            responseMetadata: openAICompatibleResponseMetadata(from: raw, response: response.response, modelID: modelID, suppressZeroCreatedTimestamp: upstream)
         )
     }
 
@@ -54,7 +57,12 @@ public final class OpenAICompatibleCompletionModel: LanguageModel, @unchecked Se
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
                     continuation.yield(.streamStart(warnings: prepared.warnings))
                     continuation.yield(.requestMetadata(AIRequestMetadata(body: body, headers: request.headers, url: httpRequest.url.absoluteString)))
-                    continuation.yield(.responseMetadata(openAICompatibleResponseMetadata(response: responseHead, modelID: modelID)))
+                    let upstream = followsUpstreamCompatibleCompletion
+                    if !upstream {
+                        continuation.yield(.responseMetadata(openAICompatibleResponseMetadata(response: responseHead, modelID: modelID)))
+                    }
+                    var isFirstChunk = true
+                    var usageChunk: JSONValue?
                     var providerMetadata: [String: JSONValue] = [:]
                     var activeTextID: String?
                     var finishReason: String? = isOpenAIBackedProvider(providerID, config: config) ? "interrupted" : "other"
@@ -109,6 +117,14 @@ public final class OpenAICompatibleCompletionModel: LanguageModel, @unchecked Se
                             openAICompatibleCompletionProviderMetadata(from: choice, providerID: providerID, namespace: metadataNamespace),
                             into: &providerMetadata
                         )
+                        if upstream, isFirstChunk {
+                            // Upstream: response metadata from the first chunk, then `text-start` with id "0".
+                            isFirstChunk = false
+                            continuation.yield(.responseMetadata(openAICompatibleResponseMetadata(from: raw, response: responseHead, modelID: modelID, suppressZeroCreatedTimestamp: true)))
+                            activeTextID = "0"
+                            continuation.yield(.textStart(id: "0"))
+                        }
+                        if let usage = raw["usage"], usage != .null { usageChunk = raw }
                         if let delta = choice?["text"]?.stringValue {
                             if !delta.isEmpty { hasOutputStarted = true }
                             let id = activeTextID ?? "txt-0"
@@ -128,7 +144,7 @@ public final class OpenAICompatibleCompletionModel: LanguageModel, @unchecked Se
                     }
                     continuation.yield(.finishMetadata(
                         reason: finishReason,
-                        usage: finishUsage,
+                        usage: upstream ? openAICompatibleUpstreamCompletionUsage(usageChunk?["usage"]) : finishUsage,
                         providerMetadata: providerMetadata
                     ))
                     continuation.finish()
@@ -169,6 +185,13 @@ public final class OpenAICompatibleCompletionModel: LanguageModel, @unchecked Se
         return (body, openAICompletionWarnings(for: request, providerID: providerID, openAIBackedProviderRoot: config.openAIBackedProviderRoot, usesGenericProviderOptions: config.usesGenericOpenAICompatibleProviderOptions))
     }
 
+    /// Generic endpoints follow upstream `OpenAICompatibleCompletionLanguageModel`.
+    private var followsUpstreamCompatibleCompletion: Bool {
+        config.usesGenericOpenAICompatibleProviderOptions
+            && config.openAIBackedProviderRoot == nil
+            && !isOpenAIBackedProvider(providerID)
+    }
+
     private func metadataNamespace(for request: LanguageModelRequest) -> String? {
         guard config.usesGenericOpenAICompatibleProviderOptions else { return nil }
         return openAICompatibleProviderMetadataNamespace(providerID, providerOptions: request.providerOptions)
@@ -205,4 +228,20 @@ func openAICompatibleCompletionPrompt(from messages: [AIMessage]) throws -> (tex
 
     text += "assistant:\n"
     return (text, ["\nuser:"])
+}
+
+/// Upstream `convertOpenAICompatibleCompletionUsage`: counts default to 0 once a usage
+/// object is present; there is no cache or reasoning breakdown.
+func openAICompatibleUpstreamCompletionUsage(_ usage: JSONValue?) -> TokenUsage? {
+    guard let usage, usage != .null else { return nil }
+    let promptTokens = usage["prompt_tokens"]?.intValue ?? 0
+    let completionTokens = usage["completion_tokens"]?.intValue ?? 0
+    return TokenUsage(
+        inputTokens: promptTokens,
+        outputTokens: completionTokens,
+        totalTokens: usage["total_tokens"]?.intValue ?? promptTokens + completionTokens,
+        inputTokensNoCache: promptTokens,
+        outputTextTokens: completionTokens,
+        rawValue: usage
+    )
 }

@@ -18,6 +18,9 @@ import Testing
 
 @Suite("WeeklyGoogle20261023")
 struct WeeklyGoogle20261023Tests {
+    /// Upstream google-vertex writes Gemini metadata under `googleVertex` (and legacy `vertex`), not `google`.
+    private func ns(_ vertex: Bool) -> String { vertex ? "googleVertex" : "google" }
+
     private let firstGrounding: JSONValue = [
         "webSearchQueries": ["accessible trails"],
         "groundingChunks": [["web": ["uri": "https://one.example", "title": "First source"]]]
@@ -77,9 +80,9 @@ struct WeeklyGoogle20261023Tests {
         let last = try raw(text: "Last", reason: "MAX_TOKENS", grounding: terminalGrounding ? lastGrounding : nil, inputTokens: 32_883, outputTokens: 512)
         let transport = RecordingTransport(responses: [jsonResponse(first), jsonResponse(last)])
         let result = try await model(vertex, transport: transport).generate(.init(messages: [.user("Hello")], maxOutputTokens: 33_280))
-        #expect(result.providerMetadata["google"]?["groundingMetadataPerRequest"] == .array([firstGrounding, terminalGrounding ? lastGrounding : .null]))
-        #expect(result.providerMetadata["google"]?["groundingMetadata"] == (terminalGrounding ? lastGrounding : .null))
-        #expect(result.providerMetadata["google"]?["initialPromptTokenCount"] == 363)
+        #expect(result.providerMetadata[ns(vertex)]?["groundingMetadataPerRequest"] == .array([firstGrounding, terminalGrounding ? lastGrounding : .null]))
+        #expect(result.providerMetadata[ns(vertex)]?["groundingMetadata"] == (terminalGrounding ? lastGrounding : .null))
+        #expect(result.providerMetadata[ns(vertex)]?["initialPromptTokenCount"] == 363)
         #expect(result.usage?.inputTokens == 33_246 && result.usage?.outputTokens == 33_306)
         #expect(result.text == "FirstLast")
         #expect(await transport.requests().count == 2)
@@ -91,9 +94,9 @@ struct WeeklyGoogle20261023Tests {
         let last = sseResponse("data: " + (try raw(text: "Last", reason: nil, grounding: terminalGrounding ? lastGrounding : nil)) + "\n\ndata: " + (try raw(text: "", reason: "MAX_TOKENS", grounding: .null, inputTokens: 32_883, outputTokens: 512)))
         let transport = RecordingTransport(responses: [first, last])
         let result = try await streamResult(model(vertex, transport: transport))
-        #expect(result.metadata["google"]?["groundingMetadataPerRequest"] == .array([firstGrounding, terminalGrounding ? lastGrounding : .null]))
+        #expect(result.metadata[ns(vertex)]?["groundingMetadataPerRequest"] == .array([firstGrounding, terminalGrounding ? lastGrounding : .null]))
         // Published streams retain the last non-null grounding payload globally.
-        #expect(result.metadata["google"]?["groundingMetadata"] == (terminalGrounding ? lastGrounding : firstGrounding))
+        #expect(result.metadata[ns(vertex)]?["groundingMetadata"] == (terminalGrounding ? lastGrounding : firstGrounding))
         #expect(result.usage?.inputTokens == 33_246 && result.usage?.outputTokens == 33_306)
         #expect(await transport.requests().count == 2)
     }
@@ -129,8 +132,8 @@ struct WeeklyGoogle20261023Tests {
         } else {
             metadata = try await target.generate(request).providerMetadata
         }
-        #expect(metadata["google"]?["groundingMetadataPerRequest"] == nil)
-        #expect(metadata["google"]?["groundingMetadata"] == firstGrounding)
+        #expect(metadata[ns(vertex)]?["groundingMetadataPerRequest"] == nil)
+        #expect(metadata[ns(vertex)]?["groundingMetadata"] == firstGrounding)
         #expect(await transport.requests().count == 1)
     }
 
@@ -139,9 +142,9 @@ struct WeeklyGoogle20261023Tests {
         let first = try raw(reason: "CONTINUATION", token: "next", grounding: firstGrounding, inputTokens: 10, outputTokens: 5)
         let transport = RecordingTransport(responses: [sseResponse("data: " + first), AIHTTPResponse(statusCode: 400, body: Data(#"{"error":{"message":"Invalid continuation token"}}"#.utf8))])
         let result = try await streamResult(model(vertex, transport: transport))
-        #expect(result.metadata["google"]?["groundingMetadataPerRequest"] == nil)
-        #expect(result.metadata["google"]?["groundingMetadata"] == firstGrounding)
-        #expect(result.metadata["google"]?["continuationToken"] == "next")
+        #expect(result.metadata[ns(vertex)]?["groundingMetadataPerRequest"] == nil)
+        #expect(result.metadata[ns(vertex)]?["groundingMetadata"] == firstGrounding)
+        #expect(result.metadata[ns(vertex)]?["continuationToken"] == "next")
         #expect(result.usage?.inputTokens == 10 && result.usage?.outputTokens == 5)
         #expect(result.parts.contains { if case .error = $0 { true } else { false } })
     }

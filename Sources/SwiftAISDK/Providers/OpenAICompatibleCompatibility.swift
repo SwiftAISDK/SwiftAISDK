@@ -29,7 +29,17 @@ extension ModelHTTPConfig {
         result.chatErrorHandler = { openAICompatibleHTTPStatusError(provider: self.providerID, response: $0) }
         result.streamErrorParser = openAIProviderStreamError
         result.normalizeSchema = normalizeOpenAIJSONSchema
-        let openAIWire = openAIConfiguration.compatibleConfiguration()
+        let openAIRoot = openAIBackedProviderRoot ?? SwiftAIOpenAICompatible.openAIBackedProviderRoot(providerID)
+        var openAIModelConfiguration = openAIConfiguration
+        openAIModelConfiguration.openAIBackedProviderRoot = openAIRoot
+        // OpenAI and Azure chat delegate their chat policy (always `json_schema`,
+        // unchanged schemas, service-tier and search-preview restrictions,
+        // `reasoningSummary` handling) to the native SwiftAIOpenAI wire configuration.
+        let openAIWire = openAIModelConfiguration.compatibleConfiguration()
+        if openAIRoot != nil {
+            result.supportsStructuredOutputs = openAIWire.supportsStructuredOutputs
+        }
+        let openAIPrepareBody = openAIRoot != nil ? openAIWire.prepareBody : nil
         result.languageCapabilities = openAIWire.languageCapabilities
         if isOpenAIBackedProvider(providerID, config: self) {
             result.mapReasoning = openAIWire.mapReasoning
@@ -41,6 +51,7 @@ extension ModelHTTPConfig {
         result.prepareBody = { body, request, modelID, warnings in
             var body = body
             if self.providerID == "googleVertex.xai" { body.removeValue(forKey: "reasoning_effort") }
+            if let openAIPrepareBody { body = try openAIPrepareBody(body, request, modelID, &warnings) }
             return body
         }
         if root == "fireworks" { configureFireworksChat(&result) }

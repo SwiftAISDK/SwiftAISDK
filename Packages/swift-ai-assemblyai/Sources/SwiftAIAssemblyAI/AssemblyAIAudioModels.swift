@@ -74,10 +74,12 @@ public final class AssemblyAITranscriptionModel: TranscriptionModel, @unchecked 
             rawValue: raw,
             segments: segments,
             language: raw["language_code"]?.stringValue,
-            durationInSeconds: raw["audio_duration"]?.doubleValue ?? transcriptionDuration(from: segments),
+            // Upstream: `audio_duration ?? words.at(-1).end / 1000`.
+            durationInSeconds: raw["audio_duration"]?.doubleValue ?? raw["words"]?.arrayValue?.last?["end"]?.doubleValue.map { $0 / 1000 },
             warnings: warnings,
             providerMetadata: assemblyAIProviderMetadata(from: raw),
-            responseMetadata: aiResponseMetadata(from: raw, response: finalResponse.response, modelID: modelID)
+            // Upstream reports the call timestamp and selected model, not the transcript ID.
+            responseMetadata: AIResponseMetadata(timestamp: Date(), modelID: modelID, headers: finalResponse.response.headers, body: raw)
         )
     }
 

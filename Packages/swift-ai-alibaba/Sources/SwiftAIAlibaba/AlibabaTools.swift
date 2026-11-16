@@ -6,7 +6,8 @@ import SwiftAIProviderUtilities
 
 func alibabaTools(from tools: [String: JSONValue]) -> AlibabaPreparedTools {
     var warnings: [AIWarning] = []
-    let values = tools.compactMap { name, schema -> JSONValue? in
+    // Swift tool maps are unordered; sort by name for a deterministic wire order.
+    let values = tools.sorted { $0.key < $1.key }.compactMap { name, schema -> JSONValue? in
         let object = schema.objectValue
         if object?["type"]?.stringValue == "provider" || object?["id"]?.stringValue != nil {
             warnings.append(AIWarning(
@@ -15,20 +16,16 @@ func alibabaTools(from tools: [String: JSONValue]) -> AlibabaPreparedTools {
             ))
             return nil
         }
-        var parameters = schema
+        // Upstream sends only `tool.inputSchema` as `parameters`.
         var function: [String: JSONValue] = [
             "name": .string(name),
-            "parameters": parameters
+            "parameters": aiFunctionToolInputSchema(schema)
         ]
-        if var parameterObject = parameters.objectValue {
-            if let description = parameterObject["description"]?.stringValue {
-                function["description"] = .string(description)
-            }
-            if let strict = parameterObject.removeValue(forKey: "strict") {
-                function["strict"] = strict
-                parameters = .object(parameterObject)
-                function["parameters"] = parameters
-            }
+        if let description = aiFunctionToolDescription(schema) {
+            function["description"] = .string(description)
+        }
+        if let strict = object?["strict"], strict != .null {
+            function["strict"] = strict
         }
         return .object([
             "type": .string("function"),
@@ -38,50 +35,39 @@ func alibabaTools(from tools: [String: JSONValue]) -> AlibabaPreparedTools {
     return AlibabaPreparedTools(tools: values, warnings: warnings)
 }
 
-func alibabaToolChoice(from value: JSONValue?) -> JSONValue? {
-    if let string = value?.stringValue {
+/// Mirrors upstream `prepareTools`: known choices map to the wire format and
+/// unrecognized types throw an unsupported-functionality error.
+func alibabaToolChoice(from value: JSONValue?) throws -> JSONValue? {
+    guard let value, value != .null else { return nil }
+    if let string = value.stringValue {
         switch string {
         case "auto", "none", "required":
             return .string(string)
         default:
-            return nil
+            throw alibabaUnsupportedToolChoice(string)
         }
     }
-    guard let object = value?.objectValue else { return nil }
+    guard let object = value.objectValue else {
+        throw alibabaUnsupportedToolChoice("undefined")
+    }
     switch object["type"]?.stringValue {
-    case "auto", "none", "required":
-        return object["type"]
+    case let type? where ["auto", "none", "required"].contains(type):
+        return .string(type)
     case "tool":
         guard let toolName = object["toolName"]?.stringValue ?? object["tool_name"]?.stringValue else {
-            return nil
+            throw AIError.invalidArgument(argument: "toolChoice.toolName", message: "Tool choice of type 'tool' requires a toolName.")
         }
         return .object([
             "type": .string("function"),
             "function": .object(["name": .string(toolName)])
         ])
-    default:
-        return nil
+    case let type:
+        throw alibabaUnsupportedToolChoice(type ?? "undefined")
     }
 }
 
-func alibabaToolChoiceWarnings(from value: JSONValue?) -> [AIWarning] {
-    if let string = value?.stringValue {
-        switch string {
-        case "auto", "none", "required":
-            return []
-        default:
-            return [AIWarning(type: "unsupported", feature: "tool choice type: \(string)")]
-        }
-    }
-    guard let object = value?.objectValue else { return [] }
-    switch object["type"]?.stringValue {
-    case "auto", "none", "required", "tool":
-        return []
-    case let type?:
-        return [AIWarning(type: "unsupported", feature: "tool choice type: \(type)")]
-    case nil:
-        return [AIWarning(type: "unsupported", feature: "tool choice type: undefined")]
-    }
+private func alibabaUnsupportedToolChoice(_ type: String) -> AIError {
+    AIError.invalidArgument(argument: "toolChoice", message: "'tool choice type: \(type)' functionality not supported.")
 }
 
 func alibabaAssistantToolCallJSON(_ part: AIContentPart) -> JSONValue? {
@@ -93,15 +79,6 @@ func alibabaAssistantToolCallJSON(_ part: AIContentPart) -> JSONValue? {
             "name": .string(call.name),
             "arguments": .string(call.arguments)
         ])
-    ])
-}
-
-func alibabaToolMessageJSON(_ part: AIContentPart) -> JSONValue? {
-    guard case let .toolResult(result) = part else { return nil }
-    return .object([
-        "role": .string("tool"),
-        "tool_call_id": .string(result.toolCallID),
-        "content": .string(alibabaToolResultContent(result))
     ])
 }
 

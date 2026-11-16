@@ -57,17 +57,21 @@ public final class TypeSafeAIDecisionModel: AIDecisionModelV4, @unchecked Sendab
         if let value = providerOptions["longContext"], value.boolValue == nil {
             throw AIError.invalidArgument(argument: "providerOptions.typesafe.longContext", message: "longContext must be a boolean.")
         }
+        // Upstream lists unknown provider options first (keys sorted here because
+        // Swift dictionaries have no insertion order), then maxOutputTokens, then reasoning.
         var warnings = providerOptions.keys.sorted().filter { $0 != "longContext" }.map {
             AIWarning(type: "unsupported", feature: "providerOptions.typesafe.\($0)")
         }
-        if options.maxOutputTokens != nil { warnings.insert(.init(type: "unsupported", feature: "maxOutputTokens"), at: 0) }
-        if options.reasoning != nil { warnings.insert(.init(type: "unsupported", feature: "reasoning"), at: options.maxOutputTokens == nil ? 0 : 1) }
+        if options.maxOutputTokens != nil { warnings.append(.init(type: "unsupported", feature: "maxOutputTokens")) }
+        if options.reasoning != nil { warnings.append(.init(type: "unsupported", feature: "reasoning")) }
         let state = try prepareTypesafeState(options.state)
-        let body: JSONValue = .object([
+        // Upstream adds `assets` only when images are present (`...(hasImages && { assets })`).
+        var bodyFields: [String: JSONValue] = [
             "model": .string(modelID), "state": state.state,
-            "assets": state.assets.isEmpty ? nil : .object(state.assets),
             "questions": .object(options.questions.mapValues(typesafeQuestion))
-        ])
+        ]
+        if !state.assets.isEmpty { bodyFields["assets"] = .object(state.assets) }
+        let body: JSONValue = .object(bodyFields)
         let apiKey = try configuration.resolvedAPIKey()
         var modelHeaders = normalizeHeaders(configuration.headers)
         modelHeaders["authorization"] = modelHeaders["authorization"] ?? "Bearer \(apiKey)"
@@ -102,26 +106,14 @@ public final class TypeSafeAIDecisionModel: AIDecisionModelV4, @unchecked Sendab
         do {
             raw = try response.jsonValue()
         } catch {
-            throw typesafeInvalidResponse(
-                request: request,
-                requestBody: body,
-                response: response,
-                message: "TypeSafe AI decision response was not valid JSON.",
-                providerID: providerID
-            )
+            throw typesafeInvalidResponse(request: request, requestBody: body, response: response, providerID: providerID)
         }
 
         let parsed: TypeSafeParsedDecisionResponse
         do {
             parsed = try parseTypesafeResponse(raw)
-        } catch let error as TypeSafeResponseValidationError {
-            throw typesafeInvalidResponse(
-                request: request,
-                requestBody: body,
-                response: response,
-                message: error.message,
-                providerID: providerID
-            )
+        } catch is TypeSafeResponseValidationError {
+            throw typesafeInvalidResponse(request: request, requestBody: body, response: response, providerID: providerID)
         }
 
         return AIDecisionModelV4Result(
@@ -178,28 +170,27 @@ private func validateTypesafeLimits(
 }
 
 private func typesafeQuestion(_ question: AIDecisionQuestion) -> JSONValue {
+    // Upstream spreads the question, so absent instructions are omitted by
+    // JSON.stringify. Swift's `.null` default stands for that absent value.
+    var output: [String: JSONValue] = [:]
+    let instructions: JSONValue
     switch question {
-    case let .choice(instructions, criteria):
-        return .object([
-            "type": .string("choice"),
-            "instructions": instructions,
-            "criteria": .object(criteria)
-        ])
-    case let .score(instructions, criteria):
-        return .object([
-            "type": .string("score"),
-            "instructions": instructions,
-            "criteria": .array(criteria)
-        ])
-    case let .box(instructions):
-        return .object(["type": "box", "instructions": instructions])
-    case let .boolean(instructions, criteria):
-        return .object([
-            "type": .string("noul"),
-            "instructions": instructions,
-            "criteria": criteria.map(JSONValue.object)
-        ])
+    case let .choice(value, criteria):
+        instructions = value
+        output = ["type": .string("choice"), "criteria": .object(criteria)]
+    case let .score(value, criteria):
+        instructions = value
+        output = ["type": .string("score"), "criteria": .array(criteria)]
+    case let .box(value):
+        instructions = value
+        output = ["type": .string("box")]
+    case let .boolean(value, criteria):
+        instructions = value
+        output = ["type": .string("noul")]
+        if let criteria { output["criteria"] = .object(criteria) }
     }
+    if instructions != .null { output["instructions"] = instructions }
+    return .object(output)
 }
 
 private func parseTypesafeResponse(
@@ -371,16 +362,19 @@ private func typesafeHTTPError(
     response: AIHTTPResponse,
     providerID: String
 ) -> AIError {
+    // Upstream `createJsonErrorResponseHandler`: the envelope supplies
+    // `message`; `responseBody` keeps the raw wire text.
     let raw = try? response.jsonValue()
-    let message = typesafeErrorMessage(raw) ?? "TypeSafe request failed"
-    return .apiCall(AIAPICallError(
+    var error = AIAPICallError(
         provider: providerID,
         url: request.url.absoluteString,
         requestBody: requestBody,
         statusCode: response.statusCode,
         responseHeaders: response.headers,
-        responseBody: message
-    ))
+        responseBody: response.bodyText
+    )
+    error.message = typesafeErrorMessage(raw) ?? "TypeSafe request failed"
+    return .apiCall(error)
 }
 
 private func typesafeErrorMessage(_ raw: JSONValue?) -> String? {
@@ -409,18 +403,21 @@ private func typesafeInvalidResponse(
     request: AIHTTPRequest,
     requestBody: JSONValue,
     response: AIHTTPResponse,
-    message: String,
     providerID: String
 ) -> AIError {
-    .apiCall(AIAPICallError(
+    // Upstream `createJsonResponseHandler` reports schema and JSON failures as
+    // "Invalid JSON response" with the raw body.
+    var error = AIAPICallError(
         provider: providerID,
         url: request.url.absoluteString,
         requestBody: requestBody,
         statusCode: response.statusCode,
         responseHeaders: response.headers,
-        responseBody: message,
+        responseBody: response.bodyText,
         isRetryable: false
-    ))
+    )
+    error.message = "Invalid JSON response"
+    return .apiCall(error)
 }
 
 private func typesafeDecisionState(_ state: [AIDecisionStatePart]) throws -> JSONValue {

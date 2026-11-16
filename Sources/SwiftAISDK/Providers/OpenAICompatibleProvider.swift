@@ -13,6 +13,7 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
     private let routesLikeOpenAI: Bool
     private let usesOpenAICompatibleSurfaceIDs: Bool
     private let supportsProviderOwnedBatch: Bool
+    private let nativeDelegate: NativeOpenAICompatibleDelegate?
 
     /// Source-compatible initializer retained from 1.6.0, before the
     /// provider-owned Batch V4 capability became configurable.
@@ -92,6 +93,15 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
             failedResponseHandler: providerID == "quiverai" ? quiverAIFailedResponse : nil,
             url: urlBuilder
         )
+        if !routesLikeOpenAI, !usesOpenAICompatibleSurfaceIDs, userAgentSuffix == nil,
+           case let .bearer(environmentVariables) = authorization,
+           let apiKey = settings.apiKey ?? environmentValue(environmentVariables) {
+            self.nativeDelegate = try nativeOpenAICompatibleDelegate(
+                providerID: providerID, apiKey: apiKey, baseURL: resolvedBaseURL, settings: settings
+            )
+        } else {
+            self.nativeDelegate = nil
+        }
     }
 
     init(providerID: String, supportedCapabilities: Set<ModelCapability>, config: ModelHTTPConfig, routesLikeOpenAI: Bool = false) {
@@ -103,6 +113,15 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
         self.routesLikeOpenAI = routesLikeOpenAI
         self.usesOpenAICompatibleSurfaceIDs = false
         self.supportsProviderOwnedBatch = providerID == "openai" || providerID == "xai"
+        self.nativeDelegate = nil
+    }
+
+    func withAlibabaOptions(videoBaseURL: String?, embeddingBaseURL: String?, includeUsage: Bool) -> OpenAICompatibleProvider {
+        var config = self.config
+        config.alibabaVideoBaseURL = videoBaseURL
+        config.alibabaEmbeddingBaseURL = embeddingBaseURL
+        config.alibabaIncludeUsage = includeUsage
+        return OpenAICompatibleProvider(providerID: providerID, supportedCapabilities: supportedCapabilities, config: config, routesLikeOpenAI: routesLikeOpenAI)
     }
 
     private func modelConfig(surface: String) -> ModelHTTPConfig {
@@ -131,6 +150,9 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
         guard supportedCapabilities.contains(.language) else {
             throw AIError.unsupportedModel(provider: providerID, capability: .language, modelID: modelID)
         }
+        if let nativeDelegate {
+            return try nativeDelegate.languageModel(modelID)
+        }
         if routesLikeOpenAI || providerID == "openai" {
             return OpenAIResponsesBatchLanguageModel(
                 modelID: modelID,
@@ -139,6 +161,9 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
         }
         if providerID == "xai" {
             return XAIResponsesBatchLanguageModel(modelID: modelID, config: modelConfig(surface: "responses"))
+        }
+        if providerID == "moonshotai" {
+            return MoonshotAIChatLanguageModel(modelID: modelID, config: modelConfig(surface: "chat"))
         }
         if providerID == "quiverai" {
             return OpenAICompatibleResponsesModel(modelID: modelID, config: modelConfig(surface: "responses"))
@@ -209,10 +234,13 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
         guard supportedCapabilities.contains(.language) else {
             throw AIError.unsupportedModel(provider: providerID, capability: .language, modelID: modelID)
         }
+        if let nativeDelegate {
+            return try nativeDelegate.languageModel(modelID)
+        }
         switch providerID {
         case "perplexity":
             return PerplexitySonarLanguageModel(modelID: modelID, config: config)
-        case "groq", "deepseek", "cerebras", "alibaba", "mistral", "cohere", "prodia", "baseten", "togetherai":
+        case "groq", "deepseek", "cerebras", "alibaba", "mistral", "cohere", "prodia", "baseten", "togetherai", "moonshotai":
             return try languageModel(modelID)
         default:
             break
@@ -254,6 +282,9 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
         guard supportedCapabilities.contains(.completion) else {
             throw AIError.unsupportedModel(provider: providerID, capability: .completion, modelID: modelID)
         }
+        if let completionModel = nativeDelegate?.completionModel {
+            return try completionModel(modelID)
+        }
         return OpenAICompatibleCompletionModel(modelID: modelID, config: modelConfig(surface: "completion"))
     }
 
@@ -273,6 +304,10 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
         }
         if providerID == "xai" {
             return XAIResponsesBatchLanguageModel(modelID: modelID, config: modelConfig(surface: "responses"))
+        }
+        if providerID == "deepseek" {
+            // Upstream `deepseek.responses()` uses the DeepSeek Responses model.
+            return DeepSeekResponsesLanguageModel(modelID: modelID, config: config.withProviderID("deepseek.responses").deepSeekConfiguration)
         }
         return OpenAICompatibleResponsesModel(modelID: modelID, config: modelConfig(surface: "responses"))
     }
@@ -409,6 +444,9 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
         guard supportedCapabilities.contains(.embedding) else {
             throw AIError.unsupportedModel(provider: providerID, capability: .embedding, modelID: modelID)
         }
+        if let nativeDelegate {
+            return try nativeDelegate.embeddingModel(modelID)
+        }
         if providerID == "cohere" {
             return CohereEmbeddingModel(modelID: modelID, config: config)
         }
@@ -478,6 +516,9 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
         if providerID == "luma" {
             return LumaImageModel(modelID: modelID, config: config)
         }
+        if providerID == "bytedance" {
+            return ByteDanceImageModel(modelID: modelID, config: config)
+        }
         if providerID == "quiverai" {
             return QuiverAIImageModel(modelID: modelID, config: modelConfig(surface: "image"))
         }
@@ -529,6 +570,9 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
         _ modelID: String = "",
         webSocketTransport: any AIDuplexWebSocketTransport = URLSessionDuplexWebSocketTransport.shared
     ) throws -> any StreamingTranscriptionModel {
+        if providerID == "deepgram", supportedCapabilities.contains(.transcription) {
+            return DeepgramStreamingTranscriptionModel(modelID: modelID, http: config.httpClient, webSocketTransport: webSocketTransport)
+        }
         guard providerID == "xai" else {
             throw AIError.unsupportedModel(provider: providerID, capability: .transcription, modelID: modelID)
         }
@@ -787,7 +831,8 @@ public final class OpenAICompatibleProvider: AIProvider, AIEvaluationProvider, A
             return withUserAgentSuffix(headers, "ai-sdk-fal/3.0.84")
         }
         if providerID == "bytedance" {
-            return withUserAgentSuffix(headers, "ai-sdk/bytedance/2.0.71")
+            // @ai-sdk/bytedance 2.0.86 (and the native package) send no user-agent suffix.
+            return normalizeHeaders(headers)
         }
         if providerID == "voyage" {
             return withUserAgentSuffix(headers, "ai-sdk-voyage/2.0.83")

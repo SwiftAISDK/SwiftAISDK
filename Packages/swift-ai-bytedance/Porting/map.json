@@ -17,11 +17,13 @@
   ],
   "swift": {
     "sources": [
+      "Packages/swift-ai-bytedance/Sources/SwiftAIByteDance/ByteDanceImageModel.swift",
       "Packages/swift-ai-bytedance/Sources/SwiftAIByteDance/ByteDanceMediaModels.swift",
       "Packages/swift-ai-bytedance/Sources/SwiftAIByteDance/ByteDanceProvider.swift"
     ],
     "tests": [
       "Packages/swift-ai-bytedance/Tests/SwiftAIByteDanceTests/ByteDanceAsyncVideoUpstreamParityTests.swift",
+      "Packages/swift-ai-bytedance/Tests/SwiftAIByteDanceTests/ByteDanceImageAndReferenceUpstreamTests.swift",
       "Packages/swift-ai-bytedance/Tests/SwiftAIByteDanceTests/ByteDanceProviderTests.swift",
       "Packages/swift-ai-bytedance/Tests/SwiftAIByteDanceTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-bytedance/Tests/SwiftAIByteDanceTests/TestSupport.swift"

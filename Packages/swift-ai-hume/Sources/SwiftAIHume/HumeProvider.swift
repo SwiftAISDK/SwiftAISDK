@@ -37,7 +37,8 @@ public final class HumeProvider: AIProvider, Sendable {
             throw AIError.missingAPIKey(provider: "hume", environmentVariables: names)
         }
         var headers = normalizeHeaders(configuration.headers)
-        headers["X-Hume-Api-Key"] = headers["X-Hume-Api-Key"] ?? "\(key)"
+        // Settings headers are lower-cased; a caller `X-Hume-Api-Key` overrides the key as upstream.
+        headers["x-hume-api-key"] = headers["x-hume-api-key"] ?? "\(key)"
         headers = withUserAgentSuffix(headers, "ai-sdk-hume/3.0.81")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.hume.ai")
         http = AIProviderHTTPClient(providerID: "hume", headers: headers, transport: configuration.transport,

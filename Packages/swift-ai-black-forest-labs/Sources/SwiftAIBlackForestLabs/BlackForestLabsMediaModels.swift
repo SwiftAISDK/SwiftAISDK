@@ -49,12 +49,12 @@ public final class BlackForestLabsImageModel: ImageModel, @unchecked Sendable {
                 warnings.append(AIWarning(type: "unsupported", feature: "aspectRatio", message: "FLUX 3 does not support aspect ratio \(original ?? ratio). Using the endpoint's default auto aspect ratio."))
                 aspectRatio = nil
             }
-            if request.seed != nil && modelAPI != .latest { warnings.append(AIWarning(type: "unsupported", feature: "seed", message: "FLUX 3 does not support seed.")) }
+            if request.seed != nil && modelAPI != .latest { warnings.append(AIWarning(type: "unsupported", feature: "seed")) }
             let supportedOptions: Set<String> = modelAPI == .latest
                 ? ["height", "width", "outputFormat", "steps", "pollIntervalMillis", "pollTimeoutMillis", "resolution", "safetyTolerance"]
                 : ["grounding", "pollIntervalMillis", "pollTimeoutMillis", "resolution", "safetyTolerance", "version"]
             for key in options.keys.sorted() where !supportedOptions.contains(key) && options[key] != .null {
-                warnings.append(AIWarning(type: "unsupported", feature: "blackForestLabs.\(key)", message: "FLUX 3 does not support \(key)."))
+                warnings.append(AIWarning(type: "unsupported", feature: "blackForestLabs.\(key)"))
             }
             body = ["prompt": .string(request.prompt)]
             body["aspect_ratio"] = aspectRatio.map(JSONValue.string)

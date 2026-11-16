@@ -190,6 +190,8 @@ private final class ResolutionEmbeddingModel: EmbeddingModel, @unchecked Sendabl
 private final class ResolutionImageModel: ImageModel, @unchecked Sendable {
     let providerID = "resolution"
     let modelID = "image"
+    // This test covers model resolution with one call; opt out of upstream per-call image splitting.
+    var maxImagesPerCall: Int { 10 }
     var requests: [ImageGenerationRequest] = []
 
     func generateImage(_ request: ImageGenerationRequest) async throws -> ImageGenerationResult {

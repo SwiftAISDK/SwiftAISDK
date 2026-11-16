@@ -461,7 +461,7 @@ import Testing
 
     #expect(result.audio == Data("deepgram-audio".utf8))
     #expect(result.warnings == [
-        AIWarning(type: "unsupported", feature: "providerOptions.deepgram.callbackMethod", message: "callbackMethod is ignored because callback speech generation is not supported."),
+        AIWarning(type: "unsupported", feature: "providerOptions.deepgram.callbackMethod", message: "providerOptions.deepgram.callbackMethod is only used together with `callback`, which is not supported by the AI SDK. Callback method was ignored."),
         AIWarning(
             type: "unsupported",
             feature: "providerOptions",

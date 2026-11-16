@@ -26,15 +26,15 @@ public final class TopazImageModel: ImageModel, Sendable {
         let options = try topazOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, video: false)
         var warnings: [AIWarning] = []
         // Swift's shared image request requires a String; empty means no prompt.
-        if !request.prompt.isEmpty { warnings.append(topazWarning("prompt", "Topaz enhances an existing image; the text prompt was ignored.")) }
-        if request.aspectRatio != nil { warnings.append(topazWarning("aspectRatio", "Use size or outputWidth/outputHeight for Topaz output dimensions.")) }
+        if !request.prompt.isEmpty { warnings.append(topazWarning("prompt", "Topaz image models enhance an existing image and do not take a text prompt. The prompt was ignored.")) }
+        if request.aspectRatio != nil { warnings.append(topazWarning("aspectRatio", "Topaz image models do not support aspectRatio. Use `size`, or the `outputWidth` / `outputHeight` provider options, to set output dimensions.")) }
         if request.seed != nil { warnings.append(topazWarning("seed", "Topaz image models do not support seed.")) }
-        if request.mask != nil { warnings.append(topazWarning("mask", "Topaz image models do not support masks.")) }
-        if (request.count ?? 1) > 1 { warnings.append(topazWarning("n", "Topaz enhances one image per call; only one image will be returned.")) }
+        if request.mask != nil { warnings.append(topazWarning("mask", "Topaz image models do not support masks. The mask was ignored.")) }
+        if (request.count ?? 1) > 1 { warnings.append(topazWarning("n", "Topaz image models enhance one image per call. Only 1 image will be returned.")) }
         guard let input = request.files.first else {
             throw AIError.invalidArgument(argument: "files", message: "Topaz image models enhance an existing image. Pass the input image via files.")
         }
-        if request.files.count > 1 { warnings.append(topazWarning("files", "Topaz enhances one image per call; only the first file was used.")) }
+        if request.files.count > 1 { warnings.append(topazWarning("files", "Topaz image models enhance one image per call. Only the first file was used.")) }
 
         var form = MultipartFormData()
         form.appendField(name: "model", value: modelID == "wonder-3.5" ? "Wonder 3.5" : modelID)
@@ -142,7 +142,7 @@ public final class TopazImageModel: ImageModel, Sendable {
                 await topazCancelQuietly(config: config, modelID: modelID, path: "/image/v1/cancel/\(topazPathComponent(processID))", headers: request.headers)
             }
             if controller.signal.isAborted {
-                throw AIError.invalidResponse(provider: providerID, message: "Topaz image enhancement did not finish within \(timeoutMillis)ms (process \(processID), last status \(lastStatus)). Increase pollTimeoutMillis if the job needs longer.")
+                throw AIError.invalidResponse(provider: providerID, message: "Topaz image enhancement did not finish within \(timeoutMillis)ms (process \(processID), last status \(lastStatus)). Increase the `pollTimeoutMillis` provider option if the job needs longer.")
             }
             throw error
         }

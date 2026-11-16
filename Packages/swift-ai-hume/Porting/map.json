@@ -23,6 +23,7 @@
     "tests": [
       "Packages/swift-ai-hume/Tests/SwiftAIHumeTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-hume/Tests/SwiftAIHumeTests/HumeProviderTests.swift",
+      "Packages/swift-ai-hume/Tests/SwiftAIHumeTests/HumeUpstreamParityTests.swift",
       "Packages/swift-ai-hume/Tests/SwiftAIHumeTests/TestSupport.swift",
       "Packages/swift-ai-hume/Tests/SwiftAIHumeTests/Weekly20261101CredentialsTests.swift"
     ],

@@ -25,6 +25,7 @@ public final class FireworksImageModel: ImageModel, @unchecked Sendable {
 
     public func generateImage(_ request: ImageGenerationRequest) async throws -> ImageGenerationResult {
         let warnings = fireworksImageWarnings(for: request, modelID: modelID)
+        try fireworksValidateImageProviderOptions(request.providerOptions["fireworks"])
         let options = fireworksProviderOptions(from: request)
         var body: [String: JSONValue] = ["prompt": .string(request.prompt)]
         if let count = request.count { body["samples"] = .number(Double(count)) }
@@ -154,6 +155,44 @@ public final class FireworksImageModel: ImageModel, @unchecked Sendable {
                 throw AIError.invalidResponse(provider: providerID, message: "Fireworks image generation timed out after \(pollTimeoutMillis)ms")
             }
             throw error
+        }
+    }
+}
+
+/// Mirrors upstream `fireworksImageModelOptionsSchema` (a loose object: unknown keys pass).
+func fireworksValidateImageProviderOptions(_ value: JSONValue?) throws {
+    guard let value, value != .null else { return }
+    func invalid(_ key: String?, _ reason: String) -> AIError {
+        AIError.invalidArgument(
+            argument: key.map { "providerOptions.fireworks.\($0)" } ?? "providerOptions.fireworks",
+            message: "invalid fireworks provider options: \(reason)"
+        )
+    }
+    guard let options = value.objectValue else { throw invalid(nil, "expected an object") }
+    func isInteger(_ value: JSONValue) -> Bool {
+        guard let number = value.doubleValue else { return false }
+        return number.isFinite && number.rounded() == number
+    }
+    for (key, option) in options {
+        switch key {
+        case "guidance_scale", "cfg_scale":
+            guard option.doubleValue != nil else { throw invalid(key, "\(key) must be a number") }
+        case "num_inference_steps", "steps":
+            guard isInteger(option) else { throw invalid(key, "\(key) must be an integer") }
+        case "output_format":
+            guard let format = option.stringValue, ["jpeg", "png"].contains(format) else {
+                throw invalid(key, "output_format must be jpeg or png")
+            }
+        case "webhook_url", "webhook_secret":
+            guard option.stringValue != nil else { throw invalid(key, "\(key) must be a string") }
+        case "prompt_upsampling":
+            guard option.boolValue != nil else { throw invalid(key, "prompt_upsampling must be a boolean") }
+        case "safety_tolerance":
+            guard isInteger(option), let tolerance = option.doubleValue, (0...6).contains(tolerance) else {
+                throw invalid(key, "safety_tolerance must be an integer from 0 to 6")
+            }
+        default:
+            continue
         }
     }
 }

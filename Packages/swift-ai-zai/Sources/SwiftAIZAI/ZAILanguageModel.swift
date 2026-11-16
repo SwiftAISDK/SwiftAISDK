@@ -48,7 +48,7 @@ public final class ZAILanguageModel: LanguageModel, @unchecked Sendable {
         )
         result.usage = zaiUsage(from: result.rawValue)
         result.providerMetadata["zai"] = result.providerMetadata["zai"] ?? .object([:])
-        result.warnings = prepared.baseWarnings + result.warnings + prepared.zaiWarnings
+        result.warnings = prepared.mergedWarnings(result.warnings)
         if let body = capture.value {
             result.requestMetadata = aiRequestMetadata(
                 body: .object(body),
@@ -92,7 +92,7 @@ public final class ZAILanguageModel: LanguageModel, @unchecked Sendable {
                         switch part {
                         case let .streamStart(warnings):
                             continuation.yield(.streamStart(
-                                warnings: prepared.baseWarnings + warnings + prepared.zaiWarnings
+                                warnings: prepared.mergedWarnings(warnings)
                             ))
                         case let .raw(raw):
                             if let reason = raw["choices"]?[0]?["finish_reason"]?.stringValue {
@@ -177,6 +177,14 @@ private struct ZAIPreparedRequest {
     var request: LanguageModelRequest
     var baseWarnings: [AIWarning]
     var zaiWarnings: [AIWarning]
+
+    /// Upstream order: the base model's provider-option deprecations, then its
+    /// topK/responseFormat warnings, then its tool warnings, then Z.AI's own warnings.
+    func mergedWarnings(_ adapterWarnings: [AIWarning]) -> [AIWarning] {
+        let deprecations = adapterWarnings.filter { $0.type == "deprecated" }
+        let remaining = adapterWarnings.filter { $0.type != "deprecated" }
+        return deprecations + baseWarnings + remaining + zaiWarnings
+    }
 }
 
 private func zaiPreparedRequest(_ request: LanguageModelRequest) throws -> ZAIPreparedRequest {
@@ -188,13 +196,7 @@ private func zaiPreparedRequest(_ request: LanguageModelRequest) throws -> ZAIPr
         baseWarnings.append(AIWarning(type: "unsupported", feature: "topK"))
         normalized.topK = nil
     }
-    if case let .json(schema, _, _)? = request.responseFormat, schema != nil {
-        baseWarnings.append(AIWarning(
-            type: "unsupported",
-            feature: "responseFormat",
-            message: "JSON response format schema is only supported with structuredOutputs"
-        ))
-    }
+    // The base OpenAI-compatible model emits the responseFormat warning after topK.
     if request.frequencyPenalty != nil {
         zaiWarnings.append(AIWarning(type: "unsupported", feature: "frequencyPenalty"))
         normalized.frequencyPenalty = nil

@@ -154,6 +154,12 @@ yourself (matched case-insensitively). The native `PerplexityProviderSettings` a
 accepts `apiKeyProvider`, an async throwing closure resolved before each authenticated
 request; a supplier failure stops the request before it is sent.
 
+HTTP failures from the Agent, Embeddings and Decisions endpoints throw
+`AIError.apiCall`; its `message` comes from Perplexity's error envelope (`error`,
+`error.message`, `detail` or `message`) while `responseBody` keeps the raw body. An
+Agent response returned with HTTP 200 but `status: "failed"` throws with status 400
+and the response's `error.message`.
+
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](../../reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

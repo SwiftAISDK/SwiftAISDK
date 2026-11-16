@@ -30,13 +30,15 @@ public final class CerebrasLanguageModel: LanguageModel, @unchecked Sendable {
         }
         let response = (json: try httpResponse.jsonValue(), response: httpResponse)
         let raw = response.json
-        let choice = raw["choices"]?[0]
+        // Upstream OpenAICompatibleChatLanguageModel only rejects a response
+        // without choices; a choice without text yields empty content.
+        guard let choices = raw["choices"]?.arrayValue, !choices.isEmpty else {
+            throw AIError.invalidResponse(provider: providerID, message: "Response did not contain any choices.")
+        }
+        let choice: JSONValue? = choices[0]
         let toolCalls = cerebrasToolCalls(from: choice?["message"]?["tool_calls"])
         let content = choice?["message"]?["content"]?.stringValue
         let refusal = choice?["message"]?["refusal"]?.stringValue ?? ""
-        guard content != nil || !refusal.isEmpty || !toolCalls.isEmpty else {
-            throw AIError.invalidResponse(provider: providerID, message: "No text content found in Cerebras response.")
-        }
         let text = (content ?? "") + refusal
         let rawFinishReason = choice?["finish_reason"]?.stringValue
         let finishReason = cerebrasFinishReason(
@@ -50,7 +52,8 @@ public final class CerebrasLanguageModel: LanguageModel, @unchecked Sendable {
             reasoning: choice?["message"]?["reasoning"]?.stringValue ?? "",
             finishReason: finishReason,
             usage: cerebrasUsage(from: raw) ?? TokenUsage(),
-            toolCalls: cerebrasShouldDropStructuredToolCalls(
+            // Upstream doGenerate filters tool calls only for a raw `tool_calls` finish.
+            toolCalls: rawFinishReason == "tool_calls" && cerebrasShouldDropStructuredToolCalls(
                 hasText: !text.isEmpty,
                 normalizeStructuredToolCalls: prepared.normalizesStructuredToolCalls
             ) ? [] : toolCalls,
@@ -180,7 +183,14 @@ public final class CerebrasLanguageModel: LanguageModel, @unchecked Sendable {
                     if activeText {
                         continuation.yield(.textEnd(id: "0"))
                     }
-                    for part in toolCalls.finishedParts() {
+                    // Upstream finalizes tool calls on flush and, in JSON mode after
+                    // text has streamed, drops every tool part (including calls that
+                    // started before the text) so the structured text is the answer.
+                    let dropsFinishedToolParts = cerebrasShouldDropStructuredToolCalls(
+                        hasText: hasText,
+                        normalizeStructuredToolCalls: prepared.normalizesStructuredToolCalls
+                    )
+                    for part in toolCalls.finishedParts() where !dropsFinishedToolParts {
                         continuation.yield(part)
                     }
                     if hasRefusal, rawFinishReason == "stop", finishReason != "error" {

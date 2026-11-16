@@ -16,7 +16,7 @@ import Testing
     _ = try await model.generate(LanguageModelRequest(messages: [
         AIMessage(role: .user, content: [
             .text("See"),
-            .data(mimeType: "image/*", data: Data([0, 1, 2]))
+            .data(mimeType: "image/*", data: Data([0xFF, 0xD8, 0xFF, 0xE0]))
         ]),
         .assistant("Partial answer", reasoning: " prior thinking")
     ]))
@@ -25,7 +25,8 @@ import Testing
     let messages = try #require(body["messages"]?.arrayValue)
     let userContent = try #require(messages[0]["content"]?.arrayValue)
     #expect(userContent[1]["type"]?.stringValue == "image_url")
-    #expect(userContent[1]["image_url"]?.stringValue == "data:image/jpeg;base64,AAEC")
+    // Upstream detects the subtype from the bytes for `image/*`.
+    #expect(userContent[1]["image_url"]?.stringValue == "data:image/jpeg;base64,/9j/4A==")
     #expect(messages[1]["role"]?.stringValue == "assistant")
     #expect(messages[1]["content"] == [
         ["type": "text", "text": "Partial answer"],

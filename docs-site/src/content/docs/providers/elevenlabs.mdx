@@ -83,7 +83,7 @@ Options under `providerOptions["elevenlabs"]`:
 
 | Key | Purpose |
 | --- | --- |
-| `voiceSettings` | `stability`, `similarityBoost`, `style`, `useSpeakerBoost`, `speed` |
+| `voiceSettings` | `stability`, `similarityBoost`, `style`, `useSpeakerBoost` (the request `speed` is sent as `voice_settings.speed`) |
 | `languageCode` | Language hint (the request `language` takes precedence) |
 | `pronunciationDictionaryLocators` | Pronunciation dictionaries to apply |
 | `previousText`, `nextText`, `previousRequestIds`, `nextRequestIds` | Continuity context |
@@ -123,11 +123,18 @@ let transcript = try await scribe.transcribe(
 print(transcript.text)
 ```
 
-Transcription calls `/v1/speech-to-text`. Diarization is on by default; set
-`diarize: false` to disable it. Other keys: `languageCode`, `tagAudioEvents`,
-`numSpeakers`, `timestampsGranularity` and `fileFormat`. Words, including speaker
-IDs and confidence, are kept in `providerMetadata["elevenlabs"]["words"]`.
-The reported `audio_duration_secs` is used as the duration when present.
+Transcription calls `/v1/speech-to-text`. Diarization is on by default, including
+when other provider options are set; set `diarize: false` to disable it. Other keys:
+`languageCode`, `tagAudioEvents`, `numSpeakers`, `timestampsGranularity` and
+`fileFormat`. Every word, including spacing, becomes a segment. Words are kept in
+`providerMetadata["elevenlabs"]["words"]` with `text`, `type`, `start`, `end`,
+`speaker_id` and `characters`; other response fields such as `logprob` remain in
+the raw response body. The reported `audio_duration_secs` is used as the duration
+when present.
+
+`scribe_v2_realtime` is a streaming-only model and is rejected for batch
+transcription; realtime transcription is not available yet. A `streaming` option
+is validated but ignored by batch transcription, with an `unsupported` warning.
 
 Set `sourceUrl` to let ElevenLabs fetch the audio itself. The request then omits
 the file; any non-empty local audio is ignored with a warning.

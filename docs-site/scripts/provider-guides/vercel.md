@@ -21,6 +21,9 @@ The provider calls the v0 Model API, an OpenAI-compatible Chat Completions endpo
 (`try vercel("v0-1.5-md")`) return the same chat model. Text generation, streaming,
 tools and the other chat features follow the shared OpenAI-compatible chat behavior;
 see [Generate text](../../core/generate-text/) and [Stream text](../../core/stream-text/).
+Options under `providerOptions["openaiCompatible"]` or `providerOptions["vercel"]`
+(`user`, `reasoningEffort`, `textVerbosity`, `strictJsonSchema`) map like the generic
+OpenAI-compatible provider, and other `vercel` keys are sent in the request body.
 
 Only language models are available. Embedding, image, transcription, speech, video and
 reranking factories throw an unsupported-model error.

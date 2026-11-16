@@ -60,6 +60,12 @@ func prepareTypesafeState(_ state: [AIDecisionStatePart]) throws -> (state: JSON
     var images: [TypeSafeImagePart] = []
     for (index, part) in state.enumerated() {
         guard case let .file(mediaType, data, filename, providerOptions) = part else { parts.append(part); continue }
+        // Upstream rejects non-inline data before checking the media type.
+        switch data {
+        case .url: throw AIDecisionUnsupportedFunctionalityError(functionality: "TypeSafe AI decision file input: \(mediaType) (url)")
+        case .reference: throw AIDecisionUnsupportedFunctionalityError(functionality: "TypeSafe AI decision file input: \(mediaType) (reference)")
+        case .data, .base64: break
+        }
         guard mediaType == "image/png" || mediaType == "image/jpeg" else {
             throw AIDecisionUnsupportedFunctionalityError(functionality: "TypeSafe AI decision image media type: \(mediaType)")
         }
@@ -71,7 +77,7 @@ func prepareTypesafeState(_ state: [AIDecisionStatePart]) throws -> (state: JSON
                 throw AIError.invalidArgument(argument: "state", message: "File data must be valid base64.")
             }
             bytes = decoded
-        default: throw AIDecisionUnsupportedFunctionalityError(functionality: "TypeSafe AI decision file input must contain data.")
+        case .url, .reference: preconditionFailure("rejected above")
         }
         let options = try typesafeOptions(providerOptions)
         if let reference = options["reference"],

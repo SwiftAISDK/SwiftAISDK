@@ -13,10 +13,11 @@ func assemblyAIHTTPStatusError(provider: String, response: AIHTTPResponse) -> AI
 
 
 func assemblyAITranscriptionSegments(from raw: JSONValue) -> [TranscriptionSegment] {
+    // Upstream maps every validated word, including empty text; timings are ms.
     raw["words"]?.arrayValue?.compactMap { item in
-        guard let text = item["text"]?.stringValue, !text.isEmpty else { return nil }
-        let start = item["start"]?.doubleValue ?? 0
-        let end = item["end"]?.doubleValue ?? start
+        guard let text = item["text"]?.stringValue,
+              let start = item["start"]?.doubleValue,
+              let end = item["end"]?.doubleValue else { return nil }
         return TranscriptionSegment(text: text, startSecond: start / 1000, endSecond: end / 1000)
     } ?? []
 }

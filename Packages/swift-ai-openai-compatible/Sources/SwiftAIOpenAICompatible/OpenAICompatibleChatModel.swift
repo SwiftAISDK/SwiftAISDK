@@ -72,10 +72,17 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                 message: "Chat completion choice did not contain a valid assistant message."
             )
         }
-        let toolCalls = openAICompatibleChatToolCalls(
+        let upstream = followsUpstreamCompatibleChat
+        var toolCalls = openAICompatibleChatToolCalls(
             from: choice?["message"]?["tool_calls"],
             providerMetadataNamespace: metadataNamespace
         )
+        if upstream {
+            // Upstream: `toolCall.id || generateId()`.
+            for index in toolCalls.indices where (toolCalls[index].rawValue?["id"]?.stringValue ?? "").isEmpty {
+                toolCalls[index].id = generateId()
+            }
+        }
         let responseContent = openAICompatibleChatContentParts(choice?["message"]?["content"])
         let contentText = responseContent.compactMap { part -> String? in
             guard case let .text(text) = part else { return nil }
@@ -88,7 +95,8 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         let separateReasoning = choice?["message"]?["reasoning_content"]?.stringValue
             ?? choice?["message"]?["reasoning"]?.stringValue
             ?? ""
-        let audioTranscript = choice?["message"]?["audio"]?["transcript"]?.stringValue
+        // Audio transcripts are a native OpenAI-backed extension; upstream generic chat ignores `audio`.
+        let audioTranscript = upstream ? nil : choice?["message"]?["audio"]?["transcript"]?.stringValue
         var orderedContent = responseContent.compactMap { part -> AIResultContentPart? in
             switch part {
             case let .text(text):
@@ -132,7 +140,14 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         guard let text = text ?? (!refusal.isEmpty || !toolCalls.isEmpty || config.allowsEmptyTextResponse ? "" : nil) else {
             throw AIError.invalidResponse(provider: providerID, message: "No text content found in chat completion response.")
         }
-        var providerMetadata = openAICompatibleChatProviderMetadata(from: raw, choice: choice, providerID: providerID, namespace: metadataNamespace, includesRefusalLogprobs: isOpenAIBackedProvider(providerID, config: config))
+        // Upstream always keys provider metadata by the metadata key. Native logprobs
+        // metadata is retained as an additive extension (umbrella compatibility contract).
+        var providerMetadata: [String: JSONValue] = upstream
+            ? [metadataNamespace ?? openAICompatibleProviderMetadataNamespace(providerID): .object([:])] : [:]
+        openAICompatibleMergeProviderMetadata(
+            openAICompatibleChatProviderMetadata(from: raw, choice: choice, providerID: providerID, namespace: metadataNamespace, includesRefusalLogprobs: isOpenAIBackedProvider(providerID, config: config)),
+            into: &providerMetadata
+        )
         openAICompatibleMergeProviderMetadata(config.responseMetadata?(raw, metadataNamespace) ?? [:], into: &providerMetadata)
         if config.toolCallsBeforeText {
             openAICompatibleMergeProviderMetadata(config.responseHeaderMetadata?(httpResponse.headers, metadataNamespace) ?? [:], into: &providerMetadata)
@@ -152,13 +167,14 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
                 from: raw,
                 response: httpResponse,
                 modelID: modelID,
-                suppressZeroCreatedTimestamp: isOpenAIBackedProvider(providerID, config: config)
+                suppressZeroCreatedTimestamp: upstream || isOpenAIBackedProvider(providerID, config: config)
             )
         )
     }
 
     public func stream(_ request: LanguageModelRequest) -> AsyncThrowingStream<LanguageStreamPart, Error> {
-        AsyncThrowingStream { continuation in
+        if followsUpstreamCompatibleChat { return upstreamCompatibleStream(request) }
+        return AsyncThrowingStream { continuation in
             let task = Task {
                 do {
                     let prepared = try preparedBody(for: request, stream: true)
@@ -366,16 +382,223 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         }
     }
 
+    /// Upstream `OpenAICompatibleChatLanguageModel.doStream` for generic endpoints.
+    private func upstreamCompatibleStream(_ request: LanguageModelRequest) -> AsyncThrowingStream<LanguageStreamPart, Error> {
+        AsyncThrowingStream { continuation in
+            let task = Task {
+                do {
+                    let prepared = try preparedBody(for: request, stream: true)
+                    let namespace = metadataNamespace(for: request) ?? openAICompatibleProviderMetadataNamespace(providerID)
+                    let body = JSONValue.object(prepared.body)
+                    let httpRequest = try config.request(path: "/chat/completions", modelID: modelID, body: body, headers: request.headers, abortSignal: request.abortSignal)
+                    let response = try await config.streamRequest(httpRequest)
+                    guard (200..<300).contains(response.statusCode) else {
+                        throw config.chatHTTPStatusError(try await bufferedHTTPResponse(from: response, request: httpRequest))
+                    }
+                    let responseHead = httpResponseHead(from: response, request: httpRequest)
+                    continuation.yield(.streamStart(warnings: prepared.warnings))
+                    continuation.yield(.requestMetadata(AIRequestMetadata(body: body, headers: request.headers, url: httpRequest.url.absoluteString)))
+
+                    var tracker = AIStreamingToolCallTracker(
+                        generateID: { generateId() },
+                        extractMetadata: { delta in
+                            guard let signature = delta.rawValue?["extra_content"]?["google"]?["thought_signature"]?.stringValue,
+                                  !signature.isEmpty else { return nil }
+                            return [namespace: .object(["thoughtSignature": .string(signature)])]
+                        },
+                        buildToolCallProviderMetadata: { $0 }
+                    )
+                    // Buffers tool-call deltas by index until `function.name` is known.
+                    var pendingOrder: [Int] = []
+                    var pending: [Int: (id: String?, arguments: String, extraContent: JSONValue?)] = [:]
+                    var forwardedIndices: Set<Int> = []
+                    func trackerDelta(index: Int?, id: String?, name: String?, arguments: String?, extraContent: JSONValue?) -> AIStreamingToolCallDelta {
+                        var raw: [String: JSONValue] = [:]
+                        if let index { raw["index"] = .number(Double(index)) }
+                        if let id { raw["id"] = .string(id) }
+                        var function: [String: JSONValue] = [:]
+                        if let name { function["name"] = .string(name) }
+                        if let arguments { function["arguments"] = .string(arguments) }
+                        raw["function"] = .object(function)
+                        if let extraContent, extraContent != .null { raw["extra_content"] = extraContent }
+                        return AIStreamingToolCallDelta(index: index, id: id, functionName: name, arguments: arguments, rawValue: .object(raw))
+                    }
+
+                    var finishReason: String?
+                    var rawFinishReason: String?
+                    var usageChunk: JSONValue?
+                    var extractedMetadata: [String: JSONValue] = [:]
+                    var metadataExtracted = false
+                    var isActiveReasoning = false
+                    var isActiveText = false
+                    var hasRefusal = false
+
+                    func enqueueReasoning(_ delta: String) {
+                        if isActiveText { continuation.yield(.textEnd(id: "txt-0")); isActiveText = false }
+                        if !isActiveReasoning { continuation.yield(.reasoningStart(id: "reasoning-0")); isActiveReasoning = true }
+                        continuation.yield(.reasoningDeltaPart(id: "reasoning-0", delta: delta))
+                    }
+                    func enqueueText(_ delta: String) {
+                        if isActiveReasoning { continuation.yield(.reasoningEnd(id: "reasoning-0")); isActiveReasoning = false }
+                        if !isActiveText { continuation.yield(.textStart(id: "txt-0")); isActiveText = true }
+                        continuation.yield(.textDeltaPart(id: "txt-0", delta: delta))
+                    }
+
+                    for try await event in serverSentEvents(from: response.body) {
+                        if event.data == "[DONE]" { break }
+                        let raw: JSONValue
+                        do {
+                            raw = try decodeJSONBody(Data(event.data.utf8))
+                        } catch {
+                            finishReason = "error"
+                            rawFinishReason = nil
+                            continuation.yield(.error(message: error.localizedDescription))
+                            continue
+                        }
+                        if request.includeRawChunks { continuation.yield(.raw(raw)) }
+                        // Upstream `metadataExtractor.processChunk` sees every parsed chunk.
+                        openAICompatibleMergeProviderMetadata(config.responseMetadata?(raw, namespace) ?? [:], into: &extractedMetadata)
+                        // Prediction tokens and native logprobs metadata (additive extension).
+                        openAICompatibleMergeProviderMetadata(
+                            openAICompatibleChatProviderMetadata(from: raw, choice: raw["choices"]?[0], providerID: providerID, namespace: namespace),
+                            into: &extractedMetadata
+                        )
+                        if let streamError = openAICompatibleStreamError(from: raw) {
+                            finishReason = "error"
+                            rawFinishReason = nil
+                            continuation.yield(.error(message: streamError.message, rawValue: streamError.rawValue))
+                            continue
+                        }
+                        if !metadataExtracted, openAICompatibleUpstreamChunkHasResponseMetadata(raw) {
+                            metadataExtracted = true
+                            continuation.yield(.responseMetadata(openAICompatibleResponseMetadata(
+                                from: raw,
+                                response: responseHead,
+                                modelID: modelID,
+                                suppressZeroCreatedTimestamp: true
+                            )))
+                        }
+                        if let usage = raw["usage"], usage != .null { usageChunk = raw }
+                        let choice = raw["choices"]?[0]
+                        if let reason = choice?["finish_reason"]?.stringValue { rawFinishReason = reason }
+                        guard let delta = choice?["delta"], delta != .null else { continue }
+
+                        let reasoning = delta["reasoning_content"].flatMap { $0 == .null ? nil : $0 } ?? delta["reasoning"]
+                        if let reasoning = reasoning?.stringValue, !reasoning.isEmpty { enqueueReasoning(reasoning) }
+                        for part in openAICompatibleChatContentParts(delta["content"]) {
+                            switch part {
+                            case let .reasoning(text): if !text.isEmpty { enqueueReasoning(text) }
+                            case let .text(text): if !text.isEmpty { enqueueText(text) }
+                            }
+                        }
+                        if let refusal = delta["refusal"]?.stringValue, !refusal.isEmpty {
+                            hasRefusal = true
+                            enqueueText(refusal)
+                        }
+                        if let toolCallDeltas = delta["tool_calls"]?.arrayValue, !toolCallDeltas.isEmpty {
+                            if isActiveReasoning { continuation.yield(.reasoningEnd(id: "reasoning-0")); isActiveReasoning = false }
+                            for item in toolCallDeltas {
+                                let index = item["index"]?.intValue
+                                let id = item["id"]?.stringValue
+                                let name = item["function"]?["name"]?.stringValue
+                                let arguments = item["function"]?["arguments"]?.stringValue
+                                let extraContent = item["extra_content"]
+                                guard let index, !forwardedIndices.contains(index) else {
+                                    for part in try tracker.processDelta(trackerDelta(index: index, id: id, name: name, arguments: arguments, extraContent: extraContent)) {
+                                        continuation.yield(part)
+                                    }
+                                    continue
+                                }
+                                var entry = pending[index] ?? (id: nil, arguments: "", extraContent: nil)
+                                if pending[index] == nil {
+                                    pendingOrder.append(index)
+                                    entry.id = id
+                                    entry.extraContent = extraContent.flatMap { $0 == .null ? nil : $0 }
+                                } else {
+                                    if entry.id == nil, let id { entry.id = id }
+                                    if entry.extraContent == nil, let extraContent, extraContent != .null { entry.extraContent = extraContent }
+                                }
+                                if let arguments { entry.arguments += arguments }
+                                if let name {
+                                    pending.removeValue(forKey: index)
+                                    pendingOrder.removeAll { $0 == index }
+                                    forwardedIndices.insert(index)
+                                    for part in try tracker.processDelta(trackerDelta(index: index, id: entry.id, name: name, arguments: entry.arguments, extraContent: entry.extraContent)) {
+                                        continuation.yield(part)
+                                    }
+                                } else {
+                                    pending[index] = entry
+                                }
+                            }
+                        }
+                    }
+
+                    if isActiveReasoning { continuation.yield(.reasoningEnd(id: "reasoning-0")) }
+                    if isActiveText { continuation.yield(.textEnd(id: "txt-0")) }
+                    // Deltas that never received a name are forwarded so the tracker rejects them.
+                    for index in pendingOrder {
+                        guard let entry = pending[index] else { continue }
+                        for part in try tracker.processDelta(trackerDelta(index: index, id: entry.id, name: nil, arguments: entry.arguments, extraContent: nil)) {
+                            continuation.yield(part)
+                        }
+                    }
+                    for part in tracker.flush() { continuation.yield(part) }
+
+                    if let rawFinishReason {
+                        finishReason = openAICompatibleChatFinishReason(rawFinishReason, hasRefusal: hasRefusal)
+                    }
+                    if finishReason == nil {
+                        finishReason = "error"
+                        continuation.yield(.error(message: "Response stream ended without a finish reason."))
+                    }
+                    var providerMetadata: [String: JSONValue] = [namespace: .object([:])]
+                    openAICompatibleMergeProviderMetadata(extractedMetadata, into: &providerMetadata)
+                    let usage = usageChunk.flatMap { self.usage(from: $0) }
+                    continuation.yield(.finishMetadata(reason: finishReason, usage: usage, providerMetadata: providerMetadata))
+                    continuation.finish()
+                } catch {
+                    continuation.finish(throwing: error)
+                }
+            }
+            continuation.onTermination = { @Sendable _ in task.cancel() }
+        }
+    }
+
+    /// Generic endpoints follow upstream `OpenAICompatibleChatLanguageModel`;
+    /// OpenAI-backed and legacy wire profiles keep their own conventions.
+    private var followsUpstreamCompatibleChat: Bool {
+        config.usesGenericOpenAICompatibleProviderOptions
+            && config.openAIBackedProviderRoot == nil
+            && !isOpenAIBackedProvider(providerID)
+    }
+
     private func preparedBody(
         for request: LanguageModelRequest,
         stream: Bool
     ) throws -> (body: [String: JSONValue], warnings: [AIWarning]) {
-        var warnings = openAICompatibleChatWarnings(
-            for: request,
-            providerID: providerID,
-            openAIBackedProviderRoot: config.openAIBackedProviderRoot,
-            usesGenericProviderOptions: config.usesGenericOpenAICompatibleProviderOptions
-        )
+        let upstream = followsUpstreamCompatibleChat
+        let supportsStructuredOutputs = config.supportsStructuredOutputs || (config.supportsStructuredOutputForModel?(modelID) ?? false)
+        var warnings: [AIWarning]
+        if upstream {
+            // Upstream order: provider-option deprecations, topK, responseFormat,
+            // mapReasoning warnings (added while building the body), then tool warnings.
+            warnings = openAICompatibleProviderOptionWarnings(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, includeCompatibilityNamespace: true)
+            if request.topK != nil { warnings.append(AIWarning(type: "unsupported", feature: "topK")) }
+            if case let .json(schema, _, _)? = request.responseFormat, schema != nil, !supportsStructuredOutputs {
+                warnings.append(AIWarning(
+                    type: "unsupported",
+                    feature: "responseFormat",
+                    message: "JSON response format schema is only supported with structuredOutputs"
+                ))
+            }
+        } else {
+            warnings = openAICompatibleChatWarnings(
+                for: request,
+                providerID: providerID,
+                openAIBackedProviderRoot: config.openAIBackedProviderRoot,
+                usesGenericProviderOptions: config.usesGenericOpenAICompatibleProviderOptions
+            )
+        }
         var body = try Self.body(
             for: request,
             modelID: modelID,
@@ -384,8 +607,9 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
             stream: stream,
             unwrapOpenAIProviderOptions: isOpenAIBackedProvider(providerID, config: config),
             openAIProviderOptionsRoot: config.openAIBackedProviderRoot,
-            supportsStructuredOutputs: config.supportsStructuredOutputs || (config.supportsStructuredOutputForModel?(modelID) ?? false),
+            supportsStructuredOutputs: supportsStructuredOutputs,
             usesGenericOpenAICompatibleProviderOptions: config.usesGenericOpenAICompatibleProviderOptions,
+            upstreamCompatible: upstream,
             supportsMultiPartToolContent: config.supportsMultiPartToolContent,
             capabilities: config.languageCapabilities?(modelID) ?? .init(),
             normalizeSchema: config.normalizeSchema,
@@ -394,9 +618,16 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
             mapReasoning: config.mapReasoning,
             warnings: &warnings
         )
+        if upstream {
+            warnings.append(contentsOf: openAICompatibleChatToolWarnings(for: request))
+        }
         if stream, config.includeUsage {
             body["stream_options"] = .object(["include_usage": .bool(true)])
+        } else if stream, upstream {
+            // Upstream writes `stream_options: undefined` after the provider-option spread.
+            body.removeValue(forKey: "stream_options")
         }
+        if stream, upstream { body["stream"] = true }
         warnings.append(contentsOf: config.additionalWarnings?(request) ?? [])
         body = try config.prepareBody?(body, request, modelID, &warnings) ?? body
         body = config.transformRequestBody?(body) ?? body
@@ -410,7 +641,8 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
     }
 
     private func usage(from raw: JSONValue) -> TokenUsage? {
-        config.usage?(raw) ?? tokenUsage(from: raw)
+        if let usage = config.usage?(raw) { return usage }
+        return followsUpstreamCompatibleChat ? openAICompatibleUpstreamChatUsage(raw["usage"]) : tokenUsage(from: raw)
     }
 
     private static func body(
@@ -423,6 +655,7 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         openAIProviderOptionsRoot: String?,
         supportsStructuredOutputs: Bool,
         usesGenericOpenAICompatibleProviderOptions: Bool,
+        upstreamCompatible: Bool = false,
         supportsMultiPartToolContent: Bool,
         capabilities: OpenAICompatibleLanguageCapabilities,
         normalizeSchema: (@Sendable (JSONValue) throws -> (schema: JSONValue, warnings: [AIWarning]))?,
@@ -432,8 +665,16 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         warnings: inout [AIWarning]
     ) throws -> [String: JSONValue] {
         var extraBody: [String: JSONValue]
+        var upstreamOptions = OpenAICompatibleUpstreamChatProviderOptions()
         if unwrapOpenAIProviderOptions {
             extraBody = openAIProviderOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, providerRoot: openAIProviderOptionsRoot)
+        } else if upstreamCompatible {
+            // providerOptions follow upstream: typed options from every namespace,
+            // raw passthrough from the provider namespaces only. `extraBody` keeps
+            // its native escape-hatch behavior.
+            upstreamOptions = try openAICompatibleUpstreamChatProviderOptions(providerOptions: request.providerOptions, providerID: providerID)
+            extraBody = openAICompatibleProviderOptions(from: request.extraBody, providerID: providerID, includeCompatibilityNamespace: true)
+            for (key, value) in upstreamOptions.typed { extraBody[key] = value }
         } else if usesGenericOpenAICompatibleProviderOptions {
             extraBody = openAICompatibleProviderOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, includeCompatibilityNamespace: true)
         } else {
@@ -521,11 +762,13 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
         if let maxOutputTokens = request.maxOutputTokens { body["max_tokens"] = .number(Double(maxOutputTokens)) }
         if !request.stopSequences.isEmpty { body["stop"] = .array(request.stopSequences) }
         let toolChoiceInput = request.toolChoice ?? request.extraBody["toolChoice"]
-        let tools = try openAICompatibleChatTools(
-            from: request.tools,
-            normalizeSchema: unwrapOpenAIProviderOptions ? normalizeSchema : nil,
-            warnings: &warnings
-        )
+        let tools = upstreamCompatible
+            ? openAICompatibleUpstreamChatTools(from: request.tools)
+            : try openAICompatibleChatTools(
+                from: request.tools,
+                normalizeSchema: unwrapOpenAIProviderOptions ? normalizeSchema : nil,
+                warnings: &warnings
+            )
         if !tools.isEmpty {
             body["tools"] = .array(tools)
             if let toolChoice = openAICompatibleChatToolChoice(from: toolChoiceInput) {
@@ -533,6 +776,25 @@ public final class OpenAICompatibleChatModel: LanguageModel, @unchecked Sendable
             }
         }
         body.merge(options) { _, new in new }
+        if upstreamCompatible {
+            // Upstream spreads raw provider options over the standard settings, then
+            // writes reasoning_effort/verbosity (when set), messages and tools last.
+            body.merge(upstreamOptions.passthrough) { _, new in new }
+            if let reasoningEffort = options["reasoning_effort"] { body["reasoning_effort"] = reasoningEffort }
+            if let verbosity = options["verbosity"] { body["verbosity"] = verbosity }
+            body["messages"] = .array(messages)
+            if tools.isEmpty {
+                body.removeValue(forKey: "tools")
+                body.removeValue(forKey: "tool_choice")
+            } else {
+                body["tools"] = .array(tools)
+                if let toolChoice = openAICompatibleChatToolChoice(from: toolChoiceInput) {
+                    body["tool_choice"] = toolChoice
+                } else {
+                    body.removeValue(forKey: "tool_choice")
+                }
+            }
+        }
         if unwrapOpenAIProviderOptions,
            !capabilities.supportsPromptCacheRetention,
            body.removeValue(forKey: "prompt_cache_retention") != nil {

@@ -47,6 +47,7 @@
     ],
     "tests": [
       "Packages/swift-ai-openai-compatible/Tests/SwiftAIOpenAICompatibleTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-openai-compatible/Tests/SwiftAIOpenAICompatibleTests/OpenAICompatibleChatUpstreamParityTests.swift",
       "Packages/swift-ai-openai-compatible/Tests/SwiftAIOpenAICompatibleTests/OpenAICompatibleWarningTests.swift",
       "Packages/swift-ai-openai-compatible/Tests/SwiftAIOpenAICompatibleTests/OpenAIStyleStreamingToolCallsTests.swift",
       "Packages/swift-ai-openai-compatible/Tests/SwiftAIOpenAICompatibleTests/TestSupport.swift",

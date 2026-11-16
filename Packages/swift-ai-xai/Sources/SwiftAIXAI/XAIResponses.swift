@@ -291,11 +291,15 @@ private func xaiResponsesInputMessageJSON(_ message: AIMessage, warnings: inout 
         var items: [JSONValue] = []
         for part in message.content {
             switch part {
-            case let .text(text, _):
-                let item: [String: JSONValue] = [
+            case let .text(text, metadata):
+                var item: [String: JSONValue] = [
                     "role": .string("assistant"),
                     "content": .string(text)
                 ]
+                // Upstream replays the xAI item id of assistant text parts.
+                if let itemID = metadata["xai"]?["itemId"], itemID.stringValue != nil {
+                    item["id"] = itemID
+                }
                 items.append(.object(item))
             case let .toolCall(call):
                 guard !call.providerExecuted else { break }
@@ -313,14 +317,36 @@ private func xaiResponsesInputMessageJSON(_ message: AIMessage, warnings: inout 
                 items.append(.object(item))
             case .toolResult:
                 break
-            case .data, .file, .reasoningFile, .custom, .imageURL, .providerReference, .toolApprovalRequest, .toolApprovalResponse:
-                warnings.append(AIWarning(type: "other", message: "xAI Responses API does not support this assistant content type."))
-            case .reasoning:
-                warnings.append(AIWarning(type: "other", message: "Reasoning parts without xAI itemId or encrypted content cannot be sent back to xAI. Skipping."))
+            case .data, .file, .imageURL, .providerReference:
+                warnings.append(AIWarning(type: "other", message: "xAI Responses API does not support file in assistant messages"))
+            case .reasoningFile:
+                warnings.append(AIWarning(type: "other", message: "xAI Responses API does not support reasoning-file in assistant messages"))
+            case .custom:
+                warnings.append(AIWarning(type: "other", message: "xAI Responses API does not support custom in assistant messages"))
+            case .toolApprovalRequest, .toolApprovalResponse:
+                warnings.append(AIWarning(type: "other", message: "xAI Responses API does not support this content type in assistant messages"))
+            case let .reasoning(text, metadata):
+                // Upstream replays reasoning items that carry an xAI item id or encrypted content.
+                let itemID = metadata["xai"]?["itemId"]?.stringValue
+                let encryptedContent = metadata["xai"]?["reasoningEncryptedContent"]?.stringValue
+                guard itemID != nil || encryptedContent != nil else {
+                    warnings.append(AIWarning(type: "other", message: xaiReasoningReplayWarning))
+                    break
+                }
+                var item: [String: JSONValue] = [
+                    "type": .string("reasoning"),
+                    "id": .string(itemID ?? ""),
+                    "summary": .array(text.isEmpty ? [] : [.object(["type": .string("summary_text"), "text": .string(text)])]),
+                    "status": .string("completed")
+                ]
+                if let encryptedContent {
+                    item["encrypted_content"] = .string(encryptedContent)
+                }
+                items.append(.object(item))
             }
         }
         if let reasoning = message.reasoning, !reasoning.isEmpty {
-            warnings.append(AIWarning(type: "other", message: "Reasoning parts without xAI itemId or encrypted content cannot be sent back to xAI. Skipping."))
+            warnings.append(AIWarning(type: "other", message: xaiReasoningReplayWarning))
         }
         return items
     case .tool:
@@ -329,25 +355,40 @@ private func xaiResponsesInputMessageJSON(_ message: AIMessage, warnings: inout 
             return .object([
                 "type": .string("function_call_output"),
                 "call_id": .string(result.toolCallID),
-                "output": .string(xaiResponsesToolResultOutput(result))
+                "output": xaiResponsesToolResultOutputValue(result)
             ])
         }
     }
+}
+
+private let xaiReasoningReplayWarning = "Reasoning parts without itemId or encrypted content cannot be sent back to xAI. Skipping."
+
+/// Upstream `xaiFilePartProviderOptions`: `imageDetail` is passed through as `detail`.
+private func xaiResponsesImagePart(url: String, providerMetadata: [String: JSONValue]) throws -> JSONValue {
+    var image: [String: JSONValue] = ["type": .string("input_image"), "image_url": .string(url)]
+    if let detail = providerMetadata["xai"]?["imageDetail"], detail != .null {
+        guard let value = detail.stringValue, ["low", "high", "auto"].contains(value) else {
+            throw AIError.invalidArgument(argument: "providerOptions.xai.imageDetail", message: "xAI imageDetail must be low, high, or auto.")
+        }
+        image["detail"] = detail
+    }
+    return .object(image)
 }
 
 private func xaiResponsesUserContentPart(_ part: AIContentPart) throws -> JSONValue? {
     switch part {
     case let .text(text, _):
         return .object(["type": .string("input_text"), "text": .string(text)])
-    case let .imageURL(url, _):
-        return .object(["type": .string("input_image"), "image_url": .string(url)])
-    case let .data(mimeType, data, _), let .file(mimeType, data, _, _):
-        if mimeType.lowercased().hasPrefix("image/") {
-            let resolvedMimeType = mimeType == "image/*" ? "image/jpeg" : mimeType
-            return .object([
-                "type": .string("input_image"),
-                "image_url": .string("data:\(resolvedMimeType);base64,\(data.base64EncodedString())")
-            ])
+    case let .imageURL(url, metadata):
+        return try xaiResponsesImagePart(url: url, providerMetadata: metadata)
+    case let .data(mimeType, data, metadata), let .file(mimeType, data, _, metadata):
+        if topLevelMediaType(mimeType.lowercased()) == "image" {
+            // Upstream resolves partial image media types (`image`, `image/*`) from the bytes.
+            let resolvedMimeType = try resolveFullMediaType(mediaType: mimeType, data: data)
+            return try xaiResponsesImagePart(
+                url: "data:\(resolvedMimeType);base64,\(data.base64EncodedString())",
+                providerMetadata: metadata
+            )
         }
         throw AIError.invalidArgument(
             argument: "messages",
@@ -376,15 +417,49 @@ private func xaiResponsesToolResultOutput(_ result: AIToolResult) -> String {
             return object["reason"]?.stringValue ?? "tool execution denied"
         case "json", "error-json":
             return xaiResponsesJSONString(object["value"] ?? .object([:])) ?? ""
-        case "content":
-            return object["value"]?.arrayValue?.map { item in
-                item["type"]?.stringValue == "text" ? (item["text"]?.stringValue ?? "") : ""
-            }.joined() ?? ""
         default:
             break
         }
     }
     return xaiResponsesJSONString(output) ?? ""
+}
+
+/// Upstream sends `content` tool outputs as an array of `input_text` / `input_image` items.
+private func xaiResponsesToolResultOutputValue(_ result: AIToolResult) -> JSONValue {
+    let output = result.modelOutput ?? result.result
+    guard output["type"]?.stringValue == "content" else {
+        return .string(xaiResponsesToolResultOutput(result))
+    }
+    let items = output["value"]?.arrayValue ?? []
+    return .array(items.compactMap { item -> JSONValue? in
+        switch item["type"]?.stringValue {
+        case "text":
+            return .object(["type": .string("input_text"), "text": item["text"] ?? .string("")])
+        case "file":
+            guard let mediaType = item["mediaType"]?.stringValue, topLevelMediaType(mediaType) == "image" else { return nil }
+            switch item["data"]?["type"]?.stringValue {
+            case "url":
+                guard let url = item["data"]?["url"]?.stringValue else { return nil }
+                return .object(["type": .string("input_image"), "image_url": .string(url)])
+            case "data":
+                guard let base64 = item["data"]?["data"]?.stringValue else { return nil }
+                let resolved = isFullMediaType(mediaType)
+                    ? mediaType
+                    : (detectMediaType(base64: base64, topLevelType: "image") ?? mediaType)
+                return .object(["type": .string("input_image"), "image_url": .string("data:\(resolved);base64,\(base64)")])
+            default:
+                return nil
+            }
+        case "image-data":
+            let mediaType = item["mediaType"]?.stringValue ?? "image/jpeg"
+            return .object(["type": .string("input_image"), "image_url": .string("data:\(mediaType);base64,\(item["data"]?.stringValue ?? "")")])
+        case "image-url":
+            guard let url = item["url"]?.stringValue else { return nil }
+            return .object(["type": .string("input_image"), "image_url": .string(url)])
+        default:
+            return nil
+        }
+    })
 }
 
 private struct XAIResponsesPreparedTools {
@@ -463,21 +538,17 @@ private func xaiResponsesTools(from tools: [String: JSONValue], toolChoice: JSON
             continue
         }
 
-        var parameters = schema
+        // Upstream `xai-responses-prepare-tools` sends `tool.inputSchema` as `parameters`.
         var function: [String: JSONValue] = [
             "type": .string("function"),
             "name": .string(name),
-            "parameters": parameters
+            "parameters": aiFunctionToolInputSchema(schema)
         ]
-        if var parameterObject = parameters.objectValue {
-            if let description = parameterObject["description"] {
-                function["description"] = description
-            }
-            if let strict = parameterObject.removeValue(forKey: "strict") {
-                function["strict"] = strict
-                parameters = .object(parameterObject)
-                function["parameters"] = parameters
-            }
+        if let description = schema.objectValue?["description"] {
+            function["description"] = description
+        }
+        if let strict = schema.objectValue?["strict"] {
+            function["strict"] = strict
         }
         output.append(.object(function))
     }
@@ -561,6 +632,6 @@ private func xaiResponsesSnakeCasedKey(_ key: String) -> String {
 }
 
 private func xaiResponsesJSONString(_ value: JSONValue) -> String? {
-    guard let data = try? encodeJSONBody(value) else { return nil }
-    return String(data: data, encoding: .utf8)
+    // JSON.stringify does not escape forward slashes.
+    try? decisionJSONText(value)
 }

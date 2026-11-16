@@ -10,6 +10,14 @@ public final class GoogleVertexLanguageModel: LanguageModel, @unchecked Sendable
     public let modelID: String
     private let config: GoogleVertexConfig
 
+    /// Vertex reads HTTP(S) and Cloud Storage URLs directly (upstream `supportedUrls`).
+    public var supportedURLs: [String: [AISupportedURLPattern]] {
+        ["*": [
+            AISupportedURLPattern { $0.range(of: #"^https?://"#, options: .regularExpression) != nil },
+            AISupportedURLPattern { $0.hasPrefix("gs://") }
+        ]]
+    }
+
     init(modelID: String, config: GoogleVertexConfig) {
         self.providerID = config.providerID
         self.modelID = modelID
@@ -25,10 +33,12 @@ public final class GoogleVertexLanguageModel: LanguageModel, @unchecked Sendable
         )
         let jsonResponse = googlePrepareJSONResponseToolRequest(resolvedRequest, modelID: modelID)
         let prepared = try googleGenerateContentBody(jsonResponse.request, modelID: modelID, providerID: providerID)
+        let path = "/\(googleModelPath(modelID)):generateContent"
         let response = try await googleGenerateContentWithContinuation(body: prepared.body, abortSignal: request.abortSignal) { body in
-            try await config.sendJSONResponse(path: "/models/\(modelID):generateContent", body: body, headers: request.headers.mergingHeaders(prepared.headers), abortSignal: request.abortSignal)
+            try await config.sendJSONResponse(path: path, body: body, headers: request.headers.mergingHeaders(prepared.headers), abortSignal: request.abortSignal)
         }
-        return try response.result(providerID: providerID, modelID: modelID, prepared: prepared, jsonResponseToolName: jsonResponse.name, requestMetadata: .init(body: prepared.body, headers: request.headers, url: config.baseURL + "/models/\(modelID):generateContent"))
+        let result = try response.result(providerID: providerID, modelID: modelID, prepared: prepared, jsonResponseToolName: jsonResponse.name, requestMetadata: .init(body: prepared.body, headers: request.headers, url: config.baseURL + path))
+        return googleProviderMetadata(result, namespaces: googleVertexProviderMetadataNamespaces)
     }
 
     public func stream(_ request: LanguageModelRequest) -> AsyncThrowingStream<LanguageStreamPart, Error> {
@@ -50,10 +60,12 @@ public final class GoogleVertexLanguageModel: LanguageModel, @unchecked Sendable
                         providerID: providerID,
                         prepared: prepared,
                         jsonResponseToolName: jsonResponse.name,
-                        continuation: continuation
+                        continuation: continuation,
+                        // Gemini metadata is written under `googleVertex` and `vertex`, like upstream.
+                        transformPart: { googleProviderMetadata($0, namespaces: googleVertexProviderMetadataNamespaces) }
                     ) { body in
                         let httpRequest = try await config.request(
-                            path: "/models/\(modelID):streamGenerateContent?alt=sse",
+                            path: "/\(googleModelPath(modelID)):streamGenerateContent?alt=sse",
                             body: body,
                             headers: request.headers.mergingHeaders(prepared.headers),
                             abortSignal: request.abortSignal
@@ -805,58 +817,16 @@ private func googleVertexUsesEmbedContentEndpoint(_ modelID: String) -> Bool {
 
 private typealias GoogleVertexGenerateContentPreparedCall = GoogleGenerateContentPreparedCall
 
+let googleVertexProviderMetadataNamespaces = ["googleVertex", "vertex"]
+
 private func googleGenerateContentBody(_ request: LanguageModelRequest, modelID: String, providerID: String, isStreaming: Bool = false) throws -> GoogleVertexGenerateContentPreparedCall {
-    let preparedOptions = try googlePrepareGenerateContentOptions(
-        from: request,
+    try googleGenerateContentCall(
+        for: request,
         modelID: modelID,
         providerID: providerID,
-        isVertexProvider: true
-    )
-    var options = preparedOptions.options
-    let responseFormat = googleResolvedResponseFormat(request: request, options: &options)
-    var warnings = preparedOptions.warnings
-    let systemText = request.messages.filter { $0.role == .system }.map(\.combinedText).joined(separator: "\n")
-    let rawContents = try request.messages.filter { $0.role != .system }.map { message in
-        try googleGenerateContentMessageJSON(
-            message,
-            modelID: modelID,
-            includeFunctionCallIDs: false,
-            supportsGoogleCloudStorageToolResults: googleMessageTargetIsGemini3(modelID),
-            providerOptionsNames: ["googleVertex", "vertex"],
-            warnings: &warnings
-        )
-    }
-    let preparedMessages = googleContentsWithSystemInstruction(systemText: systemText, contents: rawContents, modelID: modelID)
-    var body: [String: JSONValue] = ["contents": .array(preparedMessages.contents)]
-    if let systemInstruction = preparedMessages.systemInstruction {
-        body["systemInstruction"] = systemInstruction
-    }
-    var generationConfig: [String: JSONValue] = [:]
-    googleApplyStandardGenerationSettings(request, to: &generationConfig)
-    try googleApplyResponseFormat(responseFormat, options: options, to: &generationConfig)
-    googleApplyProviderGenerationOptions(options, to: &generationConfig)
-    if !generationConfig.isEmpty { body["generationConfig"] = .object(generationConfig) }
-    if let preparedTools = try googlePrepareTools(from: request.tools, toolChoice: options["toolChoice"], modelID: modelID, isVertexProvider: true) {
-        warnings.append(contentsOf: preparedTools.warnings)
-        if !preparedTools.tools.isEmpty {
-            body["tools"] = .array(preparedTools.tools)
-        }
-        if let toolConfig = googleToolConfigWithProviderOptions(preparedTools.toolConfig, options: options, isStreaming: isStreaming, isVertexProvider: true) {
-            body["toolConfig"] = toolConfig
-        }
-    } else if let toolConfig = googleToolConfigWithProviderOptions(nil, options: options, isStreaming: isStreaming, isVertexProvider: true) {
-        body["toolConfig"] = toolConfig
-    }
-    body.merge(googleTopLevelGenerateContentOptions(options)) { _, new in new }
-    body.merge(googleExtraBodyWithoutToolChoice(options)) { _, new in new }
-    return GoogleVertexGenerateContentPreparedCall(
-        body: .object(body),
-        warnings: warnings,
-        headers: preparedOptions.headers,
-        toolNameMapping: createToolNameMapping(
-            tools: request.tools,
-            providerToolNames: ["google.code_execution": "code_execution"]
-        )
+        isVertexProvider: true,
+        isStreaming: isStreaming,
+        supportsGoogleCloudStorageToolResults: googleMessageTargetIsGemini3(modelID)
     )
 }
 

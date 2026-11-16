@@ -193,7 +193,8 @@ private func humeValidatedVoice(_ value: JSONValue, argument: String) throws -> 
 
 private func humeSpeechWarnings(for request: SpeechRequest) -> [AIWarning] {
     var warnings: [AIWarning] = []
-    if let format = request.format,
+    // Upstream skips the check for a falsy (empty) output format.
+    if let format = request.format, !format.isEmpty,
        !["mp3", "pcm", "wav"].contains(format) {
         warnings.append(AIWarning(
             type: "unsupported",

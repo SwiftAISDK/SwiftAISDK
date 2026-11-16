@@ -86,8 +86,10 @@ public final class DeepInfraProvider: AIProvider, Sendable {
         var http = config.http
         http.providerID = "deepinfra.\(surface)"
         var wire = OpenAICompatibleModelConfiguration(http: http, baseURL: config.baseURL)
-        wire.usesGenericOpenAICompatibleProviderOptions = false
-        wire.allowsEmptyTextResponse = false
+        // Upstream DeepInfraChatLanguageModel extends OpenAICompatibleChatLanguageModel:
+        // providerOptions.deepinfra, portable reasoning and empty-content responses follow it.
+        wire.usesGenericOpenAICompatibleProviderOptions = true
+        wire.allowsEmptyTextResponse = true
         wire.includeUsage = config.includeUsage
         wire.supportsStructuredOutputs = config.supportsStructuredOutputs
         wire.supportsMultiPartToolContent = config.supportsMultiPartToolContent

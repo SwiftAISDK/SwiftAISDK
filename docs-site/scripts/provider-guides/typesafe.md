@@ -21,8 +21,9 @@ factory requires a configuration argument and does not throw; `typeSafeAI` is a
 default provider instance.
 
 The API key is resolved when a request is made, not when the provider is created, so a
-key can be installed in the environment later. `TypeSafeAIProviderSettings(environment:)`
-supplies a custom environment map.
+key can be installed in the environment later. The base URL is `baseURL`, then
+`TYPESAFE_AI_BASE_URL`, then `https://api.typesafe.ai/v1`.
+`TypeSafeAIProviderSettings(environment:)` supplies a custom environment map.
 
 ## Decisions
 
@@ -31,7 +32,10 @@ questions take 1–255 options and Score questions 1–10 non-null levels. Answe
 rounded to two decimals, which the result reports as its rounding. Confidence values
 and score legends (keyed by question ID) are under `providerMetadata.typesafe`.
 `maxOutputTokens`, `reasoning` and unknown provider options produce warnings; known
-options are validated before the request. See [Decisions](../../core/decide/).
+options are validated before the request. HTTP failures are `AIError.apiCall` with the
+envelope's `message`, `error`, `detail` or `error_type` as the message and the raw body
+in `responseBody`; malformed successful responses report "Invalid JSON response". See
+[Decisions](../../core/decide/).
 
 A state made of a single JSON string, object or array is sent as-is. Other states,
 including JSON null, Boolean and number values, are joined into text.

@@ -26,7 +26,8 @@
       "Packages/swift-ai-zai/Tests/SwiftAIZAITests/TestSupport.swift",
       "Packages/swift-ai-zai/Tests/SwiftAIZAITests/Weekly20261101CredentialsTests.swift",
       "Packages/swift-ai-zai/Tests/SwiftAIZAITests/Weekly20261114WarningTests.swift",
-      "Packages/swift-ai-zai/Tests/SwiftAIZAITests/ZAIProviderTests.swift"
+      "Packages/swift-ai-zai/Tests/SwiftAIZAITests/ZAIProviderTests.swift",
+      "Packages/swift-ai-zai/Tests/SwiftAIZAITests/ZAIWarningOrderTests.swift"
     ],
     "resources": []
   },

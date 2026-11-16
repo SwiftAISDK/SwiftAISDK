@@ -65,7 +65,7 @@ func openAICompatibleChatProviderMetadata(from raw: JSONValue, choice: JSONValue
 }
 func openAICompatibleCompletionProviderMetadata(from choice: JSONValue?, providerID: String, namespace: String? = nil) -> [String: JSONValue] {
     var metadata: [String: JSONValue] = [:]
-    if let logprobs = choice?["logprobs"] {
+    if let logprobs = choice?["logprobs"], logprobs != .null {
         metadata["logprobs"] = logprobs
     }
     return openAICompatibleNamespacedProviderMetadata(metadata, providerID: providerID, namespace: namespace)

@@ -17,9 +17,9 @@ factory requires a configuration argument; `ReplicateProviderSettings()` reads
 ## Model IDs and predictions
 
 Use `owner/model` to run the latest version through `/models/owner/model/predictions`,
-or `owner/model:version` to pin a version through `/predictions`. Requests send
+or `owner/model:version` to pin a version through `/predictions`. Image requests send
 `prefer: wait`; set `providerOptions["replicate"]["maxWaitTimeInSeconds"]` to send
-`prefer: wait=N`.
+`prefer: wait=N`. Video predictions, like upstream, send no `prefer` header.
 
 ## Images
 
@@ -67,7 +67,9 @@ supply `image`, `imageUrl`, `resolution`, `fps` or `seed` under
 prediction finishes; `pollIntervalMs` (default 2000) and `pollTimeoutMs` (default
 300000) control polling. Results contain the video `urls` with media type
 `video/mp4`; `providerMetadata["replicate"]` holds `predictionId`, `metrics` and the
-video URL. Failed or canceled predictions throw.
+video URL. Failed or canceled predictions throw. The video model also implements the
+asynchronous start/status operations, so the facade's `poll` and `webhook` options work;
+a webhook is registered with `webhook_events_filter: ["completed"]`.
 
 ## Rotating credentials
 

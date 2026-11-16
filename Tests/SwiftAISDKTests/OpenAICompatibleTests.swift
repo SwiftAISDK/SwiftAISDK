@@ -57,7 +57,7 @@ import Testing
     #expect(requests.count == 4)
     #expect(requests.allSatisfy { $0.headers["authorization"] == "Bearer test-key" })
     #expect(requests.allSatisfy { $0.headers["x-client"] == "swift" })
-    #expect(requests.allSatisfy { $0.headers["user-agent"] == "CustomApp/1.0 ai-sdk-openai-compatible/3.0.82" })
+    #expect(requests.allSatisfy { $0.headers["user-agent"] == "CustomApp/1.0 ai-sdk-openai-compatible/3.0.92" })
 }
 
 @Test func openAICompatibleClampsOutputTextTokensWhenReasoningExceedsCompletionLikeUpstream() async throws {
@@ -184,7 +184,8 @@ import Testing
 
     #expect(completionDeltas == ["hel", "lo"])
     #expect(completionLegacyDeltas.isEmpty)
-    #expect(completionLifecycle == ["start:txt-0", "delta:txt-0:hel", "delta:txt-0:lo", "end:txt-0"])
+    // Upstream openai-compatible-completion-language-model.ts uses text part id "0".
+    #expect(completionLifecycle == ["start:0", "delta:0:hel", "delta:0:lo", "end:0"])
     #expect(completionUsage?.totalTokens == 4)
     let completionBody = try decodeJSONBody(try #require((await completionTransport.requests()).first?.body))
     #expect(completionBody["stream"] == true)

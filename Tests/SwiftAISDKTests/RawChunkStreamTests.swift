@@ -117,7 +117,8 @@ import Testing
     let rawProvider = try AIProviders.gateway(settings: ProviderSettings(apiKey: "gateway-key", transport: RecordingTransport(response: response)))
     let rawModel = try rawProvider.languageModel("openai/gpt-4.1-mini")
     let rawParts = try await collectStreamParts(rawModel.stream(LanguageModelRequest(messages: [.user("Hi")], includeRawChunks: true)))
-    #expect(rawParts.rawValues.count == 4)
+    // Upstream gateway-language-model.ts forwards only the nested `raw` parts, not every SSE event.
+    #expect(rawParts.rawValues == [["provider": "chunk"]])
     #expect(rawParts.textDeltas == ["gate"])
 }
 

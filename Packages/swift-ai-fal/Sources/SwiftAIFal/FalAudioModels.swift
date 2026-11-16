@@ -26,7 +26,19 @@ public final class FalSpeechModel: SpeechModel, @unchecked Sendable {
         if let speed = request.speed { body["speed"] = .number(speed) }
         body.merge(options) { _, new in new }
 
-        let submit = try await config.sendJSONResponse(path: "/\(modelID)", modelID: modelID, body: .object(body), headers: request.headers, abortSignal: request.abortSignal)
+        // Upstream speech always posts to https://fal.run/<modelId>, independent of baseURL.
+        let speechRequest = AIHTTPRequest(
+            method: "POST",
+            url: try requireURL("https://fal.run/\(modelID)"),
+            headers: config.headers.mergingHeaders(request.headers).mergingHeaders(["content-type": "application/json"]),
+            body: try encodeJSONBody(.object(body)),
+            abortSignal: request.abortSignal
+        )
+        let speechResponse = try await config.transport.send(speechRequest)
+        guard (200..<300).contains(speechResponse.statusCode) else {
+            throw falAPICallError(provider: providerID, response: speechResponse, request: speechRequest)
+        }
+        let submit = (json: try speechResponse.jsonValue(), response: speechResponse)
         let raw = submit.json
         guard let audioURL = raw["audio"]?["url"]?.stringValue else {
             throw AIError.invalidResponse(provider: providerID, message: "Fal speech response did not contain audio.url.")
@@ -87,7 +99,7 @@ public final class FalTranscriptionModel: TranscriptionModel, @unchecked Sendabl
             abortSignal: request.abortSignal
         ))
         guard (200..<300).contains(queueResponse.statusCode) else {
-            throw apiCallError(provider: providerID, response: queueResponse)
+            throw falAPICallError(provider: providerID, response: queueResponse)
         }
         let queued = try queueResponse.jsonValue()
         guard let requestID = queued["request_id"]?.stringValue else {
@@ -100,8 +112,9 @@ public final class FalTranscriptionModel: TranscriptionModel, @unchecked Sendabl
             text: raw["text"]?.stringValue ?? "",
             rawValue: raw,
             segments: segments,
-            language: raw["inferred_languages"]?[0]?.stringValue ?? raw["language"]?.stringValue,
-            durationInSeconds: raw["duration"]?.doubleValue ?? transcriptionDuration(from: segments),
+            language: raw["inferred_languages"]?[0]?.stringValue,
+            // Upstream reports the end timestamp of the last chunk.
+            durationInSeconds: raw["chunks"]?.arrayValue?.last?["timestamp"]?[1]?.doubleValue,
             responseMetadata: aiResponseMetadata(from: raw, response: finalResponse.response, modelID: modelID)
         )
     }
@@ -119,10 +132,10 @@ public final class FalTranscriptionModel: TranscriptionModel, @unchecked Sendabl
                 return (try response.jsonValue(), response)
             }
             if !falIsTranscriptionInProgress(response) {
-                throw apiCallError(provider: providerID, response: response)
+                throw falAPICallError(provider: providerID, response: response)
             }
             if DispatchTime.now().uptimeNanoseconds - started > 60_000_000_000 {
-                throw AIError.invalidResponse(provider: providerID, message: "Fal transcription request timed out.")
+                throw AIError.invalidResponse(provider: providerID, message: "Transcription request timed out after 60 seconds")
             }
             try await sleepWithAbortSignal(nanoseconds: 1_000_000_000, abortSignal: abortSignal)
         }
@@ -360,10 +373,11 @@ private let falEmotions: Set<String> = [
 ]
 
 private func falTranscriptionSegments(from raw: JSONValue) -> [TranscriptionSegment] {
+    // Upstream keeps every chunk (including empty text) and defaults missing timestamps to 0.
     raw["chunks"]?.arrayValue?.compactMap { chunk in
-        guard let text = chunk["text"]?.stringValue, !text.isEmpty else { return nil }
+        guard let text = chunk["text"]?.stringValue else { return nil }
         let start = chunk["timestamp"]?[0]?.doubleValue ?? 0
-        let end = chunk["timestamp"]?[1]?.doubleValue ?? start
+        let end = chunk["timestamp"]?[1]?.doubleValue ?? 0
         return TranscriptionSegment(text: text, startSecond: start, endSecond: end)
     } ?? []
 }

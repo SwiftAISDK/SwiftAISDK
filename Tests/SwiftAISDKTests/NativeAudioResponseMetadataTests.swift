@@ -146,7 +146,8 @@ import Testing
 
     let assembly = try await assemblyModel.transcribe(AudioTranscriptionRequest(audio: Data("wav".utf8), mimeType: "audio/wav"))
 
-    #expect(assembly.responseMetadata.id == "assembly-job")
+    // Upstream assemblyai-transcription-model.ts response metadata has no id (timestamp/modelId/headers/body only).
+    #expect(assembly.responseMetadata.id == nil)
     #expect(assembly.responseMetadata.modelID == "best")
     #expect(assembly.responseMetadata.headers["assembly-header"] == "result")
     #expect(assembly.responseMetadata.body?["text"]?.stringValue == "assembly transcript")

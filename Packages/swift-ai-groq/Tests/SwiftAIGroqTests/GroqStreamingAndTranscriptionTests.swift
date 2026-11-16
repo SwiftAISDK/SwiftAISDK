@@ -85,8 +85,9 @@ import Testing
     ])
     let request = try #require(await transport.requests().first)
     let body = try decodeJSONBody(try #require(request.body))
-    #expect(body["tools"] == nil)
-    #expect(body["tool_choice"] == nil)
+    // Upstream prepareTools returns `tools: []` and keeps the tool choice.
+    #expect(body["tools"] == [])
+    #expect(body["tool_choice"] == "required")
 }
 @Test func groqTranscriptionMapsProviderOptionsToMultipartFields() async throws {
     let transport = RecordingTransport(response: jsonResponse(#"{"text":"groq transcript","x_groq":{"id":"req-1"},"language":"en","duration":1.2}"#))

@@ -16,20 +16,17 @@ func cerebrasTools(from tools: [String: JSONValue]) -> CerebrasPreparedTools {
             ))
             return nil
         }
-        var parameters = schema
+        // Upstream (openai-compatible `prepareTools`) sends `tool.inputSchema`
+        // as `parameters`; description and strict stay at the function level.
         var function: [String: JSONValue] = [
             "name": .string(name),
-            "parameters": parameters
+            "parameters": aiFunctionToolInputSchema(schema)
         ]
-        if var parameterObject = parameters.objectValue {
-            if let description = parameterObject["description"]?.stringValue {
-                function["description"] = .string(description)
-            }
-            if let strict = parameterObject.removeValue(forKey: "strict") {
-                function["strict"] = strict
-                parameters = .object(parameterObject)
-                function["parameters"] = parameters
-            }
+        if let description = aiFunctionToolDescription(schema) {
+            function["description"] = .string(description)
+        }
+        if let strict = object?["strict"], strict != .null {
+            function["strict"] = strict
         }
         return .object([
             "type": .string("function"),

@@ -100,7 +100,13 @@ public struct OpenAIModelConfiguration: Sendable {
         if let root = openAIBackedProviderRoot { result.wireProfile = .openAI(namespace: root) }
         result.usesGenericOpenAICompatibleProviderOptions = false
         result.allowsEmptyTextResponse = false
-        result.supportsStructuredOutputs = supportsStructuredOutputs
+        // Upstream OpenAI/Azure chat always sends `json_schema` when a schema is present.
+        result.supportsStructuredOutputs = supportsStructuredOutputs || openAIBackedProviderRoot != nil
+        if openAIBackedProviderRoot != nil {
+            result.prepareBody = { body, request, modelID, warnings in
+                openAIChatApplyModelRestrictions(body, request: request, modelID: modelID, warnings: &warnings)
+            }
+        }
         result.transformRequestBody = transformRequestBody
         result.errorHandler = { self.httpStatusError($0) }
         result.streamErrorParser = openAIProviderStreamError
@@ -138,3 +144,56 @@ public func openAIBackedProviderRoot(_ providerID: String, config: OpenAIModelCo
 
 func isOpenAIBackedProvider(_ providerID: String) -> Bool { SwiftAIOpenAICompatible.isOpenAIBackedProvider(providerID) }
 func openAIBackedProviderRoot(_ providerID: String) -> String? { SwiftAIOpenAICompatible.openAIBackedProviderRoot(providerID) }
+
+/// Chat Completions restrictions from upstream `OpenAIChatLanguageModel.getArgs` that the
+/// shared OpenAI-compatible chat adapter does not apply: search preview models reject
+/// `temperature`, and unsupported service tiers are removed with a warning.
+func openAIChatApplyModelRestrictions(
+    _ body: [String: JSONValue],
+    request: LanguageModelRequest,
+    modelID: String,
+    warnings: inout [AIWarning]
+) -> [String: JSONValue] {
+    var body = body
+    let capabilities = openAILanguageModelCapabilities(modelID)
+    // `reasoningSummary` is a Responses-only option that the Chat options schema strips.
+    // The shared adapter warns for the `openai` key only; upstream checks `openai` and `azure`.
+    body.removeValue(forKey: "reasoningSummary")
+    let warnedReasoningSummary = request.providerOptions["openai"]?["reasoningSummary"].map { $0 != .null } ?? false
+    if !warnedReasoningSummary,
+       let azureSummary = request.providerOptions["azure"]?["reasoningSummary"], azureSummary != .null {
+        warnings.append(AIWarning(
+            type: "unsupported",
+            feature: "reasoningSummary",
+            message: "reasoningSummary is only supported by the Responses API, not the Chat Completions API"
+        ))
+    }
+    let forceReasoning = ["openai", "azure"].compactMap { request.providerOptions[$0]?["forceReasoning"]?.boolValue }.last
+        ?? request.extraBody["forceReasoning"]?.boolValue
+    let isReasoningModel = forceReasoning ?? capabilities.isReasoningModel
+    if !isReasoningModel, !capabilities.supportsChatTemperatureWithoutReasoning,
+       body.removeValue(forKey: "temperature") != nil {
+        warnings.append(AIWarning(
+            type: "unsupported",
+            feature: "temperature",
+            message: "temperature is not supported for the search preview models and has been removed."
+        ))
+    }
+    // Upstream sends the normalized response schema unchanged; the shared adapter's strict
+    // mode would otherwise add `additionalProperties: false` to every object schema.
+    if request.extraBody["responseFormat"] == nil,
+       case let .json(schema?, _, _) = request.responseFormat,
+       var responseFormat = body["response_format"]?.objectValue,
+       responseFormat["type"]?.stringValue == "json_schema",
+       var jsonSchema = responseFormat["json_schema"]?.objectValue,
+       let normalized = try? normalizeOpenAIJSONSchema(schema) {
+        jsonSchema["schema"] = normalized.schema
+        responseFormat["json_schema"] = .object(jsonSchema)
+        body["response_format"] = .object(responseFormat)
+    }
+    if let warning = openAIServiceTierUnsupportedWarning(serviceTier: body["service_tier"], modelID: modelID) {
+        warnings.append(warning)
+        body.removeValue(forKey: "service_tier")
+    }
+    return body
+}

@@ -77,6 +77,11 @@ are passed through unchanged, so new GMI Cloud models work without an SDK update
   are kept in the raw usage value.
 - JSON Schema output is sent natively only when you set
   `supportsStructuredOutputs: true` in the settings.
+- Options under `providerOptions["openaiCompatible"]` or
+  `providerOptions["gmicloud"]` (`user`, `reasoningEffort`, `textVerbosity`,
+  `strictJsonSchema`) map like the generic OpenAI-compatible provider; other
+  `gmicloud` keys are sent in the request body. The top-level `reasoning` option is
+  sent as `reasoning_effort`.
 - `transformRequestBody` lets you edit the request body before it is sent.
 - Embedding and image models are not available and throw an unsupported-model
   error.

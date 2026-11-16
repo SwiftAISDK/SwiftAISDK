@@ -21,6 +21,7 @@
     "sources": [
       "Packages/swift-ai-cartesia/Sources/SwiftAICartesia/CartesiaHTTPConfiguration.swift",
       "Packages/swift-ai-cartesia/Sources/SwiftAICartesia/CartesiaProvider.swift",
+      "Packages/swift-ai-cartesia/Sources/SwiftAICartesia/CartesiaRealtimeModel.swift",
       "Packages/swift-ai-cartesia/Sources/SwiftAICartesia/CartesiaSpeechModel.swift",
       "Packages/swift-ai-cartesia/Sources/SwiftAICartesia/CartesiaStreamingTranscriptionModel.swift",
       "Packages/swift-ai-cartesia/Sources/SwiftAICartesia/CartesiaTranscriptionModel.swift"
@@ -30,6 +31,7 @@
       "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/CartesiaSpeechModelTests.swift",
       "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/CartesiaStreamingTranscriptionModelTests.swift",
       "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/CartesiaTranscriptionModelTests.swift",
+      "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/CartesiaUpstreamParityTests.swift",
       "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/TestSupport.swift",
       "Packages/swift-ai-cartesia/Tests/SwiftAICartesiaTests/Weekly20261101CredentialsTests.swift",

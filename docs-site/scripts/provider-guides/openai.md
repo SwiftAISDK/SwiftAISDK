@@ -53,7 +53,12 @@ Common Responses keys: `store`, `parallelToolCalls`, `reasoningEffort`,
 `reasoningSummary`, `previousResponseId`, `conversation`, `serviceTier`,
 `textVerbosity`, `include`, `maxToolCalls`, `promptCacheKey`,
 `promptCacheOptions`, `safetyIdentifier`, `user`, `allowedTools` and
-`strictJsonSchema`.
+`strictJsonSchema`. `systemMessageMode` (`system`, `developer` or `remove`),
+`passThroughUnsupportedFiles` and `includeWebSearchSources` control request
+conversion and are not sent. Inline user files must be images or PDFs unless
+`passThroughUnsupportedFiles` is `true`; `imageDetail` on a file part sets the
+image `detail`. A `serviceTier` the model does not support (`flex`, or
+`priority`/`fast`) is removed with a warning in both Responses and Chat.
 
 ### Reasoning
 
@@ -65,16 +70,18 @@ support it.
 
 ### Structured output
 
-JSON schemas are normalized for OpenAI's strict mode. Function tools default to
-`strict: false`. For JSON responses, the last `final_answer` message becomes
+JSON schemas are normalized for OpenAI's strict mode. Chat and Responses send a
+schema as `json_schema` (strict by default) and a schemaless JSON format as
+`json_object`. Function tools default to `strict: false`. For JSON responses, the last `final_answer` message becomes
 `structuredOutputText`, while `text` keeps every message, drafts included.
 
 ### Prompt caching
 
 `promptCacheOptions` accepts `mode` (`implicit` or `explicit`), `ttl` (`30m` or
 `12h`) and `prewarm: true`. A prewarm call can return no text and zero output
-tokens. Cache-write totals are reported in `TokenUsage`. A user text part can
-set a breakpoint through `providerMetadata["openai"]["promptCacheBreakpoint"]`.
+tokens. Cache-write totals are reported in `TokenUsage`. A system message or a
+user text, image or file part can set a breakpoint through
+`providerMetadata["openai"]["promptCacheBreakpoint"]`.
 
 ### Interrupted streams
 

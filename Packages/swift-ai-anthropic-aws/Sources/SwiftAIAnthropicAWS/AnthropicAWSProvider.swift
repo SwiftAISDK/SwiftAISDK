@@ -99,7 +99,10 @@ public final class AnthropicAWSProvider: AIProvider, @unchecked Sendable {
             }
         }
         let transport: any AITransport
-        if let apiKey = credentialResolver?.placeholder ?? settings.apiKey ?? environmentValue(["ANTHROPIC_AWS_API_KEY"]) {
+        // Upstream selects the API-key path only for a truthy key: an empty
+        // `apiKey` or `ANTHROPIC_AWS_API_KEY` falls back to SigV4.
+        let staticAPIKey = (settings.apiKey ?? environmentValue(["ANTHROPIC_AWS_API_KEY"])).flatMap { $0.isEmpty ? nil : $0 }
+        if let apiKey = credentialResolver?.placeholder ?? staticAPIKey {
             headers["x-api-key"] = apiKey
             transport = settings.transport
         } else {
@@ -109,7 +112,15 @@ public final class AnthropicAWSProvider: AIProvider, @unchecked Sendable {
             let credentialsProvider: @Sendable () async throws -> AWSSigningCredentials
             if let credentialProvider = settings.credentialProvider {
                 credentialsProvider = {
-                    let credentials = try await credentialProvider()
+                    let credentials: AnthropicAWSCredentials
+                    do {
+                        credentials = try await credentialProvider()
+                    } catch {
+                        throw AIError.invalidArgument(
+                            argument: "credentialProvider",
+                            message: "AWS credential provider failed: \(error). Please ensure your credential provider returns valid AWS credentials with accessKeyId and secretAccessKey properties."
+                        )
+                    }
                     return AWSSigningCredentials(
                         accessKeyID: credentials.accessKeyID,
                         secretAccessKey: credentials.secretAccessKey,

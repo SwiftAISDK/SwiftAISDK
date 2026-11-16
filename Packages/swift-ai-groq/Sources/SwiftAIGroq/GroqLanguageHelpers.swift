@@ -73,10 +73,14 @@ func groqPreparedCall(for request: LanguageModelRequest, modelID: String, stream
         preparedTools.tools = preparedTools.tools.map { tool in
             guard tool["function"]?["name"] == .string(name), var function = tool["function"]?.objectValue else { return tool }
             function["description"] = responseFormat?["description"] ?? "Respond with a JSON object."
+            // Upstream `jsonResponseTool.inputSchema` is the response schema as-is.
+            if let schema = responseFormat?["schema"] { function["parameters"] = schema }
             return .object(["type": "function", "function": .object(function)])
         }
     }
-    if !preparedTools.tools.isEmpty {
+    // Upstream sends the tools array (possibly empty after dropping unsupported provider tools)
+    // whenever tools were provided.
+    if !tools.isEmpty {
         body["tools"] = .array(preparedTools.tools)
         var choice = request.toolChoice ?? options["toolChoice"]
         if let name = jsonResponseToolName, choice?["type"] != "tool" {
@@ -196,7 +200,12 @@ func groqMessageJSON(_ message: AIMessage) throws -> [JSONValue] {
             "role": .string("assistant"),
             "content": .string(groqText(from: message))
         ]
-        if let reasoning = message.reasoning, !reasoning.isEmpty {
+        // Upstream concatenates the assistant reasoning parts; fall back to the message-level field.
+        let reasoningParts = message.content.compactMap { part -> String? in
+            if case let .reasoning(text, _) = part { text } else { nil }
+        }
+        let reasoning = reasoningParts.isEmpty ? (message.reasoning ?? "") : reasoningParts.joined()
+        if !reasoning.isEmpty {
             object["reasoning"] = .string(reasoning)
         }
         let toolCalls = message.content.compactMap { part -> AIToolCall? in
@@ -218,11 +227,10 @@ func groqMessageJSON(_ message: AIMessage) throws -> [JSONValue] {
     case .tool:
         return message.content.compactMap { part in
             guard case let .toolResult(result) = part else { return nil }
-            let value = result.modelOutput ?? result.result
             return .object([
                 "role": .string("tool"),
                 "tool_call_id": .string(result.toolCallID),
-                "content": .string(groqJSONString(value) ?? value.stringValue ?? "")
+                "content": .string(groqToolResultContent(result))
             ])
         }
     }
@@ -237,10 +245,12 @@ func groqUserContentPart(_ part: AIContentPart) throws -> JSONValue {
     case let .imageURL(url, _):
         return .object(["type": .string("image_url"), "image_url": .object(["url": .string(url)])])
     case let .data(mimeType, data, _), let .file(mimeType, data, _, _):
-        guard mimeType.hasPrefix("image/") else {
+        guard topLevelMediaType(mimeType) == "image" else {
             throw AIError.invalidArgument(argument: "files", message: "Groq chat API only supports image file parts; got \(mimeType).")
         }
-        let mediaType = mimeType == "image/*" ? "image/jpeg" : mimeType
+        // Upstream resolves partial image media types (`image`, `image/*`) from the bytes and
+        // rejects data whose subtype cannot be detected.
+        let mediaType = try resolveFullMediaType(mediaType: mimeType, data: data)
         return .object([
             "type": .string("image_url"),
             "image_url": .object(["url": .string("data:\(mediaType);base64,\(data.base64EncodedString())")])
@@ -252,13 +262,35 @@ func groqUserContentPart(_ part: AIContentPart) throws -> JSONValue {
     }
 }
 
+/// Mirrors upstream tool output mapping: text/error-text values verbatim, execution-denied reason
+/// (or the default text), and JSON stringification for json/error-json/content values.
+func groqToolResultContent(_ result: AIToolResult) -> String {
+    let output = result.modelOutput ?? result.result
+    if let text = output.stringValue {
+        return text
+    }
+    guard let object = output.objectValue, let type = object["type"]?.stringValue else {
+        return groqJSONString(output) ?? ""
+    }
+    switch type {
+    case "text", "error-text":
+        return object["value"]?.stringValue ?? ""
+    case "execution-denied":
+        return object["reason"]?.stringValue ?? "Tool call execution denied."
+    case "json", "error-json", "content":
+        return groqJSONString(object["value"] ?? .null) ?? ""
+    default:
+        return groqJSONString(output) ?? ""
+    }
+}
+
 func groqText(from message: AIMessage) -> String {
     message.content.compactMap(\.text).joined()
 }
 
 func groqJSONString(_ value: JSONValue) -> String? {
-    guard let data = try? encodeJSONBody(value) else { return nil }
-    return String(data: data, encoding: .utf8)
+    // JSON.stringify does not escape forward slashes.
+    try? decisionJSONText(value)
 }
 
 func groqTools(from tools: [String: JSONValue], modelID: String) -> GroqPreparedTools {
@@ -280,20 +312,17 @@ func groqTools(from tools: [String: JSONValue], modelID: String) -> GroqPrepared
             return .object(["type": .string("browser_search")])
         }
 
-        var parameters = schema
+        // Upstream `groq-prepare-tools` sends `tool.inputSchema` as `parameters`;
+        // description and strict stay at the function level.
         var function: [String: JSONValue] = [
             "name": .string(name),
-            "parameters": parameters
+            "parameters": aiFunctionToolInputSchema(schema)
         ]
-        if var parameterObject = parameters.objectValue {
-            if let description = parameterObject["description"]?.stringValue {
-                function["description"] = .string(description)
-            }
-            if let strict = parameterObject.removeValue(forKey: "strict") {
-                function["strict"] = strict
-                parameters = .object(parameterObject)
-                function["parameters"] = parameters
-            }
+        if let description = aiFunctionToolDescription(schema) {
+            function["description"] = .string(description)
+        }
+        if let strict = object?["strict"], strict != .null {
+            function["strict"] = strict
         }
         return .object([
             "type": .string("function"),

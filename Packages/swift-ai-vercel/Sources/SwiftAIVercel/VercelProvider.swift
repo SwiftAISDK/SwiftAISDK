@@ -19,8 +19,8 @@ public final class VercelProvider: AIProvider, @unchecked Sendable {
         configured.includeUsage = settings.includeUsage
         configured.supportsStructuredOutputs = settings.supportsStructuredOutputs
         configured.transformRequestBody = settings.transformRequestBody
-        configured.usesGenericOpenAICompatibleProviderOptions = false
-        configured.allowsEmptyTextResponse = false
+        // Upstream composes the generic OpenAICompatibleChatLanguageModel unchanged: it reads
+        // `openaiCompatible` and provider-named providerOptions and accepts empty assistant content.
 
         config = configured
     }

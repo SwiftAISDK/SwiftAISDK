@@ -26,7 +26,9 @@
     ],
     "tests": [
       "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests/MiniMaxImageUpstreamParityTests.swift",
       "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests/MiniMaxProviderTests.swift",
+      "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests/MiniMaxVideoWarningParityTests.swift",
       "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests/TestSupport.swift",
       "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests/Weekly20261101MiniMaxTests.swift",
       "Packages/swift-ai-minimax/Tests/SwiftAIMiniMaxTests/Weekly20261108ProviderSelectorCompatibilityTests.swift",

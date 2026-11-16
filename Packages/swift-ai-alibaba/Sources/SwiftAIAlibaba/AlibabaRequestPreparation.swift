@@ -4,8 +4,6 @@ import SwiftAITransport
 import SwiftAIProviderUtilities
 
 
-typealias AlibabaStreamingToolCalls = OpenAIStyleStreamingToolCalls
-
 struct AlibabaPreparedCall {
     var body: [String: JSONValue]
     var warnings: [AIWarning]
@@ -25,8 +23,11 @@ func alibabaPreparedCall(
     for request: LanguageModelRequest,
     modelID: String,
     stream: Bool,
+    includeUsage: Bool = true,
     transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])?
 ) throws -> AlibabaPreparedCall {
+    // Warning order mirrors upstream getArgs: frequencyPenalty, response format,
+    // reasoning, cache breakpoints (and Swift-only prompt part warnings), tools.
     var warnings = alibabaWarnings(for: request)
     var options = try alibabaOptions(from: request)
     let resolvedResponseFormat = alibabaResolvedResponseFormat(
@@ -34,6 +35,9 @@ func alibabaPreparedCall(
         modelID: modelID,
         options: &options
     )
+    if let warning = resolvedResponseFormat.warning {
+        warnings.append(warning)
+    }
     let toolChoiceInput = request.toolChoice ?? options.removeValue(forKey: "toolChoice")
     let explicitPreserveThinking = options.removeValue(forKey: "preserve_thinking")?.boolValue
     let preserveThinking = explicitPreserveThinking ?? alibabaSupportsPreservedThinking(modelID)
@@ -44,15 +48,9 @@ func alibabaPreparedCall(
             instruction: AIJSONInstruction()
         )
         : request.messages
-    let preparedMessages = alibabaMessages(messages, preserveThinking: preserveThinking)
     var body: [String: JSONValue] = [
-        "model": .string(modelID),
-        "messages": .array(preparedMessages.messages)
+        "model": .string(modelID)
     ]
-    if explicitPreserveThinking != nil || alibabaSupportsPreservedThinking(modelID) {
-        body["preserve_thinking"] = .bool(preserveThinking)
-    }
-    warnings += preparedMessages.warnings
     if let temperature = request.temperature { body["temperature"] = .number(temperature) }
     if let topP = request.topP { body["top_p"] = .number(topP) }
     if let topK = request.topK { body["top_k"] = .number(Double(topK)) }
@@ -60,11 +58,20 @@ func alibabaPreparedCall(
     if let seed = request.seed { body["seed"] = .number(Double(seed)) }
     if let maxOutputTokens = request.maxOutputTokens { body["max_tokens"] = .number(Double(maxOutputTokens)) }
     if !request.stopSequences.isEmpty { body["stop"] = .array(request.stopSequences) }
+    if let responseFormat = resolvedResponseFormat.value {
+        body["response_format"] = responseFormat
+    }
+    alibabaApplyThinking(request: request, options: &options, body: &body, warnings: &warnings)
+    if explicitPreserveThinking != nil || alibabaSupportsPreservedThinking(modelID) {
+        body["preserve_thinking"] = .bool(preserveThinking)
+    }
+    let preparedMessages = try alibabaMessages(messages, preserveThinking: preserveThinking)
+    body["messages"] = .array(preparedMessages.messages)
     let preparedTools = alibabaTools(from: request.tools)
-    warnings += preparedTools.warnings
-    if !preparedTools.tools.isEmpty {
+    // Upstream keeps `tools: []` (plus tool choice) when every tool is provider-defined.
+    if !request.tools.isEmpty {
         body["tools"] = .array(preparedTools.tools)
-        if let toolChoice = alibabaToolChoice(from: toolChoiceInput) {
+        if let toolChoice = try alibabaToolChoice(from: toolChoiceInput) {
             body["tool_choice"] = toolChoice
         }
         if let parallelToolCalls = options.removeValue(forKey: "parallel_tool_calls") {
@@ -73,39 +80,57 @@ func alibabaPreparedCall(
     } else {
         options.removeValue(forKey: "parallel_tool_calls")
     }
-    if !request.tools.isEmpty {
-        warnings += alibabaToolChoiceWarnings(from: toolChoiceInput)
-    }
-    if let responseFormat = resolvedResponseFormat.value {
-        body["response_format"] = responseFormat
-    }
-    if let warning = resolvedResponseFormat.warning {
-        warnings.append(warning)
-    }
-    alibabaApplyThinking(request: request, options: &options, body: &body, warnings: &warnings)
+    warnings += preparedMessages.warnings
+    warnings += preparedTools.warnings
     body.merge(options) { _, new in new }
     if stream {
         body["stream"] = true
-        if body["stream_options"] == nil {
+        if body["stream_options"] == nil, includeUsage {
             body["stream_options"] = .object(["include_usage": true])
         }
     }
     return AlibabaPreparedCall(body: transformRequestBody?(body) ?? body, warnings: warnings)
 }
 
-func alibabaMessages(_ messages: [AIMessage], preserveThinking: Bool = false) -> AlibabaPreparedMessages {
+/// Mirrors upstream `CacheControlValidator`: reads `cacheControl` (or
+/// `cache_control`) from Alibaba provider options and warns once per marker
+/// beyond Alibaba's four-breakpoint limit.
+struct AlibabaCacheControlValidator {
+    static let maxCacheBreakpoints = 4
+    private var breakpointCount = 0
+    private(set) var warnings: [AIWarning] = []
+
+    mutating func cacheControl(from providerMetadata: [String: JSONValue]) -> JSONValue? {
+        let alibaba = providerMetadata["alibaba"]
+        guard let value = alibaba?["cacheControl"] ?? alibaba?["cache_control"], value != .null else {
+            return nil
+        }
+        breakpointCount += 1
+        if breakpointCount > Self.maxCacheBreakpoints {
+            warnings.append(AIWarning(
+                type: "other",
+                message: "Max breakpoint limit exceeded. Only the last \(Self.maxCacheBreakpoints) cache markers will take effect."
+            ))
+        }
+        return value
+    }
+}
+
+func alibabaMessages(_ messages: [AIMessage], preserveThinking: Bool = false) throws -> AlibabaPreparedMessages {
+    var validator = AlibabaCacheControlValidator()
     var output: [JSONValue] = []
     var warnings: [AIWarning] = []
     let lastUserMessageIndex = messages.lastIndex { $0.role == .user } ?? -1
     for (index, message) in messages.enumerated() {
-        let prepared = alibabaMessageJSONs(
+        let prepared = try alibabaMessageJSONs(
             message,
-            includeReasoning: preserveThinking || index > lastUserMessageIndex
+            includeReasoning: preserveThinking || index > lastUserMessageIndex,
+            cacheControlValidator: &validator
         )
         output += prepared.messages
         warnings += prepared.warnings
     }
-    return AlibabaPreparedMessages(messages: output, warnings: warnings)
+    return AlibabaPreparedMessages(messages: output, warnings: validator.warnings + warnings)
 }
 
 private func alibabaSupportsPreservedThinking(_ modelID: String) -> Bool {
@@ -135,24 +160,50 @@ struct AlibabaPreparedMessageParts {
     var warnings: [AIWarning]
 }
 
-func alibabaMessageJSONs(_ message: AIMessage, includeReasoning: Bool = false) -> AlibabaPreparedMessages {
+func alibabaUnsupportedFunctionality(_ functionality: String) -> AIError {
+    AIError.invalidArgument(argument: "messages", message: "'\(functionality)' functionality not supported.")
+}
+
+private func alibabaTextBlock(_ text: String, cacheControl: JSONValue) -> JSONValue {
+    .object(["type": .string("text"), "text": .string(text), "cache_control": cacheControl])
+}
+
+func alibabaMessageJSONs(
+    _ message: AIMessage,
+    includeReasoning: Bool = false,
+    cacheControlValidator: inout AlibabaCacheControlValidator
+) throws -> AlibabaPreparedMessages {
+    let messageCacheControl = cacheControlValidator.cacheControl(from: message.providerMetadata)
     switch message.role {
     case .system:
+        let text = message.combinedText
+        if let messageCacheControl {
+            return AlibabaPreparedMessages(messages: [.object([
+                "role": .string("system"),
+                "content": .array([alibabaTextBlock(text, cacheControl: messageCacheControl)])
+            ])], warnings: [])
+        }
         return AlibabaPreparedMessages(messages: [.object([
             "role": .string("system"),
-            "content": .string(message.combinedText)
+            "content": .string(text)
         ])], warnings: [])
     case .user:
-        let content = alibabaUserContentParts(message.content)
+        let content = try alibabaUserContentParts(
+            message.content,
+            messageCacheControl: messageCacheControl,
+            cacheControlValidator: &cacheControlValidator
+        )
         return AlibabaPreparedMessages(messages: [.object([
             "role": .string("user"),
             "content": .array(content.parts)
         ])], warnings: content.warnings)
     case .assistant:
         let toolCalls = message.content.compactMap(alibabaAssistantToolCallJSON)
-        let text = message.combinedText
+        let text = message.content.compactMap(\.text).joined()
+        // `AIMessage.reasoning` is the Swift-native carrier for reasoning text; it
+        // precedes reasoning content parts.
         let reasoning = includeReasoning
-            ? message.content.compactMap { part -> String? in
+            ? (message.reasoning ?? "") + message.content.compactMap { part -> String? in
                 if case let .reasoning(value, _) = part { return value }
                 return nil
             }.joined()
@@ -160,50 +211,84 @@ func alibabaMessageJSONs(_ message: AIMessage, includeReasoning: Bool = false) -
         guard !text.isEmpty || !toolCalls.isEmpty || !reasoning.isEmpty else {
             return AlibabaPreparedMessages(messages: [], warnings: [])
         }
+        let content: JSONValue
+        if text.isEmpty, toolCalls.isEmpty {
+            content = .null
+        } else if let messageCacheControl {
+            content = .array([alibabaTextBlock(text, cacheControl: messageCacheControl)])
+        } else {
+            content = text.isEmpty ? .null : .string(text)
+        }
         var output: [String: JSONValue] = [
             "role": .string("assistant"),
-            "content": text.isEmpty ? .null : .string(text)
+            "content": content
         ]
-        if !toolCalls.isEmpty {
-            output["tool_calls"] = .array(toolCalls)
-        }
         if !reasoning.isEmpty {
             output["reasoning_content"] = .string(reasoning)
         }
+        if !toolCalls.isEmpty {
+            output["tool_calls"] = .array(toolCalls)
+        }
         return AlibabaPreparedMessages(messages: [.object(output)], warnings: [])
     case .tool:
-        let results = message.content.compactMap(alibabaToolMessageJSON)
-        if !results.isEmpty {
-            return AlibabaPreparedMessages(messages: results, warnings: [])
+        let results = message.content.compactMap { part -> AIToolResult? in
+            if case let .toolResult(result) = part { return result }
+            return nil
         }
-        return AlibabaPreparedMessages(messages: [.object([
-            "role": .string("tool"),
-            "content": .string(message.combinedText)
-        ])], warnings: [])
+        var output: [JSONValue] = []
+        for (index, result) in results.enumerated() {
+            let isLastPart = index == results.count - 1
+            let partCacheControl = cacheControlValidator.cacheControl(from: result.providerMetadata)
+                ?? (isLastPart ? messageCacheControl : nil)
+            let contentValue = alibabaToolResultContent(result)
+            output.append(.object([
+                "role": .string("tool"),
+                "tool_call_id": .string(result.toolCallID),
+                "content": partCacheControl.map { .array([alibabaTextBlock(contentValue, cacheControl: $0)]) }
+                    ?? .string(contentValue)
+            ]))
+        }
+        return AlibabaPreparedMessages(messages: output, warnings: [])
     }
 }
 
-func alibabaUserContentParts(_ content: [AIContentPart]) -> AlibabaPreparedMessageParts {
+func alibabaUserContentParts(
+    _ content: [AIContentPart],
+    messageCacheControl: JSONValue? = nil,
+    cacheControlValidator: inout AlibabaCacheControlValidator
+) throws -> AlibabaPreparedMessageParts {
     var warnings: [AIWarning] = []
-    let parts = content.compactMap { part -> JSONValue? in
+    var parts: [JSONValue] = []
+    for (index, part) in content.enumerated() {
+        let isLastPart = index == content.count - 1
+        let partCacheControl = cacheControlValidator.cacheControl(from: part.providerMetadata)
+            ?? (isLastPart ? messageCacheControl : nil)
+        var object: [String: JSONValue]
         switch part {
         case let .text(text, _):
-            return .object(["type": .string("text"), "text": .string(text)])
+            object = ["type": .string("text"), "text": .string(text)]
         case let .imageURL(url, _):
-            return .object(["type": .string("image_url"), "image_url": .object(["url": .string(url)])])
+            object = ["type": .string("image_url"), "image_url": .object(["url": .string(url)])]
         case let .data(mimeType, data, _), let .file(mimeType, data, _, _):
-            guard mimeType.lowercased().hasPrefix("image/") else {
-                warnings.append(AIWarning(type: "unsupported", feature: "user message part type: file"))
-                return nil
+            guard topLevelMediaType(mimeType) == "image" else {
+                throw alibabaUnsupportedFunctionality("Only image file parts are supported")
             }
-            return .object([
+            let mediaType = try resolveFullMediaType(mediaType: mimeType, data: data)
+            object = [
                 "type": .string("image_url"),
-                "image_url": .object(["url": .string("data:\(mimeType);base64,\(data.base64EncodedString())")])
-            ])
-        case .reasoning, .reasoningFile, .custom, .providerReference, .toolCall, .toolResult, .toolApprovalRequest, .toolApprovalResponse:
+                "image_url": .object(["url": .string("data:\(mediaType);base64,\(data.base64EncodedString())")])
+            ]
+        case .providerReference:
+            throw alibabaUnsupportedFunctionality("file parts with provider references")
+        case .reasoning, .reasoningFile, .custom, .toolCall, .toolResult, .toolApprovalRequest, .toolApprovalResponse:
+            // Not representable in upstream user messages; Swift-only parts are skipped with a warning.
             warnings.append(AIWarning(type: "unsupported", feature: alibabaUserPartFeature(part)))
-            return nil
+            continue
         }
+        if let partCacheControl {
+            object["cache_control"] = partCacheControl
+        }
+        parts.append(.object(object))
     }
     return AlibabaPreparedMessageParts(parts: parts, warnings: warnings)
 }

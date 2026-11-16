@@ -20,6 +20,7 @@
       "Packages/swift-ai-anthropic-aws/Sources/SwiftAIAnthropicAWS/AnthropicAWSProvider.swift"
     ],
     "tests": [
+      "Packages/swift-ai-anthropic-aws/Tests/SwiftAIAnthropicAWSTests/AnthropicAWSParityAuditTests.swift",
       "Packages/swift-ai-anthropic-aws/Tests/SwiftAIAnthropicAWSTests/AnthropicAWSProviderTests.swift",
       "Packages/swift-ai-anthropic-aws/Tests/SwiftAIAnthropicAWSTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-anthropic-aws/Tests/SwiftAIAnthropicAWSTests/TestSupport.swift",

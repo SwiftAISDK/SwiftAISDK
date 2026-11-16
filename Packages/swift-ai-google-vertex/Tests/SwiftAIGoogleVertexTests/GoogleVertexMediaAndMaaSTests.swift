@@ -29,7 +29,8 @@ import Testing
     let body = try decodeJSONBody(try #require((await transport.requests()).first?.body))
     #expect(body["contents"]?[1]?["parts"]?[0]?["thoughtSignature"]?.stringValue == "skip_thought_signature_validator")
     #expect(result.warnings.contains { $0.type == "other" && ($0.message?.contains("skip_thought_signature_validator") ?? false) })
-    #expect(result.finishReason == "tool-calls")
+    // Provider-executed server tool calls do not select `tool-calls` (upstream mapGoogleFinishReason).
+    #expect(result.finishReason == "stop")
     #expect(result.toolCalls.first?.id == "rag-1")
     #expect(result.toolCalls.first?.name == "server:vertex_rag_store")
     #expect(result.toolCalls.first?.providerExecuted == true)
@@ -134,7 +135,7 @@ import Testing
 
     #expect(result.text == "tuned")
     let request = try #require(await transport.requests().first)
-    #expect(request.url.absoluteString == "https://us-central1-aiplatform.googleapis.com/v1beta1/projects/test-project/locations/us-central1/models/endpoints/1234567890:generateContent")
+    #expect(request.url.absoluteString == "https://us-central1-aiplatform.googleapis.com/v1beta1/projects/test-project/locations/us-central1/endpoints/1234567890:generateContent")
     #expect(request.headers["Authorization"] == "Bearer token")
 
     let expressProvider = try AIProviders.googleVertex(configuration: GoogleVertexProviderSettings(apiKey: "vertex-key", transport: RecordingTransport(response: jsonResponse("{}"))))

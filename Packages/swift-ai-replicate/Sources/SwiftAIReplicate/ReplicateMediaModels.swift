@@ -7,6 +7,10 @@ import SwiftAIProviderUtilities
 public final class ReplicateImageModel: ImageModel, @unchecked Sendable {
     public let providerID = "replicate"
     public let modelID: String
+    /// Upstream catalog: Flux-2 models accept up to 8 images per call, others 1.
+    public var maxImagesPerCall: Int {
+        modelID.range(of: #"^black-forest-labs/flux-2-"#, options: .regularExpression) != nil ? 8 : 1
+    }
     private let config: ReplicateModelConfiguration
 
     public init(modelID: String, config: ReplicateModelConfiguration) {
@@ -22,7 +26,8 @@ public final class ReplicateImageModel: ImageModel, @unchecked Sendable {
         if let size = request.size { input["size"] = .string(size) }
         if let aspectRatio = request.aspectRatio { input["aspect_ratio"] = .string(aspectRatio) }
         if let seed = request.seed { input["seed"] = .number(Double(seed)) }
-        if let count = request.count { input["num_outputs"] = .number(Double(count)) }
+        // Upstream core always passes n (default 1), so num_outputs is always sent.
+        input["num_outputs"] = .number(Double(request.count ?? 1))
         let preparedInputs = try replicateImageInputs(from: request.files, mask: request.mask, modelID: modelID)
         input.merge(preparedInputs.input) { _, new in new }
         input.merge(replicateImageOptions(from: options)) { _, new in new }
@@ -147,9 +152,12 @@ public final class ReplicateImageModel: ImageModel, @unchecked Sendable {
     }
 }
 
-public final class ReplicateVideoModel: VideoModel, @unchecked Sendable {
+public final class ReplicateVideoModel: AsyncVideoModel, @unchecked Sendable {
     public let providerID = "replicate.video"
     public let modelID: String
+    /// Replicate video models generate one video per prediction.
+    public let maxVideosPerCall = 1
+    public let supportsVideoGenerationWebhooks = true
     private let config: ReplicateModelConfiguration
 
     public init(modelID: String, config: ReplicateModelConfiguration) {
@@ -157,7 +165,15 @@ public final class ReplicateVideoModel: VideoModel, @unchecked Sendable {
         self.config = config
     }
 
-    public func generateVideo(_ request: VideoGenerationRequest) async throws -> VideoGenerationResult {
+    public func handleVideoGenerationWebhookOption(
+        _ factory: @escaping VideoGenerationWebhookFactory
+    ) async throws -> VideoGenerationWebhookRegistration {
+        try await factory()
+    }
+
+    private func prepareVideoRequest(
+        _ request: VideoGenerationRequest
+    ) throws -> (body: [String: JSONValue], path: String, options: [String: JSONValue]) {
         let (model, version) = splitVersionedModelID(modelID)
         let options = try replicateProviderOptions(from: request)
         var input: [String: JSONValue] = ["prompt": .string(request.prompt)]
@@ -186,11 +202,91 @@ public final class ReplicateVideoModel: VideoModel, @unchecked Sendable {
         var body: [String: JSONValue] = ["input": .object(input)]
         if let version { body["version"] = .string(version) }
         let path = version == nil ? "/models/\(model)/predictions" : "/predictions"
+        return (body, path, options)
+    }
+
+    /// Mirrors upstream `doStart`: no `prefer` header, and a webhook subscribes to `completed` events.
+    public func startVideoGeneration(
+        _ operationRequest: VideoGenerationOperationStartRequest
+    ) async throws -> VideoGenerationOperationStartResult {
+        let request = operationRequest.request
+        var prepared = try prepareVideoRequest(request)
+        if let webhookURL = operationRequest.webhookURL {
+            prepared.body["webhook"] = .string(webhookURL)
+            prepared.body["webhook_events_filter"] = .array([.string("completed")])
+        }
+        let response = try await config.transport.send(config.request(
+            path: prepared.path,
+            modelID: modelID,
+            body: .object(prepared.body),
+            headers: request.headers,
+            abortSignal: request.abortSignal
+        ))
+        guard (200..<300).contains(response.statusCode) else {
+            throw replicateHTTPStatusError(provider: providerID, response: response)
+        }
+        guard let getURL = try response.jsonValue()["urls"]?["get"]?.stringValue else {
+            throw AIError.invalidResponse(provider: providerID, message: "Replicate prediction response did not contain urls.get.")
+        }
+        return VideoGenerationOperationStartResult(
+            operation: ["getUrl": .string(getURL)],
+            responseMetadata: AIResponseMetadata(timestamp: Date(), modelID: modelID, headers: response.headers)
+        )
+    }
+
+    /// Mirrors upstream `doStatus`: failed and canceled predictions become error statuses.
+    public func videoGenerationStatus(
+        _ statusRequest: VideoGenerationOperationStatusRequest
+    ) async throws -> VideoGenerationOperationStatusResult {
+        guard let getURL = statusRequest.operation["getUrl"]?.stringValue else {
+            throw AIError.invalidArgument(argument: "operation", message: "Replicate video operation must contain getUrl.")
+        }
+        let response = try await downloadURL(
+            getURL,
+            transport: config.transport,
+            headers: config.headers.mergingHeaders(statusRequest.headers),
+            abortSignal: statusRequest.abortSignal,
+            trustedOrigin: config.baseURL,
+            credentialedOrigin: config.baseURL
+        )
+        guard (200..<300).contains(response.statusCode) else {
+            throw replicateHTTPStatusError(provider: providerID, response: response)
+        }
+        let raw = try response.jsonValue()
+        let responseMetadata = AIResponseMetadata(timestamp: Date(), modelID: modelID, headers: response.headers)
+        switch raw["status"]?.stringValue {
+        case "failed":
+            return .failed(message: "Video generation failed: \(raw["error"]?.stringValue ?? "Unknown error")",
+                           responseMetadata: responseMetadata)
+        case "canceled":
+            return .failed(message: "Video generation was canceled", responseMetadata: responseMetadata)
+        case "succeeded":
+            guard let output = raw["output"]?.stringValue, !output.isEmpty else {
+                throw AIError.invalidResponse(provider: providerID, message: "No video URL in response")
+            }
+            return .completed(VideoGenerationResult(
+                urls: [output],
+                operationID: raw["id"]?.stringValue,
+                mediaType: "video/mp4",
+                rawValue: raw,
+                providerMetadata: replicateVideoProviderMetadata(from: raw),
+                responseMetadata: responseMetadata
+            ))
+        default:
+            return .pending(responseMetadata: responseMetadata)
+        }
+    }
+
+    public func generateVideo(_ request: VideoGenerationRequest) async throws -> VideoGenerationResult {
+        let prepared = try prepareVideoRequest(request)
+        let body = prepared.body
+        let options = prepared.options
+        // Upstream video predictions never send the `prefer: wait` header.
         let createHTTPResponse = try await config.transport.send(config.request(
-            path: path,
+            path: prepared.path,
             modelID: modelID,
             body: .object(body),
-            headers: request.headers.mergingHeaders(replicatePreferHeaders(from: options)),
+            headers: request.headers,
             abortSignal: request.abortSignal
         ))
         guard (200..<300).contains(createHTTPResponse.statusCode) else {

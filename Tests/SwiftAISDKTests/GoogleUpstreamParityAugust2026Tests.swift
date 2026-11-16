@@ -314,7 +314,12 @@ import Testing
             "Locale": ["type": "string", "enum": ["de", "en"]]
         ]
     ]
-    let expectedJSONSchema = toolSchema
+    // Upstream google-language-model.test.ts ("should preserve local JSON Schema
+    // references in $name tool requests") passes "Format a date" as the tool
+    // description: it goes to the function declaration, not `parametersJsonSchema`.
+    var expectedObject = try #require(toolSchema.objectValue)
+    expectedObject.removeValue(forKey: "description")
+    let expectedJSONSchema = JSONValue.object(expectedObject)
 
     let googleTransport = RecordingTransport(response: response)
     let google = try AIProviders.google(settings: ProviderSettings(apiKey: "gemini-key", transport: googleTransport))
@@ -330,7 +335,9 @@ import Testing
     let googleToolBody = try decodeJSONBody(try #require(googleRequests.first?.body))
     let googleResponseBody = try decodeJSONBody(try #require(googleRequests.last?.body))
     #expect(googleToolBody["tools"]?[0]?["functionDeclarations"]?[0]?["parametersJsonSchema"] == expectedJSONSchema)
-    #expect(googleResponseBody["generationConfig"]?["responseJsonSchema"] == expectedJSONSchema)
+    #expect(googleToolBody["tools"]?[0]?["functionDeclarations"]?[0]?["description"] == "Format a date")
+    // A response schema is not a tool declaration, so its own keys are kept.
+    #expect(googleResponseBody["generationConfig"]?["responseJsonSchema"] == toolSchema)
 
     let vertexTransport = RecordingTransport(response: response)
     let vertex = try AIProviders.googleVertex(settings: GoogleVertexProviderSettings(
@@ -343,6 +350,7 @@ import Testing
     ))
     let vertexBody = try decodeJSONBody(try #require((await vertexTransport.requests()).first?.body))
     #expect(vertexBody["tools"]?[0]?["functionDeclarations"]?[0]?["parametersJsonSchema"] == expectedJSONSchema)
+    #expect(vertexBody["tools"]?[0]?["functionDeclarations"]?[0]?["description"] == "Format a date")
 }
 
 @Test func googleUpstreamFutureFullFlashModelsUseLowMinimumThinkingLevel() {

@@ -27,6 +27,13 @@ them only when investigating an earlier pass.
   publishes Prodia, Rev.ai and Together AI 1.2.0 with their reviewed upstream
   tests translated; its public consumer evidence is
   [PublicConsumerVerificationParityRepairs20261115.json](Archive/PublicConsumerVerificationParityRepairs20261115.json).
+- The 2026-11-16 upstream behavior parity audit compared every package except
+  Prodia, Rev.ai and Together AI (audited the day before) with its reviewed npm
+  source and matching-release tests, fixed the divergences it found and
+  translated the covering upstream tests. Its prepared minor releases are
+  `Releases/changes/upstream-parity-20261116.json`; findings and the cases
+  still untranslated are in
+  [UpstreamParityAudit20261116.md](Archive/UpstreamParityAudit20261116.md).
 - Paid/live provider checks remain disabled by default.
 
 ## Current Shape
@@ -92,6 +99,7 @@ them only when investigating an earlier pass.
 | P1 | Provider option ergonomics are harder to discover than the core facade. | Add compact provider option examples to docs-site for non-obvious schemas and Swift differences. |
 | P1 | Tooling is broad but can be more polished. | Improve validation diagnostics, typed result/error surfaces, and provider-defined tool helper docs. |
 | P1 | Structured output works, but schema ecosystem parity is intentionally Swift-native. `Output.array` construction remains nonthrowing for source compatibility; invalid bounds are rejected at execution before model work begins. | Keep improving schema adapter ergonomics, repair telemetry, provider-specific structured-output examples, and docs. |
+| P1 | The 2026-11-16 parity audit left known differences: tool declaration order is lost (`request.tools` is a dictionary); `embedMany` chunks run sequentially; loops stop on pending deferred provider tool results; `AIAPICallError.responseBody` holds the provider message instead of the raw body; `getFromAPI`/`deleteFromAPI` do not follow redirects; provider user-agent suffixes replace the default instead of appending; Gateway resolves credentials once per provider. Many large upstream snapshot suites (OpenAI, Anthropic, Bedrock, Google, xAI) are still untranslated. | Work through the audit's reported items one at a time with translated upstream tests; extend snapshot coverage package by package. |
 | P1 | UI/agent scope should stay explicit. | Document whether each upstream UI/agent helper is ported, Swift-native, or out of scope before adding adjacent APIs. |
 
 ## Live Verification

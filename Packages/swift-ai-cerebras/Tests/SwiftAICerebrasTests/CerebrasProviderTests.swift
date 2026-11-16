@@ -653,14 +653,14 @@ import Testing
         "delta:0:{\"result\":\"2026\"}",
         "end:0"
     ])
+    // Upstream finalizes tool calls on flush; after structured text has
+    // streamed, the end and tool-call parts are dropped (cerebras
+    // "drops the spurious tool calls from a mixed structured-output stream").
     #expect(inputLifecycle == [
         "start:call_magic:nonUsefulTool",
-        "delta:call_magic:{}",
-        "end:call_magic"
+        "delta:call_magic:{}"
     ])
-    #expect(finalCalls.map(\.id) == ["call_magic"])
-    #expect(finalCalls.first?.name == "nonUsefulTool")
-    #expect(finalCalls.first?.arguments == "{}")
+    #expect(finalCalls.isEmpty)
     #expect(finishReason == "stop")
     #expect(usage?.totalTokens == 13)
     #expect(usage?.inputTokensNoCache == 7)

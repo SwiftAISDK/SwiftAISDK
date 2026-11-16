@@ -272,7 +272,8 @@ import Testing
     let result = try await model.generate(LanguageModelRequest(messages: [.user("Search and run code.")]))
 
     #expect(result.text == "")
-    #expect(result.finishReason == "tool-calls")
+    // Upstream counts only client-executed tool calls (google-language-model.ts convertGenerateContentResponse).
+    #expect(result.finishReason == "stop")
     #expect(result.toolCalls.count == 2)
     #expect(result.toolCalls[0].id == "google-code-execution-0")
     #expect(result.toolCalls[0].name == "code_execution")
@@ -331,7 +332,8 @@ import Testing
     #expect(toolResults.map(\.toolCallID) == ["google-code-execution-1", "google-code-execution-1", "search-1"])
     #expect(toolResults[1].result["outcome"]?.stringValue == "OUTCOME_FAILED")
     #expect(toolResults[2].result["results"]?[0]?["title"]?.stringValue == "Swift")
-    #expect(finishReason == "tool-calls")
+    // Provider-executed calls do not set hasToolCalls in the upstream stream transform.
+    #expect(finishReason == "stop")
 }
 @Test func googleLanguageExtractsGroundingSources() async throws {
     let transport = RecordingTransport(response: jsonResponse("""
@@ -669,10 +671,11 @@ private func googleSpeechTestUInt32LE(_ data: Data, offset: Int) -> UInt32 {
     #expect(requests[0].url.absoluteString == "https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-generate-preview:predictLongRunning")
     let body = try decodeJSONBody(try #require(requests[0].body))
     #expect(body["instances"]?[0]?["prompt"]?.stringValue == "cat running")
-    #expect(body["parameters"]?["sampleCount"]?.intValue == 2)
+    // Upstream google-video-model.ts copies provider options over the standard parameters.
+    #expect(body["parameters"]?["sampleCount"]?.intValue == 1)
     #expect(body["parameters"]?["aspectRatio"]?.stringValue == "16:9")
     #expect(body["parameters"]?["durationSeconds"]?.intValue == 5)
-    #expect(body["parameters"]?["resolution"]?.stringValue == "1080p")
+    #expect(body["parameters"]?["resolution"]?.stringValue == "1920x1080")
     #expect(body["parameters"]?["seed"]?.intValue == 42)
     #expect(body["parameters"]?["negativePrompt"]?.stringValue == "rain")
     #expect(requests[1].method == "GET")

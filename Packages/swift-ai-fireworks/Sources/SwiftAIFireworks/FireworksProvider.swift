@@ -87,7 +87,8 @@ public final class FireworksProvider: AIProvider, Sendable {
         http.providerID = "fireworks.\(surface)"
         var wire = OpenAICompatibleModelConfiguration(http: http, baseURL: config.baseURL)
         wire.usesGenericOpenAICompatibleProviderOptions = false
-        wire.allowsEmptyTextResponse = false
+        // Upstream returns empty content (no error) when a choice carries no text.
+        wire.allowsEmptyTextResponse = true
         wire.includeUsage = config.includeUsage
         wire.supportsStructuredOutputs = config.supportsStructuredOutputs
         wire.supportsMultiPartToolContent = config.supportsMultiPartToolContent

@@ -19,6 +19,7 @@
     "tests": [
       "Packages/swift-ai-lmnt/Tests/SwiftAILMNTTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-lmnt/Tests/SwiftAILMNTTests/LMNTProviderTests.swift",
+      "Packages/swift-ai-lmnt/Tests/SwiftAILMNTTests/LMNTSourceParityTests.swift",
       "Packages/swift-ai-lmnt/Tests/SwiftAILMNTTests/TestSupport.swift"
     ],
     "resources": []

@@ -84,4 +84,16 @@ public extension AIProviders {
 
 struct VoyageHTTPConfiguration: AIProviderHTTPConfiguration {
     var http: AIProviderHTTPClient
+
+    /// Mirrors upstream `voyageFailedResponseHandler`: a `{ "detail": string }`
+    /// body supplies the error message while the raw response body is retained.
+    func httpStatusError(_ response: AIHTTPResponse) -> AIError {
+        let error = apiCallError(provider: providerID, response: response)
+        guard case var .apiCall(callError) = error,
+              let detail = (try? decodeJSONBody(response.body))?["detail"]?.stringValue else {
+            return error
+        }
+        callError.message = detail
+        return .apiCall(callError)
+    }
 }

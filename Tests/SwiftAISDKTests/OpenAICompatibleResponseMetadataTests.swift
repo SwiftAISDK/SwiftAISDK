@@ -30,7 +30,7 @@ import Testing
     #expect(result.responseMetadata.body?["id"]?.stringValue == "chatcmpl-1")
 }
 
-@Test func genericOpenAICompatibleGeneratePreservesNonNullZeroTimestamp() async throws {
+@Test func genericOpenAICompatibleGenerateDropsZeroPlaceholderTimestamp() async throws {
     let transport = RecordingTransport(response: jsonResponse("""
     {"id":"chatcmpl-zero","created":0,"model":"custom-model","choices":[{"message":{"content":"hello"},"finish_reason":"stop"}]}
     """))
@@ -42,7 +42,8 @@ import Testing
     )
     let result = try await provider.chatModel("custom-model").generate(LanguageModelRequest(messages: [.user("Hi")]))
 
-    #expect(result.responseMetadata.timestamp == Date(timeIntervalSince1970: 0))
+    // Upstream get-response-metadata.ts passes `created || undefined`, so a 0 placeholder yields no timestamp.
+    #expect(result.responseMetadata.timestamp == nil)
 }
 
 @Test func openAICompatibleLanguageResultsCarryProviderMetadata() async throws {

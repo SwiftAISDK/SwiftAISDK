@@ -31,7 +31,7 @@ struct WeeklyGoogle20261011Tests {
         #expect(result.reasoning == "Thinking")
         #expect(result.toolCalls.map(\.name) == ["resolveDate"])
         #expect(result.finishReason == "tool-calls")
-        #expect(result.content.contains { if case let .text(_, metadata) = $0 { metadata["google"]?["thoughtSignature"] == "sig" } else { false } })
+        #expect(result.content.contains { if case let .text(_, metadata) = $0 { metadata[vertex ? "googleVertex" : "google"]?["thoughtSignature"] == "sig" } else { false } })
         let body = try decodeJSONBody(try #require(await transport.requests().first?.body))
         #expect(body["generationConfig"]?["responseMimeType"] == nil)
         #expect(body["toolConfig"]?["functionCallingConfig"]?["mode"] == "ANY")

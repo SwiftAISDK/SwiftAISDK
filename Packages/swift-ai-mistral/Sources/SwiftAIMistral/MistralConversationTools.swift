@@ -48,11 +48,10 @@ func mistralConversationPrepareTools(_ tools: [String: JSONValue], choice: JSONV
             return .object(["type": .string(providerName)])
         }
         if let forced, forced != name { return nil }
-        var function: [String: JSONValue] = ["name": .string(name), "parameters": schema]
-        if var parameters = schema.objectValue {
-            if let description = parameters["description"] { function["description"] = description }
-            if let strict = parameters.removeValue(forKey: "strict") { function["strict"] = strict; function["parameters"] = .object(parameters) }
-        }
+        // Upstream `mistral-conversation-prepare-tools` sends `tool.inputSchema` as `parameters`.
+        var function: [String: JSONValue] = ["name": .string(name), "parameters": aiFunctionToolInputSchema(schema)]
+        if let description = schema.objectValue?["description"] { function["description"] = description }
+        if let strict = schema.objectValue?["strict"] { function["strict"] = strict }
         return .object(["type": "function", "function": .object(function)])
     }
     // Conversations retains its distinct forced-tool contract; native function choice is Chat-only.

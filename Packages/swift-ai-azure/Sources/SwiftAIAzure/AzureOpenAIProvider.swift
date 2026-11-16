@@ -42,10 +42,14 @@ public final class AzureOpenAIProvider: AIProvider, @unchecked Sendable {
         if settings.baseURL == nil, let resolvedResourceName {
             try validateHostnamePart(resolvedResourceName, argument: "resourceName")
         }
-        let basePrefix = settings.baseURL ?? resolvedResourceName.map { "https://\($0).openai.azure.com/openai" }
-        guard let basePrefix else {
-            throw AIError.invalidURL("Azure requires ProviderSettings.baseURL or AZURE_RESOURCE_NAME/resourceName.")
+        let missingBaseURLError = AIError.invalidURL("Azure requires ProviderSettings.baseURL or AZURE_RESOURCE_NAME/resourceName.")
+        let configuredBasePrefix = settings.baseURL ?? resolvedResourceName.map { "https://\($0).openai.azure.com/openai" }
+        // Upstream resolves the OpenAI resource lazily, so Speech/MAI-only configurations
+        // with their own base URLs remain usable without an Azure OpenAI resource.
+        guard configuredBasePrefix != nil || audioSettings.speechBaseURL != nil || audioSettings.maiBaseURL != nil else {
+            throw missingBaseURLError
         }
+        let basePrefix = configuredBasePrefix ?? ""
         let credential = tokenProvider == nil ? settings.apiKeyProvider.map(AIAsyncCredential.init) : nil
         var headers = normalizeHeaders(settings.headers)
         if tokenProvider == nil {
@@ -60,6 +64,7 @@ public final class AzureOpenAIProvider: AIProvider, @unchecked Sendable {
         let baseURLInfo = try azureOpenAIBaseURLInfo(settings.baseURL)
         let transport = tokenProvider.map { AzureOpenAITokenProviderTransport(base: settings.transport, tokenProvider: $0) } ?? settings.transport
         let http = AIProviderHTTPClient(providerID: providerID, headers: headers, transport: transport, credentialResolver: credential, url: { modelID, path in
+            guard configuredBasePrefix != nil else { throw missingBaseURLError }
             let urlString: String
             if useDeploymentBasedURLs {
                 urlString = "\(baseURL)/deployments/\(modelID)\(path)"

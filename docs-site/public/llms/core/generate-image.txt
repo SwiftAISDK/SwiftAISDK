@@ -56,7 +56,10 @@ flag asynchronously, including overriding a known value to `nil`.
 
 - `size` and `aspectRatio` describe the output shape.
 - `seed` requests deterministic output when a provider supports it.
-- `count` requests multiple images.
+- `count` requests multiple images. When it exceeds the model's
+`maxImagesPerCall`, `generateImage` splits it into several concurrent calls
+and returns their images in call order. Pass `maxImagesPerCall:` to override
+the model's limit; models that declare none use one image per call.
 - `files` and `mask` support image editing.
 - `providerOptions` carries provider-specific controls.
 - `extraBody`, `headers`, `abortSignal`, `retryPolicy`, and `telemetry` follow the shared facade behavior.
@@ -79,7 +82,9 @@ The aggregate URL/base64/usage fields remain convenient for callers that do not
 need per-request attribution. Use `calls` when cost or response metadata must
 remain associated with an individual provider call.
 
-If the provider completes without any URL or base64 image, `generateImage`
-throws `AINoOutputError`. For image failures its `calls` property preserves the
+When a request is split, each call retries on its own. A call that still
+returns no image after its retries adds no images, and its `providerMetadata`
+`images` entries are appended in call order. If no call produces any URL or
+base64 image, `generateImage` throws `AINoOutputError`. For image failures its `calls` property preserves the
 same per-call warnings, usage, provider metadata, and response metadata, so an
 empty aggregate result does not discard diagnostic evidence.

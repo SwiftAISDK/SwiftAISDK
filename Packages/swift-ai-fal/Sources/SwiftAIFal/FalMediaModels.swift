@@ -25,13 +25,19 @@ public final class FalImageModel: ImageModel, @unchecked Sendable {
             body["image_size"] = falImageSize(aspectRatio)
         }
         if let seed = request.seed { body["seed"] = .number(Double(seed)) }
-        if let count = request.count { body["num_images"] = .number(Double(count)) }
+        // Upstream core always passes n (default 1), so num_images is always sent.
+        body["num_images"] = .number(Double(request.count ?? 1))
         let preparedInputs = try falImageInputs(from: request.files, mask: request.mask, useMultipleImages: options["useMultipleImages"]?.boolValue == true)
         body.merge(preparedInputs.input) { _, new in new }
         body.merge(falImageOptions(from: options)) { _, new in new }
         let warnings = preparedInputs.warnings + falDeprecatedImageOptionWarnings(from: options)
 
-        let response = try await config.sendJSONResponse(path: "/\(modelID)", modelID: modelID, body: .object(body), headers: request.headers, abortSignal: request.abortSignal)
+        let httpRequest = try config.request(path: "/\(modelID)", modelID: modelID, body: .object(body), headers: request.headers, abortSignal: request.abortSignal)
+        let httpResponse = try await config.transport.send(httpRequest)
+        guard (200..<300).contains(httpResponse.statusCode) else {
+            throw falAPICallError(provider: providerID, response: httpResponse, request: httpRequest, message: falImageErrorMessage)
+        }
+        let response = (json: try httpResponse.jsonValue(), response: httpResponse)
         let raw = response.json
         let urls = falImageURLs(from: raw)
         let base64Images = try await downloadFalImages(urls: urls, abortSignal: request.abortSignal)
@@ -136,8 +142,9 @@ public final class FalVideoModel: AsyncVideoModel, @unchecked Sendable {
             if raw?["detail"]?.stringValue == "Request is still in progress" {
                 return .pending(responseMetadata: responseMetadata)
             }
+            let error = falAPICallError(provider: providerID, response: response)
             return .failed(
-                message: apiCallError(provider: providerID, response: response).description,
+                message: error.apiCallError?.message ?? error.description,
                 responseMetadata: responseMetadata
             )
         }
@@ -236,7 +243,7 @@ public final class FalVideoModel: AsyncVideoModel, @unchecked Sendable {
             abortSignal: abortSignal
         ).withURL(submitURL))
         guard (200..<300).contains(queueResponse.statusCode) else {
-            throw apiCallError(provider: providerID, response: queueResponse)
+            throw falAPICallError(provider: providerID, response: queueResponse)
         }
         return (try queueResponse.jsonValue(), queueResponse, submitURL.absoluteString)
     }
@@ -256,7 +263,7 @@ public final class FalVideoModel: AsyncVideoModel, @unchecked Sendable {
                 return (try response.jsonValue(), response)
             }
             if !falIsInProgress(response) {
-                throw apiCallError(provider: providerID, response: response)
+                throw falAPICallError(provider: providerID, response: response)
             }
             if DispatchTime.now().uptimeNanoseconds - started > timeoutNanoseconds {
                 throw AIError.invalidResponse(provider: providerID, message: "Fal video generation timed out.")
@@ -277,78 +284,90 @@ private func falImageURLs(from raw: JSONValue) -> [String] {
 }
 
 private func falImageProviderMetadata(from raw: JSONValue) -> [String: JSONValue] {
-    var fal: [String: JSONValue] = [:]
-    let images = falImageMetadataObjects(from: raw)
-    if !images.isEmpty {
-        fal["images"] = .array(images.map(JSONValue.object))
+    guard let object = raw.objectValue else { return [:] }
+    // Upstream normalizes a single `image` response into `images`, keeps every other
+    // top-level field verbatim, and only drops prompt and the NSFW arrays.
+    let images: [JSONValue] = object["images"]?.arrayValue ?? object["image"].map { [$0] } ?? []
+    var fal: [String: JSONValue] = [
+        "images": .array(images.enumerated().map { index, image in
+            .object(falSingleImageMetadata(from: image, index: index, raw: raw))
+        })
+    ]
+    for (key, value) in object {
+        guard !["images", "prompt", "has_nsfw_concepts", "nsfw_content_detected"].contains(key) else { continue }
+        fal[key] = key == "image" ? .object(falImageSchemaFields(value)) : value
     }
-    for (key, value) in raw.objectValue ?? [:] {
-        guard !["image", "images", "prompt", "has_nsfw_concepts", "nsfw_content_detected"].contains(key) else { continue }
-        fal[falMetadataKey(key)] = value
-    }
-    return fal.isEmpty ? [:] : ["fal": .object(fal)]
+    return ["fal": .object(fal)]
 }
 
-private func falImageMetadataObjects(from raw: JSONValue) -> [[String: JSONValue]] {
-    if let images = raw["images"]?.arrayValue {
-        return images.enumerated().compactMap { index, image in
-            falSingleImageMetadata(from: image, index: index, raw: raw)
-        }
+/// The upstream per-image schema retains only these fields.
+private func falImageSchemaFields(_ image: JSONValue) -> [String: JSONValue] {
+    (image.objectValue ?? [:]).filter {
+        ["url", "width", "height", "content_type", "file_name", "file_data", "file_size"].contains($0.key)
     }
-    if let image = raw["image"], image.objectValue != nil {
-        return [falSingleImageMetadata(from: image, index: 0, raw: raw)].compactMap { $0 }
-    }
-    return []
 }
 
-private func falSingleImageMetadata(from image: JSONValue, index: Int, raw: JSONValue) -> [String: JSONValue]? {
-    guard let object = image.objectValue else { return nil }
+private func falSingleImageMetadata(from image: JSONValue, index: Int, raw: JSONValue) -> [String: JSONValue] {
+    let object = falImageSchemaFields(image)
     var metadata: [String: JSONValue] = [:]
-    for (key, value) in object where key != "url" {
-        metadata[falMetadataKey(key)] = value
-    }
+    if let width = object["width"] { metadata["width"] = width }
+    if let height = object["height"] { metadata["height"] = height }
+    if let value = object["content_type"] { metadata["contentType"] = value }
+    if let value = object["file_name"] { metadata["fileName"] = value }
+    if let value = object["file_data"] { metadata["fileData"] = value }
+    if let value = object["file_size"] { metadata["fileSize"] = value }
     if let nsfw = raw["has_nsfw_concepts"]?[index]?.boolValue
         ?? raw["nsfw_content_detected"]?[index]?.boolValue {
         metadata["nsfw"] = .bool(nsfw)
     }
-    return metadata.isEmpty ? nil : metadata
+    return metadata
 }
 
 private func falVideoProviderMetadata(from raw: JSONValue) -> [String: JSONValue] {
+    // Mirrors upstream buildResult(): a fixed video shape plus seed, timings,
+    // has_nsfw_concepts (snake_case, as upstream) and a non-empty prompt.
     var fal: [String: JSONValue] = [:]
-    if let video = raw["video"], let object = video.objectValue {
+    if let video = raw["video"]?.objectValue {
         var metadata: [String: JSONValue] = [:]
-        for (key, value) in object {
-            metadata[falMetadataKey(key)] = value
+        for key in ["url", "width", "height", "duration", "fps"] {
+            if let value = video[key] { metadata[key] = value }
         }
-        if !metadata.isEmpty {
-            fal["videos"] = .array([.object(metadata)])
-        }
+        if let contentType = video["content_type"] { metadata["contentType"] = contentType }
+        fal["videos"] = .array([.object(metadata)])
     }
-    for (key, value) in raw.objectValue ?? [:] {
-        guard key != "video" else { continue }
-        fal[falMetadataKey(key)] = value
-    }
+    if let seed = raw["seed"] { fal["seed"] = seed }
+    if let timings = raw["timings"], timings != .null { fal["timings"] = timings }
+    if let nsfw = raw["has_nsfw_concepts"] { fal["has_nsfw_concepts"] = nsfw }
+    if let prompt = raw["prompt"]?.stringValue, !prompt.isEmpty { fal["prompt"] = .string(prompt) }
     return fal.isEmpty ? [:] : ["fal": .object(fal)]
 }
 
-private func falMetadataKey(_ key: String) -> String {
-    switch key {
-    case "content_type":
-        return "contentType"
-    case "file_name":
-        return "fileName"
-    case "file_data":
-        return "fileData"
-    case "file_size":
-        return "fileSize"
-    case "has_nsfw_concepts":
-        return "hasNsfwConcepts"
-    case "num_inference_steps":
-        return "numInferenceSteps"
-    default:
-        return key
+/// Upstream image models format validation details as `loc.path: msg`, otherwise `message`.
+func falImageErrorMessage(_ body: Data) -> String? {
+    guard let raw = try? decodeJSONBody(body) else { return nil }
+    if let details = raw["detail"]?.arrayValue,
+       details.allSatisfy({ $0["msg"]?.stringValue != nil && $0["loc"]?.arrayValue != nil && $0["type"]?.stringValue != nil }) {
+        return details.map { detail in
+            let location = (detail["loc"]?.arrayValue ?? []).compactMap(\.stringValue).joined(separator: ".")
+            return "\(location): \(detail["msg"]?.stringValue ?? "")"
+        }.joined(separator: "\n")
     }
+    return raw["message"]?.stringValue
+}
+
+/// Upstream queue, video, speech and transcription calls read `{ error: { message, code } }`.
+func falErrorDataMessage(_ body: Data) -> String? {
+    guard let raw = try? decodeJSONBody(body), raw["error"]?["code"]?.doubleValue != nil else { return nil }
+    return raw["error"]?["message"]?.stringValue
+}
+
+func falAPICallError(provider: String, response: AIHTTPResponse, request: AIHTTPRequest? = nil,
+                     message: (Data) -> String? = falErrorDataMessage) -> AIError {
+    var error = AIAPICallError(provider: provider, url: request?.url.absoluteString ?? response.url?.absoluteString,
+                               requestBody: request?.body.flatMap { try? decodeJSONBody($0) }, statusCode: response.statusCode,
+                               responseHeaders: response.headers, responseBody: response.bodyText)
+    error.message = message(response.body)
+    return .apiCall(error)
 }
 
 private func falImageOptions(from options: [String: JSONValue]) -> [String: JSONValue] {

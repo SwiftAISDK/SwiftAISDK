@@ -102,6 +102,9 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
     public let providerID = "google.vertex"
     public let supportedCapabilities: Set<ModelCapability> = [.language, .embedding, .image, .speech, .transcription, .video]
     private let config: GoogleVertexConfig
+    /// Location-scoped base URL for `endpoints/...` models and Interactions.
+    /// An explicit `baseURL` is used unchanged, like upstream `loadBaseURL`.
+    private let endpointBaseURL: String
     private let webSocketTransport: any AIDuplexWebSocketTransport
 
     public convenience init(settings: GoogleVertexProviderSettings = GoogleVertexProviderSettings()) throws {
@@ -140,6 +143,7 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
             baseURL = "https://\(host)/v1beta1/projects/\(project)/locations/\(location)/publishers/google"
         }
 
+        endpointBaseURL = settings.baseURL == nil ? googleVertexEndpointBaseURL(from: baseURL) : baseURL
         let headers = withUserAgentSuffix(settings.headers, "ai-sdk-google-vertex/5.0.141")
         config = GoogleVertexConfig(
             providerID: providerID,
@@ -161,7 +165,7 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
             }
             return GoogleVertexLanguageModel(
                 modelID: modelID,
-                config: config.withProviderID("google.vertex.chat").withBaseURL(googleVertexEndpointBaseURL(from: config.baseURL))
+                config: config.withProviderID("google.vertex.chat").withBaseURL(endpointBaseURL)
             )
         }
         return GoogleVertexLanguageModel(modelID: modelID, config: config.withProviderID("google.vertex.chat"))
@@ -174,7 +178,7 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
         return GoogleVertexInteractionsLanguageModel(
             modelID: modelID,
             agent: nil,
-            config: config.withProviderID("google.vertex.interactions").withBaseURL(googleVertexEndpointBaseURL(from: config.baseURL))
+            config: config.withProviderID("google.vertex.interactions").withBaseURL(endpointBaseURL)
         )
     }
 
@@ -185,7 +189,7 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
         return GoogleVertexInteractionsLanguageModel(
             modelID: agentName,
             agent: agentName,
-            config: config.withProviderID("google.vertex.interactions").withBaseURL(googleVertexEndpointBaseURL(from: config.baseURL))
+            config: config.withProviderID("google.vertex.interactions").withBaseURL(endpointBaseURL)
         )
     }
 

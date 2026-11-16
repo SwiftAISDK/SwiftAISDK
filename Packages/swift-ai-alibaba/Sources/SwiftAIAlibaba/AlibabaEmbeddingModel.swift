@@ -46,14 +46,14 @@ public final class AlibabaEmbeddingModel: EmbeddingModel, @unchecked Sendable {
             "input": .object(["texts": .array(request.values.map(JSONValue.string))]),
             "parameters": .object(parameters)
         ]
-        let base = alibabaNativeBaseURL(config.baseURL)
+        let base = config.resolvedEmbeddingBaseURL
         let response = try await config.transport.send(config.request(
             path: "/services/embeddings/text-embedding/text-embedding",
             modelID: modelID,
             body: .object(body),
             headers: request.headers,
             abortSignal: request.abortSignal
-        ).withURL(try requireURL("\(base)/api/v1/services/embeddings/text-embedding/text-embedding")))
+        ).withURL(try requireURL("\(base)/services/embeddings/text-embedding/text-embedding")))
         guard (200..<300).contains(response.statusCode) else {
             throw alibabaHTTPStatusError(provider: providerID, response: response)
         }
@@ -124,7 +124,10 @@ private func alibabaValidateEmbeddingProviderOptions(_ options: [String: JSONVal
         case "textType":
             try alibabaRequireEnumOrNull(value, argument: "providerOptions.alibaba.textType", label: "textType", allowed: ["query", "document"])
         case "dimension":
-            try alibabaRequirePositiveNumberOrNull(value, argument: "providerOptions.alibaba.dimension", label: "dimension")
+            // Upstream schema: z.number().optional() (no positivity constraint).
+            guard value == .null || value.doubleValue != nil else {
+                throw AIError.invalidArgument(argument: "providerOptions.alibaba.dimension", message: "Alibaba dimension must be a number or null.")
+            }
         case "outputType":
             try alibabaRequireEnumOrNull(value, argument: "providerOptions.alibaba.outputType", label: "outputType", allowed: ["dense", "sparse", "dense&sparse"])
         default:

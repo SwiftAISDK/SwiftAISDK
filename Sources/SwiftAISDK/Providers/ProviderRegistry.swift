@@ -145,7 +145,7 @@ extension AIProviders {
             authorization: apiKey == nil ? .none : .bearer(environmentVariables: []),
             supportedCapabilities: [.language, .completion, .embedding, .image],
             settings: settings,
-            userAgentSuffix: "ai-sdk-openai-compatible/3.0.82",
+            userAgentSuffix: "ai-sdk-openai-compatible/3.0.92",
             usesOpenAICompatibleSurfaceIDs: true
         )
     }
@@ -175,7 +175,7 @@ extension AIProviders {
             authorization: apiKey == nil ? .none : .bearer(environmentVariables: []),
             supportedCapabilities: [.language, .completion, .embedding, .image],
             settings: settings,
-            userAgentSuffix: "ai-sdk-openai-compatible/3.0.82",
+            userAgentSuffix: "ai-sdk-openai-compatible/3.0.92",
             usesOpenAICompatibleSurfaceIDs: true
         )
     }
@@ -281,6 +281,21 @@ extension AIProviders {
         try OpenAICompatibleProvider(providerID: "alibaba", defaultBaseURL: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1", authorization: .bearer(environmentVariables: ["ALIBABA_API_KEY", "DASHSCOPE_API_KEY"]), supportedCapabilities: [.language, .embedding, .video], settings: settings)
     }
 
+    /// Alibaba with the native `AlibabaProviderSettings` URL and usage options.
+    /// `videoBaseURL`/`embeddingBaseURL` default to the DashScope international
+    /// endpoints when nil in `AIProviders.alibaba(configuration:)`; here nil keeps
+    /// the umbrella's documented derivation from `settings.baseURL`.
+    public static func alibaba(
+        settings: ProviderSettings = ProviderSettings(),
+        videoBaseURL: String? = nil,
+        embeddingBaseURL: String? = nil,
+        includeUsage: Bool = true
+    ) throws -> OpenAICompatibleProvider {
+        try alibaba(settings: settings).withAlibabaOptions(
+            videoBaseURL: videoBaseURL, embeddingBaseURL: embeddingBaseURL, includeUsage: includeUsage
+        )
+    }
+
     public static func moonshotAI(settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider {
         var moonshotSettings = settings
         moonshotSettings.includeUsage = true
@@ -334,7 +349,7 @@ extension AIProviders {
             headers: headers,
             transport: settings.transport,
             dynamicHeaders: dynamicHeaders,
-            userAgentSuffix: userAgentSuffix ?? "ai-sdk-open-responses/2.0.82",
+            userAgentSuffix: userAgentSuffix ?? "ai-sdk-open-responses/2.0.87",
             includeUsage: settings.includeUsage,
             queryParams: settings.queryParams,
             supportsStructuredOutputs: structuredOutputs,
@@ -393,7 +408,7 @@ extension AIProviders {
         return try OpenAICompatibleProvider(
             providerID: "heygen", defaultBaseURL: "https://api.heygen.com",
             authorization: .apiKeyHeader(name: "x-api-key", environmentVariables: ["HEYGEN_API_KEY"]),
-            supportedCapabilities: [.video, .decision], settings: settings, userAgentSuffix: "ai-sdk-heygen/3.0.14"
+            supportedCapabilities: [.video, .decision], settings: settings, userAgentSuffix: "ai-sdk-heygen/\(heyGenProviderVersion)"
         )
     }
 
@@ -424,7 +439,7 @@ extension AIProviders {
         return try OpenAICompatibleProvider(
             providerID: "topaz", defaultBaseURL: "https://api.topazlabs.com",
             authorization: .apiKeyHeader(name: "x-api-key", environmentVariables: ["TOPAZ_API_KEY"]),
-            supportedCapabilities: [.image, .video], settings: settings, userAgentSuffix: "ai-sdk-topaz/3.0.24"
+            supportedCapabilities: [.image, .video], settings: settings, userAgentSuffix: "ai-sdk-topaz/3.0.28"
         )
     }
 
@@ -446,7 +461,7 @@ extension AIProviders {
     }
 
     public static func byteDance(settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider {
-        try OpenAICompatibleProvider(providerID: "bytedance", defaultBaseURL: "https://ark.ap-southeast.bytepluses.com/api/v3", authorization: .bearer(environmentVariables: ["ARK_API_KEY"]), supportedCapabilities: [.video], settings: settings)
+        try OpenAICompatibleProvider(providerID: "bytedance", defaultBaseURL: "https://ark.ap-southeast.bytepluses.com/api/v3", authorization: .bearer(environmentVariables: ["ARK_API_KEY"]), supportedCapabilities: [.image, .video], settings: settings)
     }
 
     public static func voyage(settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider {
@@ -471,5 +486,5 @@ private func perplexityHeaders(settings: ProviderSettings) throws -> [String: St
         throw AIError.missingAPIKey(provider: "perplexity", environmentVariables: ["PERPLEXITY_API_KEY"])
     }
     headers["Authorization"] = headers["Authorization"] ?? "Bearer \(key)"
-    return withUserAgentSuffix(headers, "ai-sdk-perplexity/5.0.24")
+    return withUserAgentSuffix(headers, "ai-sdk-perplexity/5.0.35")
 }

@@ -48,8 +48,14 @@ public final class TypeSafeAIProvider: AIProvider, AIEvaluationProvider, AIDecis
         }
         let settings = resolvedSettings
         configuration = TypeSafeAIEvaluationModelConfiguration(
-            providerID: "typesafe.evaluation",
-            baseURL: withoutTrailingSlash(settings.baseURL ?? "https://api.typesafe.ai/v1"),
+            // Upstream `evaluationModel` is the same factory as `decisionModel`.
+            providerID: "typesafe.decision",
+            // Upstream `loadOptionalSetting`: the option, then TYPESAFE_AI_BASE_URL, then the default.
+            baseURL: withoutTrailingSlash(
+                settings.baseURL
+                    ?? (settings.environment.map { $0["TYPESAFE_AI_BASE_URL"] } ?? environmentValue(["TYPESAFE_AI_BASE_URL"]))
+                    ?? "https://api.typesafe.ai/v1"
+            ),
             apiKey: settings.apiKey,
             headers: settings.headers,
             environment: settings.environment,

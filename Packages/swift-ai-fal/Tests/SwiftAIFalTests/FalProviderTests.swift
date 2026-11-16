@@ -46,7 +46,7 @@ import Testing
     #expect(result.providerMetadata["fal"]?["images"]?[0]?["nsfw"]?.boolValue == false)
     #expect(result.providerMetadata["fal"]?["seed"]?.intValue == 123)
     #expect(result.providerMetadata["fal"]?["timings"]?["inference"]?.doubleValue == 1.5)
-    #expect(result.providerMetadata["fal"]?["numInferenceSteps"]?.intValue == 24)
+    #expect(result.providerMetadata["fal"]?["num_inference_steps"]?.intValue == 24)
     #expect(result.providerMetadata["fal"]?["prompt"] == nil)
     #expect(result.providerMetadata["fal"]?["hasNsfwConcepts"] == nil)
 

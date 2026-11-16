@@ -37,7 +37,7 @@ Legend:
 | `@ai-sdk/azure` | `azure` | `AIProviders.azure` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |
 | `@ai-sdk/baseten` | `baseten` | `AIProviders.baseten` | ✅ |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | `@ai-sdk/black-forest-labs` | `black-forest-labs` | `AIProviders.blackForestLabs` |  |  |  | ✅ |  |  |  |  |  | ✅ |  |  |  |  |  |  |
-| `@ai-sdk/bytedance` | `bytedance` | `AIProviders.byteDance` |  |  |  |  |  |  |  |  |  | ✅ |  |  |  |  |  |  |
+| `@ai-sdk/bytedance` | `bytedance` | `AIProviders.byteDance` |  |  |  | ✅ |  |  |  |  |  | ✅ |  |  |  |  |  |  |
 | `@ai-sdk/cartesia` | `cartesia` | `AIProviders.cartesia` |  |  |  |  | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |
 | `@ai-sdk/cerebras` | `cerebras` | `AIProviders.cerebras` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | `@ai-sdk/cohere` | `cohere` | `AIProviders.cohere` | ✅ |  | ✅ |  |  |  |  |  |  |  | ✅ |  |  |  |  |  |
@@ -99,11 +99,11 @@ Legend:
 | `azure` | OpenAI models deployed on Azure, using the Responses API by default plus Chat, completions, embeddings, images, transcription and speech, addressed by deployment name. Authenticate with an API key or a Microsoft Entra ID token provider; MAI Voice, MAI Transcribe and MAI Image models use their Azure-specific APIs. |
 | `baseten` | Chat models on Baseten Model APIs or on your own dedicated deployment, plus embeddings from dedicated deployments. Set `modelURL` to target a deployment; embeddings always require a `/sync` or `/sync/v1` model URL. |
 | `black-forest-labs` | FLUX image generation and editing and FLUX 3 video generation from Black Forest Labs. Jobs are submitted and polled until the result is ready; the request protocol and available options depend on the model family. |
-| `bytedance` | Seedance video generation through BytePlus ModelArk, from text, first and last frames or reference media. Tasks are polled until the video is ready, or run as resumable start/status operations. |
+| `bytedance` | Seedance video generation and Seedream image generation through BytePlus ModelArk. Video comes from text, first and last frames or reference media; tasks are polled until the video is ready, or run as resumable start/status operations. |
 | `cartesia` | Sonic text-to-speech, Ink Whisper batch transcription and Ink 2 streaming transcription over WebSocket. Streaming transcription uses `streamingTranscriptionModel`; batch transcription only accepts Ink Whisper models. |
 | `cerebras` | Fast chat completions on Cerebras inference hardware, with reasoning effort, service tiers and queue thresholds, structured outputs and tool calling. |
 | `cohere` | Command chat models with reasoning, document grounding and citations, plus Embed models (float, integer and binary vectors) and Rerank models, through Cohere's v2 API. |
-| `deepgram` | Deepgram speech-to-text (Nova models) and Aura text-to-speech for Swift apps. The native provider also supports real-time streaming transcription over WebSocket. |
+| `deepgram` | Deepgram speech-to-text (Nova models), real-time streaming transcription over WebSocket and Aura text-to-speech for Swift apps. |
 | `deepinfra` | Open-weight chat, completion and embedding models through DeepInfra's OpenAI-compatible API, plus image generation and editing. Structured output is enabled for chat models, and image models return one image per call. |
 | `deepseek` | DeepSeek chat and reasoning models with thinking controls, tool calling, vision input on supported models and the DeepSeek Files API. The native provider also offers the Responses API with built-in web search. |
 | `elevenlabs` | ElevenLabs text-to-speech (including WebSocket streaming and multi-speaker dialogue) and Scribe speech-to-text. The provider also exposes music, sound effects, voice changer, voice isolator and dubbing. |

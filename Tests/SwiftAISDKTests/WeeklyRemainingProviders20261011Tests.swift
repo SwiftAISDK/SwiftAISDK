@@ -81,7 +81,8 @@ struct WeeklyRemainingProviders20261011Tests {
         let raw = #"{"text":"hello","language_code":"eng","language_probability":0.99,"words":[{"text":"hello","start":0,"end":1,"type":"word","speaker_id":"speaker_0","logprob":-0.01}]}"#
         let transport = RecordingTransport(response: jsonResponse(raw))
         let result = try await AIProviders.elevenLabs(settings: .init(apiKey: "key", transport: transport)).transcriptionModel("scribe_v2").transcribe(.init(audio: Data([1]), mimeType: "audio/wav", providerOptions: ["elevenlabs": ["diarize": true]]))
-        #expect(result.providerMetadata["elevenlabs"]?["words"] == (try secureJSONParse(raw))["words"])
+        // Upstream zod schema strips unknown word keys such as `logprob` from providerMetadata.elevenlabs.words.
+        #expect(result.providerMetadata["elevenlabs"]?["words"] == [["text": "hello", "start": 0, "end": 1, "type": "word", "speaker_id": "speaker_0"]])
         #expect(result.segments == [.init(text: "hello", startSecond: 0, endSecond: 1)])
     }
 

@@ -114,6 +114,26 @@ public final class CartesiaProvider: AIProvider, @unchecked Sendable {
         try streamingTranscriptionModel(modelID)
     }
 
+    /// Creates a realtime Ink speech-to-text model (upstream
+    /// `experimental_realtime`). Use one model instance per realtime session.
+    public func realtimeModel(_ modelID: String) throws -> CartesiaRealtimeModel {
+        CartesiaRealtimeModel(
+            modelID: modelID,
+            config: config.withProviderID("cartesia.realtime"),
+            version: version
+        )
+    }
+
+    /// Alias for ``realtimeModel(_:)``.
+    public func realtime(_ modelID: String) throws -> CartesiaRealtimeModel {
+        try realtimeModel(modelID)
+    }
+
+    /// Mirrors upstream `experimental_realtime(modelId)`.
+    public func experimentalRealtime(_ modelID: String) throws -> any AIRealtimeModelV4 {
+        try realtimeModel(modelID)
+    }
+
     public func languageModel(_ modelID: String) throws -> any LanguageModel {
         throw AIError.unsupportedModel(
             provider: providerID,

@@ -611,3 +611,99 @@ struct Weekly20261108CartesiaTurnTests {
         #expect(warnings.count == (detect ? 0 : 2))
     }
 }
+
+// MARK: - Translated from cartesia-transcription-model.test.ts (doStream)
+
+private func cartesiaParityStream(
+    model: String = "ink-2",
+    format: AIStreamingAudioFormat = .init(mediaType: "audio/pcm", sampleRate: 24_000),
+    options: JSONValue? = nil
+) async throws -> (StreamingTranscriptionResult, RecordingTransport, TestDuplexWebSocketTransport) {
+    let http = RecordingTransport(response: jsonResponse(#"{"token":"test-access-token"}"#))
+    let socket = TestDuplexWebSocketTransport()
+    let provider = try CartesiaProvider(settings: .init(apiKey: "test-api-key", environment: [:], transport: http, webSocketTransport: socket))
+    let result = try await provider.streamingTranscription(model).stream(.init(
+        audio: .chunks([]),
+        inputAudioFormat: format,
+        providerOptions: options.map { ["cartesia": $0] } ?? [:]
+    ))
+    return (result, http, socket)
+}
+
+private func cartesiaParityStartWarnings(
+    _ result: StreamingTranscriptionResult,
+    _ socket: TestDuplexWebSocketTransport
+) async throws -> [AIWarning] {
+    let parts = Task { try await collect(result.stream) }
+    socket.connection.open()
+    #expect(await waitForCondition { !socket.connection.sentMessages().isEmpty })
+    socket.connection.serverClose(code: 1000)
+    guard case let .streamStart(warnings) = try await parts.value.first else {
+        Issue.record("Missing stream-start")
+        return []
+    }
+    return warnings
+}
+
+@Test func cartesiaParitySendsTurnThresholdsInUpstreamOrderWithTurnDetection() async throws {
+    let (result, _, socket) = try await cartesiaParityStream(options: ["streaming": [
+        "turnStartThreshold": 0.5,
+        "turnEagerEndThreshold": 0.4,
+        "turnEndThreshold": 0.3,
+        "turnEndTimeoutMs": 800
+    ]])
+    let request = try #require(socket.requests().first)
+    #expect(request.url.absoluteString == "wss://api.cartesia.ai/stt/turns/websocket?model=ink-2&encoding=pcm_s16le&sample_rate=24000&cartesia_version=2026-03-01&access_token=test-access-token&turn_start_threshold=0.5&turn_eager_end_threshold=0.4&turn_end_threshold=0.3&turn_end_timeout_ms=800")
+    #expect(try await cartesiaParityStartWarnings(result, socket) == [])
+}
+
+@Test func cartesiaParityOmitsTurnThresholdsAndWarnsInUpstreamOrderWithoutTurnDetection() async throws {
+    let (result, _, socket) = try await cartesiaParityStream(options: [
+        "timestampGranularities": ["word"],
+        "streaming": [
+            "turnDetection": false,
+            "turnStartThreshold": 0.5,
+            "turnEagerEndThreshold": 0.4,
+            "turnEndThreshold": 0.3,
+            "turnEndTimeoutMs": 800
+        ]
+    ])
+    let request = try #require(socket.requests().first)
+    #expect(!request.url.absoluteString.contains("turn_"))
+    let threshold = "Turn thresholds require turnDetection to be enabled."
+    #expect(try await cartesiaParityStartWarnings(result, socket) == [
+        AIWarning(type: "unsupported", feature: "providerOptions.cartesia.timestampGranularities", message: "Cartesia streaming transcription does not support timestamp granularities."),
+        AIWarning(type: "unsupported", feature: "providerOptions.cartesia.streaming.turnStartThreshold", message: threshold),
+        AIWarning(type: "unsupported", feature: "providerOptions.cartesia.streaming.turnEagerEndThreshold", message: threshold),
+        AIWarning(type: "unsupported", feature: "providerOptions.cartesia.streaming.turnEndThreshold", message: threshold),
+        AIWarning(type: "unsupported", feature: "providerOptions.cartesia.streaming.turnEndTimeoutMs", message: threshold)
+    ])
+}
+
+@Test(arguments: ["pcm_f16le", "pcm_f32le", "pcm_s32le"])
+func cartesiaParityWidensGenericPCMWithoutWarning(_ encoding: String) async throws {
+    let (result, _, socket) = try await cartesiaParityStream(
+        format: .init(mediaType: "audio/pcm", sampleRate: 48_000),
+        options: ["streaming": ["encoding": .string(encoding)]]
+    )
+    let request = try #require(socket.requests().first)
+    #expect(request.url.queryValue("encoding") == encoding)
+    #expect(try await cartesiaParityStartWarnings(result, socket) == [])
+}
+
+@Test(arguments: ["ink-3", "new-streaming-model"])
+func cartesiaParityRoutesNonWhisperModelsThroughStreaming(_ modelID: String) async throws {
+    let batchHTTP = RecordingTransport(response: jsonResponse(#"{"text":"unused"}"#))
+    let provider = try CartesiaProvider(settings: .init(apiKey: "test-api-key", environment: [:], transport: batchHTTP))
+    await #expect(throws: AIError.self) {
+        _ = try await provider.transcriptionModel(modelID).transcribe(AudioTranscriptionRequest(audio: Data(), mimeType: "audio/wav"))
+    }
+    #expect(await batchHTTP.requests().isEmpty)
+
+    let (result, http, socket) = try await cartesiaParityStream(model: modelID, format: .init(mediaType: "audio/pcm", sampleRate: 16_000))
+    #expect(await http.requests().first?.url.absoluteString == "https://api.cartesia.ai/access-token")
+    let request = try #require(socket.requests().first)
+    #expect(request.url.path == "/stt/turns/websocket")
+    #expect(request.url.queryValue("model") == modelID)
+    result.cancel()
+}

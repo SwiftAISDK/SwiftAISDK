@@ -7,7 +7,7 @@ import Foundation
 import Testing
 
 @Test func huggingFaceLanguageDefaultsToResponsesEndpoint() async throws {
-    let transport = RecordingTransport(response: jsonResponse(#"{"id":"resp-1","status":"completed","output_text":"hf text","usage":{"input_tokens":1,"output_tokens":2,"total_tokens":3}}"#))
+    let transport = RecordingTransport(response: jsonResponse(#"{"id":"resp-1","status":"completed","output":[{"id":"msg-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"hf text"}]}],"output_text":null,"usage":{"input_tokens":1,"output_tokens":2,"total_tokens":3}}"#))
     let provider = try AIProviders.huggingFace(configuration: HuggingFaceProviderSettings(apiKey: "hf-key", transport: transport))
     let model = try provider.languageModel("openai/gpt-oss-120b")
 

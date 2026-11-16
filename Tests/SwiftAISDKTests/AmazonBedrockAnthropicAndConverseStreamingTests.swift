@@ -590,6 +590,7 @@ import Testing
     var text: [String] = []
     var reasoningMetadata: [[String: JSONValue]] = []
     var metadata: [[String: JSONValue]] = []
+    var finishMetadata: [String: JSONValue] = [:]
     var totalTokens: Int?
     for try await part in model.stream(LanguageModelRequest(messages: [.user("Think.")])) {
         switch part {
@@ -602,8 +603,9 @@ import Testing
             text.append(delta)
         case let .metadata(value):
             metadata.append(value)
-        case let .finishMetadata(_, usage, _):
+        case let .finishMetadata(_, usage, value):
             totalTokens = usage?.totalTokens ?? totalTokens
+            finishMetadata = value
         default:
             break
         }
@@ -614,13 +616,17 @@ import Testing
     #expect(text == ["answer"])
     #expect(reasoningMetadata.contains { $0["amazonBedrock"]?["signature"]?.stringValue == "sig-1" })
     #expect(reasoningMetadata.contains { $0["amazonBedrock"]?["redactedData"]?.stringValue == "redacted-1" })
-    let eventMetadata = try #require(metadata.first { $0["amazonBedrock"]?["trace"] != nil })
+    // Upstream (amazon-bedrock-chat-language-model.ts metadata branch) reports trace, performanceConfig and
+    // serviceTier on the finish part, not as separate metadata stream parts.
+    #expect(metadata.allSatisfy { $0["amazonBedrock"]?["trace"] == nil })
+    let eventMetadata = finishMetadata
     #expect(eventMetadata["amazonBedrock"]?["trace"]?["guardrail"]?["action"]?.stringValue == "NONE")
     #expect(eventMetadata["amazonBedrock"]?["performanceConfig"]?["latency"]?.stringValue == "optimized")
     #expect(eventMetadata["amazonBedrock"]?["serviceTier"]?.stringValue == "priority")
     #expect(eventMetadata["amazonBedrock"]?["usage"]?["cacheWriteInputTokens"]?.intValue == 5)
     #expect(eventMetadata["bedrock"] == eventMetadata["amazonBedrock"])
-    #expect(totalTokens == 4)
+    // Upstream convert-amazon-bedrock-usage.ts counts cache writes in input tokens: (2 + 5) + 2.
+    #expect(totalTokens == 9)
 }
 
 @Test func amazonBedrockLanguageAccumulatesAndSeparatesStreamedRedactedContent() async throws {

@@ -8,7 +8,9 @@ public extension GoogleGenerativeAIProvider {
     convenience init(settings: ProviderSettings = ProviderSettings()) throws {
         let providerID = settings.name ?? "google.generative-ai"
         let headers = try OpenAICompatibleProvider.buildHeaders(providerID: providerID,
-            authorization: .apiKeyHeader(name: "x-goog-api-key", environmentVariables: ["GOOGLE_GENERATIVE_AI_API_KEY", "GOOGLE_API_KEY", "GEMINI_API_KEY"]), settings: settings)
+            authorization: .apiKeyHeader(name: "x-goog-api-key", environmentVariables: ["GOOGLE_GENERATIVE_AI_API_KEY", "GOOGLE_API_KEY", "GEMINI_API_KEY"]), settings: settings,
+            // Upstream (and the native package) append the SDK user agent for every provider name.
+            userAgentSuffix: "ai-sdk-google/4.0.121")
         let baseURL = withoutTrailingSlash(settings.baseURL ?? "https://generativelanguage.googleapis.com/v1beta")
         var configuration = GoogleModelConfiguration(
             http: AIProviderHTTPClient(providerID: providerID, headers: headers, transport: settings.transport,

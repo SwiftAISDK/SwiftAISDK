@@ -49,7 +49,7 @@ public final class DeepInfraImageModel: ImageModel, @unchecked Sendable {
             abortSignal: request.abortSignal
         ))
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw deepInfraImageHTTPError(provider: providerID, response: response, editing: false)
         }
         let raw = try response.jsonValue()
         let base64Images = raw["images"]?.arrayValue?.compactMap { image in
@@ -106,7 +106,7 @@ public final class DeepInfraImageModel: ImageModel, @unchecked Sendable {
             abortSignal: request.abortSignal
         ))
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            throw deepInfraImageHTTPError(provider: providerID, response: response, editing: true)
         }
         let raw = try response.jsonValue()
         let base64Images = raw["data"]?.arrayValue?.compactMap { $0["b64_json"]?.stringValue } ?? []
@@ -118,6 +118,28 @@ public final class DeepInfraImageModel: ImageModel, @unchecked Sendable {
             responseMetadata: aiResponseMetadata(from: raw, response: response, modelID: modelID)
         )
     }
+}
+
+/// Mirrors the upstream error handlers: generation errors use `detail.error`,
+/// edit errors use the OpenAI-compatible `error.message` (or "Unknown error").
+/// Bodies that do not match keep the raw response text.
+func deepInfraImageHTTPError(provider: String, response: AIHTTPResponse, editing: Bool) -> AIError {
+    let json = try? decodeJSONBody(response.body)
+    let message: String?
+    if editing {
+        if let object = json?.objectValue {
+            if let error = object["error"], error != .null {
+                message = error["message"]?.stringValue
+            } else {
+                message = "Unknown error"
+            }
+        } else {
+            message = nil
+        }
+    } else {
+        message = json?["detail"]?["error"]?.stringValue
+    }
+    return apiCallError(provider: provider, statusCode: response.statusCode, body: message ?? response.bodyText, headers: response.headers)
 }
 
 private func deepInfraProviderOptions(from request: ImageGenerationRequest) -> [String: JSONValue] {

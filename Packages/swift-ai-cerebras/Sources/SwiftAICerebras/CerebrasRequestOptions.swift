@@ -252,7 +252,9 @@ func cerebrasApplyKnownOptions(from options: inout [String: JSONValue], reasonin
             body[mapping.destination] = value
         }
     }
-    if let reasoning, reasoning != "none", body["reasoning_effort"] == nil {
+    // "provider-default" leaves the field unset upstream (isCustomReasoning).
+    // Documented local choice: portable "none" is not sent.
+    if let reasoning, reasoning != "none", isCustomReasoning(reasoning), body["reasoning_effort"] == nil {
         body["reasoning_effort"] = .string(reasoning)
     }
 }

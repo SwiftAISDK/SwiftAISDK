@@ -46,7 +46,9 @@ let embedder = try provider.embeddingModel()
 let result = try await embedder.embedMany(["first", "second"])
 ```
 
-Inputs are sent in batches of up to 128 values. Calling `embeddingModel` without a
+Each request carries at most 128 values: `embedMany` splits larger inputs, and a
+direct `embed` call with more than 128 values throws
+`AITooManyEmbeddingValuesForCallError`. Calling `embeddingModel` without a
 suitable `modelURL` throws `AIError.invalidArgument`.
 
 ## Provider options

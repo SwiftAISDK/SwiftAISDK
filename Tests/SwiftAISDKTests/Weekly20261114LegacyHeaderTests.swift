@@ -18,7 +18,9 @@ struct Weekly20261114LegacyHeaderTests {
         #expect(headers["user-agent"] == "application/1 ai-sdk-\(providerID)/\(version)")
     }
 
-    @Test func explicitSuffixAndIntentionalNativeByteDanceIdentityArePreserved() throws {
+    // @ai-sdk/bytedance 2.0.86 and the native SwiftAIByteDance provider send no
+    // user-agent suffix; the umbrella keeps only the caller's user agent.
+    @Test func explicitSuffixIsPreservedAndByteDanceAddsNoSuffix() throws {
         let settings = ProviderSettings(headers: ["user-agent": "application/1"], environment: [:])
         let custom = try OpenAICompatibleProvider.buildHeaders(
             providerID: "assemblyai", authorization: .none, settings: settings,
@@ -26,6 +28,6 @@ struct Weekly20261114LegacyHeaderTests {
         )
         #expect(custom["user-agent"] == "application/1 custom-proxy/1")
         let native = try OpenAICompatibleProvider.buildHeaders(providerID: "bytedance", authorization: .none, settings: settings)
-        #expect(native["user-agent"] == "application/1 ai-sdk/bytedance/2.0.71")
+        #expect(native["user-agent"] == "application/1")
     }
 }

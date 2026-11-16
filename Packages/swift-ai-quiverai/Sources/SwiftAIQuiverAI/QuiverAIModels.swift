@@ -79,6 +79,8 @@ public func prepareQuiverAIImageReference(_ input: String) throws -> QuiverAIIma
 public final class QuiverAIImageModel: ImageModel, @unchecked Sendable {
     public let providerID = "quiverai.image"
     public let modelID: String
+    /// Upstream `quiveraiRequestDefaults.image.maxImagesPerCall`.
+    public var maxImagesPerCall: Int { 16 }
     private let config: QuiverAIModelConfiguration
 
     public init(modelID: String, config: QuiverAIModelConfiguration) {

@@ -237,6 +237,7 @@
       "Packages/swift-ai-ui/Tests/SwiftAIUITests/AgentUIStreamTests.swift",
       "Packages/swift-ai-ui/Tests/SwiftAIUITests/AiConvertToModelMessagesUpstreamTests.swift",
       "Packages/swift-ai-ui/Tests/SwiftAIUITests/AiUIMessageStreamUpstreamTests.swift",
+      "Packages/swift-ai-ui/Tests/SwiftAIUITests/AiUIParity20261116Tests.swift",
       "Packages/swift-ai-ui/Tests/SwiftAIUITests/AiValidateUIMessagesUpstreamTests.swift",
       "Packages/swift-ai-ui/Tests/SwiftAIUITests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-ui/Tests/SwiftAIUITests/TestSupport.swift",

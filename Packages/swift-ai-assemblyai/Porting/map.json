@@ -23,6 +23,7 @@
     ],
     "tests": [
       "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/AssemblyAIProviderTests.swift",
+      "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/AssemblyAIUpstreamParityTests.swift",
       "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/TestSupport.swift",
       "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/Weekly20261101CredentialsTests.swift",

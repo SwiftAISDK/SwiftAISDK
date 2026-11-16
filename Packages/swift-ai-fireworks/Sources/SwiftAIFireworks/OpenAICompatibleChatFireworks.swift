@@ -33,6 +33,15 @@ public func fireworksChatBody(from input: [String: JSONValue], warnings: inout [
         body["reasoning_history"] = reasoningHistory
     }
 
+    // Upstream `transformRequestBody`: the base model spreads these provider
+    // options verbatim, and Fireworks renames them to its wire keys.
+    if let promptCacheKey = body.removeValue(forKey: "promptCacheKey") {
+        body["prompt_cache_key"] = promptCacheKey
+    }
+    if let serviceTier = body.removeValue(forKey: "serviceTier") {
+        body["service_tier"] = serviceTier
+    }
+
     return body
 }
 

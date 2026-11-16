@@ -137,6 +137,7 @@ import Testing
     #expect(transcription.responseMetadata.id == "gateway-transcription")
     #expect(transcription.responseMetadata.headers["gateway-header"] == "transcription")
     #expect(transcription.language == "en")
-    #expect(transcription.durationInSeconds == 1.5)
+    // Upstream gateway-transcription-model.ts reads only `durationInSeconds`; the `duration` alias is not derived.
+    #expect(transcription.durationInSeconds == nil)
     #expect(transcription.segments.last == TranscriptionSegment(text: "text", startSecond: 0.8, endSecond: 1.5))
 }

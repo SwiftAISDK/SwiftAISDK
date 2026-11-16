@@ -65,7 +65,11 @@ The key is sent as `x-goog-api-key` after your custom headers.
 
 `languageModel(_:)` uses Gemini `generateContent`. Model IDs that start with
 `endpoints/` target tuned endpoints (OAuth only). Provider options are read from
-the first present namespace: `googleVertex`, `vertex`, then `google`.
+the first present namespace: `googleVertex`, `vertex`, then `google`. Gemini
+provider metadata (grounding, safety ratings, usage, thought signatures) is
+returned under both `googleVertex` and `vertex`. HTTP(S) and `gs://` file URLs are
+passed to Vertex without downloading them; file parts with provider references
+are not supported on Vertex.
 
 ```swift
 let result = try await model.generateText(
@@ -100,7 +104,7 @@ Useful keys: `thinkingConfig`, `safetySettings`, `cachedContent`,
 
 Responses that hit `CONTINUATION` are continued automatically within one call, and
 usage is summed. When a call stops at `MAX_TOKENS` or a continued stream fails,
-`providerMetadata["google"]` carries a `continuationToken`. To resume, send it in
+`providerMetadata["googleVertex"]` carries a `continuationToken`. To resume, send it in
 provider options with the original prompt and a larger `maxOutputTokens`.
 Continued calls also report `groundingMetadataPerRequest` there.
 

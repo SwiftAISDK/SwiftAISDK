@@ -32,7 +32,7 @@ public final class TopazVideoModel: AsyncVideoModel, Sendable {
             throw AIError.invalidArgument(argument: "inputReferences", message: "Topaz video models require an input video. Pass it via inputReferences with a video mediaType or recognized URL extension.")
         }
         if request.inputReferences.count > 1 {
-            warnings.append(topazWarning("inputReferences", "Topaz enhances one video; only the first video reference was used."))
+            warnings.append(topazWarning("inputReferences", "Topaz video models enhance a single video. Only the first video reference was used."))
         }
         let container = try topazInputContainer(input, declared: options["source"]?["container"]?.stringValue)
         var source = try topazVideoSource(options["source"]?.objectValue ?? [:], container: container)
@@ -214,13 +214,13 @@ private func topazVideoOutput(_ options: [String: JSONValue], source: [String: J
 
 private func topazVideoWarnings(_ request: VideoGenerationRequest) -> [AIWarning] {
     var warnings: [AIWarning] = []
-    if !request.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { warnings.append(topazWarning("prompt", "Topaz enhances an existing video; the text prompt was ignored.")) }
-    if request.aspectRatio != nil { warnings.append(topazWarning("aspectRatio", "Use resolution or output dimensions for Topaz videos.")) }
+    if !request.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { warnings.append(topazWarning("prompt", "Topaz video models enhance an existing video and do not take a text prompt. The prompt was ignored.")) }
+    if request.aspectRatio != nil { warnings.append(topazWarning("aspectRatio", "Topaz video models do not support aspectRatio. Use `resolution`, or the `output` provider option, to set the output dimensions.")) }
     if request.seed != nil { warnings.append(topazWarning("seed", "Topaz video models do not support seed.")) }
-    if request.durationSeconds != nil { warnings.append(topazWarning("duration", "Topaz enhances the whole input; set source.duration for its metadata.")) }
-    if request.generateAudio != nil { warnings.append(topazWarning("generateAudio", "Topaz does not generate audio; use output.audioTransfer to retain or remove input audio.")) }
-    if !request.frameImages.isEmpty { warnings.append(topazWarning("frameImages", "Topaz does not support first/last frame generation.")) }
-    if (request.count ?? 1) > 1 { warnings.append(topazWarning("n", "Topaz enhances one video per call.")) }
+    if request.durationSeconds != nil { warnings.append(topazWarning("duration", "Topaz video models enhance the whole input video, so duration was ignored. Pass the input duration via the `source.duration` provider option instead.")) }
+    if request.generateAudio != nil { warnings.append(topazWarning("generateAudio", "Topaz video models do not generate audio. Use the `output.audioTransfer` provider option to control how the input audio track is carried over.")) }
+    if !request.frameImages.isEmpty { warnings.append(topazWarning("frameImages", "Topaz video models do not support first/last frame generation. The frame images were ignored.")) }
+    if (request.count ?? 1) > 1 { warnings.append(topazWarning("n", "Topaz video models enhance one video per call. Only 1 video will be produced.")) }
     return warnings
 }
 

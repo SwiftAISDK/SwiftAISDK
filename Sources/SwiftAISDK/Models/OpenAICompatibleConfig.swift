@@ -39,6 +39,10 @@ struct ModelHTTPConfig: @unchecked Sendable {
     var failedResponseHandling: ModelHTTPFailedResponseHandling
     var failedResponseHandler: (@Sendable (AIHTTPResponse) -> OpenResponsesFailedResponse)?
     var url: @Sendable (String, String) throws -> URL
+    /// Alibaba DashScope native URL prefixes; nil keeps the umbrella's derivation from `baseURL`.
+    var alibabaVideoBaseURL: String?
+    var alibabaEmbeddingBaseURL: String?
+    var alibabaIncludeUsage = true
 
     init(
         providerID: String,

@@ -9,7 +9,7 @@ Each provider page shows its Swift package, credentials, factories, capabilities
 | [Language](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/) | 36 |
 | [Completion](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/) | 7 |
 | [Embedding](https://swiftaisdk.github.io/SwiftAISDK/core/embeddings/) | 17 |
-| [Image](https://swiftaisdk.github.io/SwiftAISDK/core/generate-image/) | 20 |
+| [Image](https://swiftaisdk.github.io/SwiftAISDK/core/generate-image/) | 21 |
 | [Transcription](https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/) | 15 |
 | [Speech](https://swiftaisdk.github.io/SwiftAISDK/core/generate-speech/) | 14 |
 | [Audio generation](https://swiftaisdk.github.io/SwiftAISDK/core/generate-audio/) | 1 |
@@ -35,7 +35,7 @@ Each provider page shows its Swift package, credentials, factories, capabilities
 | [Azure OpenAI](https://swiftaisdk.github.io/SwiftAISDK/providers/azure/) | `azure` | `AIProviders.azure` | Language, Completion, Embedding, Image, Transcription, Speech |
 | [Baseten](https://swiftaisdk.github.io/SwiftAISDK/providers/baseten/) | `baseten` | `AIProviders.baseten` | Language, Embedding |
 | [Black Forest Labs](https://swiftaisdk.github.io/SwiftAISDK/providers/black-forest-labs/) | `black-forest-labs` | `AIProviders.blackForestLabs` | Image, Video |
-| [ByteDance (BytePlus ModelArk)](https://swiftaisdk.github.io/SwiftAISDK/providers/bytedance/) | `bytedance` | `AIProviders.byteDance` | Video |
+| [ByteDance (BytePlus ModelArk)](https://swiftaisdk.github.io/SwiftAISDK/providers/bytedance/) | `bytedance` | `AIProviders.byteDance` | Image, Video |
 | [Cartesia](https://swiftaisdk.github.io/SwiftAISDK/providers/cartesia/) | `cartesia` | `AIProviders.cartesia` | Transcription, Speech |
 | [Cerebras](https://swiftaisdk.github.io/SwiftAISDK/providers/cerebras/) | `cerebras` | `AIProviders.cerebras` | Language |
 | [Cohere](https://swiftaisdk.github.io/SwiftAISDK/providers/cohere/) | `cohere` | `AIProviders.cohere` | Language, Embedding, Reranking |

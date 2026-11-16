@@ -95,8 +95,14 @@ Invalid values fail before the request. `topK`, `seed`, `presencePenalty`,
 - Function tools and tool choice are supported. Tool choice `none` is sent as
 `tool_choice: "none"` while keeping the tool definitions. Provider-defined tools
 are dropped with a warning.
-- Reasoning, function calls and MCP calls in the response are parsed into the
-standard result and stream parts.
+- Generated results keep the response's output order: reasoning, text (with its
+`itemId` and any URL citations as sources), function calls and MCP calls with
+their outputs. Only the `output` items are read; `output_text` is ignored, so an
+empty `output` yields empty content.
+- Streams report reasoning, text and function calls. MCP items are not streamed,
+and raw chunks are not emitted even when `includeRawChunks` is set.
+- A successful HTTP response whose body carries `error` throws a non-retryable
+API call error with status 400.
 - [Structured output](https://swiftaisdk.github.io/SwiftAISDK/core/structured-output/) uses the Responses text
 format.
 - Image inputs work as URLs or inline data (PNG, JPEG, GIF, WebP; a generic

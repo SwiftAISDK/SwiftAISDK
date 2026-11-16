@@ -109,7 +109,8 @@ struct WeeklyLanguage20261025Tests {
         let target = try AIProviders.amazonBedrock(settings: .init(region: "us-east-1", apiKey: "offline-key", transport: transport)).languageModel("anthropic.claude-3-haiku-20240307-v1:0")
         let output = try await parts(target)
         #expect(finish(output) == [completed ? "stop" : "interrupted"])
-        #expect(output.contains(.textEnd(id: "0")))
+        // Upstream amazon-bedrock-chat-language-model.ts emits text-end only on contentBlockStop; flush does not auto-close blocks.
+        #expect(!output.contains(.textEnd(id: "0")))
         #expect(output.contains { if case let .finishMetadata(_, usage, _) = $0 { usage?.inputTokens == 3 } else { false } })
     }
 

@@ -19,7 +19,7 @@ public struct ByteDanceProviderSettings: Sendable {
 
 public final class ByteDanceProvider: AIProvider, Sendable {
     public let providerID = "bytedance"
-    public let supportedCapabilities: Set<ModelCapability> = [.video]
+    public let supportedCapabilities: Set<ModelCapability> = [.image, .video]
     private let config: ByteDanceModelConfiguration
 
     public init(configuration: ByteDanceProviderSettings = .init()) throws {
@@ -27,9 +27,9 @@ public final class ByteDanceProvider: AIProvider, Sendable {
         guard let key = configuration.apiKey ?? environmentValue(names) else {
             throw AIError.missingAPIKey(provider: "bytedance", environmentVariables: names)
         }
-        var headers = configuration.headers
-        headers["Authorization"] = headers["Authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk/bytedance/2.0.71")
+        var headers = normalizeHeaders(configuration.headers)
+        headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
+        // @ai-sdk/bytedance 2.0.86 sends no user-agent suffix.
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://ark.ap-southeast.bytepluses.com/api/v3")
         let http = AIProviderHTTPClient(providerID: "bytedance", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })
@@ -45,7 +45,7 @@ public final class ByteDanceProvider: AIProvider, Sendable {
     }
 
     public func imageModel(_ modelID: String) throws -> any ImageModel {
-        throw AIError.unsupportedModel(provider: providerID, capability: .image, modelID: modelID)
+        ByteDanceImageModel(modelID: modelID, config: config)
     }
 
     public func transcriptionModel(_ modelID: String) throws -> any TranscriptionModel {

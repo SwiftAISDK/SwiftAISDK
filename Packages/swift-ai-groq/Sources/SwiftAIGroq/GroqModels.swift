@@ -42,9 +42,8 @@ public final class GroqLanguageModel: LanguageModel, @unchecked Sendable {
         let allToolCalls = groqToolCalls(from: choice["message"]?["tool_calls"])
         let toolCalls = allToolCalls.filter { $0.name != prepared.jsonResponseToolName }
         let reasoning = choice["message"]?["reasoning"]?.stringValue ?? ""
-        guard let conversationalText = choice["message"]?["content"]?.stringValue ?? (!allToolCalls.isEmpty || !reasoning.isEmpty ? "" : nil) else {
-            throw AIError.invalidResponse(provider: providerID, message: "No text content found in Groq response.")
-        }
+        // Upstream treats a missing message content as empty content rather than an error.
+        let conversationalText = choice["message"]?["content"]?.stringValue ?? ""
         let responseCalls = allToolCalls.filter { $0.name == prepared.jsonResponseToolName }
         let text = prepared.jsonResponseToolName == nil ? conversationalText : responseCalls.map(\.arguments).joined()
         let reason = groqFinishReason(choice["finish_reason"]?.stringValue)
@@ -117,7 +116,8 @@ public final class GroqLanguageModel: LanguageModel, @unchecked Sendable {
                             didEmitResponseMetadata = true
                             continuation.yield(.responseMetadata(aiResponseMetadata(from: raw, response: responseHead, modelID: modelID)))
                         }
-                        latestUsage = groqUsage(from: raw["x_groq"]?["usage"]) ?? groqUsage(from: raw["usage"]) ?? latestUsage
+                        // Upstream reads streamed usage only from `x_groq.usage`.
+                        latestUsage = groqUsage(from: raw["x_groq"]?["usage"]) ?? latestUsage
                         if let reasoning = raw["choices"]?[0]?["delta"]?["reasoning"]?.stringValue, !reasoning.isEmpty {
                             let id = activeReasoningID ?? "reasoning-0"
                             if activeReasoningID == nil {

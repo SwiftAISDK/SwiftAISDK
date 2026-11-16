@@ -222,6 +222,8 @@ public final class XAITranscriptionModel: TranscriptionModel, StreamingTranscrip
 public final class XAIImageModel: ImageModel, @unchecked Sendable {
     public let providerID = "xai.image"
     public let modelID: String
+    /// Upstream xAI image catalog: three images per call.
+    public var maxImagesPerCall: Int { 3 }
     private let config: XAIModelConfiguration
 
     public init(modelID: String, config: XAIModelConfiguration) {
@@ -516,12 +518,12 @@ public final class XAIVideoModel: VideoModel, @unchecked Sendable {
         guard uploadURL != nil || url != nil else {
             throw AIError.invalidResponse(provider: providerID, message: "Video generation completed but no video URL was returned.")
         }
-        var metadata = xaiVideoProviderMetadata(from: raw, requestID: requestID, url: url ?? "")
+        // Upstream omits only `videoUrl` from the provider metadata of uploaded videos.
+        let metadata = xaiVideoProviderMetadata(from: raw, requestID: requestID, url: uploadURL == nil ? url : nil)
         var metadataBody = body
         var resultRaw = raw
         if uploadURL != nil {
             metadataBody["output"] = .object(["upload_url": .string("[REDACTED]")])
-            metadata = ["xai": .object(["requestId": .string(requestID), "duration": raw["video"]?["duration"], "costInUsdTicks": raw["usage"]?["cost_in_usd_ticks"]])]
             resultRaw = .object(["status": raw["status"], "video": .object(["duration": raw["video"]?["duration"]]), "usage": .object(["cost_in_usd_ticks": raw["usage"]?["cost_in_usd_ticks"]])])
         }
         return VideoGenerationResult(
@@ -1238,45 +1240,53 @@ private func xaiImageProviderMetadata(from raw: JSONValue) -> [String: JSONValue
     var metadata: [String: JSONValue] = [
         "images": .array((raw["data"]?.arrayValue ?? []).map { item in
             var image: [String: JSONValue] = [:]
-            if let revisedPrompt = item["revised_prompt"]?.stringValue {
+            // Upstream only includes a non-empty revised prompt.
+            if let revisedPrompt = item["revised_prompt"]?.stringValue, !revisedPrompt.isEmpty {
                 image["revisedPrompt"] = .string(revisedPrompt)
             }
             return .object(image)
         })
     ]
-    if let cost = raw["usage"]?["cost_in_usd_ticks"] {
+    if let cost = raw["usage"]?["cost_in_usd_ticks"], cost != .null {
         metadata["costInUsdTicks"] = cost
     }
     return ["xai": .object(metadata)]
 }
 
-private func xaiVideoProviderMetadata(from raw: JSONValue, requestID: String, url: String) -> [String: JSONValue] {
+/// Mirrors upstream: optional fields are included only when present and non-null.
+private func xaiVideoProviderMetadata(from raw: JSONValue, requestID: String, url: String?) -> [String: JSONValue] {
+    func present(_ value: JSONValue?) -> JSONValue? {
+        guard let value, value != .null else { return nil }
+        return value
+    }
     var metadata: [String: JSONValue] = [
-        "requestId": .string(requestID),
-        "videoUrl": .string(url)
+        "requestId": .string(requestID)
     ]
-    if let duration = raw["video"]?["duration"] {
+    if let url, !url.isEmpty {
+        metadata["videoUrl"] = .string(url)
+    }
+    if let duration = present(raw["video"]?["duration"]) {
         metadata["duration"] = duration
     }
-    if let cost = raw["usage"]?["cost_in_usd_ticks"] {
+    if let cost = present(raw["usage"]?["cost_in_usd_ticks"]) {
         metadata["costInUsdTicks"] = cost
     }
-    if let progress = raw["progress"] {
+    if let progress = present(raw["progress"]) {
         metadata["progress"] = progress
     }
     if let fileOutput = raw["video"]?["file_output"]?.objectValue {
         var mapped: [String: JSONValue] = [:]
         if let fileID = fileOutput["file_id"] { mapped["fileId"] = fileID }
         if let filename = fileOutput["filename"] { mapped["filename"] = filename }
-        if let expiresAt = fileOutput["expires_at"] { mapped["expiresAt"] = expiresAt }
-        if let publicURL = fileOutput["public_url"] { mapped["publicUrl"] = publicURL }
-        if let publicURLError = fileOutput["public_url_error"] { mapped["publicUrlError"] = publicURLError }
-        if let publicURLExpiresAt = fileOutput["public_url_expires_at"] {
+        if let expiresAt = present(fileOutput["expires_at"]) { mapped["expiresAt"] = expiresAt }
+        if let publicURL = present(fileOutput["public_url"]) { mapped["publicUrl"] = publicURL }
+        if let publicURLError = present(fileOutput["public_url_error"]) { mapped["publicUrlError"] = publicURLError }
+        if let publicURLExpiresAt = present(fileOutput["public_url_expires_at"]) {
             mapped["publicUrlExpiresAt"] = publicURLExpiresAt
         }
         metadata["fileOutput"] = .object(mapped)
     }
-    if let storageError = raw["video"]?["storage_error"] {
+    if let storageError = present(raw["video"]?["storage_error"]) {
         metadata["storageError"] = storageError
     }
     return ["xai": .object(metadata)]

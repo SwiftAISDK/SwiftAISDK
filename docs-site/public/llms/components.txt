@@ -12,14 +12,14 @@ SwiftAISDK groups public APIs into component areas so you can browse exact types
 | --- | --- |
 | [Audio](https://swiftaisdk.github.io/SwiftAISDK/components/audio/) | 323 |
 | [Chat and UI messages](https://swiftaisdk.github.io/SwiftAISDK/components/chat-and-ui-messages/) | 240 |
-| [Core runtime](https://swiftaisdk.github.io/SwiftAISDK/components/core-runtime/) | 2223 |
+| [Core runtime](https://swiftaisdk.github.io/SwiftAISDK/components/core-runtime/) | 2226 |
 | [Errors](https://swiftaisdk.github.io/SwiftAISDK/components/errors/) | 116 |
-| [MCP](https://swiftaisdk.github.io/SwiftAISDK/components/mcp/) | 604 |
-| [Media](https://swiftaisdk.github.io/SwiftAISDK/components/media/) | 128 |
-| [Middleware](https://swiftaisdk.github.io/SwiftAISDK/components/middleware/) | 109 |
-| [Provider models](https://swiftaisdk.github.io/SwiftAISDK/components/provider-models/) | 1556 |
-| [Providers](https://swiftaisdk.github.io/SwiftAISDK/components/providers/) | 2206 |
+| [MCP](https://swiftaisdk.github.io/SwiftAISDK/components/mcp/) | 624 |
+| [Media](https://swiftaisdk.github.io/SwiftAISDK/components/media/) | 129 |
+| [Middleware](https://swiftaisdk.github.io/SwiftAISDK/components/middleware/) | 110 |
+| [Provider models](https://swiftaisdk.github.io/SwiftAISDK/components/provider-models/) | 1617 |
+| [Providers](https://swiftaisdk.github.io/SwiftAISDK/components/providers/) | 2231 |
 | [Structured output](https://swiftaisdk.github.io/SwiftAISDK/components/structured-output/) | 297 |
 | [Telemetry](https://swiftaisdk.github.io/SwiftAISDK/components/telemetry/) | 195 |
-| [Tools](https://swiftaisdk.github.io/SwiftAISDK/components/tools/) | 296 |
+| [Tools](https://swiftaisdk.github.io/SwiftAISDK/components/tools/) | 301 |
 | [Video and reranking](https://swiftaisdk.github.io/SwiftAISDK/components/video-and-reranking/) | 121 |

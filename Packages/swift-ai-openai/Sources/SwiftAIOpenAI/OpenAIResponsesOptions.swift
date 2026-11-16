@@ -47,7 +47,7 @@ func openResponsesProviderOptions(providerOptions: [String: JSONValue], provider
 
 func openResponsesFunctionTools(from tools: [String: JSONValue], customToolID: String? = nil) -> [JSONValue] {
     tools.compactMap { name, schema in
-        var parameters = schema
+        let parameters = schema
         if parameters["type"]?.stringValue == "provider" {
             guard parameters["id"]?.stringValue == customToolID else { return nil }
             let args = parameters["args"]?.objectValue ?? [:]
@@ -69,20 +69,17 @@ func openResponsesFunctionTools(from tools: [String: JSONValue], customToolID: S
             }
             return .object(custom)
         }
+        // Upstream sends only `tool.inputSchema` as `parameters`.
         var tool: [String: JSONValue] = [
             "type": .string("function"),
             "name": .string(name),
-            "parameters": parameters
+            "parameters": aiFunctionToolInputSchema(parameters)
         ]
-        if var parameterObject = parameters.objectValue {
-            if let description = parameterObject["description"] {
-                tool["description"] = description
-            }
-            if let strict = parameterObject.removeValue(forKey: "strict") {
-                tool["strict"] = strict
-                parameters = .object(parameterObject)
-                tool["parameters"] = parameters
-            }
+        if let description = parameters.objectValue?["description"] {
+            tool["description"] = description
+        }
+        if let strict = parameters.objectValue?["strict"] {
+            tool["strict"] = strict
         }
         return .object(tool)
     }
@@ -185,6 +182,9 @@ func openAIResponsesInputMessageJSON(
     programmaticToolCallIDs: Set<String> = [],
     configurationUpdateUnsupportedReason: String? = nil,
     supportedConfigurationUpdateReasoningEfforts: [String]? = nil,
+    systemMessageMode: String? = nil,
+    passThroughUnsupportedFiles: Bool = false,
+    modelID: String? = nil,
     warnings: inout [AIWarning]
 ) throws -> [JSONValue] {
     if message.role == .tool {
@@ -291,7 +291,11 @@ func openAIResponsesInputMessageJSON(
         var item: [String: JSONValue] = [
             "role": .string("user"),
             "content": .array(try message.content.enumerated().compactMap {
-                try openAIResponsesInputContentPart($0, providerID: providerID)
+                try openAIResponsesInputContentPart(
+                    $0,
+                    providerID: providerID,
+                    passThroughUnsupportedFiles: passThroughUnsupportedFiles
+                )
             })
         ]
         if explicitMessageItemType { item["type"] = .string("message") }
@@ -495,7 +499,7 @@ func openAIResponsesInputMessageJSON(
                     throw AIError.invalidArgument(argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate", message: "Message-level reasoningEffortUpdate must be none, low, medium, high, xhigh, or max.")
                 }
                 if let supportedConfigurationUpdateReasoningEfforts, !supportedConfigurationUpdateReasoningEfforts.contains(effort) {
-                    throw AIError.invalidArgument(argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate", message: "The selected model only supports these reasoning efforts: \(supportedConfigurationUpdateReasoningEfforts.joined(separator: ", ")).")
+                    throw AIError.invalidArgument(argument: "messages.providerMetadata.\(namespace).reasoningEffortUpdate", message: "\(modelID ?? "The selected model") only supports the following reasoning efforts: \(supportedConfigurationUpdateReasoningEfforts.joined(separator: ", "))")
                 }
                 update["reasoning"] = ["effort": .string(effort)]
             }
@@ -509,10 +513,30 @@ func openAIResponsesInputMessageJSON(
         }
     }
 
-    let role = message.role == .system && useDeveloperRoleForSystem ? "developer" : message.role.rawValue
+    var role = message.role.rawValue
+    var content: JSONValue = .string(message.combinedText)
+    if message.role == .system {
+        switch systemMessageMode ?? (useDeveloperRoleForSystem ? "developer" : "system") {
+        case "remove":
+            warnings.append(AIWarning(type: "other", message: "system messages are removed for this model"))
+            return []
+        case "developer":
+            role = "developer"
+        default:
+            role = "system"
+        }
+        let namespace = openAICompatibleProviderMetadataNamespace(providerID)
+        if let breakpoint = message.providerMetadata[namespace]?["promptCacheBreakpoint"], breakpoint != .null {
+            content = .array([.object([
+                "type": .string("input_text"),
+                "text": .string(message.combinedText),
+                "prompt_cache_breakpoint": breakpoint
+            ])])
+        }
+    }
     var item: [String: JSONValue] = [
         "role": .string(role),
-        "content": .string(message.combinedText)
+        "content": content
     ]
     if explicitMessageItemType { item["type"] = .string("message") }
     return [.object(item)]
@@ -1114,9 +1138,23 @@ func openAIResponsesShouldSkipAssistantToolResult(_ result: AIToolResult) -> Boo
 
 func openAIResponsesInputContentPart(
     _ indexAndPart: EnumeratedSequence<[AIContentPart]>.Element,
-    providerID: String = "openai"
+    providerID: String = "openai",
+    passThroughUnsupportedFiles: Bool = false
 ) throws -> JSONValue? {
     let (index, part) = indexAndPart
+    // Upstream reads part options from the provider options name only (`openai` or `azure`).
+    let partOptionsNamespace = openAICompatibleProviderMetadataNamespace(providerID)
+    func withPartOptions(_ input: [String: JSONValue], _ providerMetadata: [String: JSONValue], imageDetail: Bool) -> JSONValue {
+        var input = input
+        let options = providerMetadata[partOptionsNamespace]?.objectValue
+        if imageDetail, let detail = options?["imageDetail"], detail != .null {
+            input["detail"] = detail
+        }
+        if let breakpoint = options?["promptCacheBreakpoint"], breakpoint != .null {
+            input["prompt_cache_breakpoint"] = breakpoint
+        }
+        return .object(input)
+    }
     switch part {
     case let .text(text, providerMetadata):
         var input: [String: JSONValue] = ["type": .string("input_text"), "text": .string(text)]
@@ -1130,34 +1168,62 @@ func openAIResponsesInputContentPart(
         return .object(input)
     case let .reasoning(text, _):
         return .object(["type": .string("input_text"), "text": .string(text)])
-    case let .imageURL(url, _):
-        return .object(["type": .string("input_image"), "image_url": .string(url)])
-    case let .data(mimeType, data, _), let .file(mimeType, data, _, _):
-        let resolvedMimeType = try openAIResponsesResolvedMimeType(mimeType, data: data)
-        let dataURL = "data:\(resolvedMimeType);base64,\(data.base64EncodedString())"
-        if resolvedMimeType.lowercased().hasPrefix("image/") {
-            return .object(["type": .string("input_image"), "image_url": .string(dataURL)])
-        }
-        return .object([
-            "type": .string("input_file"),
-            "filename": .string(openAIResponsesFileName(for: resolvedMimeType, index: index)),
-            "file_data": .string(dataURL)
-        ])
-    case let .providerReference(mimeType, reference, _, _):
+    case let .imageURL(url, providerMetadata):
+        return withPartOptions(["type": .string("input_image"), "image_url": .string(url)], providerMetadata, imageDetail: true)
+    case let .data(mimeType, data, providerMetadata):
+        return try openAIResponsesInputFilePart(
+            mimeType: mimeType, data: data, filename: nil, index: index,
+            passThroughUnsupportedFiles: passThroughUnsupportedFiles
+        ) { withPartOptions($0, providerMetadata, imageDetail: $1) }
+    case let .file(mimeType, data, filename, providerMetadata):
+        return try openAIResponsesInputFilePart(
+            mimeType: mimeType, data: data, filename: filename, index: index,
+            passThroughUnsupportedFiles: passThroughUnsupportedFiles
+        ) { withPartOptions($0, providerMetadata, imageDetail: $1) }
+    case let .providerReference(mimeType, reference, _, providerMetadata):
         let fileID = try resolveProviderReference(reference, provider: openAICompatibleProviderRoot(providerID))
         if mimeType.lowercased() == "image" || mimeType.lowercased().hasPrefix("image/") {
-            return .object([
+            return withPartOptions([
                 "type": .string("input_image"),
                 "file_id": .string(fileID)
-            ])
+            ], providerMetadata, imageDetail: true)
         }
-        return .object([
+        return withPartOptions([
             "type": .string("input_file"),
             "file_id": .string(fileID)
-        ])
+        ], providerMetadata, imageDetail: false)
     case .reasoningFile, .custom, .toolCall, .toolResult, .toolApprovalRequest, .toolApprovalResponse:
         return nil
     }
+}
+
+/// Inline file conversion from upstream `convertToOpenAIResponsesInput`: images become
+/// `input_image`, PDFs (or any type with `passThroughUnsupportedFiles`) become `input_file`
+/// with the part filename or `part-<index>[.pdf]`, and other media types are rejected.
+private func openAIResponsesInputFilePart(
+    mimeType: String,
+    data: Data,
+    filename: String?,
+    index: Int,
+    passThroughUnsupportedFiles: Bool,
+    decorate: ([String: JSONValue], Bool) -> JSONValue
+) throws -> JSONValue {
+    let resolvedMimeType = try openAIResponsesResolvedMimeType(mimeType, data: data)
+    let dataURL = "data:\(resolvedMimeType);base64,\(data.base64EncodedString())"
+    if resolvedMimeType.lowercased().hasPrefix("image/") || resolvedMimeType.lowercased() == "image" {
+        return decorate(["type": .string("input_image"), "image_url": .string(dataURL)], true)
+    }
+    guard resolvedMimeType == "application/pdf" || passThroughUnsupportedFiles else {
+        throw AIError.invalidArgument(
+            argument: "messages",
+            message: "'file part media type \(resolvedMimeType)' functionality not supported."
+        )
+    }
+    return decorate([
+        "type": .string("input_file"),
+        "filename": .string(filename ?? openAIResponsesFileName(for: resolvedMimeType, index: index)),
+        "file_data": .string(dataURL)
+    ], false)
 }
 
 func openAIResponsesResolvedMimeType(_ mimeType: String, data: Data) throws -> String {
@@ -1373,6 +1439,34 @@ public struct OpenAILanguageModelCapabilities {
     public var supportsAsyncToolCalling: Bool
     public var supportedReasoningEfforts: [String]?
     public var supportsChatFunctionToolsWithReasoning = true
+    /// Mirrors `capabilities.language.serviceTiers.flex` in the upstream model catalog.
+    public var supportsFlexProcessing = false
+    /// Mirrors `capabilities.language.serviceTiers.priority` in the upstream model catalog.
+    public var supportsPriorityProcessing = false
+    /// Mirrors `capabilities.language.endpoints.chat.temperatureWithoutReasoning`.
+    public var supportsChatTemperatureWithoutReasoning = true
+}
+
+/// Upstream `prepareRequest`/`getArgs` service-tier validation shared by Chat and Responses:
+/// unsupported tiers are removed from the request and reported as warnings.
+func openAIServiceTierUnsupportedWarning(serviceTier: JSONValue?, modelID: String) -> AIWarning? {
+    let capabilities = openAILanguageModelCapabilities(modelID)
+    switch serviceTier?.stringValue {
+    case "flex" where !capabilities.supportsFlexProcessing:
+        return AIWarning(
+            type: "unsupported",
+            feature: "serviceTier",
+            message: "flex processing is only available for o3, o4-mini, and gpt-5 models"
+        )
+    case "priority" where !capabilities.supportsPriorityProcessing, "fast" where !capabilities.supportsPriorityProcessing:
+        return AIWarning(
+            type: "unsupported",
+            feature: "serviceTier",
+            message: "priority processing is only available for supported models (gpt-4, gpt-5, gpt-5-mini, o3, o4-mini) and requires Enterprise access. gpt-5-nano is not supported"
+        )
+    default:
+        return nil
+    }
 }
 
 public func openAILanguageModelCapabilities(_ modelID: String) -> OpenAILanguageModelCapabilities {
@@ -1388,6 +1482,12 @@ public func openAILanguageModelCapabilities(_ modelID: String) -> OpenAILanguage
     let supportsNonReasoningParameters = isGPT6SolOrLuna || (gptVersion.map {
         !isGPT6OrLaterModel && $0.major == 5 && ($0.minor ?? 0) >= 1
     } ?? false)
+    let isGPTNanoModel = gptVersion?.variant?.hasPrefix("nano") ?? false
+    let supportsFlexProcessing = (oSeriesVersion.map { $0 >= 3 } ?? false)
+        || (gptVersion.map { $0.major >= 5 } == true && !isGPTChatModel)
+    let supportsPriorityProcessing = modelID.hasPrefix("gpt-4")
+        || (gptVersion.map { $0.major >= 5 } == true && !isGPTNanoModel && !isGPTChatModel)
+        || (oSeriesVersion.map { $0 >= 3 } ?? false)
     return OpenAILanguageModelCapabilities(
         isReasoningModel: isReasoningModel,
         supportsNonReasoningParameters: supportsNonReasoningParameters,
@@ -1398,7 +1498,11 @@ public func openAILanguageModelCapabilities(_ modelID: String) -> OpenAILanguage
             : isGPT6OrLaterModel
                 ? ["low", "medium", "high", "xhigh", "max"]
                 : gpt5Efforts,
-        supportsChatFunctionToolsWithReasoning: !(gptVersion?.major == 5 && (gptVersion?.minor ?? 0) >= 6)
+        supportsChatFunctionToolsWithReasoning: !(gptVersion?.major == 5 && (gptVersion?.minor ?? 0) >= 6),
+        supportsFlexProcessing: supportsFlexProcessing,
+        supportsPriorityProcessing: supportsPriorityProcessing,
+        supportsChatTemperatureWithoutReasoning: !modelID.hasPrefix("gpt-4o-search-preview")
+            && !modelID.hasPrefix("gpt-4o-mini-search-preview")
     )
 }
 

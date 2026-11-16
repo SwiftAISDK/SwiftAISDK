@@ -47,7 +47,27 @@ public final class OpenAICompatibleEmbeddingModel: EmbeddingModel, @unchecked Se
         if isOpenAIBackedProvider(providerID, config: config) {
             extraBody = openAIProviderOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, providerRoot: config.openAIBackedProviderRoot)
         } else if config.usesGenericOpenAICompatibleProviderOptions {
-            extraBody = openAICompatibleProviderOptions(providerOptions: request.providerOptions, extraBody: request.extraBody, providerID: providerID, includeCompatibilityNamespace: true)
+            // Upstream sends only `dimensions` and `user` from providerOptions
+            // (`openai-compatible`, then `openaiCompatible`, then the raw provider name);
+            // `extraBody` keeps its native passthrough behavior.
+            body["encoding_format"] = .string("float")
+            var merged = openAICompatibleProviderOptions(from: request.extraBody, providerID: providerID, includeCompatibilityNamespace: true)
+            for key in ["openai-compatible", "openaiCompatible", openAICompatibleProviderRoot(providerID)] {
+                guard let options = request.providerOptions[key]?.objectValue else { continue }
+                if let dimensions = options["dimensions"] {
+                    guard dimensions.doubleValue != nil, dimensions.boolValue == nil else {
+                        throw AIError.invalidArgument(argument: "providerOptions", message: "Invalid provider options: 'dimensions' must be a number.")
+                    }
+                    merged["dimensions"] = dimensions
+                }
+                if let user = options["user"] {
+                    guard user.stringValue != nil else {
+                        throw AIError.invalidArgument(argument: "providerOptions", message: "Invalid provider options: 'user' must be a string.")
+                    }
+                    merged["user"] = user
+                }
+            }
+            extraBody = merged
         } else {
             extraBody = openAICompatibleProviderOptions(from: request.extraBody, providerID: providerID, includeCompatibilityNamespace: true)
         }
@@ -81,7 +101,9 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
     private let config: OpenAICompatibleModelConfiguration
     public var supportsFileInputs: Bool? { config.imageSupportsFileInputs?(modelID) }
     public var supportsMaskInputs: Bool? { config.imageSupportsMaskInputs?(modelID) }
-    private var maxImagesPerCall: Int {
+    /// Upstream `openaiCompatibleRequestDefaults.image.maxImagesPerCall` (10),
+    /// or the per-model limit the provider configures (OpenAI, Azure).
+    public var maxImagesPerCall: Int {
         config.maximumImages?(modelID) ?? 10
     }
 
@@ -214,7 +236,8 @@ public final class OpenAICompatibleImageModel: ImageModel, @unchecked Sendable {
             )
         let response = try await config.transport.send(httpRequest)
         guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
+            // Upstream maps edit failures through the same error structure as generations.
+            throw isOpenAIBackedProvider(providerID, config: config) ? apiCallError(provider: providerID, response: response) : config.httpStatusError(response)
         }
         let raw = try response.jsonValue()
         guard case let .array(data) = raw["data"] else {

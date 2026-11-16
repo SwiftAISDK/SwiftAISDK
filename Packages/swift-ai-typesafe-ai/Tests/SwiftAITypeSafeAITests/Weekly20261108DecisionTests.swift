@@ -12,8 +12,8 @@ struct Weekly20261108DecisionTests {
         let sent = try #require(await transport.requests().first)
         let body = try JSONDecoder().decode(JSONValue.self, from: #require(sent.body))
         #expect(sent.headers["typesafe-danger-zone-images"] == "true")
-        #expect(body["assets"] == .null)
-        #expect(body["questions"]?["box"] == ["type": "box", "instructions": .null])
+        #expect(body["assets"] == nil)
+        #expect(body["questions"]?["box"] == ["type": "box"])
     }
 
     @Test(arguments: [Optional<JSONValue>.none, JSONValue.null, [:]])

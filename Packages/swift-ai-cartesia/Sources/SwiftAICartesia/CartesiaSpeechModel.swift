@@ -16,6 +16,8 @@ public final class CartesiaSpeechModel: SpeechModel, @unchecked Sendable {
     }
 
     public func speak(_ request: SpeechRequest) async throws -> SpeechResult {
+        // Upstream validates provider options before checking the voice.
+        let parsed = try cartesiaSpeechOptions(from: request)
         guard let voice = request.voice, !voice.isEmpty else {
             throw AIError.invalidArgument(
                 argument: "voice",
@@ -24,7 +26,6 @@ public final class CartesiaSpeechModel: SpeechModel, @unchecked Sendable {
         }
 
         var warnings: [AIWarning] = []
-        let parsed = try cartesiaSpeechOptions(from: request)
         let outputFormat = cartesiaSpeechOutputFormat(
             request.format ?? "mp3",
             options: parsed.options,
@@ -324,7 +325,9 @@ private func cartesiaSpeechOutputFormat(
             message: "Unknown output format \"\(outputFormat)\". Falling back to mp3. Use providerOptions.cartesia to configure container, encoding, and sampleRate directly."
         ))
     } else if parts.count > 1 {
-        let parsedRate = parts.count == 2 ? Int(parts[1]) : nil
+        // Upstream parses the suffix with JavaScript `Number`, so values such
+        // as "16000.0" are accepted as integer sample rates.
+        let parsedRate = parts.count == 2 ? cartesiaJavaScriptInteger(parts[1]) : nil
         if let parsedRate,
            cartesiaSpeechSampleRates.contains(parsedRate) {
             resolved["sample_rate"] = .number(Double(parsedRate))
@@ -426,6 +429,13 @@ private func cartesiaMappedSpeechOutputFormat(
     default:
         nil
     }
+}
+
+private func cartesiaJavaScriptInteger(_ text: String) -> Int? {
+    let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+    let number = trimmed.isEmpty ? 0 : Double(trimmed)
+    guard let number, number.isFinite, number.rounded() == number else { return nil }
+    return Int(exactly: number)
 }
 
 private func cartesiaInteger(_ value: JSONValue) -> Int? {

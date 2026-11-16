@@ -19,6 +19,7 @@
     "tests": [
       "Packages/swift-ai-vercel/Tests/SwiftAIVercelTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-vercel/Tests/SwiftAIVercelTests/TestSupport.swift",
+      "Packages/swift-ai-vercel/Tests/SwiftAIVercelTests/VercelOpenAICompatibleChatParityTests.swift",
       "Packages/swift-ai-vercel/Tests/SwiftAIVercelTests/VercelProviderTests.swift"
     ],
     "resources": []

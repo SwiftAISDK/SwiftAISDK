@@ -19,19 +19,46 @@ With modular packages, `import SwiftAI` and `import SwiftAIByteDance`, then call
 native factory requires the configuration argument.
 
 Requests go to BytePlus ModelArk at
-`https://ark.ap-southeast.bytepluses.com/api/v3` unless you set `baseURL`. Only
-video models are available. Model IDs in use include `seedance-1-0-pro-250528`,
+`https://ark.ap-southeast.bytepluses.com/api/v3` unless you set `baseURL`. Video
+model IDs in use include `seedance-1-0-pro-250528`,
 `seedance-1-0-pro-fast-251015`, `seedance-1-0-lite-t2v-250428`,
 `seedance-1-0-lite-i2v-250428`, `seedance-1-5-pro-251215`,
 `dreamina-seedance-2-0-260128` and `dreamina-seedance-2-0-fast-260128`.
+
+## Images
+
+Seedream image models (`dola-seedream-5-0-pro-260628`, `seedream-5-0-260128`,
+`seedream-5-0-lite-260128`, `seedream-4-5-251128`, `seedream-4-0-250828`) post to
+`/images/generations` and return base64 images. Image models are available from
+`AIProviders.byteDance()` and from the native `SwiftAIByteDance` provider:
+
+```swift
+let native = try AIProviders.byteDance(configuration: ByteDanceProviderSettings())
+let image = try native.imageModel("seedream-5-0-260128")
+let result = try await image.generateImage(
+    "A salamander in a forest pond at dusk",
+    size: "2048x2048",
+    providerOptions: ["bytedance": ["watermark": false]]
+)
+```
+
+`size` is sent as is; `aspectRatio`, `seed` and `mask` are unsupported and produce
+warnings. One input file is sent as `image`, several as an `image` array. Provider
+options: `watermark`, `outputFormat` (`png`, `jpeg`), `size` (a resolution level such
+as `2K`, overriding the top-level size), `sequentialImageGeneration` (`auto`,
+`disabled`), `maxImages` and `optimizePromptMode` (`standard`, `fast`); other keys are
+passed through. Usage reports output and total tokens.
 
 ## Requests
 
 - `aspectRatio` is sent as `ratio`, `durationSeconds` as `duration`.
 - `resolution` accepts `480p`, `720p` or `1080p`; common pixel sizes such as
   `1280x720` or `1920x1080` are mapped to those tiers.
-- `image` or a first `frameImages` entry becomes the first frame, a last frame
-  image becomes `last_frame`, and `inputReferences` become reference images. When
+- `image` or a first `frameImages` entry becomes the first frame and a last frame
+  image becomes `last_frame`. `inputReferences` become reference videos when their
+  media type is `video/*` and reference images otherwise (a URL without a media type
+  is treated as an image, with a warning); they replace the `referenceImages` and
+  `referenceVideos` provider options, and frame images suppress all references. When
   a start image is combined with other references, it is sent as a reference
   image instead of a first frame.
 - Custom `fps` (fixed at 24) and more than one video per call produce warnings.

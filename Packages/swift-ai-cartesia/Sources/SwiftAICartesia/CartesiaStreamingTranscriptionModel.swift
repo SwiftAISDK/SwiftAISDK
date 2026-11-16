@@ -49,18 +49,20 @@ public final class CartesiaStreamingTranscriptionModel:
             )
         }
 
+        // Upstream warns about timestamp granularities first, then about each
+        // turn threshold in declaration order.
         var warnings: [AIWarning] = []
-        if options.turnDetection == false {
-            for key in options.turnThresholds.keys.sorted() {
-                warnings.append(.init(type: "unsupported", feature: "providerOptions.cartesia.streaming.\(key)", message: "Turn thresholds require turnDetection to be enabled."))
-            }
-        }
         if options.hasTimestampGranularities {
             warnings.append(AIWarning(
                 type: "unsupported",
                 feature: "providerOptions.cartesia.timestampGranularities",
                 message: "Cartesia streaming transcription does not support timestamp granularities."
             ))
+        }
+        if options.turnDetection == false {
+            for (key, _) in cartesiaTurnThresholdParameters where options.turnThresholds[key] != nil {
+                warnings.append(.init(type: "unsupported", feature: "providerOptions.cartesia.streaming.\(key)", message: "Turn thresholds require turnDetection to be enabled."))
+            }
         }
 
         let inferredEncoding = try cartesiaEncoding(
@@ -177,6 +179,14 @@ private let cartesiaStreamingEncodings: Set<String> = [
     "pcm_s32le"
 ]
 
+/// Turn-detection options and their query parameters, in upstream order.
+private let cartesiaTurnThresholdParameters: KeyValuePairs<String, String> = [
+    "turnStartThreshold": "turn_start_threshold",
+    "turnEagerEndThreshold": "turn_eager_end_threshold",
+    "turnEndThreshold": "turn_end_threshold",
+    "turnEndTimeoutMs": "turn_end_timeout_ms"
+]
+
 private let cartesiaLinearPCMEncodings: Set<String> = [
     "pcm_f16le",
     "pcm_f32le",
@@ -254,7 +264,7 @@ private func parseCartesiaStreamingOptions(
             }
             options.keyterms = list.compactMap(\.stringValue)
         }
-        for key in ["turnStartThreshold", "turnEagerEndThreshold", "turnEndThreshold", "turnEndTimeoutMs"] {
+        for (key, _) in cartesiaTurnThresholdParameters {
             if let value = streaming[key] {
                 guard let number = value.doubleValue, number.isFinite, key != "turnEndTimeoutMs" || number.rounded() == number else {
                     throw AIError.invalidArgument(argument: "providerOptions.cartesia.streaming.\(key)", message: "Cartesia turn thresholds must be numbers and turnEndTimeoutMs must be an integer.")
@@ -336,8 +346,9 @@ private func cartesiaStreamingURLs(
     }
     queryItems.append(contentsOf: keyterms.map { URLQueryItem(name: "keyterm", value: $0) })
     if useTurnDetection {
-        let mapping = ["turnStartThreshold": "turn_start_threshold", "turnEagerEndThreshold": "turn_eager_end_threshold", "turnEndThreshold": "turn_end_threshold", "turnEndTimeoutMs": "turn_end_timeout_ms"]
-        for key in turnThresholds.keys.sorted() { queryItems.append(URLQueryItem(name: mapping[key]!, value: jsonScalarString(turnThresholds[key]!))) }
+        for (key, parameter) in cartesiaTurnThresholdParameters {
+            if let value = turnThresholds[key] { queryItems.append(URLQueryItem(name: parameter, value: jsonScalarString(value))) }
+        }
     }
     components.queryItems = queryItems
     guard let authenticated = components.url else {

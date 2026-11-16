@@ -4,6 +4,8 @@ import SwiftAITransport
 
 
 public final class JSONImageModel: ImageModel, @unchecked Sendable {
+    /// Generic JSON endpoints receive the full `count`, as before batching existed.
+    public var maxImagesPerCall: Int { Int.max }
     public let providerID: String
     public let modelID: String
     private let config: JSONModelConfiguration

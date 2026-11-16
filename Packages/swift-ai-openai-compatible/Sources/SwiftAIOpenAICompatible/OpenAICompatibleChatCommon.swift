@@ -46,20 +46,18 @@ public func openAICompatibleChatTools(
         if object?["type"]?.stringValue == "provider" || object?["id"]?.stringValue != nil {
             return nil
         }
-        var parameters = schema
+        // Upstream `prepareTools` sends `tool.inputSchema` as `parameters`;
+        // description and strict stay at the function level.
+        let parameters = aiFunctionToolInputSchema(schema)
         var function: [String: JSONValue] = [
             "name": .string(name),
             "parameters": parameters
         ]
-        if var parameterObject = parameters.objectValue {
-            if let description = parameterObject["description"]?.stringValue {
-                function["description"] = .string(description)
-            }
-            if let strict = parameterObject.removeValue(forKey: "strict") {
-                function["strict"] = strict
-                parameters = .object(parameterObject)
-                function["parameters"] = parameters
-            }
+        if let description = aiFunctionToolDescription(schema) {
+            function["description"] = .string(description)
+        }
+        if let strict = object?["strict"], strict != .null {
+            function["strict"] = strict
         }
         if let normalizeSchema {
             let normalized = try normalizeSchema(parameters)
@@ -293,4 +291,98 @@ public func openAICompatibleFinishReason(_ reason: String?) -> String? {
 func openAICompatibleChatFinishReason(_ raw: String?, hasRefusal: Bool) -> String? {
     let mapped = openAICompatibleFinishReason(raw)
     return hasRefusal && mapped == "stop" ? "content-filter" : mapped
+}
+
+// MARK: - Upstream `OpenAICompatibleChatLanguageModel` semantics for generic endpoints
+
+/// Keys of upstream `openaiCompatibleLanguageModelChatOptions`.
+let openAICompatibleChatOptionSchemaKeys: Set<String> = ["user", "reasoningEffort", "textVerbosity", "strictJsonSchema"]
+
+struct OpenAICompatibleUpstreamChatProviderOptions {
+    /// Typed options merged from `openai-compatible`, `openaiCompatible` and the provider namespaces.
+    var typed: [String: JSONValue] = [:]
+    /// Raw provider-namespace entries that are not typed options; sent unchanged.
+    var passthrough: [String: JSONValue] = [:]
+}
+
+/// Mirrors upstream `getArgs`: typed options resolve from every namespace (later wins),
+/// while only the provider's raw and camelCase namespaces are spread into the body,
+/// without key renaming and without the typed keys.
+func openAICompatibleUpstreamChatProviderOptions(providerOptions: [String: JSONValue], providerID: String) throws -> OpenAICompatibleUpstreamChatProviderOptions {
+    var result = OpenAICompatibleUpstreamChatProviderOptions()
+    for key in ["openai-compatible", "openaiCompatible"] {
+        guard let options = providerOptions[key]?.objectValue else { continue }
+        for (name, value) in options where openAICompatibleChatOptionSchemaKeys.contains(name) {
+            result.typed[name] = value
+        }
+    }
+    for key in openAICompatibleProviderOptionNamespaceKeys(providerID) {
+        guard let options = providerOptions[key]?.objectValue else { continue }
+        for (name, value) in options {
+            if openAICompatibleChatOptionSchemaKeys.contains(name) {
+                result.typed[name] = value
+            } else {
+                result.passthrough[name] = value
+            }
+        }
+    }
+    func invalid(_ name: String) -> AIError {
+        AIError.invalidArgument(argument: "providerOptions", message: "Invalid provider options: '\(name)' has an invalid type.")
+    }
+    if let user = result.typed["user"], user.stringValue == nil { throw invalid("user") }
+    if let effort = result.typed["reasoningEffort"], effort != .null, effort.stringValue == nil { throw invalid("reasoningEffort") }
+    if let verbosity = result.typed["textVerbosity"], verbosity.stringValue == nil { throw invalid("textVerbosity") }
+    if let strict = result.typed["strictJsonSchema"], strict.boolValue == nil { throw invalid("strictJsonSchema") }
+    return result
+}
+
+/// Upstream `prepareTools`: function tools only, `strict` only when set. Swift tool
+/// maps are unordered, so tools are sorted by name for a deterministic wire order.
+func openAICompatibleUpstreamChatTools(from tools: [String: JSONValue]) -> [JSONValue] {
+    tools.sorted { $0.key < $1.key }.compactMap { name, schema in
+        let object = schema.objectValue
+        if object?["type"]?.stringValue == "provider" || object?["id"]?.stringValue != nil {
+            return nil
+        }
+        // Swift stores tool metadata next to the JSON schema; upstream sends only
+        // `tool.inputSchema` as `parameters`.
+        var function: [String: JSONValue] = ["name": .string(name), "parameters": aiFunctionToolInputSchema(schema)]
+        if let description = object?["description"], description != .null {
+            function["description"] = description
+        }
+        if let strict = object?["strict"], strict != .null {
+            function["strict"] = strict
+        }
+        return .object(["type": .string("function"), "function": .object(function)])
+    }
+}
+
+/// Upstream `convertOpenAICompatibleChatUsage`: missing counts become 0 once a usage
+/// object is present.
+func openAICompatibleUpstreamChatUsage(_ usage: JSONValue?) -> TokenUsage? {
+    guard let usage, usage != .null else { return nil }
+    let promptTokens = usage["prompt_tokens"]?.intValue ?? 0
+    let completionTokens = usage["completion_tokens"]?.intValue ?? 0
+    let cacheReadTokens = usage["prompt_tokens_details"]?["cached_tokens"]?.intValue ?? 0
+    let reasoningTokens = usage["completion_tokens_details"]?["reasoning_tokens"]?.intValue ?? 0
+    return TokenUsage(
+        inputTokens: promptTokens,
+        outputTokens: completionTokens,
+        // Native field: the reported total when present, else input plus output as the AI SDK core computes it.
+        totalTokens: usage["total_tokens"]?.intValue ?? promptTokens + completionTokens,
+        inputTokensNoCache: promptTokens - cacheReadTokens,
+        inputTokensCacheRead: cacheReadTokens,
+        inputTokensCacheWrite: nil,
+        outputTextTokens: max(0, completionTokens - reasoningTokens),
+        outputReasoningTokens: reasoningTokens,
+        rawValue: usage
+    )
+}
+
+/// Upstream emits `response-metadata` once a chunk carries a non-empty id or model,
+/// or a non-zero `created` timestamp (`Object.values(metadata).some(Boolean)`).
+func openAICompatibleUpstreamChunkHasResponseMetadata(_ raw: JSONValue) -> Bool {
+    raw["id"]?.stringValue?.isEmpty == false
+        || raw["model"]?.stringValue?.isEmpty == false
+        || (raw["created"]?.doubleValue ?? 0) != 0
 }

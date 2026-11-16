@@ -82,7 +82,10 @@ func openAIResponsesTools(
             "parameters": parameters
         ]
         if var parameterObject = parameters.objectValue {
-            parameterObject.removeValue(forKey: "providerOptions")
+            // Upstream sends only `tool.inputSchema` as `parameters`.
+            for key in aiFunctionToolMetadataKeys where key != "description" && key != "strict" {
+                parameterObject.removeValue(forKey: key)
+            }
             parameterObject.removeValue(forKey: "openai")
             if let description = parameterObject.removeValue(forKey: "description")?.stringValue {
                 function["description"] = .string(description)

@@ -72,6 +72,27 @@ Options under `providerOptions["cartesia"]["streaming"]`:
 Inject a custom `webSocketTransport` in `CartesiaProviderSettings` for tests or
 proxies. See [Transcribe](../../core/transcribe/).
 
+## Realtime transcription (Ink)
+
+`realtimeModel("ink-2")` (aliases `realtime` and `experimentalRealtime`) returns
+an `AIRealtimeModelV4` for `AIRealtimeSession`, matching upstream
+`experimental_realtime`. Creating a client secret requests a short-lived access
+token from `/access-token` (with `expires_in` when `expiresAfterSeconds` is set,
+1–3600 seconds) and returns the WebSocket URL; the session adds the token as the
+`access_token` query parameter.
+
+- Turn detection is on by default (`/stt/turns/websocket`). Set
+  `turnDetection` to `.disabled` to use manual finalization (`/stt/websocket`),
+  where committing input audio sends `finalize` and final transcript chunks are
+  assembled into one `inputTranscriptionCompleted` event when the flush completes.
+- `inputAudioFormat` accepts `audio/pcm` (default, `pcm_s16le`), `audio/pcmu`
+  and `audio/pcma`; the sample rate defaults to 24000.
+- Only English is supported (`inputAudioTranscription.language` must be `en`).
+- Audio is sent as binary frames; session updates, clears and response requests
+  are not sent. Other client events throw.
+
+The model keeps per-session parser state, so create one model per session.
+
 ## Rotating credentials
 
 `CartesiaProviderSettings` accepts an `apiKeyProvider` async throwing closure that

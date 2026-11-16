@@ -72,9 +72,20 @@ is removed, and tool and response schemas are normalized to Moonshot's schema
 dialect, which requires an object root. A root `anyOf` or `oneOf` of objects is
 accepted; other root unions throw before sending.
 - Image, video and text input parts are converted to Moonshot's content format.
-Unsupported media throws before the request is sent.
+Images accept JPEG, PNG, GIF, WebP, BMP, HEIC and HEIF; videos accept MP4,
+MPEG, MOV, AVI, FLV, MPG, WebM, WMV and 3GPP. Other media, and provider
+references that are not `ms://` Files API URLs, throw before the request is sent.
+`ms://` image URLs are passed through without downloading.
+- `maxOutputTokens` is sent as `max_completion_tokens`.
+- Kimi models fix their sampling parameters: `temperature`, `topP`,
+`frequencyPenalty` and `presencePenalty` are omitted with a warning. `topK` and
+`seed` are never sent and warn.
+- Kimi K2.6 and K2.7 reject `toolChoice` `required`; it is omitted with a warning.
 - Generated content is ordered reasoning, then tool calls, then text; `text` and
-`toolCalls` work as usual.
+`toolCalls` work as usual. `providerMetadata["moonshotai"]` is always present and
+carries `responseObject`, `choiceIndex`, `messageRole`, `toolCallTypes` and
+`logprobs` when the service returns them.
+- Stream error chunks become typed provider errors with status and retry metadata.
 
 ## Provider options
 
@@ -100,9 +111,19 @@ let result = try await model.generateText(
 | `reasoningHistory` | `disabled`, `interleaved` or `preserved`. |
 | `promptCacheOptions` | Object with optional `mode: "implicit"` and `ttl` (`5m` or `1h`). An empty object sends implicit mode. |
 | `promptCacheKey`, `safetyIdentifier` | Strings. |
+| `strictJsonSchema` | Boolean, default `true`. |
+| `logprobs`, `topLogprobs` | Boolean and integer `0...20`; `topLogprobs` also enables `logprobs`. |
+| `prediction` | `{"type": "content", "content": ...}` with a string or an array of text parts. |
 
-Invalid values throw `AIError.invalidArgument` before the request is sent. Other
+Invalid values throw `AIError.invalidArgument(argument: "providerOptions", message:
+"invalid moonshotai provider options")` before the request is sent. Other
 service-specific fields can go in `extraBody`.
+
+Message-level `providerOptions["moonshotai"]` (`AIMessage.providerMetadata`) accepts
+`name` on system, user and assistant messages (tool messages warn), `partial: true`
+on the final assistant message (Partial Mode; not combinable with JSON object
+output), and, for Kimi K3 and unknown models, `tools` on an empty system message for
+dynamic tool loading. Other known models omit the dynamic message with a warning.
 
 ## Reasoning by model
 

@@ -130,7 +130,9 @@ defaults to `us-east-1`. Endpoints use the partition's DNS suffix (for example
 ## Provider options
 
 Pass Converse options under `providerOptions["amazonBedrock"]`; the key `"bedrock"`
-is also accepted.
+is also accepted and is ignored when `"amazonBedrock"` is present. Keys other than
+the options below (for example `guardrailConfig`) are passed through to the
+Converse request body unchanged.
 
 ```swift
 let result = try await model.generateText(
@@ -155,6 +157,8 @@ let result = try await model.generateText(
 - `guardrailConfig`, `requestMetadata` (string values only), `serviceTier`
   (a string is sent as `["type": value]`).
 - `additionalModelRequestFields`: model-specific fields passed through to Converse.
+- `anthropicBeta`: Anthropic beta flags, sent as `additionalModelRequestFields.anthropic_beta`
+  together with the betas required by Anthropic provider tools.
 - `citations`: `["enabled": true]` turns on citations for all documents in the
   prompt; the same value in a document part's `amazonBedrock` provider metadata
   enables them for that document only.

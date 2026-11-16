@@ -748,6 +748,11 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         var options = openAIResponsesOptions(from: extraBody)
         let isEffectiveReasoningModel = openAIResponsesEffectiveReasoningModel(modelID: modelID, options: options)
         let isOpenAIBacked = isOpenAIBackedProvider(providerID, config: config)
+        // Request-conversion controls from the upstream options schema; never wire fields.
+        let systemMessageModeOption = (options.removeValue(forKey: "systemMessageMode")
+            ?? options.removeValue(forKey: "system_message_mode"))?.stringValue
+        let passThroughUnsupportedFiles = options.removeValue(forKey: "passThroughUnsupportedFiles")?.boolValue ?? false
+        let includeWebSearchSources = options.removeValue(forKey: "includeWebSearchSources")?.boolValue ?? true
         var warnings = openResponsesWarnings(for: request)
         let requestTextFormat = try options.removeValue(forKey: "textFormat").map {
             try openAIResponsesNormalizedTextFormat($0, warnings: &warnings)
@@ -781,7 +786,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                 to: &options,
                 tools: request.tools,
                 isReasoningModel: isEffectiveReasoningModel,
-                supportsWebSearchSourcesInclude: config.supportsWebSearchSourcesInclude
+                supportsWebSearchSourcesInclude: config.supportsWebSearchSourcesInclude && includeWebSearchSources
             )
         }
         let store = options["store"]?.boolValue ?? true
@@ -883,6 +888,9 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                 programmaticToolCallIDs: programmaticToolCallIDs,
                 configurationUpdateUnsupportedReason: configurationUpdateUnsupportedReason,
                 supportedConfigurationUpdateReasoningEfforts: capabilities.supportedReasoningEfforts,
+                systemMessageMode: isOpenAIBacked ? systemMessageModeOption : nil,
+                passThroughUnsupportedFiles: passThroughUnsupportedFiles || !isOpenAIBacked,
+                modelID: modelID,
                 warnings: &warnings
             )
         }
@@ -936,12 +944,15 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             isReasoningModel: isEffectiveReasoningModel,
             options: samplingOptions
         )
+        // Upstream order: promptCacheRetention, temperature, topP, then logprobs.
+        var gpt6Warnings: [AIWarning] = []
         openAIResponsesRemoveUnsupportedGPT6Options(
             modelID: modelID,
             stripsReasoningModelSampling: stripsReasoningModelSampling,
             options: &options,
-            warnings: &warnings
+            warnings: &gpt6Warnings
         )
+        warnings.append(contentsOf: gpt6Warnings.filter { $0.feature == "promptCacheRetention" })
         if stripsReasoningModelSampling {
             if request.temperature != nil {
                 warnings.append(AIWarning(type: "unsupported", feature: "temperature", message: "temperature is not supported for reasoning models"))
@@ -949,6 +960,12 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             if request.topP != nil {
                 warnings.append(AIWarning(type: "unsupported", feature: "topP", message: "topP is not supported for reasoning models"))
             }
+        }
+        warnings.append(contentsOf: gpt6Warnings.filter { $0.feature != "promptCacheRetention" })
+        if isOpenAIBacked,
+           let serviceTierWarning = openAIServiceTierUnsupportedWarning(serviceTier: options["service_tier"], modelID: modelID) {
+            warnings.append(serviceTierWarning)
+            options.removeValue(forKey: "service_tier")
         }
         var body: [String: JSONValue] = [
             "model": .string(config.requestModelID ?? modelID),

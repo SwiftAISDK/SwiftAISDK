@@ -957,13 +957,16 @@ extension AI {
     }
 
 
-    public static func generateImage(model: any ImageModel, request: ImageGenerationRequest, retryPolicy: AIRetryPolicy = .default, telemetry: Telemetry.Options? = nil) async throws -> ImageGenerationResult {
-        return try await SwiftAI.AI.generateImage(model: model, request: request, retryPolicy: retryPolicy, telemetry: telemetry)
+    /// - Parameter maxImagesPerCall: Upstream `maxImagesPerCall`; overrides the
+    ///   model's per-call limit. A `count` above the limit is split into
+    ///   several concurrent calls whose images are returned in call order.
+    public static func generateImage(model: any ImageModel, request: ImageGenerationRequest, maxImagesPerCall: Int? = nil, retryPolicy: AIRetryPolicy = .default, telemetry: Telemetry.Options? = nil) async throws -> ImageGenerationResult {
+        return try await SwiftAI.AI.generateImage(model: model, request: request, maxImagesPerCall: maxImagesPerCall, retryPolicy: retryPolicy, telemetry: telemetry)
     }
 
 
-    public static func generateImage(model: any ImageModel, prompt: String, size: String? = nil, aspectRatio: String? = nil, seed: Int? = nil, count: Int? = nil, files: [ImageInputFile] = [], mask: ImageInputFile? = nil, providerOptions: [String: JSONValue] = [:], extraBody: [String: JSONValue] = [:], headers: [String: String] = [:], abortSignal: AIAbortSignal? = nil, retryPolicy: AIRetryPolicy = .default, telemetry: Telemetry.Options? = nil) async throws -> ImageGenerationResult {
-        return try await SwiftAI.AI.generateImage(model: model, prompt: prompt, size: size, aspectRatio: aspectRatio, seed: seed, count: count, files: files, mask: mask, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, retryPolicy: retryPolicy, telemetry: telemetry)
+    public static func generateImage(model: any ImageModel, prompt: String, size: String? = nil, aspectRatio: String? = nil, seed: Int? = nil, count: Int? = nil, maxImagesPerCall: Int? = nil, files: [ImageInputFile] = [], mask: ImageInputFile? = nil, providerOptions: [String: JSONValue] = [:], extraBody: [String: JSONValue] = [:], headers: [String: String] = [:], abortSignal: AIAbortSignal? = nil, retryPolicy: AIRetryPolicy = .default, telemetry: Telemetry.Options? = nil) async throws -> ImageGenerationResult {
+        return try await SwiftAI.AI.generateImage(model: model, prompt: prompt, size: size, aspectRatio: aspectRatio, seed: seed, count: count, maxImagesPerCall: maxImagesPerCall, files: files, mask: mask, providerOptions: providerOptions, extraBody: extraBody, headers: headers, abortSignal: abortSignal, retryPolicy: retryPolicy, telemetry: telemetry)
     }
 
 

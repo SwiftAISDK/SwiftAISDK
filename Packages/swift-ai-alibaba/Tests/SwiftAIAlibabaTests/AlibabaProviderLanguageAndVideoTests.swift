@@ -43,7 +43,8 @@ import Testing
     let result = try await model.generate(LanguageModelRequest(messages: [.user("Hi")]))
 
     #expect(result.text == "ok")
-    #expect(result.usage == TokenUsage(inputTokensNoCache: 0, inputTokensCacheWrite: 0))
+    // Upstream createNullLanguageModelUsage(): every field undefined.
+    #expect(result.usage == TokenUsage())
 }
 @Test func alibabaLanguageStreamsFragmentedToolCalls() async throws {
     let transport = RecordingTransport(response: sseResponse(#"""
@@ -84,7 +85,8 @@ import Testing
         }
     }
 
-    #expect(deltas == ["{\"location\":", "\"San Francisco\"}"])
+    // Upstream StreamingToolCallTracker emits only tool-input lifecycle parts.
+    #expect(deltas.isEmpty)
     #expect(inputLifecycle == [
         "start:call_weather:weather",
         "delta:call_weather:{\"location\":",
@@ -127,7 +129,7 @@ import Testing
     #expect(errors.first == "Stream failed")
     #expect(errors.count == 2)
     #expect(finishReason == "error")
-    #expect(usage == TokenUsage(inputTokensNoCache: 0, inputTokensCacheWrite: 0))
+    #expect(usage == TokenUsage())
 }
 @Test func alibabaLanguageStreamGeneratesMissingFirstToolDeltaIDLikeUpstreamV4() async throws {
     let transport = RecordingTransport(response: sseResponse(#"""
@@ -295,7 +297,7 @@ import Testing
     #expect(result.warnings.contains(AIWarning(
         type: "unsupported",
         feature: "frameImages",
-        message: "Alibaba video models do not support last_frame frameImages. The last_frame image will be ignored."
+        message: "This model does not support last_frame. The last frame image was ignored."
     )))
 }
 
@@ -360,7 +362,7 @@ import Testing
     #expect(r2vResult.warnings.contains(AIWarning(
         type: "unsupported",
         feature: "inputReferences",
-        message: "Alibaba R2V inputReferences only support URL references. Non-URL references will be ignored."
+        message: "Alibaba reference-to-video requires URL references. Non-URL reference was skipped."
     )))
 
     let i2vTransport = RecordingTransport(responses: [
@@ -379,7 +381,7 @@ import Testing
     #expect(i2vResult.warnings.contains(AIWarning(
         type: "unsupported",
         feature: "inputReferences",
-        message: "Alibaba inputReferences are only supported by R2V video models."
+        message: "Alibaba only supports inputReferences (reference-to-video) on reference-to-video models. The reference images were ignored."
     )))
 }
 

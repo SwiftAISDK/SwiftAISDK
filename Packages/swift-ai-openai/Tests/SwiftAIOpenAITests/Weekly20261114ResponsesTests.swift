@@ -78,7 +78,7 @@ private func weeklyResponseTransport(stream: Bool, diagnostics: JSONValue? = nil
         await #expect(throws: AIError.invalidArgument(argument: argument, message: "Message-level reasoningEffortUpdate must be none, low, medium, high, xhigh, or max.")) {
             _ = try await provider.responses("gpt-6-sol").generate(.init(messages: [weeklyControl(["reasoningEffortUpdate": 42], namespace: namespace), .user("Think")]))
         }
-        await #expect(throws: AIError.invalidArgument(argument: argument, message: "The selected model only supports these reasoning efforts: low, medium, high, xhigh, max.")) {
+        await #expect(throws: AIError.invalidArgument(argument: argument, message: "gpt-6-astra only supports the following reasoning efforts: low, medium, high, xhigh, max")) {
             _ = try await provider.responses("gpt-6-astra").generate(.init(messages: [weeklyControl(["reasoningEffortUpdate": "none"], namespace: namespace), .user("Think")]))
         }
         #expect(await transport.requests().isEmpty)

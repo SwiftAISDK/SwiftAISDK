@@ -34,8 +34,8 @@ public final class GMICloudProvider: AIProvider, @unchecked Sendable {
         configured.includeUsage = true
         configured.supportsStructuredOutputs = settings.supportsStructuredOutputs
         configured.transformRequestBody = settings.transformRequestBody
-        configured.usesGenericOpenAICompatibleProviderOptions = false
-        configured.allowsEmptyTextResponse = false
+        // Upstream composes the generic OpenAICompatibleChatLanguageModel unchanged: it reads
+        // `openaiCompatible` and provider-named providerOptions and accepts empty assistant content.
         configured.chatErrorHandler = gmiCloudHTTPStatusError
         config = configured
     }

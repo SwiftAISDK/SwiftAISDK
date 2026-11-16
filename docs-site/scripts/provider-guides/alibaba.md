@@ -18,6 +18,19 @@ Requests go to the international DashScope OpenAI-compatible endpoint
 (`https://dashscope-intl.aliyuncs.com/compatible-mode/v1`) unless you set
 `baseURL`. `chatModel(...)` is an alias for `languageModel(...)`.
 
+Embeddings and video use DashScope native endpoints with their own settings:
+`embeddingBaseURL` (default `https://dashscope-intl.aliyuncs.com/api/v1`) and
+`videoBaseURL` (default `https://dashscope-intl.aliyuncs.com`). They do not follow
+`baseURL`, so set them too when you target another region. `includeUsage`
+(default `true`) controls `stream_options.include_usage` on streaming chat calls.
+The umbrella accepts the same options through
+`AIProviders.alibaba(settings:videoBaseURL:embeddingBaseURL:includeUsage:)`; when
+the umbrella leaves a URL unset, it keeps deriving it from a custom `baseURL`.
+
+User messages accept text and image parts (URLs or inline data; a bare `image`
+media type is detected from the bytes). Other file types and provider file
+references throw `AIError.invalidArgument` before the request is sent.
+
 ## Thinking and reasoning
 
 Pass Alibaba options under `providerOptions["alibaba"]`:
@@ -51,6 +64,25 @@ let result = try await model.generateText(
 - Invalid option types throw `AIError.invalidArgument` before the request.
 
 Usage reports cache reads and writes from `prompt_tokens_details`.
+
+## Prompt caching
+
+Mark explicit cache breakpoints with `cacheControl` under the `alibaba` provider
+metadata of a message or content part:
+
+```swift
+let system = AIMessage(
+    role: .system,
+    content: [.text(longInstructions)],
+    providerMetadata: ["alibaba": ["cacheControl": ["type": "ephemeral"]]]
+)
+```
+
+The marker is sent as `cache_control` on a text (or image) content block. A
+part-level marker wins over the message-level one; a message-level marker on a
+multi-part user or tool message applies to its last part. Alibaba honours at
+most four breakpoints; additional markers are still sent and produce an `other`
+warning.
 
 ## Structured output
 

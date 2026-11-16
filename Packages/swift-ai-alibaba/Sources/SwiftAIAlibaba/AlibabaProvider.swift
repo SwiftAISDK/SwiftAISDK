@@ -12,13 +12,23 @@ public struct AlibabaProviderSettings: Sendable {
     public var queryParams: [String: String]
     public var transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])?
     public var transport: any AITransport
+    /// URL prefix for DashScope native video generation calls.
+    /// Defaults to `https://dashscope-intl.aliyuncs.com`, independent of `baseURL`.
+    public var videoBaseURL: String?
+    /// URL prefix for DashScope native embedding calls.
+    /// Defaults to `https://dashscope-intl.aliyuncs.com/api/v1`, independent of `baseURL`.
+    public var embeddingBaseURL: String?
+    /// Requests token usage in the final streaming chunk (`stream_options.include_usage`). Defaults to `true`.
+    public var includeUsage: Bool
 
     public init(apiKey: String? = nil, apiKeyProvider: (@Sendable () async throws -> String)? = nil, baseURL: String? = nil, headers: [String: String] = [:],
                 queryParams: [String: String] = [:], transport: any AITransport = URLSessionTransport.shared,
-                transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil) {
+                transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil,
+                videoBaseURL: String? = nil, embeddingBaseURL: String? = nil, includeUsage: Bool = true) {
         self.apiKey = apiKey; self.apiKeyProvider = apiKeyProvider; self.baseURL = baseURL; self.headers = headers
         self.queryParams = queryParams; self.transport = transport
         self.transformRequestBody = transformRequestBody
+        self.videoBaseURL = videoBaseURL; self.embeddingBaseURL = embeddingBaseURL; self.includeUsage = includeUsage
     }
 }
 
@@ -45,7 +55,14 @@ public final class AlibabaProvider: AIProvider, Sendable {
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://dashscope-intl.aliyuncs.com/compatible-mode/v1")
         let http = AIProviderHTTPClient(providerID: "alibaba", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })
-        config = AlibabaModelConfiguration(http: http, baseURL: baseURL ,transformRequestBody: configuration.transformRequestBody)
+        config = AlibabaModelConfiguration(
+            http: http,
+            baseURL: baseURL,
+            transformRequestBody: configuration.transformRequestBody,
+            videoBaseURL: withoutTrailingSlash(configuration.videoBaseURL ?? "https://dashscope-intl.aliyuncs.com"),
+            embeddingBaseURL: withoutTrailingSlash(configuration.embeddingBaseURL ?? "https://dashscope-intl.aliyuncs.com/api/v1"),
+            includeUsage: configuration.includeUsage
+        )
     }
 
     public func languageModel(_ modelID: String) throws -> any LanguageModel {
@@ -89,8 +106,28 @@ public struct AlibabaModelConfiguration: AIProviderHTTPConfiguration {
     public var http: AIProviderHTTPClient
     public var baseURL: String
     public var transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])?
-    public init(http: AIProviderHTTPClient, baseURL: String ,transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil) {
+    /// DashScope native video URL prefix. When nil, it is derived from `baseURL`
+    /// by removing `/compatible-mode/v1`.
+    public var videoBaseURL: String?
+    /// DashScope native embedding URL prefix (including `/api/v1`). When nil, it is
+    /// derived from `baseURL` by removing `/compatible-mode/v1` and appending `/api/v1`.
+    public var embeddingBaseURL: String?
+    public var includeUsage: Bool
+
+    public init(http: AIProviderHTTPClient, baseURL: String ,transformRequestBody: (@Sendable ([String: JSONValue]) -> [String: JSONValue])? = nil,
+                videoBaseURL: String? = nil, embeddingBaseURL: String? = nil, includeUsage: Bool = true) {
         self.http = http; self.baseURL = withoutTrailingSlash(baseURL)
         self.transformRequestBody = transformRequestBody
+        self.videoBaseURL = videoBaseURL.map(withoutTrailingSlash)
+        self.embeddingBaseURL = embeddingBaseURL.map(withoutTrailingSlash)
+        self.includeUsage = includeUsage
+    }
+
+    var resolvedVideoBaseURL: String {
+        videoBaseURL ?? alibabaNativeBaseURL(baseURL)
+    }
+
+    var resolvedEmbeddingBaseURL: String {
+        embeddingBaseURL ?? "\(alibabaNativeBaseURL(baseURL))/api/v1"
     }
 }

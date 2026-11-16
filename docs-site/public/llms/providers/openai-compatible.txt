@@ -109,9 +109,21 @@ let provider = try AIProviders.openAICompatible(
 
 Options are read from `providerOptions[<name>]`. For a name with dashes, use
 the camelCase key (`my-proxy` becomes `myProxy`); the raw key still works but
-produces a deprecation warning. Options are merged into the request body.
+produces a deprecation warning, and the camelCase key wins when both are set.
+
+Chat reads the typed options `user`, `reasoningEffort`, `textVerbosity` and
+`strictJsonSchema` from `openaiCompatible` and from the provider key; values of the
+wrong type throw `AIError.invalidArgument` before the request is sent. Every other
+key under the provider key is copied into the request body unchanged (no
+snake_case renaming); other keys under `openaiCompatible` are ignored.
 `reasoningEffort` overrides portable `reasoning`; portable `none` becomes
 `reasoning_effort: none`. An explicit `reasoningEffort: null` is sent as a null.
+Embeddings read only `dimensions` and `user` (from `openaiCompatible` or the raw
+provider key) and always send `encoding_format: "float"`.
+
+A JSON response format with a schema is sent as `json_object` unless
+`supportsStructuredOutputs` is enabled, with an `unsupported` `responseFormat`
+warning.
 
 ## Responses and content
 
@@ -125,8 +137,14 @@ files and provider file references.
 - Image results can be base64, URLs or both. URLs are downloaded through your
 transport into ordered `base64Images`; credentials are only sent to your API
 origin. `urls` keeps the original URLs.
-- A stream that ends without a completion signal finishes with reason
-`interrupted`.
+- A chat stream that ends without a finish reason emits an error part and finishes
+with reason `error`. Streamed tool calls are tracked like upstream: a call whose
+name arrives in a later chunk is buffered, missing IDs are generated, and a call
+that never receives a name fails the stream.
+- `providerMetadata[<name>]` is always present on chat results, with
+`acceptedPredictionTokens` and `rejectedPredictionTokens` when reported. A
+`created` value of 0 is treated as a missing timestamp.
+- Once a usage object is returned, missing token counts are reported as 0.
 - Unknown usage fields, including nested prompt and completion details, stay
 available in raw usage.
 

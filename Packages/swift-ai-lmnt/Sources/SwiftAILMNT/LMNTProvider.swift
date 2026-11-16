@@ -27,7 +27,8 @@ public final class LMNTProvider: AIProvider, Sendable {
         guard let key = configuration.apiKey ?? environmentValue(names) else {
             throw AIError.missingAPIKey(provider: "lmnt", environmentVariables: names)
         }
-        var headers = configuration.headers
+        // Lower-case first so a caller `X-Api-Key` replaces the key, as upstream spreads headers last.
+        var headers = normalizeHeaders(configuration.headers)
         headers["x-api-key"] = headers["x-api-key"] ?? "\(key)"
         headers = withUserAgentSuffix(headers, "ai-sdk/lmnt/3.0.36")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.lmnt.com")

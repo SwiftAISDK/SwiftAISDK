@@ -103,3 +103,9 @@ Requests send `X-Pplx-Integration: vercel-ai-sdk` unless you supply that header
 yourself (matched case-insensitively). The native `PerplexityProviderSettings` also
 accepts `apiKeyProvider`, an async throwing closure resolved before each authenticated
 request; a supplier failure stops the request before it is sent.
+
+HTTP failures from the Agent, Embeddings and Decisions endpoints throw
+`AIError.apiCall`; its `message` comes from Perplexity's error envelope (`error`,
+`error.message`, `detail` or `message`) while `responseBody` keeps the raw body. An
+Agent response returned with HTTP 200 but `status: "failed"` throws with status 400
+and the response's `error.message`.

@@ -378,7 +378,7 @@ private final class WeeklyProviderGroupBReasoningModel: LanguageModel, @unchecke
     let agentRequest = try #require(await agentTransport.requests().first)
     let agentBody = try decodeJSONBody(try #require(agentRequest.body))
     #expect(agentRequest.url.absoluteString == "https://api.perplexity.ai/v1/agent")
-    #expect(agentRequest.headers["user-agent"] == "ai-sdk-perplexity/5.0.24")
+    #expect(agentRequest.headers["user-agent"] == "ai-sdk-perplexity/5.0.35")
     #expect(agentBody["preset"]?.stringValue == "fast")
     #expect(agentBody["model"] == nil)
     #expect(agentBody["max_steps"]?.intValue == 4)

@@ -37,10 +37,12 @@ without one and an unsupported-reasoning warning is returned.
 
 ## Documents and citations
 
-Text (`text/*`) and `application/json` file parts are sent as Cohere documents,
-decoded from `Data` as UTF-8, with the file name as the title; document order is
-preserved. Images are sent inline as data URLs, and file URLs must be downloaded
-first. Other media types throw `AIError.invalidArgument`.
+Non-image file parts are sent as Cohere documents, decoded from `Data` as UTF-8,
+with the file name as the title; the media type is not sent and document order is
+preserved. Images are sent inline as data URLs (a partial `image` or `image/*`
+type is resolved from the bytes), with an optional
+`providerMetadata: ["cohere": ["detail": "low" | "high" | "auto"]]` on the image
+part. File URLs must be downloaded first.
 
 Responses include document citations as sources in generated and streamed
 results. Citations that refer only to tool output stay in the raw response.

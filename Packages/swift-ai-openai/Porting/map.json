@@ -124,6 +124,8 @@
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesToolPreparationTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesToolResultContentConversionTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesToolSearchConversionTests.swift",
+      "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/ParityOpenAIChatTests.swift",
+      "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/ParityOpenAIResponsesTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/ProviderStreamingRetryTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/RealtimeTestSupport.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/TestSupport.swift",

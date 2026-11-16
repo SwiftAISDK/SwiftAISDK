@@ -95,7 +95,9 @@ public final class GladiaTranscriptionModel: TranscriptionModel, @unchecked Send
             durationInSeconds: raw["result"]?["metadata"]?["audio_duration"]?.doubleValue ?? transcriptionDuration(from: segments),
             warnings: resolved.warnings,
             providerMetadata: ["gladia": raw],
-            responseMetadata: aiResponseMetadata(from: raw, response: finalResponse.response, modelID: modelID)
+            // Upstream reports only the call timestamp, the selected model ID and the
+            // final poll's headers; the Gladia job ID stays in provider metadata.
+            responseMetadata: AIResponseMetadata(timestamp: Date(), modelID: modelID, headers: finalResponse.response.headers, body: raw)
         )
     }
 

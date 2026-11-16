@@ -19,6 +19,9 @@ import Testing
 
 @Suite("WeeklyGoogle20261018")
 struct WeeklyGoogle20261018Tests {
+    /// Upstream google-vertex writes Gemini metadata under `googleVertex` (and legacy `vertex`), not `google`.
+    private func ns(_ vertex: Bool) -> String { vertex ? "googleVertex" : "google" }
+
     private let first = #"{"candidates":[{"content":{"parts":[{"text":"Hello"}]},"finishReason":"CONTINUATION","continuationToken":"token-1"}],"usageMetadata":{"promptTokenCount":10,"candidatesTokenCount":5,"thoughtsTokenCount":20,"totalTokenCount":35,"promptTokensDetails":[{"modality":"TEXT","tokenCount":10}]}}"#
     private let last = #"{"responseId":"last","candidates":[{"content":{"parts":[{"text":", world"}]},"finishReason":"STOP"}],"usageMetadata":{"promptTokenCount":35,"candidatesTokenCount":7,"totalTokenCount":42,"serviceTier":"priority","promptTokensDetails":[{"modality":"TEXT","tokenCount":30},{"modality":"IMAGE","tokenCount":5}]}}"#
 
@@ -37,9 +40,9 @@ struct WeeklyGoogle20261018Tests {
         #expect(result.usage?.inputTokens == 45 && result.usage?.outputTokens == 32)
         #expect(result.usage?.outputTextTokens == 12 && result.usage?.outputReasoningTokens == 20)
         #expect(result.usage?.totalTokens == 77)
-        #expect(result.providerMetadata["google"]?["initialPromptTokenCount"] == 10)
-        #expect(result.providerMetadata["google"]?["continuationToken"] == nil)
-        #expect(result.providerMetadata["google"]?["usageMetadata"]?["promptTokensDetails"] == [["modality": "TEXT", "tokenCount": 40], ["modality": "IMAGE", "tokenCount": 5]])
+        #expect(result.providerMetadata[ns(vertex)]?["initialPromptTokenCount"] == 10)
+        #expect(result.providerMetadata[ns(vertex)]?["continuationToken"] == nil)
+        #expect(result.providerMetadata[ns(vertex)]?["usageMetadata"]?["promptTokensDetails"] == [["modality": "TEXT", "tokenCount": 40], ["modality": "IMAGE", "tokenCount": 5]])
         #expect(result.responseMetadata.id == "last" && result.responseMetadata.headers["x-final"] == "yes")
         let requests = await transport.requests()
         #expect(requests.count == 2)
@@ -64,8 +67,8 @@ struct WeeklyGoogle20261018Tests {
         guard case let .finishMetadata(reason, usage, metadata) = try #require(parts.last) else { Issue.record("Missing finish"); return }
         #expect(reason == "stop")
         #expect(usage?.inputTokens == 45 && usage?.outputTokens == 32)
-        #expect(metadata["google"]?["initialPromptTokenCount"] == 10)
-        #expect(metadata["google"]?["continuationToken"] == nil)
+        #expect(metadata[ns(vertex)]?["initialPromptTokenCount"] == 10)
+        #expect(metadata[ns(vertex)]?["continuationToken"] == nil)
         #expect(await transport.requests().count == 2)
         let resumed = try decodeJSONBody(try #require(await transport.requests().last?.body))
         #expect(resumed["continuationToken"] == "token-1")
@@ -138,7 +141,7 @@ struct WeeklyGoogle20261018Tests {
             if case let .finishMetadata(reason, usage, metadata) = part {
                 finished = true
                 #expect(reason == "length" && usage?.inputTokens == 10)
-                #expect(metadata["google"]?["continuationToken"] == "token-1")
+                #expect(metadata[ns(vertex)]?["continuationToken"] == "token-1")
             }
         }
         #expect(errors == 1 && finished)

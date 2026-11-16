@@ -30,6 +30,9 @@ sent).
   Cognitive Services hosts are normalized without duplicating `/v1` or
   `api-version`; Foundry project URLs (`/api/projects/...`) get no `api-version`;
   any other host is used as-is.
+- Speech/MAI-only setups may omit the resource and `baseURL` when
+  `AzureOpenAIAudioSettings` supplies `speechBaseURL` or `maiBaseURL`; Azure OpenAI
+  requests then fail with an invalid-URL error before anything is sent.
 
 ## Authentication
 

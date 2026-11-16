@@ -35,6 +35,7 @@
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/AzureProviderTests.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/AzureSocketTestSupport.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/FixtureDownloadTransport.swift",
+      "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/ParityAzureTests.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/TestSupport.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/Weekly20261101AzureTests.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/Weekly20261108AzureTests.swift",

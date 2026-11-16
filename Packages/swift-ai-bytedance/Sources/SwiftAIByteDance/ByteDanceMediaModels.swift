@@ -176,12 +176,7 @@ public final class ByteDanceVideoModel: AsyncVideoModel, @unchecked Sendable {
             switch raw["status"]?.stringValue {
             case "succeeded":
                 return (raw, response)
-            case "failed":
-                throw AIError.invalidResponse(
-                    provider: providerID,
-                    message: "Video generation failed: \(byteDanceJSONString(raw))"
-                )
-            case "expired", "cancelled", "canceled":
+            case "failed", "expired", "cancelled", "canceled":
                 let status = raw["status"]?.stringValue ?? "failed"
                 let detail = raw["error"]?["message"]?.stringValue
                     ?? raw["error"]?["code"]?.stringValue
@@ -210,9 +205,10 @@ private func byteDancePreparedVideoRequest(
     modelID: String
 ) throws -> (body: [String: JSONValue], warnings: [AIWarning], options: ByteDanceResolvedOptions) {
     let options = try byteDanceProviderOptions(from: request)
+    var warnings = byteDanceWarnings(for: request)
     var body: [String: JSONValue] = [
         "model": .string(modelID),
-        "content": .array(try byteDanceContent(from: request, options: options))
+        "content": .array(try byteDanceContent(from: request, options: options, warnings: &warnings))
     ]
     if let aspectRatio = request.aspectRatio { body["ratio"] = .string(aspectRatio) }
     if let duration = request.durationSeconds { body["duration"] = .number(duration) }
@@ -224,7 +220,7 @@ private func byteDancePreparedVideoRequest(
     if let generateAudio = request.generateAudio {
         body["generate_audio"] = .bool(generateAudio)
     }
-    return (body, byteDanceWarnings(for: request), options)
+    return (body, warnings, options)
 }
 
 private func byteDanceDeprecatedPollWarnings(_ options: ByteDanceResolvedOptions) -> [AIWarning] {
@@ -274,19 +270,20 @@ private func byteDanceExtraBodyOptions(from extraBody: [String: JSONValue]) thro
     return ByteDanceResolvedOptions(known: known, passthrough: passthrough)
 }
 
-private func byteDanceContent(from request: VideoGenerationRequest, options: ByteDanceResolvedOptions) throws -> [JSONValue] {
+private func byteDanceContent(from request: VideoGenerationRequest, options: ByteDanceResolvedOptions,
+                              warnings: inout [AIWarning]) throws -> [JSONValue] {
     var content: [JSONValue] = []
     let known = options.known
     if !request.prompt.isEmpty {
         content.append(.object(["type": .string("text"), "text": .string(request.prompt)]))
     }
     let lastFrameImage = try byteDanceLastFrameImageURL(from: request, known: known)
-    let referenceImageURLs = try byteDanceReferenceImageURLs(from: request, known: known)
+    let referenceContent = try byteDanceReferenceContent(from: request, known: known, warnings: &warnings)
     if let image = try byteDanceStartImageURL(from: request, known: known) {
         var imageContent: [String: JSONValue] = ["type": .string("image_url"), "image_url": .object(["url": .string(image)])]
         if lastFrameImage != nil {
             imageContent["role"] = .string("first_frame")
-        } else if !referenceImageURLs.isEmpty {
+        } else if !referenceContent.isEmpty {
             imageContent["role"] = .string("reference_image")
         }
         content.append(.object(imageContent))
@@ -298,20 +295,7 @@ private func byteDanceContent(from request: VideoGenerationRequest, options: Byt
             "role": .string("last_frame")
         ]))
     }
-    for imageURL in referenceImageURLs {
-        content.append(.object([
-            "type": .string("image_url"),
-            "image_url": .object(["url": .string(imageURL)]),
-            "role": .string("reference_image")
-        ]))
-    }
-    for videoURL in byteDanceMediaURLs(known["referenceVideos"]) {
-        content.append(.object([
-            "type": .string("video_url"),
-            "video_url": .object(["url": .string(videoURL)]),
-            "role": .string("reference_video")
-        ]))
-    }
+    content.append(contentsOf: referenceContent)
     for audioURL in byteDanceMediaURLs(known["referenceAudio"]) {
         content.append(.object([
             "type": .string("audio_url"),
@@ -339,14 +323,37 @@ private func byteDanceLastFrameImageURL(from request: VideoGenerationRequest, kn
     return byteDanceMediaURL(known["lastFrameImage"])
 }
 
-private func byteDanceReferenceImageURLs(from request: VideoGenerationRequest, known: [String: JSONValue]) throws -> [String] {
+/// Mirrors upstream `resolveReferenceContent`: frame images suppress every reference,
+/// `inputReferences` replace provider reference images and videos and are routed by media type.
+private func byteDanceReferenceContent(from request: VideoGenerationRequest, known: [String: JSONValue],
+                                       warnings: inout [AIWarning]) throws -> [JSONValue] {
     if !request.frameImages.isEmpty {
         return []
     }
     if !request.inputReferences.isEmpty {
-        return try request.inputReferences.map { try convertImageModelFileToDataURI($0) }
+        return try request.inputReferences.map { reference in
+            if reference.url != nil, reference.mediaType == nil {
+                warnings.append(AIWarning(
+                    type: "unsupported",
+                    feature: "inputReferences",
+                    message: "ByteDance requires an explicit mediaType to route URL references as video or image. Pass { data: url, mediaType: \"video/mp4\" } for video references. The reference was treated as an image."
+                ))
+            }
+            let url = try convertImageModelFileToDataURI(reference)
+            let isVideo = reference.mediaType?.split(separator: "/").first.map(String.init) == "video"
+            return isVideo
+                ? .object(["type": "video_url", "video_url": .object(["url": .string(url)]), "role": "reference_video"])
+                : .object(["type": "image_url", "image_url": .object(["url": .string(url)]), "role": "reference_image"])
+        }
     }
-    return byteDanceMediaURLs(known["referenceImages"])
+    var content: [JSONValue] = []
+    for imageURL in byteDanceMediaURLs(known["referenceImages"]) {
+        content.append(.object(["type": "image_url", "image_url": .object(["url": .string(imageURL)]), "role": "reference_image"]))
+    }
+    for videoURL in byteDanceMediaURLs(known["referenceVideos"]) {
+        content.append(.object(["type": "video_url", "video_url": .object(["url": .string(videoURL)]), "role": "reference_video"]))
+    }
+    return content
 }
 
 private func byteDanceOptions(from options: ByteDanceResolvedOptions) -> [String: JSONValue] {

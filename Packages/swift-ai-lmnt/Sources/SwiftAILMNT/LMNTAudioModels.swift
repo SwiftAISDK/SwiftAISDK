@@ -28,7 +28,8 @@ public final class LMNTSpeechModel: SpeechModel, @unchecked Sendable {
             body["speed"] = .number(speed)
         }
         body.merge(lmntSpeechOptions(from: options)) { _, new in new }
-        if let language = request.language {
+        // Upstream only sends a truthy (non-empty) language.
+        if let language = request.language, !language.isEmpty {
             body["language"] = .string(language)
         }
 
@@ -170,7 +171,8 @@ private func lmntIsInteger(_ value: Double) -> Bool {
 }
 
 private func lmntSpeechWarnings(for request: SpeechRequest) -> [AIWarning] {
-    guard let format = request.format,
+    // Upstream skips the check for a falsy (empty) output format.
+    guard let format = request.format, !format.isEmpty,
           !["mp3", "aac", "mulaw", "raw", "wav"].contains(format) else {
         return []
     }

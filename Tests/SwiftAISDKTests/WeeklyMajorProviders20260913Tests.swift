@@ -35,7 +35,10 @@ struct WeeklyMajorProviders20260913Tests {
 
         """))
         let alibaba = try AIProviders.alibaba(settings: ProviderSettings(apiKey: "key", transport: alibabaTransport))
-        let alibabaLifecycle = try await reasoningLifecycle(from: alibaba.languageModel("qwen3-max"))
+        // Upstream alibaba-chat-language-model.ts uses generateId() for each reasoning block; normalize it.
+        let rawAlibabaLifecycle = try await reasoningLifecycle(from: alibaba.languageModel("qwen3-max"))
+        let alibabaReasoningID = try #require(rawAlibabaLifecycle.first?.split(separator: ":").last.map(String.init))
+        let alibabaLifecycle = rawAlibabaLifecycle.map { $0.replacingOccurrences(of: alibabaReasoningID, with: "reasoning-0") }
         #expect(alibabaLifecycle == [
             "start:reasoning-0",
             "delta:reasoning-0:Think ",

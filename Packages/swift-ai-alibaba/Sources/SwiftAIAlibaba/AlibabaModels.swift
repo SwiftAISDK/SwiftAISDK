@@ -19,6 +19,7 @@ public final class AlibabaLanguageModel: LanguageModel, @unchecked Sendable {
             for: request,
             modelID: modelID,
             stream: false,
+            includeUsage: config.includeUsage,
             transformRequestBody: config.transformRequestBody
         )
         let httpResponse = try await config.transport.send(config.request(
@@ -35,14 +36,13 @@ public final class AlibabaLanguageModel: LanguageModel, @unchecked Sendable {
         let raw = response.json
         let choice = raw["choices"]?[0]
         let toolCalls = alibabaToolCalls(from: choice?["message"]?["tool_calls"])
-        guard let text = choice?["message"]?["content"]?.stringValue ?? (toolCalls.isEmpty ? nil : "") else {
-            throw AIError.invalidResponse(provider: providerID, message: "No text content found in Alibaba response.")
-        }
+        // Upstream returns whatever content is present (possibly none) instead of failing.
+        let text = choice?["message"]?["content"]?.stringValue ?? ""
         return TextGenerationResult(
             text: text,
             reasoning: choice?["message"]?["reasoning_content"]?.stringValue ?? "",
             finishReason: alibabaFinishReason(choice?["finish_reason"]?.stringValue),
-            usage: alibabaUsage(from: raw) ?? TokenUsage(inputTokensNoCache: 0, inputTokensCacheWrite: 0),
+            usage: alibabaUsage(from: raw) ?? TokenUsage(),
             toolCalls: toolCalls,
             rawValue: raw,
             warnings: prepared.warnings,
@@ -58,6 +58,7 @@ public final class AlibabaLanguageModel: LanguageModel, @unchecked Sendable {
                         for: request,
                         modelID: modelID,
                         stream: true,
+                        includeUsage: config.includeUsage,
                         transformRequestBody: config.transformRequestBody
                     )
                     let httpRequest = try config.request(
@@ -77,18 +78,23 @@ public final class AlibabaLanguageModel: LanguageModel, @unchecked Sendable {
                     let responseHead = httpResponseHead(from: response, request: httpRequest)
 
                     continuation.yield(.streamStart(warnings: prepared.warnings))
-                    var latestUsage: TokenUsage? = TokenUsage(inputTokensNoCache: 0, inputTokensCacheWrite: 0)
+                    var latestUsage: TokenUsage? = TokenUsage()
                     var finishReason: String? = "interrupted"
-                    var toolCalls = AlibabaStreamingToolCalls()
+                    var toolCalls = AIStreamingToolCallTracker(generateID: { generateId() })
                     var emittedResponseMetadata = false
                     var activeText = false
                     var activeReasoningID: String?
                     for try await event in serverSentEvents(from: response.body) {
-                        if event.data == "[DONE]" { break }
+                        // Upstream parseJsonEventStream ignores [DONE] and keeps reading.
+                        if event.data == "[DONE]" { continue }
                         let raw: JSONValue
                         do {
                             raw = try decodeJSONBody(Data(event.data.utf8))
                         } catch {
+                            if request.includeRawChunks {
+                                // Upstream emits a raw part with an undefined rawValue for unparsable chunks.
+                                continuation.yield(.raw(.null))
+                            }
                             finishReason = "error"
                             continuation.yield(.error(message: error.localizedDescription))
                             continue
@@ -113,7 +119,7 @@ public final class AlibabaLanguageModel: LanguageModel, @unchecked Sendable {
                                 continuation.yield(.textEnd(id: "0"))
                                 activeText = false
                             }
-                            let id = activeReasoningID ?? "reasoning-0"
+                            let id = activeReasoningID ?? generateId()
                             if activeReasoningID == nil {
                                 activeReasoningID = id
                                 continuation.yield(.reasoningStart(id: id))
@@ -142,19 +148,15 @@ public final class AlibabaLanguageModel: LanguageModel, @unchecked Sendable {
                                 activeText = false
                             }
                             for toolCallDelta in toolCallDeltas {
-                                let startsNewToolCall = !toolCalls.hasMatchingBuffer(for: toolCallDelta)
-                                var effectiveDelta = toolCallDelta
-                                if startsNewToolCall,
-                                   toolCallDelta["id"]?.stringValue == nil,
-                                   toolCallDelta["function"]?["name"]?.stringValue != nil,
-                                   var object = toolCallDelta.objectValue {
-                                    object["id"] = .string(generateId())
-                                    effectiveDelta = .object(object)
-                                }
-                                if startsNewToolCall, toolCallDelta["function"]?["name"]?.stringValue == nil {
-                                    throw AIError.invalidResponse(provider: providerID, message: "Expected 'function.name' to be a string.")
-                                }
-                                for part in toolCalls.apply(delta: effectiveDelta) {
+                                let parts = try toolCalls.processDelta(AIStreamingToolCallDelta(
+                                    index: toolCallDelta["index"]?.intValue,
+                                    id: toolCallDelta["id"]?.stringValue,
+                                    type: toolCallDelta["type"]?.stringValue,
+                                    functionName: toolCallDelta["function"]?["name"]?.stringValue,
+                                    arguments: toolCallDelta["function"]?["arguments"]?.stringValue,
+                                    rawValue: toolCallDelta
+                                ))
+                                for part in parts {
                                     continuation.yield(part)
                                 }
                             }
@@ -169,7 +171,7 @@ public final class AlibabaLanguageModel: LanguageModel, @unchecked Sendable {
                     if activeText {
                         continuation.yield(.textEnd(id: "0"))
                     }
-                    for part in toolCalls.finishedParts() {
+                    for part in toolCalls.flush() {
                         continuation.yield(part)
                     }
                     continuation.yield(.finishMetadata(

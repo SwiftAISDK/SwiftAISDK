@@ -142,7 +142,7 @@ and extra fields.
 ## Gateway tools
 
 `GatewayTools` creates tools that Gateway executes on the server:
-`parallelSearch`, `perplexitySearch`, `takoSearch`, `browserbaseSearch`,
+`parallelSearch`, `perplexitySearch`, `exaSearch`, `takoSearch`, `browserbaseSearch`,
 `browserbaseFetch`, `deepseekSearch` and `deepseekFetch`. Pass them as provider
 tools in the request:
 
@@ -200,6 +200,12 @@ print(speechToken.token, speechToken.url, speechToken.expiresAt ?? 0)
 `gateway.experimentalTranscription("openai/gpt-realtime-whisper")` also creates a
 streaming transcription model directly.
 
+Clients that open their own WebSocket carry the token in subprotocols:
+`GatewayRealtimeAuth.realtimeProtocols(token:teamIDOrSlug:)` (and the `speech` and
+`transcription` variants) build them, and a compatible server reads them back with
+`GatewayRealtimeAuth.authToken(fromSecWebSocketProtocol:)` and
+`teamIDOrSlug(fromSecWebSocketProtocol:)`.
+
 ## Video, images and batches
 
 - Video supports asynchronous start/status operations and callback registration
@@ -228,7 +234,10 @@ actually answered.
 
 ## Account APIs
 
-- `availableModels()` lists the model catalog.
+- `availableModels()` lists the model catalog, including `description` and
+`pricing` when Gateway publishes them. Entries with an unknown `modelType` are
+skipped. The catalog is cached for `metadataCacheRefreshMillis` (five minutes by
+default); after that a refresh starts while the cached catalog is returned.
 - `credits()` returns balance and total usage.
 - `getSpendReport(GatewaySpendReportParams(startDate:endDate:))` returns spend
 rows, optionally grouped and filtered by model, provider, user or tags.
@@ -239,7 +248,18 @@ cost), latency and token details for one generation.
 
 `GatewayProviderSettings(apiKeyProvider:)` takes an async throwing closure that is
 called before each authenticated request and each streaming speech or transcription
-connection. It must return a non-empty key; if it throws, the request is not sent.
+connection. It must return a non-empty key; otherwise the request is not sent and
+the call fails with a Gateway authentication error ("No authentication provided").
+
+## Errors and observability
+
+Authentication failures carry Gateway's guidance for the credential in use (API
+key or OIDC token). Network failures become a retryable `GatewayError` of type
+`responseError` (status 500) whose message starts with
+`Invalid error response format: Gateway request failed:`. On Vercel, model
+requests forward `VERCEL_DEPLOYMENT_ID`, `VERCEL_ENV`, `VERCEL_REGION` and
+`VERCEL_PROJECT_ID` as `ai-o11y-*` headers; the per-request ID from Vercel's
+Node request context is not available in Swift.
 
 Task cancellation, `AIAbortError` and timeouts surface as cancellation errors, not
 as retryable Gateway failures.

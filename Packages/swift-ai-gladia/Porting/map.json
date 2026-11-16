@@ -26,6 +26,8 @@
       "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/GladiaProviderTests.swift",
       "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/GladiaTranscriptionSchemaAndLifecycleTests.swift",
+      "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/GladiaUpstreamFixtures.swift",
+      "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/GladiaUpstreamParityTests.swift",
       "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/TestSupport.swift",
       "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/Weekly20261101CredentialsTests.swift",
       "Packages/swift-ai-gladia/Tests/SwiftAIGladiaTests/Weekly20261108GladiaTests.swift",

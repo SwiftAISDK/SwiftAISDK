@@ -155,7 +155,10 @@ import Testing
     let model = try provider.languageModel("gemini-2.5-pro")
 
     let result = try await model.generate(LanguageModelRequest(messages: [.user("Metadata?")]))
-    let metadata = try #require(result.providerMetadata["google"])
+    // Upstream google-vertex writes metadata under `googleVertex` and legacy `vertex`, not `google`.
+    #expect(result.providerMetadata["google"] == nil)
+    #expect(result.providerMetadata["vertex"] == result.providerMetadata["googleVertex"])
+    let metadata = try #require(result.providerMetadata["googleVertex"])
 
     #expect(metadata["safetyRatings"]?[0]?["category"]?.stringValue == "HARM_CATEGORY_DANGEROUS_CONTENT")
     #expect(metadata["promptFeedback"]?["blockReason"]?.stringValue == "SAFETY")
@@ -330,7 +333,9 @@ import Testing
     let functionResponse = try #require(body["contents"]?[2]?["parts"]?[0]?["functionResponse"])
     #expect(functionResponse["id"] == nil)
     #expect(functionResponse["name"]?.stringValue == "lookup")
-    #expect(functionResponse["response"]?["answer"]?.stringValue == "known")
+    // Upstream wraps tool output as `{ name, content }` (convert-to-google-messages.ts).
+    #expect(functionResponse["response"]?["name"]?.stringValue == "lookup")
+    #expect(functionResponse["response"]?["content"]?["answer"]?.stringValue == "known")
     #expect(generation.responseMetadata.id == "vertex-response-123")
 }
 @Test func googleVertexToolsHelpersMirrorProviderExecutedToolFactories() async throws {

@@ -31,7 +31,7 @@ func alibabaToolCalls(from value: JSONValue?) -> [AIToolCall] {
 }
 
 func alibabaUsage(from raw: JSONValue) -> TokenUsage? {
-    guard let usage = raw["usage"] else { return nil }
+    guard let usage = raw["usage"], usage.objectValue != nil else { return nil }
     let inputTokens = usage["prompt_tokens"]?.intValue ?? usage["input_tokens"]?.intValue ?? 0
     let outputTokens = usage["completion_tokens"]?.intValue ?? usage["output_tokens"]?.intValue ?? 0
     let cacheReadTokens = usage["prompt_tokens_details"]?["cached_tokens"]?.intValue ?? 0
@@ -62,7 +62,10 @@ func alibabaResponseMetadata(from raw: JSONValue? = nil, response: AIHTTPRespons
 }
 
 func alibabaJSONString(_ value: JSONValue) -> String? {
-    guard let data = try? JSONEncoder().encode(value) else { return nil }
+    // JSON.stringify does not escape "/"; sorted keys keep unordered Swift objects deterministic.
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
+    guard let data = try? encoder.encode(value) else { return nil }
     return String(data: data, encoding: .utf8)
 }
 

@@ -34,11 +34,8 @@ func mistralMessageJSONs(_ message: AIMessage, isLastMessage: Bool) throws -> [J
         }
         return [.object(output)]
     case .tool:
-        let toolMessages = message.content.compactMap(mistralToolMessageJSON)
-        if !toolMessages.isEmpty {
-            return toolMessages
-        }
-        return [.object(["role": .string("tool"), "content": .string(message.combinedText)])]
+        // Upstream maps tool results only; approval responses produce no message.
+        return message.content.compactMap(mistralToolMessageJSON)
     case .user:
         return [.object([
             "role": .string("user"),
@@ -100,6 +97,10 @@ func mistralToolMessageJSON(_ part: AIContentPart) -> JSONValue? {
 
 func mistralToolResultContent(_ result: AIToolResult) -> String {
     let output = result.modelOutput ?? result.result
+    // A plain string tool output becomes a `text` model output upstream.
+    if let text = output.stringValue {
+        return text
+    }
     switch output["type"]?.stringValue {
     case "text", "error-text":
         return output["value"]?.stringValue ?? ""
@@ -116,8 +117,8 @@ func mistralToolResultContent(_ result: AIToolResult) -> String {
 }
 
 func mistralJSONString(_ value: JSONValue) -> String? {
-    guard let data = try? JSONEncoder().encode(value) else { return nil }
-    return String(data: data, encoding: .utf8)
+    // JSON.stringify does not escape forward slashes.
+    try? decisionJSONText(value)
 }
 
 func mistralContentPartJSON(_ part: AIContentPart) throws -> JSONValue {
@@ -128,15 +129,18 @@ func mistralContentPartJSON(_ part: AIContentPart) throws -> JSONValue {
         return .object(["type": .string("text"), "text": .string(text)])
     case let .imageURL(url, _):
         return .object(["type": .string("image_url"), "image_url": .string(url)])
-    case let .data(mimeType, data, _) where mimeType.hasPrefix("image/"),
-         let .file(mimeType, data, _, _) where mimeType.hasPrefix("image/"):
-        let mediaType = mimeType == "image/*" ? "image/jpeg" : mimeType
-        return .object(["type": .string("image_url"), "image_url": .string("data:\(mediaType);base64,\(data.base64EncodedString())")])
-    case let .data(mimeType, data, _) where mimeType == "application/pdf",
-         let .file(mimeType, data, _, _) where mimeType == "application/pdf":
-        return .object(["type": .string("document_url"), "document_url": .string("data:\(mimeType);base64,\(data.base64EncodedString())")])
-    case let .data(mimeType, _, _), let .file(mimeType, _, _, _):
-        throw AIError.invalidArgument(argument: "files", message: "Mistral chat API only supports image and PDF file parts; got \(mimeType).")
+    case let .data(mimeType, data, _), let .file(mimeType, data, _, _):
+        // Upstream resolves partial media types (`image`, `image/*`, `application`) from the bytes
+        // and accepts images plus documents whose resolved type is application/pdf.
+        if topLevelMediaType(mimeType) == "image" {
+            let mediaType = try resolveFullMediaType(mediaType: mimeType, data: data)
+            return .object(["type": .string("image_url"), "image_url": .string("data:\(mediaType);base64,\(data.base64EncodedString())")])
+        }
+        let mediaType = try resolveFullMediaType(mediaType: mimeType, data: data)
+        guard mediaType == "application/pdf" else {
+            throw AIError.invalidArgument(argument: "files", message: "Mistral chat API only supports image and PDF file parts; got \(mimeType).")
+        }
+        return .object(["type": .string("document_url"), "document_url": .string("data:\(mediaType);base64,\(data.base64EncodedString())")])
     case let .providerReference(mimeType, reference, _, _) where mimeType == "application/pdf":
         let url = try resolveProviderReference(reference: reference, provider: "mistral")
         guard URLComponents(string: url)?.scheme?.lowercased() == "https" else {
@@ -194,7 +198,7 @@ func mapMistralFinishReason(_ reason: String?) -> String? {
 }
 
 func mistralUsage(from raw: JSONValue) -> TokenUsage? {
-    guard let usage = raw["usage"] else { return nil }
+    guard let usage = raw["usage"], usage != .null else { return nil }
     let inputTokens = usage["prompt_tokens"]?.intValue
     let outputTokens = usage["completion_tokens"]?.intValue
     let cacheReadTokens = usage["num_cached_tokens"]?.intValue

@@ -24,7 +24,7 @@ struct TypesafeAIProviderTests {
         #expect(provider.providerID == "typesafe")
         #expect(provider.supportedCapabilities == [.evaluation, .decision])
         #expect(model.specificationVersion == "v4")
-        #expect(model.providerID == "typesafe.evaluation")
+        #expect(model.providerID == "typesafe.decision")
         #expect(model.modelID == "jev-latest")
         #expect(model.supportedQuestionTypes == [.choice, .score, .boolean, .box])
 
@@ -234,9 +234,10 @@ struct TypesafeAIProviderTests {
             Issue.record("Expected an API call error.")
         } catch let error as AIError {
             let apiError = try #require(error.apiCallError)
-            #expect(apiError.provider == "typesafe.evaluation")
+            #expect(apiError.provider == "typesafe.decision")
             #expect(apiError.statusCode == status)
-            #expect(apiError.responseBody == "Provider error")
+            #expect(apiError.message == "Provider error")
+            #expect(apiError.responseBody == #"{"detail":"Provider error"}"#)
             #expect(apiError.responseHeaders["x-request-id"] == "failed")
             #expect(apiError.isRetryable == (status == 429 || status == 529))
             #expect(apiError.url == "https://api.typesafe.ai/v1/systemone")
@@ -269,7 +270,8 @@ struct TypesafeAIProviderTests {
                 _ = try await model.doEvaluate(typesafeOptions())
                 Issue.record("Expected an API call error for \(body).")
             } catch let error as AIError {
-                #expect(error.apiCallError?.responseBody == expectedMessage)
+                #expect(error.apiCallError?.message == expectedMessage)
+                #expect(error.apiCallError?.responseBody == body)
             }
         }
     }
@@ -295,6 +297,8 @@ struct TypesafeAIProviderTests {
                 let apiError = try #require(error.apiCallError)
                 #expect(apiError.statusCode == 200)
                 #expect(!apiError.isRetryable)
+                #expect(apiError.message == "Invalid JSON response")
+                #expect(apiError.responseBody == body)
             }
         }
     }

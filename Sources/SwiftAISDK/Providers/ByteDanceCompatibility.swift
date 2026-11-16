@@ -9,3 +9,9 @@ extension ByteDanceVideoModel {
         self.init(modelID: modelID, config: ByteDanceModelConfiguration(http: config.httpClient, baseURL: config.baseURL))
     }
 }
+
+extension ByteDanceImageModel {
+    convenience init(modelID: String, config: ModelHTTPConfig) {
+        self.init(modelID: modelID, config: ByteDanceModelConfiguration(http: config.httpClient, baseURL: config.baseURL))
+    }
+}
