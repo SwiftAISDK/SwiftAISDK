@@ -278,7 +278,12 @@ struct TypeSafeAIUpstreamDecisionTests {
         let transport = RecordingTransport(response: AIHTTPResponse(statusCode: 200, headers: ["content-type": "application/json"], body: try encodeJSONBody(response)))
         let result = try await model(transport).doDecide(options(questions: ["rating": .score(criteria: criteria)]))
         #expect(try await jsonBody(transport)["questions"]?["rating"] == ["type": "score", "criteria": .array(criteria)])
-        #expect(result.answers["rating"] == .score(score: 0, probabilities: (0..<length).reduce(into: [:]) { $0[String($1)] = $1 == 0 ? 1 : 0 }))
+        var expectedProbabilities: [String: Double] = [:]
+        for level in 0..<length {
+            expectedProbabilities[String(level)] = level == 0 ? 1 : 0
+        }
+        let expected = AIDecisionAnswer.score(score: 0, probabilities: expectedProbabilities)
+        #expect(result.answers["rating"] == expected)
         #expect(result.providerMetadata["typesafe"]?["legend"] == ["rating": legend])
     }
 
