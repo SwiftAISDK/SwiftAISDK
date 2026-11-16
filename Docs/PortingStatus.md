@@ -30,9 +30,11 @@ them only when investigating an earlier pass.
 - The 2026-11-16 upstream behavior parity audit compared every package except
   Prodia, Rev.ai and Together AI (audited the day before) with its reviewed npm
   source and matching-release tests, fixed the divergences it found and
-  translated the covering upstream tests. Its prepared minor releases are
-  `Releases/changes/upstream-parity-20261116.json`; findings and the cases
-  still untranslated are in
+  translated the covering upstream tests. Its 44 minor releases, including
+  core 1.6.0, are published as `Releases/sets/upstream-parity-20261116.json`
+  with public consumer evidence in
+  [PublicConsumerVerification20261116.json](Archive/PublicConsumerVerification20261116.json);
+  findings and the cases still untranslated are in
   [UpstreamParityAudit20261116.md](Archive/UpstreamParityAudit20261116.md).
 - Paid/live provider checks remain disabled by default.
 

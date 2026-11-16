@@ -8,7 +8,7 @@ and macOS 12 or iOS 15 or later.
 ```swift
 // Package.swift
 dependencies: [
-    .package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "3.5.0"),
+    .package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "3.6.0"),
 ],
 targets: [
     .target(

@@ -17,7 +17,7 @@ limitations are described in the documentation.
 Add the complete `SwiftAISDK` package to `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "3.5.0")
+.package(url: "https://github.com/SwiftAISDK/SwiftAISDK.git", from: "3.6.0")
 ```
 
 Add its product to your target's dependencies:
