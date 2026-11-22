@@ -18,8 +18,9 @@ them only when investigating an earlier pass.
 - The canonical catalog tracks 58 npm packages across 56 independent Swift
   packages, including core, 53 provider adapters, MCP and UI. All 56 Swift
   packages are published.
-- SwiftAISDK 3.6.0 is the current optional compatibility umbrella. Its tested
-  dependency selection is `Releases/umbrella/3.6.0.json`.
+- SwiftAISDK 3.7.0 is the current optional compatibility umbrella. Its tested
+  dependency selection is `Releases/umbrella/3.7.0.json`, with the public tag
+  checks in [UmbrellaConsumerVerification20261122.json](Archive/UmbrellaConsumerVerification20261122.json).
 - The latest source review and released package selection are in
   [WeeklyUpstreamAudit20261122.md](Archive/WeeklyUpstreamAudit20261122.md).
   Published refs, CI and consumer checks are in
