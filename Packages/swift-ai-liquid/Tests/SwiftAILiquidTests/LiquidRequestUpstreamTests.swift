@@ -89,17 +89,7 @@ import Testing
         #expect(await transport.requests.isEmpty)
     }
 
-    @Test(arguments: [
-        [String: AIDecisionQuestion](),
-        Dictionary(uniqueKeysWithValues: (0..<129).map { (String($0), liquidUrgency) }),
-        ["is_urgent": .boolean(criteria: ["true": "Urgent", "false": "Not urgent"])],
-        ["department": .choice(instructions: "Which team should handle this?", criteria: ["billing": .null])],
-        ["department": .choice(instructions: "Which team should handle this?", criteria:
-            Dictionary(uniqueKeysWithValues: (0..<256).map { (String($0), JSONValue.null) }))],
-        ["frustration": .score(instructions: "How frustrated is the customer?", criteria: ["Calm"])],
-        ["frustration": .score(instructions: "How frustrated is the customer?", criteria: (0..<11).map { .string(String($0)) })],
-        ["frustration": .score(instructions: "How frustrated is the customer?", criteria: ["Calm", .null])]
-    ])
+    @Test(arguments: liquidInvalidQuestionSets)
     func rejectsInvalidQuestionLimitsBeforeHTTP(questions: [String: AIDecisionQuestion]) async throws {
         let (model, transport) = try liquidSetup()
         await #expect {
@@ -147,3 +137,27 @@ import Testing
         #expect(Set(body.keys) == ["model", "state", "questions"])
     }
 }
+
+private let liquidInvalidQuestionSets: [[String: AIDecisionQuestion]] = {
+    let oversizedQuestionSet = Dictionary(uniqueKeysWithValues: (0..<129).map { (String($0), liquidUrgency) })
+    let oversizedChoices = Dictionary(uniqueKeysWithValues: (0..<256).map { (String($0), JSONValue.null) })
+    let oversizedScore: [JSONValue] = (0..<11).map { .string(String($0)) }
+    let department: JSONValue = "Which team should handle this?"
+    let frustration: JSONValue = "How frustrated is the customer?"
+    let boolean: AIDecisionQuestion = .boolean(criteria: ["true": "Urgent", "false": "Not urgent"])
+    let singleChoice: AIDecisionQuestion = .choice(instructions: department, criteria: ["billing": .null])
+    let tooManyChoices: AIDecisionQuestion = .choice(instructions: department, criteria: oversizedChoices)
+    let singleScore: AIDecisionQuestion = .score(instructions: frustration, criteria: ["Calm"])
+    let tooManyScores: AIDecisionQuestion = .score(instructions: frustration, criteria: oversizedScore)
+    let nullScore: AIDecisionQuestion = .score(instructions: frustration, criteria: ["Calm", .null])
+    return [
+        [:],
+        oversizedQuestionSet,
+        ["is_urgent": boolean],
+        ["department": singleChoice],
+        ["department": tooManyChoices],
+        ["frustration": singleScore],
+        ["frustration": tooManyScores],
+        ["frustration": nullScore]
+    ]
+}()
