@@ -505,7 +505,7 @@ struct TogetherAIRerankingModelUpstreamTests {
     private func expectUpstreamHeaders(_ request: AIHTTPRequest) {
         var headers = normalizeHeaders(request.headers)
         // Swift appends the package user agent; upstream's snapshot runs without it.
-        #expect(headers.removeValue(forKey: "user-agent") == "ai-sdk-togetherai/3.0.94")
+        #expect(headers.removeValue(forKey: "user-agent") == "ai-sdk-togetherai/3.0.96")
         #expect(headers == ["authorization": "Bearer test-api-key", "content-type": "application/json"])
     }
 

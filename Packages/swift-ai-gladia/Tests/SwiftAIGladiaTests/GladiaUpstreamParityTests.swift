@@ -118,11 +118,11 @@ struct GladiaUpstreamTranscriptionTests {
         let requests = await transport.requests()
         let initiate = normalizeHeaders(requests[1].headers)
         #expect(initiate["x-gladia-key"] == "test-api-key")
-        #expect(initiate["x-gladia-version"] == "ai-sdk/3.0.82")
+        #expect(initiate["x-gladia-version"] == "ai-sdk/3.0.84")
         #expect(initiate["content-type"] == "application/json")
         #expect(initiate["custom-provider-header"] == "provider-header-value")
         #expect(initiate["custom-request-header"] == "request-header-value")
-        #expect(normalizeHeaders(requests[0].headers)["user-agent"]?.contains("ai-sdk-gladia/3.0.82") == true)
+        #expect(normalizeHeaders(requests[0].headers)["user-agent"]?.contains("ai-sdk-gladia/3.0.84") == true)
     }
 
     @Test func extractsTheTranscriptionTextAndGeneratesTheFullResponse() async throws {

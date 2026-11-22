@@ -24,6 +24,7 @@ private final class AIDefaultProviderStorage: @unchecked Sendable {
 
 public enum AIDefaultProvider {
     private static let storage = AIDefaultProviderStorage()
+    @TaskLocal private static var resolvingExtractionIDs: Set<String> = []
 
     public static func set(_ provider: (any AIProvider)?) {
         storage.set(provider)
@@ -61,6 +62,15 @@ public enum AIDefaultProvider {
     }
 
     public static func resolveExtractionModel(_ modelID: String) throws -> any AIExtractionModelV4 {
+        guard !resolvingExtractionIDs.contains(modelID) else {
+            throw AIError.invalidArgument(argument: "model", message: "Circular extraction model alias: \(modelID)")
+        }
+        return try $resolvingExtractionIDs.withValue(resolvingExtractionIDs.union([modelID])) {
+            try resolveConfiguredExtractionModel(modelID)
+        }
+    }
+
+    private static func resolveConfiguredExtractionModel(_ modelID: String) throws -> any AIExtractionModelV4 {
         let provider = try resolved()
         guard let extractionProvider = provider as? any AIExtractionProvider else {
             throw AIError.unsupportedModel(provider: provider.providerID, capability: .extraction, modelID: modelID)

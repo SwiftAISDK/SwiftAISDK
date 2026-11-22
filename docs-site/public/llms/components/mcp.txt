@@ -32,6 +32,10 @@ are rejected unless `followRedirects: true` is set, and requests carry an
 `ai-sdk/<version>` user-agent suffix. After a `202 Accepted`, a legacy session
 re-opens its optional inbound SSE stream.
 
+An HTTP POST event stream must return the JSON-RPC result or error for the
+request ID. If the stream ends or disconnects first, the request throws
+`MCPClientError`.
+
 `MCPSSETransport` is the legacy HTTP+SSE transport (upstream `{ type: 'sse' }`).
 It waits for the server's same-origin `endpoint` event, posts messages to that
 endpoint and receives responses on the event stream. Its `onError` callback

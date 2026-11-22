@@ -22,7 +22,7 @@ struct ParallelRequestUpstreamTests {
         #expect(request.headers["x-call"] == "custom")
         #expect(request.headers["content-type"] == "application/json")
         #expect(request.headers["authorization"] == nil)
-        #expect(request.headers["user-agent"]?.contains("ai-sdk-parallel/3.0.9") == true)
+        #expect(request.headers["user-agent"]?.contains("ai-sdk-parallel/3.0.11") == true)
         #expect(try parallelRequestBody(request) == .object([
             "mode": "fast", "include_excerpts": false,
             "state": ["company": "Parallel", "website": "https://parallel.ai"],

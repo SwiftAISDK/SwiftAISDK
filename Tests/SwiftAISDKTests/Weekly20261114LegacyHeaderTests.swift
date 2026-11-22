@@ -4,11 +4,11 @@ import Testing
 @Suite("Weekly20261114 legacy provider package header identities")
 struct Weekly20261114LegacyHeaderTests {
     @Test(arguments: [
-        ("assemblyai", "3.0.82"),
-        ("revai", "3.0.81"),
-        ("deepseek", "3.0.87"),
-        ("elevenlabs", "3.0.86"),
-        ("klingai", "4.0.85")
+        ("assemblyai", "3.0.85"),
+        ("revai", "3.0.83"),
+        ("deepseek", "3.0.89"),
+        ("elevenlabs", "3.0.88"),
+        ("klingai", "4.0.87")
     ])
     func packageVersionMatchesItsOwningProvider(_ providerID: String, _ version: String) throws {
         let headers = try OpenAICompatibleProvider.buildHeaders(

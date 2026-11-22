@@ -12,10 +12,10 @@ maps are coarse candidate relationships, not assertions that every listed
 upstream test has been ported. Refine them while porting, preserving
 existing dispositions and known gaps.
 
-The root is the optional compatibility facade. All 52 packages are published
-under `SwiftAISDK`; current versions and dependencies are in `Releases/sets/`
-and `Docs/PackageCatalog.md`. Canonical development uses local package paths;
-public distribution manifests use compatible remote version ranges.
+The root is the optional compatibility facade. Package and dependency metadata
+are in `Docs/PackageCatalog.md`, and `Releases/sets/` records public versions
+under `SwiftAISDK`. Canonical development uses local package paths. Public
+distribution manifests use compatible remote version ranges.
 
 ## Commands
 

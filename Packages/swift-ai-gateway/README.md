@@ -1,6 +1,6 @@
 # Vercel AI Gateway for Swift
 
-`SwiftAIGateway` adds Vercel AI Gateway to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/gateway` and supports text generation, embeddings, image generation, transcription, speech, video generation, reranking, evaluation and decisions.
+`SwiftAIGateway` adds Vercel AI Gateway to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/gateway` and supports text generation, embeddings, image generation, transcription, speech, video generation, reranking, decisions, evaluation, extraction, realtime, and continuous Live conversations.
 
 Provider guide with models, options, streaming and errors:
 

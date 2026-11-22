@@ -1,16 +1,4 @@
-import Foundation
 import SwiftAIProvider
-import SwiftAITransport
-import SwiftAIProviderUtilities
-
-func assemblyAIHTTPStatusError(provider: String, response: AIHTTPResponse) -> AIError {
-    let flat = (try? response.jsonValue())?["error"]?.stringValue
-    return apiCallError(provider: provider, statusCode: response.statusCode,
-        body: flat ?? audioProviderErrorMessage(from: response.body) ?? response.bodyText,
-        headers: response.headers)
-}
-
-
 
 func assemblyAITranscriptionSegments(from raw: JSONValue) -> [TranscriptionSegment] {
     // Upstream maps every validated word, including empty text; timings are ms.

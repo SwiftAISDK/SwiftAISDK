@@ -8,14 +8,21 @@ public final class AssemblyAITranscriptionModel: TranscriptionModel, @unchecked 
     public let providerID: String
     public let modelID: String
     private let config: AssemblyAIModelConfiguration
+    private let currentDate: @Sendable () -> Date
 
-    public init(modelID: String, config: AssemblyAIModelConfiguration) {
+    public convenience init(modelID: String, config: AssemblyAIModelConfiguration) {
+        self.init(modelID: modelID, config: config, currentDate: Date.init)
+    }
+
+    init(modelID: String, config: AssemblyAIModelConfiguration, currentDate: @escaping @Sendable () -> Date) {
         self.providerID = "assemblyai.transcription"
         self.modelID = modelID
         self.config = config
+        self.currentDate = currentDate
     }
 
     public func transcribe(_ request: AudioTranscriptionRequest) async throws -> TranscriptionResult {
+        let timestamp = currentDate()
         let options = try assemblyAIProviderOptions(from: request)
         let warnings = assemblyAITranscriptionWarnings(modelID: modelID, options: options)
         let uploadResponse = try await config.transport.send(config.rawRequest(
@@ -34,14 +41,10 @@ public final class AssemblyAITranscriptionModel: TranscriptionModel, @unchecked 
             throw AIError.invalidResponse(provider: providerID, message: "AssemblyAI upload response did not contain upload_url.")
         }
 
-        var body: [String: JSONValue] = ["audio_url": .string(uploadURL)]
-        if modelID == "best" {
-            body["speech_model"] = .string(modelID)
-        } else {
-            body["speech_models"] = .array([.string(modelID)])
-        }
+        var body: [String: JSONValue] = ["audio_url": .string(uploadURL), "speech_models": .array([.string(modelID)])]
         if let language = request.language { body["language_code"] = .string(language) }
         body.merge(assemblyAITranscriptionOptions(from: options)) { _, new in new }
+        body.removeValue(forKey: "speech_model")
 
         let submitResponse = try await config.transport.send(config.request(
             path: "/v2/transcript",
@@ -79,7 +82,7 @@ public final class AssemblyAITranscriptionModel: TranscriptionModel, @unchecked 
             warnings: warnings,
             providerMetadata: assemblyAIProviderMetadata(from: raw),
             // Upstream reports the call timestamp and selected model, not the transcript ID.
-            responseMetadata: AIResponseMetadata(timestamp: Date(), modelID: modelID, headers: finalResponse.response.headers, body: raw)
+            responseMetadata: AIResponseMetadata(timestamp: timestamp, modelID: modelID, headers: finalResponse.response.headers, body: raw)
         )
     }
 
@@ -327,21 +330,16 @@ private func assemblyAIValidateTranscriptionProviderOptions(_ options: [String: 
 private func assemblyAITranscriptionWarnings(modelID: String, options: [String: JSONValue]) -> [AIWarning] {
     var warnings: [AIWarning] = []
     let modelDocsURL = "https://www.assemblyai.com/docs/pre-recorded-audio/select-the-speech-model"
-    if modelID == "best" {
+    if modelID == "universal-3-5-pro" {
         warnings.append(AIWarning(
             type: "deprecated",
-            setting: "model 'best'",
-            message: "The 'best' model is a legacy AssemblyAI model. Use 'universal-3-5-pro' instead. See documentation: \(modelDocsURL)"
-        ))
-    } else if modelID == "universal-3-pro" {
-        warnings.append(AIWarning(
-            type: "other",
-            message: "'universal-3-5-pro' is AssemblyAI's latest flagship model and is set to replace 'universal-3-pro'. See \(modelDocsURL)"
+            setting: "model 'universal-3-5-pro'",
+            message: "AssemblyAI has deprecated 'universal-3-5-pro'. Use 'assemblyai-stt-3-7' instead. See documentation: \(modelDocsURL)"
         ))
     } else if modelID == "universal-2" {
         warnings.append(AIWarning(
             type: "other",
-            message: "'universal-3-5-pro' is AssemblyAI's latest flagship model. See \(modelDocsURL)"
+            message: "'assemblyai-stt-3-7' is AssemblyAI's latest flagship model; 'universal-2' remains available for languages it does not support. See \(modelDocsURL)"
         ))
     }
 
@@ -352,7 +350,7 @@ private func assemblyAITranscriptionWarnings(modelID: String, options: [String: 
         warnings.append(AIWarning(
             type: "deprecated",
             setting: deprecatedBoostOptions.joined(separator: ", "),
-            message: "'wordBoost' and 'boostParam' are deprecated and are rejected by 'universal-3-pro' / 'universal-3-5-pro' and 'slam-1'. Use 'keytermsPrompt' instead."
+            message: "'wordBoost' and 'boostParam' are deprecated and are rejected by 'assemblyai-stt-3-7' and 'universal-3-5-pro'. Use 'keytermsPrompt' instead."
         ))
     }
 

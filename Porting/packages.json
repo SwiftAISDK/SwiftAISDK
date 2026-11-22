@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "snapshotDate": "2026-11-15",
+  "snapshotDate": "2026-11-22",
   "organization": "SwiftAISDK",
   "swiftToolsVersion": "6.3",
   "swiftLanguageMode": 6,
@@ -169,7 +169,7 @@
         },
         {
           "package": "swift-ai-openai-compatible",
-          "from": "1.2.0"
+          "from": "1.4.0"
         }
       ],
       "capabilityRows": [
@@ -325,7 +325,7 @@
         "docs-site/scripts/provider-guides/amazon-bedrock-anthropic.md",
         "docs-site/scripts/provider-guides/bedrock-mantle.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.3.0"
     },
     {
       "id": "swift-ai-anthropic",
@@ -491,6 +491,9 @@
           ],
           "testDependencies": [
             "swift-ai-core/SwiftAI"
+          ],
+          "testResources": [
+            "Fixtures"
           ]
         }
       ],
@@ -513,7 +516,8 @@
             "AIProviders.assemblyAI"
           ],
           "capabilities": [
-            "transcription"
+            "transcription",
+            "speech"
           ],
           "files": false,
           "skills": false,
@@ -523,13 +527,13 @@
               "description": "API key, sent in the `authorization` header. Required unless `apiKey` or `apiKeyProvider` is set in settings."
             }
           ],
-          "notes": "Speech-to-text with AssemblyAI's Universal models. Each call uploads the audio, submits a transcript job and polls until it completes; speaker labels, PII redaction and audio-intelligence results are available through provider options and provider metadata."
+          "notes": "AssemblyAI file transcription with timed words and automatic language detection, plus buffered Speech V4 for MP3 and PCM output."
         }
       ],
       "guides": [
         "docs-site/scripts/provider-guides/assemblyai.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.3.0"
     },
     {
       "id": "swift-ai-azure",
@@ -609,7 +613,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/azure.md"
       ],
-      "umbrellaFrom": "1.3.0"
+      "umbrellaFrom": "1.4.0"
     },
     {
       "id": "swift-ai-baseten",
@@ -878,7 +882,7 @@
         },
         {
           "package": "swift-ai-openai-compatible",
-          "from": "1.2.0"
+          "from": "1.4.0"
         }
       ],
       "capabilityRows": [
@@ -907,7 +911,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/cerebras.md"
       ],
-      "umbrellaFrom": "1.3.0"
+      "umbrellaFrom": "1.4.0"
     },
     {
       "id": "swift-ai-cohere",
@@ -1008,7 +1012,7 @@
       "dependencies": [],
       "capabilityRows": [],
       "guides": [],
-      "umbrellaFrom": "1.6.0"
+      "umbrellaFrom": "1.7.0"
     },
     {
       "id": "swift-ai-deepgram",
@@ -1457,7 +1461,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.6.0"
+          "from": "1.7.0"
         }
       ],
       "capabilityRows": [
@@ -1478,7 +1482,8 @@
             "video",
             "reranking",
             "evaluation",
-            "decision"
+            "decision",
+            "extraction"
           ],
           "files": false,
           "skills": false,
@@ -1492,13 +1497,13 @@
               "description": "Vercel OIDC token, used when no API key is configured. Read for each request so refreshed tokens are picked up."
             }
           ],
-          "notes": "One provider for hundreds of models from many vendors through the Vercel AI Gateway: text, embeddings, images, video, speech, transcription, reranking, decisions, realtime and batches. It adds routing and fallback controls, Gateway-executed search tools and account APIs for credits and spend."
+          "notes": "One provider for hundreds of models from many vendors through the Vercel AI Gateway: text, embeddings, images, video, speech, transcription, reranking, decisions, realtime and batches. It adds routing and fallback controls, Gateway-executed search tools and account APIs for credits and spend. Includes native Extraction V4 and continuous Realtime Live alongside the turn-based route."
         }
       ],
       "guides": [
         "docs-site/scripts/provider-guides/gateway.md"
       ],
-      "umbrellaFrom": "1.4.0"
+      "umbrellaFrom": "1.5.0"
     },
     {
       "id": "swift-ai-gladia",
@@ -1645,7 +1650,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.6.0"
+          "from": "1.7.0"
         }
       ],
       "capabilityRows": [
@@ -1689,7 +1694,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/google-generative-ai.md"
       ],
-      "umbrellaFrom": "1.4.0"
+      "umbrellaFrom": "1.5.0"
     },
     {
       "id": "swift-ai-google-vertex",
@@ -1724,7 +1729,7 @@
         },
         {
           "package": "swift-ai-google",
-          "from": "1.4.0"
+          "from": "1.5.0"
         },
         {
           "package": "swift-ai-anthropic",
@@ -1732,7 +1737,7 @@
         },
         {
           "package": "swift-ai-openai-compatible",
-          "from": "1.2.0"
+          "from": "1.4.0"
         },
         {
           "package": "swift-ai-openai",
@@ -1903,7 +1908,7 @@
         "docs-site/scripts/provider-guides/googlevertex-maas.md",
         "docs-site/scripts/provider-guides/googlevertex-xai.md"
       ],
-      "umbrellaFrom": "1.3.0"
+      "umbrellaFrom": "1.4.0"
     },
     {
       "id": "swift-ai-groq",
@@ -2199,6 +2204,64 @@
       "umbrellaFrom": "1.1.2"
     },
     {
+      "id": "swift-ai-liquid",
+      "kind": "provider",
+      "directory": "Packages/swift-ai-liquid",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-liquid.git",
+      "state": "extracted",
+      "modules": [
+        {
+          "name": "SwiftAILiquid",
+          "dependencies": [
+            "swift-ai-core/SwiftAIProvider",
+            "swift-ai-core/SwiftAITransport",
+            "swift-ai-core/SwiftAIProviderUtilities"
+          ],
+          "testResources": [
+            "Fixtures"
+          ]
+        }
+      ],
+      "upstream": [
+        "@ai-sdk/liquid"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.6.0"
+        }
+      ],
+      "capabilityRows": [
+        {
+          "order": 63,
+          "providerID": "liquid",
+          "displayName": "Liquid AI",
+          "upstreamPackage": "@ai-sdk/liquid",
+          "factoryNames": [
+            "AIProviders.liquid",
+            "createLiquid",
+            "liquid"
+          ],
+          "capabilities": [
+            "decision"
+          ],
+          "files": false,
+          "skills": false,
+          "credentials": [
+            {
+              "env": "LIQUID_API_KEY",
+              "description": "Liquid API key. Required unless apiKey or apiKeyProvider is set in settings."
+            }
+          ],
+          "notes": "Liquid native Decision V4 handles choice, score, boolean and box questions with text, JSON, image and audio evidence. Returns full-precision probabilities, confidence, score legends, token usage and cost."
+        }
+      ],
+      "guides": [
+        "docs-site/scripts/provider-guides/liquid.md"
+      ],
+      "umbrellaFrom": "1.0.0"
+    },
+    {
       "id": "swift-ai-lmnt",
       "kind": "provider",
       "directory": "Packages/swift-ai-lmnt",
@@ -2336,12 +2399,12 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.3.0"
         }
       ],
       "capabilityRows": [],
       "guides": [],
-      "umbrellaFrom": "1.3.0"
+      "umbrellaFrom": "1.4.0"
     },
     {
       "id": "swift-ai-minimax",
@@ -2495,7 +2558,7 @@
         },
         {
           "package": "swift-ai-openai-compatible",
-          "from": "1.0.0"
+          "from": "1.4.0"
         }
       ],
       "capabilityRows": [
@@ -2524,7 +2587,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/moonshotai.md"
       ],
-      "umbrellaFrom": "1.2.0"
+      "umbrellaFrom": "1.3.0"
     },
     {
       "id": "swift-ai-open-responses",
@@ -2615,7 +2678,7 @@
         },
         {
           "package": "swift-ai-openai-compatible",
-          "from": "1.3.0"
+          "from": "1.4.0"
         }
       ],
       "capabilityRows": [
@@ -2656,7 +2719,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/openai.md"
       ],
-      "umbrellaFrom": "1.4.0"
+      "umbrellaFrom": "1.5.0"
     },
     {
       "id": "swift-ai-openai-compatible",
@@ -3101,7 +3164,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.4.0"
+          "from": "1.7.0"
         }
       ],
       "capabilityRows": [
@@ -3132,7 +3195,7 @@
         "Packages/swift-ai-scaledown/README.md",
         "docs-site/scripts/provider-guides/scaledown.md"
       ],
-      "umbrellaFrom": "1.0.0"
+      "umbrellaFrom": "1.1.0"
     },
     {
       "id": "swift-ai-tencent",
@@ -3431,7 +3494,7 @@
       ],
       "capabilityRows": [],
       "guides": [],
-      "umbrellaFrom": "1.3.0"
+      "umbrellaFrom": "1.3.1"
     },
     {
       "id": "swift-ai-vercel",
@@ -3586,7 +3649,7 @@
         },
         {
           "package": "swift-ai-openai-compatible",
-          "from": "1.2.0"
+          "from": "1.4.0"
         }
       ],
       "capabilityRows": [
@@ -3619,7 +3682,7 @@
       "guides": [
         "docs-site/scripts/provider-guides/xai.md"
       ],
-      "umbrellaFrom": "1.3.0"
+      "umbrellaFrom": "1.4.0"
     },
     {
       "id": "swift-ai-zai",

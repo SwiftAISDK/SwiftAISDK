@@ -75,6 +75,12 @@ public final class AzureMAIImageModel: ImageModel, @unchecked Sendable {
         if let dimensions { fields["width"] = .number(Double(dimensions.width)); fields["height"] = .number(Double(dimensions.height)) }
         fields["auto_aspect_ratio"] = options["autoAspectRatio"]
         fields["web_grounding"] = options["webGrounding"]
+        if options["background"] == "auto" {
+            warnings.append(AIWarning(type: "unsupported", feature: "providerOptions.azure.background",
+                                      message: "The MAI image API supports 'transparent' and 'opaque' backgrounds."))
+        } else {
+            fields["background"] = options["background"]
+        }
 
         var files: [(data: Data, mediaType: String)] = []
         for file in request.files {
@@ -164,14 +170,22 @@ func azureMAIDimensionsForAspectRatio(_ aspectRatio: String) -> (width: Int, hei
     return (max(768, Int(floor(width / 16 + 1e-9)) * 16), max(768, Int(floor(height / 16 + 1e-9)) * 16))
 }
 
-private let azureMAIImageModels: Set<String> = ["mai-image-2.5", "mai-image-2.5-flash", "mai-image-2.5-pro", "mai-image-2.6", "mai-image-2.6-flash"]
+let azureMAIBackgroundModels: Set<String> = ["mai-image-2.7", "mai-image-2.7-flash"]
+private let azureMAIImageModels = azureMAIBackgroundModels.union([
+    "mai-image-2.5", "mai-image-2.5-flash", "mai-image-2.5-pro", "mai-image-2.6", "mai-image-2.6-flash"
+])
 private func azureImageOptions(_ providerOptions: [String: JSONValue]) throws -> [String: JSONValue] {
     guard let value = providerOptions["azure"], value != .null else { return [:] }
     guard let raw = value.objectValue else { throw AIError.invalidArgument(argument: "providerOptions.azure", message: "Azure image options must be an object.") }
     let options = raw.filter { ["api", "autoAspectRatio", "webGrounding", "quality", "background", "size", "outputFormat", "outputCompression", "complexity", "frameCount", "frameDurationMs", "inputFidelity", "markup", "moderation", "user", "safetyIdentifier", "style"].contains($0.key) }
     for (key, value) in options {
-        guard ["api", "autoAspectRatio", "webGrounding"].contains(key) else { continue }
-        let valid = key == "api" ? value.stringValue.map { ["openai", "mai"].contains($0) } ?? false : value.boolValue != nil
+        let valid: Bool
+        switch key {
+        case "api": valid = value == "openai" || value == "mai"
+        case "background": valid = value == "transparent" || value == "opaque" || value == "auto"
+        case "autoAspectRatio", "webGrounding": valid = value.boolValue != nil
+        default: continue
+        }
         if !valid { throw AIError.invalidArgument(argument: "providerOptions.azure.\(key)", message: "Invalid Azure image option \(key).") }
     }
     return options

@@ -130,7 +130,11 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
             toolResults: toolResults,
             toolApprovalRequests: toolApprovalRequests,
             sources: sources,
-            providerMetadata: try openAIResponsesProviderMetadata(from: raw, providerID: providerID),
+            providerMetadata: try openAIResponsesProviderMetadata(
+                from: raw,
+                providerID: providerID,
+                includesInputTransformations: isOpenAIBackedProvider(providerID, config: config)
+            ),
             rawValue: raw,
             warnings: prepared.warnings,
             requestMetadata: AIRequestMetadata(body: .object(prepared.body), headers: request.headers, url: httpRequest.url.absoluteString),
@@ -181,7 +185,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                     var hasOutputStarted = false
                     var encounteredStreamError = false
                     var fallbackFinishReason: String? = "interrupted"
-                    let shouldThrowPreOutputStreamErrors = isOpenAIBackedProvider(providerID, config: config)
+                    let isOpenAIBacked = isOpenAIBackedProvider(providerID, config: config)
                     var sourceCounter = 0
                     var hasWebSearchActionSources = false
                     var hasFileSearchResults = false
@@ -200,6 +204,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                     }
                     var pendingCompletedResponse: JSONValue?
                     var pendingCompletedResponseType: String?
+                    var inputTransformations: JSONValue?
                     let openResponsesProviderOptionsName: String?
                     if case let .openResponses(providerOptionsName) = config.responsesRequestMode {
                         openResponsesProviderOptionsName = providerOptionsName
@@ -232,14 +237,14 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             continue
                         }
                         if raw["type"]?.stringValue == "error" {
-                            if shouldThrowPreOutputStreamErrors && !hasOutputStarted {
+                            if isOpenAIBacked && !hasOutputStarted {
                                 throw openAIResponsesStreamAPIError(raw, providerID: providerID)
                             }
                             encounteredStreamError = true
                             fallbackFinishReason = "error"
                             if let providerError = config.streamErrorParser != nil
                                 ? config.streamErrorParser?(raw)
-                                : shouldThrowPreOutputStreamErrors
+                                : isOpenAIBacked
                                     ? openAIProviderStreamError(from: raw)
                                     : openResponsesStreamProviderError(from: raw) {
                                 continuation.yield(.providerError(providerError))
@@ -252,7 +257,19 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             continue
                         }
                         let responsePayload = raw["response"] ?? raw
-                        if raw["type"]?.stringValue == "response.created" {
+                        let eventType = raw["type"]?.stringValue
+                        if isOpenAIBacked,
+                           eventType == "response.completed" || eventType == "response.incomplete" || eventType == "response.failed" {
+                            do {
+                                inputTransformations = try openAIResponsesInputTransformations(from: responsePayload, providerID: providerID)
+                            } catch {
+                                encounteredStreamError = true
+                                fallbackFinishReason = "error"
+                                continuation.yield(.error(message: error.localizedDescription, rawValue: raw))
+                                continue
+                            }
+                        }
+                        if eventType == "response.created" {
                             flushFallbackSources()
                             for textID in activeTextPartIDs.sorted() {
                                 continuation.yield(.textEnd(id: textID, citations: openAIResponsesCitations(from: textItemAnnotations[textID] ?? [], providerID: providerID)))
@@ -281,19 +298,18 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                                 continuation.yield(.finishMetadata(
                                     reason: completedFinishReason,
                                     usage: tokenUsage(from: completedResponse),
-                                    providerMetadata: openAIResponsesProviderMetadataByPreservingResponseID(
-                                        openAIResponsesProviderMetadataByApplyingStreamLogprobs(
-                                            providerMetadata,
-                                            streamOutputLogprobs: streamOutputLogprobs,
-                                            providerID: providerID
-                                        ),
+                                    providerMetadata: openAIResponsesFinishProviderMetadata(
+                                        providerMetadata,
                                         responseID: streamResponseID,
+                                        streamOutputLogprobs: streamOutputLogprobs,
+                                        inputTransformations: inputTransformations,
                                         providerID: providerID
                                     )
                                 ))
                             }
                             pendingCompletedResponse = nil
                             pendingCompletedResponseType = nil
+                            inputTransformations = nil
                             providerMetadata = [:]
                             streamOutputLogprobs = []
                             textItemPhases = [:]
@@ -323,7 +339,11 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             ))
                         }
                         openAICompatibleMergeProviderMetadata(
-                            try openAIResponsesProviderMetadata(from: responsePayload, providerID: providerID),
+                            try openAIResponsesProviderMetadata(
+                                from: responsePayload,
+                                providerID: providerID,
+                                includesInputTransformations: false
+                            ),
                             into: &providerMetadata
                         )
                         if openAIResponsesStreamEventStartsOutput(raw) {
@@ -626,7 +646,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                             pendingCompletedResponseType = "response.incomplete"
                         } else if raw["type"]?.stringValue == "response.failed" {
                             let response = raw["response"] ?? raw
-                            if shouldThrowPreOutputStreamErrors && !hasOutputStarted {
+                            if isOpenAIBacked && !hasOutputStarted {
                                 throw openAIResponsesStreamFailedError(raw, providerID: providerID)
                             }
                             if !encounteredStreamError {
@@ -634,7 +654,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                                 fallbackFinishReason = "error"
                                 if let providerError = config.streamErrorParser != nil
                                     ? config.streamErrorParser?(raw)
-                                    : shouldThrowPreOutputStreamErrors
+                                    : isOpenAIBacked
                                         ? openAIProviderStreamError(from: raw)
                                         : openResponsesStreamProviderError(from: raw) {
                                     continuation.yield(.providerError(providerError))
@@ -683,13 +703,11 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                         continuation.yield(.finishMetadata(
                             reason: finishReason,
                             usage: finishUsage,
-                            providerMetadata: openAIResponsesProviderMetadataByPreservingResponseID(
-                                openAIResponsesProviderMetadataByApplyingStreamLogprobs(
-                                    providerMetadata,
-                                    streamOutputLogprobs: streamOutputLogprobs,
-                                    providerID: providerID
-                                ),
+                            providerMetadata: openAIResponsesFinishProviderMetadata(
+                                providerMetadata,
                                 responseID: streamResponseID,
+                                streamOutputLogprobs: streamOutputLogprobs,
+                                inputTransformations: inputTransformations,
                                 providerID: providerID
                             )
                         ))
@@ -697,13 +715,11 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                         continuation.yield(.finishMetadata(
                             reason: fallbackFinishReason,
                             usage: nil,
-                            providerMetadata: openAIResponsesProviderMetadataByPreservingResponseID(
-                                openAIResponsesProviderMetadataByApplyingStreamLogprobs(
-                                    providerMetadata,
-                                    streamOutputLogprobs: streamOutputLogprobs,
-                                    providerID: providerID
-                                ),
+                            providerMetadata: openAIResponsesFinishProviderMetadata(
+                                providerMetadata,
                                 responseID: streamResponseID,
+                                streamOutputLogprobs: streamOutputLogprobs,
+                                inputTransformations: inputTransformations,
                                 providerID: providerID
                             )
                         ))
@@ -794,13 +810,25 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         let hasPreviousResponseID = options["previous_response_id"] != nil
         var processedApprovalIDs: Set<String> = []
         let toolNamespaces = openAIResponsesToolNamespaces(from: request.tools)
+        let toolProviderOptionsName = config.openAIBackedProviderRoot ?? "openai"
         let preparedTools = try openAIResponsesTools(
             from: request.tools,
             supportsAsyncToolCalling: !isOpenAIBacked || openAILanguageModelCapabilities(modelID).supportsAsyncToolCalling,
             normalizeSchemas: isOpenAIBacked,
-            providerOptionsName: config.openAIBackedProviderRoot ?? "openai"
+            providerOptionsName: toolProviderOptionsName
         )
         warnings.append(contentsOf: preparedTools.warnings)
+        let allowedTools = options["allowedTools"] ?? options["allowed_tools"]
+        let allowedHistoryToolNames = allowedTools.map { option in
+            let toolNames = option["toolNames"]?.arrayValue ?? option["tool_names"]?.arrayValue ?? []
+            return Set(toolNames.compactMap(\.stringValue))
+        }
+        let additionalToolReplay = OpenAIResponsesAdditionalToolReplay(
+            tools: request.tools,
+            providerOptionsName: toolProviderOptionsName,
+            normalizeSchemas: isOpenAIBacked,
+            allowedToolNames: allowedHistoryToolNames
+        )
         let providerDefinedToolNames = Set(request.tools.compactMap { name, schema -> String? in
             let object = schema.objectValue
             guard object?["type"]?.stringValue == "provider"
@@ -891,9 +919,11 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                 systemMessageMode: isOpenAIBacked ? systemMessageModeOption : nil,
                 passThroughUnsupportedFiles: passThroughUnsupportedFiles || !isOpenAIBacked,
                 modelID: modelID,
+                additionalToolReplay: additionalToolReplay,
                 warnings: &warnings
             )
         }
+        additionalToolReplay.appendDroppedWarning(to: &warnings)
         if let reasoningEffortUpdate {
             let unsupportedReason = configurationUpdateUnsupportedReason ?? {
                 guard let supportedEfforts = capabilities.supportedReasoningEfforts,
@@ -998,10 +1028,11 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
         }
         if !request.tools.isEmpty {
             body["tools"] = .array(preparedTools.tools)
-            if let allowedTools = options["allowedTools"] ?? options["allowed_tools"] {
+            if let allowedTools {
                 body["tool_choice"] = try openAIResponsesAllowedToolsChoice(
                     from: allowedTools,
                     tools: request.tools,
+                    providerOptionsName: toolProviderOptionsName,
                     warnings: &warnings
                 )
             } else if let toolChoice = openAIResponsesToolChoice(
@@ -1012,7 +1043,7 @@ public final class OpenAICompatibleResponsesModel: LanguageModel, @unchecked Sen
                 if toolChoice["type"]?.stringValue == "function",
                    let name = toolChoice["name"]?.stringValue,
                    let tool = request.tools[name] {
-                    let openAIOptions = tool["providerOptions"]?["openai"] ?? tool["openai"]
+                    let openAIOptions = openAIResponsesRegisteredFunctionOptions(tool, providerOptionsName: toolProviderOptionsName)
                     if (openAIOptions?["omitFromRequestTools"] ?? openAIOptions?["omit_from_request_tools"])?.boolValue == true {
                         throw AIError.invalidArgument(
                             argument: "toolChoice",

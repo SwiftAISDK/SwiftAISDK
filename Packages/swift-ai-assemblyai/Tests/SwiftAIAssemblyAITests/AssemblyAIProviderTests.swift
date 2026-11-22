@@ -27,6 +27,7 @@ import Testing
             "languageDetection": .bool(true),
             "redactPiiPolicies": .array([.string("person_name")]),
             "speakerLabels": .bool(true),
+            "speech_model": "best",
             "speakersExpected": .number(2),
             "webhookUrl": .string("https://example.com/assembly"),
             "wordBoost": .array([.string("Codex")])
@@ -39,15 +40,15 @@ import Testing
     #expect(requests[0].url.absoluteString == "https://api.assemblyai.com/v2/upload")
     #expect(requests[0].method == "POST")
     #expect(requests[0].headers["authorization"] == "assembly-key")
-    #expect(requests[0].headers["user-agent"] == "ai-sdk-assemblyai/3.0.82")
+    #expect(requests[0].headers["user-agent"] == "ai-sdk-assemblyai/3.0.85")
     #expect(requests[0].headers["content-type"] == "application/octet-stream")
     #expect(requests[0].body == Data("audio".utf8))
 
     #expect(requests[1].url.absoluteString == "https://api.assemblyai.com/v2/transcript")
-    #expect(requests[1].headers["user-agent"] == "ai-sdk-assemblyai/3.0.82")
+    #expect(requests[1].headers["user-agent"] == "ai-sdk-assemblyai/3.0.85")
     let submitBody = try decodeJSONBody(try #require(requests[1].body))
-    #expect(submitBody["speech_model"]?.stringValue == "best")
-    #expect(submitBody["speech_models"] == nil)
+    #expect(submitBody["speech_models"] == ["best"])
+    #expect(submitBody["speech_model"] == nil)
     #expect(submitBody["audio_url"]?.stringValue == "https://cdn.example.com/audio.wav")
     #expect(submitBody["language_code"]?.stringValue == "en")
     #expect(submitBody["auto_chapters"]?.boolValue == true)
@@ -65,12 +66,8 @@ import Testing
 
     #expect(requests[2].method == "GET")
     #expect(requests[2].url.absoluteString == "https://api.assemblyai.com/v2/transcript/job-123")
-    #expect(requests[2].headers["user-agent"] == "ai-sdk-assemblyai/3.0.82")
-    #expect(result.warnings.contains(AIWarning(
-        type: "deprecated",
-        setting: "model 'best'",
-        message: "The 'best' model is a legacy AssemblyAI model. Use 'universal-3-5-pro' instead. See documentation: https://www.assemblyai.com/docs/pre-recorded-audio/select-the-speech-model"
-    )))
+    #expect(requests[2].headers["user-agent"] == "ai-sdk-assemblyai/3.0.85")
+    #expect(result.warnings.contains { $0.type == "deprecated" && $0.setting == "wordBoost" })
 }
 
 @Test func assemblyAITranscriptionMapsNestedExtraBodyOptions() async throws {
@@ -110,62 +107,6 @@ import Testing
     #expect(submitBody["speech_threshold"]?.doubleValue == 0.6)
     #expect(submitBody["assemblyai"] == nil)
     #expect(submitBody["summaryModel"] == nil)
-}
-
-@Test func assemblyAITranscriptionRoutesCurrentAndLegacyModelIDsLikeUpstream() async throws {
-    let legacyTransport = RecordingTransport(responses: [
-        jsonResponse(#"{"upload_url":"https://cdn.example.com/audio.wav"}"#),
-        jsonResponse(#"{"id":"legacy","status":"queued"}"#),
-        jsonResponse(#"{"id":"legacy","status":"completed","text":"legacy"}"#)
-    ])
-    let legacyProvider = try AIProviders.assemblyAI(configuration: AssemblyAIProviderSettings(apiKey: "assembly-key", transport: legacyTransport))
-    let legacyResult = try await legacyProvider.transcriptionModel("best").transcribe(AudioTranscriptionRequest(audio: Data("audio".utf8)))
-    let legacyBody = try decodeJSONBody(try #require((await legacyTransport.requests())[1].body))
-    #expect(legacyBody["speech_model"]?.stringValue == "best")
-    #expect(legacyBody["speech_models"] == nil)
-    #expect(legacyResult.warnings.contains { warning in
-        warning.type == "deprecated" &&
-        warning.setting == "model 'best'" &&
-        warning.message?.contains("universal-3-5-pro") == true
-    })
-
-    let currentTransport = RecordingTransport(responses: [
-        jsonResponse(#"{"upload_url":"https://cdn.example.com/audio.wav"}"#),
-        jsonResponse(#"{"id":"current","status":"queued"}"#),
-        jsonResponse(#"{"id":"current","status":"completed","text":"current"}"#)
-    ])
-    let currentProvider = try AIProviders.assemblyAI(configuration: AssemblyAIProviderSettings(apiKey: "assembly-key", transport: currentTransport))
-    let currentResult = try await currentProvider.transcriptionModel("universal-3-5-pro").transcribe(AudioTranscriptionRequest(audio: Data("audio".utf8)))
-    let currentBody = try decodeJSONBody(try #require((await currentTransport.requests())[1].body))
-    #expect(currentBody["speech_models"]?[0]?.stringValue == "universal-3-5-pro")
-    #expect(currentBody["speech_model"] == nil)
-    #expect(currentResult.warnings.isEmpty)
-
-    let universal3Transport = RecordingTransport(responses: [
-        jsonResponse(#"{"upload_url":"https://cdn.example.com/audio.wav"}"#),
-        jsonResponse(#"{"id":"u3","status":"queued"}"#),
-        jsonResponse(#"{"id":"u3","status":"completed","text":"u3"}"#)
-    ])
-    let universal3Provider = try AIProviders.assemblyAI(configuration: AssemblyAIProviderSettings(apiKey: "assembly-key", transport: universal3Transport))
-    let universal3Result = try await universal3Provider.transcriptionModel("universal-3-pro").transcribe(AudioTranscriptionRequest(audio: Data("audio".utf8)))
-    #expect(universal3Result.warnings.contains { warning in
-        warning.type == "other" &&
-        warning.message?.contains("universal-3-5-pro") == true &&
-        warning.message?.contains("replace 'universal-3-pro'") == true
-    })
-
-    let universal2Transport = RecordingTransport(responses: [
-        jsonResponse(#"{"upload_url":"https://cdn.example.com/audio.wav"}"#),
-        jsonResponse(#"{"id":"u2","status":"queued"}"#),
-        jsonResponse(#"{"id":"u2","status":"completed","text":"u2"}"#)
-    ])
-    let universal2Provider = try AIProviders.assemblyAI(configuration: AssemblyAIProviderSettings(apiKey: "assembly-key", transport: universal2Transport))
-    let universal2Result = try await universal2Provider.transcriptionModel("universal-2").transcribe(AudioTranscriptionRequest(audio: Data("audio".utf8)))
-    #expect(universal2Result.warnings.contains { warning in
-        warning.type == "other" &&
-        warning.message?.contains("universal-3-5-pro") == true &&
-        warning.message?.contains("replace 'universal-3-pro'") == false
-    })
 }
 
 @Test func assemblyAITranscriptionTreatsNullProviderOptionsNamespaceAsNoop() async throws {
@@ -242,8 +183,8 @@ import Testing
 
     let requests = await transport.requests()
     let submitBody = try decodeJSONBody(try #require(requests[1].body))
-    #expect(submitBody["speech_model"]?.stringValue == "best")
-    #expect(submitBody["speech_models"] == nil)
+    #expect(submitBody["speech_models"] == ["best"])
+    #expect(submitBody["speech_model"] == nil)
     #expect(submitBody["audio_end_at"]?.intValue == 10_000)
     #expect(submitBody["audio_start_from"]?.intValue == 250)
     #expect(submitBody["auto_highlights"]?.boolValue == true)
@@ -315,7 +256,7 @@ import Testing
     #expect(result.warnings.contains(AIWarning(
         type: "deprecated",
         setting: "wordBoost, boostParam",
-        message: "'wordBoost' and 'boostParam' are deprecated and are rejected by 'universal-3-pro' / 'universal-3-5-pro' and 'slam-1'. Use 'keytermsPrompt' instead."
+        message: "'wordBoost' and 'boostParam' are deprecated and are rejected by 'assemblyai-stt-3-7' and 'universal-3-5-pro'. Use 'keytermsPrompt' instead."
     )))
     #expect(result.warnings.contains { warning in
         warning.type == "other" && warning.message?.contains("redactPii") == true

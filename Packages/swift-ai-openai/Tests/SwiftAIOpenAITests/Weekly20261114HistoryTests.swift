@@ -6,14 +6,24 @@ import SwiftAITransport
 
 @Suite struct Weekly20261114HistoryTests {
     private var custom: JSONValue { ["type": "custom", "name": "apply_patch", "format": ["type": "grammar", "syntax": "lark", "definition": "start: x"]] }
-    private var namespace: JSONValue { ["type": "namespace", "name": "linear", "description": "Linear tools", "tools": [["type": "function", "name": "get_issue", "parameters": ["type": "object"], "defer_loading": true]]] }
+    private var namespace: JSONValue { ["type": "namespace", "name": "linear", "description": "Linear tools", "tools": [["type": "function", "name": "get_issue", "parameters": ["type": "object"], "strict": false, "defer_loading": true]]] }
 
     @Test func additionalToolsSupportControlMessagesAndHostingFallback() async throws {
         let transport = RecordingTransport(response: jsonResponse(#"{"id":"resp","output":[]}"#))
         let provider = try OpenAIProvider(configuration: .init(apiKey: "key", transport: transport, name: "azure"))
         let result = AIToolResult(toolCallID: "call", toolName: "lookup", result: "result", providerMetadata: ["openai": ["additionalTools": .array([custom, namespace])]])
         var control = AIMessage.system(""); control.providerMetadata = ["azure": ["additionalTools": .array([custom])]]
-        _ = try await provider.responses("gpt-5.4").generate(.init(messages: [.user("Next"), control, .init(role: .tool, content: [.toolResult(result)])]))
+        let tools: [String: JSONValue] = [
+            "apply_patch": OpenAITools.customTool(name: "apply_patch", format: custom["format"]),
+            "get_issue": ["type": "object", "providerOptions": ["openai": [
+                "omitFromRequestTools": true, "deferLoading": true,
+                "namespace": ["name": "linear", "description": "Linear tools"]
+            ]]]
+        ]
+        _ = try await provider.responses("gpt-5.4").generate(.init(
+            messages: [.user("Next"), control, .init(role: .tool, content: [.toolResult(result)])],
+            tools: tools
+        ))
         let body = try decodeJSONBody(#require(await transport.requests().first?.body))
         #expect(body["input"]?[1] == ["type": "additional_tools", "role": "developer", "tools": .array([custom])])
         #expect(body["input"]?[3] == ["type": "additional_tools", "role": "developer", "tools": .array([custom, namespace])])
@@ -32,7 +42,13 @@ import SwiftAITransport
 
     @Test(arguments: [false, true]) func compactParallelMetadataRoundTripsAndRetainsEachChildsDefinitions(reverse: Bool) async throws {
         let wrapper = #"{"tool_uses":[{"recipient_name":"functions.a","parameters":{}},{"recipient_name":"functions.b","parameters":{}}]}"#
-        let tools: [String: JSONValue] = ["a": ["type": "object"], "b": ["type": "object"]]
+        let hidden: JSONValue = ["type": "object", "providerOptions": ["openai": [
+            "omitFromRequestTools": true, "deferLoading": true
+        ]]]
+        let tools: [String: JSONValue] = [
+            "a": ["type": "object"], "b": ["type": "object"],
+            "loaded_0": hidden, "loaded_1": hidden
+        ]
         let calls = try #require(openAIResponsesExpandedParallelToolCalls(from: .init(id: "wrapper", name: "parallel", arguments: wrapper), itemID: "fc", providerID: "openai.responses", functionToolNames: ["a", "b"]))
         #expect(calls[0].providerMetadata["openai"]?["parallelToolCall"]?["input"] == .string(wrapper))
         #expect(calls[1].providerMetadata["openai"]?["parallelToolCall"]?["input"] == nil)

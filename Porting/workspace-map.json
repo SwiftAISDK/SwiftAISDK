@@ -310,6 +310,7 @@
     "Tests/SwiftAISDKTests/Weekly20261114LegacyHeaderTests.swift",
     "Tests/SwiftAISDKTests/Weekly20261115ApprovalReplayTests.swift",
     "Tests/SwiftAISDKTests/Weekly20261115ProviderIntegrationTests.swift",
+    "Tests/SwiftAISDKTests/Weekly20261122ProviderCompatibilityTests.swift",
     "Tests/SwiftAISDKTests/WeeklyAnthropic20261018Tests.swift",
     "Tests/SwiftAISDKTests/WeeklyApproval20261025Tests.swift",
     "Tests/SwiftAISDKTests/WeeklyBFLXAI20261011Tests.swift",

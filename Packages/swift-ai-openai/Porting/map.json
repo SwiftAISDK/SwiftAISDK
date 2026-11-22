@@ -43,6 +43,7 @@
         "packages/openai/src/responses/expand-parallel-tool-call.test.ts",
         "packages/openai/src/responses/openai-responses-api.test.ts",
         "packages/openai/src/responses/openai-responses-computer.test.ts",
+        "packages/openai/src/responses/openai-responses-input-transformations.test.ts",
         "packages/openai/src/responses/openai-responses-language-model.test.ts",
         "packages/openai/src/responses/openai-responses-prepare-tools.test.ts",
         "packages/openai/src/responses/openai-responses-prompt-cache-diagnostics.test.ts",
@@ -71,6 +72,7 @@
       "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAILiveModel.swift",
       "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIOptions.swift",
       "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIProvider.swift",
+      "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIResponsesAdditionalTools.swift",
       "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIResponsesBatchLanguageModel.swift",
       "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIResponsesInput.swift",
       "Packages/swift-ai-openai/Sources/SwiftAIOpenAI/OpenAIResponsesModel.swift",
@@ -94,6 +96,8 @@
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAILiveModelTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIMediaTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIProgrammaticAndForwardCompatibilityTests.swift",
+      "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesAdditionalToolHistoryTests.swift",
+      "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesAdditionalToolResolutionTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesBatchV4UpstreamTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesComputerV4UpstreamTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesConversationCompactionTests.swift",
@@ -104,6 +108,7 @@
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesHostedFilePatchAndCustomToolsTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesHostedMCPToolsTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesHostedSearchAndShellToolsTests.swift",
+      "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesInputTransformationsTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesMessageConversionTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesParallelToolCallTests.swift",
       "Packages/swift-ai-openai/Tests/SwiftAIOpenAITests/OpenAIResponsesProviderExecutedToolFilteringTests.swift",
@@ -210,6 +215,10 @@
     {
       "kind": "native-adaptation",
       "reason": "2026-11-15: reviewed @ai-sdk/openai 4.0.117 -> 4.0.118 with integrity-verified archives and exact matching-release tests. Source, declarations, changed scenarios and explicit remaining gaps are recorded in Docs/WeeklyUpstreamAudit20261115.json; no full-package or paid/live-service parity claim."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "Matching-release @ai-sdk/openai 4.0.118 to 4.0.122 uses native JSON provider metadata for unary, stream and batch input transformations and request-registered definitions for additionalTools replay. String model IDs already use the documented GPT-6.2 capabilities. Swift orders loaded namespace members by tool name because request tools are a dictionary. TypeScript factory inference, Zod import timing and browser-only Realtime remain outside the native surface. The source and test delta review does not imply full older snapshot coverage."
     }
   ],
   "reviewNote": "Imported M0 file ownership and upstream test inventory. These are candidate relationships, not claims that every listed upstream test is ported; refine into behavior mappings during extraction. 2026-11-01: @ai-sdk/openai 4.0.102 -> 4.0.106; integrity-verified published sources/declarations and matching-release tests 612be2311464804d1e4897afacbf8f3fc2f6d9e3 -> 9b603d36186b75e58d5479445a96c76f6e2d2700 reviewed independently. New native behavior is covered by Weekly20261101 suites. Internal TypeScript catalog/documentation/type-inference declarations are represented by native request policies, not an exact JS export contract. Prior imported provenance and known gaps remain unchanged. 2026-11-08 published delta review and focused translations: Docs/WeeklyUpstreamAudit20261108.json; release-matched provenance and native adaptations retained separately from full-package parity. 2026-11-08 compatibility supplement: preserved exact public function-reference selectors from canonical pre-run b34e233f033adde06bff302f5d3d11c12f73733e: OpenAITools.mcp(serverLabel:allowedTools:authorization:connectorID:headers:requireApproval:serverDescription:serverURL:). Forwarding overloads retain original defaults and explicit new-option defaults; Weekly20261108ProviderSelectorCompatibilityTests also verifies extended references, defaulted calls and runtime forwarding. No upstream baseline or behavioral disposition is changed by this supplement. 2026-11-14 @ai-sdk/openai 4.0.111 -> 4.0.117: integrity-verified published old/latest source/declarations and exact release-matched tests 0f3a85f92d1ce06ccde01d662407ef83e097a712 -> 8bc7652cdb13fc84722666eb93f45acd0d131eee reviewed separately. OpenAI and Anthropic now expose experimental typed field extraction through the shared Extraction V4 contract. OpenAI wraps Responses with nullable structured output. Responses accepts providerOptions.openai.textFormat as a stable initial format and textFormatUpdate on empty system controls; historical controls combine with reasoning updates, normalize schemas independently, preserve effective reasoning across format-only updates, reject unsupported models/settings and adjacent updates. History-loaded tools include function/custom/namespace definitions and work at system positions or after tool results, with OpenAI namespace fallback for hosting adapters. Parallel call metadata retains the original wrapper input only on the first child, accepts older repeated metadata, safely rejoins complete groups even with reversed results and preserves each child's additional tools. promptCacheOptions.comparisonResponseId maps to comparison_response_id; promptCacheDiagnostics survives unary, stream and batch responses, including future diagnostic types. OpenAI-owned tool authorization/header/domain-secret values are redacted in telemetry copies while caller bodies stay intact. Input-image/mask/markup URLs use an unauthenticated configured download transport and cancellation. Existing JS workflow serialization/browser Realtime gaps remain explicit."

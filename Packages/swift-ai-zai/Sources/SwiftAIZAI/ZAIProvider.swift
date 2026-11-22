@@ -6,7 +6,7 @@ import SwiftAIOpenAICompatible
 
 
 /// The published `@ai-sdk/zai` package version mirrored by this port.
-public let zaiProviderVersion = "3.0.55"
+public let zaiProviderVersion = "3.0.57"
 
 /// Z.AI accepts the documented GLM identifiers as well as future model IDs.
 public typealias ZAIChatModelID = String

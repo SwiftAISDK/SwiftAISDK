@@ -37,7 +37,7 @@ struct ParallelNativeTests {
         let request = try #require(await transport.requests().first)
         #expect(request.headers["x-api-key"] == "call-key")
         #expect(request.headers["x-level"] == "call")
-        #expect(request.headers["user-agent"] == "custom-client ai-sdk-parallel/3.0.9")
+        #expect(request.headers["user-agent"] == "custom-client ai-sdk-parallel/3.0.11")
     }
 
     @Test func missingCredentialsAndAbortedCallsPerformNoIO() async throws {

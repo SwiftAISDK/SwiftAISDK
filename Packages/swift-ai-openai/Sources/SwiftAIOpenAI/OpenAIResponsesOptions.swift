@@ -185,8 +185,14 @@ func openAIResponsesInputMessageJSON(
     systemMessageMode: String? = nil,
     passThroughUnsupportedFiles: Bool = false,
     modelID: String? = nil,
+    additionalToolReplay: OpenAIResponsesAdditionalToolReplay? = nil,
     warnings: inout [AIWarning]
 ) throws -> [JSONValue] {
+    let replay = additionalToolReplay ?? OpenAIResponsesAdditionalToolReplay(tools: [:])
+    defer {
+        if additionalToolReplay == nil { replay.appendDroppedWarning(to: &warnings) }
+    }
+
     if message.role == .tool {
         return try message.content.flatMap { part -> [JSONValue] in
             switch part {
@@ -249,7 +255,7 @@ func openAIResponsesInputMessageJSON(
                         )
                     ])]
                 }
-                var warnings: [AIWarning] = []
+                var outputWarnings: [AIWarning] = []
                 var item: [String: JSONValue] = [
                     "type": .string("function_call_output"),
                     "call_id": .string(result.toolCallID),
@@ -259,25 +265,23 @@ func openAIResponsesInputMessageJSON(
                         jsonEncodeText: outputSchemaToolNames.contains(result.toolName),
                         wrapToolErrors: wrapToolErrors,
                         promptCacheBreakpoint: openAIResponsesScalarToolResultPromptCacheBreakpoint(result),
-                        warnings: &warnings
+                        warnings: &outputWarnings
                     )
                 ]
                 if let caller = openAIResponsesCaller(from: result.providerMetadata) {
                     item["caller"] = caller
                 }
                 var items: [JSONValue] = [.object(item)]
-                if let additionalTools = try openAIResponsesAdditionalTools(result, providerID: providerID),
-                   !additionalTools.isEmpty {
-                    items.append(.object([
-                        "type": .string("additional_tools"),
-                        "role": .string("developer"),
-                        "tools": .array(additionalTools)
-                    ]))
+                if let entries = try openAIResponsesAdditionalTools(result, providerID: providerID),
+                   let item = try replay.inputItem(for: entries, warnings: &warnings) {
+                    items.append(item)
                 }
                 if let groups = result.providerMetadata["__swiftParallelAdditionalTools"]?.arrayValue {
                     for value in groups {
-                        let definitions = try openAIResponsesValidatedAdditionalTools(value)
-                        if !definitions.isEmpty { items.append(["type": "additional_tools", "role": "developer", "tools": .array(definitions)]) }
+                        let entries = try openAIResponsesValidatedAdditionalTools(value)
+                        if let item = try replay.inputItem(for: entries, warnings: &warnings) {
+                            items.append(item)
+                        }
                     }
                 }
                 return items
@@ -506,8 +510,10 @@ func openAIResponsesInputMessageJSON(
             if let textFormat { update["text"] = ["format": try openAIResponsesNormalizedTextFormat(textFormat, warnings: &warnings)] }
             var items: [JSONValue] = effortValue != nil || textFormat != nil ? [.object(update)] : []
             if let additionalTools {
-                let definitions = try openAIResponsesValidatedAdditionalTools(additionalTools)
-                if !definitions.isEmpty { items.append(["type": "additional_tools", "role": "developer", "tools": .array(definitions)]) }
+                let entries = try openAIResponsesValidatedAdditionalTools(additionalTools)
+                if let item = try replay.inputItem(for: entries, warnings: &warnings) {
+                    items.append(item)
+                }
             }
             return items
         }
@@ -1577,6 +1583,7 @@ private enum OpenAIResponsesAllowedToolResolution: Equatable {
 func openAIResponsesAllowedToolsChoice(
     from value: JSONValue,
     tools: [String: JSONValue],
+    providerOptionsName: String = "openai",
     warnings: inout [AIWarning]
 ) throws -> JSONValue {
     let object = value.objectValue ?? [:]
@@ -1609,8 +1616,7 @@ func openAIResponsesAllowedToolsChoice(
             || providerToolID?.hasPrefix("openai.") == true
 
         if !isProviderTool {
-            let openAIOptions = tool["providerOptions"]?["openai"]?.objectValue
-                ?? tool["openai"]?.objectValue
+            let openAIOptions = openAIResponsesRegisteredFunctionOptions(schema, providerOptionsName: providerOptionsName)
             let isNamespaced = openAIOptions?["namespace"] != nil
             let isDeferred = (openAIOptions?["deferLoading"] ?? openAIOptions?["defer_loading"]
                 ?? tool["deferLoading"] ?? tool["defer_loading"])?.boolValue == true

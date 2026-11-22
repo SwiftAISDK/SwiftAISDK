@@ -10,6 +10,7 @@
       ],
       "tests": [
         "packages/assemblyai/src/assemblyai-error.test.ts",
+        "packages/assemblyai/src/assemblyai-speech-model.test.ts",
         "packages/assemblyai/src/assemblyai-transcription-model.test.ts",
         "packages/assemblyai/src/lazy-schemas.test.ts"
       ]
@@ -18,24 +19,44 @@
   "swift": {
     "sources": [
       "Packages/swift-ai-assemblyai/Sources/SwiftAIAssemblyAI/AssemblyAIAudioModels.swift",
+      "Packages/swift-ai-assemblyai/Sources/SwiftAIAssemblyAI/AssemblyAIErrors.swift",
       "Packages/swift-ai-assemblyai/Sources/SwiftAIAssemblyAI/AssemblyAIProvider.swift",
+      "Packages/swift-ai-assemblyai/Sources/SwiftAIAssemblyAI/AssemblyAISpeechModel.swift",
+      "Packages/swift-ai-assemblyai/Sources/SwiftAIAssemblyAI/AssemblyAISpeechModelOptions.swift",
       "Packages/swift-ai-assemblyai/Sources/SwiftAIAssemblyAI/AssemblyAITranscriptionParsing.swift"
     ],
     "tests": [
+      "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/AssemblyAIErrorParityTests.swift",
       "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/AssemblyAIProviderTests.swift",
+      "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/AssemblyAISpeechModelTests.swift",
       "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/AssemblyAIUpstreamParityTests.swift",
       "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/FixtureDownloadTransport.swift",
       "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/TestSupport.swift",
       "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/Weekly20261101CredentialsTests.swift",
       "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/Weekly20261108ErrorTests.swift"
     ],
-    "resources": []
+    "resources": [
+      "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/Fixtures/transcript-completed.json",
+      "Packages/swift-ai-assemblyai/Tests/SwiftAIAssemblyAITests/Fixtures/transcript-test.mp3"
+    ]
   },
   "differences": [
     {
       "kind": "native-adaptation",
       "reason": "Preserve Swift async/await, Sendable, Foundation transport and existing documented gaps; see Docs/CoreV6Parity.md and PortingStatus.md."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "The two lazy-schemas.test.ts cases require JavaScript import and Zod factory instrumentation. Swift parses provider options at request time without a Zod validator to cache. JavaScript workflow serialization symbols and the callable provider function are also outside the Swift surface. Swift uses production user-agent version 3.0.85 in place of the Vitest version mock."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "Existing transcription errors expose the provider message through responseBody. Speech errors preserve the wire body and expose the normalized message separately. Swift has no API-error data field or raw HTTP reason phrase, so the new handler retains structured provider data in the wire JSON and uses Foundation's status description as the fallback. Existing transcription polls time out after 60 seconds and options are validated before upload."
+    },
+    {
+      "kind": "temporary-deviation",
+      "reason": "The pre-existing transcription validator checks core result fields and top-level word timings. It does not validate every optional nested word, diarization and audio-intelligence value the upstream Zod schema checks, or run full completed-payload validation on intermediate polls. Those invalid fixture permutations are absent from the matching-release transcription suite."
     }
   ],
-  "reviewNote": "2026-11-08: published @ai-sdk/assemblyai 3.0.72..3.0.77 source, declarations and matching-release tests reviewed independently. Flat transcription error responses work on upload, submission and polling. Delta review is not a claim of whole-provider parity; existing documented gaps remain. 2026-11-14: each changed published source/declaration and exact-release test delta is reviewed separately in Docs/WeeklyUpstreamAudit20261114.json; native catalog policies retained where equivalent, headers synchronized and TogetherAI schema routing extended. Existing gaps remain."
+  "reviewNote": "@ai-sdk/assemblyai 3.0.85 exact test ref 9b8c25e582bb2ca97e459ba3f8f6b325cb9dfb22. assemblyai-speech-model.test.ts maps to AssemblyAISpeechModelTests.swift (17 expanded cases); assemblyai-transcription-model.test.ts maps to AssemblyAIUpstreamParityTests.swift (23); assemblyai-error.test.ts maps to AssemblyAIErrorParityTests.swift (9). The two lazy-schemas.test.ts cases are out of scope. The MP3 fixture retains the release Git blob 6a4cf7b67483c076cebf897b5456f64d0372df90. The completed transcript fixture is the full inline object from the matching-release test. Prior reviews are recorded in Docs/Archive/WeeklyUpstreamAudit20261108.json and Docs/Archive/WeeklyUpstreamAudit20261114.json."
 }

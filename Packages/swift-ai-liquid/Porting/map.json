@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-liquid",
+  "status": "reviewed",
+  "upstream": [
+    {
+      "name": "@ai-sdk/liquid",
+      "implementation": [
+        "packages/liquid/src"
+      ],
+      "tests": [
+        "packages/liquid/src/lazy-schemas.test.ts",
+        "packages/liquid/src/liquid-decision-model.test.ts",
+        "packages/liquid/src/liquid-provider.test.ts"
+      ]
+    }
+  ],
+  "swift": {
+    "sources": [
+      "Packages/swift-ai-liquid/Sources/SwiftAILiquid/DecisionLiquidModel.swift",
+      "Packages/swift-ai-liquid/Sources/SwiftAILiquid/LiquidDecisionInput.swift",
+      "Packages/swift-ai-liquid/Sources/SwiftAILiquid/LiquidDecisionResponse.swift",
+      "Packages/swift-ai-liquid/Sources/SwiftAILiquid/LiquidProvider.swift"
+    ],
+    "tests": [
+      "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidProviderUpstreamTests.swift",
+      "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidRequestUpstreamTests.swift",
+      "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidResponseUpstreamTests.swift",
+      "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidTestSupport.swift"
+    ],
+    "resources": [
+      "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/Fixtures/decisions-box-not-found.json",
+      "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/Fixtures/decisions.json"
+    ]
+  },
+  "differences": [
+    {
+      "kind": "native-adaptation",
+      "reason": "Injected Swift AITransport and async credential suppliers replace JavaScript fetch and Resolvable credential functions."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "The Swift model uses native typed decoding and has no JavaScript Zod import or Workflow model serialization contract."
+    },
+    {
+      "kind": "native-adaptation",
+      "reason": "The core Decision facade can download URL evidence before invoking the adapter. Direct Liquid Decision V4 calls require bytes or base64."
+    }
+  ],
+  "reviewNote": "Liquid 3.0.1 Decision V4 with matching-release tests and Git-verified fixtures. Detailed scenario and fixture dispositions are in Porting/upstream-tests.json. No paid or live provider checks."
+}

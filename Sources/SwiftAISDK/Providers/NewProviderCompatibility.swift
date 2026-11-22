@@ -1,4 +1,6 @@
 import SwiftAIProvider
+import SwiftAIAssemblyAI
+import SwiftAILiquid
 import SwiftAIParallel
 import SwiftAIScaleDown
 import SwiftAITencent
@@ -7,6 +9,14 @@ import SwiftAIHeyGen
 // Keep the compatibility facade's AIProviders namespace usable when imported
 // alongside the independently distributed native provider modules.
 public extension AIProviders {
+    static func assemblyAI(configuration: AssemblyAIProviderSettings) throws -> AssemblyAIProvider {
+        try AssemblyAIProvider(configuration: configuration)
+    }
+
+    static func liquid(configuration: LiquidProviderSettings = .init()) -> LiquidProvider {
+        createLiquid(configuration: configuration)
+    }
+
     static func parallel(configuration: ParallelProviderSettings = .init()) -> ParallelProvider {
         ParallelProvider(configuration: configuration)
     }

@@ -304,6 +304,16 @@
       ]
     },
     {
+      "package": "swift-ai-liquid",
+      "directory": "Packages/swift-ai-liquid",
+      "state": "extracted",
+      "independentBuildReady": true,
+      "command": "swift test --package-path Packages/swift-ai-liquid",
+      "upstream": [
+        "@ai-sdk/liquid"
+      ]
+    },
+    {
       "package": "swift-ai-lmnt",
       "directory": "Packages/swift-ai-lmnt",
       "state": "extracted",

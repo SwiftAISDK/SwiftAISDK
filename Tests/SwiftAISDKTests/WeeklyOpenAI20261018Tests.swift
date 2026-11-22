@@ -26,21 +26,36 @@ struct WeeklyOpenAI20261018Tests {
         "parameters": ["type": "object", "properties": [:], "additionalProperties": false], "strict": true
     ]
 
+    private var registeredTools: [String: JSONValue] {
+        ["list_issues": [
+            "type": "object", "properties": [:], "additionalProperties": false, "description": "List issues", "strict": true,
+            "providerOptions": ["openai": ["omitFromRequestTools": true]]
+        ]]
+    }
+
     @Test(arguments: ["openai", "azure"])
-    func additionalToolsFollowOrdinaryResultsAtEachInsertionPoint(_ provider: String) throws {
+    func additionalToolsFollowOrdinaryResultsAtEachInsertionPoint(_ provider: String) async throws {
+        let transport = RecordingTransport(response: response)
+        let model: any LanguageModel
+        if provider == "azure" {
+            model = try AIProviders.azure(resourceName: "test-resource", settings: .init(apiKey: "key", transport: transport)).languageModel("gpt-4.1")
+        } else {
+            model = try AIProviders.openAI(settings: .init(apiKey: "key", transport: transport)).languageModel("gpt-4.1")
+        }
         let first = AIToolResult(toolCallID: "search-1", toolName: "search", result: ["type": "json", "value": [["connection": "github"]]],
                                  providerMetadata: [provider: ["additionalTools": .array([functionDefinition])]])
         let second = AIToolResult(toolCallID: "other", toolName: "other", result: ["type": "text", "value": "other result"])
-        var warnings: [AIWarning] = []
-        var approvals: Set<String> = []
         let message = AIMessage(role: .tool, content: [.toolResult(first), .toolResult(second), .toolResult(first)])
-        let input = try openAIResponsesInputMessageJSON(message, store: false, processedApprovalIDs: &approvals, providerID: provider, warnings: &warnings)
+        let result = try await model.generate(.init(messages: [message], tools: registeredTools))
+        let request = try #require(await transport.requests().first)
+        let body = try decodeJSONBody(#require(request.body))
+        let input = try #require(body["input"]?.arrayValue)
         #expect(input.map { $0["type"] } == ["function_call_output", "additional_tools", "function_call_output", "function_call_output", "additional_tools"])
         #expect(input[1] == ["type": "additional_tools", "role": "developer", "tools": .array([functionDefinition])])
         #expect(input[0]["output"]?.stringValue == #"[{"connection":"github"}]"#)
         #expect(input[2]["output"] == "other result")
         #expect(input[1] == input[4])
-        #expect(warnings.isEmpty)
+        #expect(result.warnings.isEmpty)
     }
 
     @Test func additionalToolsRejectMalformedStrictDefinitionsAndIgnoreEmptyLists() throws {
@@ -62,7 +77,7 @@ struct WeeklyOpenAI20261018Tests {
         let transport = RecordingTransport(response: jsonResponse(#"{"id":"resp","status":"completed","output":[{"type":"message","id":"msg","content":[{"type":"output_text","text":"Answer","annotations":[{"type":"file_citation","file_id":"file-1","filename":"one.pdf","index":0}]}]}]}"#))
         let model = try AIProviders.azure(resourceName: "test-resource", settings: .init(apiKey: "key", transport: transport)).languageModel("gpt-4.1")
         let history = AIToolResult(toolCallID: "call", toolName: "search", result: "ok", providerMetadata: ["azure": ["additionalTools": .array([functionDefinition])]])
-        let result = try await model.generate(.init(messages: [AIMessage(role: .tool, content: [.toolResult(history)])]))
+        let result = try await model.generate(.init(messages: [AIMessage(role: .tool, content: [.toolResult(history)])], tools: registeredTools))
         let body = try decodeJSONBody(try #require(await transport.requests().first?.body))
         #expect(body["input"]?[1] == ["type": "additional_tools", "role": "developer", "tools": .array([functionDefinition])])
         #expect(result.content.flatMap(\.citations).first?.source.providerMetadata["azure"]?["fileId"] == "file-1")

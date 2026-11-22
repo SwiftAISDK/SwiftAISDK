@@ -80,7 +80,8 @@ func aiExecuteToolsFromStreamDoesNotExecuteAfterUnsafeFinishReasonsLikeUpstream(
     let providerResult = AIToolResult(
         toolCallID: "call-1",
         toolName: "providerTool",
-        result: "example-result"
+        result: "example-result",
+        providerExecuted: true
     )
     let model = MockLanguageModel(
         result: TextGenerationResult(text: "", rawValue: .object([:])),

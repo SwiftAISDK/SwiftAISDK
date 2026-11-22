@@ -58,7 +58,6 @@ public final class ScaleDownExtractionModel: AIExtractionModelV4, Sendable {
         for (id, field) in options.fields {
             let matches = content.entities.filter { $0.type == id && !$0.text.isEmpty }
             if field.type == .list {
-                if matches.isEmpty { answers[id] = .init(type: .list); continue }
                 let items = try matches.map { entity in
                     AIExtractionItem(confidence: entity.confidence,
                         source: try scaleDownExtractionSource(text: entity.text, start: entity.start, end: entity.end,

@@ -13,15 +13,15 @@ Each provider page shows its Swift package, credentials, factories, capabilities
 | [Embedding](../core/embeddings/) | 17 |
 | [Image](../core/generate-image/) | 21 |
 | [Transcription](../core/transcribe/) | 15 |
-| [Speech](../core/generate-speech/) | 14 |
+| [Speech](../core/generate-speech/) | 15 |
 | [Audio generation](../core/generate-audio/) | 1 |
 | [Audio transformation](../core/transform-audio/) | 1 |
 | [Dubbing](../core/dubbing/) | 1 |
 | [Video](../core/generate-video/) | 15 |
 | [Reranking](../core/rerank/) | 5 |
 | [Evaluation](../core/evaluate/) | 5 |
-| [Decision](../core/decide/) | 9 |
-| [Extraction](../core/extract/) | 4 |
+| [Decision](../core/decide/) | 10 |
+| [Extraction](../core/extract/) | 5 |
 | [Files](../core/files/) | 6 |
 | [Skills](../core/files/) | 3 |
 
@@ -33,7 +33,7 @@ Each provider page shows its Swift package, credentials, factories, capabilities
 | [Amazon Bedrock Mantle](bedrock-mantle/) | `bedrock-mantle` | `AIProviders.bedrockMantle` | Language |
 | [Anthropic](anthropic/) | `anthropic` | `AIProviders.anthropic` | Language, Evaluation, Decision, Extraction, Files, Skills |
 | [Claude Platform on AWS](anthropic-aws/) | `anthropic-aws` | `AIProviders.anthropicAWS` | Language, Files, Skills |
-| [AssemblyAI](assemblyai/) | `assemblyai` | `AIProviders.assemblyAI` | Transcription |
+| [AssemblyAI](assemblyai/) | `assemblyai` | `AIProviders.assemblyAI` | Transcription, Speech |
 | [Azure OpenAI](azure/) | `azure` | `AIProviders.azure` | Language, Completion, Embedding, Image, Transcription, Speech |
 | [Baseten](baseten/) | `baseten` | `AIProviders.baseten` | Language, Embedding |
 | [Black Forest Labs](black-forest-labs/) | `black-forest-labs` | `AIProviders.blackForestLabs` | Image, Video |
@@ -48,7 +48,7 @@ Each provider page shows its Swift package, credentials, factories, capabilities
 | [fal](fal/) | `fal` | `AIProviders.fal` | Image, Transcription, Speech, Video |
 | [Fish Audio](fish-audio/) | `fish-audio` | `AIProviders.fishAudio` | Transcription, Speech |
 | [Fireworks AI](fireworks/) | `fireworks` | `AIProviders.fireworks` | Language, Completion, Embedding, Image |
-| [Vercel AI Gateway](gateway/) | `gateway` | `AIProviders.gateway` | Language, Embedding, Image, Transcription, Speech, Video, Reranking, Evaluation, Decision |
+| [Vercel AI Gateway](gateway/) | `gateway` | `AIProviders.gateway` | Language, Embedding, Image, Transcription, Speech, Video, Reranking, Evaluation, Decision, Extraction |
 | [GMI Cloud](gmicloud/) | `gmicloud` | `AIProviders.gmiCloud` | Language |
 | [Gladia](gladia/) | `gladia` | `AIProviders.gladia` | Transcription |
 | [Google Generative AI (Gemini API)](google-generative-ai/) | `google.generative-ai` | `AIProviders.google` | Language, Embedding, Image, Speech, Video, Evaluation, Decision, Extraction, Files |
@@ -84,5 +84,6 @@ Each provider page shows its Swift package, credentials, factories, capabilities
 | [Parallel](parallel/) | `parallel` | `AIProviders.parallel`, `createParallel`, `parallel` | Decision |
 | [ScaleDown](scaledown/) | `scaledown` | `AIProviders.scaleDown` | Decision, Extraction |
 | [Tencent (TokenHub and Cloud VOD)](tencent/) | `tencent` | `AIProviders.tencent` | Language, Video |
+| [Liquid AI](liquid/) | `liquid` | `AIProviders.liquid`, `createLiquid`, `liquid` | Decision |
 
 This page is generated from [Porting/packages.json](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Porting/packages.json) by `npm --prefix docs-site run generate`.

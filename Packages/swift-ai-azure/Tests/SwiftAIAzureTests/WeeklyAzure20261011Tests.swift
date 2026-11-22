@@ -9,13 +9,15 @@ import Testing
 
 private let weeklyAzureMAIResponse = #"{"created":1791229019,"size":"768x768","usage":{"num_input_text_tokens":10,"num_input_image_tokens":0,"num_output_tokens":576},"data":[{"b64_json":"aGk="}]}"#
 
-@Test(arguments: ["MAI-Image-2.6", "mai-image-2.6-flash", "MAI-Image-2.5-Pro", "mai-image-2.5", "mai-image-2.5-flash", "gpt-image-1", "mai-image-custom"])
+@Test(arguments: ["MAI-Image-2.6", "mai-image-2.6-flash", "MAI-Image-2.5-Pro", "mai-image-2.5", "mai-image-2.5-flash",
+                  "MAI-Image-2.7", "mai-image-2.7-flash", "gpt-image-1", "mai-image-custom"])
 func WeeklyAzure20261011RoutesKnownMAIFamilies(_ modelID: String) async throws {
     let transport = RecordingTransport(response: jsonResponse(weeklyAzureMAIResponse))
     let model = try AIProviders.azure(resourceName: "weekly", configuration: .init(apiKey: "key", transport: transport)).image(modelID)
     _ = try await model.generateImage(.init(prompt: "apple"))
     let request = try #require(await transport.requests().first)
-    let mai = ["mai-image-2.6", "mai-image-2.6-flash", "mai-image-2.5-pro", "mai-image-2.5", "mai-image-2.5-flash"].contains(modelID.lowercased())
+    let mai = ["mai-image-2.6", "mai-image-2.6-flash", "mai-image-2.5-pro", "mai-image-2.5", "mai-image-2.5-flash",
+               "mai-image-2.7", "mai-image-2.7-flash"].contains(modelID.lowercased())
     #expect(request.url.host == (mai ? "weekly.services.ai.azure.com" : "weekly.openai.azure.com"))
     #expect(request.url.path == (mai ? "/mai/v1/images/generations" : "/openai/v1/images/generations"))
     #expect(await model.supportsFileInputs == (mai ? true : nil))

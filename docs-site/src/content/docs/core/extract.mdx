@@ -35,6 +35,7 @@ or ordered `.parts` with text, JSON and file evidence.
 | [OpenAI](../../providers/openai/) | `AIProviders.openAI()` | Language-model adapter with structured output. |
 | [Anthropic](../../providers/anthropic/) | `AIProviders.anthropic()` | Language-model adapter with structured output. |
 | [Google Generative AI](../../providers/google-generative-ai/) | `AIProviders.google()` | Language-model adapter with structured output. |
+| [AI Gateway](../../providers/gateway/) | `AIProviders.gateway()` | Native extraction routes configured by Gateway. |
 | [ScaleDown](../../providers/scaledown/) | `AIProviders.scaleDown(configuration:)` | Native extraction model; text fields and lists of text only. |
 
 Each factory exposes `extractionModel(_:)`. The modular packages expose the same
@@ -48,7 +49,18 @@ number or date items. Field instructions, units, integer/decimal constraints and
 an optional calendar reference date guide extraction. An absent value is `nil`,
 with a separate `guess` where the model can supply one. Answers retain confidence,
 `pNull`, source evidence, usage and provider metadata. Text source offsets count
-UTF-16 code units. File sources identify the original evidence part.
+UTF-16 code units. File sources identify the original evidence part. The facade
+normalizes empty strings and empty lists to missing values while preserving
+whitespace in nonempty strings and retaining answer metadata.
+
+## Lifecycle and telemetry
+
+Use `onStart` and `onEnd` for application callbacks. An opt-in `telemetry`
+integration receives `ai.extract` operation events and
+`ai.extract.doExtract` model-call events. The integration receives filtered
+runtime context and redacted file URLs and references. Request headers and
+provider options remain available to the application callback. A failure emits
+an error event, and the success callback fires after answer validation.
 
 ## Errors and limitations
 
@@ -63,6 +75,10 @@ can supply an application-owned downloader.
 
 Use `AIProviderRegistry.extractionModel("provider:model")` for a registered
 provider. With the umbrella package, `AI.experimentalExtract(model: "…")`
-resolves the string through `AIDefaultProvider`. The default Gateway provider
-has no extraction factory, so configure a capable default provider or pass a
-model explicitly.
+resolves the string through `AIDefaultProvider`, which uses Gateway by default.
+Supply a model that the configured provider supports for extraction.
+
+Register an extraction alias with `AIProviders.customProvider(extractionModels:)`.
+An alias accepts `.model(existingModel)` or a model ID string. In standalone
+packages, supply a fallback provider for string IDs. The umbrella resolves
+string IDs through `AIDefaultProvider`.

@@ -51,7 +51,7 @@ public final class AlibabaProvider: AIProvider, Sendable {
         }
         var headers = normalizeHeaders(configuration.headers)
         headers["authorization"] = headers["authorization"] ?? "Bearer \(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-alibaba/2.0.91")
+        headers = withUserAgentSuffix(headers, "ai-sdk-alibaba/2.0.93")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://dashscope-intl.aliyuncs.com/compatible-mode/v1")
         let http = AIProviderHTTPClient(providerID: "alibaba", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

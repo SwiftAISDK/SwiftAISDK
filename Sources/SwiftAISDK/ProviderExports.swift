@@ -32,6 +32,7 @@
 @_exported import SwiftAIHuggingFace
 @_exported import SwiftAIHume
 @_exported import SwiftAIKlingAI
+@_exported import SwiftAILiquid
 @_exported import SwiftAILMNT
 @_exported import SwiftAILuma
 @_exported import SwiftAIMCP

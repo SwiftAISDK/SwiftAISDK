@@ -11,15 +11,15 @@ Each provider page shows its Swift package, credentials, factories, capabilities
 | [Embedding](https://swiftaisdk.github.io/SwiftAISDK/core/embeddings/) | 17 |
 | [Image](https://swiftaisdk.github.io/SwiftAISDK/core/generate-image/) | 21 |
 | [Transcription](https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/) | 15 |
-| [Speech](https://swiftaisdk.github.io/SwiftAISDK/core/generate-speech/) | 14 |
+| [Speech](https://swiftaisdk.github.io/SwiftAISDK/core/generate-speech/) | 15 |
 | [Audio generation](https://swiftaisdk.github.io/SwiftAISDK/core/generate-audio/) | 1 |
 | [Audio transformation](https://swiftaisdk.github.io/SwiftAISDK/core/transform-audio/) | 1 |
 | [Dubbing](https://swiftaisdk.github.io/SwiftAISDK/core/dubbing/) | 1 |
 | [Video](https://swiftaisdk.github.io/SwiftAISDK/core/generate-video/) | 15 |
 | [Reranking](https://swiftaisdk.github.io/SwiftAISDK/core/rerank/) | 5 |
 | [Evaluation](https://swiftaisdk.github.io/SwiftAISDK/core/evaluate/) | 5 |
-| [Decision](https://swiftaisdk.github.io/SwiftAISDK/core/decide/) | 9 |
-| [Extraction](https://swiftaisdk.github.io/SwiftAISDK/core/extract/) | 4 |
+| [Decision](https://swiftaisdk.github.io/SwiftAISDK/core/decide/) | 10 |
+| [Extraction](https://swiftaisdk.github.io/SwiftAISDK/core/extract/) | 5 |
 | [Files](https://swiftaisdk.github.io/SwiftAISDK/core/files/) | 6 |
 | [Skills](https://swiftaisdk.github.io/SwiftAISDK/core/files/) | 3 |
 
@@ -31,7 +31,7 @@ Each provider page shows its Swift package, credentials, factories, capabilities
 | [Amazon Bedrock Mantle](https://swiftaisdk.github.io/SwiftAISDK/providers/bedrock-mantle/) | `bedrock-mantle` | `AIProviders.bedrockMantle` | Language |
 | [Anthropic](https://swiftaisdk.github.io/SwiftAISDK/providers/anthropic/) | `anthropic` | `AIProviders.anthropic` | Language, Evaluation, Decision, Extraction, Files, Skills |
 | [Claude Platform on AWS](https://swiftaisdk.github.io/SwiftAISDK/providers/anthropic-aws/) | `anthropic-aws` | `AIProviders.anthropicAWS` | Language, Files, Skills |
-| [AssemblyAI](https://swiftaisdk.github.io/SwiftAISDK/providers/assemblyai/) | `assemblyai` | `AIProviders.assemblyAI` | Transcription |
+| [AssemblyAI](https://swiftaisdk.github.io/SwiftAISDK/providers/assemblyai/) | `assemblyai` | `AIProviders.assemblyAI` | Transcription, Speech |
 | [Azure OpenAI](https://swiftaisdk.github.io/SwiftAISDK/providers/azure/) | `azure` | `AIProviders.azure` | Language, Completion, Embedding, Image, Transcription, Speech |
 | [Baseten](https://swiftaisdk.github.io/SwiftAISDK/providers/baseten/) | `baseten` | `AIProviders.baseten` | Language, Embedding |
 | [Black Forest Labs](https://swiftaisdk.github.io/SwiftAISDK/providers/black-forest-labs/) | `black-forest-labs` | `AIProviders.blackForestLabs` | Image, Video |
@@ -46,7 +46,7 @@ Each provider page shows its Swift package, credentials, factories, capabilities
 | [fal](https://swiftaisdk.github.io/SwiftAISDK/providers/fal/) | `fal` | `AIProviders.fal` | Image, Transcription, Speech, Video |
 | [Fish Audio](https://swiftaisdk.github.io/SwiftAISDK/providers/fish-audio/) | `fish-audio` | `AIProviders.fishAudio` | Transcription, Speech |
 | [Fireworks AI](https://swiftaisdk.github.io/SwiftAISDK/providers/fireworks/) | `fireworks` | `AIProviders.fireworks` | Language, Completion, Embedding, Image |
-| [Vercel AI Gateway](https://swiftaisdk.github.io/SwiftAISDK/providers/gateway/) | `gateway` | `AIProviders.gateway` | Language, Embedding, Image, Transcription, Speech, Video, Reranking, Evaluation, Decision |
+| [Vercel AI Gateway](https://swiftaisdk.github.io/SwiftAISDK/providers/gateway/) | `gateway` | `AIProviders.gateway` | Language, Embedding, Image, Transcription, Speech, Video, Reranking, Evaluation, Decision, Extraction |
 | [GMI Cloud](https://swiftaisdk.github.io/SwiftAISDK/providers/gmicloud/) | `gmicloud` | `AIProviders.gmiCloud` | Language |
 | [Gladia](https://swiftaisdk.github.io/SwiftAISDK/providers/gladia/) | `gladia` | `AIProviders.gladia` | Transcription |
 | [Google Generative AI (Gemini API)](https://swiftaisdk.github.io/SwiftAISDK/providers/google-generative-ai/) | `google.generative-ai` | `AIProviders.google` | Language, Embedding, Image, Speech, Video, Evaluation, Decision, Extraction, Files |
@@ -82,5 +82,6 @@ Each provider page shows its Swift package, credentials, factories, capabilities
 | [Parallel](https://swiftaisdk.github.io/SwiftAISDK/providers/parallel/) | `parallel` | `AIProviders.parallel`, `createParallel`, `parallel` | Decision |
 | [ScaleDown](https://swiftaisdk.github.io/SwiftAISDK/providers/scaledown/) | `scaledown` | `AIProviders.scaleDown` | Decision, Extraction |
 | [Tencent (TokenHub and Cloud VOD)](https://swiftaisdk.github.io/SwiftAISDK/providers/tencent/) | `tencent` | `AIProviders.tencent` | Language, Video |
+| [Liquid AI](https://swiftaisdk.github.io/SwiftAISDK/providers/liquid/) | `liquid` | `AIProviders.liquid`, `createLiquid`, `liquid` | Decision |
 
 This page is generated from [Porting/packages.json](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Porting/packages.json) by `npm --prefix docs-site run generate`.

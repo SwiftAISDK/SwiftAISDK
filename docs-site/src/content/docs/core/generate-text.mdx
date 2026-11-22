@@ -118,7 +118,11 @@ let outcome = await receipt.value
 
 Messages queued before the run start reach step zero. Messages queued during a step can continue a completed answer, subject to `maxSteps` and `stopWhen`. Pending messages do not continue an errored or interrupted step, and unresolved tool results or approvals stop the run. A receipt reports either the receiving step number or `finished`, `removed-by-prepare-step`, `stop-condition`, `waiting-for-tool-results`, `aborted`, or `error`.
 
-`prepareStep` receives the newly queued messages in `experimentalSteeringMessages`. Returning a replacement request can remove them; retaining equivalent user content counts as delivery. Each `AIToolStep.experimentalSteeringMessages` records only messages actually sent in that step. `initialRequest` remains the original request, and `responseMessages` contains generated assistant/tool messages, so steering messages remain separate when rebuilding conversation state. The final `text` is the final step's answer; prior step content and response messages remain available in the result.
+Pass `interrupt: true` to request a correction while a run is active. For example, `steering.steer("Use Paris, Texas instead.", id: "location", interrupt: true)` aborts an active model call before it returns output and repeats the same step with the correction. After the model returns or while tools are running, the correction waits for the next step boundary. A caller abort or deadline takes precedence. A repeated ID returns the original receipt without interrupting again.
+
+`prepareStep` runs again from the same step's starting request on each replacement attempt. Its `experimentalSteeringMessages` includes the messages taken for that step in arrival order. Returning a replacement request can remove queued messages. Retaining equivalent user content counts as delivery. `AIToolStep.experimentalSteeringMessages` records the messages delivered across the step's attempts. `initialRequest` remains the original request, and `responseMessages` contains generated assistant and tool messages. The final `text` comes from the last completed step. Prior step content and response messages remain available in the result.
+
+An interrupted attempt uses no extra step and contributes no reported token usage. The provider may still charge for the aborted call.
 
 Set an explicit step limit for steering. The prompt/tool-loop default is five steps and the agent default is twenty; the single-request overload permits one step. `AIOutput` overloads also accept steering.
 
@@ -128,6 +132,10 @@ finishes before starting another. Queued messages are promoted one at a time;
 does not start the next queued task. Both methods share the same idempotent ID
 and receipt rules. Normal completion, abort and the step limit settle messages
 that were never delivered.
+
+## Tool approval signatures
+
+When `toolApprovalSecret` is configured, human approval requests and automatic approvals carry a signature. Automatic denials are unsigned. The denial and its result can be included in subsequent conversation history. An attempt to resume an unsigned denial as an approved tool call fails signature verification.
 
 ## Failed-step callbacks
 

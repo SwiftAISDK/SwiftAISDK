@@ -19,10 +19,33 @@ public extension AI {
         headers: [String: String] = [:],
         providerOptions: [String: JSONValue] = [:]
     ) async throws -> AIExtractionResult {
+        try await experimentalExtract(model: model, state: state, fields: fields, referenceDate: referenceDate,
+            maxOutputTokens: maxOutputTokens, reasoning: reasoning, maxRetries: maxRetries, abortSignal: abortSignal,
+            download: download, headers: headers, providerOptions: providerOptions, telemetry: nil)
+    }
+
+    static func experimentalExtract(
+        model: String,
+        state: AIDecisionState,
+        fields: [String: AIExtractionField],
+        referenceDate: String? = nil,
+        maxOutputTokens: Int? = nil,
+        reasoning: String? = nil,
+        maxRetries: Int? = nil,
+        abortSignal: AIAbortSignal? = nil,
+        download: AIDownloadFunction? = nil,
+        headers: [String: String] = [:],
+        providerOptions: [String: JSONValue] = [:],
+        telemetry: Telemetry.Options? = nil,
+        runtimeContext: [String: JSONValue] = [:],
+        onStart: AICallback<AIExtractionStartEvent>? = nil,
+        onEnd: AICallback<AIExtractionEndEvent>? = nil
+    ) async throws -> AIExtractionResult {
         let resolved = try AIDefaultProvider.resolveExtractionModel(model)
         return try await SwiftAI.AI.experimentalExtract(model: resolved, state: state, fields: fields,
             referenceDate: referenceDate, maxOutputTokens: maxOutputTokens, reasoning: reasoning,
             maxRetries: maxRetries, abortSignal: abortSignal, download: download,
-            headers: headers, providerOptions: providerOptions)
+            headers: headers, providerOptions: providerOptions, telemetry: telemetry,
+            runtimeContext: runtimeContext, onStart: onStart, onEnd: onEnd)
     }
 }

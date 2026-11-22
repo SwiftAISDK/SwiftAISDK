@@ -69,7 +69,7 @@ struct ScaleDownDecisionUpstreamTests {
         let (request, body) = try await scaleDownRequest(transport)
         #expect(request.url.absoluteString == "https://custom.example/v1/scaledown")
         #expect(request.headers["x-api-key"] == "custom-key")
-        #expect(request.headers["user-agent"]?.contains("ai-sdk-scaledown/3.0.1") == true)
+        #expect(request.headers["user-agent"]?.contains("ai-sdk-scaledown/3.0.3") == true)
         #expect(request.headers["shared"] == "call")
         #expect(request.abortSignal === controller.signal)
         #expect(body["model"] == "classify")

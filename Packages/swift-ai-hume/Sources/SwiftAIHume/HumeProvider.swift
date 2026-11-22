@@ -39,7 +39,7 @@ public final class HumeProvider: AIProvider, Sendable {
         var headers = normalizeHeaders(configuration.headers)
         // Settings headers are lower-cased; a caller `X-Hume-Api-Key` overrides the key as upstream.
         headers["x-hume-api-key"] = headers["x-hume-api-key"] ?? "\(key)"
-        headers = withUserAgentSuffix(headers, "ai-sdk-hume/3.0.81")
+        headers = withUserAgentSuffix(headers, "ai-sdk-hume/3.0.83")
         let baseURL = withoutTrailingSlash(configuration.baseURL ?? "https://api.hume.ai")
         http = AIProviderHTTPClient(providerID: "hume", headers: headers, transport: configuration.transport,
             url: { _, path in try providerURL("\(baseURL)\(path)", queryParams: configuration.queryParams) })

@@ -52,7 +52,7 @@
         },
         {
           "package": "swift-ai-openai-compatible",
-          "from": "1.2.0"
+          "from": "1.4.0"
         }
       ]
     },
@@ -265,7 +265,7 @@
         },
         {
           "package": "swift-ai-openai-compatible",
-          "from": "1.2.0"
+          "from": "1.4.0"
         }
       ]
     },
@@ -484,7 +484,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.6.0"
+          "from": "1.7.0"
         }
       ]
     },
@@ -551,7 +551,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.6.0"
+          "from": "1.7.0"
         }
       ]
     },
@@ -576,7 +576,7 @@
         },
         {
           "package": "swift-ai-google",
-          "from": "1.4.0"
+          "from": "1.5.0"
         },
         {
           "package": "swift-ai-anthropic",
@@ -584,7 +584,7 @@
         },
         {
           "package": "swift-ai-openai-compatible",
-          "from": "1.2.0"
+          "from": "1.4.0"
         },
         {
           "package": "swift-ai-openai",
@@ -698,6 +698,27 @@
       ]
     },
     {
+      "package": "swift-ai-liquid",
+      "repository": "https://github.com/SwiftAISDK/swift-ai-liquid.git",
+      "releaseReady": false,
+      "gate": "Committed source, reviewed evidence, M4 rehearsal and M5 remote publication verification required",
+      "inputs": [
+        "Packages/swift-ai-liquid/Package.swift",
+        "Packages/swift-ai-liquid/Sources/SwiftAILiquid",
+        "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests",
+        "Packages/swift-ai-liquid/README.md",
+        "Packages/swift-ai-liquid/Porting/map.json",
+        "LICENSE",
+        ".github/workflows/package-check.yml"
+      ],
+      "dependencies": [
+        {
+          "package": "swift-ai-core",
+          "from": "1.6.0"
+        }
+      ]
+    },
+    {
       "package": "swift-ai-lmnt",
       "repository": "https://github.com/SwiftAISDK/swift-ai-lmnt.git",
       "releaseReady": false,
@@ -756,7 +777,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.0.0"
+          "from": "1.3.0"
         }
       ]
     },
@@ -827,7 +848,7 @@
         },
         {
           "package": "swift-ai-openai-compatible",
-          "from": "1.0.0"
+          "from": "1.4.0"
         }
       ]
     },
@@ -877,7 +898,7 @@
         },
         {
           "package": "swift-ai-openai-compatible",
-          "from": "1.3.0"
+          "from": "1.4.0"
         }
       ]
     },
@@ -1049,7 +1070,7 @@
       "dependencies": [
         {
           "package": "swift-ai-core",
-          "from": "1.4.0"
+          "from": "1.7.0"
         }
       ]
     },
@@ -1237,7 +1258,7 @@
         },
         {
           "package": "swift-ai-openai-compatible",
-          "from": "1.2.0"
+          "from": "1.4.0"
         }
       ]
     },

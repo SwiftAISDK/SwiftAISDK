@@ -34,6 +34,7 @@
   "Packages/swift-ai-huggingface/Package.swift",
   "Packages/swift-ai-hume/Package.swift",
   "Packages/swift-ai-klingai/Package.swift",
+  "Packages/swift-ai-liquid/Package.swift",
   "Packages/swift-ai-lmnt/Package.swift",
   "Packages/swift-ai-luma/Package.swift",
   "Packages/swift-ai-mcp/Package.swift",

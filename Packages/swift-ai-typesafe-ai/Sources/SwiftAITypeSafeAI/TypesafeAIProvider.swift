@@ -5,7 +5,7 @@ import SwiftAIProviderUtilities
 
 
 /// The published `@ai-sdk/typesafe-ai` package version mirrored by this port.
-public let typeSafeAIProviderVersion = "3.0.40"
+public let typeSafeAIProviderVersion = "3.0.42"
 
 /// Creates a TypeSafe AI provider using the same defaults as
 /// `createTypeSafeAi` from `@ai-sdk/typesafe-ai`.

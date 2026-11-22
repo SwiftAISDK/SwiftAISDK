@@ -61,7 +61,8 @@ Throw safe errors inside a tool when both the model and UI need a safe message.
 Native failed-tool display uses `AIToolResult.isError`; browser chunk framing and
 input-error state names are not a separate native protocol.
 
-Validation reports the first invalid message/part/citation, and non-finite
+Validation reports the first invalid message, part or citation. Nested
+metadata from text, tools and citations is preserved as Swift JSON values. Non-finite
 provider/tool metadata produces a bounded issue. Opaque application data keeps
 its existing typed behavior.
 

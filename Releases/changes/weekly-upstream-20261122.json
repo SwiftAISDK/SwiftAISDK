@@ -1,0 +1,320 @@
+{
+  "schemaVersion": 1,
+  "id": "weekly-upstream-20261122",
+  "status": "reviewed",
+  "summary": "Port Liquid Decision V4, Gateway Extraction and Realtime Live, AssemblyAI speech, native steering interrupts and typed Batch output. Reviewed npm and Swift coverage is recorded in Docs/Archive/WeeklyUpstreamAudit20261122.md. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection.",
+  "packages": [
+    {
+      "package": "swift-ai-alibaba",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/alibaba 2.0.93 after comparing source, declarations and matching-release tests against 2.0.91. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-amazon-bedrock",
+      "bump": "minor",
+      "notes": "Align the provider request identity with @ai-sdk/amazon-bedrock 5.0.146 after comparing source, declarations and matching-release tests against 5.0.142. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update. Requires SwiftAIOpenAICompatible 1.4.0 for the public image model conformance introduced in Core 1.6.0."
+    },
+    {
+      "package": "swift-ai-anthropic",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/anthropic 4.0.107 after comparing source, declarations and matching-release tests against 4.0.105. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-anthropic-aws",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/anthropic-aws 2.0.100 after comparing source, declarations and matching-release tests against 2.0.98. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-assemblyai",
+      "bump": "minor",
+      "notes": "Add buffered speech synthesis with MP3 and PCM encoding and a distinct speech host. The transcription adapter recognizes assemblyai-stt-3-7, sends speech_models and reports migration warnings for older IDs. Reviewed npm: @ai-sdk/assemblyai 3.0.82 to 3.0.85. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. Speech is buffered. Existing native STT GET-query and schema differences are recorded in the audit. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Additive speech API and settings. The transcription adapter places every supplied model ID in the speech_models array."
+    },
+    {
+      "package": "swift-ai-azure",
+      "bump": "minor",
+      "notes": "Add MAI-Image-2.7 and MAI-Image-2.7-Flash routing and transparent or opaque backgrounds in generation and edits. OpenAI image routes accept auto as well. Reviewed npm: @ai-sdk/azure 4.0.126 to 4.0.130. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Additive image options. The MAI route skips auto with a warning."
+    },
+    {
+      "package": "swift-ai-baseten",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/baseten 2.1.73 after comparing source, declarations and matching-release tests against 2.1.71. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-black-forest-labs",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/black-forest-labs 2.0.87 after comparing source, declarations and matching-release tests against 2.0.85. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-cartesia",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/cartesia 3.0.78 after comparing source, declarations and matching-release tests against 3.0.76. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-cerebras",
+      "bump": "minor",
+      "notes": "Align the provider request identity with @ai-sdk/cerebras 3.0.95 after comparing source, declarations and matching-release tests against 3.0.93. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update. Requires SwiftAIOpenAICompatible 1.4.0 for the public image model conformance introduced in Core 1.6.0."
+    },
+    {
+      "package": "swift-ai-cohere",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/cohere 4.0.86 after comparing source, declarations and matching-release tests against 4.0.84. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-core",
+      "bump": "minor",
+      "notes": "Add pre-output steering interrupts, per-item structured text batch output and extraction model aliases and lifecycle telemetry. Preserve tool replay approval verification while keeping automatic denials unsigned. Normalize empty extraction answers at the facade and preserve structured Gateway errors. Reviewed npm: @ai-sdk/provider 4.0.38 to 4.0.39, @ai-sdk/provider-utils 5.0.81 to 5.0.83, ai 7.0.173 to 7.0.179. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. The Swift unary facade uses a caller-wide abort signal. Browser runtimes and Node tracing channels are outside the SDK. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Existing Swift overloads remain available. Use steering interrupts to retry the same logical step before output. Extraction facade results represent empty strings and lists as missing values."
+    },
+    {
+      "package": "swift-ai-deepgram",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/deepgram 3.1.55 after comparing source, declarations and matching-release tests against 3.1.53. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-deepinfra",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/deepinfra 3.0.95 after comparing source, declarations and matching-release tests against 3.0.93. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-deepseek",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/deepseek 3.0.89 after comparing source, declarations and matching-release tests against 3.0.87. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-elevenlabs",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/elevenlabs 3.0.88 after comparing source, declarations and matching-release tests against 3.0.86. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-fal",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/fal 3.0.86 after comparing source, declarations and matching-release tests against 3.0.84. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-fireworks",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/fireworks 3.0.98 after comparing source, declarations and matching-release tests against 3.0.96. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-fish-audio",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/fish-audio 3.0.61 after comparing source, declarations and matching-release tests against 3.0.59. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-gateway",
+      "bump": "minor",
+      "notes": "Add native Extraction V4, route-aware Realtime Live sessions and typed access-policy denial details. Existing turn-based sessions and their token workflow remain available. Reviewed npm: @ai-sdk/gateway 4.0.146 to 4.0.152. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Additive factories and metadata. Requires SwiftAI Core 1.7.0 for source-compatible structured errors and correct retry handling."
+    },
+    {
+      "package": "swift-ai-gladia",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/gladia 3.0.84 after comparing source, declarations and matching-release tests against 3.0.82. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-gmicloud",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/gmicloud 3.0.66 after comparing source, declarations and matching-release tests against 3.0.64. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-google",
+      "bump": "minor",
+      "notes": "Add the Interactions MCP server tool with header redaction in telemetry, Neon reasoning, prompt blocking metadata and early validation of unsupported batch response schemas. Reviewed npm: @ai-sdk/google 4.0.121 to 4.0.124. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. Standalone Developer API transcription and speech translation remain outside the native surface. Vertex Live provides the tested VAD behavior. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Use JSON mode or disable structured outputs for Google Batch requests that previously supplied a wire schema. Requires SwiftAI Core 1.7.0 for contextual credential redaction."
+    },
+    {
+      "package": "swift-ai-google-vertex",
+      "bump": "minor",
+      "notes": "Add Gemini Live transcription VAD controls and correct single-turn completion. Re-export the Vertex Interactions MCP server tool with telemetry redaction. Reviewed npm: @ai-sdk/google-vertex 5.0.141 to 5.0.144. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Additive transcription options and tool API. Requires SwiftAIGoogle 1.5.0 for shared tool and telemetry behavior. Requires SwiftAIOpenAICompatible 1.4.0 for the public image model conformance introduced in Core 1.6.0."
+    },
+    {
+      "package": "swift-ai-groq",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/groq 4.0.86 after comparing source, declarations and matching-release tests against 4.0.84. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-heygen",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/heygen 3.0.27 after comparing source, declarations and matching-release tests against 3.0.25. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-hume",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/hume 3.0.83 after comparing source, declarations and matching-release tests against 3.0.81. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-klingai",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/klingai 4.0.87 after comparing source, declarations and matching-release tests against 4.0.85. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-liquid",
+      "bump": "initial",
+      "notes": "Add Liquid Decision V4 for d1.2 and d1.2-ultra. Requests support text, structured JSON and inline image/audio evidence. Results retain typed decisions, bounding boxes and refusals, probabilities, costs, usage and raw metadata. Reviewed npm: @ai-sdk/liquid 3.0.1. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. The initial release translates 37 portable cases. Zod initialization and JavaScript workflow serialization are platform-specific. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Initial package release. API keys resolve at call time through LIQUID_API_KEY, explicit settings or an async credential supplier."
+    },
+    {
+      "package": "swift-ai-luma",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/luma 3.0.86 after comparing source, declarations and matching-release tests against 3.0.84. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-mcp",
+      "bump": "minor",
+      "notes": "Fail Streamable HTTP requests with an MCPClientError if the POST event stream ends or disconnects before the matching JSON-RPC response. Reviewed npm: @ai-sdk/mcp 2.0.99 to 2.0.102. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible Streamable HTTP error correction. Requires SwiftAI Core 1.3.0 for the existing MCP tool title and metadata contract."
+    },
+    {
+      "package": "swift-ai-minimax",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/minimax 3.0.84 after comparing source, declarations and matching-release tests against 3.0.82. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-mistral",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/mistral 4.0.89 after comparing source, declarations and matching-release tests against 4.0.87. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-moonshotai",
+      "bump": "minor",
+      "notes": "Align the provider request identity with @ai-sdk/moonshotai 3.0.95 after comparing source, declarations and matching-release tests against 3.0.93. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update. Requires SwiftAIOpenAICompatible 1.4.0 for the public image model conformance introduced in Core 1.6.0."
+    },
+    {
+      "package": "swift-ai-open-responses",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/open-responses 2.0.89 after comparing source, declarations and matching-release tests against 2.0.87. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-openai",
+      "bump": "minor",
+      "notes": "Rebuild Responses additional-tool replay from current registrations and preserve input transformation metadata across unary, stream and batch results. Reviewed npm: @ai-sdk/openai 4.0.118 to 4.0.122. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. The earlier OpenRouter combined fixture remains open. Existing selectors keep their signatures. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Register history-loaded tools again on each call using omitFromRequestTools. The adapter uses the current declaration when replaying a tool reference. Requires SwiftAIOpenAICompatible 1.4.0 for the public image model conformance introduced in Core 1.6.0."
+    },
+    {
+      "package": "swift-ai-openai-compatible",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/openai-compatible 3.0.94 after comparing source, declarations and matching-release tests against 3.0.92. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-parallel",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/parallel 3.0.11 after comparing source, declarations and matching-release tests against 3.0.9. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-perplexity",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/perplexity 5.0.37 after comparing source, declarations and matching-release tests against 5.0.35. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-prodia",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/prodia 2.0.86 after comparing source, declarations and matching-release tests against 2.0.84. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-quiverai",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/quiverai 2.0.85 after comparing source, declarations and matching-release tests against 2.0.83. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-replicate",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/replicate 3.0.86 after comparing source, declarations and matching-release tests against 3.0.84. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-revai",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/revai 3.0.83 after comparing source, declarations and matching-release tests against 3.0.81. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-scaledown",
+      "bump": "minor",
+      "notes": "Return an explicit empty list and empty item metadata from native extraction when no list items match. The core extraction facade normalizes it to a missing value. Reviewed npm: @ai-sdk/scaledown 3.0.1 to 3.0.3. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Low-level extraction callers can distinguish an empty list from a missing field. Requires SwiftAI Core 1.7.0 for facade normalization."
+    },
+    {
+      "package": "swift-ai-tencent",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/tencent 3.0.5 after comparing source, declarations and matching-release tests against 3.0.3. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-togetherai",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/togetherai 3.0.96 after comparing source, declarations and matching-release tests against 3.0.94. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-topaz",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/topaz 3.0.30 after comparing source, declarations and matching-release tests against 3.0.28. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-typesafe-ai",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/typesafe-ai 3.0.42 after comparing source, declarations and matching-release tests against 3.0.40. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-ui",
+      "bump": "patch",
+      "notes": "Validate nested citation metadata for finite JSON while preserving valid nested tool, citation and text values. Reviewed npm: @ai-sdk/react 4.0.177 to 4.0.183, ai 7.0.173 to 7.0.179. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible validation correction. Invalid nested metadata is reported at its first path."
+    },
+    {
+      "package": "swift-ai-voyage",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/voyage 2.0.85 after comparing source, declarations and matching-release tests against 2.0.83. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    },
+    {
+      "package": "swift-ai-xai",
+      "bump": "minor",
+      "notes": "Align the provider request identity with @ai-sdk/xai 5.0.48 after comparing source, declarations and matching-release tests against 5.0.46. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update. Requires SwiftAIOpenAICompatible 1.4.0 for the public image model conformance introduced in Core 1.6.0."
+    },
+    {
+      "package": "swift-ai-zai",
+      "bump": "patch",
+      "notes": "Align the provider request identity with @ai-sdk/zai 3.0.57 after comparing source, declarations and matching-release tests against 3.0.55. Offline validation passed: node Scripts/test-packages.mjs (56 packages, 3672 owning tests and 1760 compatibility tests), generation, tooling, isolation, and version selection. See Docs/Archive/WeeklyUpstreamAudit20261122.md for retained gaps. Paid provider calls were skipped.",
+      "compatibility": "Source-compatible request-header update."
+    }
+  ]
+}

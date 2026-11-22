@@ -27,7 +27,7 @@ struct TencentProviderUpstreamTests {
         let call = try #require(await transport.requests().first)
         #expect(call.url.absoluteString == "https://tokenhub-intl.tencentcloudmaas.com/v1/chat/completions")
         #expect(call.headers["authorization"] == "Bearer test-key")
-        #expect(call.headers["user-agent"]?.contains("ai-sdk-tencent/3.0.3") == true)
+        #expect(call.headers["user-agent"]?.contains("ai-sdk-tencent/3.0.5") == true)
         #expect(try decodeJSONBody(try #require(call.body)) == ["model": "hy4", "messages": [["role": "user", "content": "Hi"]], "reasoning_effort": "high", "thinking": ["type": "enabled"]])
         #expect(result.text == "Hello")
         #expect(result.content == [.text("Hello")])
@@ -67,7 +67,7 @@ struct TencentProviderUpstreamTests {
         #expect(call.headers["authorization"]?.hasPrefix("TC3-HMAC-SHA256 Credential=AKIDEXAMPLE/") == true)
         #expect(call.headers["x-tc-region"] == "ap-singapore")
         #expect(call.headers["x-custom"] == "value")
-        #expect(call.headers["user-agent"]?.contains("ai-sdk-tencent/3.0.3") == true)
+        #expect(call.headers["user-agent"]?.contains("ai-sdk-tencent/3.0.5") == true)
         #expect(try decodeJSONBody(try #require(call.body))["SubAppId"] == 1_500_000_000)
     }
     @Test func environmentVodCredentials() async throws {

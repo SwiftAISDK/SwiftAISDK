@@ -90,7 +90,7 @@ struct UmbrellaNativeProviderParityTests {
         let transport = RecordingTransport(response: jsonResponse(chatResponse))
         let compatible = try AIProviders.openAICompatible(name: "custom", baseURL: "https://example.com/v1", apiKey: "key", transport: transport)
         _ = try await compatible.chatModel("m").generate(LanguageModelRequest(messages: [.user("Hi")]))
-        #expect(await transport.requests().first?.headers["user-agent"] == "ai-sdk-openai-compatible/3.0.92")
+        #expect(await transport.requests().first?.headers["user-agent"] == "ai-sdk-openai-compatible/3.0.94")
 
         let settings = ProviderSettings(apiKey: "key", environment: [:])
         let byteDance = try OpenAICompatibleProvider.buildHeaders(providerID: "bytedance", authorization: .none, settings: settings)

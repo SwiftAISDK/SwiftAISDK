@@ -164,6 +164,64 @@ and abort protections used by `generateText` apply (see
 [Files](https://swiftaisdk.github.io/SwiftAISDK/core/files/#download-transport-security)); provider file references
 remain opaque.
 
+## Structured text output
+
+Pass a Swift `Output` specification to `startBatch` to set the response format
+for every text request. Image requests use their usual options. Pass the same
+specification to `getBatchResults` to parse and validate completed text items.
+Keep the specification available in any process that resumes a batch by its
+reference.
+
+```swift
+struct BatchSummary: Decodable, Sendable {
+    let text: String
+}
+
+let output = Output.object(
+    schema: [
+        "type": "object",
+        "properties": ["text": ["type": "string"]],
+        "required": ["text"],
+        "additionalProperties": false
+    ],
+    as: BatchSummary.self
+)
+
+let started = try await AI.startBatch(
+    provider: batch,
+    requests: [.text(TextBatchRequest(
+        id: "summary-1",
+        modelID: "claude-opus-5-5",
+        request: LanguageModelRequest(messages: [.user("Summarize the release notes.")])
+    ))],
+    output: output
+)
+
+let results = try AI.getBatchResults(
+    provider: batch,
+    batch: started.batch.reference,
+    output: output
+)
+
+for try await item in results {
+    guard case let .text(.succeeded(id, result)) = item else { continue }
+    switch result.parsedOutput {
+    case let .success(summary):
+        print(id, summary.text)
+    case let .failure(error):
+        print(id, error.message, result.generation.text)
+    }
+}
+```
+
+A successful text item exposes either the typed `output` or an `outputError`.
+Malformed JSON, a schema mismatch, or an item that ends with tool calls can
+produce an `outputError`. The item still succeeds, its original text, content,
+and token usage remain available in `generation`, and results continue for the
+other items. JSON parsing uses the provider's selected structured response text
+when available, or the item's generated text. Failed, cancelled, expired, and
+image items keep their usual cases.
+
 ## Legacy text-only API
 
 The model-owned API remains source compatible for existing callers:

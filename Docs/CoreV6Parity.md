@@ -1,6 +1,6 @@
 # Core V7 Parity
 
-Snapshot date: 2026-11-15
+Snapshot date: 2026-11-22
 
 This document tracks SwiftAISDK against the current AI SDK Core and Errors
 reference. It is intentionally high-level: product status belongs in
@@ -9,7 +9,7 @@ and provider behavior belongs in focused tests.
 The current snapshot versions below are generated from `Porting/upstream-lock.json`;
 parity explanations remain hand-authored.
 Implementation-sensitive UI/chat items are also checked against npm source
-snapshots, currently `ai@7.0.173`, `@ai-sdk/provider@4.0.38`, `@ai-sdk/provider-utils@5.0.81`, and `@ai-sdk/react@4.0.177`.
+snapshots, currently `ai@7.0.179`, `@ai-sdk/provider@4.0.39`, `@ai-sdk/provider-utils@5.0.83`, and `@ai-sdk/react@4.0.183`.
 
 References:
 
@@ -40,12 +40,14 @@ Dated core deltas and package diff notes from earlier passes are archived in
 | `embedMany` | `covered` | `AI.embedMany`, `EmbeddingModel.maxEmbeddingsPerCall`, `EmbeddingModel.maxInputBytesPerCall` | Splits once against the caller/model count limit and provider UTF-8 byte budget, keeps an individually oversized value intact, and aggregates usage/warnings/metadata in request order. |
 | `rerank` | `covered` | `AI.rerank`, `RerankingRequest`, `RerankingResult` | Native model family exists. |
 | `experimental_evaluate` | `covered` | `AI.experimentalEvaluate`, `AIEvaluationModelV4`, `AIEvaluationProvider`, `AIEvaluationModelReference` | Provider-neutral Choice, Score, and Boolean evaluation validates question/answer contracts, retries transient failures, preserves rounding/usage/warnings/metadata, and resolves direct, registry, or custom-provider models. OpenAI, Anthropic, Google, and Gateway expose adapters. |
+| `experimental_extract` | `covered` | `AI.experimentalExtract`, `AIExtractionModelV4`, `AIExtractionModelReference`, `AIExtractionStartEvent`, `AIExtractionEndEvent` | Typed field requests and answers, model aliases and registry routing, empty answer normalization, and redacted native telemetry. Gateway exposes native Extraction V4. |
 | `generateImage` | `covered` | `AI.generateImage`, `ImageGenerationRequest`, `ImageGenerationResult.calls` | Includes files, masks, provider options, aggregate metadata, per-call results, warnings, retries, and aborts. True request splitting and provider-specific cost aggregation across multiple calls remain deferred. |
 | `transcribe` | `covered` | `AI.transcribe`, `AudioTranscriptionRequest`, `detectMediaType` | Upstream now documents `transcribe`; older experimental naming is intentionally not mirrored. Shared media detection recognizes MP4/M4A from the ISO-BMFF `ftyp` box in an audio context and bounds ID3 scanning. |
 | `StreamingTranscriptionModel` | `covered` | `StreamingTranscriptionModel`, `AIStreamingAudioInput`, `StreamingTranscriptionPart`, `CartesiaStreamingTranscriptionModel`, `GatewayTranscriptionModel` | Provider-neutral duplex transcription lifecycle with Cartesia Ink 2 and Gateway adapters. Gateway adds a short-lived route-bound token factory; ElevenLabs realtime STT remains deferred. |
 | `generateSpeech` | `covered` | `AI.generateSpeech`, `SpeechRequest` | Native model family exists. |
 | `experimental_generateVideo` | `covered` | `AI.generateVideo`, `AI.startVideo`, `AI.getVideoStatus`, `VideoGenerationRequest`, `AsyncVideoModel`, `VideoGenerationPollOptions` | Stable Swift naming preserves unary generation and adds directly persistable V4 start/status, polling, webhook waiting, cancellation, metadata merging, logical-start idempotency, and count splitting. BFL, Fal, ByteDance, and Gateway are vertical adapters; Fal and Gateway support native callback URLs while BFL and ByteDance fall back to polling with a warning. |
 | `startTextBatch` / `getBatchStatus` / `getBatchResults` | `covered` | `AI.startTextBatch`, `AI.getBatchStatus`, `AI.getBatchResults`, `BatchLanguageModel` | Durable text batches expose persistable references, optional completion webhooks, normalized status/counts, full result content, and complete per-item terminal streams through Anthropic Messages Batch, OpenAI Responses Batch, Gateway Batch V4, and xAI Responses Batch. Gateway forwards webhooks; the direct providers warn that they are unsupported. |
+| Provider-owned Batch structured output | `covered` | `AI.startBatch(output:)`, `AI.getBatchResults(output:)`, `BatchOutputItemResult` | Applies one structured output specification to text requests and keeps each result's text, usage, and output parse status independently. |
 | `Experimental_RealtimeModelV4` | `covered` | `AIRealtimeModelV4`, `AIRealtimeSession`, `XAIRealtimeModel`, `OpenAILiveModel`, `GoogleRealtimeModel`, `GatewayRealtimeModel` | Native turn-based and continuous WebSocket lifecycles with normalized audio/text/tool/delegation/usage/error events, aborts and close behavior. Google and Gateway support ephemeral-client and trusted-server connections with per-session parsing and usage snapshots. Browser WebRTC, provider-backed Responses delegation and non-Live OpenAI Realtime remain deferred. |
 | `Output` | `covered` | `Output.text/object/array/choice/json`, `AI.generateText(... output:)`, `AI.streamText(... output:)`, existing object-generation facades | Swift now mirrors the v6-style `generateText/streamText + Output.*` entry point while still keeping the older Swift-native object/array/enum/json facades. `Output.object` partial streaming uses `JSONValue` because Swift has no automatic `DeepPartial<T>`. |
 | `Agent` interface | `covered` | `AIAgent`, `AIAgentCallOptions` | Swift-native agent protocol mirrors upstream `version: "agent-v1"`, optional `id`, tool exposure, and generate/stream calls over model messages or prompts. |
@@ -76,6 +78,7 @@ Dated core deltas and package diff notes from earlier passes are archived in
 | `addToolInputExamplesMiddleware` | `covered` | `addToolInputExamplesMiddleware` | Direct helper exists. |
 | `extractJsonMiddleware` | `covered` | `extractJsonMiddleware`, `extractJSONMiddleware` | Direct helper plus Swift capitalization alias. |
 | `stepCountIs` | `swift-native` | `AIStopCondition.isStepCount` | Behavior exists; helper name differs. |
+| Steering interrupts | `swift-native` | `AISteering.steer(…, interrupt: true)` | A pre-output interrupt replaces an in-flight request within its current logical step. Visible text, tool execution, and streaming step deadlines keep their native lifecycle. |
 | `hasToolCall` | `swift-native` | `AIStopCondition.hasToolCall` | Behavior exists; helper name differs. |
 | `simulateReadableStream` | `covered` | `simulateReadableStream(chunks:initialDelayNanoseconds:chunkDelayNanoseconds:)` | Swift-native `AsyncThrowingStream` equivalent with `nil` delays as the no-delay path. |
 | `smoothStream` | `covered` | `smoothStream(_:delayNanoseconds:chunking:)`, custom detector overload | Smooths text/reasoning deltas by word, line, or custom detector; flushes before non-text chunks and preserves metadata. |

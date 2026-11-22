@@ -177,11 +177,17 @@ print(result.base64Images.count)
 ```
 
 `mai-image-2.5`, `mai-image-2.5-flash`, `mai-image-2.5-pro`, `mai-image-2.6` and
-`mai-image-2.6-flash` use the MAI image API with aspect-ratio sizing, reference
+`mai-image-2.6-flash` and the `mai-image-2.7` family use the MAI image API with aspect-ratio sizing, reference
 images (passing `files` switches to editing; masks are unsupported) and options
 `autoAspectRatio` and `webGrounding`. Other deployments use the OpenAI image API;
 set `providerOptions["azure"]["api"] = "mai"` for a custom MAI deployment name.
 Images referenced by URL are downloaded without sending your Azure credentials.
+
+For `mai-image-2.7` and `mai-image-2.7-flash`, set
+`providerOptions["azure"]["background"]` to `"transparent"` for PNG with alpha
+or `"opaque"` for an opaque result. The setting works in both generations and
+reference-image edits. On the MAI route, `"auto"` produces a warning and the
+request uses the API default. The OpenAI route accepts all three settings.
 
 Factory argument requirements are defined by the public Swift factory signatures. Use [Public symbols](https://swiftaisdk.github.io/SwiftAISDK/reference/generated/public-symbols/) when you need the exact initializer or factory declaration.
 

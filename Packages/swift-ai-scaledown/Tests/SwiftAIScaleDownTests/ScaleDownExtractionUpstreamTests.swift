@@ -1,4 +1,4 @@
-// Translated from @ai-sdk/scaledown@3.0.1 scaledown-extraction-model.test.ts.
+// Translated from @ai-sdk/scaledown@3.0.3 scaledown-extraction-model.test.ts.
 import Foundation
 import Testing
 import SwiftAIProvider
@@ -26,9 +26,9 @@ struct ScaleDownExtractionUpstreamTests {
             "contacts": .init(type: .list, value: ["Ana", "Bo"], items: [
                 .init(confidence: 0.9, source: .text(part: 0, start: 21, end: 24)),
                 .init(confidence: 0.85, source: .text(part: 0, start: 26, end: 28))]),
-            "missing": .init(type: .text), "empty": .init(type: .list)
+            "missing": .init(type: .text), "empty": .init(type: .list, value: [], items: [])
         ])
-        #expect(result.answers["empty"]?.items == nil)
+        #expect(result.answers["empty"]?.items == [])
         #expect(result.usage == .init(inputTokens: 42, outputTokens: 12))
         #expect(result.response?.id == "extract-123")
         #expect(result.response?.timestamp == Date(timeIntervalSince1970: 1700000000))

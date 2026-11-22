@@ -2,12 +2,13 @@ import Foundation
 import SwiftAIProvider
 import SwiftAITransport
 import SwiftAIProviderUtilities
-import SwiftAIGoogle
+@_spi(Vertex) import SwiftAIGoogle
 
 
 public final class GoogleVertexLanguageModel: LanguageModel, @unchecked Sendable {
     public let providerID: String
     public let modelID: String
+    public var telemetryRedactor: AITelemetryRedactor? { googleRedactInteractionsTelemetry }
     private let config: GoogleVertexConfig
 
     /// Vertex reads HTTP(S) and Cloud Storage URLs directly (upstream `supportedUrls`).
@@ -416,6 +417,7 @@ public final class GoogleVertexSpeechModel: SpeechModel, @unchecked Sendable {
 public final class GoogleVertexInteractionsLanguageModel: LanguageModel, @unchecked Sendable {
     public let providerID: String
     public let modelID: String
+    public var telemetryRedactor: AITelemetryRedactor? { googleRedactInteractionsTelemetry }
     private let agent: String?
     private let config: GoogleVertexConfig
 
@@ -428,7 +430,18 @@ public final class GoogleVertexInteractionsLanguageModel: LanguageModel, @unchec
 
     public func generate(_ request: LanguageModelRequest) async throws -> TextGenerationResult {
         let prepared = try googleInteractionsPreparedCall(for: request, modelID: modelID, agent: agent, stream: false)
-        let raw = try await sendInteractions(body: .object(prepared.body), headers: request.headers, abortSignal: request.abortSignal)
+        let body = JSONValue.object(prepared.body)
+        let httpRequest = try await config.request(
+            path: "/interactions",
+            body: body,
+            headers: googleInteractionsHeaders(request.headers),
+            abortSignal: request.abortSignal
+        )
+        let response = try await config.transport.send(httpRequest)
+        guard (200..<300).contains(response.statusCode) else {
+            throw interactionsHTTPError(response, request: httpRequest, body: body)
+        }
+        let raw = try response.jsonValue()
         let final = try await resolvedInteraction(raw, isBackground: prepared.body["background"]?.boolValue == true, requestHeaders: request.headers, abortSignal: request.abortSignal)
         let output = googleInteractionsParsedOutput(from: final)
         guard !output.content.isEmpty else {
@@ -443,7 +456,8 @@ public final class GoogleVertexInteractionsLanguageModel: LanguageModel, @unchec
             sources: googleInteractionsSources(from: final),
             providerMetadata: googleInteractionsProviderMetadata(from: final),
             rawValue: final,
-            warnings: prepared.warnings
+            warnings: prepared.warnings,
+            requestMetadata: .init(body: body, headers: request.headers, url: httpRequest.url.absoluteString)
         )
     }
 
@@ -452,19 +466,22 @@ public final class GoogleVertexInteractionsLanguageModel: LanguageModel, @unchec
             let task = Task {
                 do {
                     let prepared = try googleInteractionsPreparedCall(for: request, modelID: modelID, agent: agent, stream: true)
+                    let body = JSONValue.object(prepared.body)
                     let httpRequest = try await config.request(
                         path: "/interactions",
-                        body: .object(prepared.body),
+                        body: body,
                         headers: googleInteractionsHeaders(request.headers),
                         abortSignal: request.abortSignal
                     )
                     let response = try await config.streamRequest(httpRequest)
                     guard (200..<300).contains(response.statusCode) else {
-                        throw apiCallError(provider: providerID, response: try await bufferedHTTPResponse(from: response, request: httpRequest))
+                        let failure = try await bufferedHTTPResponse(from: response, request: httpRequest)
+                        throw interactionsHTTPError(failure, request: httpRequest, body: body)
                     }
                     if !prepared.warnings.isEmpty {
                         continuation.yield(.streamStart(warnings: prepared.warnings))
                     }
+                    continuation.yield(.requestMetadata(.init(body: body, headers: request.headers, url: httpRequest.url.absoluteString)))
                     var toolCalls = GoogleInteractionsStreamingToolCalls()
                     var content = GoogleInteractionsStreamingContent()
                     var hasFunctionCall = false
@@ -581,12 +598,12 @@ public final class GoogleVertexInteractionsLanguageModel: LanguageModel, @unchec
         }
     }
 
-    private func sendInteractions(body: JSONValue, headers: [String: String], abortSignal: AIAbortSignal?) async throws -> JSONValue {
-        let response = try await config.transport.send(try await config.request(path: "/interactions", body: body, headers: googleInteractionsHeaders(headers), abortSignal: abortSignal))
-        guard (200..<300).contains(response.statusCode) else {
-            throw apiCallError(provider: providerID, response: response)
-        }
-        return try response.jsonValue()
+    private func interactionsHTTPError(_ response: AIHTTPResponse, request: AIHTTPRequest, body: JSONValue) -> AIError {
+        let error = apiCallError(provider: providerID, response: response)
+        guard case var .apiCall(call) = error else { return error }
+        call.url = request.url.absoluteString
+        call.requestBody = body
+        return .apiCall(call)
     }
 
     private func resolvedInteraction(_ raw: JSONValue, isBackground: Bool, requestHeaders: [String: String], abortSignal: AIAbortSignal?) async throws -> JSONValue {

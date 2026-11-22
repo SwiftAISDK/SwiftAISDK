@@ -4,7 +4,7 @@ import SwiftAITransport
 import SwiftAIProviderUtilities
 import SwiftAIOpenAICompatible
 
-public let tencentProviderVersion = "3.0.3"
+public let tencentProviderVersion = "3.0.5"
 
 /// TokenHub and VOD credentials are resolved independently when a request is sent.
 public struct TencentProviderSettings: Sendable {

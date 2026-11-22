@@ -66,6 +66,8 @@ cases to exhaustive switches over `LanguageStreamPart`.
 
 Tool input can arrive before the final tool call. Use `toolInputStart` / `toolInputStartText`, `toolInputDelta`, and `toolInputEnd` parts when you want to show streamed arguments in a UI, and handle `toolApprovalRequest` / `toolApprovalResponse` parts when a tool requires human or policy approval. See [Tools](https://swiftaisdk.github.io/SwiftAISDK/core/tools/) for tool loops and approvals.
 
+Provider-executed tools can emit results with `preliminary == true` for progress displays. Completed step content and tool results include only final outputs. With `toolApprovalSecret` configured, denied tool requests are unsigned and their denial history remains valid for subsequent calls.
+
 ## Citations attached to text
 
 `AICitation` identifies the URL or document supporting a text block, with optional
@@ -177,6 +179,8 @@ snapshots.
 ## Steering and failed steps
 
 `AI.streamText` accepts `experimentalSteering`, `onStepError`, `onError` and `onAbort`, including the typed `AIOutput` overloads. Pass a fresh object from `AI.experimentalCreateSteering()` and set the desired `maxSteps`. Delivery receipts, `prepareStep.experimentalSteeringMessages` and completed-step steering metadata follow the same rules as [`generateText`](https://swiftaisdk.github.io/SwiftAISDK/core/generate-text/#experimental-steering).
+
+`steering.steer("Use Paris, Texas instead.", interrupt: true)` restarts the active model stream in the same step when it has yet to produce semantic output or start a tool input. The facade closes any already visible empty text and reasoning blocks before emitting the new steering message. The replacement attempt supplies the completed step's request metadata, warnings, usage and terminal part. The step deadline continues across attempts. Once semantic output or tool input has started, an interrupting message waits for the next step boundary.
 
 `onStepError` fires once when a started model step fails before producing a result: a thrown provider/stream error or a stream ending without output or its terminal finish. It reports the actual continuation-step index and completed previous steps. A provider error chunk completes an errored step and invokes `onError`, without a failed-step callback. An abort or timeout invokes `onAbort`, without `onStepError` or `onError`.
 

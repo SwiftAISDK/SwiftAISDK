@@ -16,7 +16,7 @@ extension AIProviders {
         if let project = settings.project {
             settings.headers["OpenAI-Project"] = settings.headers["OpenAI-Project"] ?? project
         }
-        return try OpenAICompatibleProvider(providerID: providerID, defaultBaseURL: "https://api.openai.com/v1", authorization: .bearer(environmentVariables: ["OPENAI_API_KEY"]), supportedCapabilities: [.language, .completion, .embedding, .image, .transcription, .speech], settings: settings, routesLikeOpenAI: true, userAgentSuffix: "ai-sdk-openai/4.0.118", supportsProviderOwnedBatch: true)
+        return try OpenAICompatibleProvider(providerID: providerID, defaultBaseURL: "https://api.openai.com/v1", authorization: .bearer(environmentVariables: ["OPENAI_API_KEY"]), supportedCapabilities: [.language, .completion, .embedding, .image, .transcription, .speech], settings: settings, routesLikeOpenAI: true, userAgentSuffix: "ai-sdk-openai/4.0.122", supportsProviderOwnedBatch: true)
     }
 
     public static func anthropic(settings: ProviderSettings = ProviderSettings()) throws -> AnthropicProvider {
@@ -145,7 +145,7 @@ extension AIProviders {
             authorization: apiKey == nil ? .none : .bearer(environmentVariables: []),
             supportedCapabilities: [.language, .completion, .embedding, .image],
             settings: settings,
-            userAgentSuffix: "ai-sdk-openai-compatible/3.0.92",
+            userAgentSuffix: "ai-sdk-openai-compatible/3.0.94",
             usesOpenAICompatibleSurfaceIDs: true
         )
     }
@@ -175,7 +175,7 @@ extension AIProviders {
             authorization: apiKey == nil ? .none : .bearer(environmentVariables: []),
             supportedCapabilities: [.language, .completion, .embedding, .image],
             settings: settings,
-            userAgentSuffix: "ai-sdk-openai-compatible/3.0.92",
+            userAgentSuffix: "ai-sdk-openai-compatible/3.0.94",
             usesOpenAICompatibleSurfaceIDs: true
         )
     }
@@ -349,7 +349,7 @@ extension AIProviders {
             headers: headers,
             transport: settings.transport,
             dynamicHeaders: dynamicHeaders,
-            userAgentSuffix: userAgentSuffix ?? "ai-sdk-open-responses/2.0.87",
+            userAgentSuffix: userAgentSuffix ?? "ai-sdk-open-responses/2.0.89",
             includeUsage: settings.includeUsage,
             queryParams: settings.queryParams,
             supportsStructuredOutputs: structuredOutputs,
@@ -378,7 +378,7 @@ extension AIProviders {
     }
 
     public static func assemblyAI(settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider {
-        try OpenAICompatibleProvider(providerID: "assemblyai", defaultBaseURL: "https://api.assemblyai.com", authorization: .apiKeyHeader(name: "authorization", environmentVariables: ["ASSEMBLYAI_API_KEY"]), supportedCapabilities: [.transcription], settings: settings)
+        try OpenAICompatibleProvider(providerID: "assemblyai", defaultBaseURL: "https://api.assemblyai.com", authorization: .apiKeyHeader(name: "authorization", environmentVariables: ["ASSEMBLYAI_API_KEY"]), supportedCapabilities: [.transcription, .speech], settings: settings)
     }
 
     public static func elevenLabs(settings: ProviderSettings = ProviderSettings()) throws -> OpenAICompatibleProvider {
@@ -439,7 +439,7 @@ extension AIProviders {
         return try OpenAICompatibleProvider(
             providerID: "topaz", defaultBaseURL: "https://api.topazlabs.com",
             authorization: .apiKeyHeader(name: "x-api-key", environmentVariables: ["TOPAZ_API_KEY"]),
-            supportedCapabilities: [.image, .video], settings: settings, userAgentSuffix: "ai-sdk-topaz/3.0.28"
+            supportedCapabilities: [.image, .video], settings: settings, userAgentSuffix: "ai-sdk-topaz/3.0.30"
         )
     }
 
@@ -486,5 +486,5 @@ private func perplexityHeaders(settings: ProviderSettings) throws -> [String: St
         throw AIError.missingAPIKey(provider: "perplexity", environmentVariables: ["PERPLEXITY_API_KEY"])
     }
     headers["Authorization"] = headers["Authorization"] ?? "Bearer \(key)"
-    return withUserAgentSuffix(headers, "ai-sdk-perplexity/5.0.35")
+    return withUserAgentSuffix(headers, "ai-sdk-perplexity/5.0.37")
 }

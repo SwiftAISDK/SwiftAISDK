@@ -153,6 +153,11 @@
       "remote": "https://github.com/SwiftAISDK/swift-ai-klingai.git"
     },
     {
+      "identity": "swift-ai-liquid",
+      "path": "Packages/swift-ai-liquid",
+      "remote": "https://github.com/SwiftAISDK/swift-ai-liquid.git"
+    },
+    {
       "identity": "swift-ai-lmnt",
       "path": "Packages/swift-ai-lmnt",
       "remote": "https://github.com/SwiftAISDK/swift-ai-lmnt.git"
@@ -311,6 +316,7 @@
     "swift-ai-huggingface",
     "swift-ai-hume",
     "swift-ai-klingai",
+    "swift-ai-liquid",
     "swift-ai-lmnt",
     "swift-ai-luma",
     "swift-ai-mcp",

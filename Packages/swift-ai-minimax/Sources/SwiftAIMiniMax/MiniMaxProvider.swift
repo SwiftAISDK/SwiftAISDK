@@ -70,7 +70,7 @@ public final class MiniMaxProvider: AIProvider, @unchecked Sendable {
         var languageHeaders = normalizeHeaders(settings.headers)
         languageHeaders["anthropic-version"] = languageHeaders["anthropic-version"] ?? "2023-06-01"
         languageHeaders["x-api-key"] = languageHeaders["x-api-key"] ?? apiKey
-        languageHeaders = withUserAgentSuffix(languageHeaders, "ai-sdk-minimax/3.0.82")
+        languageHeaders = withUserAgentSuffix(languageHeaders, "ai-sdk-minimax/3.0.84")
 
         config = MiniMaxHTTPConfiguration(
             providerID: "minimax.messages",
@@ -82,7 +82,7 @@ public final class MiniMaxProvider: AIProvider, @unchecked Sendable {
 
         var videoHeaders = normalizeHeaders(settings.headers)
         videoHeaders["authorization"] = videoHeaders["authorization"] ?? "Bearer \(apiKey)"
-        videoHeaders = withUserAgentSuffix(videoHeaders, "ai-sdk-minimax/3.0.82")
+        videoHeaders = withUserAgentSuffix(videoHeaders, "ai-sdk-minimax/3.0.84")
         videoConfig = MiniMaxHTTPConfiguration(
             providerID: "minimax.video",
             baseURL: settings.videoBaseURL ?? "https://api.minimax.io",

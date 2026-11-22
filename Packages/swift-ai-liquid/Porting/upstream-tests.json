@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "package": "swift-ai-liquid",
+  "upstream": "@ai-sdk/liquid",
+  "version": "3.0.1",
+  "testRef": "3dad57f204c7332178d28c3467c7311875b66a3e",
+  "archiveIntegrity": "sha512-I159VsTv+tQnbo84Hyg0ThhFdt0z8KxIUMAZUTxtlxGhNvwThW24T3GVKiPNHxegiFSBMrE7T2oFXjB2TLC1Iw==",
+  "archiveSHA256": "554eed8de7a9f91769b34e86a6615a039f570507c823a870abde787cd3502e92",
+  "testDispositions": [
+    {
+      "path": "packages/liquid/src/liquid-provider.test.ts",
+      "sha256": "d9c4cbb37197c740a72d09270407456276f85dfbc31a65f16d84c8f7d55c89e1",
+      "disposition": "ported",
+      "scenarios": [
+        {
+          "upstreamScenario": "rejects unsupported model types",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidProviderUpstreamTests.swift",
+          "swiftTest": "rejectsUnsupportedModelTypes",
+          "expandedCases": 1
+        },
+        {
+          "upstreamScenario": "uses explicit or environment keys and the default endpoint (explicit=%s)",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidProviderUpstreamTests.swift",
+          "swiftTest": "usesExplicitOrEnvironmentKeyWithDefaultEndpoint",
+          "expandedCases": 2
+        },
+        {
+          "upstreamScenario": "loads credentials lazily and reports a missing key",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidProviderUpstreamTests.swift",
+          "swiftTest": "loadsCredentialsLazilyAndReportsMissingKey",
+          "expandedCases": 1
+        }
+      ]
+    },
+    {
+      "path": "packages/liquid/src/liquid-decision-model.test.ts",
+      "sha256": "3d9d4bddd818a6b3f95dc4218210faac821a5ff949d45edbd1ba78b04f35f910",
+      "disposition": "ported-with-platform-exclusion",
+      "scenarios": [
+        {
+          "upstreamScenario": "sends one native request with configured headers",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidRequestUpstreamTests.swift",
+          "swiftTest": "sendsOneNativeRequestWithConfiguredHeaders",
+          "expandedCases": 1
+        },
+        {
+          "upstreamScenario": "maps answers and preserves confidence, legends, usage, cost and response metadata",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidResponseUpstreamTests.swift",
+          "swiftTest": "mapsAnswersAndPreservesConfidenceLegendsUsageCostAndResponseMetadata",
+          "expandedCases": 1
+        },
+        {
+          "upstreamScenario": "sends a Box question with its image and maps the box",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidResponseUpstreamTests.swift",
+          "swiftTest": "sendsBoxWithImageAndMapsBox",
+          "expandedCases": 1
+        },
+        {
+          "upstreamScenario": "returns a refusal when the Box object is not found",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidResponseUpstreamTests.swift",
+          "swiftTest": "returnsRefusalWhenBoxObjectIsNotFound",
+          "expandedCases": 1
+        },
+        {
+          "upstreamScenario": "sends images and audio as ordered top-level data URLs and joins the remaining state",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidRequestUpstreamTests.swift",
+          "swiftTest": "sendsSeparateOrderedMediaArraysAndJoinsTextAndJSON",
+          "expandedCases": 1
+        },
+        {
+          "upstreamScenario": "sends %s (structured JSON or media only)",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidRequestUpstreamTests.swift",
+          "swiftTest": "sendsStructuredObjectOrNullForOnlyMedia",
+          "expandedCases": 2
+        },
+        {
+          "upstreamScenario": "rejects %s before HTTP (image/audio counts)",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidRequestUpstreamTests.swift",
+          "swiftTest": "rejectsTooManyImagesOrAudioBeforeHTTP",
+          "expandedCases": 2
+        },
+        {
+          "upstreamScenario": "rejects %s before HTTP (unsupported media or file transport)",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidRequestUpstreamTests.swift",
+          "swiftTest": "rejectsUnsupportedMediaBeforeHTTP",
+          "expandedCases": 5
+        },
+        {
+          "upstreamScenario": "request limits rejects %s before HTTP (question and criteria limits)",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidRequestUpstreamTests.swift",
+          "swiftTest": "rejectsInvalidQuestionLimitsBeforeHTTP",
+          "expandedCases": 8
+        },
+        {
+          "upstreamScenario": "request limits rejects %s before HTTP (Box image count)",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidRequestUpstreamTests.swift",
+          "swiftTest": "rejectsBoxWithoutExactlyOneImageBeforeHTTP",
+          "expandedCases": 2
+        },
+        {
+          "upstreamScenario": "sends Boolean criteria and null Choice descriptions",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidRequestUpstreamTests.swift",
+          "swiftTest": "sendsBooleanCriteriaAndNullChoiceDescriptions",
+          "expandedCases": 1
+        },
+        {
+          "upstreamScenario": "warns about unsupported settings without adding fields to the request",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidRequestUpstreamTests.swift",
+          "swiftTest": "warnsAboutUnsupportedSettingsWithoutAddingRequestFields",
+          "expandedCases": 1
+        },
+        {
+          "upstreamScenario": "rejects missing and unexpected answers",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidResponseUpstreamTests.swift",
+          "swiftTest": "rejectsMissingAndUnexpectedAnswers",
+          "expandedCases": 3
+        },
+        {
+          "upstreamScenario": "rejects malformed native responses",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidResponseUpstreamTests.swift",
+          "swiftTest": "rejectsMalformedNativeResponses",
+          "expandedCases": 3
+        },
+        {
+          "upstreamScenario": "preserves Liquid error messages and codes",
+          "swiftFile": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/LiquidResponseUpstreamTests.swift",
+          "swiftTest": "preservesLiquidErrorMessageAndCode",
+          "expandedCases": 1
+        }
+      ],
+      "excludedScenarios": [
+        {
+          "scenario": "restores the endpoint and authentication across workflow serialization",
+          "reason": "Swift does not implement JavaScript Workflow serialization symbols or serialize closures and injected transports."
+        }
+      ]
+    },
+    {
+      "path": "packages/liquid/src/lazy-schemas.test.ts",
+      "sha256": "0c2d17cbc3560540031d5294b6e6721b1c2c48c1d0fa8f623c8bd8f29b986c43",
+      "disposition": "platform-only",
+      "scenarios": [],
+      "reason": "Zod module construction and JavaScript lazy import mocking have no Swift Codable/module equivalent."
+    }
+  ],
+  "fixtures": [
+    {
+      "upstreamPath": "packages/liquid/src/__fixtures__/decisions-box-not-found.json",
+      "swiftPath": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/Fixtures/decisions-box-not-found.json",
+      "gitBlob": "fa6693cdcfc2d2a11714028ac6177ac8514896d7",
+      "sha256": "2bb450c7c11060b8e1b03e2f0958f8de002dccb00c95dc072fba806fe520d7e7"
+    },
+    {
+      "upstreamPath": "packages/liquid/src/__fixtures__/decisions.json",
+      "swiftPath": "Packages/swift-ai-liquid/Tests/SwiftAILiquidTests/Fixtures/decisions.json",
+      "gitBlob": "e89542e805f46a34c6f14c2377a93c035b1cf396",
+      "sha256": "bbaf331d71fc5f0644a780427999cc5a40307864245d39ff063695b462ecc353"
+    }
+  ],
+  "validation": {
+    "command": "swift test --package-path Packages/swift-ai-liquid --filter Liquid --no-parallel",
+    "exitCode": 0,
+    "testDeclarations": 18,
+    "expandedPortableScenarios": 37,
+    "platformOnlyScenarios": 2,
+    "logSHA256": "01a38465b31c73e199e0b3c6b0351b0f9ffd6ea85acc3eec29711957b1b64f5b"
+  }
+}

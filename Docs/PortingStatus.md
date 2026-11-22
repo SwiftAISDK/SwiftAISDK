@@ -1,6 +1,6 @@
 # Porting Status
 
-Snapshot date: 2026-11-16
+Snapshot date: 2026-11-22
 
 SwiftAISDK ports the provider-facing parts of Vercel AI SDK into SwiftPM
 packages: a Swift-native facade, provider registry, provider implementations,
@@ -15,14 +15,13 @@ them only when investigating an earlier pass.
 
 ## Release State
 
-- 57 tracked npm packages map to 55 independent Swift packages: core, 52
-  provider adapters, MCP and UI. All are published.
+- The canonical catalog tracks 58 npm packages across 56 independent Swift
+  packages, including core, 53 provider adapters, MCP and UI.
 - SwiftAISDK 3.6.0 is the current optional compatibility umbrella. Its tested
   dependency selection is `Releases/umbrella/3.6.0.json`.
-- The latest weekly pass is recorded in
-  [WeeklyUpstreamAudit20261115.md](Archive/WeeklyUpstreamAudit20261115.md), with
-  release evidence in
-  [ReleaseVerification20261115.json](Archive/ReleaseVerification20261115.json).
+- The latest source review and candidate release selection are in
+  [WeeklyUpstreamAudit20261122.md](Archive/WeeklyUpstreamAudit20261122.md).
+  Published distribution state is recorded in `Releases/sets/`.
 - The later `parity-repairs-20261115` set (`Releases/sets/parity-repairs-20261115.json`)
   publishes Prodia, Rev.ai and Together AI 1.2.0 with their reviewed upstream
   tests translated; its public consumer evidence is
@@ -41,18 +40,22 @@ them only when investigating an earlier pass.
 ## Current Shape
 
 - The `AI` facade covers text, streaming text, durable text batches, structured
-  output, embeddings, images, unary and asynchronous video, unary and streaming speech, batch and
+  output, typed text batch output, pre-output steering interrupts, embeddings, images,
+  unary and asynchronous video, unary and streaming speech, batch and
   streaming transcription, reranking, Files V4 operations, skill uploads,
   middleware, telemetry, warnings, setup and in-band stream retries, aborts,
   tools, approvals, MCP tools, UI messages, chat sessions, agent helpers, and
   provider-neutral realtime sessions.
 - Experimental Decision V4 is available through `AI.experimentalDecide` with
   ordered text/JSON/file evidence, typed questions/answers/refusals, optional token
-  budgets/reasoning controls, Perplexity native decisions, provider/registry routing,
+  budgets/reasoning controls, Perplexity and Liquid native decisions, provider/registry routing,
   and native telemetry. Existing Evaluation V4 is available through `AI.experimentalEvaluate`
   with Choice, Score, Boolean, and TypeSafe Box questions, provider/default-registry model
   resolution, a native TypeSafe AI provider, and OpenAI, Anthropic, Google, and
   Gateway adapters.
+- Experimental Extraction V4 supports direct and aliased models, typed fields
+  and answers, and redacted operation/model telemetry. Gateway can route native
+  extraction and continuous Realtime Live sessions.
 - Attached citations survive generated/streamed content, typed text output and
   native UI independently of retrieved sources; tool concurrency is configurable.
 - HTTP language-model streaming consumes SSE and Amazon EventStream bodies
@@ -82,7 +85,7 @@ them only when investigating an earlier pass.
 | Provider capabilities | `Porting/packages.json`, generated into `Docs/ProviderCapabilityMatrix.md` |
 | Core AI SDK parity | `Docs/CoreV6Parity.md` |
 | Upstream test inventory | `Docs/UpstreamTestInventory.md` |
-| Latest pass dispositions and retained gaps | `Docs/Archive/WeeklyUpstreamAudit20261115.md` |
+| Latest pass dispositions and retained gaps | `Docs/Archive/WeeklyUpstreamAudit20261122.md` |
 
 ## Active Product Gaps
 

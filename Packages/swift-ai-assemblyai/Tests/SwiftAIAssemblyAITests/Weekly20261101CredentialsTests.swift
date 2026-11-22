@@ -34,4 +34,20 @@ struct Weekly20261101CredentialsTests {
             #expect(!request.headers.values.contains(where: { $0.contains("__swift_ai_credential_") }))
         }
     }
+
+    @Test func resolvesFreshCredentialForEverySpeechRequest() async throws {
+        let sequence = WeeklyCredentialSequence()
+        let transport = RecordingTransport(response: AIHTTPResponse(statusCode: 200, body: Data([1, 2, 3])))
+        let provider = try AssemblyAIProvider(configuration: .init(apiKeyProvider: { await sequence.next() }, transport: transport))
+        let model = provider.speech("assemblyai-tts-1")
+        #expect(await sequence.count == 0)
+
+        for _ in 0..<2 {
+            _ = try await model.speak(.init(text: "Hello, world!"))
+        }
+
+        let requests = await transport.requests()
+        #expect(requests.map { $0.headers["authorization"] } == ["rotating-1", "rotating-2"])
+        #expect(await sequence.count == 2)
+    }
 }

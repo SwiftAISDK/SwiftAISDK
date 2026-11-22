@@ -84,9 +84,9 @@ try {
   for (const [id, entries] of published) {
     if (!unitByID.has(id)) continue;
     const remote = path.join(stage, 'remotes', id + '.git');
+    const tagRefspecs = entries.map(({version}) => `refs/tags/${version}:refs/tags/${version}`);
+    command('git', ['fetch', '--no-tags', unitByID.get(id).repository, ...tagRefspecs], remote, `fetch published ${id}`);
     for (const entry of entries) {
-      command('git', ['fetch', '--no-tags', unitByID.get(id).repository,
-        `refs/tags/${entry.version}:refs/tags/${entry.version}`], remote, `fetch published ${id} ${entry.version}`);
       ensure(release.git(['rev-parse', `refs/tags/${entry.version}^{}`], remote) === entry.exportCommit, 'Published peeled tag changed: ' + id);
       ensure(release.git(['rev-parse', `refs/tags/${entry.version}`], remote) === entry.tagObject, 'Published annotated tag changed: ' + id);
       versions.get(id).push(entry);
@@ -100,26 +100,52 @@ try {
   function installMirrors(cwd) {
     const dir = path.join(cwd, '.swiftpm/configuration'); fs.mkdirSync(dir, {recursive: true}); fs.writeFileSync(path.join(dir, 'mirrors.json'), mirror);
   }
-  function closure(id, found = new Set()) {
-    if (found.has(id)) return found; found.add(id);
-    for (const d of unitByID.get(id).dependencies) closure(d.package, found);
+  function selectedReceipt(id, pins) {
+    const receipt = versions.get(id)?.find(v => v.version === pins.get(id));
+    ensure(receipt, 'Missing selected package version: ' + id);
+    return receipt;
+  }
+  function closure(id, found = new Set(), pins = null) {
+    if (found.has(id)) return found;
+    found.add(id);
+    const dependencies = pins ? selectedReceipt(id, pins).dependencies : unitByID.get(id).dependencies;
+    for (const d of dependencies) closure(d.package, found, pins);
     return found;
   }
   function minimumVersions(id) {
-    const ids = closure(id), required = new Map();
-    required.set(id, journal.packages.find(p => p.package === id).version);
-    for (const key of ids) for (const dep of unitByID.get(key).dependencies) {
-      if (!required.has(dep.package) || release.compare(dep.from, required.get(dep.package)) > 0) required.set(dep.package, dep.from);
+    const rootVersion = journal.packages.find(p => p.package === id).version;
+    let selected = new Map([[id, rootVersion]]);
+    // A historical transitive package can have a different dependency graph
+    // from its current catalog entry. Rebuild constraints from the selected
+    // receipts until the versions and reachable package set both stabilize.
+    for (let iteration = 0; iteration <= units.length; iteration++) {
+      const constraints = new Map(), visited = new Set();
+      function visit(key) {
+        if (visited.has(key) || !selected.has(key)) return;
+        visited.add(key);
+        for (const dep of selectedReceipt(key, selected).dependencies) {
+          const floors = constraints.get(dep.package) ?? new Set();
+          floors.add(dep.from);
+          constraints.set(dep.package, floors);
+          visit(dep.package);
+        }
+      }
+      visit(id);
+      const next = new Map([[id, rootVersion]]);
+      for (const [key, floors] of constraints) {
+        const match = versions.get(key)?.find(v => [...floors].every(floor => release.accepts(floor, v.version)));
+        ensure(match, `No real minimum candidate for ${key} from ${[...floors].join(', ')}`);
+        next.set(key, match.version);
+      }
+      if (next.size === selected.size && [...next].every(([key, version]) => selected.get(key) === version)) return next;
+      selected = next;
     }
-    return new Map([...required].map(([key, lower]) => {
-      const match = versions.get(key).find(v => release.accepts(lower, v.version));
-      ensure(match, `No real minimum candidate for ${key} from ${lower}`); return [key, match.version];
-    }));
+    throw new Error('Minimum dependency selection did not converge: ' + id);
   }
   function publicClient(label, roots, pins, exactAll = true) {
     const cwd = path.join(temp, 'consumers', label), source = path.join(cwd, 'Sources/Consumer');
     fs.mkdirSync(source, {recursive: true});
-    const ids = new Set(roots.flatMap(id => [...closure(id)]));
+    const ids = exactAll ? new Set(roots.flatMap(id => [...closure(id, new Set(), pins)])) : new Set(roots);
     // Latest clients constrain roots only. Adding a newer transitive major here
     // would incorrectly force it on a provider whose range still permits 1.x.
     const dependencies = [...(exactAll ? ids : new Set(roots))].map(id => {
@@ -139,9 +165,11 @@ try {
       }
     }
     fs.writeFileSync(path.join(source, 'main.swift'), code + 'print("IMPORTS_OK")\n'); installMirrors(cwd);
-    // Share only the disposable compiler scratch area. Each client still starts
-    // without a lockfile and its resolved versions/revisions are checked below.
-    const scratch = path.join(temp, exactAll ? 'minimum-client-build' : 'latest-client-build');
+    // Keep different Core versions in separate scratch areas so resolving one
+    // minimum cannot replace another client's checkout or invalidate its build.
+    // Each fresh client still verifies its own resolved versions and revisions.
+    const coreVersion = pins.get('swift-ai-core') ?? 'no-core';
+    const scratch = path.join(temp, exactAll ? `minimum-client-build-${coreVersion}` : 'latest-client-build');
     command('swift', ['run', '--scratch-path', scratch, '-c', 'release', 'Consumer'], cwd, label);
     const lock = JSON.parse(fs.readFileSync(path.join(cwd, 'Package.resolved')));
     const resolved = new Map();

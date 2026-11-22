@@ -176,6 +176,7 @@ import Testing
 @Test func openAIResponsesBatchV4IncrementallyParsesSuccessAndTerminalFailuresAcrossBothFiles() async throws {
     var successBody = try secureJSONParse(openAIResponsesBatchResultBody(text: "Paris")).objectValue!
     successBody["prompt_cache_diagnostics"] = ["type": "cache_miss", "reason": "input_changed", "cache_missed_tokens": 1200]
+    successBody["input_transformations"] = [["id": "rs_1", "type": "reasoning", "action": "removed", "reason": "prefix_mismatch"]]
     let success = openAIBatchResultLine(
         id: "france",
         statusCode: 200,
@@ -244,6 +245,9 @@ import Testing
     #expect(result.providerMetadata["openai"]?["responseId"]?.stringValue == "resp_123")
     #expect(result.providerMetadata["openai"]?["serviceTier"]?.stringValue == "default")
     #expect(result.providerMetadata["openai"]?["promptCacheDiagnostics"] == ["type": "cache_miss", "reason": "input_changed", "cache_missed_tokens": 1200])
+    #expect(result.providerMetadata["openai"]?["inputTransformations"] == [
+        ["id": "rs_1", "type": "reasoning", "action": "removed", "reason": "prefix_mismatch"]
+    ])
 
     guard case let .failed(httpID, httpFailure, _) = items[1] else {
         Issue.record("Expected HTTP item failure")

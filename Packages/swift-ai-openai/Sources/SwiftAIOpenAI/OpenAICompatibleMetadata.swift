@@ -21,7 +21,11 @@ func openAIResponsesStreamResponseMetadata(from raw: JSONValue, response: AIHTTP
     )
 }
 
-func openAIResponsesProviderMetadata(from raw: JSONValue, providerID: String) throws -> [String: JSONValue] {
+func openAIResponsesProviderMetadata(
+    from raw: JSONValue,
+    providerID: String,
+    includesInputTransformations: Bool = true
+) throws -> [String: JSONValue] {
     if let diagnostics = raw["prompt_cache_diagnostics"], diagnostics != .null {
         guard let object = diagnostics.objectValue, object["type"]?.stringValue != nil,
               object["reason"] == nil || object["reason"] == .null || object["reason"]?.stringValue != nil,
@@ -52,6 +56,9 @@ func openAIResponsesProviderMetadata(from raw: JSONValue, providerID: String) th
     if let diagnostics = raw["prompt_cache_diagnostics"], diagnostics != .null {
         metadata["promptCacheDiagnostics"] = diagnostics
     }
+    if includesInputTransformations {
+        metadata["inputTransformations"] = try openAIResponsesInputTransformations(from: raw, providerID: providerID)
+    }
     if let reasoningContext = raw["reasoning"]?["context"], reasoningContext != .null {
         metadata["reasoningContext"] = reasoningContext
     }
@@ -62,29 +69,39 @@ func openAIResponsesProviderMetadata(from raw: JSONValue, providerID: String) th
     return openAICompatibleNamespacedProviderMetadata(metadata, providerID: providerID)
 }
 
-func openAIResponsesProviderMetadataByPreservingResponseID(_ providerMetadata: [String: JSONValue], responseID: JSONValue?, providerID: String) -> [String: JSONValue] {
-    guard let responseID else {
-        return providerMetadata
+func openAIResponsesInputTransformations(from raw: JSONValue, providerID: String) throws -> JSONValue? {
+    guard let transformations = raw["input_transformations"], transformations != .null else { return nil }
+    guard let entries = transformations.arrayValue else {
+        throw AIError.invalidResponse(provider: providerID, message: "Invalid OpenAI input transformations.")
     }
-    let namespace = openAICompatibleProviderMetadataNamespace(providerID)
-    var namespaceMetadata = providerMetadata[namespace]?.objectValue ?? [:]
-    namespaceMetadata["responseId"] = responseID
-    var updated = providerMetadata
-    updated[namespace] = .object(namespaceMetadata)
-    return updated
+    return .array(try entries.map { entry in
+        guard let type = entry["type"]?.stringValue,
+              let action = entry["action"]?.stringValue,
+              let reason = entry["reason"]?.stringValue,
+              entry["id"] == nil || entry["id"] == .null || entry["id"]?.stringValue != nil else {
+            throw AIError.invalidResponse(provider: providerID, message: "Invalid OpenAI input transformations.")
+        }
+        var metadata: [String: JSONValue] = ["type": .string(type), "action": .string(action), "reason": .string(reason)]
+        metadata["id"] = entry["id"]
+        return .object(metadata)
+    })
 }
 
-func openAIResponsesProviderMetadataByApplyingStreamLogprobs(
+func openAIResponsesFinishProviderMetadata(
     _ providerMetadata: [String: JSONValue],
+    responseID: JSONValue?,
     streamOutputLogprobs: [JSONValue],
+    inputTransformations: JSONValue?,
     providerID: String
 ) -> [String: JSONValue] {
-    guard !streamOutputLogprobs.isEmpty else {
+    guard responseID != nil || !streamOutputLogprobs.isEmpty || inputTransformations != nil else {
         return providerMetadata
     }
     let namespace = openAICompatibleProviderMetadataNamespace(providerID)
     var namespaceMetadata = providerMetadata[namespace]?.objectValue ?? [:]
-    namespaceMetadata["logprobs"] = .array(streamOutputLogprobs)
+    if let responseID { namespaceMetadata["responseId"] = responseID }
+    if !streamOutputLogprobs.isEmpty { namespaceMetadata["logprobs"] = .array(streamOutputLogprobs) }
+    if let inputTransformations { namespaceMetadata["inputTransformations"] = inputTransformations }
     var updated = providerMetadata
     updated[namespace] = .object(namespaceMetadata)
     return updated

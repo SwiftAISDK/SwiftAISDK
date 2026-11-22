@@ -678,3 +678,41 @@ private let openAIResponsesNonReasoningModelIDsLikeUpstream = [
     #expect(result.sources[3].filename == "cfile-path")
     #expect(result.sources[3].providerMetadata["openai"]?["type"]?.stringValue == "file_path")
 }
+
+// openai-language-model-capabilities.test.ts, @ai-sdk/openai@4.0.122.
+@Test(arguments: ["gpt-6.2-astra", "gpt-6.2-sol"])
+func openAIGPT62ModelsExposeDocumentedCapabilities(modelID: String) async throws {
+    let capabilities = openAILanguageModelCapabilities(modelID)
+    #expect(capabilities.isReasoningModel)
+    #expect(capabilities.supportsFlexProcessing)
+    #expect(capabilities.supportsPriorityProcessing)
+    #expect(capabilities.supportsConfigurationUpdate)
+    #expect(capabilities.supportsAsyncToolCalling)
+    #expect(capabilities.supportedReasoningEfforts == ["low", "medium", "high", "xhigh", "max"])
+    #expect(!capabilities.supportsNonReasoningParameters)
+    #expect(capabilities.supportsChatFunctionToolsWithReasoning)
+
+    let transport = RecordingTransport(response: jsonResponse(#"{"id":"resp_test","output":[]}"#))
+    let provider = try OpenAIProvider(configuration: .init(apiKey: "test-key", transport: transport))
+    let model = provider.responses(modelID)
+    let unsupportedSampling = try await model.generate(.init(
+        messages: [.system("You are a helpful assistant."), .user("Hello")], temperature: 0.5, topP: 0.3
+    ))
+    let supportedReasoning = try await model.generate(.init(
+        messages: [.user("Hello")],
+        providerOptions: ["openai": ["reasoningEffort": "low", "reasoningSummary": "auto"]]
+    ))
+    let requests = await transport.requests()
+    let samplingBody = try decodeJSONBody(#require(requests[0].body))
+    let reasoningBody = try decodeJSONBody(#require(requests[1].body))
+    let hello: JSONValue = ["role": "user", "content": [["type": "input_text", "text": "Hello"]]]
+    #expect(samplingBody == ["model": .string(modelID), "input": [
+        ["role": "developer", "content": "You are a helpful assistant."], hello
+    ]])
+    #expect(unsupportedSampling.warnings == [
+        AIWarning(type: "unsupported", feature: "temperature", message: "temperature is not supported for reasoning models"),
+        AIWarning(type: "unsupported", feature: "topP", message: "topP is not supported for reasoning models")
+    ])
+    #expect(reasoningBody == ["model": .string(modelID), "input": [hello], "reasoning": ["effort": "low", "summary": "auto"]])
+    #expect(supportedReasoning.warnings.isEmpty)
+}

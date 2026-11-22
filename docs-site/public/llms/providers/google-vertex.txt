@@ -154,7 +154,8 @@ and `X-Vertex-AI-LLM-Request-Type` headers. `serviceTier` is a Gemini API option
 Vertex drops it with a warning.
 - Explicit `thinkingBudget` or `thinkingLevel` overrides the portable `reasoning`
 setting. Gemini 3 models that cannot disable thinking use their lowest level and
-warn when you ask for `none`.
+warn when you ask for `none`. Gemini 4 Hydrogen and Neon support `xhigh` and use
+`low` as their minimum.
 - Gemini behavior (structured JSON with tools, grounding, continuation) is shared
 with the [Google Generative AI provider](https://swiftaisdk.github.io/SwiftAISDK/providers/google-generative-ai/).
 
@@ -184,6 +185,12 @@ Express Mode key, up to 7 MiB each by default. Change the limit with
 `interactionsModel("gemini-omni-flash-preview")` and `interactionsAgent(_:)` use
 the location-scoped Interactions API. They need OAuth or service-account
 credentials. Background interactions are polled until they finish.
+
+Pass `GoogleVertexTools.mcpServer(name:url:headers:allowedTools:)` in the
+request's `tools` to connect a remote MCP server from an Interactions model.
+Gemini uses `headers` to authenticate to the connector, and SDK telemetry
+replaces each header value with `[redacted]`. Raw request metadata and the
+request diagnostics on provider errors retain the header values.
 
 ## Embeddings
 
@@ -243,6 +250,16 @@ Options include `region`, `languageCodes`, `enableWordTimeOffsets` and
 a regional WebSocket. It needs OAuth credentials with a project and location, and
 interim text can change before final segments arrive. To inject a WebSocket
 transport, use `GoogleVertexProvider(settings:webSocketTransport:)`.
+
+Live transcription uses server voice activity detection by default. Each
+completed speech segment is emitted as a final transcript. After the caller
+ends audio input, the stream can finish when the server reports that the
+last segment reached the end of the audio. If audio ends in silence and there
+is no terminal event, the stream finishes after a quiet grace period.
+
+For push-to-talk, set `streaming.automaticActivityDetection.disabled` to `true`
+under the selected provider namespace. The SDK brackets the audio with activity
+start and end messages, so the server transcribes the whole input as one turn.
 
 Transcription options use the first present namespace of `googleVertex`, `vertex`
 and `google`. See [Transcribe](https://swiftaisdk.github.io/SwiftAISDK/core/transcribe/).

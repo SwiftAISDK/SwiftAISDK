@@ -1,8 +1,8 @@
 # AssemblyAI for Swift
 
-`SwiftAIAssemblyAI` adds AssemblyAI to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK. It ports `@ai-sdk/assemblyai` and supports transcription.
+`SwiftAIAssemblyAI` adds AssemblyAI transcription and buffered text-to-speech to [SwiftAISDK](https://github.com/SwiftAISDK/SwiftAISDK), an independent Swift port of the Vercel AI SDK.
 
-Provider guide with models, options, streaming and errors:
+See the provider guide for models, options and errors.
 
 - [AssemblyAI](https://swiftaisdk.github.io/SwiftAISDK/providers/assemblyai/)
 
@@ -15,6 +15,8 @@ import SwiftAI
 import SwiftAIAssemblyAI
 
 let provider = try AIProviders.assemblyAI(configuration: AssemblyAIProviderSettings())
+let transcription = try provider.transcriptionModel("assemblyai-stt-3-7")
+let speech = provider.speech("assemblyai-tts-1")
 ```
 
 By default the provider reads `ASSEMBLYAI_API_KEY` from the environment; values set in `AssemblyAIProviderSettings` take precedence.

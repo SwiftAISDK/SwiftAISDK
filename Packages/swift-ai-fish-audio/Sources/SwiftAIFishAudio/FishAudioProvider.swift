@@ -5,7 +5,7 @@ import SwiftAIProviderUtilities
 
 
 /// The published `@ai-sdk/fish-audio` package version mirrored by this port.
-public let fishAudioProviderVersion = "3.0.59"
+public let fishAudioProviderVersion = "3.0.61"
 
 /// Creates a Fish Audio provider using the same defaults as
 /// `createFishAudio` from `@ai-sdk/fish-audio`.

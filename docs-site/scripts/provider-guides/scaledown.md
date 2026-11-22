@@ -59,8 +59,9 @@ text fields and lists of text are supported; number, date, time, datetime, durat
 and non-text list fields are rejected before the request. `threshold` must be between
 0 and 1.
 
-- Scalar fields take the highest-confidence entity (the first on ties); lists keep
-  entity order. Empty or missing values become `nil`.
+- Scalar fields take the highest-confidence entity (the first on ties). Lists keep
+  entity order. A low-level model result uses an empty list when no entities match.
+  `AI.experimentalExtract` represents that empty answer as `nil`.
 - Text sources are returned only when ScaleDown's UTF-8 byte span matches the original
   text exactly; they are converted to Swift string offsets. JSON evidence is never cited.
 - OCR matches cite the file part, and the OCR text is exposed as

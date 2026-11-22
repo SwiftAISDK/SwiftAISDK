@@ -153,7 +153,7 @@ struct VoyageUpstreamEmbeddingTests {
         #expect(headers["content-type"] == "application/json")
         #expect(headers["custom-provider-header"] == "provider-header-value")
         #expect(headers["custom-request-header"] == "request-header-value")
-        #expect(headers["user-agent"]?.contains("ai-sdk-voyage/2.0.83") == true)
+        #expect(headers["user-agent"]?.contains("ai-sdk-voyage/2.0.85") == true)
     }
 
     @Test func usesDetailAsTheErrorMessage() async throws {

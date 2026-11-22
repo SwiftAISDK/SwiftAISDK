@@ -208,7 +208,7 @@ private actor VertexWeeklyKeys {
     }
 }
 
-private final class VertexWeeklySocketTransport: AIDuplexWebSocketTransport, @unchecked Sendable {
+final class VertexWeeklySocketTransport: AIDuplexWebSocketTransport, @unchecked Sendable {
     let connection = VertexWeeklySocket()
     private let lock = NSLock()
     private var recorded: [AIDuplexWebSocketRequest] = []
@@ -216,17 +216,19 @@ private final class VertexWeeklySocketTransport: AIDuplexWebSocketTransport, @un
     func requests() -> [AIDuplexWebSocketRequest] { lock.withLock { recorded } }
 }
 
-private final class VertexWeeklySocket: AIDuplexWebSocketConnection, @unchecked Sendable {
+final class VertexWeeklySocket: AIDuplexWebSocketConnection, @unchecked Sendable {
     let events: AsyncThrowingStream<AIDuplexWebSocketEvent, Error>
     private let continuation: AsyncThrowingStream<AIDuplexWebSocketEvent, Error>.Continuation
     private let lock = NSLock()
     private var sent: [JSONValue] = []
+    private var closeCodes: [Int] = []
     init() { let pair = AsyncThrowingStream<AIDuplexWebSocketEvent, Error>.makeStream(); events = pair.stream; continuation = pair.continuation }
     func emit(_ event: AIDuplexWebSocketEvent) { continuation.yield(event) }
     func json(_ value: JSONValue) { continuation.yield(.message(.text(String(decoding: (try? encodeJSONBody(value)) ?? Data(), as: UTF8.self)))) }
     func send(_ message: AIDuplexWebSocketMessage) async throws { if case let .text(text) = message { let value = try secureJSONParse(text); lock.withLock { sent.append(value) } } }
-    func close(code: Int, reason: Data?) async { continuation.finish() }
+    func close(code: Int, reason: Data?) async { lock.withLock { closeCodes.append(code) }; continuation.finish() }
     func messages() -> [JSONValue] { lock.withLock { sent } }
+    func recordedCloseCodes() -> [Int] { lock.withLock { closeCodes } }
     func waitForCount(_ count: Int) async throws {
         for _ in 0..<1_000 { if messages().count >= count { return }; try await Task.sleep(nanoseconds: 1_000_000) }
         Issue.record("Expected \(count) socket sends, observed \(messages().count)")

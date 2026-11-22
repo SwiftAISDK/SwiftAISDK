@@ -18,6 +18,7 @@ public struct GoogleVertexGeminiTranscriptionModel: TranscriptionModel, Streamin
         guard !modelID.contains("-live") else { throw AIError.invalidArgument(argument: "modelID", message: "Model '\(modelID)' only supports streaming transcription. Use streamingTranscriptionModel, or a unary model such as gemini-3.5-transcribe.") }
         let timestamp = config.date()
         var options = try vertexGeminiTranscriptionOptions(request.providerOptions)
+        options.removeValue(forKey: "streaming")
         var warnings: [AIWarning] = []
         let wantsWord = request.timestampGranularities?.contains(.word) == true
         if wantsWord && options["wordTimestamp"] == false { warnings.append(AIWarning(type: "unsupported", feature: "timestampGranularities", message: "The provider wordTimestamp option is false and overrides the requested word timings.")) }
@@ -52,18 +53,25 @@ public struct GoogleVertexGeminiTranscriptionModel: TranscriptionModel, Streamin
             guard request.inputAudioFormat.mediaType == "audio/pcm", request.inputAudioFormat.sampleRate == nil || request.inputAudioFormat.sampleRate == 16_000 else { throw AIError.invalidArgument(argument: "inputAudioFormat", message: "The Gemini Live transcription API only supports 16kHz 16-bit PCM input audio.") }
             guard !config.usesAPIKey, let project = config.project, !project.isEmpty, let location = config.location, !location.isEmpty else { throw AIError.invalidArgument(argument: "credentials", message: "Vertex Live transcription requires project, location and OAuth Bearer credentials.") }
             try validateHostnamePart(location, argument: "location")
-            let options = try vertexGeminiTranscriptionOptions(request.providerOptions)
+            var options = try vertexGeminiTranscriptionOptions(request.providerOptions)
+            let manualActivityDetection = options.removeValue(forKey: "streaming")?["automaticActivityDetection"]?["disabled"] == true
             let host: String
             if location == "global" { host = "aiplatform.googleapis.com" }
             else if location == "eu" || location == "us" { host = "aiplatform.\(location).rep.googleapis.com" }
             else { host = "\(location)-aiplatform.googleapis.com" }
             let url = try requireURL("wss://\(host)/ws/google.cloud.aiplatform.v1.LlmBidiService/BidiGenerateContent")
-            let setup: JSONValue = .object(["model": .string("projects/\(project)/locations/\(location)/publishers/google/models/\(modelID)"), "inputAudioTranscription": .object(options)])
+            var setup: [String: JSONValue] = [
+                "model": .string("projects/\(project)/locations/\(location)/publishers/google/models/\(modelID)"),
+                "inputAudioTranscription": .object(options)
+            ]
+            if manualActivityDetection {
+                setup["realtimeInputConfig"] = ["automaticActivityDetection": ["disabled": true]]
+            }
             let headers = try await config.authenticatedHeaders(request.headers)
             try request.abortSignal?.throwIfAborted()
             let connection = try await webSocketTransport.connect(.init(url: url, headers: headers, abortSignal: request.abortSignal))
-            let session = VertexLiveTranscriptionSession(connection: connection, request: request, setup: setup, providerID: providerID, finishGraceMilliseconds: finishGraceMilliseconds)
-            return .init(stream: session.makeStream(), requestMetadata: .init(body: setup, headers: request.headers, url: url.absoluteString), responseMetadata: .init(timestamp: config.date(), modelID: modelID), cancel: { Task { await session.cancel() } })
+            let session = VertexLiveTranscriptionSession(connection: connection, request: request, setup: .object(setup), providerID: providerID, manualActivityDetection: manualActivityDetection, finishGraceMilliseconds: finishGraceMilliseconds)
+            return .init(stream: session.makeStream(), requestMetadata: .init(body: .object(setup), headers: request.headers, url: url.absoluteString), responseMetadata: .init(timestamp: config.date(), modelID: modelID), cancel: { Task { await session.cancel() } })
         } catch {
             request.audio.cancelFromConsumer()
             throw error
@@ -74,13 +82,19 @@ public struct GoogleVertexGeminiTranscriptionModel: TranscriptionModel, Streamin
 private func vertexGeminiTranscriptionOptions(_ values: [String: JSONValue]) throws -> [String: JSONValue] {
     let resolved = try resolveProviderOptions(providerOptions: values, namespaces: ["googleVertex", "vertex", "google"], resolution: .first)
     let options = resolved.options ?? [:]
-    let keys = Set(["languageCodes", "customVocabulary", "wordTimestamp", "diarization", "mode"])
+    let keys = Set(["languageCodes", "customVocabulary", "wordTimestamp", "diarization", "mode", "streaming"])
     for (key, value) in options where keys.contains(key) {
         let valid: Bool
         switch key {
         case "languageCodes", "customVocabulary": valid = value.arrayValue?.allSatisfy { $0.stringValue != nil } == true
         case "wordTimestamp", "diarization": valid = value.boolValue != nil
         case "mode": valid = value == "SMART" || value == "VERBATIM"
+        case "streaming":
+            let detection = value["automaticActivityDetection"]
+            let disabled = detection?["disabled"]
+            valid = value.objectValue != nil
+                && (detection == nil || detection?.objectValue != nil)
+                && (disabled == nil || disabled?.boolValue != nil)
         default: valid = true
         }
         if !valid { throw AIError.invalidArgument(argument: key, message: "Invalid Vertex Gemini transcription provider option '\(key)'.") }
@@ -103,6 +117,7 @@ private actor VertexLiveTranscriptionSession {
     let setup: JSONValue
     let providerID: String
     let finishGraceMilliseconds: Int
+    let manualActivityDetection: Bool
     var continuation: Continuation?
     var eventTask: Task<Void, Never>?
     var audioTask: Task<Void, Never>?
@@ -112,6 +127,8 @@ private actor VertexLiveTranscriptionSession {
     var started = false
     var setupComplete = false
     var audioEnded = false
+    var sentAudioBytes = 0
+    var lastSpeechEndSeconds: Double?
     var segment = 0
     var buffer = ""
     var interim = ""
@@ -119,8 +136,10 @@ private actor VertexLiveTranscriptionSession {
     var language: String?
     var usage: [String: JSONValue]?
 
-    init(connection: any AIDuplexWebSocketConnection, request: StreamingTranscriptionRequest, setup: JSONValue, providerID: String, finishGraceMilliseconds: Int) {
-        self.connection = connection; self.request = request; self.setup = setup; self.providerID = providerID; self.finishGraceMilliseconds = finishGraceMilliseconds
+    init(connection: any AIDuplexWebSocketConnection, request: StreamingTranscriptionRequest, setup: JSONValue, providerID: String, manualActivityDetection: Bool, finishGraceMilliseconds: Int) {
+        self.connection = connection; self.request = request; self.setup = setup; self.providerID = providerID
+        self.manualActivityDetection = manualActivityDetection
+        self.finishGraceMilliseconds = finishGraceMilliseconds
     }
     nonisolated func makeStream() -> AsyncThrowingStream<StreamingTranscriptionPart, Error> {
         AsyncThrowingStream { continuation in
@@ -170,17 +189,26 @@ private actor VertexLiveTranscriptionSession {
             do { try await Task.sleep(nanoseconds: delay); await self?.finish() } catch { }
         }
     }
+    private var hasTranscribedSentAudio: Bool {
+        guard let lastSpeechEndSeconds, buffer.isEmpty, interim.isEmpty else { return false }
+        // 16 kHz, 16-bit PCM, with a 250 ms tolerance on the server VAD offset.
+        return lastSpeechEndSeconds >= Double(sentAudioBytes) / 32_000 - 0.25
+    }
     private func send(_ value: JSONValue) async throws { try await connection.send(text: String(decoding: try encodeJSONBody(value), as: UTF8.self)) }
     private func sendAudio() async {
         do {
+            if manualActivityDetection { try await send(["realtimeInput": ["activityStart": [:]]]) }
             for try await chunk in request.audio {
                 if finished { return }
+                sentAudioBytes += chunk.count
                 try await send(.object(["realtimeInput": .object(["audio": .object(["data": .string(chunk.base64EncodedString()), "mimeType": "audio/pcm;rate=16000"])])]))
             }
             guard !finished else { return }
-            try await send(.object(["realtimeInput": .object(["audioStreamEnd": true])]))
+            let end: JSONValue = manualActivityDetection ? ["activityEnd": [:]] : ["audioStreamEnd": true]
+            try await send(["realtimeInput": end])
             guard !finished else { return }
-            audioEnded = true; scheduleFinish()
+            audioEnded = true
+            if hasTranscribedSentAudio { finish() } else { scheduleFinish() }
         } catch { if !finished { fail(error) } }
     }
     private func consumeEvents() async {
@@ -201,6 +229,11 @@ private actor VertexLiveTranscriptionSession {
                         setupComplete = true; audioTask = Task { await sendAudio() }
                     }
                     if let value = raw["usageMetadata"]?.objectValue { usage = value }
+                    if let activity = raw["voiceActivity"], let type = activity["type"]?.stringValue {
+                        lastSpeechEndSeconds = type == "ACTIVITY_END"
+                            ? vertexTranscriptionOffset(activity["audioOffset"]?.stringValue) ?? 0
+                            : nil
+                    }
                     let content = raw["serverContent"]
                     if let text = content?["interimInputTranscription"]?["text"]?.stringValue, !text.isEmpty {
                         scheduleFinish(); interim = text
@@ -214,9 +247,9 @@ private actor VertexLiveTranscriptionSession {
                         }
                         if transcription["finished"] == true { completeSegment() }
                     }
-                    if content?["turnComplete"] == true { completeSegment() }
+                    if content?["generationComplete"] == true || content?["turnComplete"] == true { completeSegment() }
                     let status = content?["interactionStatus"]?.stringValue
-                    if audioEnded && (status == "IDLE" || status == "REQUIRES_ACTION" || (content?["turnComplete"] == true && status == nil)) { finish(); return }
+                    if audioEnded && (status == "IDLE" || status == "REQUIRES_ACTION" || (content?["turnComplete"] == true && status == nil) || hasTranscribedSentAudio) { finish(); return }
                 case let .closed(metadata):
                     if audioEnded { finish() }
                     else { fail(AIStreamingTranscriptionError(provider: providerID, message: "Vertex Live transcription WebSocket closed unexpectedly before finishing (code \(metadata.code)).", closeMetadata: metadata)) }

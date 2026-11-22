@@ -14,7 +14,7 @@ import SwiftAISDK
     let provider = try SwiftAISDK.AIProviders.google(settings: ProviderSettings(apiKey: "key", transport: transport, name: "anthropic"))
     _ = try await provider.languageModel("gemini").generate(LanguageModelRequest(messages: [.user("hello")]))
     let request = try #require(await transport.requests().first)
-    #expect(request.headers["user-agent"] == "ai-sdk-google/4.0.121")
+    #expect(request.headers["user-agent"] == "ai-sdk-google/4.0.124")
 }
 
 @Test(arguments: [false, true]) func googleCompatibilityPreservesLegacyNamedErrorPolicy(stream: Bool) async throws {

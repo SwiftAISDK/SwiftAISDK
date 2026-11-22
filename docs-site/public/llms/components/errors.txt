@@ -14,7 +14,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Enumeration | 2 |
 | Function | 1 |
 | Initializer | 14 |
-| Instance Property | 68 |
+| Instance Property | 72 |
 | Structure | 13 |
 | Type Method | 1 |
 | Type Property | 1 |
@@ -86,6 +86,7 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Instance Property | `SwiftAIProvider.generationID` | `var generationID: String?` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
 | Instance Property | `SwiftAIProvider.headers` | `var headers: [String : String]` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
 | Instance Property | `SwiftAIProvider.input` | `var input: JSONValue?` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
+| Instance Property | `SwiftAIProvider.isAccessPolicyDenied` | `var isAccessPolicyDenied: Bool { get }` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
 | Instance Property | `SwiftAIProvider.isNotFound` | `var isNotFound: Bool { get }` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
 | Instance Property | `SwiftAIProvider.isRetryable` | `var isRetryable: Bool` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Instance Property | `SwiftAIProvider.isRetryable` | `var isRetryable: Bool` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
@@ -99,9 +100,12 @@ These declarations follow the canonical repository's main branch. Match your ins
 | Instance Property | `SwiftAIProvider.name` | `var name: String { get }` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
 | Instance Property | `SwiftAIProvider.originalError` | `var originalError: String` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Instance Property | `SwiftAIProvider.path` | `var path: String` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
+| Instance Property | `SwiftAIProvider.policyIDs` | `var policyIDs: [String]? { get }` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
 | Instance Property | `SwiftAIProvider.provider` | `var provider: String` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Instance Property | `SwiftAIProvider.provider` | `var provider: String` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Instance Property | `SwiftAIProvider.reason` | `var reason: String` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
+| Instance Property | `SwiftAIProvider.removedModels` | `var removedModels: [String]? { get }` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
+| Instance Property | `SwiftAIProvider.removedProviders` | `var removedProviders: [String]? { get }` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |
 | Instance Property | `SwiftAIProvider.repairedInput` | `var repairedInput: JSONValue?` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Instance Property | `SwiftAIProvider.requestBody` | `var requestBody: JSONValue?` | [Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/Errors.swift) |
 | Instance Property | `SwiftAIProvider.response` | `var response: JSONValue?` | [Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift](https://github.com/SwiftAISDK/SwiftAISDK/blob/main/Packages/swift-ai-core/Sources/SwiftAIProvider/GatewayErrors.swift) |

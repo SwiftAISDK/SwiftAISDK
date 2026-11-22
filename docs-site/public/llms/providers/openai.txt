@@ -122,8 +122,9 @@ image `detail`. A `serviceTier` the model does not support (`flex`, or
 Portable `reasoning` maps to the nearest supported effort, rounding down, and never
 silently disables reasoning. An explicit `reasoningEffort` is sent unchanged. On
 reasoning models, `temperature` and `topP` are removed with warnings. Chat maps
-`max` to the highest supported effort; Responses sends `max` to models that
-support it.
+`max` to the highest supported effort. Responses sends `max` to models that
+support it. `gpt-6.2-astra` and `gpt-6.2-sol` accept `low`, `medium`, `high`,
+`xhigh` and `max` on Responses.
 
 ### Structured output
 
@@ -232,19 +233,41 @@ change in the same empty message. Non-empty system messages with these keys thro
 
 ### Tools loaded during a conversation
 
-`additionalTools` can also be attached to an ordinary `AIToolResult` through
-`providerMetadata: ["openai": ["additionalTools": [...]]]`. The tools are inserted
-right after that result. Each definition needs `type: "function"`, a nonempty
-`name` and object `parameters`, with optional `description`, `strict` and
-`defer_loading`. To keep a function tool local but leave it out of the top-level
-tool list, set its `providerOptions.openai.omitFromRequestTools` to `true`. Such a
-tool cannot be forced or allow-listed until it appears in history.
+Set `providerMetadata["openai"]["additionalTools"]` on an empty system message or
+an ordinary `AIToolResult`. Responses inserts the selected tools at the system
+message's position or immediately after the tool result.
+
+Register every tool you want to load in the current request's `tools`. For
+function tools, `providerOptions.openai.omitFromRequestTools: true` keeps the
+function registered while omitting it from the top-level tool list. Use automatic
+tool choice for those functions.
+
+Each history entry selects the registered definition by type and name. Functions
+still require object `parameters` in history, and namespaces require a
+`description` and a nonempty `tools` list. The provider uses the registered
+description, schema, strictness, deferred loading and custom format. A namespace
+loads only the registered members named in its entry. Unregistered entries and
+conflicting `strict` or `defer_loading` values produce warnings.
+
+Functions that restrict `allowedCallers` are skipped. A request with
+`allowedTools` can load eligible function and custom tools in its allow-list.
+Namespace entries are skipped while that list applies.
 
 ### Prompt-cache diagnostics
 
 Set `promptCacheOptions.comparisonResponseId` to an earlier response ID to request
 cache comparison diagnostics. Unary, streaming and batch results return the raw
 fields in `providerMetadata["openai"]["promptCacheDiagnostics"]`.
+
+### Input transformations
+
+OpenAI can change input before generation, for example by removing a reasoning
+item because its prefix, model or end user differs. On a generation result,
+stream finish or successful batch item, read
+`providerMetadata["openai"]["inputTransformations"]`. Each entry has `type`,
+`action`, `reason` and an optional `id`. An empty array is preserved when sent.
+A missing or null field leaves the metadata key absent. A stream that reports a
+failure after output begins can include transformations in its finish metadata.
 
 ### Decision evidence limits
 

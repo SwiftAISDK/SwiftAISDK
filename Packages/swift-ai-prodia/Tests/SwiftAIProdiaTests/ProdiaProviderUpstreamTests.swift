@@ -161,7 +161,7 @@ private func defaultProvider(transport: RecordingTransport = RecordingTransport(
     let videoRequest = try #require(await videoTransport.requests().first)
     #expect(videoRequest.url.absoluteString == "https://api.example.com/v2/job?price=true&tenant=acme")
     #expect(prodiaHeader(videoRequest, "content-type")?.hasPrefix("multipart/form-data; boundary=") == true)
-    #expect(prodiaHeader(videoRequest, "user-agent") == "ai-sdk-prodia/2.0.84")
+    #expect(prodiaHeader(videoRequest, "user-agent") == "ai-sdk-prodia/2.0.86")
 
     let languageTransport = RecordingTransport(response: prodiaUpstreamMultipartResponse([
         prodiaUpstreamJobPart(#"{"id":"job-language"}"#),

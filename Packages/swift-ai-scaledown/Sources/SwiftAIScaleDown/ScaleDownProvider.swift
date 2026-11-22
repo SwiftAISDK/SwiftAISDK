@@ -4,7 +4,7 @@ import SwiftAITransport
 import SwiftAIProviderUtilities
 
 /// Published npm baseline mirrored by this provider.
-public let scaleDownProviderVersion = "3.0.1"
+public let scaleDownProviderVersion = "3.0.3"
 
 public struct ScaleDownProviderSettings: Sendable {
     public var apiKey: String?

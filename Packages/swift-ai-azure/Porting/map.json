@@ -32,6 +32,7 @@
       "Packages/swift-ai-azure/Sources/SwiftAIAzure/AzureOpenAITools.swift"
     ],
     "tests": [
+      "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/AzureMAIBackgroundUpstreamTests.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/AzureProviderTests.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/AzureSocketTestSupport.swift",
       "Packages/swift-ai-azure/Tests/SwiftAIAzureTests/FixtureDownloadTransport.swift",

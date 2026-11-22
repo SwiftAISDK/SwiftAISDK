@@ -88,6 +88,7 @@ Every page is also available as Markdown: replace the trailing slash of a page U
 - [Hugging Face](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/huggingface.txt): Install and use Hugging Face (@ai-sdk/huggingface) from Swift.
 - [Hume AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/hume.txt): Install and use Hume AI (@ai-sdk/hume) from Swift.
 - [Kling AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/klingai.txt): Install and use Kling AI (@ai-sdk/klingai) from Swift.
+- [Liquid AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/liquid.txt): Install and use Liquid AI (@ai-sdk/liquid) from Swift.
 - [LMNT](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/lmnt.txt): Install and use LMNT (@ai-sdk/lmnt) from Swift.
 - [Luma AI](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/luma.txt): Install and use Luma AI (@ai-sdk/luma) from Swift.
 - [MiniMax](https://swiftaisdk.github.io/SwiftAISDK/llms/providers/minimax.txt): Install and use MiniMax (@ai-sdk/minimax) from Swift.

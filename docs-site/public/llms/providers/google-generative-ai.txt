@@ -131,7 +131,8 @@ takes precedence over the portable `reasoning` option. Otherwise:
 - Gemini 3 and newer map `reasoning` to a `thinkingLevel` (`low`, `medium`,
 `high`, and `minimal` or `xhigh` where the model supports them). Levels below a
 model's floor, such as `none` on models that cannot disable thinking, move up
-to the lowest supported level with a compatibility warning.
+to the lowest supported level with a compatibility warning. Gemini 4 Hydrogen
+and Neon support `xhigh` and use `low` as their minimum.
 - Gemini 2.5 maps `reasoning` to a `thinkingBudget`. `none` sends a budget of 0,
 except on Gemini 2.5 Pro, which uses its 128-token minimum.
 
@@ -162,7 +163,9 @@ Available tools: `googleSearch(searchTypes:timeRangeFilter:)`,
 `fileSearch(fileSearchStoreNames:metadataFilter:topK:)`, `codeExecution()` and
 `vertexRagStore(ragCorpus:topK:)`. Grounding sources appear in `result.sources`
 and grounding details in `providerMetadata["google"]`. Tool failures and denials
-are sent back as `functionResponse.error`.
+are sent back as `functionResponse.error`. When a prompt is blocked, Gemini can
+return `blockReason` and `blockReasonMessage` in
+`providerMetadata["google"]["promptFeedback"]`.
 
 ## Long outputs and continuation
 
@@ -230,6 +233,11 @@ video input and streaming. The portable `reasoning` option maps to
 Agent calls ignore generation controls and warn about each dropped setting.
 Requests with `background: true` are polled until they finish.
 
+Pass `GoogleTools.mcpServer(name:url:headers:allowedTools:)` in a request's tools
+to connect a remote MCP server from an Interactions model. Gemini sends these
+headers to the connector, and SDK telemetry masks each connector header value.
+Raw request metadata and API error diagnostics retain the header values.
+
 ## Decisions and extraction
 
 ```swift
@@ -265,6 +273,11 @@ from `event.usage`.
 `experimentalBatch()` runs Gemini batch jobs, including tool content and input
 file metadata. Result rows are limited to 64 MiB each by default; change it with
 `GoogleProviderSettings(batchResultDownloads: AIBatchResultDownloadSettings(maxLineBytes:))`.
+
+Google's batch endpoint does not reliably enforce JSON schemas. Use
+`responseFormat: .json()` for JSON mode. If your shared request carries a schema,
+set `providerOptions["google"]["structuredOutputs"]` to `false` to omit it from
+the wire request, then validate the batch results locally.
 
 ## Rotating credentials
 

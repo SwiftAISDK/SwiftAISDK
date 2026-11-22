@@ -4,6 +4,7 @@ import SwiftAIProvider
 import SwiftAITransport
 import SwiftAIProviderUtilities
 import SwiftAIGoogle
+@_exported import enum SwiftAIGoogle.GoogleVertexTools
 
 
 public struct GoogleServiceAccountCredentials: Sendable {
@@ -144,7 +145,7 @@ public final class GoogleVertexProvider: AIProvider, @unchecked Sendable {
         }
 
         endpointBaseURL = settings.baseURL == nil ? googleVertexEndpointBaseURL(from: baseURL) : baseURL
-        let headers = withUserAgentSuffix(settings.headers, "ai-sdk-google-vertex/5.0.141")
+        let headers = withUserAgentSuffix(settings.headers, "ai-sdk-google-vertex/5.0.144")
         config = GoogleVertexConfig(
             providerID: providerID,
             baseURL: baseURL,

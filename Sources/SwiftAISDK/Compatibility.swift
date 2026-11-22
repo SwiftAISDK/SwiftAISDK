@@ -27,6 +27,22 @@ extension AI {
     }
 
 
+    /// Starts a batch with the output specification's response format on every text request.
+    public static func startBatch<FinalOutput: Sendable, PartialOutput: Sendable>(
+        provider: any AIBatchProvider,
+        requests: [AIBatchRequest],
+        output: AIOutput<FinalOutput, PartialOutput>,
+        providerOptions: [String: JSONValue] = [:],
+        headers: [String: String] = [:],
+        idempotencyKey: String? = nil,
+        webhookURL: String? = nil,
+        abortSignal: AIAbortSignal? = nil,
+        timeoutNanoseconds: UInt64? = nil
+    ) async throws -> StartBatchResult {
+        return try await SwiftAI.AI.startBatch(provider: provider, requests: requests, output: output, providerOptions: providerOptions, headers: headers, idempotencyKey: idempotencyKey, webhookURL: webhookURL, abortSignal: abortSignal, timeoutNanoseconds: timeoutNanoseconds)
+    }
+
+
     public static func cancelBatch(
         provider: any AIBatchProvider,
         batch: AIBatchReference,
@@ -76,6 +92,21 @@ extension AI {
         retryPolicy: AIRetryPolicy = .default
     ) throws -> AsyncThrowingStream<BatchItemResult, Error> {
         return try SwiftAI.AI.getBatchResults(provider: provider, batch: batch, providerOptions: providerOptions, headers: headers, abortSignal: abortSignal, timeoutNanoseconds: timeoutNanoseconds, retryPolicy: retryPolicy)
+    }
+
+
+    /// Parses each successful text item with the output specification used to start the batch.
+    public static func getBatchResults<FinalOutput: Sendable, PartialOutput: Sendable>(
+        provider: any AIBatchProvider,
+        batch: AIBatchReference,
+        output: AIOutput<FinalOutput, PartialOutput>,
+        providerOptions: [String: JSONValue] = [:],
+        headers: [String: String] = [:],
+        abortSignal: AIAbortSignal? = nil,
+        timeoutNanoseconds: UInt64? = nil,
+        retryPolicy: AIRetryPolicy = .default
+    ) throws -> AsyncThrowingStream<BatchOutputItemResult<FinalOutput>, Error> {
+        return try SwiftAI.AI.getBatchResults(provider: provider, batch: batch, output: output, providerOptions: providerOptions, headers: headers, abortSignal: abortSignal, timeoutNanoseconds: timeoutNanoseconds, retryPolicy: retryPolicy)
     }
 
 
@@ -386,6 +417,28 @@ extension AI {
         providerOptions: [String: JSONValue] = [:]
     ) async throws -> AIExtractionResult {
         return try await SwiftAI.AI.experimentalExtract(model: model, state: state, fields: fields, referenceDate: referenceDate, maxOutputTokens: maxOutputTokens, reasoning: reasoning, maxRetries: maxRetries, abortSignal: abortSignal, download: download, headers: headers, providerOptions: providerOptions)
+    }
+
+
+    /// Extracts values with lifecycle callbacks and opt-in, redacted telemetry.
+    public static func experimentalExtract(
+        model: any AIExtractionModelV4,
+        state: AIDecisionState,
+        fields: [String: AIExtractionField],
+        referenceDate: String? = nil,
+        maxOutputTokens: Int? = nil,
+        reasoning: String? = nil,
+        maxRetries: Int? = nil,
+        abortSignal: AIAbortSignal? = nil,
+        download: AIDownloadFunction? = nil,
+        headers: [String: String] = [:],
+        providerOptions: [String: JSONValue] = [:],
+        telemetry: Telemetry.Options? = nil,
+        runtimeContext: [String: JSONValue] = [:],
+        onStart: AICallback<AIExtractionStartEvent>? = nil,
+        onEnd: AICallback<AIExtractionEndEvent>? = nil
+    ) async throws -> AIExtractionResult {
+        return try await SwiftAI.AI.experimentalExtract(model: model, state: state, fields: fields, referenceDate: referenceDate, maxOutputTokens: maxOutputTokens, reasoning: reasoning, maxRetries: maxRetries, abortSignal: abortSignal, download: download, headers: headers, providerOptions: providerOptions, telemetry: telemetry, runtimeContext: runtimeContext, onStart: onStart, onEnd: onEnd)
     }
 
     public static func generateObject<Object: Decodable & Sendable>(
@@ -2029,13 +2082,33 @@ public final class AICustomProvider: AIFileProvider, AISkillsProvider, AIEvaluat
         speechModels: [String: any SpeechModel] = [:],
         videoModels: [String: any VideoModel] = [:],
         rerankingModels: [String: any RerankingModel] = [:],
+        decisionModels: [String: AIDecisionModelReference] = [:],
+        evaluationModels: [String: AIEvaluationModelReference] = [:],
+        extractionModels: [String: AIExtractionModelReference],
+        files: (any AIFileClient)? = nil,
+        skills: (any AISkillsClient)? = nil,
+        fallbackProvider: (any AIProvider)? = nil
+    ) {
+        self.base = SwiftAI.AICustomProvider(providerID: providerID, languageModels: languageModels, embeddingModels: embeddingModels, imageModels: imageModels, transcriptionModels: transcriptionModels, speechModels: speechModels, videoModels: videoModels, rerankingModels: rerankingModels, decisionModels: decisionModels, evaluationModels: evaluationModels, extractionModels: extractionModels, files: files, skills: skills, fallbackProvider: fallbackProvider, resolveDecisionModelID: { try AIDefaultProvider.resolveDecisionModel($0) }, resolveEvaluationModelID: { try AIDefaultProvider.resolveEvaluationModel($0) }, resolveExtractionModelID: { try AIDefaultProvider.resolveExtractionModel($0) })
+    }
+
+
+    public init(
+        providerID: String = "custom",
+        languageModels: [String: any LanguageModel] = [:],
+        embeddingModels: [String: any EmbeddingModel] = [:],
+        imageModels: [String: any ImageModel] = [:],
+        transcriptionModels: [String: any TranscriptionModel] = [:],
+        speechModels: [String: any SpeechModel] = [:],
+        videoModels: [String: any VideoModel] = [:],
+        rerankingModels: [String: any RerankingModel] = [:],
         decisionModels: [String: AIDecisionModelReference],
         evaluationModels: [String: AIEvaluationModelReference] = [:],
         files: (any AIFileClient)? = nil,
         skills: (any AISkillsClient)? = nil,
         fallbackProvider: (any AIProvider)? = nil
     ) {
-        self.base = SwiftAI.AICustomProvider(providerID: providerID, languageModels: languageModels, embeddingModels: embeddingModels, imageModels: imageModels, transcriptionModels: transcriptionModels, speechModels: speechModels, videoModels: videoModels, rerankingModels: rerankingModels, decisionModels: decisionModels, evaluationModels: evaluationModels, files: files, skills: skills, fallbackProvider: fallbackProvider, resolveDecisionModelID: { try AIDefaultProvider.resolveDecisionModel($0) }, resolveEvaluationModelID: { try AIDefaultProvider.resolveEvaluationModel($0) })
+        self.base = SwiftAI.AICustomProvider(providerID: providerID, languageModels: languageModels, embeddingModels: embeddingModels, imageModels: imageModels, transcriptionModels: transcriptionModels, speechModels: speechModels, videoModels: videoModels, rerankingModels: rerankingModels, decisionModels: decisionModels, evaluationModels: evaluationModels, extractionModels: [:], files: files, skills: skills, fallbackProvider: fallbackProvider, resolveDecisionModelID: { try AIDefaultProvider.resolveDecisionModel($0) }, resolveEvaluationModelID: { try AIDefaultProvider.resolveEvaluationModel($0) }, resolveExtractionModelID: { try AIDefaultProvider.resolveExtractionModel($0) })
     }
 
 
@@ -2054,7 +2127,7 @@ public final class AICustomProvider: AIFileProvider, AISkillsProvider, AIEvaluat
         skills: (any AISkillsClient)? = nil,
         fallbackProvider: (any AIProvider)? = nil
     ) {
-        self.base = SwiftAI.AICustomProvider(providerID: providerID, languageModels: languageModels, embeddingModels: embeddingModels, imageModels: imageModels, transcriptionModels: transcriptionModels, speechModels: speechModels, videoModels: videoModels, rerankingModels: rerankingModels, decisionModels: [:], evaluationModels: evaluationModels, files: files, skills: skills, fallbackProvider: fallbackProvider, resolveDecisionModelID: { try AIDefaultProvider.resolveDecisionModel($0) }, resolveEvaluationModelID: { try AIDefaultProvider.resolveEvaluationModel($0) })
+        self.base = SwiftAI.AICustomProvider(providerID: providerID, languageModels: languageModels, embeddingModels: embeddingModels, imageModels: imageModels, transcriptionModels: transcriptionModels, speechModels: speechModels, videoModels: videoModels, rerankingModels: rerankingModels, decisionModels: [:], evaluationModels: evaluationModels, extractionModels: [:], files: files, skills: skills, fallbackProvider: fallbackProvider, resolveDecisionModelID: { try AIDefaultProvider.resolveDecisionModel($0) }, resolveEvaluationModelID: { try AIDefaultProvider.resolveEvaluationModel($0) }, resolveExtractionModelID: { try AIDefaultProvider.resolveExtractionModel($0) })
     }
 
 
@@ -2072,7 +2145,7 @@ public final class AICustomProvider: AIFileProvider, AISkillsProvider, AIEvaluat
         skills: (any AISkillsClient)? = nil,
         fallbackProvider: (any AIProvider)? = nil
     ) {
-        self.base = SwiftAI.AICustomProvider(providerID: providerID, languageModels: languageModels, embeddingModels: embeddingModels, imageModels: imageModels, transcriptionModels: transcriptionModels, speechModels: speechModels, videoModels: videoModels, rerankingModels: rerankingModels, decisionModels: [:], evaluationModels: [:], files: files, skills: skills, fallbackProvider: fallbackProvider, resolveDecisionModelID: { try AIDefaultProvider.resolveDecisionModel($0) }, resolveEvaluationModelID: { try AIDefaultProvider.resolveEvaluationModel($0) })
+        self.base = SwiftAI.AICustomProvider(providerID: providerID, languageModels: languageModels, embeddingModels: embeddingModels, imageModels: imageModels, transcriptionModels: transcriptionModels, speechModels: speechModels, videoModels: videoModels, rerankingModels: rerankingModels, decisionModels: [:], evaluationModels: [:], extractionModels: [:], files: files, skills: skills, fallbackProvider: fallbackProvider, resolveDecisionModelID: { try AIDefaultProvider.resolveDecisionModel($0) }, resolveEvaluationModelID: { try AIDefaultProvider.resolveEvaluationModel($0) }, resolveExtractionModelID: { try AIDefaultProvider.resolveExtractionModel($0) })
     }
 
 
@@ -2090,7 +2163,7 @@ public final class AICustomProvider: AIFileProvider, AISkillsProvider, AIEvaluat
         skills: (any AISkillsClient)? = nil,
         fallbackProvider: (any AIProvider)? = nil
     ) {
-        self.base = SwiftAI.AICustomProvider(providerID: providerID, languageModels: languageModels, embeddingModels: embeddingModels, imageModels: imageModels, transcriptionModels: transcriptionModels, speechModels: speechModels, videoModels: videoModels, rerankingModels: rerankingModels, decisionModels: [:], evaluationModels: evaluationModels .mapValues { .model($0) }, files: files, skills: skills, fallbackProvider: fallbackProvider, resolveDecisionModelID: { try AIDefaultProvider.resolveDecisionModel($0) }, resolveEvaluationModelID: { try AIDefaultProvider.resolveEvaluationModel($0) })
+        self.base = SwiftAI.AICustomProvider(providerID: providerID, languageModels: languageModels, embeddingModels: embeddingModels, imageModels: imageModels, transcriptionModels: transcriptionModels, speechModels: speechModels, videoModels: videoModels, rerankingModels: rerankingModels, decisionModels: [:], evaluationModels: evaluationModels .mapValues { .model($0) }, extractionModels: [:], files: files, skills: skills, fallbackProvider: fallbackProvider, resolveDecisionModelID: { try AIDefaultProvider.resolveDecisionModel($0) }, resolveEvaluationModelID: { try AIDefaultProvider.resolveEvaluationModel($0) }, resolveExtractionModelID: { try AIDefaultProvider.resolveExtractionModel($0) })
     }
 
 
@@ -2269,6 +2342,14 @@ extension AIProviders {
         imageModelMiddleware: AIImageModelMiddleware
     ) -> AIProviderRegistry {
         return SwiftAI.AIProviders.experimentalCreateProviderRegistry(providers, separator: separator, languageModelMiddleware: languageModelMiddleware, imageModelMiddleware: imageModelMiddleware)
+    }
+public static func customProvider(
+        providerID: String = "custom",
+        languageModels: [String: any LanguageModel] = [:],
+        extractionModels: [String: AIExtractionModelReference],
+        fallbackProvider: (any AIProvider)? = nil
+    ) -> AICustomProvider {
+        return AICustomProvider(providerID: providerID, languageModels: languageModels, extractionModels: extractionModels, fallbackProvider: fallbackProvider)
     }
 public static func customProvider(
         providerID: String = "custom",

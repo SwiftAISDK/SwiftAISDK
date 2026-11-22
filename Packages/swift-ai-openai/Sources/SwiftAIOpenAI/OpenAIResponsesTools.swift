@@ -48,11 +48,10 @@ func openAIResponsesTools(
     var warnings: [AIWarning] = []
     for (name, schema) in tools {
         let object = schema.objectValue
-        let providerToolID = object?["id"]?.stringValue
-        if object?["type"]?.stringValue == "provider" || providerToolID?.hasPrefix("openai.") == true {
+        if let providerToolID = openAIResponsesRegisteredProviderToolID(name: name, tool: schema) {
             if let tool = try openAIResponsesProviderTool(
                 name: object?["name"]?.stringValue ?? name,
-                id: providerToolID ?? name,
+                id: providerToolID,
                 args: object?["args"]?.objectValue ?? [:],
                 supportsAsyncToolCalling: supportsAsyncToolCalling,
                 warnings: &warnings,
@@ -64,8 +63,7 @@ func openAIResponsesTools(
             continue
         }
 
-        var parameters = schema
-        let openAIOptions = object?["providerOptions"]?[providerOptionsName]?.objectValue ?? object?["providerOptions"]?["openai"]?.objectValue ?? object?["openai"]?.objectValue
+        let openAIOptions = openAIResponsesRegisteredFunctionOptions(schema, providerOptionsName: providerOptionsName)
         if let outputSchema = openAIOptions?["outputSchema"] ?? openAIOptions?["output_schema"], outputSchema != .null {
             outputSchemaToolNames.insert(name)
         }
@@ -76,62 +74,14 @@ func openAIResponsesTools(
         if omitFromRequestTools?.boolValue == true {
             continue
         }
-        var function: [String: JSONValue] = [
-            "type": .string("function"),
-            "name": .string(name),
-            "parameters": parameters
-        ]
-        if var parameterObject = parameters.objectValue {
-            // Upstream sends only `tool.inputSchema` as `parameters`.
-            for key in aiFunctionToolMetadataKeys where key != "description" && key != "strict" {
-                parameterObject.removeValue(forKey: key)
-            }
-            parameterObject.removeValue(forKey: "openai")
-            if let description = parameterObject.removeValue(forKey: "description")?.stringValue {
-                function["description"] = .string(description)
-            }
-            if let strict = parameterObject.removeValue(forKey: "strict") {
-                function["strict"] = strict
-            }
-            if let deferLoading = parameterObject.removeValue(forKey: "deferLoading") ?? parameterObject.removeValue(forKey: "defer_loading") {
-                function["defer_loading"] = deferLoading
-            }
-            parameters = .object(parameterObject)
-        }
-        if normalizeSchemas {
-            let normalizedParameters = try normalizeOpenAIJSONSchema(parameters)
-            parameters = normalizedParameters.schema
-            warnings.append(contentsOf: normalizedParameters.warnings)
-        }
-        function["parameters"] = parameters
-        if function["strict"] == nil {
-            function["strict"] = .bool(false)
-        }
-        if let deferLoading = openAIOptions?["deferLoading"] ?? openAIOptions?["defer_loading"] {
-            function["defer_loading"] = deferLoading
-        }
-        if let allowedCallers = openAIOptions?["allowedCallers"] ?? openAIOptions?["allowed_callers"] {
-            function["allowed_callers"] = allowedCallers
-        }
-        if let async = openAIResponsesAsyncToolOption(
-            openAIOptions?["async"],
+        let function = try openAIResponsesRegisteredFunction(
+            name: name,
+            schema: schema,
+            options: openAIOptions,
             supportsAsyncToolCalling: supportsAsyncToolCalling,
-            toolName: name,
+            normalizeSchemas: normalizeSchemas,
             warnings: &warnings
-        ) {
-            function["async"] = async
-        }
-        if let outputSchema = openAIOptions?["outputSchema"] ?? openAIOptions?["output_schema"],
-           outputSchema != .null {
-            if normalizeSchemas {
-                let normalizedOutputSchema = try normalizeOpenAIJSONSchema(outputSchema)
-                function["output_schema"] = normalizedOutputSchema.schema
-                warnings.append(contentsOf: normalizedOutputSchema.warnings)
-            } else {
-                function["output_schema"] = outputSchema
-            }
-            outputSchemaToolNames.insert(name)
-        }
+        )
         if let namespace = openAIOptions?["namespace"]?.objectValue,
            let namespaceName = namespace["name"]?.stringValue,
            let namespaceDescription = namespace["description"]?.stringValue {
@@ -161,6 +111,88 @@ func openAIResponsesTools(
         }
     }
     return (mapped, customToolNames, programmaticToolNames, outputSchemaToolNames, warnings)
+}
+
+func openAIResponsesRegisteredProviderToolID(name: String, tool: JSONValue) -> String? {
+    let id = tool["id"]?.stringValue
+    guard tool["type"] == "provider" || id?.hasPrefix("openai.") == true else { return nil }
+    return id ?? name
+}
+
+func openAIResponsesRegisteredFunctionOptions(
+    _ tool: JSONValue,
+    providerOptionsName: String
+) -> [String: JSONValue]? {
+    tool["providerOptions"]?[providerOptionsName]?.objectValue
+        ?? tool["providerOptions"]?["openai"]?.objectValue
+        ?? tool["openai"]?.objectValue
+}
+
+func openAIResponsesRegisteredFunction(
+    name: String,
+    schema: JSONValue,
+    options openAIOptions: [String: JSONValue]?,
+    supportsAsyncToolCalling: Bool?,
+    normalizeSchemas: Bool,
+    warnings: inout [AIWarning]
+) throws -> [String: JSONValue] {
+    var parameters = schema
+    var function: [String: JSONValue] = [
+        "type": .string("function"),
+        "name": .string(name),
+        "parameters": parameters
+    ]
+    if var parameterObject = parameters.objectValue {
+        // Upstream sends only `tool.inputSchema` as `parameters`.
+        for key in aiFunctionToolMetadataKeys where key != "description" && key != "strict" {
+            parameterObject.removeValue(forKey: key)
+        }
+        parameterObject.removeValue(forKey: "openai")
+        if let description = parameterObject.removeValue(forKey: "description")?.stringValue {
+            function["description"] = .string(description)
+        }
+        if let strict = parameterObject.removeValue(forKey: "strict") {
+            function["strict"] = strict
+        }
+        if let deferLoading = parameterObject.removeValue(forKey: "deferLoading") ?? parameterObject.removeValue(forKey: "defer_loading") {
+            function["defer_loading"] = deferLoading
+        }
+        parameters = .object(parameterObject)
+    }
+    if normalizeSchemas {
+        let normalizedParameters = try normalizeOpenAIJSONSchema(parameters)
+        parameters = normalizedParameters.schema
+        warnings.append(contentsOf: normalizedParameters.warnings)
+    }
+    function["parameters"] = parameters
+    if function["strict"] == nil {
+        function["strict"] = .bool(false)
+    }
+    if let deferLoading = openAIOptions?["deferLoading"] ?? openAIOptions?["defer_loading"] {
+        function["defer_loading"] = deferLoading
+    }
+    if let allowedCallers = openAIOptions?["allowedCallers"] ?? openAIOptions?["allowed_callers"] {
+        function["allowed_callers"] = allowedCallers
+    }
+    if let supportsAsyncToolCalling, let async = openAIResponsesAsyncToolOption(
+        openAIOptions?["async"],
+        supportsAsyncToolCalling: supportsAsyncToolCalling,
+        toolName: name,
+        warnings: &warnings
+    ) {
+        function["async"] = async
+    }
+    if let outputSchema = openAIOptions?["outputSchema"] ?? openAIOptions?["output_schema"],
+       outputSchema != .null {
+        if normalizeSchemas {
+            let normalizedOutputSchema = try normalizeOpenAIJSONSchema(outputSchema)
+            function["output_schema"] = normalizedOutputSchema.schema
+            warnings.append(contentsOf: normalizedOutputSchema.warnings)
+        } else {
+            function["output_schema"] = outputSchema
+        }
+    }
+    return function
 }
 
 func openAIResponsesProviderToolNameAliases(from tools: [String: JSONValue]) -> [String: String] {

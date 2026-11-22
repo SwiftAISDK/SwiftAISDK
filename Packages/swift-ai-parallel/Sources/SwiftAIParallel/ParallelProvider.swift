@@ -4,7 +4,7 @@ import SwiftAITransport
 import SwiftAIProviderUtilities
 
 /// The published `@ai-sdk/parallel` baseline used for the wire contract.
-public let parallelProviderVersion = "3.0.9"
+public let parallelProviderVersion = "3.0.11"
 
 public struct ParallelProviderSettings: Sendable {
     public var apiKey: String?

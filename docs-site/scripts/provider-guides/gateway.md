@@ -44,7 +44,8 @@ let gateway = try AIProviders.gateway(teamIDOrSlug: "my-team")
 | `transcriptionModel(_:)`, `streamingTranscriptionModel(_:)` | [Transcribe](../../core/transcribe/) |
 | `rerankingModel(_:)` | [Rerank](../../core/rerank/) |
 | `decisionModel(_:)`, `evaluationModel(_:)` | [Decide](../../core/decide/), [Evaluate](../../core/evaluate/) |
-| `realtimeModel(_:)` | [Realtime](../../core/realtime/) |
+| `extractionModel(_:)`, `extraction(_:)` | [Extract fields](../../core/extract/) |
+| `experimentalRealtime(_:api:)`, `realtimeModel(_:)`, `liveModel(_:)` | [Realtime](../../core/realtime/) |
 | `experimentalBatch()` | [Batch text](../../core/batch-text/) |
 
 ## Routing options
@@ -151,6 +152,43 @@ Clients that open their own WebSocket carry the token in subprotocols:
 `GatewayRealtimeAuth.authToken(fromSecWebSocketProtocol:)` and
 `teamIDOrSlug(fromSecWebSocketProtocol:)`.
 
+## Realtime and Live conversations
+
+`gateway.experimentalRealtime("openai/gpt-live-1.1")` selects the continuous
+Live route. `openai/gpt-live-1` also selects Live. Other IDs default to the
+turn-based realtime route. Pass `api: .live` for a new Live ID or
+`api: .realtime` to force the turn-based route. Use `liveModel(_:)` and
+`realtimeModel(_:)` when you want a concrete model for a particular route.
+
+```swift
+let live = gateway.experimentalRealtime("openai/gpt-live-1.1")
+let token = try await gateway.experimentalRealtime.getToken(.init(
+    model: "openai/gpt-live-1.1",
+    expiresAfterSeconds: 60
+))
+let format = AIRealtimeAudioFormat(type: "audio/pcm", rate: 24_000)
+let session = try await AIRealtimeSession.connect(
+    model: live,
+    clientSecret: token,
+    sessionConfiguration: .init(inputAudioFormat: format, outputAudioFormat: format)
+)
+```
+
+Mint client tokens on a trusted process. Live tokens bind to `/live-model` and
+use the same auth and team subprotocols as realtime. For a trusted process that
+connects with its own credential, call `AIRealtimeSession.connectServer`.
+
+Live uses `session-start` to open one continuous conversation and `session-close`
+to report final usage before closing. After the session emits `sessionStarted`,
+stream audio with `appendAudio`, mute or unmute input, and add context with
+`appendContext`. Live accepts matching audio
+formats on input and output: PCM at 16 or 24 kHz, or PCMA or PCMU at 8 kHz. The
+session accepts instructions, voice, audio formats and provider options. For
+OpenAI, `delegation` accepts `{"type":"client"}` or JSON null, `input` accepts
+up to 128 text messages, `store` accepts a Boolean, and `voice` accepts an object
+with a nonempty `id`. `appendContext` accepts `openai.channel` values
+`commentary`, `instructions` and `thinking`.
+
 ## Video, images and batches
 
 - Video supports asynchronous start/status operations and callback registration
@@ -177,6 +215,31 @@ Decision calls forward `maxOutputTokens` and `reasoning` only when you set them.
 Evaluation models use the same decision endpoint and report the model that
 actually answered.
 
+## Extraction
+
+```swift
+let result = try await AI.experimentalExtract(
+    model: gateway.extractionModel("scaledown/extract-1"),
+    state: .text("Invoice INV-2041 from Acme Corp. Contacts: Ana, Bo."),
+    fields: [
+        "invoiceNumber": .init(type: .text, instructions: "The invoice number"),
+        "contacts": .init(type: .list, instructions: "Contact names", items: .text),
+    ]
+)
+print(result.answers["invoiceNumber"]?.value?.stringValue ?? "")
+```
+
+Gateway sends ordered text, JSON and file state. Send inline files as bytes or
+base64. To use file URLs, pass a `download` callback to `AI.experimentalExtract`
+so it can prepare the file first. Gateway references are forwarded to the server,
+which currently rejects them.
+
+Supported field types depend on the selected model. An unsupported type returns
+`AIExtractionUnsupportedFieldTypeError` with the field ID and `fieldTypeLabel`,
+which can include the list item type (for example, `list<number>`). Extraction
+forwards `referenceDate`, `maxOutputTokens`, `reasoning` and `providerOptions`
+when provided. The result includes typed answers, available metadata and warnings.
+
 ## Account APIs
 
 - `availableModels()` lists the model catalog, including `description` and
@@ -192,9 +255,10 @@ actually answered.
 ## Rotating credentials and cancellation
 
 `GatewayProviderSettings(apiKeyProvider:)` takes an async throwing closure that is
-called before each authenticated request and each streaming speech or transcription
-connection. It must return a non-empty key; otherwise the request is not sent and
-the call fails with a Gateway authentication error ("No authentication provided").
+called before each authenticated request, streaming speech or transcription
+connection, and Live server connection. It must return a non-empty key. An
+empty key stops the request with a Gateway authentication error
+("No authentication provided").
 
 ## Errors and observability
 
@@ -206,5 +270,9 @@ requests forward `VERCEL_DEPLOYMENT_ID`, `VERCEL_ENV`, `VERCEL_REGION` and
 `VERCEL_PROJECT_ID` as `ai-o11y-*` headers; the per-request ID from Vercel's
 Node request context is not available in Swift.
 
-Task cancellation, `AIAbortError` and timeouts surface as cancellation errors, not
-as retryable Gateway failures.
+For access-policy denials, `GatewayError.isAccessPolicyDenied` identifies the
+`access_policy_denied` discriminator. The error reports HTTP 403 and can include
+`policyIDs`, `removedModels` and `removedProviders`. `GatewayError.description`
+includes the generation ID when Gateway returns it.
+
+Task cancellation, `AIAbortError` and timeouts retain their native identity.

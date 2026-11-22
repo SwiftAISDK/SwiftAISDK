@@ -32,7 +32,7 @@ function renderCompatibility(root) {
     if(method.kind==='property')return `    public var ${method.name}: ${method.type} { base.${method.name} }`;
     if(method.kind==='initializer') {
       const params=new Map(method.parameters.map(p=>[p.name,p]));
-      const names=['providerID','languageModels','embeddingModels','imageModels','transcriptionModels','speechModels','videoModels','rerankingModels','decisionModels','evaluationModels','files','skills','fallbackProvider'];
+      const names=['providerID','languageModels','embeddingModels','imageModels','transcriptionModels','speechModels','videoModels','rerankingModels','decisionModels','evaluationModels','extractionModels','files','skills','fallbackProvider'];
       const args=names.map(name=>{
         const p=params.get(name);
         let value=p?name:'[:]';
@@ -40,6 +40,7 @@ function renderCompatibility(root) {
         return name+': '+value;
       });
       args.push('resolveDecisionModelID: { try AIDefaultProvider.resolveDecisionModel($0) }','resolveEvaluationModelID: { try AIDefaultProvider.resolveEvaluationModel($0) }');
+      args.push('resolveExtractionModelID: { try AIDefaultProvider.resolveExtractionModel($0) }');
       return method.signature.trimEnd()+` {\n        self.base = SwiftAI.AICustomProvider(${args.join(', ')})\n    }`;
     }
     const effects=(method.throws?'try ':'')+(method.async?'await ':'');

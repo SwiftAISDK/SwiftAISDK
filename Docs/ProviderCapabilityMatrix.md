@@ -1,6 +1,6 @@
 # Provider Capability Matrix
 
-Snapshot date: 2026-11-15
+Snapshot date: 2026-11-22
 
 This document and `AIProviderCapabilities` are generated from
 `Porting/packages.json`. Update the catalog, then run
@@ -33,7 +33,7 @@ Legend:
 | `@ai-sdk/amazon-bedrock` | `bedrock-mantle` | `AIProviders.bedrockMantle` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | `@ai-sdk/anthropic` | `anthropic` | `AIProviders.anthropic` | ✅ |  |  |  |  |  |  |  |  |  |  | ✅ | ✅ | ✅ | ✅ | ✅ |
 | `@ai-sdk/anthropic-aws` | `anthropic-aws` | `AIProviders.anthropicAWS` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  | ✅ | ✅ |
-| `@ai-sdk/assemblyai` | `assemblyai` | `AIProviders.assemblyAI` |  |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |
+| `@ai-sdk/assemblyai` | `assemblyai` | `AIProviders.assemblyAI` |  |  |  |  | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |
 | `@ai-sdk/azure` | `azure` | `AIProviders.azure` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |
 | `@ai-sdk/baseten` | `baseten` | `AIProviders.baseten` | ✅ |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | `@ai-sdk/black-forest-labs` | `black-forest-labs` | `AIProviders.blackForestLabs` |  |  |  | ✅ |  |  |  |  |  | ✅ |  |  |  |  |  |  |
@@ -48,7 +48,7 @@ Legend:
 | `@ai-sdk/fal` | `fal` | `AIProviders.fal` |  |  |  | ✅ | ✅ | ✅ |  |  |  | ✅ |  |  |  |  |  |  |
 | `@ai-sdk/fish-audio` | `fish-audio` | `AIProviders.fishAudio` |  |  |  |  | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |
 | `@ai-sdk/fireworks` | `fireworks` | `AIProviders.fireworks` | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |
-| `@ai-sdk/gateway` | `gateway` | `AIProviders.gateway` | ✅ |  | ✅ | ✅ | ✅ | ✅ |  |  |  | ✅ | ✅ | ✅ | ✅ |  |  |  |
+| `@ai-sdk/gateway` | `gateway` | `AIProviders.gateway` | ✅ |  | ✅ | ✅ | ✅ | ✅ |  |  |  | ✅ | ✅ | ✅ | ✅ | ✅ |  |  |
 | `@ai-sdk/gmicloud` | `gmicloud` | `AIProviders.gmiCloud` | ✅ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | `@ai-sdk/gladia` | `gladia` | `AIProviders.gladia` |  |  |  |  | ✅ |  |  |  |  |  |  |  |  |  |  |  |
 | `@ai-sdk/google` | `google.generative-ai` | `AIProviders.google` | ✅ |  | ✅ | ✅ |  | ✅ |  |  |  | ✅ |  | ✅ | ✅ | ✅ | ✅ |  |
@@ -84,6 +84,7 @@ Legend:
 | `@ai-sdk/parallel` | `parallel` | `AIProviders.parallel`, `createParallel`, `parallel` |  |  |  |  |  |  |  |  |  |  |  |  | ✅ |  |  |  |
 | `@ai-sdk/scaledown` | `scaledown` | `AIProviders.scaleDown` |  |  |  |  |  |  |  |  |  |  |  |  | ✅ | ✅ |  |  |
 | `@ai-sdk/tencent` | `tencent` | `AIProviders.tencent` | ✅ |  |  |  |  |  |  |  |  | ✅ |  |  |  |  |  |  |
+| `@ai-sdk/liquid` | `liquid` | `AIProviders.liquid`, `createLiquid`, `liquid` |  |  |  |  |  |  |  |  |  |  |  |  | ✅ |  |  |  |
 
 ## Provider Notes
 
@@ -95,7 +96,7 @@ Legend:
 | `bedrock-mantle` | OpenAI-compatible Chat Completions and Responses endpoints on Amazon Bedrock Mantle, authenticated with a Bedrock API key or SigV4 credentials. The endpoint path is chosen from the model ID. |
 | `anthropic` | Claude models through the Anthropic Messages API, with thinking, prompt caching, citations, Anthropic-hosted tools, message threads, files, skills and message batches. Decision, evaluation and extraction models run over Messages with structured output. |
 | `anthropic-aws` | Claude models through Anthropic's Claude Platform on AWS, authenticated with an Anthropic AWS API key or AWS SigV4 credentials and scoped to a workspace. It uses the same Messages adapter as the Anthropic provider, including message threads, files and skills. |
-| `assemblyai` | Speech-to-text with AssemblyAI's Universal models. Each call uploads the audio, submits a transcript job and polls until it completes; speaker labels, PII redaction and audio-intelligence results are available through provider options and provider metadata. |
+| `assemblyai` | AssemblyAI file transcription with timed words and automatic language detection, plus buffered Speech V4 for MP3 and PCM output. |
 | `azure` | OpenAI models deployed on Azure, using the Responses API by default plus Chat, completions, embeddings, images, transcription and speech, addressed by deployment name. Authenticate with an API key or a Microsoft Entra ID token provider; MAI Voice, MAI Transcribe and MAI Image models use their Azure-specific APIs. |
 | `baseten` | Chat models on Baseten Model APIs or on your own dedicated deployment, plus embeddings from dedicated deployments. Set `modelURL` to target a deployment; embeddings always require a `/sync` or `/sync/v1` model URL. |
 | `black-forest-labs` | FLUX image generation and editing and FLUX 3 video generation from Black Forest Labs. Jobs are submitted and polled until the result is ready; the request protocol and available options depend on the model family. |
@@ -110,7 +111,7 @@ Legend:
 | `fal` | Image generation and editing, queued video generation, speech and transcription on fal's hosted model endpoints. Video and transcription jobs are polled to completion, and video can also complete through fal webhooks. |
 | `fish-audio` | Fish Audio text-to-speech with reference voices, latency and sampling controls, plus speech-to-text with timed segments. |
 | `fireworks` | Open-weight chat, completion and embedding models on Fireworks AI with thinking and prompt-cache controls, plus FLUX and Stable Diffusion image generation. Asynchronous Kontext image jobs are polled to completion. |
-| `gateway` | One provider for hundreds of models from many vendors through the Vercel AI Gateway: text, embeddings, images, video, speech, transcription, reranking, decisions, realtime and batches. It adds routing and fallback controls, Gateway-executed search tools and account APIs for credits and spend. |
+| `gateway` | One provider for hundreds of models from many vendors through the Vercel AI Gateway: text, embeddings, images, video, speech, transcription, reranking, decisions, realtime and batches. It adds routing and fallback controls, Gateway-executed search tools and account APIs for credits and spend. Includes native Extraction V4 and continuous Realtime Live alongside the turn-based route. |
 | `gmicloud` | Open-weight chat models such as Kimi, GLM, DeepSeek and MiniMax through GMI Cloud's OpenAI-compatible API, with streaming usage and tool calls. Only language models are available. |
 | `gladia` | Gladia pre-recorded speech-to-text with diarization, translation, PII redaction and other add-ons. Jobs are uploaded and polled to completion, and remote audio URLs can be transcribed without uploading. |
 | `google.generative-ai` | Gemini models through the Gemini API (Google AI Studio): text with thinking, tools and Google Search grounding, embeddings, Gemini and Imagen images, TTS speech, Veo video, files, decisions, extraction, Gemini Live realtime and batches. For Gemini on Google Cloud, use the Google Vertex AI provider. |
@@ -146,6 +147,7 @@ Legend:
 | `parallel` | Parallel's web-grounded decision models answer Boolean, Choice and Score questions with shared web citations and confidence. Parallel offers decisions only; there are no text, media or embedding models. |
 | `scaledown` | ScaleDown classification decisions (Choice, Boolean and Score) and text extraction over text, JSON and one JPEG, PNG, TIFF or PDF document. Extraction supports text fields and lists of text only. |
 | `tencent` | Tencent TokenHub chat models and Kling video generation, plus Tencent Cloud VOD video generation with TC3-signed requests. Both backends expose resumable video jobs, and each backend loads its own credentials only when used. |
+| `liquid` | Liquid native Decision V4 handles choice, score, boolean and box questions with text, JSON, image and audio evidence. Returns full-precision probabilities, confidence, score legends, token usage and cost. |
 
 ## Reality Gates
 
