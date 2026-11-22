@@ -16,12 +16,14 @@ them only when investigating an earlier pass.
 ## Release State
 
 - The canonical catalog tracks 58 npm packages across 56 independent Swift
-  packages, including core, 53 provider adapters, MCP and UI.
+  packages, including core, 53 provider adapters, MCP and UI. All 56 Swift
+  packages are published.
 - SwiftAISDK 3.6.0 is the current optional compatibility umbrella. Its tested
   dependency selection is `Releases/umbrella/3.6.0.json`.
-- The latest source review and candidate release selection are in
+- The latest source review and released package selection are in
   [WeeklyUpstreamAudit20261122.md](Archive/WeeklyUpstreamAudit20261122.md).
-  Published distribution state is recorded in `Releases/sets/`.
+  Published refs, CI and consumer checks are in
+  [ReleaseVerification20261122.json](Archive/ReleaseVerification20261122.json).
 - The later `parity-repairs-20261115` set (`Releases/sets/parity-repairs-20261115.json`)
   publishes Prodia, Rev.ai and Together AI 1.2.0 with their reviewed upstream
   tests translated; its public consumer evidence is
